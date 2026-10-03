@@ -1,0 +1,11 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lemur Home Dashboard",
+        "description": "Adds the ready-made home dashboard. Create a dashboard and put `strategy: type: custom:lemur-home-dashboard` in its raw configuration. Edit the dashboard from \"Lemur Home Dashboard\" in the sidebar."
+      }
+    },
+    "abort": { "single_instance_allowed": "Already set up." }
+  }
+}

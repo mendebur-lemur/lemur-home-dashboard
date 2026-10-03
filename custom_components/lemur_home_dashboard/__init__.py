@@ -1,4 +1,4 @@
-"""Lemur Panel.
+"""Lemur Home Dashboard.
 
 Serves the panel's JavaScript (dashboard strategy, panel card and admin panel),
 loads it on every page and keeps the household panel layout in Home Assistant
@@ -89,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             hass,
             frontend_url_path=PANEL_URL,
             webcomponent_name=PANEL_ELEMENT,
-            sidebar_title="Lemur Panel",
+            sidebar_title="Lemur Home Dashboard",
             sidebar_icon="mdi:tablet-dashboard",
             module_url=f"{URL_BASE}/{JS_FILE}?v={VERSION}",
             require_admin=True,
@@ -108,7 +108,7 @@ def _data(hass: HomeAssistant) -> PanelData | None:
     return hass.data.get(DOMAIN)
 
 
-@websocket_api.websocket_command({vol.Required("type"): "lemur_panel/get"})
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/get"})
 @callback
 def ws_get(hass, connection, msg):
     data = _data(hass)
@@ -120,7 +120,7 @@ def ws_get(hass, connection, msg):
 
 @websocket_api.websocket_command(
     {
-        vol.Required("type"): "lemur_panel/set",
+        vol.Required("type"): "lemur_home_dashboard/set",
         vol.Required("key"): vol.In(["settings", "tabs", "profiles"]),
         vol.Required("value"): vol.Any(list, dict),
     }
@@ -143,7 +143,7 @@ def ws_set(hass, connection, msg):
     connection.send_result(msg["id"], data.data)
 
 
-@websocket_api.websocket_command({vol.Required("type"): "lemur_panel/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/subscribe"})
 @callback
 def ws_subscribe(hass, connection, msg):
     @callback
@@ -154,7 +154,7 @@ def ws_subscribe(hass, connection, msg):
     connection.send_result(msg["id"])
 
 
-@websocket_api.websocket_command({vol.Required("type"): "lemur_panel/info"})
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/info"})
 @callback
 def ws_info(hass, connection, msg):
     """Version of the integration, so an outdated script in a browser cache can ask for a reload."""

@@ -1,0 +1,11 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lemur Home Dashboard",
+        "description": "Hazır ev panosunu ekler. Bir pano oluştur ve ham yapılandırmasına `strategy: type: custom:lemur-home-dashboard` yaz. Panoyu sol menüdeki \"Lemur Home Dashboard\" bölümünden düzenle."
+      }
+    },
+    "abort": { "single_instance_allowed": "Zaten kurulu." }
+  }
+}

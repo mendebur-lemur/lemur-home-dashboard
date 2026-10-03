@@ -1,8 +1,8 @@
-// lemur-panel-card: bir sekmeyi baştan sona çizer. TASLAK: iskelet düzen, ışık karoları ve senaryo düğmeleri çalışıyor;
+// lemur-home-dashboard-card: bir sekmeyi baştan sona çizer. TASLAK: iskelet düzen, ışık karoları ve senaryo düğmeleri çalışıyor;
 // iklim/medya bölümleri yer tutucu. Eski Safari için ?. ve ?? yok.
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
-class LemurPanelCard extends HTMLElement {
+class LemurHomeDashboardCard extends HTMLElement {
   setConfig(config) { this._config = config || {}; }
   getCardSize() { return 12; }
   set hass(h) {

@@ -1,13 +1,13 @@
 {
-  "domain": "lemur_panel",
-  "name": "Lemur Panel",
+  "domain": "lemur_home_dashboard",
+  "name": "Lemur Home Dashboard",
   "codeowners": ["@mendebur-lemur"],
   "config_flow": true,
   "dependencies": ["http", "frontend", "panel_custom", "websocket_api"],
-  "documentation": "https://github.com/mendebur-lemur/lemur-panel",
+  "documentation": "https://github.com/mendebur-lemur/lemur-home-dashboard",
   "integration_type": "service",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/mendebur-lemur/lemur-panel/issues",
+  "issue_tracker": "https://github.com/mendebur-lemur/lemur-home-dashboard/issues",
   "requirements": [],
   "single_config_entry": true,
   "version": "0.0.1"

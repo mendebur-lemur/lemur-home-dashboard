@@ -1,7 +1,7 @@
 // Kanvas ölçekleme. İçerik ÖLÇÜLMEZ; zoom sadece ekran boyutundan hesaplanır ve hui-root'a CSS kuralı olarak yazılır.
 // Böylece görünüm ilk karede doğru boyutta gelir, sayfa değişince oynamaz. (Arkadaşın panosundaki tablet-olcek.js v8'in dersi.)
 const LemurScale = (() => {
-  const ID = 'lemur-panel-scale';
+  const ID = 'lemur-home-dashboard-scale';
   function root() {
     try {
       const m = document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main').shadowRoot;
@@ -14,7 +14,7 @@ const LemurScale = (() => {
     const r = root(); if (!r) return;
     const sr = r.shadowRoot;
     const raw = r.lovelace && r.lovelace.rawConfig;
-    const active = !!sr.querySelector('lemur-panel-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-panel');
+    const active = !!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard');
     let st = sr.getElementById(ID);
     if (!active) { if (st) st.textContent = ''; return; }
     const W = (canvas && canvas.width) || 1280, H = (canvas && canvas.ref_height) || 1075;

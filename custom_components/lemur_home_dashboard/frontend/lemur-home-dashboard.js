@@ -1,16 +1,16 @@
-/*! Lemur Panel v0.0.1 | MIT */
+/*! Lemur Home Dashboard v0.0.1 | MIT */
 (() => {
-if (customElements.get('lemur-panel-card')) return;
+if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '0.0.1';
 const CSS = ":host { display: block; --lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08); --lp-accent: #5B8DEF; --lp-on: #fdd835; }\n.wrap { display: grid; grid-template-areas: \"h1 h1 h1\" \"c1 c2 c3\"; gap: 12px; padding: 12px; box-sizing: border-box; }\n.nav { grid-area: h1; display: flex; align-items: center; gap: 12px; }\n.navb { width: 235px; height: 155px; border-radius: 15px; border: none; background: var(--ha-card-background, rgba(30,33,40,0.9)); color: var(--primary-text-color);\nopacity: 0.85; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 18px; --mdc-icon-size: 64px; }\n.navb.sel { opacity: 1; box-shadow: inset 0 0 0 2px rgba(91, 141, 239, 0.9); }\n.clock { margin-left: auto; margin-right: 40px; font-size: 48px; font-weight: 700; color: var(--primary-text-color); font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }\n.box { background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; }\n.title { text-align: center; font-weight: 700; font-size: 18px; color: var(--primary-text-color); padding: 6px 0 4px; }\n.grid { display: grid; gap: 10px; flex: 1 1 auto; grid-auto-rows: 1fr; }\n.tile { border-radius: 14px; background: var(--ha-card-background, rgba(30,33,40,0.9)); border: 1px solid transparent; color: var(--primary-text-color);\ndisplay: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; --mdc-icon-size: 44px; font-size: 14px; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on)); background: rgba(255, 255, 255, 0.05); }\n.scene { height: 118px; border-radius: 22px; border: none; background: var(--ha-card-background, rgba(30,33,40,0.9)); color: var(--primary-text-color);\ndisplay: flex; align-items: center; gap: 16px; padding: 0 20px; font-size: 18px; cursor: pointer; --mdc-icon-size: 40px; text-align: left; }\n.todo { color: var(--secondary-text-color); font-size: 13px; text-align: center; padding: 8px; }";
 // Metinler: her metin tr ve en. Arayüzde marka adı geçmez.
 const TXT = {
   tr: { home: 'Ev', other: 'Diğer', lights: 'IŞIKLAR', scenes: 'SENARYOLAR', control: 'EV KONTROL', media: 'MEDYA',
-    admin_title: 'Lemur Panel', admin_intro: 'Panelin sekmeleri, bölümleri ve boyutları burada düzenlenecek. (Yapım aşamasında)',
-    reset: 'Varsayılana dön', save: 'Kaydet', saved: 'Kaydedildi', not_loaded: 'Lemur Panel entegrasyonu yüklü değil.' },
+    admin_title: 'Lemur Home Dashboard', admin_intro: 'Panonun sekmeleri, bölümleri ve boyutları burada düzenlenecek. (Yapım aşamasında)',
+    reset: 'Varsayılana dön', save: 'Kaydet', saved: 'Kaydedildi', not_loaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.' },
   en: { home: 'Home', other: 'Other', lights: 'LIGHTS', scenes: 'SCENES', control: 'CONTROLS', media: 'MEDIA',
-    admin_title: 'Lemur Panel', admin_intro: 'Tabs, sections and sizes of the panel will be edited here. (Work in progress)',
-    reset: 'Reset to defaults', save: 'Save', saved: 'Saved', not_loaded: 'The Lemur Panel integration is not loaded.' }
+    admin_title: 'Lemur Home Dashboard', admin_intro: 'Tabs, sections and sizes of the dashboard will be edited here. (Work in progress)',
+    reset: 'Reset to defaults', save: 'Save', saved: 'Saved', not_loaded: 'The Lemur Home Dashboard integration is not loaded.' }
 };
 function pickLang(hass) {
   const l = (hass && ((hass.locale && hass.locale.language) || hass.language)) || 'en';
@@ -19,20 +19,20 @@ function pickLang(hass) {
 function t(lang, key) { const d = TXT[lang] || TXT.en; return d[key] !== undefined ? d[key] : (TXT.en[key] || key); }
 
 // Ortak ayarlar: entegrasyondan okunur, değişince bütün açık ekranlara gelir.
-const STORE = window.__LEMUR_PANEL_STORE || (window.__LEMUR_PANEL_STORE = {
+const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBOARD_STORE = {
   data: null, conn: null, subs: [], loading: null,
   load(hass) {
     if (this.data) return Promise.resolve(this.data);
     if (this.loading) return this.loading;
     this.conn = hass.connection;
-    this.loading = this.conn.sendMessagePromise({ type: 'lemur_panel/get' }).then((d) => {
+    this.loading = this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/get' }).then((d) => {
       this.data = d;
-      this.conn.subscribeMessage((msg) => { this.data = msg; this.subs.forEach((f) => f(msg)); }, { type: 'lemur_panel/subscribe' });
+      this.conn.subscribeMessage((msg) => { this.data = msg; this.subs.forEach((f) => f(msg)); }, { type: 'lemur_home_dashboard/subscribe' });
       return d;
     }).catch((e) => { this.loading = null; throw e; });
     return this.loading;
   },
-  set(key, value) { return this.conn.sendMessagePromise({ type: 'lemur_panel/set', key: key, value: value }); },
+  set(key, value) { return this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/set', key: key, value: value }); },
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });
 
@@ -64,7 +64,7 @@ function buildDefaultTabs(hass, lang) {
 // Kanvas ölçekleme. İçerik ÖLÇÜLMEZ; zoom sadece ekran boyutundan hesaplanır ve hui-root'a CSS kuralı olarak yazılır.
 // Böylece görünüm ilk karede doğru boyutta gelir, sayfa değişince oynamaz. (Arkadaşın panosundaki tablet-olcek.js v8'in dersi.)
 const LemurScale = (() => {
-  const ID = 'lemur-panel-scale';
+  const ID = 'lemur-home-dashboard-scale';
   function root() {
     try {
       const m = document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main').shadowRoot;
@@ -77,7 +77,7 @@ const LemurScale = (() => {
     const r = root(); if (!r) return;
     const sr = r.shadowRoot;
     const raw = r.lovelace && r.lovelace.rawConfig;
-    const active = !!sr.querySelector('lemur-panel-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-panel');
+    const active = !!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard');
     let st = sr.getElementById(ID);
     if (!active) { if (st) st.textContent = ''; return; }
     const W = (canvas && canvas.width) || 1280, H = (canvas && canvas.ref_height) || 1075;
@@ -102,15 +102,15 @@ const LemurScale = (() => {
   return { set(c) { canvas = c; run(); }, run: run };
 })();
 
-// Pano stratejisi: `strategy: { type: custom:lemur-panel }` yazılan pano bu sınıfla üretilir.
-// HA kuralı: custom:lemur-panel → <ll-strategy-dashboard-lemur-panel>, static generate(config, hass).
-class LemurPanelStrategy extends HTMLElement {
+// Pano stratejisi: `strategy: { type: custom:lemur-home-dashboard }` yazılan pano bu sınıfla üretilir.
+// HA kuralı: custom:lemur-home-dashboard → <ll-strategy-dashboard-lemur-home-dashboard>, static generate(config, hass).
+class LemurHomeDashboardStrategy extends HTMLElement {
   static async generate(config, hass) {
     const lang = pickLang(hass);
     let data = null;
     try { data = await STORE.load(hass); } catch (e) { data = null; }
     if (!data) {
-      return { views: [{ title: 'Lemur Panel', type: 'panel', cards: [{ type: 'markdown', content: t(lang, 'not_loaded') }] }] };
+      return { views: [{ title: 'Lemur Home Dashboard', type: 'panel', cards: [{ type: 'markdown', content: t(lang, 'not_loaded') }] }] };
     }
     const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
     const settings = data.settings || {};
@@ -122,17 +122,17 @@ class LemurPanelStrategy extends HTMLElement {
         icon: tab.icon,
         type: 'panel',
         theme: settings.theme_name || undefined,
-        cards: [{ type: 'custom:lemur-panel-card', tab: tab.id }]
+        cards: [{ type: 'custom:lemur-home-dashboard-card', tab: tab.id }]
       }))
     };
   }
 }
 
-// lemur-panel-card: bir sekmeyi baştan sona çizer. TASLAK: iskelet düzen, ışık karoları ve senaryo düğmeleri çalışıyor;
+// lemur-home-dashboard-card: bir sekmeyi baştan sona çizer. TASLAK: iskelet düzen, ışık karoları ve senaryo düğmeleri çalışıyor;
 // iklim/medya bölümleri yer tutucu. Eski Safari için ?. ve ?? yok.
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
-class LemurPanelCard extends HTMLElement {
+class LemurHomeDashboardCard extends HTMLElement {
   setConfig(config) { this._config = config || {}; }
   getCardSize() { return 12; }
   set hass(h) {
@@ -204,9 +204,9 @@ class LemurPanelCard extends HTMLElement {
   }
 }
 
-// lemur-panel-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
+// lemur-home-dashboard-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
 // Hedef: Light Effect Card'ın kontrol paneli düzeninde sekme/bölüm/cihaz/boyut düzenleme, sürükle-bırak, canlı önizleme.
-class LemurPanelAdmin extends HTMLElement {
+class LemurHomeDashboardAdmin extends HTMLElement {
   set hass(h) { const first = !this._hass; this._hass = h; if (first) STORE.load(h).then(() => this._render()).catch(() => this._render()); }
   set narrow(v) { this._narrow = v; }
   set panel(p) { this._panel = p; }
@@ -221,8 +221,8 @@ class LemurPanelAdmin extends HTMLElement {
   }
 }
 
-customElements.define('ll-strategy-dashboard-lemur-panel', LemurPanelStrategy);
-customElements.define('lemur-panel-card', LemurPanelCard);
-customElements.define('lemur-panel-admin', LemurPanelAdmin);
-console.info('%c LEMUR PANEL %c v' + PANEL_VERSION + ' ', 'background:#5B8DEF;color:#0B1020;font-weight:700', 'background:#1E2024;color:#ECEDEF');
+customElements.define('ll-strategy-dashboard-lemur-home-dashboard', LemurHomeDashboardStrategy);
+customElements.define('lemur-home-dashboard-card', LemurHomeDashboardCard);
+customElements.define('lemur-home-dashboard-admin', LemurHomeDashboardAdmin);
+console.info('%c LEMUR HOME DASHBOARD %c v' + PANEL_VERSION + ' ', 'background:#5B8DEF;color:#0B1020;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 })();

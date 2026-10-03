@@ -1,6 +1,6 @@
-// lemur-panel-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
+// lemur-home-dashboard-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
 // Hedef: Light Effect Card'ın kontrol paneli düzeninde sekme/bölüm/cihaz/boyut düzenleme, sürükle-bırak, canlı önizleme.
-class LemurPanelAdmin extends HTMLElement {
+class LemurHomeDashboardAdmin extends HTMLElement {
   set hass(h) { const first = !this._hass; this._hass = h; if (first) STORE.load(h).then(() => this._render()).catch(() => this._render()); }
   set narrow(v) { this._narrow = v; }
   set panel(p) { this._panel = p; }

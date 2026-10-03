@@ -16,4 +16,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 build.py && node --check custom_components/lemur_panel/frontend/lemur-panel.js && git diff --exit-code custom_components/lemur_panel/frontend
+      - run: python3 build.py && node --check custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard.js && git diff --exit-code custom_components/lemur_home_dashboard/frontend
