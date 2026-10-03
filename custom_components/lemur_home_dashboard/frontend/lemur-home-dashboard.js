@@ -1,7 +1,7 @@
-/*! Lemur Halo Cards v0.2.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
+/*! Lemur Halo Cards (gömülü kopya) v0.2.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
 (() => {
-if (window.__lemurCardsLoaded) return;
-window.__lemurCardsLoaded = true;
+if (window.__lemurHdCardsLoaded) return;
+window.__lemurHdCardsLoaded = true;
 const CSS = ":host { display: block; }\nha-card { position: relative; padding: 0; overflow: hidden; isolation: isolate;\nborder-radius: var(--ha-card-border-radius, 12px);\nbackground: var(--ha-card-background, var(--card-background-color)); }\n.halo { position: absolute; left: 14px; top: 14px; width: 460px; height: 460px; margin: -230px 0 0 -230px;\npointer-events: none; z-index: 0; mix-blend-mode: screen; opacity: var(--halo-k, 1);\n-webkit-mask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px);\nmask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px); }\n.halo::before, .halo::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%;\nwill-change: transform, opacity; }\n.halo::before { background: radial-gradient(circle closest-side,\nrgba(var(--temp-rgb), 0.416) 52px,\nrgba(var(--temp-rgb), 0.399) 70px,\nrgba(var(--temp-rgb), 0.353) 88px,\nrgba(var(--temp-rgb), 0.288) 105px,\nrgba(var(--temp-rgb), 0.216) 123px,\nrgba(var(--temp-rgb), 0.150) 141px,\nrgba(var(--temp-rgb), 0.095) 159px,\nrgba(var(--temp-rgb), 0.056) 177px,\nrgba(var(--temp-rgb), 0.030) 194px,\nrgba(var(--temp-rgb), 0.015) 212px,\nrgba(var(--temp-rgb), 0.000) 230px);\nanimation: lc-glow var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite; }\n.halo::after { background: radial-gradient(circle closest-side,\nrgba(var(--tint-rgb), 0.272) 52px,\nrgba(var(--tint-rgb), 0.250) 70px,\nrgba(var(--tint-rgb), 0.196) 88px,\nrgba(var(--tint-rgb), 0.130) 105px,\nrgba(var(--tint-rgb), 0.073) 123px,\nrgba(var(--tint-rgb), 0.034) 141px,\nrgba(var(--tint-rgb), 0.014) 159px,\nrgba(var(--tint-rgb), 0.005) 177px,\nrgba(var(--tint-rgb), 0.002) 194px,\nrgba(var(--tint-rgb), 0.000) 212px,\nrgba(var(--tint-rgb), 0.000) 230px);\nanimation: lc-sheen var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite;\nanimation-delay: calc(var(--halo-dur, 4.4s) * -0.12); }\n@keyframes lc-glow { 0%, 100% { transform: scale(0.84); opacity: 0.72; } 50% { transform: scale(1.06); opacity: 1; } }\n@keyframes lc-sheen { 0%, 100% { transform: translateY(8px) scale(0.86); opacity: 0.55; } 50% { transform: translateY(16px) scale(1.04); opacity: 1; } }\n.alarm .halo { animation: lc-alarm var(--halo-dur, 1.2s) ease-in-out infinite; }\n@keyframes lc-alarm { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }\n.still .halo::before { animation: none; transform: scale(1); opacity: 0.95; }\n.still .halo::after { animation: none; transform: translateY(12px) scale(1); opacity: 0.9; }\n.light .halo { mix-blend-mode: normal; }\n@media (prefers-reduced-motion: reduce) {\n.halo::before, .halo::after, .alarm .halo { animation: none; }\n}\n.top { position: relative; z-index: 1; height: 70px; }\n.ic { position: absolute; left: -18px; top: -18px; box-sizing: border-box; width: 64px; height: 64px; border-radius: 50%;\ndisplay: flex; align-items: center; justify-content: center;\nbackground: rgba(127, 127, 127, 0.08); border: 1px solid rgba(255, 255, 255, 0.07);\ncolor: rgb(var(--temp-rgb, 140,140,140)); --mdc-icon-size: 38px; }\n.ic svg { width: 38px; height: 38px; }\n.txt { position: absolute; left: 76px; top: 12px; right: 90px; min-width: 0; }\n.name { font-size: 14px; line-height: 21px; font-weight: 500; color: var(--primary-text-color);\nwhite-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.sec { font-size: 12px; line-height: 16px; color: var(--secondary-text-color); overflow: hidden;\ndisplay: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 32px; word-wrap: break-word; }\n.pwr { position: absolute; top: 12px; right: 12px; width: 56px; height: 56px; border-radius: 14px; border: none; cursor: pointer; padding: 0;\ndisplay: flex; align-items: center; justify-content: center; --mdc-icon-size: 26px;\nbackground: var(--lc-box, rgba(255, 255, 255, 0.05)); color: var(--secondary-text-color); }\n.pwr.on { background: rgba(40, 190, 100, 0.18); color: rgb(40, 190, 100); }\n.nopwr .txt { right: 14px; }\n.compact .top { height: 80px; }\n.compact .txt { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); }\n.bottom { position: relative; z-index: 1; display: flex; padding: 12px 12px 14px; }\n.bottom > .box + .box { margin-left: 10px; }\n.box { box-sizing: border-box; flex: 1 1 0; min-width: 0; height: 42px; border-radius: 12px; background: var(--lc-box, rgba(255, 255, 255, 0.05));\ndisplay: flex; align-items: center; justify-content: space-between; padding: 0 4px; color: var(--primary-text-color); overflow: hidden; }\n.box button { border: none; background: transparent; color: inherit; font-size: 1.2rem; flex: 0 1 30px; min-width: 14px; height: 32px;\ncursor: pointer; border-radius: 8px; padding: 0; }\n.box .val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.box.sel { position: relative; justify-content: flex-start; }\n.box.sel .lead { flex: 0 0 auto; display: flex; margin-left: 6px; --mdc-icon-size: 20px; color: var(--primary-text-color); }\n.box.sel .lbl { flex: 0 1 auto; min-width: 0; margin-left: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }\n.box.sel .chev { flex: 0 1000000 20px; min-width: 0; margin-left: auto; overflow: hidden; display: flex; justify-content: flex-end;\n--mdc-icon-size: 20px; color: var(--primary-text-color); margin-right: 5px; }\n.box.sel select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; padding: 0; margin: 0; border: 0; cursor: pointer; font-size: 16px; }\n.box.sel:focus-within { box-shadow: inset 0 0 0 2px rgba(var(--temp-rgb, 140,140,140), 0.55); }\n.box.sel select option { color: var(--primary-text-color); background: var(--card-background-color, #1c1c1c); }\nbutton.box { border: none; font: inherit; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }\n.box.btn { justify-content: center; --mdc-icon-size: 20px; }\n.box.btn ha-icon, .box.info ha-icon { flex: 0 0 auto; display: flex; }\n.box.btn .lbl, .box.info .lbl { flex: 0 1 auto; min-width: 0; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; font-weight: 500; }\n.box.btn.active { background: rgba(var(--temp-rgb), 0.2); color: rgb(var(--temp-rgb)); }\n.box.btn.ask { background: rgba(255, 55, 55, 0.22); color: rgb(255, 95, 95); }\n.box.btn:active { -webkit-transform: scale(0.97); transform: scale(0.97); }\n.box.info { justify-content: center; --mdc-icon-size: 18px; }\n.box.info ha-icon { color: var(--secondary-text-color); }\n.box.btn.tight .lbl, .box.sel.tight .lbl { display: none; }\n.box.info.tight ha-icon { display: none; }\n.box.info.tight .lbl { margin-left: 0; }\n.bottom.dis { opacity: 0.38; pointer-events: none; }\n.pwr:disabled { opacity: 0.38; cursor: default; }\n.ic[data-more], .txt[data-more] { -webkit-tap-highlight-color: transparent; }\n.light { --lc-box: rgba(0, 0, 0, 0.05); }\n.light .ic { border-color: rgba(0, 0, 0, 0.07); }";
 const DOCS_URL = "https://github.com/mendebur-lemur/lemur-halo-cards";
 // Metinler. Her metin hem tr hem en. Arayüzde marka adı geçmez.
@@ -850,13 +850,14 @@ const SCH = {
 
 // Kartı ve editörünü kaydeder, HA'nın "Kart ekle" listesine ekler
 function registerCard(cls, info) {
-  const type = cls.TYPE;
+  const type = cls.TYPE.replace(/^lemur-/, 'lemur-hd-');
   if (!customElements.get(type)) customElements.define(type, cls);
   if (!customElements.get(type + '-editor')) {
     const Ed = class extends LemurEditor {};
     Ed.cardClass = cls;
     customElements.define(type + '-editor', Ed);
   }
+  return;  // gömülü kopya Kart ekle listesine girmez
   window.customCards = window.customCards || [];
   if (window.customCards.some((x) => x.type === type)) return;
   const L = () => { const ha = document.querySelector('home-assistant'); return pickLang(ha && ha.hass); };
@@ -1943,7 +1944,7 @@ registerCard(LemurLightCard, {
   en: { name: 'Lemur Light Card', desc: 'The halo takes the lamp\'s colour and brightness; brightness and colour temperature control' }
 });
 
-console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
+if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 })();
 /*! Lemur Home Dashboard v0.0.2 | MIT */
 (() => {
@@ -2391,7 +2392,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-climate-card')]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card')]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -2435,12 +2436,12 @@ class LemurHomeDashboardCard extends HTMLElement {
         const ac = items.filter(isAC), rad = items.filter((x) => !isAC(x));
         const both = ac.length > 0 && rad.length > 0;
         const list = both ? (season === 'winter' ? rad : ac) : items;
-        return { kind: 'hd', spread: true, season: both, html: list.map((x) => emb('lemur-climate-card', Object.assign({ type: 'custom:lemur-climate-card' }, x), x.entity)).join('') };
+        return { kind: 'hd', spread: true, season: both, html: list.map((x) => emb('lemur-hd-climate-card', Object.assign({ type: 'custom:lemur-hd-climate-card' }, x), x.entity)).join('') };
       }
       if (s.type === 'vacuum') {
         const items = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]);
         if (!items.length) return null;
-        return { kind: 'hd', spread: true, html: items.map((x) => emb('lemur-vacuum-card', Object.assign({ type: 'custom:lemur-vacuum-card' }, x), x.entity)).join('') };
+        return { kind: 'hd', spread: true, html: items.map((x) => emb('lemur-hd-vacuum-card', Object.assign({ type: 'custom:lemur-hd-vacuum-card' }, x), x.entity)).join('') };
       }
       if (s.type === 'media') {
         const ids = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]).map((e) => e.entity);

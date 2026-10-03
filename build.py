@@ -25,10 +25,22 @@ window.addEventListener('location-changed', lpDefineAll);
 console.info('%c LEMUR HOME DASHBOARD %c v' + PANEL_VERSION + ' ', 'background:#5B8DEF;color:#0B1020;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 }})();
 """
-# Lemur Halo Cards (iklim, süpürge... kartları) pakete gömülü: tablet panosundaki kartların kendisi. Kendi koruması var
-# (window.__lemurCardsLoaded): kullanıcı Halo'yu ayrıca kurduysa hangisi önce yüklenirse o tanımlar, çakışma olmaz.
-# Güncellemek için: lemur-halo-cards deposundaki dist/lemur-halo-cards.js dosyasını vendor/ içine kopyala.
+# Lemur Halo Cards (iklim, süpürge... kartları) pakete gömülü: tablet panosundaki kartların kendisi.
+# Gömülü kopya KENDİ ADLARIYLA kaydolur (lemur-climate-card → lemur-hd-climate-card), "Kart ekle" listesine girmez ve kendi bayrağını kullanır.
+# Böylece kullanıcı Halo'yu ayrıca kurarsa iki sürüm birbirini ezmez: pano her zaman test edilen gömülü sürümü, diğer panolar kurulan Halo'yu kullanır.
+# Güncellemek için: lemur-halo-cards deposundaki dist/lemur-halo-cards.js dosyasını vendor/ içine kopyala (dosyanın kendisi değiştirilmez).
 halo = (root / "vendor/lemur-halo-cards.js").read_text(encoding="utf-8")
+HALO_PATCH = [
+    ("window.__lemurCardsLoaded", "window.__lemurHdCardsLoaded"),
+    ("  const type = cls.TYPE;", "  const type = cls.TYPE.replace(/^lemur-/, 'lemur-hd-');"),
+    ("  window.customCards = window.customCards || [];", "  return;  // gömülü kopya Kart ekle listesine girmez\n  window.customCards = window.customCards || [];"),
+    ("console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ',", "if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ',"),
+]
+for old, new in HALO_PATCH:
+    if old not in halo:
+        raise SystemExit("Halo dosyasında beklenen satır yok (Halo değişmiş olabilir): " + old)
+    halo = halo.replace(old, new)
+halo = halo.replace("/*! Lemur Halo Cards", "/*! Lemur Halo Cards (gömülü kopya)", 1)
 out = halo.rstrip() + "\n" + out
 dst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard.js"
 dst.write_text(out, encoding="utf-8")

@@ -129,7 +129,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-climate-card')]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card')]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -173,12 +173,12 @@ class LemurHomeDashboardCard extends HTMLElement {
         const ac = items.filter(isAC), rad = items.filter((x) => !isAC(x));
         const both = ac.length > 0 && rad.length > 0;
         const list = both ? (season === 'winter' ? rad : ac) : items;
-        return { kind: 'hd', spread: true, season: both, html: list.map((x) => emb('lemur-climate-card', Object.assign({ type: 'custom:lemur-climate-card' }, x), x.entity)).join('') };
+        return { kind: 'hd', spread: true, season: both, html: list.map((x) => emb('lemur-hd-climate-card', Object.assign({ type: 'custom:lemur-hd-climate-card' }, x), x.entity)).join('') };
       }
       if (s.type === 'vacuum') {
         const items = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]);
         if (!items.length) return null;
-        return { kind: 'hd', spread: true, html: items.map((x) => emb('lemur-vacuum-card', Object.assign({ type: 'custom:lemur-vacuum-card' }, x), x.entity)).join('') };
+        return { kind: 'hd', spread: true, html: items.map((x) => emb('lemur-hd-vacuum-card', Object.assign({ type: 'custom:lemur-hd-vacuum-card' }, x), x.entity)).join('') };
       }
       if (s.type === 'media') {
         const ids = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]).map((e) => e.entity);
