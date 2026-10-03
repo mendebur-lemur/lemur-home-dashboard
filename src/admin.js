@@ -16,6 +16,7 @@ const ADM = {
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Cihaz ekle', addPh: 'Boş yuva', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
+    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_here: 'Bu ekran',
     pickT: 'Cihaz ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
     s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
@@ -37,6 +38,7 @@ const ADM = {
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add device', addPh: 'Empty slot', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
+    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_here: 'This screen',
     pickT: 'Add device', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
     s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
@@ -55,6 +57,8 @@ const LHD_TYPES = {
   vacuum: { icon: 'mdi:robot-vacuum', domains: ['vacuum'], col: 2 },
   media: { icon: 'mdi:television', domains: ['media_player'], col: 2 }
 };
+// Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
+const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['here', 0, 0]];
 const LHD_COLS = [['56%', '17%', '25.5%'], ['50%', '25%', '25%'], ['34%', '33%', '33%'], ['65%', '35%']];
 const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
 const lhdClone = (x) => JSON.parse(JSON.stringify(x));
@@ -210,7 +214,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       (sec ? this._secEditor(tab, sec, ncols) : '') +
       (this._isAuto() ? '<div class="hint">' + t('autoT') + '</div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
 
-    const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span></div><div class="pvbox"><div class="pvc"></div></div></div>';
+    const scr = this._screenKey();
+    const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span><span class="grow"></span>' +
+      '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top +
       '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
@@ -361,16 +367,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (this._ro) { this._ro.disconnect(); this._ro.observe(box.parentNode); }
     this._fit();
   }
+  // önizleme ekranı bu tarayıcıda hatırlanır (ayar değil, herkese gitmez)
+  _screenKey() { let k = null; try { k = localStorage.getItem('lhd-preview-screen'); } catch (e) {} return LHD_SCREENS.some((x) => x[0] === k) ? k : 'tab16'; }
   _fit() {
     const R = this.shadowRoot; if (!R) return;
     // dar ekranda (tablet dikey) önizleme üstte, düzenleyici altta
     if (this._narrowNow !== undefined && ((this.clientWidth || window.innerWidth) < 980) !== this._narrowNow && !this._modal) { this._render(); return; }
     const box = R.querySelector('.pvc'), wrap = R.querySelector('.pvbox'); if (!box || !wrap) return;
+    // gerçek ölçeklemeyle aynı hesap: kanvas en az W geniş, ekranın oranına göre genişler, yüksekliği ekrana göre
     const cv = this._settings().canvas || {}, W = cv.width || 1280, H = cv.ref_height || 1075;
-    const z = Math.min(wrap.clientWidth / W, wrap.clientHeight / H) || 0.5;
-    box.style.width = W + 'px'; box.style.height = H + 'px';
-    box.style.setProperty('--lp-h', H + 'px');
-    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - W * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - H * z) / 2) + 'px) scale(' + z + ')';
+    const sc = LHD_SCREENS.filter((x) => x[0] === this._screenKey())[0];
+    const sw = sc[1] || window.innerWidth, sh = sc[2] || window.innerHeight;
+    const cw = Math.max(W, Math.floor(sw / sh * H)), ch = Math.floor(sh * cw / sw);
+    const z = Math.min(wrap.clientWidth / cw, wrap.clientHeight / ch) || 0.5;
+    box.style.width = cw + 'px'; box.style.height = ch + 'px';
+    box.style.setProperty('--lp-h', ch + 'px');
+    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - cw * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - ch * z) / 2) + 'px) scale(' + z + ')';
   }
 
   // ---- olaylar ----
@@ -460,6 +472,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (tb && !this._dragged) { this._tab = tb.getAttribute('data-tab'); this._sec = null; return this._render(); }
       const si = g('.si[data-sec]');
       if (si && !this._dragged && !g('[data-handle]')) { this._sec = si.getAttribute('data-sec'); return this._render(); }
+      const sb = g('[data-scr]');
+      if (sb) { try { localStorage.setItem('lhd-preview-screen', sb.getAttribute('data-scr')); } catch (x) {} return this._render(); }
       const cb = g('[data-cols]');
       if (cb) { const c = LHD_COLS[+cb.getAttribute('data-cols')]; return editTab((T) => { T.columns = c.slice(); T.sections.forEach((s) => { if ((s.col || 0) > c.length - 1) s.col = c.length - 1; }); }); }
       const sc = g('[data-scol]');

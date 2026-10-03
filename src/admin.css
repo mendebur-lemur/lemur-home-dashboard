@@ -75,6 +75,7 @@ select.inp { padding-right: 6px; }
 .pvw { flex: 1 1 auto; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .pvh { display: flex; align-items: center; gap: 8px; color: var(--tx2); font-size: 13px; }
 .pvh b { color: var(--tx); font-weight: 600; }
+.pvh .seg button { height: 26px; padding: 0 10px; font-size: 12px; }
 .pvbox { position: relative; flex: 1; min-height: 200px; overflow: hidden; border-radius: 14px; background: #08090b; }
 .pvc { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 0; overflow: hidden; }
 .ins { flex: 0 0 420px; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); display: flex; flex-direction: column; min-height: 0; }
