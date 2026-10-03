@@ -93,6 +93,8 @@ function lhdFitSplits(T, cw) {
 }
 let lhdSeq = 0;
 const lhdId = (p) => p + Date.now().toString(36) + (lhdSeq++).toString(36);
+const lhdSlug = (x) => String(x || '').replace(/İ/g, 'i').toLowerCase().replace(/[çćč]/g, 'c').replace(/ğ/g, 'g').replace(/[ıîí]/g, 'i').replace(/[öô]/g, 'o').replace(/ş/g, 's').replace(/[üû]/g, 'u')
+  .replace(/[âáà]/g, 'a').replace(/[éè]/g, 'e').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
 const lhdMove = (arr, from, to) => { const x = arr.splice(from, 1)[0]; arr.splice(to, 0, x); };
 
 class LemurHomeDashboardAdmin extends HTMLElement {
@@ -523,7 +525,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const nt = g('[data-newtab]');
       if (nt) {
         const aid = nt.getAttribute('data-newtab'); this._menu = null;
-        const id = lhdId('t');
+        // sekme kimliği panonun adresinde görünür (/pano/salon): alan kimliği ya da "sekme", çakışırsa -2, -3...
+        const taken = {}; this._work().forEach((x) => { taken[x.id] = 1; });
+        const base = aid || (this._lang === 'tr' ? 'sekme' : 'tab');
+        let id = base, k = 2; while (taken[id]) id = base + '-' + (k++);
         let nw;
         if (aid) {
           const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === aid)[0];
@@ -603,6 +608,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (f === 'tab.name') {
         const v = el.value.trim(); if (!v) { el.value = tab.name; return; }
         const lb = R.querySelector('.rb.on'); if (lb && lb.lastChild && lb.lastChild.nodeType === 3) lb.lastChild.textContent = v;
+        // yeni açılmış adsız sekme ilk kez adlandırılınca adresi de addan gelsin (/pano/sekme → /pano/salon)
+        if (/^(sekme|tab)(-\d+)?$/.test(tab.id)) {
+          const base = lhdSlug(v) || tab.id, taken = {}; this._work().forEach((x) => { if (x.id !== tab.id) taken[x.id] = 1; });
+          let nid = base, k = 2; while (taken[nid]) nid = base + '-' + (k++);
+          if (nid !== tab.id) { this._tab = nid; return this._edit((T) => { const x = T.filter((y) => y.id === tabId)[0]; if (x) { x.name = v; x.id = nid; } }); }
+        }
         return editTab((T) => { T.name = v; }, true);
       }
       if (f === 'tab.icon') {
