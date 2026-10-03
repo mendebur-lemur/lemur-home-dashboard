@@ -1,0 +1,19 @@
+name: Validate
+on: [push, pull_request]
+jobs:
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: integration
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 build.py && node --check custom_components/lemur_panel/frontend/lemur-panel.js && git diff --exit-code custom_components/lemur_panel/frontend
