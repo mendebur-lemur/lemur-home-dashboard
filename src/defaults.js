@@ -42,7 +42,10 @@ function buildDefaultTabs(hass, lang) {
   };
   const usable = (id) => {
     const e = ents[id];
-    return !(e && (e.hidden || e.hidden_by || e.entity_category || e.disabled_by));
+    if (e && (e.hidden || e.hidden_by || e.entity_category || e.disabled_by)) return false;
+    // şu an ulaşılamayan cihaz otomatik düzene girmez (bozuk ya da kaldırılmış cihazlar panoyu doldurmasın)
+    const st = S[id];
+    return !(st && (st.state === 'unavailable' || st.state === 'unknown'));
   };
   const lightLikeSwitch = (id) => {
     const a = attr(id);

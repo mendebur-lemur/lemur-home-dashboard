@@ -13,7 +13,10 @@ const TXT = {
     admin_title: 'Lemur Home Dashboard', admin_intro: 'Tabs, sections and sizes of the dashboard will be edited here. (Work in progress)',
     reset: 'Reset to defaults', save: 'Save', saved: 'Saved', not_loaded: 'The Lemur Home Dashboard integration is not loaded.' }
 };
+// Dil: ayarda tr/en seçildiyse o, yoksa (auto) kullanıcının HA arayüz dili.
 function pickLang(hass) {
+  const st = window.__LEMUR_HOME_DASHBOARD_STORE, set = st && st.data && st.data.settings && st.data.settings.language;
+  if (set === 'tr' || set === 'en') return set;
   const l = (hass && ((hass.locale && hass.locale.language) || hass.language)) || 'en';
   return String(l).toLowerCase().indexOf('tr') === 0 ? 'tr' : 'en';
 }

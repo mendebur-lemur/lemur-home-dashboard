@@ -61,6 +61,7 @@
 
 /* gömülü kartlar (iklim, süpürge): zemin ve köşe tablettekiyle aynı */
 .emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;
+  --ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;
   --primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }
 
 /* kendi kartı henüz olmayan cihazlar için geçici satır (medya) */

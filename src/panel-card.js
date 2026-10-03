@@ -32,6 +32,13 @@ function lpFire(node, type, detail) {
 }
 const lpFr = (v) => (/%$/.test(String(v)) ? parseFloat(v) + 'fr' : String(v));
 const lpEnt = (x) => (typeof x === 'string' ? { entity: x } : (x && x.entity ? x : null));
+// Gömülü kart (Halo) tanımlı mı? customElements.get'e güvenilmez (kayıt defteri değişmiş olabilir), öğeyi oluşturup bakıyoruz.
+const LP_HAS = {};
+function lpHas(tag) {
+  if (LP_HAS[tag]) return true;
+  try { const el = document.createElement(tag); if (typeof el.setConfig === 'function') LP_HAS[tag] = true; } catch (e) {}
+  return !!LP_HAS[tag];
+}
 const lpItem = (x) => (typeof x === 'string' ? { entity: x } : (x && (x.entity || x.name) ? x : null));
 // karoda "açık" sayılan durumlar (ışık, priz, perde açık, medya çalıyor...)
 const LP_ON = ['on', 'open', 'opening', 'closing', 'playing', 'cleaning'];
@@ -122,7 +129,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), !!customElements.get('lemur-climate-card')]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-climate-card')]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -132,8 +139,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     const h = this._hass, S = h.states;
     const tiles = [], tileItems = [], rows = [], embeds = [];
     const emb = (tag, cfg, id) => {
-      if (!customElements.get(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }
-      embeds.push({ tag: tag, cfg: cfg });
+      if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }
+      embeds.push({ tag: tag, cfg: Object.assign({ language: lang }, cfg) });
       return '<div class="emb" data-emb="' + (embeds.length - 1) + '"></div>';
     };
     const bodyOf = (s) => {

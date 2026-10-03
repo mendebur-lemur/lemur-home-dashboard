@@ -13,9 +13,15 @@ if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';
 const CSS = {json.dumps(css, ensure_ascii=False)};
 {chr(10).join(parts)}
-customElements.define('ll-strategy-dashboard-lemur-home-dashboard', LemurHomeDashboardStrategy);
-customElements.define('lemur-home-dashboard-card', LemurHomeDashboardCard);
-customElements.define('lemur-home-dashboard-admin', LemurHomeDashboardAdmin);
+// Bazı eklentiler sayfa açılırken window.customElements'i kendi kopyasıyla değiştiriyor (scoped registry polyfill).
+// Biz ondan önce yüklenirsek tanımımız yeni kopyada görünmez; HA pano stratejisini bulamaz ("Timeout waiting for strategy element").
+// Bu yüzden ilk 30 sn boyunca kayıt defterine bakıp eksikse yeniden kaydediyoruz (aynı sınıf; tarayıcının asıl kaydı zaten bizde).
+const LP_DEFS = [['ll-strategy-dashboard-lemur-home-dashboard', LemurHomeDashboardStrategy], ['lemur-home-dashboard-card', LemurHomeDashboardCard], ['lemur-home-dashboard-admin', LemurHomeDashboardAdmin]];
+const lpDefineAll = () => LP_DEFS.forEach((d) => {{ try {{ if (!window.customElements.get(d[0])) window.customElements.define(d[0], d[1]); }} catch (e) {{}} }});
+lpDefineAll();
+let lpTries = 0;
+const lpTimer = setInterval(() => {{ lpDefineAll(); if (++lpTries > 300) clearInterval(lpTimer); }}, 100);
+window.addEventListener('location-changed', lpDefineAll);
 console.info('%c LEMUR HOME DASHBOARD %c v' + PANEL_VERSION + ' ', 'background:#5B8DEF;color:#0B1020;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 }})();
 """
