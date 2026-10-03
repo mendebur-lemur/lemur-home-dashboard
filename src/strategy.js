@@ -18,6 +18,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     LemurScale.set(settings.canvas || null, settings.kiosk || null);
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
     const bg = settings.background || LP_DEFAULT_BG;
+    window.__LHD_VIEWS = tabs.map((x) => x.id);   // kartın gezinmesi bilsin: hangi sekmelerin HA'da görünümü var
     return {
       views: tabs.map((tab) => {
         const v = {

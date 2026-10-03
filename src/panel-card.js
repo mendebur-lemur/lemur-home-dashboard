@@ -297,6 +297,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const id = b.getAttribute('data-nav');
       if (id === tab.id) return;
       const base = location.pathname.split('/').slice(0, 2).join('/');
+      // pano açıkken eklenen sekmenin HA'da henüz görünümü yok: sayfa baştan yüklenir, pano yeniden üretilir
+      if (window.__LHD_VIEWS && window.__LHD_VIEWS.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
       history.pushState(null, '', base + '/' + id);
       lpFire(window, 'location-changed', { replace: false });
     }));
@@ -335,6 +337,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     // boyutlandırma tutamakları: kolonların arasında dikey, aynı kolonda üst üste duran kutuların arasında yatay
     const place = () => {
       if (!wrap.isConnected || D) return;
+      // sığmayan kutuyu işaretle
+      arr(R.querySelectorAll('.box[data-secs]')).forEach((b) => {
+        const over = b.scrollHeight > b.clientHeight + 2;
+        b.classList.toggle('over', over);
+        if (over) b.setAttribute('data-over', t(this._lang || 'tr', 'too_full')); else b.removeAttribute('data-over');
+      });
       arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => x.remove());
       const cols = arr(R.querySelectorAll('.col[data-col]'));
       for (let k = 0; k < cols.length - 1; k++) {
