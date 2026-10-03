@@ -1,3 +1,30 @@
+// Güncellemeden sonra eski sürüm kalmasın: HA'nın service worker'ı sunduğu her sayfanın bir kopyasını saklar. Güncellemeden önce
+// alınmış kopya eski dosyamızı (lemur-home-dashboard.js?v=ESKİ) ister ve tarayıcı onu da önbellekten verir; sonuç: yeni sürüm gelmez.
+// Entegrasyonun sürümü bizimkinden farklıysa eski kopyaları ve eski dosyaları siler, sayfayı bir kez yeniler (Light Effect Card'daki yöntem).
+function lhdHeal(want) {
+  if (!window.caches) return Promise.resolve(0);
+  let n = 0;
+  return caches.keys().then((keys) => Promise.all(keys.map((k) => caches.open(k).then((c) => c.keys().then((reqs) => Promise.all(reqs.map((r) => {
+    const u = r.url;
+    if (/\/lemur_home_dashboard\/lemur-home-dashboard\.js\?v=/.test(u)) { if (u.indexOf('v=' + want) < 0) { n++; return c.delete(r); } return null; }
+    let path; try { path = new URL(u).pathname; } catch (e) { return null; }
+    if (/\.[a-z0-9]{1,5}$/i.test(path)) return null;   // sadece sayfalar
+    return c.match(r).then((res) => (res ? res.clone().text() : '')).then((txt) => {
+      const m = txt.match(/lemur-home-dashboard\.js\?v=([0-9.]+)/);
+      if (m && m[1] !== want) { n++; return c.delete(r); }
+      return null;
+    });
+  }))))))).then(() => n).catch(() => n);
+}
+function lhdHealCheck(conn) {
+  conn.sendMessagePromise({ type: 'lemur_home_dashboard/info' }).then((info) => {
+    const want = info && info.version;
+    if (!want || want === PANEL_VERSION) return;
+    lhdHeal(want).then(() => {
+      try { const f = 'lhd-heal-' + want; if (!sessionStorage.getItem(f)) { sessionStorage.setItem(f, '1'); location.reload(); } } catch (e) {}
+    });
+  }).catch(() => {});
+}
 // Ortak ayarlar: entegrasyondan okunur, değişince bütün açık ekranlara gelir.
 const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBOARD_STORE = {
   data: null, conn: null, subs: [], loading: null,
@@ -7,6 +34,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     this.conn = hass.connection;
     this.loading = this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/get' }).then((d) => {
       this.data = d;
+      lhdHealCheck(this.conn);
       this.conn.subscribeMessage((msg) => { this.data = msg; this.subs.forEach((f) => f(msg)); }, { type: 'lemur_home_dashboard/subscribe' });
       return d;
     }).catch((e) => { this.loading = null; throw e; });
