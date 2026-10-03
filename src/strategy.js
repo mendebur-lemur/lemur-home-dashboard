@@ -15,7 +15,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     }
     const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
     const settings = data.settings || {};
-    LemurScale.set(settings.canvas || null);
+    LemurScale.set(settings.canvas || null, settings.kiosk || null);
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
     const bg = settings.background || LP_DEFAULT_BG;
     return {

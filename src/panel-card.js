@@ -100,7 +100,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     for (let i = 0; i < w.length; i++) if (h.states[w[i]] !== this._last[w[i]]) { this._render(); return; }
   }
   connectedCallback() {
-    if (!this._unsub) this._unsub = STORE.onChange(() => { this._def = null; this._render(); });
+    if (!this._unsub) this._unsub = STORE.onChange((d) => {
+      this._def = null;
+      const st = (d && d.settings) || {};
+      if (!this._config.edit) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
+      this._render();
+    });
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     if (this._hass) this._render();
   }
@@ -129,7 +134,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card')]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -138,10 +143,12 @@ class LemurHomeDashboardCard extends HTMLElement {
   _build(tab, tabs, lang, season) {
     const h = this._hass, S = h.states;
     const tiles = [], tileItems = [], rows = [], embeds = [];
+    const edit = !!this._config.edit, selected = this._config.selected || '';
+    let curSec = '';
     const emb = (tag, cfg, id) => {
-      if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }
+      if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '" data-sec="' + esc(curSec) + '"></div>'; }
       embeds.push({ tag: tag, cfg: Object.assign({ language: lang }, cfg) });
-      return '<div class="emb" data-emb="' + (embeds.length - 1) + '"></div>';
+      return '<div class="emb" data-emb="' + (embeds.length - 1) + '" data-sec="' + esc(curSec) + '"></div>';
     };
     const bodyOf = (s) => {
       if (s.type === 'lights') {
@@ -152,8 +159,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
         const c = s.tile_columns || 5, r = Math.ceil(items.length / c), fill = r >= 4;
         const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
-        const open = fill ? '<div class="grid" style="' + gs + '">'
-          : '<div class="gsq" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
+        const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
+          : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
         return { kind: 'md', html: open +
           items.map((it) => {
             if (!it.entity) return '<div class="tile ph"><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="nm">' + esc(it.name || '') + '</div></div>';
@@ -164,7 +171,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (s.type === 'scenes') {
         const items = s.items || [];
         if (!items.length) return null;
-        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-scene="' + esc(s.id) + ':' + i + '"><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
+        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-sec="' + esc(s.id) + '" data-scene="' + esc(s.id) + ':' + i + '"><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
       }
       if (s.type === 'climate') {
         const items = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]);
@@ -183,7 +190,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (s.type === 'media') {
         const ids = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]).map((e) => e.entity);
         if (!ids.length) return null;
-        return { kind: 'hd', spread: true, html: ids.map((id) => { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }).join('') };
+        return { kind: 'hd', spread: true, html: ids.map((id) => { rows.push(id); return '<div class="row" data-row="' + esc(id) + '" data-sec="' + esc(curSec) + '"></div>'; }).join('') };
       }
       return null;
     };
@@ -191,16 +198,18 @@ class LemurHomeDashboardCard extends HTMLElement {
     // kolonlara dağıt; başlıksız bölüm aynı kolondaki önceki kutunun içine girer (ör. iklimin altında süpürge)
     // içi boş bölümün başlığı, aynı kolonda arkasından gelen başlıksız bölüme geçer
     const widths = tab.columns || ['56%', '17%', '25.5%'];
-    const cols = widths.map(() => []), pending = widths.map(() => null);
+    const cols = widths.map(() => []), pending = widths.map(() => null), emptySecs = [];
     (tab.sections || []).forEach((s) => {
       const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0));
+      curSec = s.id;
       const b = bodyOf(s);
-      if (!b) { if (s.title) pending[ci] = s; return; }
+      if (!b) { if (s.title) pending[ci] = s; if (edit) emptySecs.push(s); return; }
       const boxes = cols[ci];
-      if (!s.title && !pending[ci] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; return; }
+      if (!s.title && !pending[ci] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; last.secs.push(s.id); return; }
       const head = s.title ? s : pending[ci];
       pending[ci] = null;
-      boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html });
+      boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html,
+        secs: head && head !== s ? [head.id, s.id] : [s.id] });
     });
     const used = [];
     cols.forEach((b, i) => { if (b.length) used.push(i); });
@@ -208,7 +217,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni"><ha-icon icon="' + esc(x.icon || 'mdi:home-outline') + '"></ha-icon></div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
       '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
-    const boxHtml = (b) => '<div class="box' + (b.spread ? ' spread' : '') + '">' +
+    const boxHtml = (b) => '<div class="box' + (b.spread ? ' spread' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '">' +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
       b.html + '</div>';   // spread: başlık da dahil hepsi kutuya eşit aralıkla dağılır (tablet panosundaki justify-content: space-between)
     let grid, body;
@@ -221,7 +230,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap" style="' + grid + '">' + nav + body + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + '" style="' + grid + '">' + nav + body + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -239,6 +248,15 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._last = {};
     this._lang = lang;
 
+    // düzenleme modu (yönetim panelindeki önizleme): cihazlara dokunulmaz, tıklama bölümü / sekmeyi seçer
+    if (edit) {
+      R.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => lpFire(this, 'lhd-tab', { tab: b.getAttribute('data-nav') })));
+      R.querySelectorAll('.box[data-secs]').forEach((b) => b.addEventListener('click', (e) => {
+        const hit = e.target.closest ? e.target.closest('[data-sec]') : null;
+        lpFire(this, 'lhd-select', { section: hit ? hit.getAttribute('data-sec') : b.getAttribute('data-secs').split(',')[0] });
+      }));
+      return;
+    }
     // dokunuşlar
     R.querySelectorAll('[data-nav]').forEach((b) => lpPress(b, () => {
       const id = b.getAttribute('data-nav');

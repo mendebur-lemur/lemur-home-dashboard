@@ -1,16 +1,570 @@
-// lemur-home-dashboard-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
-// Hedef: Light Effect Card'ın kontrol paneli düzeninde sekme/bölüm/cihaz/boyut düzenleme, sürükle-bırak, canlı önizleme.
+// lemur-home-dashboard-admin: sol menüdeki yönetim paneli.
+// Düzen Light Effect Card'ın kontrol paneliyle aynı aile: üstte sekme şeridi (seçili sekmenin ayarları altında birleşik),
+// solda panonun canlı önizlemesi (tıklayınca bölüm seçilir), sağda bölüm düzenleyici. Her değişiklik anında kaydedilir,
+// açık bütün tabletler canlı güncellenir; "Geri al" (Ctrl+Z) son değişiklikleri geri alır.
+// Ayar yokken pano otomatik düzendedir; ilk değişiklikte o düzen kopyalanıp kaydedilir.
+
+const ADM = {
+  tr: {
+    title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
+    undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}',
+    tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolon genişlikleri', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
+    refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
+    preview: 'Önizleme', pvHint: 'Bir kutuya tıkla, sağda düzenle', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
+    secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', delSec: 'Bölümü sil',
+    t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya',
+    d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
+    n_items: '{n} öğe', addDev: 'Cihaz ekle', addPh: 'Boş yuva', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
+    tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
+    pickT: 'Cihaz ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
+    s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
+    lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
+    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi',
+    theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
+    kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu. Efekt düğmesi ve efekt sayfası sonraki sürümde panoya gelecek.', lecOff: 'Kurulu değil. Efektler için isteğe bağlı olarak kurulabilir.',
+    resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
+  },
+  en: {
+    title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
+    undo: 'Undo', undoK: 'Undo (Ctrl+Z)', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}',
+    tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Column widths', delTab: 'Delete tab', sure: 'Sure?',
+    refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
+    preview: 'Preview', pvHint: 'Click a box, edit it on the right', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
+    secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', delSec: 'Delete section',
+    t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media',
+    d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
+    n_items: '{n} items', addDev: 'Add device', addPh: 'Empty slot', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
+    tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
+    pickT: 'Add device', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
+    s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
+    lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
+    bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address',
+    theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
+    kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed. The effect button and effect page come to the dashboard in a later version.', lecOff: 'Not installed. Optional, for light effects.',
+    resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
+  }
+};
+const LHD_TYPES = {
+  lights: { icon: 'mdi:lightbulb-group-outline', domains: ['light', 'switch', 'cover', 'fan', 'input_boolean'], col: 0 },
+  scenes: { icon: 'mdi:gesture-tap-button', domains: ['script', 'scene', 'automation'], col: 1 },
+  climate: { icon: 'mdi:thermostat', domains: ['climate'], col: 2 },
+  vacuum: { icon: 'mdi:robot-vacuum', domains: ['vacuum'], col: 2 },
+  media: { icon: 'mdi:television', domains: ['media_player'], col: 2 }
+};
+const LHD_COLS = [['56%', '17%', '25.5%'], ['50%', '25%', '25%'], ['34%', '33%', '33%'], ['65%', '35%']];
+const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
+const lhdClone = (x) => JSON.parse(JSON.stringify(x));
+let lhdSeq = 0;
+const lhdId = (p) => p + Date.now().toString(36) + (lhdSeq++).toString(36);
+const lhdMove = (arr, from, to) => { const x = arr.splice(from, 1)[0]; arr.splice(to, 0, x); };
+
 class LemurHomeDashboardAdmin extends HTMLElement {
-  set hass(h) { const first = !this._hass; this._hass = h; if (first) STORE.load(h).then(() => this._render()).catch(() => this._render()); }
+  constructor() {
+    super();
+    this._tab = null; this._sec = null; this._undo = []; this._modal = null; this._menu = null; this._q = ''; this._picked = [];
+    this._ask = null;
+  }
+  set hass(h) {
+    const first = !this._hass;
+    this._hass = h;
+    if (first) {
+      STORE.load(h).then(() => {
+        if (!this._unsub) this._unsub = STORE.onChange(() => { if (!this._modal) this._render(); });
+        this._render();
+      }).catch(() => this._render());
+      return;
+    }
+    if (this._pv) this._pv.hass = h;
+  }
   set narrow(v) { this._narrow = v; }
-  set panel(p) { this._panel = p; }
-  _render() {
-    const lang = pickLang(this._hass);
+  set panel(p) { this._panelCfg = p; }
+  connectedCallback() {
+    if (!this._key) {
+      this._key = (e) => {
+        const typing = e.composedPath && e.composedPath()[0] && /INPUT|SELECT|TEXTAREA/.test(e.composedPath()[0].tagName || '');
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !typing && this._undo.length) { e.preventDefault(); this._undoIt(); }
+        if (e.key === 'Escape' && (this._modal || this._menu)) { this._modal = null; this._menu = null; this._render(); }
+      };
+    }
+    window.addEventListener('keydown', this._key);
+    if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
+    if (this._hass && STORE.data) this._render();
+  }
+  disconnectedCallback() {
+    window.removeEventListener('keydown', this._key);
+    if (this._ro) this._ro.disconnect();
+  }
+
+  get _lang() { return pickLang(this._hass); }
+  _t(k, v) {
+    const d = ADM[this._lang] || ADM.en;
+    let s = d[k] !== undefined ? d[k] : (ADM.en[k] !== undefined ? ADM.en[k] : k);
+    if (v) Object.keys(v).forEach((x) => { s = s.split('{' + x + '}').join(v[x]); });
+    return s;
+  }
+  _settings() { return (STORE.data && STORE.data.settings) || {}; }
+  _isAuto() { const d = STORE.data; return !(d && d.tabs && d.tabs.length); }
+  _work() { const d = STORE.data; return lhdClone(d && d.tabs && d.tabs.length ? d.tabs : buildDefaultTabs(this._hass, this._lang)); }
+  _area(id) { const a = this._hass.areas && this._hass.areas[id]; return a ? a.name : ''; }
+  _ename(id) { const s = this._hass.states[id]; return (s && s.attributes.friendly_name) || id; }
+
+  // ---- kayıt: önce ekranda, sonra entegrasyona; her değişiklik geri alınabilir ----
+  _commit(key, value) {
+    STORE.data = Object.assign({}, STORE.data); STORE.data[key] = value;
     const d = STORE.data;
-    this.innerHTML = '<div style="padding:24px;max-width:960px;font-family:var(--primary-font-family, sans-serif);color:var(--primary-text-color)">' +
-      '<h1 style="margin:0 0 8px">' + t(lang, 'admin_title') + '</h1><p>' + t(lang, 'admin_intro') + '</p>' +
-      (d ? '<button id="reset">' + t(lang, 'reset') + '</button><pre style="white-space:pre-wrap;font-size:12px;opacity:.8">' + esc(JSON.stringify(d, null, 2)) + '</pre>' : '<p>' + t(lang, 'not_loaded') + '</p>') + '</div>';
-    const r = this.querySelector('#reset');
-    if (r) r.addEventListener('click', () => STORE.set('tabs', []).then(() => this._render()));
+    STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
+    return STORE.set(key, value).catch((e) => this._toast(this._t('err', { e: (e && e.message) || e }), false));
+  }
+  _snap() {
+    this._undo.push({ tabs: lhdClone((STORE.data && STORE.data.tabs) || []), settings: lhdClone(this._settings()) });
+    if (this._undo.length > 40) this._undo.shift();
+  }
+  _undoIt() {
+    const u = this._undo.pop(); if (!u) return;
+    this._commit('settings', u.settings); this._commit('tabs', u.tabs);
+    this._render();
+    this._toast(this._t('undone'), false);
+  }
+  _edit(fn, msg) {
+    this._snap();
+    const tabs = this._work();
+    fn(tabs);
+    this._commit('tabs', tabs);
+    this._toast(msg || this._t('saved'));
+  }
+  _setting(path, value) {
+    this._snap();
+    const s = lhdClone(this._settings());
+    const p = path.split('.');
+    let o = s;
+    for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
+    if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
+    this._commit('settings', s);
+    this._render();   // ayarlar penceresi açıkken de güncel görünsün
+    this._toast(this._t('saved'));
+  }
+  _toast(x, undo) {
+    const el = this.shadowRoot && this.shadowRoot.querySelector('.toast'); if (!el) return;
+    el.querySelector('span').textContent = x;
+    el.querySelector('button').hidden = undo === false || !this._undo.length;
+    el.classList.add('show');
+    clearTimeout(this._tt); this._tt = setTimeout(() => el.classList.remove('show'), 4200);
+  }
+
+  // ---- seçili sekme ve bölüm ----
+  _curTab(tabs) {
+    let t = tabs.filter((x) => x.id === this._tab)[0];
+    if (!t) { t = tabs[0]; this._tab = t ? t.id : null; }
+    return t;
+  }
+  _curSec(tab) {
+    if (!tab) return null;
+    const s = (tab.sections || []).filter((x) => x.id === this._sec)[0];
+    if (!s) this._sec = null;
+    return s || null;
+  }
+
+  // ---- çizim ----
+  _render() {
+    if (!this._hass) return;
+    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
+    const R = this.shadowRoot;
+    if (!STORE.data) { R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app"><div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + esc(this._t('title')) + '</h1></div><div class="warn">' + esc(this._t('notLoaded')) + '</div></div>'; return; }
+    const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab);
+    const t = (k, v) => esc(this._t(k, v));
+    const narrow = (this.clientWidth || window.innerWidth) < 980;
+    this._narrowNow = narrow;
+
+    const top = '<div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + t('title') + '</h1>' +
+      (this._isAuto() ? '<span class="badge" title="' + t('autoT') + '">' + t('auto') + '</span>' : '') + '<div class="grow"></div>' +
+      '<button class="btn ic" data-a="undo" title="' + t('undoK') + '"' + (this._undo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:undo"></ha-icon></button>' +
+      '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
+      '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
+
+    const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle><ha-icon icon="' + esc(x.icon || 'mdi:door') + '"></ha-icon>' + esc(x.name) + '</div>').join('') +
+      '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div></div>';
+    const areaOpts = '<option value="">' + t('noArea') + '</option>' + Object.keys(this._hass.areas || {}).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
+    const colKey = tab ? JSON.stringify(tab.columns || LHD_COLS[0]) : '';
+    const rpanel = tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
+      '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
+      '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv"><ha-icon icon="' + esc(tab.icon || 'mdi:door') + '"></ha-icon></div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"></div></div>' +
+      '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
+      '<div class="fld"><label>' + t('cols') + '</label><div class="seg">' + LHD_COLS.map((c, i) => '<button data-cols="' + i + '"' + (JSON.stringify(c) === colKey ? ' class="on"' : '') + '>' + c.map((x) => parseFloat(x)).join(' · ') + '</button>').join('') + '</div></div>' +
+      (tab.area ? '<button class="btn sm" data-a="refill" title="' + t('refillT') + '"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('refill') + '</button>' : '') +
+      '<button class="btn sm dan' + (this._ask === 'deltab' ? ' ask' : '') + '" data-a="deltab"' + (tabs.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'deltab' ? t('sure') : t('delTab')) + '</button></div>' : '';
+
+    const ncols = tab ? (tab.columns || LHD_COLS[0]).length : 3;
+    const colName = (c) => [t('colL'), t('colM'), t('colR')][ncols === 2 && c >= 1 ? 2 : c] || t('colR');
+    const count = (s) => (s.type === 'scenes' ? (s.items || []).length : (s.entities || []).length);
+    const secList = tab && (tab.sections || []).length ? '<div class="sl" data-dl="secs">' + tab.sections.map((s) => '<div class="si' + (s.id === this._sec ? ' on' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
+      '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
+      '<div class="nm"><b>' + esc(s.title || this._t('t_' + s.type)) + '</b><span>' + t('t_' + s.type) + ' · ' + t('n_items', { n: count(s) }) + '</span></div><span class="cb">' + colName(s.col || 0) + '</span></div>').join('') + '</div>'
+      : '<div class="empty">' + t('noSec') + '</div>';
+
+    const ins = '<div class="ins"><div class="sc">' +
+      '<h3>' + t('sections') + '<span class="grow"></span><button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button></h3>' + secList +
+      (sec ? this._secEditor(tab, sec, ncols) : '') +
+      (this._isAuto() ? '<div class="hint">' + t('autoT') + '</div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
+
+    const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span></div><div class="pvbox"><div class="pvc"></div></div></div>';
+
+    R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top +
+      '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
+      this._menuHtml() + this._modalHtml(tabs, tab, sec) +
+      '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
+
+    this._mountPreview(tab, sec);
+    this._bind(tabs, tab, sec);
+  }
+
+  _secEditor(tab, s, ncols) {
+    const t = (k, v) => esc(this._t(k, v));
+    const S = this._hass.states;
+    const colSeg = '<div class="seg">' + (ncols === 2 ? [0, 1] : [0, 1, 2]).map((c) => '<button data-scol="' + c + '"' + ((s.col || 0) === c ? ' class="on"' : '') + '>' + (ncols === 2 ? [t('colL'), t('colR')][c] : [t('colL'), t('colM'), t('colR')][c]) + '</button>').join('') + '</div>';
+    let body = '';
+    const handle = '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span>';
+    const xBtn = (i) => '<button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
+    if (s.type === 'scenes') {
+      const items = s.items || [];
+      body = items.length ? '<div class="items" data-dl="items">' + items.map((it, i) => '<div class="it" data-di>' + handle +
+        '<input type="color" data-if="' + i + '.color" value="' + esc(it.color || '#5B8DEF') + '">' +
+        '<div class="ico"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div>' +
+        '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
+        '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="mdi:play" style="height:28px;font-size:12px">' +
+        '</div><span class="eid">' + t('target') + ': ' + esc(it.action && it.action.target ? this._ename(it.action.target) : '—') + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
+        : '<div class="empty">' + t('noItems') + '</div>';
+      body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addScene') + '</button></div>';
+    } else {
+      const items = (s.entities || []).map((x) => (typeof x === 'string' ? { entity: x } : x));
+      const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
+      const hums = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'humidity');
+      const sel = (i, key, list, cur) => '<select class="inp" data-if="' + i + '.' + key + '"><option value="">' + t('fromDevice') + '</option>' +
+        list.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
+      body = items.length ? '<div class="items" data-dl="items">' + items.map((it, i) => {
+        const st = it.entity ? S[it.entity] : null;
+        const ico = it.entity ? (it.icon ? '<ha-icon icon="' + esc(it.icon) + '"></ha-icon>' : '<ha-state-icon data-eid="' + esc(it.entity) + '"></ha-state-icon>') : '<ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon>';
+        let extra = '';
+        if (s.type === 'lights') extra = '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="' + t('icon') + ' (mdi:...)" style="height:28px;font-size:12px"></div>';
+        if (s.type === 'climate') extra = '<div class="sub">' + sel(i, 'temperature_sensor', temps, it.temperature_sensor) + sel(i, 'humidity_sensor', hums, it.humidity_sensor) + '</div>' +
+          '<div class="sub"><select class="inp" data-if="' + i + '.kind">' + ['auto', 'ac', 'radiator'].map((k) => '<option value="' + k + '"' + ((it.kind || 'auto') === k ? ' selected' : '') + '>' + t('k_' + k) + '</option>').join('') + '</select></div>';
+        return '<div class="it' + (it.entity ? '' : ' ph') + '" data-di>' + handle + '<div class="ico">' + ico + '</div><div class="col">' +
+          '<input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + esc(it.entity ? this._ename(it.entity) : this._t('name')) + '">' + extra +
+          '<span class="eid">' + esc(it.entity ? it.entity + (st ? '' : ' · ?') : this._t('addPh')) + '</span></div>' + xBtn(i) + '</div>';
+      }).join('') + '</div>' : '<div class="empty">' + t('noItems') + '</div>';
+      body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addDev') + '</button>' +
+        (s.type === 'lights' ? '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' : '') + '</div>';
+    }
+    return '<div class="ed"><div class="row2"><div class="fld"><label>' + t('secTitle') + '</label><input class="inp" data-f="sec.title" value="' + esc(s.title || '') + '" placeholder="' + t('t_' + s.type) + '"></div>' +
+      '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div></div>' +
+      (s.type === 'lights' ? '<div class="fld"><label>' + t('tileCols') + '</label><div class="seg">' + [3, 4, 5, 6].map((n) => '<button data-tc="' + n + '"' + ((s.tile_columns || 5) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') +
+      body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
+  }
+
+  _menuHtml() {
+    const m = this._menu; if (!m) return '';
+    const t = (k) => esc(this._t(k));
+    let inner = '';
+    if (m.kind === 'more') inner = '<button class="dan" data-a="reset"><ha-icon class="s16" icon="mdi:restore"></ha-icon>' + t('resetAll') + '</button>';
+    if (m.kind === 'addtab') {
+      const used = {}; this._work().forEach((x) => { if (x.area) used[x.area] = 1; });
+      const areas = Object.keys(this._hass.areas || {}).filter((a) => !used[a]);
+      inner = '<button data-newtab=""><ha-icon class="s16" icon="mdi:tab-plus"></ha-icon>' + t('emptyTab') + '</button>' +
+        (areas.length ? '<hr><div class="mh">' + t('fromArea') + '</div>' + areas.map((a) => '<button data-newtab="' + esc(a) + '"><ha-icon class="s16" icon="' + esc((this._hass.areas[a].icon) || 'mdi:door') + '"></ha-icon>' + esc(this._area(a)) + '</button>').join('') : '');
+    }
+    if (m.kind === 'addsec') inner = Object.keys(LHD_TYPES).map((k) => '<button data-newsec="' + k + '"><ha-icon class="s16" icon="' + LHD_TYPES[k].icon + '"></ha-icon><span><b>' + t('t_' + k) + '</b><br><span class="mu" style="font-size:12px">' + t('d_' + k) + '</span></span></button>').join('');
+    return '<div class="menu" style="left:' + m.x + 'px;top:' + m.y + 'px;max-height:' + Math.max(200, window.innerHeight - m.y - 20) + 'px;overflow:auto">' + inner + '</div>';
+  }
+
+  _modalHtml(tabs, tab, sec) {
+    const md = this._modal; if (!md) return '';
+    const t = (k, v) => esc(this._t(k, v));
+    if (md === 'pick' && sec) {
+      return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="' + LHD_TYPES[sec.type].icon + '"></ha-icon></div><h2>' + t('pickT') + ' → ' + esc(sec.title || this._t('t_' + sec.type)) + '</h2>' +
+        '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+        '<div class="db" style="padding-bottom:4px"><input class="inp" data-q placeholder="' + t('search') + '" value="' + esc(this._q) + '"></div>' +
+        '<div class="db"><div class="plist">' + this._pickList(sec) + '</div></div>' +
+        '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="pickadd"' + (this._picked.length ? '' : ' disabled') + '>' + t('addN', { n: this._picked.length }) + '</button></div></div></div>';
+    }
+    if (md === 'settings') {
+      const s = this._settings();
+      const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const tg = (path, on) => '<button class="tg' + (on ? ' on' : '') + '" data-tg="' + path + '"></button>';
+      const k = s.kiosk || {}, cv = s.canvas || {};
+      const bgImg = typeof s.background === 'string' && /url\(/.test(s.background);
+      const bgUrl = bgImg ? (s.background.match(/url\(['"]?([^'")]+)/) || [])[1] || '' : '';
+      const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
+      return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('settings') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' +
+        '<div class="sh">' + t('s_board') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('lang') + '</b></div>' + seg('language', s.language || 'auto', [['auto', this._t('lAuto')], ['tr', 'Türkçe'], ['en', 'English']]) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
+        '<div class="sh">' + t('s_look') + '</div>' +
+        '<div class="srow" style="flex-wrap:wrap"><div class="t"><b>' + t('bg') + '</b><span>' + t('bgT') + '</span></div>' + seg('bgmode', bgImg ? 'img' : 'dark', [['dark', this._t('bgDark')], ['img', this._t('bgImg')]]) +
+        (bgImg ? '<input class="inp w" data-bgurl value="' + esc(bgUrl) + '" placeholder="/local/zemin.jpg" style="width:100%">' : '') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('theme') + '</b><span>' + t('themeT') + '</span></div><input class="inp w" data-sf="theme_name" value="' + esc(s.theme_name || '') + '" placeholder="ios-dark-mode-blue-red"></div>' +
+        '<div class="sh">' + t('s_screen') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + tg('kiosk.hide_header', !!k.hide_header) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + tg('kiosk.hide_sidebar', !!k.hide_sidebar) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
+        '<div class="sh">' + t('s_info') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn') : t('lecOff')) + '</span></div></div>' +
+        '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
+        '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
+    }
+    if (md === 'reset') {
+      return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di" style="color:var(--red)"><ha-icon icon="mdi:restore"></ha-icon></div><h2>' + t('resetAll') + '</h2></div>' +
+        '<div class="db"><div>' + t('resetQ') + '</div></div><div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="resetgo" style="background:var(--red);border-color:var(--red);color:#fff">' + t('resetAll') + '</button></div></div></div>';
+    }
+    return '';
+  }
+
+  // cihaz seçici listesi: bölümün türüne uyan cihazlar, alana göre gruplu, aramayla süzülür
+  _pickList(sec) {
+    const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
+    const doms = LHD_TYPES[sec.type].domains;
+    const have = {};
+    if (sec.type === 'scenes') (sec.items || []).forEach((x) => { if (x.action && x.action.target) have[x.action.target] = 1; });
+    else (sec.entities || []).forEach((x) => { const id = typeof x === 'string' ? x : x.entity; if (id) have[id] = 1; });
+    const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
+    const q = this._q.toLowerCase().trim();
+    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)))
+      .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
+    if (!ids.length) return '<div class="empty">' + esc(this._t('nothing')) + '</div>';
+    const groups = {};
+    ids.forEach((id) => { const a = areaOf(id); (groups[a] = groups[a] || []).push(id); });
+    const order = Object.keys(this._hass.areas || {}).filter((a) => groups[a]).concat(groups[''] ? [''] : []);
+    return order.map((a) => '<div class="pg">' + esc(a ? this._area(a) : this._t('noArea2')) + '</div>' + groups[a].sort((x, y) => this._ename(x).localeCompare(this._ename(y))).map((id) => {
+      const on = this._picked.indexOf(id) >= 0, dis = !!have[id];
+      return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
+        '<div class="ico"><ha-state-icon data-eid="' + esc(id) + '"></ha-state-icon></div><div class="t"><b>' + esc(this._ename(id)) + '</b><span>' + esc(id) + '</span></div>' +
+        '<span class="st">' + esc(dis ? this._t('added') : (this._hass.formatEntityState ? this._hass.formatEntityState(S[id]) : S[id].state)) + '</span></div>';
+    }).join('')).join('');
+  }
+
+  // ---- önizleme: panonun kendi kartı, düzenleme modunda, tasarım boyutunda çizilip kutuya sığdırılır ----
+  _mountPreview(tab, sec) {
+    const box = this.shadowRoot.querySelector('.pvc'); if (!box || !tab) return;
+    if (!this._pv) {
+      this._pv = document.createElement('lemur-home-dashboard-card');
+      this._pv.addEventListener('lhd-select', (e) => { this._sec = e.detail.section; this._ask = null; this._render(); });
+      this._pv.addEventListener('lhd-tab', (e) => { this._tab = e.detail.tab; this._sec = null; this._ask = null; this._render(); });
+    }
+    const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '' };
+    if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
+    box.appendChild(this._pv);
+    this._pv.hass = this._hass;
+    const s = this._settings();
+    box.style.background = typeof s.background === 'string' ? s.background : LP_DEFAULT_BG;
+    if (this._ro) { this._ro.disconnect(); this._ro.observe(box.parentNode); }
+    this._fit();
+  }
+  _fit() {
+    const R = this.shadowRoot; if (!R) return;
+    // dar ekranda (tablet dikey) önizleme üstte, düzenleyici altta
+    if (this._narrowNow !== undefined && ((this.clientWidth || window.innerWidth) < 980) !== this._narrowNow && !this._modal) { this._render(); return; }
+    const box = R.querySelector('.pvc'), wrap = R.querySelector('.pvbox'); if (!box || !wrap) return;
+    const cv = this._settings().canvas || {}, W = cv.width || 1280, H = cv.ref_height || 1075;
+    const z = Math.min(wrap.clientWidth / W, wrap.clientHeight / H) || 0.5;
+    box.style.width = W + 'px'; box.style.height = H + 'px';
+    box.style.setProperty('--lp-h', H + 'px');
+    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - W * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - H * z) / 2) + 'px) scale(' + z + ')';
+  }
+
+  // ---- olaylar ----
+  _bind(tabs, tab, sec) {
+    const R = this.shadowRoot, app = R.querySelector('.app');
+    R.querySelectorAll('ha-state-icon[data-eid]').forEach((e) => { e.hass = this._hass; e.stateObj = this._hass.states[e.getAttribute('data-eid')]; });
+    const tabIdx = tab ? tabs.indexOf(tab) : -1;
+    const secIdx = sec ? tab.sections.indexOf(sec) : -1;
+    const editTab = (fn) => this._edit((T) => fn(T[tabIdx], T));
+    const editSec = (fn) => this._edit((T) => fn(T[tabIdx].sections[secIdx], T[tabIdx]));
+
+    app.addEventListener('click', (e) => {
+      const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
+      const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
+      if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
+      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { this._modal = null; this._render(); return; }
+      if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
+      const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
+      if (act === 'undo') return this._undoIt();
+      if (act === 'settings') { this._modal = 'settings'; this._menu = null; return this._render(); }
+      if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
+      if (act === 'close') { this._modal = null; this._picked = []; this._q = ''; return this._render(); }
+      if (act === 'reset') { this._menu = null; this._modal = 'reset'; return this._render(); }
+      if (act === 'resetgo') { this._snap(); this._modal = null; this._sec = null; this._commit('tabs', []); this._toast(this._t('resetOk')); return this._render(); }
+      if (act === 'deltab') {
+        if (this._ask !== 'deltab') { this._ask = 'deltab'; return this._render(); }
+        this._ask = null; const id = tab.id; this._sec = null;
+        this._edit((T) => { T.splice(T.map((x) => x.id).indexOf(id), 1); }); this._tab = null; return;
+      }
+      if (act === 'delsec') {
+        if (this._ask !== 'delsec') { this._ask = 'delsec'; return this._render(); }
+        this._ask = null; const id = sec.id; this._sec = null;
+        return editTab((T) => { T.sections = T.sections.filter((x) => x.id !== id); });
+      }
+      if (act === 'refill') {
+        const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === tab.area)[0];
+        if (!fresh) return;
+        this._sec = null;
+        return editTab((T) => { T.sections = fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })); });
+      }
+      if (act === 'pick') { this._modal = 'pick'; this._picked = []; this._q = ''; return this._render(); }
+      if (act === 'pickadd') {
+        const ids = this._picked.slice(); this._modal = null; this._picked = []; this._q = '';
+        return editSec((S) => {
+          if (S.type === 'scenes') {
+            S.items = S.items || [];
+            ids.forEach((id) => {
+              const d = id.split('.')[0], st = this._hass.states[id];
+              S.items.push({ name: this._ename(id), icon: (st && st.attributes.icon) || (d === 'script' ? 'mdi:play-circle-outline' : d === 'scene' ? 'mdi:palette-outline' : 'mdi:robot'),
+                color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: d === 'automation' ? 'automation.trigger' : d + '.turn_on', target: id } });
+            });
+          } else {
+            S.entities = S.entities || [];
+            ids.forEach((id) => S.entities.push(S.type === 'climate' ? this._climateItem(id) : id));
+          }
+        });
+      }
+      if (act === 'addph') return editSec((S) => { S.entities = (S.entities || []).concat([{ name: this._t('addPh'), icon: 'mdi:lightbulb-outline' }]); });
+      const nt = g('[data-newtab]');
+      if (nt) {
+        const aid = nt.getAttribute('data-newtab'); this._menu = null;
+        const id = lhdId('t');
+        let nw;
+        if (aid) {
+          const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === aid)[0];
+          const ar = this._hass.areas[aid];
+          nw = fresh ? Object.assign({}, fresh, { id: id, sections: fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })) })
+            : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LHD_COLS[0].slice(), sections: [] };
+        } else {
+          nw = { id: id, name: this._t('newTab'), icon: 'mdi:door', area: null, columns: LHD_COLS[0].slice(), sections: [] };
+        }
+        this._tab = id; this._sec = null;
+        return this._edit((T) => { T.push(nw); });
+      }
+      const ns = g('[data-newsec]');
+      if (ns) {
+        const type = ns.getAttribute('data-newsec'), id = lhdId('s'); this._menu = null;
+        const L = this._lang, titles = { lights: t(L, 'lights'), scenes: t(L, 'scenes'), climate: tab.area ? upper(L, this._area(tab.area)) : t(L, 'control'), vacuum: '', media: '' };
+        const ncol = (tab.columns || LHD_COLS[0]).length;
+        const s = { id: id, type: type, title: titles[type], col: Math.min(LHD_TYPES[type].col, ncol - 1) };
+        if (type === 'scenes') s.items = []; else s.entities = [];
+        if (type === 'lights') s.tile_columns = 5;
+        this._sec = id;
+        return editTab((T) => { T.sections.push(s); });
+      }
+      const tb = g('[data-tab]');
+      if (tb && !this._dragged) { this._tab = tb.getAttribute('data-tab'); this._sec = null; return this._render(); }
+      const si = g('.si[data-sec]');
+      if (si && !this._dragged && !g('[data-handle]')) { this._sec = si.getAttribute('data-sec'); return this._render(); }
+      const cb = g('[data-cols]');
+      if (cb) { const c = LHD_COLS[+cb.getAttribute('data-cols')]; return editTab((T) => { T.columns = c.slice(); T.sections.forEach((s) => { if ((s.col || 0) > c.length - 1) s.col = c.length - 1; }); }); }
+      const sc = g('[data-scol]');
+      if (sc) return editSec((S) => { S.col = +sc.getAttribute('data-scol'); });
+      const tc = g('[data-tc]');
+      if (tc) return editSec((S) => { S.tile_columns = +tc.getAttribute('data-tc'); });
+      const dl = g('[data-del]');
+      if (dl) { const i = +dl.getAttribute('data-del'); return editSec((S) => { (S.type === 'scenes' ? S.items : S.entities).splice(i, 1); }); }
+      const pk = g('[data-pk]');
+      if (pk && !pk.classList.contains('dis')) {
+        const id = pk.getAttribute('data-pk'), k = this._picked.indexOf(id);
+        if (k >= 0) this._picked.splice(k, 1); else this._picked.push(id);
+        pk.classList.toggle('on', k < 0);
+        pk.querySelector('.ck').innerHTML = k < 0 ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '';
+        const btn = R.querySelector('[data-a="pickadd"]'); btn.disabled = !this._picked.length; btn.textContent = this._t('addN', { n: this._picked.length });
+        return;
+      }
+      const st = g('[data-set]');
+      if (st) {
+        const path = st.getAttribute('data-set'), v = st.getAttribute('data-val');
+        if (path === 'bgmode') return this._setting('background', v === 'img' ? "center / cover no-repeat fixed url('/local/zemin.jpg')" : null);
+        return this._setting(path, v === 'auto' ? null : v);
+      }
+      const tgl = g('[data-tg]');
+      if (tgl) { const path = tgl.getAttribute('data-tg'); const cur = tgl.classList.contains('on'); return this._setting(path, cur ? null : true); }
+    });
+
+    // metin alanları: değişiklik Enter'a basınca ya da alandan çıkınca kaydedilir (yazarken odak kaybolmasın)
+    app.addEventListener('change', (e) => {
+      const el = e.target;
+      const f = el.getAttribute && el.getAttribute('data-f');
+      if (f === 'tab.name') return editTab((T) => { T.name = el.value.trim() || T.name; });
+      if (f === 'tab.icon') return editTab((T) => { T.icon = el.value.trim() || 'mdi:door'; });
+      if (f === 'tab.area') return editTab((T) => { T.area = el.value || null; });
+      if (f === 'sec.title') return editSec((S) => { S.title = el.value; });
+      const itf = el.getAttribute && el.getAttribute('data-if');
+      if (itf) {
+        const p = itf.split('.'), i = +p[0], key = p[1], v = el.value.trim();
+        return editSec((S) => {
+          if (S.type === 'scenes') { const it = S.items[i]; if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }
+          let it = S.entities[i]; if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
+          if (v && !(key === 'kind' && v === 'auto')) it[key] = v; else delete it[key];
+          if (it.entity && Object.keys(it).length === 1) S.entities[i] = it.entity;   // sade kalsın
+        });
+      }
+      const sf = el.getAttribute && el.getAttribute('data-sf');
+      if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v); }
+      if (el.hasAttribute && el.hasAttribute('data-bgurl')) { const u = el.value.trim(); return this._setting('background', u ? "center / cover no-repeat fixed url('" + u.replace(/'/g, '') + "')" : null); }
+    });
+    app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('inp') && e.target.tagName === 'INPUT') e.target.blur(); });
+    // simge alanında yazarken önizleme
+    app.addEventListener('input', (e) => {
+      const el = e.target;
+      if (el.hasAttribute && el.hasAttribute('data-q')) { this._q = el.value; const pl = R.querySelector('.plist'); if (pl) { pl.innerHTML = this._pickList(sec); pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; }); } return; }
+      const f = el.getAttribute && (el.getAttribute('data-f') || el.getAttribute('data-if') || '');
+      if (/icon$/.test(f)) { const pv = el.closest('.iconin, .it'); const ic = pv && pv.querySelector('.pv ha-icon, .ico ha-icon'); if (ic && /^[a-z]+:[a-z0-9-]+$/.test(el.value.trim())) ic.setAttribute('icon', el.value.trim()); }
+    });
+    const q = R.querySelector('[data-q]'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+
+    // sürükle bırak: sekmeler (yatay), bölümler, öğeler
+    R.querySelectorAll('[data-dl]').forEach((list) => {
+      list.addEventListener('pointerdown', (e) => {
+        const h = e.target.closest ? e.target.closest('[data-handle]') : null;
+        if (!h || e.button !== 0) return;
+        const item = h.closest('[data-di]'); if (!item || item.parentNode !== list) return;
+        const items = Array.prototype.filter.call(list.children, (x) => x.hasAttribute('data-di'));
+        const from = items.indexOf(item), horiz = list.getAttribute('data-dir') === 'x';
+        const sx = e.clientX, sy = e.clientY;
+        let to = from, started = false;
+        this._dragged = false;
+        const clear = () => items.forEach((x) => x.classList.remove('dropb', 'dropa'));
+        const move = (ev) => {
+          if (!started && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 6) return;
+          if (!started) { started = true; item.classList.add('dragging'); try { list.setPointerCapture(e.pointerId); } catch (x) {} }
+          const pos = horiz ? ev.clientX : ev.clientY;
+          to = items.length;
+          for (let i = 0; i < items.length; i++) { const r = items[i].getBoundingClientRect(); if (pos < (horiz ? r.left + r.width / 2 : r.top + r.height / 2)) { to = i; break; } }
+          clear();
+          if (to < items.length) items[to].classList.add('dropb'); else items[items.length - 1].classList.add('dropa');
+        };
+        const up = () => {
+          list.removeEventListener('pointermove', move); list.removeEventListener('pointerup', up); list.removeEventListener('pointercancel', up);
+          clear(); item.classList.remove('dragging');
+          if (!started) return;
+          this._dragged = true; setTimeout(() => { this._dragged = false; }, 0);
+          const dest = to > from ? to - 1 : to;
+          if (dest === from) return;
+          const kind = list.getAttribute('data-dl');
+          if (kind === 'tabs') this._edit((T) => lhdMove(T, from, dest));
+          if (kind === 'secs') editTab((T) => lhdMove(T.sections, from, dest));
+          if (kind === 'items') editSec((S) => lhdMove(S.type === 'scenes' ? S.items : S.entities, from, dest));
+        };
+        list.addEventListener('pointermove', move); list.addEventListener('pointerup', up); list.addEventListener('pointercancel', up);
+      });
+    });
+  }
+
+  // iklim cihazı eklenirken aynı alandaki harici sıcaklık/nem sensörü önerilir (otomatik düzendeki kural)
+  _climateItem(id) {
+    const fresh = buildDefaultTabs(this._hass, this._lang);
+    for (let i = 0; i < fresh.length; i++) {
+      const s = (fresh[i].sections || []).filter((x) => x.type === 'climate')[0];
+      const it = s && (s.entities || []).filter((x) => (typeof x === 'string' ? x : x.entity) === id)[0];
+      if (it) return typeof it === 'string' ? it : lhdClone(it);
+    }
+    return id;
   }
 }

@@ -1950,7 +1950,8 @@ if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background
 (() => {
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '0.0.2';
-const CSS = ":host { display: block; color: var(--lp-text); font-family: var(--primary-font-family, Roboto, Noto, sans-serif);\n--lp-text: #FFFFFF; --lp-text2: #D3D3D3;\n--lp-card: rgba(10, 10, 10, 0.4);\n--lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08);\n--lp-sel: rgba(91, 141, 239, 0.9);\n--lp-on-border: rgb(255, 214, 10); --lp-on-icon: #FFC107; --lp-na: #555555;\n--lp-embed-bg: rgb(28, 28, 28); }\n.wrap { display: grid; grid-template-rows: auto 1fr; grid-gap: 12px; padding: 4px 4px 25px 4px; box-sizing: border-box;\nmin-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));\n-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }\n.nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }\n.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);\nborder: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;\noverflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }\n.navb + .navb { margin-left: 8px; }\n.navb.sel { opacity: 1; border: 2px solid var(--lp-sel); }\n.ni { flex: 1 1 auto; width: 40%; min-height: 0; display: flex; align-items: center; justify-content: center; }\n.ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }\n.nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }\n.col > .box + .box { margin-top: 12px; }\n.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 20px;\nbackground: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }\n.box > * + * { margin-top: 8px; }\n.box.spread { justify-content: space-between; }\n.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }\n.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; }\n.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }\n.title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }\n.title.season { cursor: pointer; }\n.grid { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }\n.tile { box-sizing: border-box; min-width: 0; min-height: 0; border-radius: 20px; background-color: var(--lp-card); border: 0 solid transparent;\ncolor: var(--lp-text); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4% 0;\ncursor: pointer; overflow: hidden; text-align: center; transition: all 0.2s ease-out; }\n.tile ha-state-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.tile .nm { margin-top: 8px; font-size: 16px; line-height: 19.2px; max-width: 100%; padding: 0 4px; box-sizing: border-box;\noverflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }\n.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on-icon)); }\n.tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }\n.tile.na ha-state-icon { color: var(--lp-na); }\n.scene { flex: 0 0 auto; height: 118px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);\ndisplay: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }\n.scene .si { flex: 0 0 40%; display: flex; justify-content: center; }\n.scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }\n.scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;\n--ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;\n--primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }\n.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }\n.row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }\n.row.on ha-state-icon { color: var(--lp-on-icon); }\n.rt { min-width: 0; }\n.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.down { -webkit-transform: scale(0.96); transform: scale(0.96); }\n.gsq { position: relative; flex: 0 0 auto; height: 0; }\n.gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }\n.tile.ph { cursor: default; }\n.tile.ph ha-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }";
+const CSS = ":host { display: block; color: var(--lp-text); font-family: var(--primary-font-family, Roboto, Noto, sans-serif);\n--lp-text: #FFFFFF; --lp-text2: #D3D3D3;\n--lp-card: rgba(10, 10, 10, 0.4);\n--lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08);\n--lp-sel: rgba(91, 141, 239, 0.9);\n--lp-on-border: rgb(255, 214, 10); --lp-on-icon: #FFC107; --lp-na: #555555;\n--lp-embed-bg: rgb(28, 28, 28); }\n.wrap { display: grid; grid-template-rows: auto 1fr; grid-gap: 12px; padding: 4px 4px 25px 4px; box-sizing: border-box;\nmin-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));\n-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }\n.nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }\n.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);\nborder: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;\noverflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }\n.navb + .navb { margin-left: 8px; }\n.navb.sel { opacity: 1; border: 2px solid var(--lp-sel); }\n.ni { flex: 1 1 auto; width: 40%; min-height: 0; display: flex; align-items: center; justify-content: center; }\n.ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }\n.nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }\n.col > .box + .box { margin-top: 12px; }\n.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 20px;\nbackground: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }\n.box > * + * { margin-top: 8px; }\n.box.spread { justify-content: space-between; }\n.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }\n.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; }\n.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }\n.title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }\n.title.season { cursor: pointer; }\n.grid { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }\n.tile { box-sizing: border-box; min-width: 0; min-height: 0; border-radius: 20px; background-color: var(--lp-card); border: 0 solid transparent;\ncolor: var(--lp-text); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4% 0;\ncursor: pointer; overflow: hidden; text-align: center; transition: all 0.2s ease-out; }\n.tile ha-state-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.tile .nm { margin-top: 8px; font-size: 16px; line-height: 19.2px; max-width: 100%; padding: 0 4px; box-sizing: border-box;\noverflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }\n.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on-icon)); }\n.tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }\n.tile.na ha-state-icon { color: var(--lp-na); }\n.scene { flex: 0 0 auto; height: 118px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);\ndisplay: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }\n.scene .si { flex: 0 0 40%; display: flex; justify-content: center; }\n.scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }\n.scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;\n--ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;\n--primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }\n.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }\n.row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }\n.row.on ha-state-icon { color: var(--lp-on-icon); }\n.rt { min-width: 0; }\n.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.down { -webkit-transform: scale(0.96); transform: scale(0.96); }\n.edit .box { cursor: pointer; transition: box-shadow 0.15s; }\n.edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }\n.edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }\n.edit .tile, .edit .scene, .edit .row, .edit .emb > *, .edit .title.season { pointer-events: none; }\n.edit .navb { cursor: pointer; }\n.gsq { position: relative; flex: 0 0 auto; height: 0; }\n.gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }\n.tile.ph { cursor: default; }\n.tile.ph ha-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }";
+const ADMIN_CSS = ":host { display: block; height: 100vh; height: 100dvh; font-family: var(--lemur-font, Archivo, var(--ha-font-family-body, system-ui), sans-serif); }\n* { box-sizing: border-box; }\nbutton, input, select { font-family: inherit; color: inherit; font-size: inherit; }\nbutton { cursor: pointer; }\nha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px; flex: none; }\n.s14 { width: 14px; height: 14px; } .s16 { width: 16px; height: 16px; } .s18 { width: 18px; height: 18px; } .s24 { width: 24px; height: 24px; }\n.app { position: relative; height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; background: #0B0C0E; color: #ECEDEE;\noverflow: hidden; font-size: 14px; line-height: 1.4;\n--bg: #0B0C0E; --s1: #131417; --s2: #18191D; --s3: #1F2125; --s4: #272A2F; --s5: #30333A;\n--ln: rgba(255,255,255,.06); --ln2: rgba(255,255,255,.10); --ln3: rgba(255,255,255,.18);\n--tx: #ECEDEE; --tx2: #B3B7BE; --mu: #7C818A; --mu2: #5A5E66;\n--ac: #F2A93B; --acs: rgba(242,169,59,.13); --acl: rgba(242,169,59,.55); --actx: #1B1206;\n--red: #EE6A5F; --reds: rgba(238,106,95,.12); --tint: #261C10;\n--r1: 22px; --r2: 14px; --r3: 10px; }\n.grow { flex: 1; }\n.mu { color: var(--mu); }\n.top { display: flex; align-items: center; gap: 10px; min-height: 60px; flex: none; }\n.lg { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #F4B24A, #E2702C); display: grid; place-items: center; color: var(--actx); flex: none; }\n.lg ha-icon { width: 18px; height: 18px; }\n.top h1 { font-size: 16px; font-weight: 600; margin: 0 6px 0 2px; letter-spacing: -.01em; white-space: nowrap; }\n.badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--acs); color: var(--ac); border: 1px solid var(--acl); white-space: nowrap; }\n.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: var(--r3);\nborder: 1px solid var(--ln2); background: var(--s2); font-size: 13px; font-weight: 500; color: var(--tx); white-space: nowrap; }\n.btn:hover { background: var(--s3); }\n.btn:disabled { opacity: .35; cursor: default; }\n.btn.ic { width: 34px; padding: 0; }\n.btn.pri { background: var(--ac); color: var(--actx); border-color: var(--ac); }\n.btn.pri:hover { filter: brightness(1.06); }\n.btn.dan { color: var(--red); }\n.btn.dan.ask { background: var(--reds); border-color: rgba(238,106,95,.45); }\n.btn.sm { height: 30px; font-size: 12.5px; padding: 0 10px; }\n.btn.dash { border-style: dashed; background: none; color: var(--tx2); }\n.btn.dash:hover { color: var(--tx); background: var(--s2); }\n.warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }\n.rblock { flex: none; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 10px; }\n.rooms { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 1px; margin-bottom: -1px; position: relative; z-index: 2; align-items: flex-start; scrollbar-width: none; }\n.rooms::-webkit-scrollbar { display: none; }\n.rb { display: flex; align-items: center; justify-content: center; gap: 10px; min-width: 130px; padding: 14px 18px; border-radius: var(--r2); background: var(--s2);\nborder: 1px solid transparent; font-weight: 600; font-size: 16px; line-height: 1.2; white-space: nowrap; color: var(--tx2); cursor: pointer; flex: none; user-select: none; touch-action: none; }\n.rb ha-icon { width: 24px; height: 24px; }\n.rb:hover { background: var(--s3); color: var(--tx); }\n.rb.on { background: var(--tint); color: var(--ac); border: 1px solid var(--acl); border-bottom-color: var(--tint); border-radius: var(--r2) var(--r2) 0 0;\npadding-bottom: 24px; margin-bottom: -1px; }\n.rb.add { background: none; border: 1px dashed var(--ln2); color: var(--mu); font-weight: 500; min-width: 0; }\n.rb.add:hover { color: var(--tx); }\n.rpanel { position: relative; z-index: 1; background: var(--tint); border: 1px solid var(--acl); border-radius: var(--r2); padding: 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }\n.rpanel.first { border-top-left-radius: 0; }\n.fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }\n.fld > label, .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); }\n.inp { flex-shrink: 0; height: 36px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); padding: 0 11px; color: var(--tx); outline: none; min-width: 0; width: 100%; }\n.inp:focus { border-color: var(--acl); background: var(--s3); }\nselect.inp { padding-right: 6px; }\n.iconin { display: flex; align-items: center; gap: 8px; }\n.iconin .pv { width: 36px; height: 36px; border-radius: var(--r3); background: var(--s3); display: grid; place-items: center; flex: none; }\n.iconin .pv ha-icon { width: 20px; height: 20px; }\n.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--s2); border: 1px solid var(--ln2); flex-wrap: wrap; }\n.seg button { height: 30px; padding: 0 12px; border: none; border-radius: 8px; background: none; color: var(--tx2); font-weight: 500; font-size: 13px; white-space: nowrap; }\n.seg button:hover { color: var(--tx); }\n.seg button.on { background: var(--s4); color: var(--tx); box-shadow: 0 1px 2px rgba(0,0,0,.35); }\n.tg { width: 42px; height: 24px; border-radius: 99px; border: none; background: var(--s5); position: relative; flex: none; padding: 0; transition: background .15s; }\n.tg::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }\n.tg.on { background: var(--ac); }\n.tg.on::after { left: 21px; }\n.main { flex: 1; display: flex; gap: 12px; min-height: 0; }\n.pvw { flex: 1 1 auto; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.pvh { display: flex; align-items: center; gap: 8px; color: var(--tx2); font-size: 13px; }\n.pvh b { color: var(--tx); font-weight: 600; }\n.pvbox { position: relative; flex: 1; min-height: 200px; overflow: hidden; border-radius: 14px; background: #08090b; }\n.pvc { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 0; overflow: hidden; }\n.ins { flex: 0 0 420px; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); display: flex; flex-direction: column; min-height: 0; }\n.ins .sc { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; min-height: 0; flex: 1; scrollbar-width: thin; }\n.ins h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); display: flex; align-items: center; gap: 8px; }\n.narrowv .main { flex-direction: column; overflow-y: auto; }\n.narrowv .pvw { flex: none; height: 46vh; }\n.narrowv .ins { flex: none; }\n.sl { display: flex; flex-direction: column; gap: 6px; }\n.si { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 12px; background: var(--s2); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.si:hover { background: var(--s3); }\n.si.on { background: var(--tint); border-color: var(--acl); }\n.si .ti { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; color: var(--tx2); }\n.si.on .ti { background: var(--acs); color: var(--ac); }\n.si .ti ha-icon { width: 18px; height: 18px; }\n.si .nm { flex: 1; min-width: 0; }\n.si .nm b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.si .nm span { font-size: 12px; color: var(--mu); }\n.cb { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--s4); color: var(--tx2); flex: none; }\n.hd { color: var(--mu2); cursor: grab; display: grid; place-items: center; width: 18px; flex: none; touch-action: none; }\n.hd:hover { color: var(--tx2); }\n.dragging { opacity: .45; }\n.dropb { box-shadow: 0 -2px 0 var(--ac); }\n.dropa { box-shadow: 0 2px 0 var(--ac); }\n.rooms .dropb { box-shadow: -3px 0 0 var(--ac); }\n.rooms .dropa { box-shadow: 3px 0 0 var(--ac); }\n.ed { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 16px; background: var(--s2); border: 1px solid var(--ln); }\n.row2 { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }\n.row2 > .fld { flex: 1 1 140px; }\n.items { display: flex; flex-direction: column; gap: 6px; }\n.it { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 11px; background: var(--s3); }\n.it .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; }\n.it .ico ha-icon, .it .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.it .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }\n.it .inp { height: 30px; font-size: 13px; padding: 0 8px; }\n.it .eid { font-size: 11.5px; color: var(--mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.it .x { width: 28px; height: 28px; border: none; background: none; color: var(--mu); border-radius: 8px; display: grid; place-items: center; flex: none; }\n.it .x:hover { background: var(--s4); color: var(--red); }\n.it input[type=color] { width: 30px; height: 30px; border: none; border-radius: 9px; padding: 0; background: none; flex: none; cursor: pointer; }\n.it input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }\n.it input[type=color]::-webkit-color-swatch { border: none; border-radius: 9px; }\n.it .sub { display: flex; gap: 6px; }\n.it .sub select { flex: 1; min-width: 0; height: 28px; font-size: 12px; }\n.it.ph { opacity: .75; }\n.acts { display: flex; gap: 8px; flex-wrap: wrap; }\n.empty { padding: 14px; border-radius: 12px; border: 1px dashed var(--ln2); color: var(--mu); font-size: 13px; text-align: center; }\n.hint { font-size: 12.5px; color: var(--mu); }\n.menu { position: absolute; z-index: 30; min-width: 220px; background: var(--s2); border: 1px solid var(--ln2); border-radius: 14px; padding: 6px; box-shadow: 0 18px 40px rgba(0,0,0,.5); }\n.menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: none; background: none; border-radius: 9px; text-align: left; color: var(--tx); }\n.menu button:hover { background: var(--s3); }\n.menu button.dan { color: var(--red); }\n.menu hr { border: none; border-top: 1px solid var(--ln); margin: 6px 4px; }\n.menu .mh { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); padding: 6px 10px 4px; }\n.ov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }\n.dlg { width: min(900px, 100%); max-height: 100%; background: #111215; border: 1px solid var(--ln2); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6); }\n.dlg.sm { width: min(560px, 100%); }\n.dh { display: flex; align-items: center; gap: 12px; padding: 18px 20px 12px; }\n.dh .di { width: 38px; height: 38px; border-radius: 50%; background: var(--s3); display: grid; place-items: center; color: var(--ac); flex: none; }\n.dh h2 { margin: 0; font-size: 18px; font-weight: 600; flex: 1; }\n.db { padding: 4px 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 0; }\n.df { display: flex; gap: 10px; justify-content: flex-end; padding: 12px 20px 18px; border-top: 1px solid var(--ln); align-items: center; }\n.sh { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 0; }\n.srow { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: var(--s1); border: 1px solid var(--ln); }\n.srow .t { flex: 1; min-width: 0; }\n.srow .t b { display: block; font-weight: 600; }\n.srow .t span { font-size: 12.5px; color: var(--mu); }\n.srow .inp { width: 120px; }\n.srow .inp.w { width: 260px; }\n.plist { display: flex; flex-direction: column; gap: 4px; }\n.pg { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 2px; }\n.pi { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: var(--s1); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.pi:hover { background: var(--s2); }\n.pi.on { border-color: var(--acl); background: var(--tint); }\n.pi.dis { opacity: .45; cursor: default; }\n.pi .ck { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--ln3); display: grid; place-items: center; flex: none; color: var(--actx); }\n.pi.on .ck { background: var(--ac); border-color: var(--ac); }\n.pi .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s3); display: grid; place-items: center; flex: none; }\n.pi .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.pi .t { flex: 1; min-width: 0; }\n.pi .t b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.pi .t span { font-size: 12px; color: var(--mu); }\n.pi .st { font-size: 12px; color: var(--tx2); flex: none; }\n.toast { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 50;\ndisplay: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 16px; border-radius: 14px; background: #24262B; border: 1px solid var(--ln2);\nbox-shadow: 0 14px 30px rgba(0,0,0,.45); transition: all .2s; font-size: 13.5px; }\n.toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }\n.toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }\n.toast button[hidden] { display: none; }";
 // Metinler: her metin tr ve en. Arayüzde marka adı geçmez.
 const TXT = {
   tr: { home: 'Ev', other: 'Diğer', lights: 'IŞIKLAR', room_lights: '{area} IŞIKLARI', scenes: 'SENARYOLAR', shortcuts: 'KISAYOLLAR',
@@ -2180,25 +2181,40 @@ function buildDefaultTabs(hass, lang) {
   return tabs.slice(0, 8);
 }
 
-// Kanvas ölçekleme. İçerik ÖLÇÜLMEZ; zoom sadece ekran boyutundan hesaplanır ve hui-root'a CSS kuralı olarak yazılır.
+// Kanvas ölçekleme ve kiosk. İçerik ÖLÇÜLMEZ; zoom sadece ekran boyutundan hesaplanır ve hui-root'a CSS kuralı olarak yazılır.
 // Böylece görünüm ilk karede doğru boyutta gelir, sayfa değişince oynamaz. (Arkadaşın panosundaki tablet-olcek.js v8'in dersi.)
+// Kiosk: ayarda seçildiyse bizim panomuz açıkken HA'nın üst barı ve yan menüsü gizlenir (kiosk-mode ya da browser_mod gerekmez).
 const LemurScale = (() => {
-  const ID = 'lemur-home-dashboard-scale';
-  function root() {
+  const ID = 'lemur-home-dashboard-scale', KID = 'lemur-home-dashboard-kiosk';
+  function mainRoot() {
+    try { return document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main').shadowRoot; } catch (e) { return null; }
+  }
+  function root(m) {
     try {
-      const m = document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main').shadowRoot;
       const p = m.querySelector('ha-panel-lovelace');
       const r = p && p.shadowRoot && p.shadowRoot.querySelector('hui-root');
       return (r && r.shadowRoot) ? r : null;
     } catch (e) { return null; }
   }
-  function apply(canvas) {
-    const r = root(); if (!r) return;
-    const sr = r.shadowRoot;
-    const raw = r.lovelace && r.lovelace.rawConfig;
-    const active = !!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard');
-    let st = sr.getElementById(ID);
-    if (!active) { if (st) st.textContent = ''; return; }
+  function style(host, id, css) {
+    if (!host) return;
+    let st = host.getElementById ? host.getElementById(id) : host.querySelector('#' + id);
+    if (!css) { if (st) st.textContent = ''; return; }
+    if (!st) { st = document.createElement('style'); st.id = id; host.appendChild(st); }
+    if (st.textContent !== css) st.textContent = css;
+  }
+  function apply(canvas, kiosk) {
+    const m = mainRoot(); if (!m) return;
+    const r = root(m);
+    const sr = r && r.shadowRoot;
+    const raw = r && r.lovelace && r.lovelace.rawConfig;
+    const active = !!sr && (!!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard'));
+    // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde
+    const k = kiosk || {};
+    style(m, KID, active && k.hide_sidebar ? 'ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
+    if (!sr) return;
+    style(sr, KID, active && k.hide_header ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
+    if (!active) { style(sr, ID, ''); return; }
     const W = (canvas && canvas.width) || 1280, H = (canvas && canvas.ref_height) || 1075;
     const kap = sr.querySelector('hui-view-container') || r;
     const g = kap.getBoundingClientRect().width;
@@ -2212,16 +2228,14 @@ const LemurScale = (() => {
     // --lp-h: ekranın kalan yüksekliği, kanvas pikseli cinsinden. Kart bunu en az yükseklik olarak kullanır, böylece kolonlar ekranı doldurur.
     // (Ekrandan hesaplanır, içerikten değil: içerik ölçülürse zoom kendini besler.)
     const lh = Math.floor(y / z);
-    const css = 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}';
-    if (!st) { st = document.createElement('style'); st.id = ID; sr.appendChild(st); }
-    if (st.textContent !== css) st.textContent = css;
+    style(sr, ID, 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}');
   }
-  let canvas = null;
-  const run = () => apply(canvas);
+  let canvas = null, kiosk = null;
+  const run = () => apply(canvas, kiosk);
   window.addEventListener('resize', run);
   window.addEventListener('location-changed', () => { run(); setTimeout(run, 0); setTimeout(run, 100); });
   setInterval(run, 1000);
-  return { set(c) { canvas = c; run(); }, run: run };
+  return { set(c, k) { canvas = c; kiosk = k || null; run(); }, run: run };
 })();
 
 // Pano stratejisi: `strategy: { type: custom:lemur-home-dashboard }` yazılan pano bu sınıfla üretilir.
@@ -2241,7 +2255,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     }
     const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
     const settings = data.settings || {};
-    LemurScale.set(settings.canvas || null);
+    LemurScale.set(settings.canvas || null, settings.kiosk || null);
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
     const bg = settings.background || LP_DEFAULT_BG;
     return {
@@ -2363,7 +2377,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     for (let i = 0; i < w.length; i++) if (h.states[w[i]] !== this._last[w[i]]) { this._render(); return; }
   }
   connectedCallback() {
-    if (!this._unsub) this._unsub = STORE.onChange(() => { this._def = null; this._render(); });
+    if (!this._unsub) this._unsub = STORE.onChange((d) => {
+      this._def = null;
+      const st = (d && d.settings) || {};
+      if (!this._config.edit) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
+      this._render();
+    });
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     if (this._hass) this._render();
   }
@@ -2392,7 +2411,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card')]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -2401,10 +2420,12 @@ class LemurHomeDashboardCard extends HTMLElement {
   _build(tab, tabs, lang, season) {
     const h = this._hass, S = h.states;
     const tiles = [], tileItems = [], rows = [], embeds = [];
+    const edit = !!this._config.edit, selected = this._config.selected || '';
+    let curSec = '';
     const emb = (tag, cfg, id) => {
-      if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }
+      if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '" data-sec="' + esc(curSec) + '"></div>'; }
       embeds.push({ tag: tag, cfg: Object.assign({ language: lang }, cfg) });
-      return '<div class="emb" data-emb="' + (embeds.length - 1) + '"></div>';
+      return '<div class="emb" data-emb="' + (embeds.length - 1) + '" data-sec="' + esc(curSec) + '"></div>';
     };
     const bodyOf = (s) => {
       if (s.type === 'lights') {
@@ -2415,8 +2436,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
         const c = s.tile_columns || 5, r = Math.ceil(items.length / c), fill = r >= 4;
         const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
-        const open = fill ? '<div class="grid" style="' + gs + '">'
-          : '<div class="gsq" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
+        const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
+          : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
         return { kind: 'md', html: open +
           items.map((it) => {
             if (!it.entity) return '<div class="tile ph"><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="nm">' + esc(it.name || '') + '</div></div>';
@@ -2427,7 +2448,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (s.type === 'scenes') {
         const items = s.items || [];
         if (!items.length) return null;
-        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-scene="' + esc(s.id) + ':' + i + '"><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
+        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-sec="' + esc(s.id) + '" data-scene="' + esc(s.id) + ':' + i + '"><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
       }
       if (s.type === 'climate') {
         const items = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]);
@@ -2446,7 +2467,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (s.type === 'media') {
         const ids = (s.entities || []).map(lpEnt).filter((e) => e && S[e.entity]).map((e) => e.entity);
         if (!ids.length) return null;
-        return { kind: 'hd', spread: true, html: ids.map((id) => { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"></div>'; }).join('') };
+        return { kind: 'hd', spread: true, html: ids.map((id) => { rows.push(id); return '<div class="row" data-row="' + esc(id) + '" data-sec="' + esc(curSec) + '"></div>'; }).join('') };
       }
       return null;
     };
@@ -2454,16 +2475,18 @@ class LemurHomeDashboardCard extends HTMLElement {
     // kolonlara dağıt; başlıksız bölüm aynı kolondaki önceki kutunun içine girer (ör. iklimin altında süpürge)
     // içi boş bölümün başlığı, aynı kolonda arkasından gelen başlıksız bölüme geçer
     const widths = tab.columns || ['56%', '17%', '25.5%'];
-    const cols = widths.map(() => []), pending = widths.map(() => null);
+    const cols = widths.map(() => []), pending = widths.map(() => null), emptySecs = [];
     (tab.sections || []).forEach((s) => {
       const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0));
+      curSec = s.id;
       const b = bodyOf(s);
-      if (!b) { if (s.title) pending[ci] = s; return; }
+      if (!b) { if (s.title) pending[ci] = s; if (edit) emptySecs.push(s); return; }
       const boxes = cols[ci];
-      if (!s.title && !pending[ci] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; return; }
+      if (!s.title && !pending[ci] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; last.secs.push(s.id); return; }
       const head = s.title ? s : pending[ci];
       pending[ci] = null;
-      boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html });
+      boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html,
+        secs: head && head !== s ? [head.id, s.id] : [s.id] });
     });
     const used = [];
     cols.forEach((b, i) => { if (b.length) used.push(i); });
@@ -2471,7 +2494,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni"><ha-icon icon="' + esc(x.icon || 'mdi:home-outline') + '"></ha-icon></div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
       '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
-    const boxHtml = (b) => '<div class="box' + (b.spread ? ' spread' : '') + '">' +
+    const boxHtml = (b) => '<div class="box' + (b.spread ? ' spread' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '">' +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
       b.html + '</div>';   // spread: başlık da dahil hepsi kutuya eşit aralıkla dağılır (tablet panosundaki justify-content: space-between)
     let grid, body;
@@ -2484,7 +2507,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap" style="' + grid + '">' + nav + body + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + '" style="' + grid + '">' + nav + body + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -2502,6 +2525,15 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._last = {};
     this._lang = lang;
 
+    // düzenleme modu (yönetim panelindeki önizleme): cihazlara dokunulmaz, tıklama bölümü / sekmeyi seçer
+    if (edit) {
+      R.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => lpFire(this, 'lhd-tab', { tab: b.getAttribute('data-nav') })));
+      R.querySelectorAll('.box[data-secs]').forEach((b) => b.addEventListener('click', (e) => {
+        const hit = e.target.closest ? e.target.closest('[data-sec]') : null;
+        lpFire(this, 'lhd-select', { section: hit ? hit.getAttribute('data-sec') : b.getAttribute('data-secs').split(',')[0] });
+      }));
+      return;
+    }
     // dokunuşlar
     R.querySelectorAll('[data-nav]').forEach((b) => lpPress(b, () => {
       const id = b.getAttribute('data-nav');
@@ -2560,20 +2592,574 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
 }
 
-// lemur-home-dashboard-admin: sol menüdeki yönetim paneli. TASLAK: şimdilik ayarları gösterir, varsayılana dönebilir.
-// Hedef: Light Effect Card'ın kontrol paneli düzeninde sekme/bölüm/cihaz/boyut düzenleme, sürükle-bırak, canlı önizleme.
+// lemur-home-dashboard-admin: sol menüdeki yönetim paneli.
+// Düzen Light Effect Card'ın kontrol paneliyle aynı aile: üstte sekme şeridi (seçili sekmenin ayarları altında birleşik),
+// solda panonun canlı önizlemesi (tıklayınca bölüm seçilir), sağda bölüm düzenleyici. Her değişiklik anında kaydedilir,
+// açık bütün tabletler canlı güncellenir; "Geri al" (Ctrl+Z) son değişiklikleri geri alır.
+// Ayar yokken pano otomatik düzendedir; ilk değişiklikte o düzen kopyalanıp kaydedilir.
+
+const ADM = {
+  tr: {
+    title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
+    undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}',
+    tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolon genişlikleri', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
+    refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
+    preview: 'Önizleme', pvHint: 'Bir kutuya tıkla, sağda düzenle', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
+    secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', delSec: 'Bölümü sil',
+    t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya',
+    d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
+    n_items: '{n} öğe', addDev: 'Cihaz ekle', addPh: 'Boş yuva', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
+    tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
+    pickT: 'Cihaz ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
+    s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
+    lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
+    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi',
+    theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
+    kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu. Efekt düğmesi ve efekt sayfası sonraki sürümde panoya gelecek.', lecOff: 'Kurulu değil. Efektler için isteğe bağlı olarak kurulabilir.',
+    resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
+  },
+  en: {
+    title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
+    undo: 'Undo', undoK: 'Undo (Ctrl+Z)', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}',
+    tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Column widths', delTab: 'Delete tab', sure: 'Sure?',
+    refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
+    preview: 'Preview', pvHint: 'Click a box, edit it on the right', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
+    secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', delSec: 'Delete section',
+    t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media',
+    d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
+    n_items: '{n} items', addDev: 'Add device', addPh: 'Empty slot', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
+    tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
+    pickT: 'Add device', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
+    s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
+    lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
+    bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address',
+    theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
+    kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed. The effect button and effect page come to the dashboard in a later version.', lecOff: 'Not installed. Optional, for light effects.',
+    resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
+  }
+};
+const LHD_TYPES = {
+  lights: { icon: 'mdi:lightbulb-group-outline', domains: ['light', 'switch', 'cover', 'fan', 'input_boolean'], col: 0 },
+  scenes: { icon: 'mdi:gesture-tap-button', domains: ['script', 'scene', 'automation'], col: 1 },
+  climate: { icon: 'mdi:thermostat', domains: ['climate'], col: 2 },
+  vacuum: { icon: 'mdi:robot-vacuum', domains: ['vacuum'], col: 2 },
+  media: { icon: 'mdi:television', domains: ['media_player'], col: 2 }
+};
+const LHD_COLS = [['56%', '17%', '25.5%'], ['50%', '25%', '25%'], ['34%', '33%', '33%'], ['65%', '35%']];
+const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
+const lhdClone = (x) => JSON.parse(JSON.stringify(x));
+let lhdSeq = 0;
+const lhdId = (p) => p + Date.now().toString(36) + (lhdSeq++).toString(36);
+const lhdMove = (arr, from, to) => { const x = arr.splice(from, 1)[0]; arr.splice(to, 0, x); };
+
 class LemurHomeDashboardAdmin extends HTMLElement {
-  set hass(h) { const first = !this._hass; this._hass = h; if (first) STORE.load(h).then(() => this._render()).catch(() => this._render()); }
+  constructor() {
+    super();
+    this._tab = null; this._sec = null; this._undo = []; this._modal = null; this._menu = null; this._q = ''; this._picked = [];
+    this._ask = null;
+  }
+  set hass(h) {
+    const first = !this._hass;
+    this._hass = h;
+    if (first) {
+      STORE.load(h).then(() => {
+        if (!this._unsub) this._unsub = STORE.onChange(() => { if (!this._modal) this._render(); });
+        this._render();
+      }).catch(() => this._render());
+      return;
+    }
+    if (this._pv) this._pv.hass = h;
+  }
   set narrow(v) { this._narrow = v; }
-  set panel(p) { this._panel = p; }
-  _render() {
-    const lang = pickLang(this._hass);
+  set panel(p) { this._panelCfg = p; }
+  connectedCallback() {
+    if (!this._key) {
+      this._key = (e) => {
+        const typing = e.composedPath && e.composedPath()[0] && /INPUT|SELECT|TEXTAREA/.test(e.composedPath()[0].tagName || '');
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !typing && this._undo.length) { e.preventDefault(); this._undoIt(); }
+        if (e.key === 'Escape' && (this._modal || this._menu)) { this._modal = null; this._menu = null; this._render(); }
+      };
+    }
+    window.addEventListener('keydown', this._key);
+    if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
+    if (this._hass && STORE.data) this._render();
+  }
+  disconnectedCallback() {
+    window.removeEventListener('keydown', this._key);
+    if (this._ro) this._ro.disconnect();
+  }
+
+  get _lang() { return pickLang(this._hass); }
+  _t(k, v) {
+    const d = ADM[this._lang] || ADM.en;
+    let s = d[k] !== undefined ? d[k] : (ADM.en[k] !== undefined ? ADM.en[k] : k);
+    if (v) Object.keys(v).forEach((x) => { s = s.split('{' + x + '}').join(v[x]); });
+    return s;
+  }
+  _settings() { return (STORE.data && STORE.data.settings) || {}; }
+  _isAuto() { const d = STORE.data; return !(d && d.tabs && d.tabs.length); }
+  _work() { const d = STORE.data; return lhdClone(d && d.tabs && d.tabs.length ? d.tabs : buildDefaultTabs(this._hass, this._lang)); }
+  _area(id) { const a = this._hass.areas && this._hass.areas[id]; return a ? a.name : ''; }
+  _ename(id) { const s = this._hass.states[id]; return (s && s.attributes.friendly_name) || id; }
+
+  // ---- kayıt: önce ekranda, sonra entegrasyona; her değişiklik geri alınabilir ----
+  _commit(key, value) {
+    STORE.data = Object.assign({}, STORE.data); STORE.data[key] = value;
     const d = STORE.data;
-    this.innerHTML = '<div style="padding:24px;max-width:960px;font-family:var(--primary-font-family, sans-serif);color:var(--primary-text-color)">' +
-      '<h1 style="margin:0 0 8px">' + t(lang, 'admin_title') + '</h1><p>' + t(lang, 'admin_intro') + '</p>' +
-      (d ? '<button id="reset">' + t(lang, 'reset') + '</button><pre style="white-space:pre-wrap;font-size:12px;opacity:.8">' + esc(JSON.stringify(d, null, 2)) + '</pre>' : '<p>' + t(lang, 'not_loaded') + '</p>') + '</div>';
-    const r = this.querySelector('#reset');
-    if (r) r.addEventListener('click', () => STORE.set('tabs', []).then(() => this._render()));
+    STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
+    return STORE.set(key, value).catch((e) => this._toast(this._t('err', { e: (e && e.message) || e }), false));
+  }
+  _snap() {
+    this._undo.push({ tabs: lhdClone((STORE.data && STORE.data.tabs) || []), settings: lhdClone(this._settings()) });
+    if (this._undo.length > 40) this._undo.shift();
+  }
+  _undoIt() {
+    const u = this._undo.pop(); if (!u) return;
+    this._commit('settings', u.settings); this._commit('tabs', u.tabs);
+    this._render();
+    this._toast(this._t('undone'), false);
+  }
+  _edit(fn, msg) {
+    this._snap();
+    const tabs = this._work();
+    fn(tabs);
+    this._commit('tabs', tabs);
+    this._toast(msg || this._t('saved'));
+  }
+  _setting(path, value) {
+    this._snap();
+    const s = lhdClone(this._settings());
+    const p = path.split('.');
+    let o = s;
+    for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
+    if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
+    this._commit('settings', s);
+    this._render();   // ayarlar penceresi açıkken de güncel görünsün
+    this._toast(this._t('saved'));
+  }
+  _toast(x, undo) {
+    const el = this.shadowRoot && this.shadowRoot.querySelector('.toast'); if (!el) return;
+    el.querySelector('span').textContent = x;
+    el.querySelector('button').hidden = undo === false || !this._undo.length;
+    el.classList.add('show');
+    clearTimeout(this._tt); this._tt = setTimeout(() => el.classList.remove('show'), 4200);
+  }
+
+  // ---- seçili sekme ve bölüm ----
+  _curTab(tabs) {
+    let t = tabs.filter((x) => x.id === this._tab)[0];
+    if (!t) { t = tabs[0]; this._tab = t ? t.id : null; }
+    return t;
+  }
+  _curSec(tab) {
+    if (!tab) return null;
+    const s = (tab.sections || []).filter((x) => x.id === this._sec)[0];
+    if (!s) this._sec = null;
+    return s || null;
+  }
+
+  // ---- çizim ----
+  _render() {
+    if (!this._hass) return;
+    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
+    const R = this.shadowRoot;
+    if (!STORE.data) { R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app"><div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + esc(this._t('title')) + '</h1></div><div class="warn">' + esc(this._t('notLoaded')) + '</div></div>'; return; }
+    const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab);
+    const t = (k, v) => esc(this._t(k, v));
+    const narrow = (this.clientWidth || window.innerWidth) < 980;
+    this._narrowNow = narrow;
+
+    const top = '<div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + t('title') + '</h1>' +
+      (this._isAuto() ? '<span class="badge" title="' + t('autoT') + '">' + t('auto') + '</span>' : '') + '<div class="grow"></div>' +
+      '<button class="btn ic" data-a="undo" title="' + t('undoK') + '"' + (this._undo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:undo"></ha-icon></button>' +
+      '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
+      '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
+
+    const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle><ha-icon icon="' + esc(x.icon || 'mdi:door') + '"></ha-icon>' + esc(x.name) + '</div>').join('') +
+      '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div></div>';
+    const areaOpts = '<option value="">' + t('noArea') + '</option>' + Object.keys(this._hass.areas || {}).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
+    const colKey = tab ? JSON.stringify(tab.columns || LHD_COLS[0]) : '';
+    const rpanel = tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
+      '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
+      '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv"><ha-icon icon="' + esc(tab.icon || 'mdi:door') + '"></ha-icon></div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"></div></div>' +
+      '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
+      '<div class="fld"><label>' + t('cols') + '</label><div class="seg">' + LHD_COLS.map((c, i) => '<button data-cols="' + i + '"' + (JSON.stringify(c) === colKey ? ' class="on"' : '') + '>' + c.map((x) => parseFloat(x)).join(' · ') + '</button>').join('') + '</div></div>' +
+      (tab.area ? '<button class="btn sm" data-a="refill" title="' + t('refillT') + '"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('refill') + '</button>' : '') +
+      '<button class="btn sm dan' + (this._ask === 'deltab' ? ' ask' : '') + '" data-a="deltab"' + (tabs.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'deltab' ? t('sure') : t('delTab')) + '</button></div>' : '';
+
+    const ncols = tab ? (tab.columns || LHD_COLS[0]).length : 3;
+    const colName = (c) => [t('colL'), t('colM'), t('colR')][ncols === 2 && c >= 1 ? 2 : c] || t('colR');
+    const count = (s) => (s.type === 'scenes' ? (s.items || []).length : (s.entities || []).length);
+    const secList = tab && (tab.sections || []).length ? '<div class="sl" data-dl="secs">' + tab.sections.map((s) => '<div class="si' + (s.id === this._sec ? ' on' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
+      '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
+      '<div class="nm"><b>' + esc(s.title || this._t('t_' + s.type)) + '</b><span>' + t('t_' + s.type) + ' · ' + t('n_items', { n: count(s) }) + '</span></div><span class="cb">' + colName(s.col || 0) + '</span></div>').join('') + '</div>'
+      : '<div class="empty">' + t('noSec') + '</div>';
+
+    const ins = '<div class="ins"><div class="sc">' +
+      '<h3>' + t('sections') + '<span class="grow"></span><button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button></h3>' + secList +
+      (sec ? this._secEditor(tab, sec, ncols) : '') +
+      (this._isAuto() ? '<div class="hint">' + t('autoT') + '</div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
+
+    const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span></div><div class="pvbox"><div class="pvc"></div></div></div>';
+
+    R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top +
+      '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
+      this._menuHtml() + this._modalHtml(tabs, tab, sec) +
+      '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
+
+    this._mountPreview(tab, sec);
+    this._bind(tabs, tab, sec);
+  }
+
+  _secEditor(tab, s, ncols) {
+    const t = (k, v) => esc(this._t(k, v));
+    const S = this._hass.states;
+    const colSeg = '<div class="seg">' + (ncols === 2 ? [0, 1] : [0, 1, 2]).map((c) => '<button data-scol="' + c + '"' + ((s.col || 0) === c ? ' class="on"' : '') + '>' + (ncols === 2 ? [t('colL'), t('colR')][c] : [t('colL'), t('colM'), t('colR')][c]) + '</button>').join('') + '</div>';
+    let body = '';
+    const handle = '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span>';
+    const xBtn = (i) => '<button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
+    if (s.type === 'scenes') {
+      const items = s.items || [];
+      body = items.length ? '<div class="items" data-dl="items">' + items.map((it, i) => '<div class="it" data-di>' + handle +
+        '<input type="color" data-if="' + i + '.color" value="' + esc(it.color || '#5B8DEF') + '">' +
+        '<div class="ico"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div>' +
+        '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
+        '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="mdi:play" style="height:28px;font-size:12px">' +
+        '</div><span class="eid">' + t('target') + ': ' + esc(it.action && it.action.target ? this._ename(it.action.target) : '—') + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
+        : '<div class="empty">' + t('noItems') + '</div>';
+      body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addScene') + '</button></div>';
+    } else {
+      const items = (s.entities || []).map((x) => (typeof x === 'string' ? { entity: x } : x));
+      const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
+      const hums = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'humidity');
+      const sel = (i, key, list, cur) => '<select class="inp" data-if="' + i + '.' + key + '"><option value="">' + t('fromDevice') + '</option>' +
+        list.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
+      body = items.length ? '<div class="items" data-dl="items">' + items.map((it, i) => {
+        const st = it.entity ? S[it.entity] : null;
+        const ico = it.entity ? (it.icon ? '<ha-icon icon="' + esc(it.icon) + '"></ha-icon>' : '<ha-state-icon data-eid="' + esc(it.entity) + '"></ha-state-icon>') : '<ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon>';
+        let extra = '';
+        if (s.type === 'lights') extra = '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="' + t('icon') + ' (mdi:...)" style="height:28px;font-size:12px"></div>';
+        if (s.type === 'climate') extra = '<div class="sub">' + sel(i, 'temperature_sensor', temps, it.temperature_sensor) + sel(i, 'humidity_sensor', hums, it.humidity_sensor) + '</div>' +
+          '<div class="sub"><select class="inp" data-if="' + i + '.kind">' + ['auto', 'ac', 'radiator'].map((k) => '<option value="' + k + '"' + ((it.kind || 'auto') === k ? ' selected' : '') + '>' + t('k_' + k) + '</option>').join('') + '</select></div>';
+        return '<div class="it' + (it.entity ? '' : ' ph') + '" data-di>' + handle + '<div class="ico">' + ico + '</div><div class="col">' +
+          '<input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + esc(it.entity ? this._ename(it.entity) : this._t('name')) + '">' + extra +
+          '<span class="eid">' + esc(it.entity ? it.entity + (st ? '' : ' · ?') : this._t('addPh')) + '</span></div>' + xBtn(i) + '</div>';
+      }).join('') + '</div>' : '<div class="empty">' + t('noItems') + '</div>';
+      body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addDev') + '</button>' +
+        (s.type === 'lights' ? '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' : '') + '</div>';
+    }
+    return '<div class="ed"><div class="row2"><div class="fld"><label>' + t('secTitle') + '</label><input class="inp" data-f="sec.title" value="' + esc(s.title || '') + '" placeholder="' + t('t_' + s.type) + '"></div>' +
+      '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div></div>' +
+      (s.type === 'lights' ? '<div class="fld"><label>' + t('tileCols') + '</label><div class="seg">' + [3, 4, 5, 6].map((n) => '<button data-tc="' + n + '"' + ((s.tile_columns || 5) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') +
+      body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
+  }
+
+  _menuHtml() {
+    const m = this._menu; if (!m) return '';
+    const t = (k) => esc(this._t(k));
+    let inner = '';
+    if (m.kind === 'more') inner = '<button class="dan" data-a="reset"><ha-icon class="s16" icon="mdi:restore"></ha-icon>' + t('resetAll') + '</button>';
+    if (m.kind === 'addtab') {
+      const used = {}; this._work().forEach((x) => { if (x.area) used[x.area] = 1; });
+      const areas = Object.keys(this._hass.areas || {}).filter((a) => !used[a]);
+      inner = '<button data-newtab=""><ha-icon class="s16" icon="mdi:tab-plus"></ha-icon>' + t('emptyTab') + '</button>' +
+        (areas.length ? '<hr><div class="mh">' + t('fromArea') + '</div>' + areas.map((a) => '<button data-newtab="' + esc(a) + '"><ha-icon class="s16" icon="' + esc((this._hass.areas[a].icon) || 'mdi:door') + '"></ha-icon>' + esc(this._area(a)) + '</button>').join('') : '');
+    }
+    if (m.kind === 'addsec') inner = Object.keys(LHD_TYPES).map((k) => '<button data-newsec="' + k + '"><ha-icon class="s16" icon="' + LHD_TYPES[k].icon + '"></ha-icon><span><b>' + t('t_' + k) + '</b><br><span class="mu" style="font-size:12px">' + t('d_' + k) + '</span></span></button>').join('');
+    return '<div class="menu" style="left:' + m.x + 'px;top:' + m.y + 'px;max-height:' + Math.max(200, window.innerHeight - m.y - 20) + 'px;overflow:auto">' + inner + '</div>';
+  }
+
+  _modalHtml(tabs, tab, sec) {
+    const md = this._modal; if (!md) return '';
+    const t = (k, v) => esc(this._t(k, v));
+    if (md === 'pick' && sec) {
+      return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="' + LHD_TYPES[sec.type].icon + '"></ha-icon></div><h2>' + t('pickT') + ' → ' + esc(sec.title || this._t('t_' + sec.type)) + '</h2>' +
+        '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+        '<div class="db" style="padding-bottom:4px"><input class="inp" data-q placeholder="' + t('search') + '" value="' + esc(this._q) + '"></div>' +
+        '<div class="db"><div class="plist">' + this._pickList(sec) + '</div></div>' +
+        '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="pickadd"' + (this._picked.length ? '' : ' disabled') + '>' + t('addN', { n: this._picked.length }) + '</button></div></div></div>';
+    }
+    if (md === 'settings') {
+      const s = this._settings();
+      const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const tg = (path, on) => '<button class="tg' + (on ? ' on' : '') + '" data-tg="' + path + '"></button>';
+      const k = s.kiosk || {}, cv = s.canvas || {};
+      const bgImg = typeof s.background === 'string' && /url\(/.test(s.background);
+      const bgUrl = bgImg ? (s.background.match(/url\(['"]?([^'")]+)/) || [])[1] || '' : '';
+      const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
+      return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('settings') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' +
+        '<div class="sh">' + t('s_board') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('lang') + '</b></div>' + seg('language', s.language || 'auto', [['auto', this._t('lAuto')], ['tr', 'Türkçe'], ['en', 'English']]) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
+        '<div class="sh">' + t('s_look') + '</div>' +
+        '<div class="srow" style="flex-wrap:wrap"><div class="t"><b>' + t('bg') + '</b><span>' + t('bgT') + '</span></div>' + seg('bgmode', bgImg ? 'img' : 'dark', [['dark', this._t('bgDark')], ['img', this._t('bgImg')]]) +
+        (bgImg ? '<input class="inp w" data-bgurl value="' + esc(bgUrl) + '" placeholder="/local/zemin.jpg" style="width:100%">' : '') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('theme') + '</b><span>' + t('themeT') + '</span></div><input class="inp w" data-sf="theme_name" value="' + esc(s.theme_name || '') + '" placeholder="ios-dark-mode-blue-red"></div>' +
+        '<div class="sh">' + t('s_screen') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + tg('kiosk.hide_header', !!k.hide_header) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + tg('kiosk.hide_sidebar', !!k.hide_sidebar) + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
+        '<div class="sh">' + t('s_info') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn') : t('lecOff')) + '</span></div></div>' +
+        '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
+        '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
+    }
+    if (md === 'reset') {
+      return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di" style="color:var(--red)"><ha-icon icon="mdi:restore"></ha-icon></div><h2>' + t('resetAll') + '</h2></div>' +
+        '<div class="db"><div>' + t('resetQ') + '</div></div><div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="resetgo" style="background:var(--red);border-color:var(--red);color:#fff">' + t('resetAll') + '</button></div></div></div>';
+    }
+    return '';
+  }
+
+  // cihaz seçici listesi: bölümün türüne uyan cihazlar, alana göre gruplu, aramayla süzülür
+  _pickList(sec) {
+    const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
+    const doms = LHD_TYPES[sec.type].domains;
+    const have = {};
+    if (sec.type === 'scenes') (sec.items || []).forEach((x) => { if (x.action && x.action.target) have[x.action.target] = 1; });
+    else (sec.entities || []).forEach((x) => { const id = typeof x === 'string' ? x : x.entity; if (id) have[id] = 1; });
+    const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
+    const q = this._q.toLowerCase().trim();
+    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)))
+      .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
+    if (!ids.length) return '<div class="empty">' + esc(this._t('nothing')) + '</div>';
+    const groups = {};
+    ids.forEach((id) => { const a = areaOf(id); (groups[a] = groups[a] || []).push(id); });
+    const order = Object.keys(this._hass.areas || {}).filter((a) => groups[a]).concat(groups[''] ? [''] : []);
+    return order.map((a) => '<div class="pg">' + esc(a ? this._area(a) : this._t('noArea2')) + '</div>' + groups[a].sort((x, y) => this._ename(x).localeCompare(this._ename(y))).map((id) => {
+      const on = this._picked.indexOf(id) >= 0, dis = !!have[id];
+      return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
+        '<div class="ico"><ha-state-icon data-eid="' + esc(id) + '"></ha-state-icon></div><div class="t"><b>' + esc(this._ename(id)) + '</b><span>' + esc(id) + '</span></div>' +
+        '<span class="st">' + esc(dis ? this._t('added') : (this._hass.formatEntityState ? this._hass.formatEntityState(S[id]) : S[id].state)) + '</span></div>';
+    }).join('')).join('');
+  }
+
+  // ---- önizleme: panonun kendi kartı, düzenleme modunda, tasarım boyutunda çizilip kutuya sığdırılır ----
+  _mountPreview(tab, sec) {
+    const box = this.shadowRoot.querySelector('.pvc'); if (!box || !tab) return;
+    if (!this._pv) {
+      this._pv = document.createElement('lemur-home-dashboard-card');
+      this._pv.addEventListener('lhd-select', (e) => { this._sec = e.detail.section; this._ask = null; this._render(); });
+      this._pv.addEventListener('lhd-tab', (e) => { this._tab = e.detail.tab; this._sec = null; this._ask = null; this._render(); });
+    }
+    const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '' };
+    if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
+    box.appendChild(this._pv);
+    this._pv.hass = this._hass;
+    const s = this._settings();
+    box.style.background = typeof s.background === 'string' ? s.background : LP_DEFAULT_BG;
+    if (this._ro) { this._ro.disconnect(); this._ro.observe(box.parentNode); }
+    this._fit();
+  }
+  _fit() {
+    const R = this.shadowRoot; if (!R) return;
+    // dar ekranda (tablet dikey) önizleme üstte, düzenleyici altta
+    if (this._narrowNow !== undefined && ((this.clientWidth || window.innerWidth) < 980) !== this._narrowNow && !this._modal) { this._render(); return; }
+    const box = R.querySelector('.pvc'), wrap = R.querySelector('.pvbox'); if (!box || !wrap) return;
+    const cv = this._settings().canvas || {}, W = cv.width || 1280, H = cv.ref_height || 1075;
+    const z = Math.min(wrap.clientWidth / W, wrap.clientHeight / H) || 0.5;
+    box.style.width = W + 'px'; box.style.height = H + 'px';
+    box.style.setProperty('--lp-h', H + 'px');
+    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - W * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - H * z) / 2) + 'px) scale(' + z + ')';
+  }
+
+  // ---- olaylar ----
+  _bind(tabs, tab, sec) {
+    const R = this.shadowRoot, app = R.querySelector('.app');
+    R.querySelectorAll('ha-state-icon[data-eid]').forEach((e) => { e.hass = this._hass; e.stateObj = this._hass.states[e.getAttribute('data-eid')]; });
+    const tabIdx = tab ? tabs.indexOf(tab) : -1;
+    const secIdx = sec ? tab.sections.indexOf(sec) : -1;
+    const editTab = (fn) => this._edit((T) => fn(T[tabIdx], T));
+    const editSec = (fn) => this._edit((T) => fn(T[tabIdx].sections[secIdx], T[tabIdx]));
+
+    app.addEventListener('click', (e) => {
+      const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
+      const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
+      if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
+      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { this._modal = null; this._render(); return; }
+      if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
+      const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
+      if (act === 'undo') return this._undoIt();
+      if (act === 'settings') { this._modal = 'settings'; this._menu = null; return this._render(); }
+      if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
+      if (act === 'close') { this._modal = null; this._picked = []; this._q = ''; return this._render(); }
+      if (act === 'reset') { this._menu = null; this._modal = 'reset'; return this._render(); }
+      if (act === 'resetgo') { this._snap(); this._modal = null; this._sec = null; this._commit('tabs', []); this._toast(this._t('resetOk')); return this._render(); }
+      if (act === 'deltab') {
+        if (this._ask !== 'deltab') { this._ask = 'deltab'; return this._render(); }
+        this._ask = null; const id = tab.id; this._sec = null;
+        this._edit((T) => { T.splice(T.map((x) => x.id).indexOf(id), 1); }); this._tab = null; return;
+      }
+      if (act === 'delsec') {
+        if (this._ask !== 'delsec') { this._ask = 'delsec'; return this._render(); }
+        this._ask = null; const id = sec.id; this._sec = null;
+        return editTab((T) => { T.sections = T.sections.filter((x) => x.id !== id); });
+      }
+      if (act === 'refill') {
+        const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === tab.area)[0];
+        if (!fresh) return;
+        this._sec = null;
+        return editTab((T) => { T.sections = fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })); });
+      }
+      if (act === 'pick') { this._modal = 'pick'; this._picked = []; this._q = ''; return this._render(); }
+      if (act === 'pickadd') {
+        const ids = this._picked.slice(); this._modal = null; this._picked = []; this._q = '';
+        return editSec((S) => {
+          if (S.type === 'scenes') {
+            S.items = S.items || [];
+            ids.forEach((id) => {
+              const d = id.split('.')[0], st = this._hass.states[id];
+              S.items.push({ name: this._ename(id), icon: (st && st.attributes.icon) || (d === 'script' ? 'mdi:play-circle-outline' : d === 'scene' ? 'mdi:palette-outline' : 'mdi:robot'),
+                color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: d === 'automation' ? 'automation.trigger' : d + '.turn_on', target: id } });
+            });
+          } else {
+            S.entities = S.entities || [];
+            ids.forEach((id) => S.entities.push(S.type === 'climate' ? this._climateItem(id) : id));
+          }
+        });
+      }
+      if (act === 'addph') return editSec((S) => { S.entities = (S.entities || []).concat([{ name: this._t('addPh'), icon: 'mdi:lightbulb-outline' }]); });
+      const nt = g('[data-newtab]');
+      if (nt) {
+        const aid = nt.getAttribute('data-newtab'); this._menu = null;
+        const id = lhdId('t');
+        let nw;
+        if (aid) {
+          const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === aid)[0];
+          const ar = this._hass.areas[aid];
+          nw = fresh ? Object.assign({}, fresh, { id: id, sections: fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })) })
+            : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LHD_COLS[0].slice(), sections: [] };
+        } else {
+          nw = { id: id, name: this._t('newTab'), icon: 'mdi:door', area: null, columns: LHD_COLS[0].slice(), sections: [] };
+        }
+        this._tab = id; this._sec = null;
+        return this._edit((T) => { T.push(nw); });
+      }
+      const ns = g('[data-newsec]');
+      if (ns) {
+        const type = ns.getAttribute('data-newsec'), id = lhdId('s'); this._menu = null;
+        const L = this._lang, titles = { lights: t(L, 'lights'), scenes: t(L, 'scenes'), climate: tab.area ? upper(L, this._area(tab.area)) : t(L, 'control'), vacuum: '', media: '' };
+        const ncol = (tab.columns || LHD_COLS[0]).length;
+        const s = { id: id, type: type, title: titles[type], col: Math.min(LHD_TYPES[type].col, ncol - 1) };
+        if (type === 'scenes') s.items = []; else s.entities = [];
+        if (type === 'lights') s.tile_columns = 5;
+        this._sec = id;
+        return editTab((T) => { T.sections.push(s); });
+      }
+      const tb = g('[data-tab]');
+      if (tb && !this._dragged) { this._tab = tb.getAttribute('data-tab'); this._sec = null; return this._render(); }
+      const si = g('.si[data-sec]');
+      if (si && !this._dragged && !g('[data-handle]')) { this._sec = si.getAttribute('data-sec'); return this._render(); }
+      const cb = g('[data-cols]');
+      if (cb) { const c = LHD_COLS[+cb.getAttribute('data-cols')]; return editTab((T) => { T.columns = c.slice(); T.sections.forEach((s) => { if ((s.col || 0) > c.length - 1) s.col = c.length - 1; }); }); }
+      const sc = g('[data-scol]');
+      if (sc) return editSec((S) => { S.col = +sc.getAttribute('data-scol'); });
+      const tc = g('[data-tc]');
+      if (tc) return editSec((S) => { S.tile_columns = +tc.getAttribute('data-tc'); });
+      const dl = g('[data-del]');
+      if (dl) { const i = +dl.getAttribute('data-del'); return editSec((S) => { (S.type === 'scenes' ? S.items : S.entities).splice(i, 1); }); }
+      const pk = g('[data-pk]');
+      if (pk && !pk.classList.contains('dis')) {
+        const id = pk.getAttribute('data-pk'), k = this._picked.indexOf(id);
+        if (k >= 0) this._picked.splice(k, 1); else this._picked.push(id);
+        pk.classList.toggle('on', k < 0);
+        pk.querySelector('.ck').innerHTML = k < 0 ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '';
+        const btn = R.querySelector('[data-a="pickadd"]'); btn.disabled = !this._picked.length; btn.textContent = this._t('addN', { n: this._picked.length });
+        return;
+      }
+      const st = g('[data-set]');
+      if (st) {
+        const path = st.getAttribute('data-set'), v = st.getAttribute('data-val');
+        if (path === 'bgmode') return this._setting('background', v === 'img' ? "center / cover no-repeat fixed url('/local/zemin.jpg')" : null);
+        return this._setting(path, v === 'auto' ? null : v);
+      }
+      const tgl = g('[data-tg]');
+      if (tgl) { const path = tgl.getAttribute('data-tg'); const cur = tgl.classList.contains('on'); return this._setting(path, cur ? null : true); }
+    });
+
+    // metin alanları: değişiklik Enter'a basınca ya da alandan çıkınca kaydedilir (yazarken odak kaybolmasın)
+    app.addEventListener('change', (e) => {
+      const el = e.target;
+      const f = el.getAttribute && el.getAttribute('data-f');
+      if (f === 'tab.name') return editTab((T) => { T.name = el.value.trim() || T.name; });
+      if (f === 'tab.icon') return editTab((T) => { T.icon = el.value.trim() || 'mdi:door'; });
+      if (f === 'tab.area') return editTab((T) => { T.area = el.value || null; });
+      if (f === 'sec.title') return editSec((S) => { S.title = el.value; });
+      const itf = el.getAttribute && el.getAttribute('data-if');
+      if (itf) {
+        const p = itf.split('.'), i = +p[0], key = p[1], v = el.value.trim();
+        return editSec((S) => {
+          if (S.type === 'scenes') { const it = S.items[i]; if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }
+          let it = S.entities[i]; if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
+          if (v && !(key === 'kind' && v === 'auto')) it[key] = v; else delete it[key];
+          if (it.entity && Object.keys(it).length === 1) S.entities[i] = it.entity;   // sade kalsın
+        });
+      }
+      const sf = el.getAttribute && el.getAttribute('data-sf');
+      if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v); }
+      if (el.hasAttribute && el.hasAttribute('data-bgurl')) { const u = el.value.trim(); return this._setting('background', u ? "center / cover no-repeat fixed url('" + u.replace(/'/g, '') + "')" : null); }
+    });
+    app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('inp') && e.target.tagName === 'INPUT') e.target.blur(); });
+    // simge alanında yazarken önizleme
+    app.addEventListener('input', (e) => {
+      const el = e.target;
+      if (el.hasAttribute && el.hasAttribute('data-q')) { this._q = el.value; const pl = R.querySelector('.plist'); if (pl) { pl.innerHTML = this._pickList(sec); pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; }); } return; }
+      const f = el.getAttribute && (el.getAttribute('data-f') || el.getAttribute('data-if') || '');
+      if (/icon$/.test(f)) { const pv = el.closest('.iconin, .it'); const ic = pv && pv.querySelector('.pv ha-icon, .ico ha-icon'); if (ic && /^[a-z]+:[a-z0-9-]+$/.test(el.value.trim())) ic.setAttribute('icon', el.value.trim()); }
+    });
+    const q = R.querySelector('[data-q]'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+
+    // sürükle bırak: sekmeler (yatay), bölümler, öğeler
+    R.querySelectorAll('[data-dl]').forEach((list) => {
+      list.addEventListener('pointerdown', (e) => {
+        const h = e.target.closest ? e.target.closest('[data-handle]') : null;
+        if (!h || e.button !== 0) return;
+        const item = h.closest('[data-di]'); if (!item || item.parentNode !== list) return;
+        const items = Array.prototype.filter.call(list.children, (x) => x.hasAttribute('data-di'));
+        const from = items.indexOf(item), horiz = list.getAttribute('data-dir') === 'x';
+        const sx = e.clientX, sy = e.clientY;
+        let to = from, started = false;
+        this._dragged = false;
+        const clear = () => items.forEach((x) => x.classList.remove('dropb', 'dropa'));
+        const move = (ev) => {
+          if (!started && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 6) return;
+          if (!started) { started = true; item.classList.add('dragging'); try { list.setPointerCapture(e.pointerId); } catch (x) {} }
+          const pos = horiz ? ev.clientX : ev.clientY;
+          to = items.length;
+          for (let i = 0; i < items.length; i++) { const r = items[i].getBoundingClientRect(); if (pos < (horiz ? r.left + r.width / 2 : r.top + r.height / 2)) { to = i; break; } }
+          clear();
+          if (to < items.length) items[to].classList.add('dropb'); else items[items.length - 1].classList.add('dropa');
+        };
+        const up = () => {
+          list.removeEventListener('pointermove', move); list.removeEventListener('pointerup', up); list.removeEventListener('pointercancel', up);
+          clear(); item.classList.remove('dragging');
+          if (!started) return;
+          this._dragged = true; setTimeout(() => { this._dragged = false; }, 0);
+          const dest = to > from ? to - 1 : to;
+          if (dest === from) return;
+          const kind = list.getAttribute('data-dl');
+          if (kind === 'tabs') this._edit((T) => lhdMove(T, from, dest));
+          if (kind === 'secs') editTab((T) => lhdMove(T.sections, from, dest));
+          if (kind === 'items') editSec((S) => lhdMove(S.type === 'scenes' ? S.items : S.entities, from, dest));
+        };
+        list.addEventListener('pointermove', move); list.addEventListener('pointerup', up); list.addEventListener('pointercancel', up);
+      });
+    });
+  }
+
+  // iklim cihazı eklenirken aynı alandaki harici sıcaklık/nem sensörü önerilir (otomatik düzendeki kural)
+  _climateItem(id) {
+    const fresh = buildDefaultTabs(this._hass, this._lang);
+    for (let i = 0; i < fresh.length; i++) {
+      const s = (fresh[i].sections || []).filter((x) => x.type === 'climate')[0];
+      const it = s && (s.entities || []).filter((x) => (typeof x === 'string' ? x : x.entity) === id)[0];
+      if (it) return typeof it === 'string' ? it : lhdClone(it);
+    }
+    return id;
   }
 }
 

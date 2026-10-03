@@ -72,6 +72,12 @@
 .rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .down { -webkit-transform: scale(0.96); transform: scale(0.96); }
+/* düzenleme modu (yönetim panelindeki önizleme) */
+.edit .box { cursor: pointer; transition: box-shadow 0.15s; }
+.edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }
+.edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }
+.edit .tile, .edit .scene, .edit .row, .edit .emb > *, .edit .title.season { pointer-events: none; }
+.edit .navb { cursor: pointer; }
 .gsq { position: relative; flex: 0 0 auto; height: 0; }
 .gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .tile.ph { cursor: default; }
