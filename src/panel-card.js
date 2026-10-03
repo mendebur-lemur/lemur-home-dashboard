@@ -93,6 +93,12 @@ const LP_FX_CSS = LP_FX.map((p) => {
     '.tile.fx-' + p.k + ' ha-state-icon{animation:lpfxi-' + p.k + ' ' + p.d + 's linear infinite}';
 }).join('');
 
+// üst şeritteki Efektler düğmesi: LEC kuruluysa varsayılan açık
+function lpLecNav(h) {
+  const st = (STORE.data && STORE.data.settings) || {};
+  return LEC.installed(h) && st.lec_nav !== false;
+}
+
 // Mevsim: ayarda yoksa aya göre (Mayıs-Eylül yaz). Kış'ta petek, Yaz'da klima kartları.
 function lpSeason() {
   const d = STORE.data, s = d && d.settings && d.settings.season;
@@ -165,7 +171,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), !!this._config.edit, this._config.selected || '']);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -271,8 +277,10 @@ class LemurHomeDashboardCard extends HTMLElement {
     const used = [];
     cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
 
+    // Lemur Light Effect Card kuruluysa üst şeridin sonunda "Efektler": efekt ekranını bu sekmenin odasıyla açar (ayarlardan kapatılabilir)
+    const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni"><ha-icon icon="mdi:creation"></ha-icon></div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
     const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni"><ha-icon icon="' + esc(x.icon || 'mdi:home-outline') + '"></ha-icon></div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
-      '<div class="clock">' + this._time() + '</div></div>';
+      navFx + '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
     const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
@@ -359,6 +367,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._hass.callService(sv[0], sv[1], it.action.target ? { entity_id: it.action.target } : (it.action.data || {}));
     }));
     R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter')));
+    R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => LEC.open(this._hass, tab.area)));
   }
 
   // --- düzenleme modu: tıkla seç, sürükle taşı, çizgiden boyutlandır ---

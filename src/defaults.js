@@ -8,7 +8,8 @@
 // - Küçük ışık grubunun üyeleri ayrıca gösterilmez; odanın tamamını kapsayan büyük grupta üyeler de görünür.
 // - Şerit/lamba segmentleri, ışığı olan cihazın güç anahtarı ve tarayıcı eklentisi (browser_mod) varlıkları alınmaz.
 // - Parametre isteyen betikler senaryo düğmesi olmaz.
-// - Lemur Light Effect Card kuruluysa senaryoların sonuna "Efektler" düğmesi eklenir (efekt ekranı, sekmenin odasıyla).
+// - Lemur Light Effect Card kuruluysa efekt ekranı üst şeritteki "Efektler" düğmesinden açılır (kart çizer, burada bir şey eklenmez).
+// - En fazla 6 oda sekmesi; fazlası ve küçük odalar "Diğer"de (sekme sayısı 8'i geçmesin, oda kaybolmasın).
 // - Anahtarlardan (switch) sadece priz ve aydınlatma gibi görünenler alınır; ayar anahtarları ve gizli varlıklar alınmaz.
 // Eski Safari için ?. ve ?? yok.
 const LP_SCENE_COLORS = ['#5B8DEF', '#8E7CFF', '#F5A623', '#4CD964', '#FF6B6B', '#2EC4B6', '#FFB86B', '#E879F9'];
@@ -121,15 +122,12 @@ function buildDefaultTabs(hass, lang) {
     action: { service: dom(id) + '.turn_on', target: id }
   });
   const globalScenes = scenes.filter((id) => !areaOf(id)).sort(byName);
-  // Lemur Light Effect Card kuruluysa her sekmenin senaryolarının sonunda "Efektler": LEC'in efekt ekranını sekmenin odasıyla açar
-  const lecBtn = () => ((hass.config && (hass.config.components || []).indexOf('lemur_light_effects') >= 0)
-    ? [{ name: t(lang, 'effects'), icon: 'mdi:creation', color: '#FF6FAE', action: { service: 'lemur_light_effects.open' } }] : []);
 
   const tab = (o) => {
     colorIdx = 0;   // her sekmede renkler baştan: aynı sıradaki düğme aynı renkte
     const secs = [
       { id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 },
-      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem).concat(lecBtn()) },
+      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem) },
       { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem) },
       { id: o.id + '-v', type: 'vacuum', col: 2, entities: o.vacuums || [] },
       { id: o.id + '-m', type: 'media', col: 2, entities: o.medias }
@@ -168,6 +166,7 @@ function buildDefaultTabs(hass, lang) {
   order.forEach((aid) => {
     const L = lightsIn(aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
     if (!C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
+    if (tabs.length >= 7) { small[aid] = true; return; }   // Ev + 6 oda dolu: kalan odalar "Diğer"e
     const sc = inArea(scenes, aid);
     const ar = areas[aid];
     const aname = ar.name || aid;

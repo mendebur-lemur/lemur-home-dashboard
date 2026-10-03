@@ -175,3 +175,7 @@ select.inp { padding-right: 6px; }
 .toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }
 .toast button[hidden] { display: none; }
 .lecna { color: #F3B0A9; font-weight: 600; }
+.lecinfo { display: flex; align-items: center; gap: 12px; flex: none; padding: 12px 14px; border-radius: var(--r2); background: linear-gradient(135deg, rgba(255,111,174,.14), rgba(142,124,255,.14)); border: 1px solid rgba(255,111,174,.35); }
+.lecinfo > ha-icon { --mdc-icon-size: 22px; color: #FF6FAE; flex: none; }
+.lecinfo .t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; font-size: 13px; }
+.lecinfo .t span { color: var(--tx2, #B5B9C0); line-height: 1.45; }
