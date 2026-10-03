@@ -8,9 +8,9 @@ const ADM = {
   tr: {
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
     undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}',
-    tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolon genişlikleri', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
+    tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
-    preview: 'Önizleme', pvHint: 'Bir kutuya tıkla, sağda düzenle', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
+    preview: 'Önizleme', pvHint: 'Tıkla seç · sürükle taşı · çizgiden boyutlandır', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', delSec: 'Bölümü sil',
     t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya',
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
@@ -30,9 +30,9 @@ const ADM = {
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
     undo: 'Undo', undoK: 'Undo (Ctrl+Z)', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}',
-    tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Column widths', delTab: 'Delete tab', sure: 'Sure?',
+    tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
-    preview: 'Preview', pvHint: 'Click a box, edit it on the right', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
+    preview: 'Preview', pvHint: 'Click to select · drag to move · drag lines to resize', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', delSec: 'Delete section',
     t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media',
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
@@ -59,7 +59,7 @@ const LHD_TYPES = {
 };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['here', 0, 0]];
-const LHD_COLS = [['56%', '17%', '25.5%'], ['50%', '25%', '25%'], ['34%', '33%', '33%'], ['65%', '35%']];
+const LHD_MAXCOLS = 6;
 const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
 const lhdClone = (x) => JSON.parse(JSON.stringify(x));
 let lhdSeq = 0;
@@ -192,17 +192,21 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle><ha-icon icon="' + esc(x.icon || 'mdi:door') + '"></ha-icon>' + esc(x.name) + '</div>').join('') +
       '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div></div>';
     const areaOpts = '<option value="">' + t('noArea') + '</option>' + Object.keys(this._hass.areas || {}).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
-    const colKey = tab ? JSON.stringify(tab.columns || LHD_COLS[0]) : '';
+    const W = tab ? lpWeights(tab) : LP_DEFAULT_COLS, wsum = W.reduce((a, b) => a + b, 0);
     const rpanel = tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
       '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
       '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv"><ha-icon icon="' + esc(tab.icon || 'mdi:door') + '"></ha-icon></div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
-      '<div class="fld"><label>' + t('cols') + '</label><div class="seg">' + LHD_COLS.map((c, i) => '<button data-cols="' + i + '"' + (JSON.stringify(c) === colKey ? ' class="on"' : '') + '>' + c.map((x) => parseFloat(x)).join(' · ') + '</button>').join('') + '</div></div>' +
+      '<div class="fld"><label title="' + t('colHint') + '">' + t('cols') + ' · ' + W.map((x) => Math.round(x / wsum * 100)).join(' / ') + '</label><div class="acts">' +
+        '<button class="btn sm ic" data-a="coldel" title="' + t('colDel') + '"' + (W.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:minus"></ha-icon></button>' +
+        '<span class="btn sm" style="pointer-events:none;min-width:38px">' + W.length + '</span>' +
+        '<button class="btn sm ic" data-a="coladd" title="' + t('colAdd') + '"' + (W.length >= LHD_MAXCOLS ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:plus"></ha-icon></button>' +
+        (W.length === 3 ? '<button class="btn sm" data-a="coltab">' + t('colTab') + '</button>' : '') + '<button class="btn sm" data-a="coleq">' + t('colEq') + '</button></div></div>' +
       (tab.area ? '<button class="btn sm" data-a="refill" title="' + t('refillT') + '"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('refill') + '</button>' : '') +
       '<button class="btn sm dan' + (this._ask === 'deltab' ? ' ask' : '') + '" data-a="deltab"' + (tabs.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'deltab' ? t('sure') : t('delTab')) + '</button></div>' : '';
 
-    const ncols = tab ? (tab.columns || LHD_COLS[0]).length : 3;
-    const colName = (c) => [t('colL'), t('colM'), t('colR')][ncols === 2 && c >= 1 ? 2 : c] || t('colR');
+    const ncols = W.length;
+    const colName = (c) => this._colName(c, ncols);
     const count = (s) => (s.type === 'scenes' ? (s.items || []).length : (s.entities || []).length);
     const secList = tab && (tab.sections || []).length ? '<div class="sl" data-dl="secs">' + tab.sections.map((s) => '<div class="si' + (s.id === this._sec ? ' on' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
       '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
@@ -230,7 +234,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _secEditor(tab, s, ncols) {
     const t = (k, v) => esc(this._t(k, v));
     const S = this._hass.states;
-    const colSeg = '<div class="seg">' + (ncols === 2 ? [0, 1] : [0, 1, 2]).map((c) => '<button data-scol="' + c + '"' + ((s.col || 0) === c ? ' class="on"' : '') + '>' + (ncols === 2 ? [t('colL'), t('colR')][c] : [t('colL'), t('colM'), t('colR')][c]) + '</button>').join('') + '</div>';
+    const colSeg = '<div class="seg">' + Array.apply(null, Array(ncols)).map((x, c) => '<button data-scol="' + c + '"' + (Math.min(s.col || 0, ncols - 1) === c ? ' class="on"' : '') + '>' + esc(this._colName(c, ncols)) + '</button>').join('') + '</div>';
     let body = '';
     const handle = '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span>';
     const xBtn = (i) => '<button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
@@ -350,6 +354,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }).join('')).join('');
   }
 
+  _colName(c, n) {
+    if (n === 2) return [this._t('colL'), this._t('colR')][c] || String(c + 1);
+    if (n === 3) return [this._t('colL'), this._t('colM'), this._t('colR')][c] || String(c + 1);
+    return String(c + 1);
+  }
+
   // ---- önizleme: panonun kendi kartı, düzenleme modunda, tasarım boyutunda çizilip kutuya sığdırılır ----
   _mountPreview(tab, sec) {
     const box = this.shadowRoot.querySelector('.pvc'); if (!box || !tab) return;
@@ -357,6 +367,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       this._pv = document.createElement('lemur-home-dashboard-card');
       this._pv.addEventListener('lhd-select', (e) => { this._sec = e.detail.section; this._ask = null; this._render(); });
       this._pv.addEventListener('lhd-tab', (e) => { this._tab = e.detail.tab; this._sec = null; this._ask = null; this._render(); });
+      // önizlemede sürükle-bırak ya da boyutlandırma: kart yeni sekme ayarını verir, burada kaydedilir (geri alınabilir)
+      this._pv.addEventListener('lhd-change', (e) => { const nt = e.detail.tab; this._edit((T) => { const i = T.map((x) => x.id).indexOf(nt.id); if (i >= 0) T[i] = nt; }); });
     }
     const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '' };
     if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
@@ -450,9 +462,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === aid)[0];
           const ar = this._hass.areas[aid];
           nw = fresh ? Object.assign({}, fresh, { id: id, sections: fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })) })
-            : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LHD_COLS[0].slice(), sections: [] };
+            : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LP_DEFAULT_COLS.slice(), sections: [] };
         } else {
-          nw = { id: id, name: this._t('newTab'), icon: 'mdi:door', area: null, columns: LHD_COLS[0].slice(), sections: [] };
+          nw = { id: id, name: this._t('newTab'), icon: 'mdi:door', area: null, columns: LP_DEFAULT_COLS.slice(), sections: [] };
         }
         this._tab = id; this._sec = null;
         return this._edit((T) => { T.push(nw); });
@@ -461,7 +473,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (ns) {
         const type = ns.getAttribute('data-newsec'), id = lhdId('s'); this._menu = null;
         const L = this._lang, titles = { lights: t(L, 'lights'), scenes: t(L, 'scenes'), climate: tab.area ? upper(L, this._area(tab.area)) : t(L, 'control'), vacuum: '', media: '' };
-        const ncol = (tab.columns || LHD_COLS[0]).length;
+        const ncol = lpWeights(tab).length;
         const s = { id: id, type: type, title: titles[type], col: Math.min(LHD_TYPES[type].col, ncol - 1) };
         if (type === 'scenes') s.items = []; else s.entities = [];
         if (type === 'lights') s.tile_columns = 5;
@@ -474,8 +486,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (si && !this._dragged && !g('[data-handle]')) { this._sec = si.getAttribute('data-sec'); return this._render(); }
       const sb = g('[data-scr]');
       if (sb) { try { localStorage.setItem('lhd-preview-screen', sb.getAttribute('data-scr')); } catch (x) {} return this._render(); }
-      const cb = g('[data-cols]');
-      if (cb) { const c = LHD_COLS[+cb.getAttribute('data-cols')]; return editTab((T) => { T.columns = c.slice(); T.sections.forEach((s) => { if ((s.col || 0) > c.length - 1) s.col = c.length - 1; }); }); }
+      // kolonlar: ekle / son kolonu kaldır (bölümleri bir soldakine geçer) / tablet düzeni / eşit. Toplam oran korunur, bölümler yerinde kalır.
+      if (act === 'coladd') return editTab((T) => { const w = lpWeights(T), n = w.length, sum = w.reduce((a, b) => a + b, 0); T.columns = w.map((x) => Math.round(x * n / (n + 1) * 100) / 100).concat([Math.round(sum / (n + 1) * 100) / 100]); });
+      if (act === 'coldel') return editTab((T) => { const w = lpWeights(T), n = w.length; if (n < 2) return; const sum = w.reduce((a, b) => a + b, 0), keep = w.slice(0, -1), ks = keep.reduce((a, b) => a + b, 0);
+        T.columns = keep.map((x) => Math.round(x * sum / ks * 100) / 100); T.sections.forEach((s) => { if ((s.col || 0) > n - 2) s.col = n - 2; }); });
+      if (act === 'coltab') return editTab((T) => { T.columns = LP_DEFAULT_COLS.slice(); });
+      if (act === 'coleq') return editTab((T) => { const w = lpWeights(T), sum = w.reduce((a, b) => a + b, 0); T.columns = w.map(() => Math.round(sum / w.length * 100) / 100); });
       const sc = g('[data-scol]');
       if (sc) return editSec((S) => { S.col = +sc.getAttribute('data-scol'); });
       const tc = g('[data-tc]');

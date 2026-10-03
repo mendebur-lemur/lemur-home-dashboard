@@ -72,12 +72,33 @@
 .rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .down { -webkit-transform: scale(0.96); transform: scale(0.96); }
-/* düzenleme modu (yönetim panelindeki önizleme) */
+/* düzenleme modu (yönetim panelindeki önizleme): seç, sürükle, boyutlandır */
+.wrap.edit { position: relative; touch-action: none; }
 .edit .box { cursor: pointer; transition: box-shadow 0.15s; }
 .edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }
 .edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }
-.edit .tile, .edit .scene, .edit .row, .edit .emb > *, .edit .title.season { pointer-events: none; }
+.edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }
+.edit .tile > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }
 .edit .navb { cursor: pointer; }
+.edit .dragging { opacity: 0.35; }
+.edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }
+.edit .dropr { box-shadow: 6px 0 0 -2px #F2A93B !important; }
+.edit .dropt { box-shadow: 0 -6px 0 -2px #F2A93B !important; }
+.edit .dropd { box-shadow: 0 6px 0 -2px #F2A93B !important; }
+.edit .dropin { box-shadow: 0 0 0 3px #F2A93B !important; }
+.colh { position: absolute; width: 14px; cursor: col-resize; z-index: 5; }
+.colh::after { content: ''; position: absolute; left: 5px; top: 10%; bottom: 10%; width: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }
+.wrap.edit:hover .colh::after { background: rgba(242, 169, 59, 0.3); }
+.colh:hover::after, .colh:active::after { background: #F2A93B !important; }
+.rowh { position: absolute; height: 14px; cursor: row-resize; z-index: 5; }
+.rowh::after { content: ''; position: absolute; top: 5px; left: 15%; right: 15%; height: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }
+.wrap.edit:hover .rowh::after { background: rgba(242, 169, 59, 0.3); }
+.rowh:hover::after, .rowh:active::after { background: #F2A93B !important; }
+.dropline { position: absolute; height: 4px; border-radius: 2px; background: #F2A93B; z-index: 6; pointer-events: none; box-shadow: 0 0 12px rgba(242, 169, 59, 0.6); }
+.eph { flex: 1 1 auto; min-height: 90px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--lp-text2);
+  border: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }
+.box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;
+  border: 2px dashed rgba(242, 169, 59, 0.35); font-size: 16px; padding: 20px; }
 .gsq { position: relative; flex: 0 0 auto; height: 0; }
 .gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .tile.ph { cursor: default; }

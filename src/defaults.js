@@ -118,7 +118,7 @@ function buildDefaultTabs(hass, lang) {
       { id: o.id + '-v', type: 'vacuum', col: 2, entities: o.vacuums || [] },
       { id: o.id + '-m', type: 'media', col: 2, entities: o.medias }
     ];
-    return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, columns: ['56%', '17%', '25.5%'], sections: secs };
+    return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, columns: [56, 17, 25.5], sections: secs };
   };
 
   const tabs = [];
