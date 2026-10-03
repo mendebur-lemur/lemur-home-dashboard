@@ -1,17 +1,45 @@
-:host { display: block; --lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08); --lp-accent: #5B8DEF; --lp-on: #fdd835; }
-.wrap { display: grid; grid-template-areas: "h1 h1 h1" "c1 c2 c3"; gap: 12px; padding: 12px; box-sizing: border-box; }
-.nav { grid-area: h1; display: flex; align-items: center; gap: 12px; }
-.navb { width: 235px; height: 155px; border-radius: 15px; border: none; background: var(--ha-card-background, rgba(30,33,40,0.9)); color: var(--primary-text-color);
-  opacity: 0.85; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 18px; --mdc-icon-size: 64px; }
-.navb.sel { opacity: 1; box-shadow: inset 0 0 0 2px rgba(91, 141, 239, 0.9); }
-.clock { margin-left: auto; margin-right: 40px; font-size: 48px; font-weight: 700; color: var(--primary-text-color); font-variant-numeric: tabular-nums; }
-.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.box { background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; }
-.title { text-align: center; font-weight: 700; font-size: 18px; color: var(--primary-text-color); padding: 6px 0 4px; }
-.grid { display: grid; gap: 10px; flex: 1 1 auto; grid-auto-rows: 1fr; }
-.tile { border-radius: 14px; background: var(--ha-card-background, rgba(30,33,40,0.9)); border: 1px solid transparent; color: var(--primary-text-color);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; --mdc-icon-size: 44px; font-size: 14px; }
-.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on)); background: rgba(255, 255, 255, 0.05); }
-.scene { height: 118px; border-radius: 22px; border: none; background: var(--ha-card-background, rgba(30,33,40,0.9)); color: var(--primary-text-color);
-  display: flex; align-items: center; gap: 16px; padding: 0 20px; font-size: 18px; cursor: pointer; --mdc-icon-size: 40px; text-align: left; }
-.todo { color: var(--secondary-text-color); font-size: 13px; text-align: center; padding: 8px; }
+/* Renkler kendi değişkenlerimizde, varsayılanlı: tema "aktif" rengi tanımsız olsa da çerçeveler görünür. */
+:host { display: block; color: var(--lp-text);
+  --lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08); --lp-accent: #5B8DEF; --lp-on: #FDD835;
+  --lp-heat: #FF8A3D; --lp-cool: #4FC3F7;
+  --lp-tile-bg: var(--ha-card-background, var(--card-background-color, rgba(30, 33, 40, 0.9)));
+  --lp-text: var(--primary-text-color, #ECEDEF); --lp-text2: var(--secondary-text-color, #9AA0A6); }
+.wrap { display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 12px; box-sizing: border-box;
+  min-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+.nav { grid-area: h; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.navb { flex: 0 1 235px; min-width: 0; height: 155px; border-radius: 15px; background: var(--lp-tile-bg); color: var(--lp-text); opacity: 0.85;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 18px;
+  --mdc-icon-size: 64px; padding: 0 8px; box-sizing: border-box; overflow: hidden; transition: transform 0.12s; }
+.navb span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.navb.sel { opacity: 1; box-shadow: inset 0 0 0 2px var(--lp-accent); }
+.clock { flex: 0 0 auto; margin-left: auto; margin-right: 40px; font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; }
+.box { background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; padding: 12px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto; min-height: 0; }
+.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }
+.title { text-align: center; font-weight: 700; font-size: 18px; padding: 6px 0 4px; letter-spacing: 0.3px; }
+.grid { display: grid; gap: 10px; flex: 1 1 auto; min-height: 0; }
+.tile { border-radius: 14px; background: var(--lp-tile-bg); border: 2px solid transparent; box-sizing: border-box; color: var(--lp-text);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; padding: 6px;
+  --mdc-icon-size: 44px; font-size: 14px; text-align: center; min-width: 0; overflow: hidden; transition: transform 0.12s; }
+.tile .nm { max-width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.2; }
+.tile .br { font-size: 12px; color: var(--lp-text2); }
+.tile.on { border-color: var(--tile-rgb, var(--lp-on)); background: rgba(255, 255, 255, 0.05); }
+.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on)); }
+.tile ha-state-icon { color: var(--lp-text2); }
+.na { opacity: 0.45; }
+.scene { flex: 0 0 118px; height: 118px; border-radius: 22px; background: var(--lp-tile-bg); color: var(--lp-text);
+  display: flex; align-items: center; gap: 16px; padding: 0 20px; box-sizing: border-box; font-size: 18px; cursor: pointer; --mdc-icon-size: 40px; transition: transform 0.12s; }
+.scene span { min-width: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.rows { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: var(--lp-tile-bg); cursor: pointer;
+  --mdc-icon-size: 36px; transition: transform 0.12s; }
+.row ha-state-icon { color: var(--lp-text2); flex: 0 0 auto; }
+.row.on ha-state-icon { color: var(--lp-accent); }
+.row.heat ha-state-icon { color: var(--lp-heat); }
+.row.cool ha-state-icon { color: var(--lp-cool); }
+.rt { min-width: 0; }
+.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.down { transform: scale(0.96); }

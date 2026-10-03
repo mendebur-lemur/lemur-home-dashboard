@@ -27,7 +27,10 @@ const LemurScale = (() => {
     let gen = Math.max(W, Math.floor(g / y * H));
     const z = Math.max(0.35, Math.min(2, Math.floor(g / gen * 1000) / 1000));
     gen = Math.max(W, Math.floor(g / z));
-    const css = 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;}';
+    // --lp-h: ekranın kalan yüksekliği, kanvas pikseli cinsinden. Kart bunu en az yükseklik olarak kullanır, böylece kolonlar ekranı doldurur.
+    // (Ekrandan hesaplanır, içerikten değil: içerik ölçülürse zoom kendini besler.)
+    const lh = Math.floor(y / z);
+    const css = 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}';
     if (!st) { st = document.createElement('style'); st.id = ID; sr.appendChild(st); }
     if (st.textContent !== css) st.textContent = css;
   }
