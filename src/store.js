@@ -13,5 +13,14 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     return this.loading;
   },
   set(key, value) { return this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/set', key: key, value: value }); },
+  // Yaz/Kış: yönetici olmayan kullanıcı (evdeki tablet) da değiştirebilir. Ekran beklemeden hemen değişir.
+  season(value) {
+    if (this.data) {
+      this.data = Object.assign({}, this.data, { settings: Object.assign({}, this.data.settings, { season: value }) });
+      const d = this.data;
+      this.subs.forEach((f) => f(d));
+    }
+    return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/season', season: value }) : Promise.resolve();
+  },
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });

@@ -1,6 +1,7 @@
 // Ayar yokken evden varsayılan düzen üretir: ilk kurulumda tek satırla dolu bir pano gelsin diye.
 // Kurallar:
-// - İlk sekme "Ev": bütün evin özeti (en fazla 20 ışık, 6 senaryo, bütün klimalar, 2 medya).
+// - İlk sekme "Ev": bütün evin özeti (en fazla 20 ışık, 6 senaryo, iklim cihazları, süpürgeler, 2 medya).
+// - İklim cihazına aynı alandaki sıcaklık/nem sensörü eşlenir (cihazın kendi sensörü değilse); kart konforu ondan hesaplar.
 // - Her alan bir sekme (kat sırasına göre, sonra HA'daki alan sırası). Klima/medya yoksa ve 3'ten az ışık varsa küçük oda sayılır,
 //   ayrı sekme açılmaz (koridor, banyo gibi yerler üst şeridi kalabalıklaştırmasın).
 // - Küçük odaların ve alana atanmamış cihazların hepsi sondaki "Diğer" sekmesinde (en az bir oda sekmesi açıldıysa).
@@ -53,7 +54,7 @@ function buildDefaultTabs(hass, lang) {
   };
 
   // tüm varlıkları bir kez gez, türüne göre ayır
-  const lights = [], controls = [], medias = [], scenes = [];
+  const lights = [], controls = [], medias = [], scenes = [], vacuums = [], temps = [], hums = [];
   Object.keys(S).forEach((id) => {
     if (!usable(id)) return;
     const d = dom(id);
@@ -62,7 +63,21 @@ function buildDefaultTabs(hass, lang) {
     else if (d === 'climate') controls.push(id);
     else if (d === 'media_player') medias.push(id);
     else if (d === 'scene' || d === 'script') scenes.push(id);
+    else if (d === 'vacuum') vacuums.push(id);
+    else if (d === 'sensor' && attr(id).device_class === 'temperature') temps.push(id);
+    else if (d === 'sensor' && attr(id).device_class === 'humidity') hums.push(id);
   });
+  const devOf = (id) => (ents[id] && ents[id].device_id) || null;
+  // klimaya aynı alandaki harici sensör (klimanın kendi cihazındaki sensör değil)
+  const climateItem = (id) => {
+    const o = { entity: id }, a = areaOf(id);
+    if (!a) return o;
+    const pickS = (list) => list.filter((x) => areaOf(x) === a && devOf(x) !== devOf(id) && !isNaN(parseFloat(S[x].state))).sort((x, y) => String(name(x)).localeCompare(String(name(y))))[0];
+    const ts = pickS(temps), hs = pickS(hums);
+    if (ts) o.temperature_sensor = ts;
+    if (hs) o.humidity_sensor = hs;
+    return o;
+  };
 
   // ışık grubu: üyeleri listeden çıkar
   const members = {};
@@ -96,7 +111,8 @@ function buildDefaultTabs(hass, lang) {
     const secs = [
       { id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 },
       { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem) },
-      { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls },
+      { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem) },
+      { id: o.id + '-v', type: 'vacuum', col: 2, entities: o.vacuums || [] },
       { id: o.id + '-m', type: 'media', col: 2, entities: o.medias }
     ];
     return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, columns: ['56%', '17%', '25.5%'], sections: secs };
@@ -109,14 +125,15 @@ function buildDefaultTabs(hass, lang) {
     lights: lightList.slice().sort(byArea).slice(0, 20),
     scenes: (globalScenes.length ? globalScenes : scenes.slice().sort(byName)).slice(0, 6),
     controls: controls.slice().sort(byArea).slice(0, 4),
+    vacuums: vacuums.slice().sort(byArea).slice(0, 3),
     medias: medias.slice().sort(byArea).slice(0, 2),
     lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'scenes'), controlTitle: t(lang, 'control')
   }));
 
   const small = {};
   order.forEach((aid) => {
-    const L = inArea(lightList, aid), C = inArea(controls, aid), M = inArea(medias, aid);
-    if (!C.length && !M.length && L.length < 3) { small[aid] = true; return; }
+    const L = inArea(lightList, aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
+    if (!C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
     const sc = inArea(scenes, aid);
     const ar = areas[aid];
     const aname = ar.name || aid;
@@ -125,7 +142,7 @@ function buildDefaultTabs(hass, lang) {
     const id = usedIds[aid] ? 'a-' + aid : aid; usedIds[id] = true;
     tabs.push(tab({
       id: id, name: aname, icon: icon, area: aid,
-      lights: L.slice(0, 25), scenes: (sc.length ? sc : globalScenes).slice(0, 6), controls: C.slice(0, 4), medias: M.slice(0, 3),
+      lights: L.slice(0, 25), scenes: (sc.length ? sc : globalScenes).slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
       lightTitle: t(lang, 'room_lights', { area: upper(lang, aname) }), sceneTitle: t(lang, 'shortcuts'), controlTitle: upper(lang, aname)
     }));
   });
@@ -135,9 +152,10 @@ function buildDefaultTabs(hass, lang) {
     const L = lightList.filter(rest).sort(byArea);
     const C = controls.filter(rest).sort(byArea);
     const M = medias.filter(rest).sort(byArea);
-    if (L.length || C.length || M.length) tabs.push(tab({
+    const V = vacuums.filter(rest).sort(byArea);
+    if (L.length || C.length || M.length || V.length) tabs.push(tab({
       id: 'other', name: t(lang, 'other'), icon: 'mdi:dots-horizontal-circle-outline',
-      lights: L.slice(0, 25), scenes: globalScenes.slice(0, 6), controls: C.slice(0, 4), medias: M.slice(0, 3),
+      lights: L.slice(0, 25), scenes: globalScenes.slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
       lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'shortcuts'), controlTitle: t(lang, 'other_control')
     }));
   }

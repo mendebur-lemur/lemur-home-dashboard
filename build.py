@@ -19,6 +19,11 @@ customElements.define('lemur-home-dashboard-admin', LemurHomeDashboardAdmin);
 console.info('%c LEMUR HOME DASHBOARD %c v' + PANEL_VERSION + ' ', 'background:#5B8DEF;color:#0B1020;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 }})();
 """
+# Lemur Halo Cards (iklim, süpürge... kartları) pakete gömülü: tablet panosundaki kartların kendisi. Kendi koruması var
+# (window.__lemurCardsLoaded): kullanıcı Halo'yu ayrıca kurduysa hangisi önce yüklenirse o tanımlar, çakışma olmaz.
+# Güncellemek için: lemur-halo-cards deposundaki dist/lemur-halo-cards.js dosyasını vendor/ içine kopyala.
+halo = (root / "vendor/lemur-halo-cards.js").read_text(encoding="utf-8")
+out = halo.rstrip() + "\n" + out
 dst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard.js"
 dst.write_text(out, encoding="utf-8")
 print(dst, len(out.encode()))

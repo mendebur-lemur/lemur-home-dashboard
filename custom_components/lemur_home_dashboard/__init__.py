@@ -80,7 +80,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         await _register_static(hass)
         # loaded on every page, so the strategy, the card and the scaling are defined before a dashboard opens
         add_extra_js_url(hass, f"{URL_BASE}/{JS_FILE}?v={VERSION}")
-        for handler in (ws_get, ws_set, ws_subscribe, ws_info):
+        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
     if PANEL_URL not in hass.data.get("frontend_panels", {}):
@@ -141,6 +141,26 @@ def ws_set(hass, connection, msg):
     data.data[key] = value
     data.changed()
     connection.send_result(msg["id"], data.data)
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/season",
+        vol.Required("season"): vol.In(["summer", "winter"]),
+    }
+)
+@callback
+def ws_season(hass, connection, msg):
+    """Summer/winter switch on the climate section. Any signed-in user may flip it (wall tablets are often not admin)."""
+    data = _data(hass)
+    if data is None:
+        connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
+        return
+    settings = dict(data.data.get("settings") or {})
+    settings["season"] = msg["season"]
+    data.data["settings"] = settings
+    data.changed()
+    connection.send_result(msg["id"], {"season": msg["season"]})
 
 
 @websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/subscribe"})
