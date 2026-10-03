@@ -32,7 +32,7 @@
 .col > .subs { display: grid; grid-gap: 12px; flex: 1 1 auto; min-height: 0; }
 .sub { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .sub > .box + .box { margin-top: 12px; }
-.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 20px;
+.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; box-sizing: border-box; padding: 20px;
   background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }
 .box > * + * { margin-top: 8px; }
 .box.spread { justify-content: space-between; }

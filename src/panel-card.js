@@ -184,7 +184,11 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (!items.some((e) => e.entity)) return null;
         // Tablet panosundaki gibi: 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
         // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
-        const c = s.tile_columns || 5, r = Math.ceil(items.length / c), fill = r >= 4;
+        // Karo sayısı ayardaki kadar, ama sütun daraldıysa karolar 70 px'ten küçülmesin diye azalır (kanvas en az W piksel geniş)
+        const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
+        const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
+        const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
+        const c = Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = r >= 4;
         const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
         const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
           : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
@@ -260,7 +264,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     let grid, body;
     if (used.length) {
       // kolon genişlikleri oran (fr): kolon sayısı ne olursa olsun ekrana sığar, aralıklar taşırmaz
-      grid = 'grid-template-columns:' + used.map((i) => widths[i] + 'fr').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
+      grid = 'grid-template-columns:' + used.map((i) => 'minmax(0,' + widths[i] + 'fr)').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
       body = used.map((i) => {
         // normal panoda boş sütun yer kaplamaz; düzenlemede görünür
         const subs = cols[i].map((boxes, j) => ({ j: j, boxes: boxes })).filter((x) => edit || x.boxes.length);
@@ -339,7 +343,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!wrap.isConnected || D) return;
       // sığmayan kutuyu işaretle
       arr(R.querySelectorAll('.box[data-secs]')).forEach((b) => {
-        const over = b.scrollHeight > b.clientHeight + 2;
+        const over = b.scrollHeight > b.clientHeight + 2 || b.scrollWidth > b.clientWidth + 2;
         b.classList.toggle('over', over);
         if (over) b.setAttribute('data-over', t(this._lang || 'tr', 'too_full')); else b.removeAttribute('data-over');
       });
@@ -409,10 +413,16 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (D.kind === 'col' || D.kind === 'row') arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { if (x !== D.el) x.style.display = 'none'; });
       }
       if (D.kind === 'col') {
-        const tot = D.pa + D.pb, na = Math.max(120, Math.min(tot - 120, D.pa + dx));
+        // kolon, içindeki sütun sayısı kadar daralabilir: her sütun en dar kanvasta (W, genelde 1280) en az 150 px.
+        // Sınır oran olarak hesaplanır; önizleme ya da ekran daha geniş olsa da dar tablette sütun ezilmez.
+        const spl = lpSplits(tab, widths.length), n = widths.length;
+        const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
+        const k = (wrap.offsetWidth - 8 - 20 * n) / (cw - 8 - 20 * n);
+        const ma = spl[D.a] * 150 * Math.max(1, k), mb = spl[D.b] * 150 * Math.max(1, k);
+        const tot = D.pa + D.pb, na = Math.max(ma, Math.min(tot - mb, D.pa + dx));
         const sum = widths[D.a] + widths[D.b];
         D.W[D.a] = r2(sum * na / tot); D.W[D.b] = r2(sum - D.W[D.a]);
-        wrap.style.gridTemplateColumns = used.map((i) => D.W[i] + 'fr').join(' ');
+        wrap.style.gridTemplateColumns = used.map((i) => 'minmax(0,' + D.W[i] + 'fr)').join(' ');
         D.el.style.left = (parseFloat(D.el.style.left) + (e.clientX - (D.lx || D.sx)) / D.z) + 'px'; D.lx = e.clientX;
         return;
       }

@@ -1,11 +1,13 @@
 // Ayar yokken evden varsayılan düzen üretir: ilk kurulumda tek satırla dolu bir pano gelsin diye.
 // Kurallar:
-// - İlk sekme "Ev": bütün evin özeti (en fazla 20 ışık, 6 senaryo, iklim cihazları, süpürgeler, 2 medya).
+// - İlk sekme "Ev": bütün evin özeti, odalardan sırayla (en fazla 20 ışık, 6 senaryo, 6 iklim cihazı, süpürgeler, 2 medya).
 // - İklim cihazına aynı alandaki sıcaklık/nem sensörü eşlenir (cihazın kendi sensörü değilse); kart konforu ondan hesaplar.
 // - Her alan bir sekme (kat sırasına göre, sonra HA'daki alan sırası). Klima/medya yoksa ve 3'ten az ışık varsa küçük oda sayılır,
 //   ayrı sekme açılmaz (koridor, banyo gibi yerler üst şeridi kalabalıklaştırmasın).
 // - Küçük odaların ve alana atanmamış cihazların hepsi sondaki "Diğer" sekmesinde (en az bir oda sekmesi açıldıysa).
-// - Işık grubu varsa üyeleri ayrıca gösterilmez (aynı sekmede iki kez görünmesin).
+// - Küçük ışık grubunun üyeleri ayrıca gösterilmez; odanın tamamını kapsayan büyük grupta üyeler de görünür.
+// - Şerit/lamba segmentleri, ışığı olan cihazın güç anahtarı ve tarayıcı eklentisi (browser_mod) varlıkları alınmaz.
+// - Parametre isteyen betikler senaryo düğmesi olmaz.
 // - Anahtarlardan (switch) sadece priz ve aydınlatma gibi görünenler alınır; ayar anahtarları ve gizli varlıklar alınmaz.
 // Eski Safari için ?. ve ?? yok.
 const LP_SCENE_COLORS = ['#5B8DEF', '#8E7CFF', '#F5A623', '#4CD964', '#FF6B6B', '#2EC4B6', '#FFB86B', '#E879F9'];
@@ -43,6 +45,8 @@ function buildDefaultTabs(hass, lang) {
   const usable = (id) => {
     const e = ents[id];
     if (e && (e.hidden || e.hidden_by || e.entity_category || e.disabled_by)) return false;
+    // tarayıcı/tablet eklentilerinin her ekran için açtığı "ışık" ve "oynatıcı"lar (browser_mod) ev cihazı değil
+    if (e && e.platform === 'browser_mod') return false;
     // şu an ulaşılamayan cihaz otomatik düzene girmez (bozuk ya da kaldırılmış cihazlar panoyu doldurmasın)
     const st = S[id];
     return !(st && (st.state === 'unavailable' || st.state === 'unknown'));
@@ -56,8 +60,13 @@ function buildDefaultTabs(hass, lang) {
     return /\b(lamp|lamps|light|lights|bulb|led|outlet|socket|plug)\b/i.test(n) || /lamba|ışık|ışığı|aydınlatma|avize|abajur|aplik|priz|şerit/i.test(n);
   };
 
+  const scriptNeedsInput = (id) => {
+    const sv = hass.services && hass.services.script && hass.services.script[id.split('.')[1]];
+    return !!(sv && sv.fields && Object.keys(sv.fields).length);
+  };
+
   // tüm varlıkları bir kez gez, türüne göre ayır
-  const lights = [], controls = [], medias = [], scenes = [], vacuums = [], temps = [], hums = [];
+  const lights = [], controls = [], medias = [], scenes = [], vacuums = [];
   Object.keys(S).forEach((id) => {
     if (!usable(id)) return;
     const d = dom(id);
@@ -65,30 +74,33 @@ function buildDefaultTabs(hass, lang) {
     else if (d === 'switch' && lightLikeSwitch(id)) lights.push(id);
     else if (d === 'climate') controls.push(id);
     else if (d === 'media_player') medias.push(id);
-    else if (d === 'scene' || d === 'script') scenes.push(id);
+    else if (d === 'scene') scenes.push(id);
+    else if (d === 'script' && !scriptNeedsInput(id)) scenes.push(id);   // parametre isteyen yardımcı betikler düğme olamaz
     else if (d === 'vacuum') vacuums.push(id);
-    else if (d === 'sensor' && attr(id).device_class === 'temperature') temps.push(id);
-    else if (d === 'sensor' && attr(id).device_class === 'humidity') hums.push(id);
   });
   const devOf = (id) => (ents[id] && ents[id].device_id) || null;
-  // klimaya aynı alandaki harici sensör (klimanın kendi cihazındaki sensör değil)
-  const climateItem = (id) => {
-    const o = { entity: id }, a = areaOf(id);
-    if (!a) return o;
-    const pickS = (list) => list.filter((x) => areaOf(x) === a && devOf(x) !== devOf(id) && !isNaN(parseFloat(S[x].state))).sort((x, y) => String(name(x)).localeCompare(String(name(y))))[0];
-    const ts = pickS(temps), hs = pickS(hums);
-    if (ts) o.temperature_sensor = ts;
-    if (hs) o.humidity_sensor = hs;
-    return o;
-  };
+  const climateItem = (id) => lpClimateItem(hass, id);
 
   // ışık grubu: üyeleri listeden çıkar
   const members = {};
-  lights.forEach((id) => { const m = attr(id).entity_id; if (dom(id) === 'light' && Array.isArray(m)) m.forEach((x) => { if (x !== id) members[x] = true; }); });
-  const lightList = lights.filter((id) => !members[id]);
+  // Küçük grup (ör. 3 ampullük "Tavan") tek karo olur, üyeleri gizlenir. Büyük grup (odanın bütün ışıkları, ör. Hue oda grubu)
+  // ve Hue oda/bölge grupları "hepsi" karosu olarak kalır ama üyeleri de ayrı ayrı görünür; yoksa odanın tek tek lambaları kaybolur.
+  lights.forEach((id) => { const m = attr(id).entity_id; if (dom(id) === 'light' && Array.isArray(m) && m.length <= 4 && !attr(id).is_hue_group) m.forEach((x) => { if (x !== id) members[x] = true; }); });
+  // Aynı cihazın parçaları ayrı karo olmasın: şerit/lamba "segment"leri ve ışığı olan cihazın güç anahtarı (ana ışık zaten var)
+  const devHasLight = {};
+  lights.forEach((id) => { const dv = devOf(id); if (dom(id) === 'light' && dv && !/_segment_?\d+$/.test(id)) devHasLight[dv] = true; });
+  const part = (id) => {
+    const dv = devOf(id);
+    if (/_segment_?\d+$/.test(id)) return !dv || devHasLight[dv] || lights.some((x) => x !== id && id.indexOf(x.replace(/_govee$/, '') + '_segment') === 0);
+    return dom(id) === 'switch' && !!dv && !!devHasLight[dv];
+  };
+  const lightList = lights.filter((id) => !members[id] && !part(id));
+  // sıra: ışık grupları önce, sonra normal ışıklar, en sonda durum ledi gibi görünenler (…_leds, …_switch_state)
+  const lightRank = (id) => (Array.isArray(attr(id).entity_id) ? 0 : /_(leds|switch_state|status|status_led|indicator)$/.test(id) ? 2 : 1);
 
   const byName = (a, b) => String(name(a)).localeCompare(String(name(b)), lang);
   const inArea = (list, aid) => list.filter((id) => areaOf(id) === aid).sort(byName);
+  const lightsIn = (aid) => inArea(lightList, aid).sort((a, b) => (lightRank(a) - lightRank(b)) || byName(a, b));
 
   // alan sırası: kat seviyesi (yoksa en sona), sonra kayıt sırası
   const areaIds = Object.keys(areas);
@@ -121,13 +133,28 @@ function buildDefaultTabs(hass, lang) {
     return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, columns: [56, 17, 25.5], sections: secs };
   };
 
+  // Ev sekmesi bütün evin özeti: listeyi tek bir odanın cihazları doldurmasın, odalardan sırayla alınır
+  const spread = (list, rank, max) => {
+    const g = {}, keys = [];
+    list.forEach((id) => { const a = areaOf(id) || ''; if (!g[a]) { g[a] = []; keys.push(a); } g[a].push(id); });
+    keys.sort((a, b) => (areaRank[a] === undefined ? 9999 : areaRank[a]) - (areaRank[b] === undefined ? 9999 : areaRank[b]));
+    keys.forEach((a) => g[a].sort((x, y) => ((rank ? rank(x) - rank(y) : 0)) || byName(x, y)));
+    const out = [];
+    for (let i = 0; out.length < max; i++) {
+      let any = false;
+      keys.forEach((a) => { if (out.length < max && g[a][i] !== undefined) { out.push(g[a][i]); any = true; } });
+      if (!any) break;
+    }
+    return out;
+  };
+
   const tabs = [];
   const usedIds = { home: true, other: true };
   tabs.push(tab({
     id: 'home', name: t(lang, 'home'), icon: 'mdi:home-outline',
-    lights: lightList.slice().sort(byArea).slice(0, 20),
+    lights: spread(lightList.filter((id) => lightRank(id) < 2), lightRank, 20),
     scenes: (globalScenes.length ? globalScenes : scenes.slice().sort(byName)).slice(0, 6),
-    controls: controls.slice().sort(byArea).slice(0, 4),
+    controls: spread(controls, null, 6),
     vacuums: vacuums.slice().sort(byArea).slice(0, 3),
     medias: medias.slice().sort(byArea).slice(0, 2),
     lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'scenes'), controlTitle: t(lang, 'control')
@@ -135,7 +162,7 @@ function buildDefaultTabs(hass, lang) {
 
   const small = {};
   order.forEach((aid) => {
-    const L = inArea(lightList, aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
+    const L = lightsIn(aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
     if (!C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
     const sc = inArea(scenes, aid);
     const ar = areas[aid];
@@ -163,4 +190,45 @@ function buildDefaultTabs(hass, lang) {
     }));
   }
   return tabs.slice(0, 8);
+}
+
+
+// İklim cihazına oda sensörü: aynı alandaki sıcaklık/nem sensörlerinden en uygunu. Puan: termostat/oda sensörü öne,
+// iklim cihazlarının kendi sensörleri (petek/vana "local temperature") ve balkon/dış sensörleri arkaya, 3B yazıcı gibi
+// cihazların iç sensörleri hiç. Nem, mümkünse seçilen sıcaklık sensörüyle aynı cihazdan.
+function lpClimateItem(hass, id) {
+  const S = hass.states || {}, ents = hass.entities || {}, devs = hass.devices || {};
+  const o = { entity: id };
+  const areaOf = (x) => { const e = ents[x]; if (!e) return null; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return d && d.area_id ? d.area_id : null; };
+  const devOf = (x) => (ents[x] && ents[x].device_id) || null;
+  const a = areaOf(id); if (!a) return o;
+  const climateDevs = {};
+  Object.keys(S).forEach((x) => { if (x.split('.')[0] === 'climate' && devOf(x)) climateDevs[devOf(x)] = true; });
+  const nm = (x) => String((S[x].attributes && S[x].attributes.friendly_name) || x);
+  const cname = (nm(id) + ' ' + id).toLowerCase();
+  const score = (x) => {
+    const e = ents[x];
+    if (e && (e.hidden || e.entity_category || e.disabled_by)) return -99;
+    const t = (nm(x) + ' ' + x).toLowerCase();
+    if (/nozzle|bed_|chamber|ams_|cpu|gpu|battery|pil|device_temperature|internal|dahili|soc|probe|water|su_|boiler|kombi/.test(t)) return -99;
+    let p = 0;
+    if (/termostat|thermostat/.test(t)) p += 4;
+    else if (/temp_hmd|temperature_humidity|sicaklik_nem|hygro|thermometer|termometre/.test(t)) p += 2;
+    if (/local_temperature|_local_|petek|radiator|valve|vana|trv/.test(t)) p -= 5;
+    if (devOf(x) && climateDevs[devOf(x)]) p -= 4;
+    if (/balkon|balcony|outdoor|outside|exterior|dis_|dış|bahce|bahçe|garden|teras|terrace/.test(t) && !/balkon|balcony|outdoor|dis_|dış/.test(cname)) p -= 6;
+    if (/motion|hareket/.test(t)) p -= 1;
+    // iklim cihazının adındaki oda adı sensörün adında da geçiyorsa (ör. "Salon Petek" → "Salon Termostat")
+    cname.split(/[^a-zçğıöşü0-9]+/).filter((w) => w.length > 3 && ['climate', 'petek', 'klima', 'tarafi', 'device'].indexOf(w) < 0).forEach((w) => { if (t.indexOf(w) >= 0) p += 1; });
+    return p;
+  };
+  const cand = (cls) => Object.keys(S).filter((x) => x.split('.')[0] === 'sensor' && S[x].attributes && S[x].attributes.device_class === cls &&
+    areaOf(x) === a && devOf(x) !== devOf(id) && !isNaN(parseFloat(S[x].state)))
+    .map((x) => ({ x: x, p: score(x) })).filter((c) => c.p > -50).sort((p, q) => (q.p - p.p) || nm(p.x).localeCompare(nm(q.x)));
+  const ts = cand('temperature')[0];
+  if (ts) o.temperature_sensor = ts.x;
+  const hs = cand('humidity');
+  const same = ts && hs.filter((c) => devOf(c.x) && devOf(c.x) === devOf(ts.x))[0];
+  if (same || hs[0]) o.humidity_sensor = (same || hs[0]).x;
+  return o;
 }
