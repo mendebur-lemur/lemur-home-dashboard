@@ -77,12 +77,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._hass = h;
     if (first) {
       STORE.load(h).then(() => {
-        if (!this._unsub) this._unsub = STORE.onChange(() => { if (!this._modal) this._render(); });
+        this._sub();
         this._render();
       }).catch(() => this._render());
       return;
     }
     if (this._pv) this._pv.hass = h;
+  }
+  // ayar değişince yeniden çiz; kendi kaydımızın ve sunucu yankısının aynısı gelirse çizme (odak ve tıklama kaybolmasın)
+  _sub() {
+    if (this._unsub) return;
+    this._unsub = STORE.onChange((d) => {
+      const j = JSON.stringify(d);
+      if (j === this._lastJson) return;
+      this._lastJson = j;
+      if (!this._modal) this._render();
+    });
   }
   set narrow(v) { this._narrow = v; }
   set panel(p) { this._panelCfg = p; }
@@ -96,10 +106,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     window.addEventListener('keydown', this._key);
     if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
-    if (this._hass && STORE.data) this._render();
+    if (this._hass && STORE.data) { this._sub(); this._render(); }
   }
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
+    if (this._unsub) { this._unsub(); this._unsub = null; }
     if (this._ro) this._ro.disconnect();
   }
 
@@ -120,6 +131,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _commit(key, value) {
     STORE.data = Object.assign({}, STORE.data); STORE.data[key] = value;
     const d = STORE.data;
+    this._lastJson = JSON.stringify(d);   // kendi değişikliğimiz: abonelikten gelince yeniden çizme
     STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
     return STORE.set(key, value).catch((e) => this._toast(this._t('err', { e: (e && e.message) || e }), false));
   }
@@ -129,18 +141,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _undoIt() {
     const u = this._undo.pop(); if (!u) return;
-    this._commit('settings', u.settings); this._commit('tabs', u.tabs);
+    // sadece değişen anahtar gönderilir (ikisi birden gönderilince ara yankı geri alınanı bir an geri getiriyordu)
+    if (JSON.stringify(u.settings) !== JSON.stringify(this._settings())) this._commit('settings', u.settings);
+    if (JSON.stringify(u.tabs) !== JSON.stringify((STORE.data && STORE.data.tabs) || [])) this._commit('tabs', u.tabs);
     this._render();
     this._toast(this._t('undone'), false);
   }
-  _edit(fn, msg) {
+  // soft: yazı alanından gelen değişiklik; panel yeniden çizilmez (odak ve hemen ardından gelen tıklama kaybolmasın), önizleme kendisi güncellenir
+  _edit(fn, msg, soft) {
     this._snap();
     const tabs = this._work();
     fn(tabs);
     this._commit('tabs', tabs);
+    if (!soft) this._render();
     this._toast(msg || this._t('saved'));
   }
-  _setting(path, value) {
+  _setting(path, value, soft) {
     this._snap();
     const s = lhdClone(this._settings());
     const p = path.split('.');
@@ -148,7 +164,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
     if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
     this._commit('settings', s);
-    this._render();   // ayarlar penceresi açıkken de güncel görünsün
+    if (!soft) this._render();   // ayarlar penceresi açıkken de güncel görünsün
     this._toast(this._t('saved'));
   }
   _toast(x, undo) {
@@ -223,6 +239,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span><span class="grow"></span>' +
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
+    // yeniden çizimde odaktaki alan ve imleç korunur
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top +
       '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
       this._menuHtml() + this._modalHtml(tabs, tab, sec) +
@@ -230,6 +249,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
     this._mountPreview(tab, sec);
     this._bind(tabs, tab, sec);
+    if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
   }
 
   _secEditor(tab, s, ncols) {
@@ -408,10 +428,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _bind(tabs, tab, sec) {
     const R = this.shadowRoot, app = R.querySelector('.app');
     R.querySelectorAll('ha-state-icon[data-eid]').forEach((e) => { e.hass = this._hass; e.stateObj = this._hass.states[e.getAttribute('data-eid')]; });
-    const tabIdx = tab ? tabs.indexOf(tab) : -1;
-    const secIdx = sec ? tab.sections.indexOf(sec) : -1;
-    const editTab = (fn) => this._edit((T) => fn(T[tabIdx], T));
-    const editSec = (fn) => this._edit((T) => fn(T[tabIdx].sections[secIdx], T[tabIdx]));
+    // sekme ve bölüm sırayla değil kimlikle bulunur (otomatik düzen ya da başka cihazdan değişiklik sırayı kaydırabilir)
+    const tabId = tab ? tab.id : null, secId = sec ? sec.id : null;
+    const findTab = (T) => T.filter((x) => x.id === tabId)[0];
+    const editTab = (fn, soft) => this._edit((T) => { const x = findTab(T); if (x) fn(x, T); }, null, soft);
+    const editSec = (fn, soft) => this._edit((T) => { const x = findTab(T), y = x && (x.sections || []).filter((z) => z.id === secId)[0]; if (y) fn(y, x); }, null, soft);
 
     app.addEventListener('click', (e) => {
       const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
@@ -532,26 +553,42 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     });
 
     // metin alanları: değişiklik Enter'a basınca ya da alandan çıkınca kaydedilir (yazarken odak kaybolmasın)
+    // metin alanları: değişiklik Enter'a basınca ya da alandan çıkınca kaydedilir. Yazı alanları "soft" kaydedilir: panel yeniden
+    // çizilmez (odak ve hemen arkasından basılan düğme kaybolmasın); görünen ilgili yazılar yerinde güncellenir, önizleme kendisi güncellenir.
     app.addEventListener('change', (e) => {
       const el = e.target;
+      const soft = el.tagName === 'INPUT';
       const f = el.getAttribute && el.getAttribute('data-f');
-      if (f === 'tab.name') return editTab((T) => { T.name = el.value.trim() || T.name; });
-      if (f === 'tab.icon') return editTab((T) => { T.icon = el.value.trim() || 'mdi:door'; });
+      if (f === 'tab.name') {
+        const v = el.value.trim(); if (!v) { el.value = tab.name; return; }
+        const lb = R.querySelector('.rb.on'); if (lb && lb.lastChild && lb.lastChild.nodeType === 3) lb.lastChild.textContent = v;
+        return editTab((T) => { T.name = v; }, true);
+      }
+      if (f === 'tab.icon') {
+        const v = el.value.trim() || 'mdi:door';
+        const ic = R.querySelector('.rb.on ha-icon'); if (ic) ic.setAttribute('icon', v);
+        return editTab((T) => { T.icon = v; }, true);
+      }
       if (f === 'tab.area') return editTab((T) => { T.area = el.value || null; });
-      if (f === 'sec.title') return editSec((S) => { S.title = el.value; });
+      if (f === 'sec.title') {
+        const lb = R.querySelector('.si.on .nm b'); if (lb) lb.textContent = el.value || this._t('t_' + sec.type);
+        return editSec((S) => { S.title = el.value; }, true);
+      }
       const itf = el.getAttribute && el.getAttribute('data-if');
       if (itf) {
         const p = itf.split('.'), i = +p[0], key = p[1], v = el.value.trim();
+        if (key === 'color') { const ic = el.parentNode.querySelector('.ico ha-icon'); if (ic) ic.style.color = v; }
         return editSec((S) => {
-          if (S.type === 'scenes') { const it = S.items[i]; if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }
-          let it = S.entities[i]; if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
+          if (S.type === 'scenes') { const it = S.items[i]; if (!it) return; if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }
+          let it = S.entities[i]; if (it === undefined) return;
+          if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
           if (v && !(key === 'kind' && v === 'auto')) it[key] = v; else delete it[key];
           if (it.entity && Object.keys(it).length === 1) S.entities[i] = it.entity;   // sade kalsın
-        });
+        }, soft);
       }
       const sf = el.getAttribute && el.getAttribute('data-sf');
-      if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v); }
-      if (el.hasAttribute && el.hasAttribute('data-bgurl')) { const u = el.value.trim(); return this._setting('background', u ? "center / cover no-repeat fixed url('" + u.replace(/'/g, '') + "')" : null); }
+      if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v, true); }
+      if (el.hasAttribute && el.hasAttribute('data-bgurl')) { const u = el.value.trim(); return this._setting('background', u ? "center / cover no-repeat fixed url('" + u.replace(/'/g, '') + "')" : null, true); }
     });
     app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('inp') && e.target.tagName === 'INPUT') e.target.blur(); });
     // simge alanında yazarken önizleme
@@ -585,7 +622,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (to < items.length) items[to].classList.add('dropb'); else items[items.length - 1].classList.add('dropa');
         };
         const up = () => {
-          list.removeEventListener('pointermove', move); list.removeEventListener('pointerup', up); list.removeEventListener('pointercancel', up);
+          window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
           clear(); item.classList.remove('dragging');
           if (!started) return;
           this._dragged = true; setTimeout(() => { this._dragged = false; }, 0);
@@ -596,7 +633,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (kind === 'secs') editTab((T) => lhdMove(T.sections, from, dest));
           if (kind === 'items') editSec((S) => lhdMove(S.type === 'scenes' ? S.items : S.entities, from, dest));
         };
-        list.addEventListener('pointermove', move); list.addEventListener('pointerup', up); list.addEventListener('pointercancel', up);
+        window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
       });
     });
   }
