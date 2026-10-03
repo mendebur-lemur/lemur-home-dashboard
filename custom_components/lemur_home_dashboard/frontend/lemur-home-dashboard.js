@@ -1946,25 +1946,25 @@ registerCard(LemurLightCard, {
 
 if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 })();
-/*! Lemur Home Dashboard v0.0.6 | MIT */
+/*! Lemur Home Dashboard v0.0.7 | MIT */
 (() => {
 if (customElements.get('lemur-home-dashboard-card')) return;
-const PANEL_VERSION = '0.0.6';
-const CSS = ":host { display: block; color: var(--lp-text); font-family: var(--primary-font-family, Roboto, Noto, sans-serif);\n--lp-text: #FFFFFF; --lp-text2: #D3D3D3;\n--lp-card: rgba(10, 10, 10, 0.4);\n--lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08);\n--lp-sel: rgba(91, 141, 239, 0.9);\n--lp-on-border: rgb(255, 214, 10); --lp-on-icon: #FFC107; --lp-na: #555555;\n--lp-embed-bg: rgb(28, 28, 28); }\n.wrap { display: grid; grid-template-rows: auto minmax(0, 1fr); grid-gap: 12px; padding: 4px 4px 25px 4px; box-sizing: border-box;\nheight: var(--lp-h, auto); min-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));\n-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }\n.nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }\n.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);\nborder: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;\noverflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }\n.navb + .navb { margin-left: 8px; }\n.navb.sel { opacity: 1; border: 2px solid var(--lp-sel); }\n.ni { flex: 1 1 auto; width: 40%; min-height: 0; display: flex; align-items: center; justify-content: center; }\n.ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }\n.nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }\n.col > .subs { display: grid; grid-gap: 12px; flex: 1 1 auto; min-height: 0; }\n.sub { display: flex; flex-direction: column; min-width: 0; min-height: 0; }\n.sub > .box + .box { margin-top: 12px; }\n.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; box-sizing: border-box; padding: 20px;\nbackground: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }\n.box > * + * { margin-top: 8px; }\n.box.spread { justify-content: space-between; }\n.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }\n.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }\n.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }\n.title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }\n.title.season { cursor: pointer; }\n.grid { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }\n.tile { box-sizing: border-box; min-width: 0; min-height: 0; border-radius: 20px; background-color: var(--lp-card); border: 0 solid transparent;\ncolor: var(--lp-text); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4% 0;\ncursor: pointer; overflow: hidden; text-align: center; transition: all 0.2s ease-out; }\n.tile ha-state-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.tile .nm { margin-top: 8px; font-size: 16px; line-height: 19.2px; max-width: 100%; padding: 0 4px; box-sizing: border-box;\noverflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }\n.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on-icon)); }\n.tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }\n.tile.na ha-state-icon { color: var(--lp-na); }\n.scene { flex: 0 1 118px; height: auto; min-height: 48px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);\ndisplay: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }\n.scene .si { flex: 0 0 40%; display: flex; justify-content: center; }\n.scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }\n.scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;\n--ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;\n--primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }\n.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }\n.row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }\n.row.on ha-state-icon { color: var(--lp-on-icon); }\n.rt { min-width: 0; }\n.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.down { -webkit-transform: scale(0.96); transform: scale(0.96); }\n.wrap.edit { position: relative; touch-action: none; }\n.edit .box { cursor: pointer; transition: box-shadow 0.15s; position: relative; }\n.bgrip { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 9px; background: rgba(242, 169, 59, 0.16); color: #F2A93B;\ndisplay: flex; align-items: center; justify-content: center; cursor: grab; z-index: 3; --mdc-icon-size: 18px; }\n.bgrip:hover { background: rgba(242, 169, 59, 0.3); }\n.bgrip ha-icon { pointer-events: none; }\n.edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }\n.edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }\n.edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }\n.edit .tile > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }\n.edit .navb { cursor: pointer; }\n.edit .dragging { opacity: 0.35; }\n.edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }\n.edit .dropr { box-shadow: 6px 0 0 -2px #F2A93B !important; }\n.edit .dropt { box-shadow: 0 -6px 0 -2px #F2A93B !important; }\n.edit .dropd { box-shadow: 0 6px 0 -2px #F2A93B !important; }\n.edit .dropin { box-shadow: 0 0 0 3px #F2A93B !important; }\n.colh { position: absolute; width: 14px; cursor: col-resize; z-index: 5; }\n.colh::after { content: ''; position: absolute; left: 5px; top: 10%; bottom: 10%; width: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .colh::after { background: rgba(242, 169, 59, 0.3); }\n.colh:hover::after, .colh:active::after { background: #F2A93B !important; }\n.rowh { position: absolute; height: 14px; cursor: row-resize; z-index: 5; }\n.rowh::after { content: ''; position: absolute; top: 5px; left: 15%; right: 15%; height: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .rowh::after { background: rgba(242, 169, 59, 0.3); }\n.rowh:hover::after, .rowh:active::after { background: #F2A93B !important; }\n.dropline { position: absolute; height: 4px; border-radius: 2px; background: #F2A93B; z-index: 6; pointer-events: none; box-shadow: 0 0 12px rgba(242, 169, 59, 0.6); }\n.eph { flex: 1 1 auto; min-height: 90px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--lp-text2);\nborder: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }\n.box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;\nborder: 2px dashed rgba(242, 169, 59, 0.35); font-size: 15px; padding: 20px; cursor: default; }\n.addsec { margin-top: 14px; padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(242, 169, 59, 0.5); background: rgba(242, 169, 59, 0.12);\ncolor: #F2A93B; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }\n.addsec:hover { background: rgba(242, 169, 59, 0.22); }\n.gsq { position: relative; flex: 0 0 auto; height: 0; }\n.gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }\n.tile.ph { cursor: default; }\n.tile.ph ha-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.edit .box.over { box-shadow: 0 0 0 2px #e5484d; }\n.edit .box.over::after { content: attr(data-over); position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); padding: 4px 12px; border-radius: 12px; max-width: 90%; box-sizing: border-box; text-align: center;\nbackground: #e5484d; color: #fff; font-size: 18px; line-height: 22px; font-weight: 700; pointer-events: none; z-index: 3; }";
-const ADMIN_CSS = ":host { display: block; height: 100vh; height: 100dvh; font-family: var(--lemur-font, Archivo, var(--ha-font-family-body, system-ui), sans-serif); }\n* { box-sizing: border-box; }\nbutton, input, select { font-family: inherit; color: inherit; font-size: inherit; }\nbutton { cursor: pointer; }\nha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px; flex: none; }\n.s14 { width: 14px; height: 14px; } .s16 { width: 16px; height: 16px; } .s18 { width: 18px; height: 18px; } .s24 { width: 24px; height: 24px; }\n.app { position: relative; height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; background: #0B0C0E; color: #ECEDEE;\noverflow: hidden; font-size: 14px; line-height: 1.4;\n--bg: #0B0C0E; --s1: #131417; --s2: #18191D; --s3: #1F2125; --s4: #272A2F; --s5: #30333A;\n--ln: rgba(255,255,255,.06); --ln2: rgba(255,255,255,.10); --ln3: rgba(255,255,255,.18);\n--tx: #ECEDEE; --tx2: #B3B7BE; --mu: #7C818A; --mu2: #5A5E66;\n--ac: #F2A93B; --acs: rgba(242,169,59,.13); --acl: rgba(242,169,59,.55); --actx: #1B1206;\n--red: #EE6A5F; --reds: rgba(238,106,95,.12); --tint: #261C10;\n--r1: 22px; --r2: 14px; --r3: 10px; }\n.grow { flex: 1; }\n.mu { color: var(--mu); }\n.top { display: flex; align-items: center; gap: 10px; min-height: 60px; flex: none; }\n.lg { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #F4B24A, #E2702C); display: grid; place-items: center; color: var(--actx); flex: none; }\n.lg ha-icon { width: 18px; height: 18px; }\n.top h1 { font-size: 16px; font-weight: 600; margin: 0 6px 0 2px; letter-spacing: -.01em; white-space: nowrap; }\n.badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--acs); color: var(--ac); border: 1px solid var(--acl); white-space: nowrap; }\n.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: var(--r3);\nborder: 1px solid var(--ln2); background: var(--s2); font-size: 13px; font-weight: 500; color: var(--tx); white-space: nowrap; }\n.btn:hover { background: var(--s3); }\n.btn:disabled { opacity: .35; cursor: default; }\n.btn.ic { width: 34px; padding: 0; }\n.btn.pri { background: var(--ac); color: var(--actx); border-color: var(--ac); }\n.btn.pri:hover { filter: brightness(1.06); }\n.btn.dan { color: var(--red); }\n.btn.dan.ask { background: var(--reds); border-color: rgba(238,106,95,.45); }\n.btn.sm { height: 30px; font-size: 12.5px; padding: 0 10px; }\n.btn.dash { border-style: dashed; background: none; color: var(--tx2); }\n.btn.dash:hover { color: var(--tx); background: var(--s2); }\n.warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }\n.rblock { flex: none; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 10px; }\n.rooms { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 1px; margin-bottom: -1px; position: relative; z-index: 2; align-items: flex-start; scrollbar-width: none; }\n.rooms::-webkit-scrollbar { display: none; }\n.rb { display: flex; align-items: center; justify-content: center; gap: 10px; min-width: 130px; padding: 14px 18px; border-radius: var(--r2); background: var(--s2);\nborder: 1px solid transparent; font-weight: 600; font-size: 16px; line-height: 1.2; white-space: nowrap; color: var(--tx2); cursor: pointer; flex: none; user-select: none; touch-action: none; }\n.rb ha-icon { width: 24px; height: 24px; }\n.rb:hover { background: var(--s3); color: var(--tx); }\n.rb.on { background: var(--tint); color: var(--ac); border: 1px solid var(--acl); border-bottom-color: var(--tint); border-radius: var(--r2) var(--r2) 0 0;\npadding-bottom: 24px; margin-bottom: -1px; }\n.rb.add { background: none; border: 1px dashed var(--ln2); color: var(--mu); font-weight: 500; min-width: 0; }\n.rb.add:hover { color: var(--tx); }\n.rpanel { position: relative; z-index: 1; background: var(--tint); border: 1px solid var(--acl); border-radius: var(--r2); padding: 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }\n.rpanel.first { border-top-left-radius: 0; }\n.fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }\n.fld > label, .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); }\n.inp { flex-shrink: 0; height: 36px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); padding: 0 11px; color: var(--tx); outline: none; min-width: 0; width: 100%; }\n.inp:focus { border-color: var(--acl); background: var(--s3); }\nselect.inp { padding-right: 6px; }\n.iconin { display: flex; align-items: center; gap: 8px; }\n.iconin .pv { width: 36px; height: 36px; border-radius: var(--r3); background: var(--s3); display: grid; place-items: center; flex: none; }\n.iconin .pv ha-icon { width: 20px; height: 20px; }\n.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--s2); border: 1px solid var(--ln2); flex-wrap: wrap; }\n.seg button { height: 30px; padding: 0 12px; border: none; border-radius: 8px; background: none; color: var(--tx2); font-weight: 500; font-size: 13px; white-space: nowrap; }\n.seg button:hover { color: var(--tx); }\n.seg button.on { background: var(--s4); color: var(--tx); box-shadow: 0 1px 2px rgba(0,0,0,.35); }\n.tg { width: 42px; height: 24px; border-radius: 99px; border: none; background: var(--s5); position: relative; flex: none; padding: 0; transition: background .15s; }\n.tg::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }\n.tg.on { background: var(--ac); }\n.tg.on::after { left: 21px; }\n.main { flex: 1; display: flex; gap: 12px; min-height: 0; }\n.pvw { flex: 1 1 auto; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.pvh { display: flex; align-items: center; gap: 8px; color: var(--tx2); font-size: 13px; }\n.pvh b { color: var(--tx); font-weight: 600; }\n.pvh .seg button { height: 26px; padding: 0 10px; font-size: 12px; }\n.pvbox { position: relative; flex: 1; min-height: 200px; overflow: hidden; border-radius: 14px; background: #08090b; }\n.pvc { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 0; overflow: hidden; }\n.ins { flex: 0 0 420px; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); display: flex; flex-direction: column; min-height: 0; }\n.ins .sc { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; min-height: 0; flex: 1; scrollbar-width: thin; }\n.ins h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); display: flex; align-items: center; gap: 8px; }\n.narrowv .main { flex-direction: column; overflow-y: auto; }\n.narrowv .pvw { flex: none; height: 46vh; }\n.narrowv .ins { flex: none; }\n.sl { display: flex; flex-direction: column; gap: 6px; }\n.si { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 12px; background: var(--s2); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.si:hover { background: var(--s3); }\n.si.on { background: var(--tint); border-color: var(--acl); }\n.si .ti { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; color: var(--tx2); }\n.si.on .ti { background: var(--acs); color: var(--ac); }\n.si .ti ha-icon { width: 18px; height: 18px; }\n.si .nm { flex: 1; min-width: 0; }\n.si .nm b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.si .nm span { font-size: 12px; color: var(--mu); }\n.cb { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--s4); color: var(--tx2); flex: none; }\n.hd { color: var(--mu2); cursor: grab; display: grid; place-items: center; width: 18px; flex: none; touch-action: none; }\n.hd:hover { color: var(--tx2); }\n.dragging { opacity: .45; }\n.dropb { box-shadow: 0 -2px 0 var(--ac); }\n.dropa { box-shadow: 0 2px 0 var(--ac); }\n.rooms .dropb { box-shadow: -3px 0 0 var(--ac); }\n.rooms .dropa { box-shadow: 3px 0 0 var(--ac); }\n.ed { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 16px; background: var(--s2); border: 1px solid var(--ln); }\n.row2 { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }\n.row2 > .fld { flex: 1 1 140px; }\n.items { display: flex; flex-direction: column; gap: 6px; }\n.it { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 11px; background: var(--s3); }\n.it .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; }\n.it .ico ha-icon, .it .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.it .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }\n.it .inp { height: 30px; font-size: 13px; padding: 0 8px; }\n.it .eid { font-size: 11.5px; color: var(--mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.it .x { width: 28px; height: 28px; border: none; background: none; color: var(--mu); border-radius: 8px; display: grid; place-items: center; flex: none; }\n.it .x:hover { background: var(--s4); color: var(--red); }\n.it input[type=color] { width: 30px; height: 30px; border: none; border-radius: 9px; padding: 0; background: none; flex: none; cursor: pointer; }\n.it input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }\n.it input[type=color]::-webkit-color-swatch { border: none; border-radius: 9px; }\n.it .sub { display: flex; gap: 6px; }\n.it .sub select { flex: 1; min-width: 0; height: 28px; font-size: 12px; }\n.it.ph { opacity: .75; }\n.acts { display: flex; gap: 8px; flex-wrap: wrap; }\n.empty { padding: 14px; border-radius: 12px; border: 1px dashed var(--ln2); color: var(--mu); font-size: 13px; text-align: center; }\n.hint { font-size: 12.5px; color: var(--mu); }\n.menu { position: absolute; z-index: 30; min-width: 220px; background: var(--s2); border: 1px solid var(--ln2); border-radius: 14px; padding: 6px; box-shadow: 0 18px 40px rgba(0,0,0,.5); }\n.menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: none; background: none; border-radius: 9px; text-align: left; color: var(--tx); }\n.menu button:hover { background: var(--s3); }\n.menu button.dan { color: var(--red); }\n.menu hr { border: none; border-top: 1px solid var(--ln); margin: 6px 4px; }\n.menu .mh { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); padding: 6px 10px 4px; }\n.ov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }\n.dlg { width: min(900px, 100%); max-height: 100%; background: #111215; border: 1px solid var(--ln2); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6); }\n.dlg.sm { width: min(560px, 100%); }\n.dh { display: flex; align-items: center; gap: 12px; padding: 18px 20px 12px; }\n.dh .di { width: 38px; height: 38px; border-radius: 50%; background: var(--s3); display: grid; place-items: center; color: var(--ac); flex: none; }\n.dh h2 { margin: 0; font-size: 18px; font-weight: 600; flex: 1; }\n.db { padding: 4px 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 0; }\n.df { display: flex; gap: 10px; justify-content: flex-end; padding: 12px 20px 18px; border-top: 1px solid var(--ln); align-items: center; }\n.sh { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 0; }\n.srow { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: var(--s1); border: 1px solid var(--ln); }\n.srow .t { flex: 1; min-width: 0; }\n.srow .t b { display: block; font-weight: 600; }\n.srow .t span { font-size: 12.5px; color: var(--mu); }\n.srow .inp { width: 120px; }\n.srow .inp.w { width: 260px; }\n.plist { display: flex; flex-direction: column; gap: 4px; }\n.pg { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 2px; }\n.pi { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: var(--s1); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.pi:hover { background: var(--s2); }\n.pi.on { border-color: var(--acl); background: var(--tint); }\n.pi.dis { opacity: .45; cursor: default; }\n.pi .ck { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--ln3); display: grid; place-items: center; flex: none; color: var(--actx); }\n.pi.on .ck { background: var(--ac); border-color: var(--ac); }\n.pi .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s3); display: grid; place-items: center; flex: none; }\n.pi .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.pi .t { flex: 1; min-width: 0; }\n.pi .t b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.pi .t span { font-size: 12px; color: var(--mu); }\n.pi .st { font-size: 12px; color: var(--tx2); flex: none; }\n.toast { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 50;\ndisplay: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 16px; border-radius: 14px; background: #24262B; border: 1px solid var(--ln2);\nbox-shadow: 0 14px 30px rgba(0,0,0,.45); transition: all .2s; font-size: 13.5px; }\n.toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }\n.toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }\n.toast button[hidden] { display: none; }";
+const PANEL_VERSION = '0.0.7';
+const CSS = ":host { display: block; color: var(--lp-text); font-family: var(--primary-font-family, Roboto, Noto, sans-serif);\n--lp-text: #FFFFFF; --lp-text2: #D3D3D3;\n--lp-card: rgba(10, 10, 10, 0.4);\n--lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08);\n--lp-sel: rgba(91, 141, 239, 0.9);\n--lp-on-border: rgb(255, 214, 10); --lp-on-icon: #FFC107; --lp-na: #555555;\n--lp-embed-bg: rgb(28, 28, 28); }\n.wrap { display: grid; grid-template-rows: auto minmax(0, 1fr); grid-gap: 12px; padding: 4px 4px 25px 4px; box-sizing: border-box;\nheight: var(--lp-h, auto); min-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));\n-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }\n.nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }\n.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);\nborder: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;\noverflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }\n.navb + .navb { margin-left: 8px; }\n.navb.sel { opacity: 1; border: 2px solid var(--lp-sel); }\n.ni { flex: 1 1 auto; width: 40%; min-height: 0; display: flex; align-items: center; justify-content: center; }\n.ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }\n.nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }\n.col > .subs { display: grid; grid-gap: 12px; flex: 1 1 auto; min-height: 0; }\n.sub { display: flex; flex-direction: column; min-width: 0; min-height: 0; }\n.sub > .box + .box { margin-top: 12px; }\n.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; box-sizing: border-box; padding: 20px;\nbackground: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }\n.box > * + * { margin-top: 8px; }\n.box.spread { justify-content: space-between; }\n.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }\n.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }\n.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }\n.title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }\n.title.season { cursor: pointer; }\n.grid { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }\n.tile { box-sizing: border-box; min-width: 0; min-height: 0; border-radius: 20px; background-color: var(--lp-card); border: 0 solid transparent;\ncolor: var(--lp-text); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4% 0;\ncursor: pointer; overflow: hidden; text-align: center; transition: all 0.2s ease-out; }\n.tile ha-state-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.tile .nm { margin-top: 8px; font-size: 16px; line-height: 19.2px; max-width: 100%; padding: 0 4px; box-sizing: border-box;\noverflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }\n.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on-icon)); }\n.tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }\n.tile.na ha-state-icon { color: var(--lp-na); }\n.scene { flex: 0 1 118px; height: auto; min-height: 48px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);\ndisplay: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }\n.scene .si { flex: 0 0 40%; display: flex; justify-content: center; }\n.scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }\n.scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;\n--ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;\n--primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }\n.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }\n.row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }\n.row.on ha-state-icon { color: var(--lp-on-icon); }\n.rt { min-width: 0; }\n.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.down { -webkit-transform: scale(0.96); transform: scale(0.96); }\n.wrap.edit { position: relative; touch-action: none; }\n.edit .box { cursor: pointer; transition: box-shadow 0.15s; position: relative; }\n.bgrip { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 9px; background: rgba(242, 169, 59, 0.16); color: #F2A93B;\ndisplay: flex; align-items: center; justify-content: center; cursor: grab; z-index: 3; --mdc-icon-size: 18px; }\n.bgrip:hover { background: rgba(242, 169, 59, 0.3); }\n.bgrip ha-icon { pointer-events: none; }\n.edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }\n.edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }\n.edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }\n.edit .tile > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }\n.edit .navb { cursor: pointer; }\n.edit .dragging { opacity: 0.35; }\n.edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }\n.edit .dropr { box-shadow: 6px 0 0 -2px #F2A93B !important; }\n.edit .dropt { box-shadow: 0 -6px 0 -2px #F2A93B !important; }\n.edit .dropd { box-shadow: 0 6px 0 -2px #F2A93B !important; }\n.edit .dropin { box-shadow: 0 0 0 3px #F2A93B !important; }\n.colh { position: absolute; width: 14px; cursor: col-resize; z-index: 5; }\n.colh::after { content: ''; position: absolute; left: 5px; top: 10%; bottom: 10%; width: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .colh::after { background: rgba(242, 169, 59, 0.3); }\n.colh:hover::after, .colh:active::after { background: #F2A93B !important; }\n.rowh { position: absolute; height: 14px; cursor: row-resize; z-index: 5; }\n.rowh::after { content: ''; position: absolute; top: 5px; left: 15%; right: 15%; height: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .rowh::after { background: rgba(242, 169, 59, 0.3); }\n.rowh:hover::after, .rowh:active::after { background: #F2A93B !important; }\n.dropline { position: absolute; height: 4px; border-radius: 2px; background: #F2A93B; z-index: 6; pointer-events: none; box-shadow: 0 0 12px rgba(242, 169, 59, 0.6); }\n.eph { flex: 1 1 auto; min-height: 90px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--lp-text2);\nborder: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }\n.box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;\nborder: 2px dashed rgba(242, 169, 59, 0.35); font-size: 15px; padding: 20px; cursor: default; }\n.addsec { margin-top: 14px; padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(242, 169, 59, 0.5); background: rgba(242, 169, 59, 0.12);\ncolor: #F2A93B; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }\n.addsec:hover { background: rgba(242, 169, 59, 0.22); }\n.gsq { position: relative; flex: 0 0 auto; height: 0; }\n.gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }\n.tile.ph { cursor: default; }\n.tile.ph ha-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.edit .box.over { box-shadow: 0 0 0 2px #e5484d; }\n.edit .box.over::after { content: attr(data-over); position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); padding: 4px 12px; border-radius: 12px; max-width: 90%; box-sizing: border-box; text-align: center;\nbackground: #e5484d; color: #fff; font-size: 18px; line-height: 22px; font-weight: 700; pointer-events: none; z-index: 3; }\n.scene.lec.on { box-shadow: inset 0 0 0 2px var(--sc), 0 0 18px -8px var(--sc); background-color: rgba(255, 255, 255, 0.05); }\n.scene.lec.na { opacity: 0.45; }";
+const ADMIN_CSS = ":host { display: block; height: 100vh; height: 100dvh; font-family: var(--lemur-font, Archivo, var(--ha-font-family-body, system-ui), sans-serif); }\n* { box-sizing: border-box; }\nbutton, input, select { font-family: inherit; color: inherit; font-size: inherit; }\nbutton { cursor: pointer; }\nha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px; flex: none; }\n.s14 { width: 14px; height: 14px; } .s16 { width: 16px; height: 16px; } .s18 { width: 18px; height: 18px; } .s24 { width: 24px; height: 24px; }\n.app { position: relative; height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; background: #0B0C0E; color: #ECEDEE;\noverflow: hidden; font-size: 14px; line-height: 1.4;\n--bg: #0B0C0E; --s1: #131417; --s2: #18191D; --s3: #1F2125; --s4: #272A2F; --s5: #30333A;\n--ln: rgba(255,255,255,.06); --ln2: rgba(255,255,255,.10); --ln3: rgba(255,255,255,.18);\n--tx: #ECEDEE; --tx2: #B3B7BE; --mu: #7C818A; --mu2: #5A5E66;\n--ac: #F2A93B; --acs: rgba(242,169,59,.13); --acl: rgba(242,169,59,.55); --actx: #1B1206;\n--red: #EE6A5F; --reds: rgba(238,106,95,.12); --tint: #261C10;\n--r1: 22px; --r2: 14px; --r3: 10px; }\n.grow { flex: 1; }\n.mu { color: var(--mu); }\n.top { display: flex; align-items: center; gap: 10px; min-height: 60px; flex: none; }\n.lg { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #F4B24A, #E2702C); display: grid; place-items: center; color: var(--actx); flex: none; }\n.lg ha-icon { width: 18px; height: 18px; }\n.top h1 { font-size: 16px; font-weight: 600; margin: 0 6px 0 2px; letter-spacing: -.01em; white-space: nowrap; }\n.badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--acs); color: var(--ac); border: 1px solid var(--acl); white-space: nowrap; }\n.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: var(--r3);\nborder: 1px solid var(--ln2); background: var(--s2); font-size: 13px; font-weight: 500; color: var(--tx); white-space: nowrap; }\n.btn:hover { background: var(--s3); }\n.btn:disabled { opacity: .35; cursor: default; }\n.btn.ic { width: 34px; padding: 0; }\n.btn.pri { background: var(--ac); color: var(--actx); border-color: var(--ac); }\n.btn.pri:hover { filter: brightness(1.06); }\n.btn.dan { color: var(--red); }\n.btn.dan.ask { background: var(--reds); border-color: rgba(238,106,95,.45); }\n.btn.sm { height: 30px; font-size: 12.5px; padding: 0 10px; }\n.btn.dash { border-style: dashed; background: none; color: var(--tx2); }\n.btn.dash:hover { color: var(--tx); background: var(--s2); }\n.warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }\n.rblock { flex: none; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 10px; }\n.rooms { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 1px; margin-bottom: -1px; position: relative; z-index: 2; align-items: flex-start; scrollbar-width: none; }\n.rooms::-webkit-scrollbar { display: none; }\n.rb { display: flex; align-items: center; justify-content: center; gap: 10px; min-width: 130px; padding: 14px 18px; border-radius: var(--r2); background: var(--s2);\nborder: 1px solid transparent; font-weight: 600; font-size: 16px; line-height: 1.2; white-space: nowrap; color: var(--tx2); cursor: pointer; flex: none; user-select: none; touch-action: none; }\n.rb ha-icon { width: 24px; height: 24px; }\n.rb:hover { background: var(--s3); color: var(--tx); }\n.rb.on { background: var(--tint); color: var(--ac); border: 1px solid var(--acl); border-bottom-color: var(--tint); border-radius: var(--r2) var(--r2) 0 0;\npadding-bottom: 24px; margin-bottom: -1px; }\n.rb.add { background: none; border: 1px dashed var(--ln2); color: var(--mu); font-weight: 500; min-width: 0; }\n.rb.add:hover { color: var(--tx); }\n.rpanel { position: relative; z-index: 1; background: var(--tint); border: 1px solid var(--acl); border-radius: var(--r2); padding: 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }\n.rpanel.first { border-top-left-radius: 0; }\n.fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }\n.fld > label, .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); }\n.inp { flex-shrink: 0; height: 36px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); padding: 0 11px; color: var(--tx); outline: none; min-width: 0; width: 100%; }\n.inp:focus { border-color: var(--acl); background: var(--s3); }\nselect.inp { padding-right: 6px; }\n.iconin { display: flex; align-items: center; gap: 8px; }\n.iconin .pv { width: 36px; height: 36px; border-radius: var(--r3); background: var(--s3); display: grid; place-items: center; flex: none; }\n.iconin .pv ha-icon { width: 20px; height: 20px; }\n.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--s2); border: 1px solid var(--ln2); flex-wrap: wrap; }\n.seg button { height: 30px; padding: 0 12px; border: none; border-radius: 8px; background: none; color: var(--tx2); font-weight: 500; font-size: 13px; white-space: nowrap; }\n.seg button:hover { color: var(--tx); }\n.seg button.on { background: var(--s4); color: var(--tx); box-shadow: 0 1px 2px rgba(0,0,0,.35); }\n.tg { width: 42px; height: 24px; border-radius: 99px; border: none; background: var(--s5); position: relative; flex: none; padding: 0; transition: background .15s; }\n.tg::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }\n.tg.on { background: var(--ac); }\n.tg.on::after { left: 21px; }\n.main { flex: 1; display: flex; gap: 12px; min-height: 0; }\n.pvw { flex: 1 1 auto; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.pvh { display: flex; align-items: center; gap: 8px; color: var(--tx2); font-size: 13px; }\n.pvh b { color: var(--tx); font-weight: 600; }\n.pvh .seg button { height: 26px; padding: 0 10px; font-size: 12px; }\n.pvbox { position: relative; flex: 1; min-height: 200px; overflow: hidden; border-radius: 14px; background: #08090b; }\n.pvc { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 0; overflow: hidden; }\n.ins { flex: 0 0 420px; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); display: flex; flex-direction: column; min-height: 0; }\n.ins .sc { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; min-height: 0; flex: 1; scrollbar-width: thin; }\n.ins h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); display: flex; align-items: center; gap: 8px; }\n.narrowv .main { flex-direction: column; overflow-y: auto; }\n.narrowv .pvw { flex: none; height: 46vh; }\n.narrowv .ins { flex: none; }\n.sl { display: flex; flex-direction: column; gap: 6px; }\n.si { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 12px; background: var(--s2); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.si:hover { background: var(--s3); }\n.si.on { background: var(--tint); border-color: var(--acl); }\n.si .ti { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; color: var(--tx2); }\n.si.on .ti { background: var(--acs); color: var(--ac); }\n.si .ti ha-icon { width: 18px; height: 18px; }\n.si .nm { flex: 1; min-width: 0; }\n.si .nm b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.si .nm span { font-size: 12px; color: var(--mu); }\n.cb { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--s4); color: var(--tx2); flex: none; }\n.hd { color: var(--mu2); cursor: grab; display: grid; place-items: center; width: 18px; flex: none; touch-action: none; }\n.hd:hover { color: var(--tx2); }\n.dragging { opacity: .45; }\n.dropb { box-shadow: 0 -2px 0 var(--ac); }\n.dropa { box-shadow: 0 2px 0 var(--ac); }\n.rooms .dropb { box-shadow: -3px 0 0 var(--ac); }\n.rooms .dropa { box-shadow: 3px 0 0 var(--ac); }\n.ed { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 16px; background: var(--s2); border: 1px solid var(--ln); }\n.row2 { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }\n.row2 > .fld { flex: 1 1 140px; }\n.items { display: flex; flex-direction: column; gap: 6px; }\n.it { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 11px; background: var(--s3); }\n.it .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; }\n.it .ico ha-icon, .it .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.it .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }\n.it .inp { height: 30px; font-size: 13px; padding: 0 8px; }\n.it .eid { font-size: 11.5px; color: var(--mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.it .x { width: 28px; height: 28px; border: none; background: none; color: var(--mu); border-radius: 8px; display: grid; place-items: center; flex: none; }\n.it .x:hover { background: var(--s4); color: var(--red); }\n.it input[type=color] { width: 30px; height: 30px; border: none; border-radius: 9px; padding: 0; background: none; flex: none; cursor: pointer; }\n.it input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }\n.it input[type=color]::-webkit-color-swatch { border: none; border-radius: 9px; }\n.it .sub { display: flex; gap: 6px; }\n.it .sub select { flex: 1; min-width: 0; height: 28px; font-size: 12px; }\n.it.ph { opacity: .75; }\n.acts { display: flex; gap: 8px; flex-wrap: wrap; }\n.empty { padding: 14px; border-radius: 12px; border: 1px dashed var(--ln2); color: var(--mu); font-size: 13px; text-align: center; }\n.hint { font-size: 12.5px; color: var(--mu); }\n.menu { position: absolute; z-index: 30; min-width: 220px; background: var(--s2); border: 1px solid var(--ln2); border-radius: 14px; padding: 6px; box-shadow: 0 18px 40px rgba(0,0,0,.5); }\n.menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: none; background: none; border-radius: 9px; text-align: left; color: var(--tx); }\n.menu button:hover { background: var(--s3); }\n.menu button.dan { color: var(--red); }\n.menu hr { border: none; border-top: 1px solid var(--ln); margin: 6px 4px; }\n.menu .mh { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); padding: 6px 10px 4px; }\n.ov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }\n.dlg { width: min(900px, 100%); max-height: 100%; background: #111215; border: 1px solid var(--ln2); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6); }\n.dlg.sm { width: min(560px, 100%); }\n.dh { display: flex; align-items: center; gap: 12px; padding: 18px 20px 12px; }\n.dh .di { width: 38px; height: 38px; border-radius: 50%; background: var(--s3); display: grid; place-items: center; color: var(--ac); flex: none; }\n.dh h2 { margin: 0; font-size: 18px; font-weight: 600; flex: 1; }\n.db { padding: 4px 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 0; }\n.df { display: flex; gap: 10px; justify-content: flex-end; padding: 12px 20px 18px; border-top: 1px solid var(--ln); align-items: center; }\n.sh { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 0; }\n.srow { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: var(--s1); border: 1px solid var(--ln); }\n.srow .t { flex: 1; min-width: 0; }\n.srow .t b { display: block; font-weight: 600; }\n.srow .t span { font-size: 12.5px; color: var(--mu); }\n.srow .inp { width: 120px; }\n.srow .inp.w { width: 260px; }\n.plist { display: flex; flex-direction: column; gap: 4px; }\n.pg { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 2px; }\n.pi { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: var(--s1); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.pi:hover { background: var(--s2); }\n.pi.on { border-color: var(--acl); background: var(--tint); }\n.pi.dis { opacity: .45; cursor: default; }\n.pi .ck { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--ln3); display: grid; place-items: center; flex: none; color: var(--actx); }\n.pi.on .ck { background: var(--ac); border-color: var(--ac); }\n.pi .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s3); display: grid; place-items: center; flex: none; }\n.pi .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.pi .t { flex: 1; min-width: 0; }\n.pi .t b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.pi .t span { font-size: 12px; color: var(--mu); }\n.pi .st { font-size: 12px; color: var(--tx2); flex: none; }\n.toast { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 50;\ndisplay: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 16px; border-radius: 14px; background: #24262B; border: 1px solid var(--ln2);\nbox-shadow: 0 14px 30px rgba(0,0,0,.45); transition: all .2s; font-size: 13.5px; }\n.toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }\n.toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }\n.toast button[hidden] { display: none; }\n.lecna { color: #F3B0A9; font-weight: 600; }";
 // Metinler: her metin tr ve en. Arayüzde marka adı geçmez.
 const TXT = {
   tr: { home: 'Ev', other: 'Diğer', lights: 'IŞIKLAR', room_lights: '{area} IŞIKLARI', scenes: 'SENARYOLAR', shortcuts: 'KISAYOLLAR',
     control: 'EV KONTROL', other_control: 'DİĞER CİHAZLAR', media: 'MEDYA',
     empty: 'Bu sekmede gösterilecek cihaz yok. Yönetim panelinden ekleyebilirsin.',
-    edit_empty: 'Boş bölüm · sağdan "Cihaz ekle" ya da başka bölümden bir öğeyi buraya sürükle', col_empty: 'Boş sütun · bir kutuyu ⠿ tutamağından tutup buraya sürükle ya da', add_section: 'Bölüm ekle', too_full: 'Ekrana sığmıyor', drag_box: 'Kutuyu taşımak için tut ve sürükle',
+    edit_empty: 'Boş bölüm · sağdan "Cihaz ekle" ya da başka bölümden bir öğeyi buraya sürükle', col_empty: 'Boş sütun · bir kutuyu ⠿ tutamağından tutup buraya sürükle ya da', add_section: 'Bölüm ekle', effects: 'Efektler', too_full: 'Ekrana sığmıyor', drag_box: 'Kutuyu taşımak için tut ve sürükle',
     heat: 'Isıtıyor', cool: 'Soğutuyor', idle: 'Beklemede', off: 'Kapalı', on: 'Açık', playing: 'Çalıyor', paused: 'Duraklatıldı', unavailable: 'Ulaşılamıyor',
     admin_title: 'Lemur Home Dashboard', admin_intro: 'Panonun sekmeleri, bölümleri ve boyutları burada düzenlenecek. (Yapım aşamasında)',
     reset: 'Varsayılana dön', save: 'Kaydet', saved: 'Kaydedildi', not_loaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.' },
   en: { home: 'Home', other: 'Other', lights: 'LIGHTS', room_lights: '{area} LIGHTS', scenes: 'SCENES', shortcuts: 'SHORTCUTS',
     control: 'CONTROLS', other_control: 'OTHER DEVICES', media: 'MEDIA',
     empty: 'Nothing to show on this tab yet. Add devices from the admin panel.',
-    edit_empty: 'Empty section · use "Add device" on the right or drag an item here from another section', col_empty: 'Empty sub-column · drag a box here by its ⠿ handle, or', add_section: 'Add section', too_full: "Doesn't fit the screen", drag_box: 'Hold and drag to move the box',
+    edit_empty: 'Empty section · use "Add device" on the right or drag an item here from another section', col_empty: 'Empty sub-column · drag a box here by its ⠿ handle, or', add_section: 'Add section', effects: 'Effects', too_full: "Doesn't fit the screen", drag_box: 'Hold and drag to move the box',
     heat: 'Heating', cool: 'Cooling', idle: 'Idle', off: 'Off', on: 'On', playing: 'Playing', paused: 'Paused', unavailable: 'Unavailable',
     admin_title: 'Lemur Home Dashboard', admin_intro: 'Tabs, sections and sizes of the dashboard will be edited here. (Work in progress)',
     reset: 'Reset to defaults', save: 'Save', saved: 'Saved', not_loaded: 'The Lemur Home Dashboard integration is not loaded.' }
@@ -2053,6 +2053,96 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });
 
+// Lemur Light Effect Card (LEC) ile birlikte çalışma. LEC pakete girmez, ayrı kurulur; kuruluysa pano:
+// - senaryolarda "Efekt ekranı" düğmesi: LEC'in tam ekran efekt ekranını sekmenin odasıyla açar,
+// - efekt düğmeleri: seçilen efekti o odada başlatır / durdurur (LEC servisleri play, stop),
+// - oynayan efekti gösterir: o odanın karoları efektin paletiyle parlar, efektin düğmesi yanar,
+// - isteğe bağlı: ışık karosuna basılı tutunca HA'nın penceresi yerine LEC ekranı açılır (ayar: lec_hold).
+// LEC'in odaları HA alan kimlikleriyle tutulur (oturma_odasi...), panodaki sekmelerin alanı da aynı; eşleme kendiliğinden.
+const LP_LEC_DOMAIN = 'lemur_light_effects';
+const LEC = window.__LEMUR_HD_LEC || (window.__LEMUR_HD_LEC = {
+  rooms: null,        // { alan: [ışık, ...] } (LEC'in oda listesi)
+  favorites: [], recent: {},
+  effects: {},        // oda → efekt adları (LEC list_effects)
+  names: {},          // oda → odanın adı
+  playing: {},        // oda → şu an oynayan efekt (yoksa null)
+  version: null, subs: [], loading: null, pend: {}, timers: {},
+  installed(h) { return !!(h && h.config && (h.config.components || []).indexOf(LP_LEC_DOMAIN) >= 0); },
+  load(h) {
+    if (!this.installed(h)) return Promise.resolve(null);
+    if (this.rooms) return Promise.resolve(this);
+    if (this.loading) return this.loading;
+    const conn = h.connection;
+    this.loading = conn.sendMessagePromise({ type: LP_LEC_DOMAIN + '/get' }).then((d) => {
+      this._put(d || {});
+      // LEC'in ayarı değişince (oda listesi, favoriler) canlı gelsin
+      conn.subscribeMessage((m) => { this._put(m || {}); this._emit('rooms'); }, { type: LP_LEC_DOMAIN + '/subscribe' }).catch(() => {});
+      conn.sendMessagePromise({ type: LP_LEC_DOMAIN + '/info' }).then((r) => { this.version = (r && r.version) || null; this._emit('info'); }).catch(() => {});
+      this._emit('rooms');
+      return this;
+    }).catch(() => { this.loading = null; return null; });
+    return this.loading;
+  },
+  _put(d) {
+    if (d.rooms) this.rooms = d.rooms;
+    if (d.favorites) this.favorites = d.favorites;
+    if (d.recent) this.recent = d.recent;
+    if (!this.rooms) this.rooms = {};
+  },
+  hasRoom(room) { return !!(room && this.rooms && this.rooms[room]); },
+  roomOf(id) { const r = this.rooms || {}; for (const k in r) if ((r[k] || []).indexOf(id) >= 0) return k; return null; },
+  lightsOf(room) { return (this.rooms && this.rooms[room]) || []; },
+  // odanın efekt listesi ve şu an oynayan efekt: LEC'in cevap veren servisi (yönetici olmayan kullanıcı da çağırabilir)
+  query(h, room) {
+    if (!room) return Promise.resolve(null);
+    if (this.pend[room]) return this.pend[room];
+    this.pend[room] = h.connection.sendMessagePromise({ type: 'call_service', domain: LP_LEC_DOMAIN, service: 'list_effects', service_data: { room: room }, return_response: true })
+      .then((r) => {
+        const x = (r && r.response) || {};
+        const first = !this.effects[room];
+        this.effects[room] = x.effects || [];
+        this.names[room] = x.name || room;
+        const p = x.playing || null, ch = this.playing[room] !== p;
+        this.playing[room] = p;
+        if (ch) this._emit('playing');
+        if (first) this._emit('effects');   // yönetim panelindeki seçici efekt listesini göstersin
+        return x;
+      }).catch(() => null).then((x) => { delete this.pend[room]; return x; });
+    return this.pend[room];
+  },
+  // odanın ışıkları değişince oynayan efekti yeniden sor; art arda gelen değişiklikler birleşir
+  watch(h, room) {
+    clearTimeout(this.timers[room]);
+    this.timers[room] = setTimeout(() => this.query(h, room), 1200);
+  },
+  isPlaying(room, effect) {
+    const p = this.playing[room];
+    return !!(p && effect && String(p).toLowerCase() === String(effect).toLowerCase());
+  },
+  // LEC'in tam ekran efekt ekranı (LEC'in kendi düğmesi gizli olarak kullanılır; oda verilirse o oda seçili açılır)
+  open(h, room) {
+    let el = null;
+    try { el = document.createElement('lemur-fullscreen-button'); } catch (e) { el = null; }
+    if (!el || typeof el.open !== 'function') return false;
+    el.setConfig(this.hasRoom(room) ? { room: room } : {});
+    el.hass = h;
+    el.open(false);
+    return true;
+  },
+  run(h, action) {
+    const sv = String(action.service || '').split('.')[1];
+    return h.callService(LP_LEC_DOMAIN, sv, action.data || {});
+  },
+  onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; },
+  _emit(kind) { this.subs.forEach((f) => { try { f(kind); } catch (e) {} }); }
+});
+// senaryo öğesi LEC'e mi ait: 'open' (efekt ekranı), 'play' (efekt), 'stop' (durdur)
+function lpLecKind(it) {
+  const s = it && it.action && it.action.service;
+  if (!s || s.indexOf(LP_LEC_DOMAIN + '.') !== 0) return null;
+  return s.split('.')[1];
+}
+
 // Ayar yokken evden varsayılan düzen üretir: ilk kurulumda tek satırla dolu bir pano gelsin diye.
 // Kurallar:
 // - İlk sekme "Ev": bütün evin özeti, odalardan sırayla (en fazla 20 ışık, 6 senaryo, 6 iklim cihazı, süpürgeler, 2 medya).
@@ -2063,6 +2153,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
 // - Küçük ışık grubunun üyeleri ayrıca gösterilmez; odanın tamamını kapsayan büyük grupta üyeler de görünür.
 // - Şerit/lamba segmentleri, ışığı olan cihazın güç anahtarı ve tarayıcı eklentisi (browser_mod) varlıkları alınmaz.
 // - Parametre isteyen betikler senaryo düğmesi olmaz.
+// - Lemur Light Effect Card kuruluysa senaryoların sonuna "Efektler" düğmesi eklenir (efekt ekranı, sekmenin odasıyla).
 // - Anahtarlardan (switch) sadece priz ve aydınlatma gibi görünenler alınır; ayar anahtarları ve gizli varlıklar alınmaz.
 // Eski Safari için ?. ve ?? yok.
 const LP_SCENE_COLORS = ['#5B8DEF', '#8E7CFF', '#F5A623', '#4CD964', '#FF6B6B', '#2EC4B6', '#FFB86B', '#E879F9'];
@@ -2175,12 +2266,15 @@ function buildDefaultTabs(hass, lang) {
     action: { service: dom(id) + '.turn_on', target: id }
   });
   const globalScenes = scenes.filter((id) => !areaOf(id)).sort(byName);
+  // Lemur Light Effect Card kuruluysa her sekmenin senaryolarının sonunda "Efektler": LEC'in efekt ekranını sekmenin odasıyla açar
+  const lecBtn = () => ((hass.config && (hass.config.components || []).indexOf('lemur_light_effects') >= 0)
+    ? [{ name: t(lang, 'effects'), icon: 'mdi:creation', color: '#FF6FAE', action: { service: 'lemur_light_effects.open' } }] : []);
 
   const tab = (o) => {
     colorIdx = 0;   // her sekmede renkler baştan: aynı sıradaki düğme aynı renkte
     const secs = [
       { id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 },
-      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem) },
+      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem).concat(lecBtn()) },
       { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem) },
       { id: o.id + '-v', type: 'vacuum', col: 2, entities: o.vacuums || [] },
       { id: o.id + '-m', type: 'media', col: 2, entities: o.medias }
@@ -2453,7 +2547,10 @@ const LP_FX = [
 const LP_FX_NONE = ['', 'none', 'off', 'solid', 'static', 'normal'];
 function lpFx(st) {
   if (!st || st.state !== 'on') return null;
-  const ef = String(st.attributes.effect || '').toLowerCase().replace(/^\s+|\s+$/g, '');
+  return lpFxByName(st.attributes.effect);
+}
+function lpFxByName(name) {
+  const ef = String(name || '').toLowerCase().replace(/^\s+|\s+$/g, '');
   if (LP_FX_NONE.indexOf(ef) >= 0) return null;
   for (let i = 0; i < LP_FX.length; i++) {
     const p = LP_FX[i];
@@ -2490,7 +2587,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   set hass(h) {
     const first = !this._hass;
     this._hass = h;
-    if (first) { STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
+    if (first) { LEC.load(h); STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
     if (!this._sig) return;
     (this._embeds || []).forEach((e) => { e.hass = h; });
     const w = this._watched || [];
@@ -2505,11 +2602,17 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!this._config.edit) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
       this._render();
     });
+    if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
+      if (kind === 'rooms') { this._sig = null; this._render(); return; }
+      if (kind === 'effects' || kind === 'info') return;   // oda listesi değişti: izlenen ışıklar değişir
+      this._last = {}; if (this._sig) this._update();                       // oynayan efekt değişti: karolar ve düğmeler
+    });
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     if (this._hass) this._render();
   }
   disconnectedCallback() {
     if (this._unsub) { this._unsub(); this._unsub = null; }
+    if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     clearInterval(this._clock); this._clock = null;
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
@@ -2540,7 +2643,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), !!this._config.edit, this._config.selected || '']);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -2549,6 +2652,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   _build(tab, tabs, lang, season) {
     const h = this._hass, S = h.states;
     const tiles = [], tileItems = [], rows = [], embeds = [];
+    const lecRooms = {};   // bu sekmede LEC'ten oynayan efekti sorulacak odalar
     // ayarda olup şu an HA'da olmayan cihazlar: gelince (ör. HA yeniden başladıktan sonra) pano yeniden kurulur
     this._missing = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && !S[e.entity]) this._missing.push(e.entity); }));
@@ -2585,9 +2689,20 @@ class LemurHomeDashboardCard extends HTMLElement {
           }).join('') + (fill ? '</div>' : '</div></div>') };
       }
       if (s.type === 'scenes') {
-        const items = s.items || [];
+        // LEC düğmeleri: LEC kurulu değilse panoda görünmez (düzenlemede soluk görünür)
+        const lecOn = LEC.installed(h);
+        const items = (s.items || []).map((it, i) => ({ it: it, i: i, k: lpLecKind(it) })).filter((x) => x.it && (!x.k || lecOn || edit));
         if (!items.length) return null;
-        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-scene="' + esc(s.id) + ':' + i + '"' + mark(i) + '><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
+        return { kind: 'md', spread: true, html: items.map((x) => {
+          const it = x.it, c = it.color || '#5B8DEF';
+          let lec = '';
+          if (x.k) {
+            const room = x.k === 'open' ? (it.action.room || tab.area || '') : ((it.action.data && it.action.data.room) || '');
+            if (room) lecRooms[room] = 1;
+            lec = ' data-lk="' + esc(x.k) + '" data-lroom="' + esc(room) + '" data-lfx="' + esc((it.action.data && it.action.data.effect) || '') + '"';
+          }
+          return '<div class="scene' + (x.k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + '" data-scene="' + esc(s.id) + ':' + x.i + '"' + lec + mark(x.i) + '><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(c) + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>';
+        }).join('') };
       }
       if (s.type === 'climate') {
         const items = withIdx(s.entities, lpEnt).filter((e) => S[e.entity]);
@@ -2675,7 +2790,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; this._tiles.push(el); });
     this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => this._rows.push(el));
-    this._watched = tiles.concat(rows);
+    // LEC: karoların odaları da sorulur; efekt düğmesi olan odaların ışıkları izlenir (değişince oynayan efekt yeniden sorulur)
+    tiles.forEach((id) => { const r = LEC.roomOf(id); if (r) lecRooms[r] = 1; });
+    this._lecRooms = Object.keys(lecRooms).filter((r) => LEC.hasRoom(r));
+    const lecLights = [];
+    this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
+    this._watched = tiles.concat(rows, lecLights);
+    if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
     this._lang = lang;
 
@@ -2694,7 +2815,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     const more = (id) => lpFire(this, 'hass-more-info', { entityId: id });
     this._tiles.forEach((b) => {
       const id = b.getAttribute('data-light');
-      lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), () => more(id));
+      // basılı tut: HA'nın ışık penceresi; ayarda seçildiyse ve LEC kuruluysa LEC'in efekt ekranı (lambanın odasıyla)
+      const hold = () => {
+        const st = (STORE.data && STORE.data.settings) || {};
+        if (st.lec_hold && LEC.installed(this._hass) && LEC.open(this._hass, LEC.roomOf(id) || tab.area)) return;
+        more(id);
+      };
+      lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), hold);
     });
     this._rows.forEach((b) => lpPress(b, () => more(b.getAttribute('data-row'))));
     R.querySelectorAll('[data-scene]').forEach((b) => lpPress(b, () => {
@@ -2702,6 +2829,9 @@ class LemurHomeDashboardCard extends HTMLElement {
       const s = (tab.sections || []).filter((x) => x.id === p[0])[0];
       const it = s && s.items && s.items[+p[1]];
       if (!it || !it.action || !it.action.service) return;
+      const lk = lpLecKind(it);
+      if (lk === 'open') { LEC.open(this._hass, it.action.room || tab.area); return; }
+      if (lk) { LEC.run(this._hass, it.action); return; }
       const sv = it.action.service.split('.');
       this._hass.callService(sv[0], sv[1], it.action.target ? { entity_id: it.action.target } : (it.action.data || {}));
     }));
@@ -2912,10 +3042,17 @@ class LemurHomeDashboardCard extends HTMLElement {
   // --- durum güncellemesi (iskelete dokunmadan) ---
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
+    // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor
+    if (this._lecRooms && this._lecRooms.length && !this._config.edit) {
+      const seen = {};
+      (this._watched || []).forEach((id) => { if (this._last[id] && S[id] !== this._last[id]) { const r = LEC.roomOf(id); if (r && !seen[r] && this._lecRooms.indexOf(r) >= 0) { seen[r] = 1; LEC.watch(h, r); } } });
+    }
     (this._tiles || []).forEach((el) => {
       const id = el.getAttribute('data-light'), st = S[id];
       if (!st || this._last[id] === st) return;
-      const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0, fx = lpFx(st);
+      const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0;
+      // efekt: ışığın kendi efekti; yoksa LEC'in o odada oynattığı efekt (yanan ışıklarda)
+      const fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(id)]) : null);
       el.className = 'tile' + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '');
       const rgb = on && !fx && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
@@ -2939,6 +3076,13 @@ class LemurHomeDashboardCard extends HTMLElement {
       const ic = el.firstChild; ic.hass = h; ic.stateObj = st;
     });
     (this._watched || []).forEach((id) => { this._last[id] = S[id]; });
+    // LEC düğmeleri: efekti oynuyorsa (ya da efekt ekranı düğmesinin odasında bir efekt oynuyorsa) yanar
+    const R = this.shadowRoot;
+    if (R) Array.prototype.forEach.call(R.querySelectorAll('.scene[data-lk]'), (el) => {
+      const k = el.getAttribute('data-lk'), room = el.getAttribute('data-lroom');
+      const on = k === 'play' ? LEC.isPlaying(room, el.getAttribute('data-lfx')) : (k === 'open' ? !!LEC.playing[room] : false);
+      el.classList.toggle('on', on);
+    });
   }
 }
 
@@ -2967,7 +3111,7 @@ const ADM = {
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
-    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu. Efekt düğmesi ve efekt sayfası sonraki sürümde panoya gelecek.', lecOff: 'Kurulu değil. Efektler için isteğe bağlı olarak kurulabilir.',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Senaryolara efekt ekranı ve efekt düğmeleri eklenebilir.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecHold: 'Basılı tutunca efekt ekranı', lecHoldT: 'Işık karosuna basılı tutunca HA penceresi yerine efekt ekranı lambanın odasıyla açılır', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
@@ -2989,7 +3133,7 @@ const ADM = {
     bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
-    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed. The effect button and effect page come to the dashboard in a later version.', lecOff: 'Not installed. Optional, for light effects.',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). Effect screen and effect buttons can be added to scene sections.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecHold: 'Hold for effect screen', lecHoldT: 'Holding a light tile opens the effect screen for that light\'s room instead of the HA dialog', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
@@ -3051,6 +3195,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const first = !this._hass;
     this._hass = h;
     if (first) {
+      LEC.load(h);
+      if (!this._lecUnsub) this._lecUnsub = LEC.onChange((k) => { if (k === 'playing') return; if (this._modal === 'pick') this._refreshPick(); else if (STORE.data && this.shadowRoot && !this._modal) this._render(); });
       STORE.load(h).then(() => {
         this._sub();
         this._render();
@@ -3086,6 +3232,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
     if (this._unsub) { this._unsub(); this._unsub = null; }
+    if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     if (this._ro) this._ro.disconnect();
   }
 
@@ -3129,7 +3276,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const tabs = this._work();
     fn(tabs);
     this._commit('tabs', tabs);
-    if (!soft) this._render();
+    if (!soft) this._render(); else this._undoBtn();
     this._toast(msg || this._t('saved'));
   }
   _setting(path, value, soft) {
@@ -3140,9 +3287,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
     if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
     this._commit('settings', s);
-    if (!soft) this._render();   // ayarlar penceresi açıkken de güncel görünsün
+    if (!soft) this._render(); else this._undoBtn();   // ayarlar penceresi açıkken de güncel görünsün
     this._toast(this._t('saved'));
   }
+  // yazı alanından gelen kayıtta panel yeniden çizilmez; geri al düğmesi yine de açılsın (ilk değişiklikte kapalı kalıyordu)
+  _undoBtn() { const u = this.shadowRoot && this.shadowRoot.querySelector('[data-a="undo"]'); if (u) u.disabled = !this._undo.length; }
   _toast(x, undo) {
     const el = this.shadowRoot && this.shadowRoot.querySelector('.toast'); if (!el) return;
     el.querySelector('span').textContent = x;
@@ -3244,10 +3393,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="ico"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div>' +
         '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
         '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="mdi:play" style="height:28px;font-size:12px">' +
-        '</div><span class="eid">' + t('target') + ': ' + esc(it.action && it.action.target ? this._ename(it.action.target) : '—') + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
+        '</div><span class="eid">' + this._scTarget(tab, it) + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
         : '<div class="empty">' + t('noItems') + '</div>';
       body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addScene') + '</button>' +
-        '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addScPh') + '</button></div>';
+        '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addScPh') + '</button>' +
+        (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     } else {
       const items = (s.entities || []).map((x) => (typeof x === 'string' ? { entity: x } : x));
       const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
@@ -3324,7 +3474,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + tg('kiosk.hide_sidebar', !!k.hide_sidebar) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
         '<div class="sh">' + t('s_info') + '</div>' +
-        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn') : t('lecOff')) + '</span></div></div>' +
+        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
+        (lec ? '<div class="srow"><div class="t"><b>' + t('lecHold') + '</b><span>' + t('lecHoldT') + '</span></div>' + tg('lec_hold', !!s.lec_hold) + '</div>' : '') +
         '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }
@@ -3340,13 +3491,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
     const doms = LHD_TYPES[sec.type].domains;
     const have = {};
-    if (sec.type === 'scenes') (sec.items || []).forEach((x) => { if (x.action && x.action.target) have[x.action.target] = 1; });
+    if (sec.type === 'scenes') (sec.items || []).forEach((x) => {
+      if (x.action && x.action.target) have[x.action.target] = 1;
+      const k = lpLecKind(x), d = (x.action && x.action.data) || {};
+      if (k === 'play') have['lec:' + d.room + ':' + d.effect] = 1;
+      if (k === 'stop') have['lecstop:' + d.room] = 1;
+    });
     else (sec.entities || []).forEach((x) => { const id = typeof x === 'string' ? x : x.entity; if (id) have[id] = 1; });
     const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
     const q = this._q.toLowerCase().trim();
     const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)))
       .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
-    if (!ids.length) return '<div class="empty">' + esc(this._t('nothing')) + '</div>';
+    const lecHtml = this._lecGroups(sec, have, q);
+    if (!ids.length) return lecHtml || '<div class="empty">' + esc(this._t('nothing')) + '</div>';
     const groups = {};
     ids.forEach((id) => { const a = areaOf(id); (groups[a] = groups[a] || []).push(id); });
     // sekmenin alanı en üstte (oda sekmesine cihaz eklerken önce o odanınkiler görünsün)
@@ -3357,7 +3514,49 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
         '<div class="ico"><ha-state-icon data-eid="' + esc(id) + '"></ha-state-icon></div><div class="t"><b>' + esc(this._ename(id)) + '</b><span>' + esc(id) + '</span></div>' +
         '<span class="st">' + esc(dis ? this._t('added') : (this._hass.formatEntityState ? this._hass.formatEntityState(S[id]) : S[id].state)) + '</span></div>';
-    }).join('')).join('');
+    }).join('')).join('') + lecHtml;
+  }
+
+  // senaryo düğmesinin ne yaptığı (düzenleyicideki alt yazı)
+  _scTarget(tab, it) {
+    const T = (k, v) => esc(this._t(k, v)), k = lpLecKind(it), a = it.action || {};
+    const rn = (r) => (r ? (LEC.names[r] || this._area(r) || r) : this._t('roomByTab'));
+    let txt;
+    if (k === 'open') txt = T('tOpen', { r: rn(a.room || tab.area) });
+    else if (k === 'play') txt = T('tPlay', { e: (a.data && a.data.effect) || '?', r: rn(a.data && a.data.room) });
+    else if (k === 'stop') txt = T('tStop', { r: rn(a.data && a.data.room) });
+    else txt = T('target') + ': ' + esc(a.target ? this._ename(a.target) : '—');
+    if (k && !LEC.installed(this._hass)) txt += ' · <b class="lecna">' + T('lecNa') + '</b>';
+    return txt;
+  }
+  _refreshPick() {
+    const pl = this.shadowRoot && this.shadowRoot.querySelector('.plist'); if (!pl) return;
+    const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab); if (!sec) return;
+    pl.innerHTML = this._pickList(sec);
+    pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; });
+  }
+  // senaryo seçicide LEC efektleri: sekmenin odası (oda yoksa bütün LEC odaları); önce "durdur", sonra favoriler, sonra hepsi
+  _lecGroups(sec, have, q) {
+    if (sec.type !== 'scenes' || !LEC.installed(this._hass) || !LEC.rooms) return '';
+    const tab = this._curTab(this._work());
+    const rooms = LEC.hasRoom(tab && tab.area) ? [tab.area] : Object.keys(LEC.rooms);
+    return rooms.map((r) => {
+      const name = LEC.names[r] || this._area(r) || r;
+      const list = LEC.effects[r];
+      if (!list) { LEC.query(this._hass, r); return '<div class="pg">' + esc(this._t('lecGroup', { r: name })) + '</div><div class="empty">' + esc(this._t('lecLoading')) + '</div>'; }
+      const fav = (LEC.favorites || []).map((x) => String(x).toLowerCase());
+      const sorted = list.slice().sort((a, b) => ((fav.indexOf(String(a).toLowerCase()) < 0) - (fav.indexOf(String(b).toLowerCase()) < 0)) || String(a).localeCompare(String(b)));
+      const row = (id, icon, title, sub) => {
+        if (q && (title + ' ' + sub).toLowerCase().indexOf(q) < 0) return '';
+        const on = this._picked.indexOf(id) >= 0, dis = !!have[id];
+        return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
+          '<div class="ico"><ha-icon icon="' + icon + '"></ha-icon></div><div class="t"><b>' + esc(title) + '</b><span>' + esc(sub) + '</span></div>' +
+          '<span class="st">' + esc(dis ? this._t('added') : '') + '</span></div>';
+      };
+      const body = row('lecstop:' + r, 'mdi:stop-circle-outline', this._t('lecStop'), name) +
+        sorted.map((e) => row('lec:' + r + ':' + e, fav.indexOf(String(e).toLowerCase()) >= 0 ? 'mdi:star' : 'mdi:creation', e, name)).join('');
+      return body ? '<div class="pg">' + esc(this._t('lecGroup', { r: name })) + '</div>' + body : '';
+    }).join('');
   }
 
   _colName(c, n) {
@@ -3454,6 +3653,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (S.type === 'scenes') {
             S.items = S.items || [];
             ids.forEach((id) => {
+              if (id.indexOf('lec:') === 0) {
+                const p = id.split(':'), room = p[1], effect = p.slice(2).join(':');
+                S.items.push({ name: effect, icon: 'mdi:creation', color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: LP_LEC_DOMAIN + '.play', data: { room: room, effect: effect } } });
+                return;
+              }
+              if (id.indexOf('lecstop:') === 0) {
+                S.items.push({ name: this._t('lecStop'), icon: 'mdi:stop-circle-outline', color: '#E5484D', action: { service: LP_LEC_DOMAIN + '.stop', data: { room: id.slice(8) } } });
+                return;
+              }
               const d = id.split('.')[0], st = this._hass.states[id];
               S.items.push({ name: this._ename(id), icon: (st && st.attributes.icon) || (d === 'script' ? 'mdi:play-circle-outline' : d === 'scene' ? 'mdi:palette-outline' : 'mdi:robot'),
                 color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: d === 'automation' ? 'automation.trigger' : d + '.turn_on', target: id } });
@@ -3464,6 +3672,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           }
         });
       }
+      if (act === 'addlec') return editSec((S) => { S.items = S.items || []; S.items.push({ name: this._t('lecOpen'), icon: 'mdi:creation', color: '#FF6FAE', action: { service: LP_LEC_DOMAIN + '.open' } }); });
       if (act === 'addscph') return editSec((S) => { S.items = S.items || []; S.items.push({ name: this._t('addScPh'), icon: 'mdi:gesture-tap', color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: null }); });
       if (act === 'addph') return editSec((S) => { S.entities = (S.entities || []).concat([{ name: this._t('addPh'), icon: 'mdi:lightbulb-outline' }]); });
       const nt = g('[data-newtab]');

@@ -25,6 +25,17 @@ strategy:
 
 Not: Bu panoda Home Assistant'ın kendi düzenleyicisinde "kontrolü al" dersen pano sabit hâle gelir ve Lemur Home Dashboard'dan kopar. Düzenlemeyi sol menüdeki Lemur Home Dashboard'dan yap.
 
+## Işık efektleri (isteğe bağlı)
+
+[Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) ayrıca kuruluysa pano onu kendiliğinden tanır:
+
+- **Efekt ekranı düğmesi:** Senaryo bölümüne eklenir; dokununca efekt ekranı sekmenin odasıyla tam ekran açılır.
+- **Efekt düğmeleri:** Senaryoya düğme eklerken cihaz seçicide odanın efektleri de listelenir; seçilen efekt tek dokunuşla başlar. "Efekti durdur" düğmesi de eklenebilir.
+- **Oynayan efekt görünür:** Odada efekt oynarken o odanın ışık karoları efektin renkleriyle parlar, efektin düğmesi yanar.
+- **Basılı tutunca efekt ekranı:** Ayarlardan açılırsa ışık karosuna basılı tutmak efekt ekranını lambanın odasıyla açar.
+
+Kurulu değilse bu düğmeler panoda görünmez, başka hiçbir şey değişmez.
+
 ## Lisans
 
 MIT

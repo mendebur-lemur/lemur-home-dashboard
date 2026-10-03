@@ -25,6 +25,17 @@ strategy:
 
 Note: if you "take control" of this dashboard in Home Assistant's own editor, it becomes static and disconnects from Lemur Home Dashboard. Edit from Lemur Home Dashboard in the sidebar instead.
 
+## Light effects (optional)
+
+If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is also installed, the dashboard picks it up on its own:
+
+- **Effect screen button:** add it to a scene section; tapping it opens the effect screen full screen for the tab's room.
+- **Effect buttons:** when adding a button to a scene section, the device picker also lists the room's effects; the chosen effect starts with one tap. A "Stop effect" button can be added too.
+- **The playing effect shows:** while an effect plays in a room, that room's light tiles glow in the effect's colors and the effect's button lights up.
+- **Hold for effect screen:** if turned on in settings, holding a light tile opens the effect screen for that light's room.
+
+If it is not installed these buttons stay hidden and nothing else changes.
+
 ## License
 
 MIT

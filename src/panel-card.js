@@ -68,7 +68,10 @@ const LP_FX = [
 const LP_FX_NONE = ['', 'none', 'off', 'solid', 'static', 'normal'];
 function lpFx(st) {
   if (!st || st.state !== 'on') return null;
-  const ef = String(st.attributes.effect || '').toLowerCase().replace(/^\s+|\s+$/g, '');
+  return lpFxByName(st.attributes.effect);
+}
+function lpFxByName(name) {
+  const ef = String(name || '').toLowerCase().replace(/^\s+|\s+$/g, '');
   if (LP_FX_NONE.indexOf(ef) >= 0) return null;
   for (let i = 0; i < LP_FX.length; i++) {
     const p = LP_FX[i];
@@ -105,7 +108,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   set hass(h) {
     const first = !this._hass;
     this._hass = h;
-    if (first) { STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
+    if (first) { LEC.load(h); STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
     if (!this._sig) return;
     (this._embeds || []).forEach((e) => { e.hass = h; });
     const w = this._watched || [];
@@ -120,11 +123,17 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!this._config.edit) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
       this._render();
     });
+    if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
+      if (kind === 'rooms') { this._sig = null; this._render(); return; }
+      if (kind === 'effects' || kind === 'info') return;   // oda listesi değişti: izlenen ışıklar değişir
+      this._last = {}; if (this._sig) this._update();                       // oynayan efekt değişti: karolar ve düğmeler
+    });
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     if (this._hass) this._render();
   }
   disconnectedCallback() {
     if (this._unsub) { this._unsub(); this._unsub = null; }
+    if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     clearInterval(this._clock); this._clock = null;
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
@@ -155,7 +164,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), !!this._config.edit, this._config.selected || '']);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -164,6 +173,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   _build(tab, tabs, lang, season) {
     const h = this._hass, S = h.states;
     const tiles = [], tileItems = [], rows = [], embeds = [];
+    const lecRooms = {};   // bu sekmede LEC'ten oynayan efekti sorulacak odalar
     // ayarda olup şu an HA'da olmayan cihazlar: gelince (ör. HA yeniden başladıktan sonra) pano yeniden kurulur
     this._missing = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && !S[e.entity]) this._missing.push(e.entity); }));
@@ -200,9 +210,20 @@ class LemurHomeDashboardCard extends HTMLElement {
           }).join('') + (fill ? '</div>' : '</div></div>') };
       }
       if (s.type === 'scenes') {
-        const items = s.items || [];
+        // LEC düğmeleri: LEC kurulu değilse panoda görünmez (düzenlemede soluk görünür)
+        const lecOn = LEC.installed(h);
+        const items = (s.items || []).map((it, i) => ({ it: it, i: i, k: lpLecKind(it) })).filter((x) => x.it && (!x.k || lecOn || edit));
         if (!items.length) return null;
-        return { kind: 'md', spread: true, html: items.map((it, i) => '<div class="scene" data-scene="' + esc(s.id) + ':' + i + '"' + mark(i) + '><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>').join('') };
+        return { kind: 'md', spread: true, html: items.map((x) => {
+          const it = x.it, c = it.color || '#5B8DEF';
+          let lec = '';
+          if (x.k) {
+            const room = x.k === 'open' ? (it.action.room || tab.area || '') : ((it.action.data && it.action.data.room) || '');
+            if (room) lecRooms[room] = 1;
+            lec = ' data-lk="' + esc(x.k) + '" data-lroom="' + esc(room) + '" data-lfx="' + esc((it.action.data && it.action.data.effect) || '') + '"';
+          }
+          return '<div class="scene' + (x.k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + '" data-scene="' + esc(s.id) + ':' + x.i + '"' + lec + mark(x.i) + '><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(c) + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>';
+        }).join('') };
       }
       if (s.type === 'climate') {
         const items = withIdx(s.entities, lpEnt).filter((e) => S[e.entity]);
@@ -290,7 +311,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; this._tiles.push(el); });
     this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => this._rows.push(el));
-    this._watched = tiles.concat(rows);
+    // LEC: karoların odaları da sorulur; efekt düğmesi olan odaların ışıkları izlenir (değişince oynayan efekt yeniden sorulur)
+    tiles.forEach((id) => { const r = LEC.roomOf(id); if (r) lecRooms[r] = 1; });
+    this._lecRooms = Object.keys(lecRooms).filter((r) => LEC.hasRoom(r));
+    const lecLights = [];
+    this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
+    this._watched = tiles.concat(rows, lecLights);
+    if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
     this._lang = lang;
 
@@ -309,7 +336,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     const more = (id) => lpFire(this, 'hass-more-info', { entityId: id });
     this._tiles.forEach((b) => {
       const id = b.getAttribute('data-light');
-      lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), () => more(id));
+      // basılı tut: HA'nın ışık penceresi; ayarda seçildiyse ve LEC kuruluysa LEC'in efekt ekranı (lambanın odasıyla)
+      const hold = () => {
+        const st = (STORE.data && STORE.data.settings) || {};
+        if (st.lec_hold && LEC.installed(this._hass) && LEC.open(this._hass, LEC.roomOf(id) || tab.area)) return;
+        more(id);
+      };
+      lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), hold);
     });
     this._rows.forEach((b) => lpPress(b, () => more(b.getAttribute('data-row'))));
     R.querySelectorAll('[data-scene]').forEach((b) => lpPress(b, () => {
@@ -317,6 +350,9 @@ class LemurHomeDashboardCard extends HTMLElement {
       const s = (tab.sections || []).filter((x) => x.id === p[0])[0];
       const it = s && s.items && s.items[+p[1]];
       if (!it || !it.action || !it.action.service) return;
+      const lk = lpLecKind(it);
+      if (lk === 'open') { LEC.open(this._hass, it.action.room || tab.area); return; }
+      if (lk) { LEC.run(this._hass, it.action); return; }
       const sv = it.action.service.split('.');
       this._hass.callService(sv[0], sv[1], it.action.target ? { entity_id: it.action.target } : (it.action.data || {}));
     }));
@@ -527,10 +563,17 @@ class LemurHomeDashboardCard extends HTMLElement {
   // --- durum güncellemesi (iskelete dokunmadan) ---
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
+    // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor
+    if (this._lecRooms && this._lecRooms.length && !this._config.edit) {
+      const seen = {};
+      (this._watched || []).forEach((id) => { if (this._last[id] && S[id] !== this._last[id]) { const r = LEC.roomOf(id); if (r && !seen[r] && this._lecRooms.indexOf(r) >= 0) { seen[r] = 1; LEC.watch(h, r); } } });
+    }
     (this._tiles || []).forEach((el) => {
       const id = el.getAttribute('data-light'), st = S[id];
       if (!st || this._last[id] === st) return;
-      const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0, fx = lpFx(st);
+      const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0;
+      // efekt: ışığın kendi efekti; yoksa LEC'in o odada oynattığı efekt (yanan ışıklarda)
+      const fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(id)]) : null);
       el.className = 'tile' + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '');
       const rgb = on && !fx && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
@@ -554,5 +597,12 @@ class LemurHomeDashboardCard extends HTMLElement {
       const ic = el.firstChild; ic.hass = h; ic.stateObj = st;
     });
     (this._watched || []).forEach((id) => { this._last[id] = S[id]; });
+    // LEC düğmeleri: efekti oynuyorsa (ya da efekt ekranı düğmesinin odasında bir efekt oynuyorsa) yanar
+    const R = this.shadowRoot;
+    if (R) Array.prototype.forEach.call(R.querySelectorAll('.scene[data-lk]'), (el) => {
+      const k = el.getAttribute('data-lk'), room = el.getAttribute('data-lroom');
+      const on = k === 'play' ? LEC.isPlaying(room, el.getAttribute('data-lfx')) : (k === 'open' ? !!LEC.playing[room] : false);
+      el.classList.toggle('on', on);
+    });
   }
 }

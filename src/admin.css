@@ -174,3 +174,4 @@ select.inp { padding-right: 6px; }
 .toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
 .toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }
 .toast button[hidden] { display: none; }
+.lecna { color: #F3B0A9; font-weight: 600; }

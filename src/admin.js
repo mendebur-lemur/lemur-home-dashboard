@@ -23,7 +23,7 @@ const ADM = {
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
-    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu. Efekt düğmesi ve efekt sayfası sonraki sürümde panoya gelecek.', lecOff: 'Kurulu değil. Efektler için isteğe bağlı olarak kurulabilir.',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Senaryolara efekt ekranı ve efekt düğmeleri eklenebilir.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecHold: 'Basılı tutunca efekt ekranı', lecHoldT: 'Işık karosuna basılı tutunca HA penceresi yerine efekt ekranı lambanın odasıyla açılır', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
@@ -45,7 +45,7 @@ const ADM = {
     bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
-    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed. The effect button and effect page come to the dashboard in a later version.', lecOff: 'Not installed. Optional, for light effects.',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). Effect screen and effect buttons can be added to scene sections.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecHold: 'Hold for effect screen', lecHoldT: 'Holding a light tile opens the effect screen for that light\'s room instead of the HA dialog', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
@@ -107,6 +107,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const first = !this._hass;
     this._hass = h;
     if (first) {
+      LEC.load(h);
+      if (!this._lecUnsub) this._lecUnsub = LEC.onChange((k) => { if (k === 'playing') return; if (this._modal === 'pick') this._refreshPick(); else if (STORE.data && this.shadowRoot && !this._modal) this._render(); });
       STORE.load(h).then(() => {
         this._sub();
         this._render();
@@ -142,6 +144,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
     if (this._unsub) { this._unsub(); this._unsub = null; }
+    if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     if (this._ro) this._ro.disconnect();
   }
 
@@ -185,7 +188,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const tabs = this._work();
     fn(tabs);
     this._commit('tabs', tabs);
-    if (!soft) this._render();
+    if (!soft) this._render(); else this._undoBtn();
     this._toast(msg || this._t('saved'));
   }
   _setting(path, value, soft) {
@@ -196,9 +199,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
     if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
     this._commit('settings', s);
-    if (!soft) this._render();   // ayarlar penceresi açıkken de güncel görünsün
+    if (!soft) this._render(); else this._undoBtn();   // ayarlar penceresi açıkken de güncel görünsün
     this._toast(this._t('saved'));
   }
+  // yazı alanından gelen kayıtta panel yeniden çizilmez; geri al düğmesi yine de açılsın (ilk değişiklikte kapalı kalıyordu)
+  _undoBtn() { const u = this.shadowRoot && this.shadowRoot.querySelector('[data-a="undo"]'); if (u) u.disabled = !this._undo.length; }
   _toast(x, undo) {
     const el = this.shadowRoot && this.shadowRoot.querySelector('.toast'); if (!el) return;
     el.querySelector('span').textContent = x;
@@ -300,10 +305,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="ico"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div>' +
         '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
         '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(it.icon || '') + '" placeholder="mdi:play" style="height:28px;font-size:12px">' +
-        '</div><span class="eid">' + t('target') + ': ' + esc(it.action && it.action.target ? this._ename(it.action.target) : '—') + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
+        '</div><span class="eid">' + this._scTarget(tab, it) + '</span></div>' + xBtn(i) + '</div>').join('') + '</div>'
         : '<div class="empty">' + t('noItems') + '</div>';
       body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addScene') + '</button>' +
-        '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addScPh') + '</button></div>';
+        '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addScPh') + '</button>' +
+        (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     } else {
       const items = (s.entities || []).map((x) => (typeof x === 'string' ? { entity: x } : x));
       const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
@@ -380,7 +386,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + tg('kiosk.hide_sidebar', !!k.hide_sidebar) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
         '<div class="sh">' + t('s_info') + '</div>' +
-        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn') : t('lecOff')) + '</span></div></div>' +
+        '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
+        (lec ? '<div class="srow"><div class="t"><b>' + t('lecHold') + '</b><span>' + t('lecHoldT') + '</span></div>' + tg('lec_hold', !!s.lec_hold) + '</div>' : '') +
         '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }
@@ -396,13 +403,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
     const doms = LHD_TYPES[sec.type].domains;
     const have = {};
-    if (sec.type === 'scenes') (sec.items || []).forEach((x) => { if (x.action && x.action.target) have[x.action.target] = 1; });
+    if (sec.type === 'scenes') (sec.items || []).forEach((x) => {
+      if (x.action && x.action.target) have[x.action.target] = 1;
+      const k = lpLecKind(x), d = (x.action && x.action.data) || {};
+      if (k === 'play') have['lec:' + d.room + ':' + d.effect] = 1;
+      if (k === 'stop') have['lecstop:' + d.room] = 1;
+    });
     else (sec.entities || []).forEach((x) => { const id = typeof x === 'string' ? x : x.entity; if (id) have[id] = 1; });
     const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
     const q = this._q.toLowerCase().trim();
     const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)))
       .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
-    if (!ids.length) return '<div class="empty">' + esc(this._t('nothing')) + '</div>';
+    const lecHtml = this._lecGroups(sec, have, q);
+    if (!ids.length) return lecHtml || '<div class="empty">' + esc(this._t('nothing')) + '</div>';
     const groups = {};
     ids.forEach((id) => { const a = areaOf(id); (groups[a] = groups[a] || []).push(id); });
     // sekmenin alanı en üstte (oda sekmesine cihaz eklerken önce o odanınkiler görünsün)
@@ -413,7 +426,49 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
         '<div class="ico"><ha-state-icon data-eid="' + esc(id) + '"></ha-state-icon></div><div class="t"><b>' + esc(this._ename(id)) + '</b><span>' + esc(id) + '</span></div>' +
         '<span class="st">' + esc(dis ? this._t('added') : (this._hass.formatEntityState ? this._hass.formatEntityState(S[id]) : S[id].state)) + '</span></div>';
-    }).join('')).join('');
+    }).join('')).join('') + lecHtml;
+  }
+
+  // senaryo düğmesinin ne yaptığı (düzenleyicideki alt yazı)
+  _scTarget(tab, it) {
+    const T = (k, v) => esc(this._t(k, v)), k = lpLecKind(it), a = it.action || {};
+    const rn = (r) => (r ? (LEC.names[r] || this._area(r) || r) : this._t('roomByTab'));
+    let txt;
+    if (k === 'open') txt = T('tOpen', { r: rn(a.room || tab.area) });
+    else if (k === 'play') txt = T('tPlay', { e: (a.data && a.data.effect) || '?', r: rn(a.data && a.data.room) });
+    else if (k === 'stop') txt = T('tStop', { r: rn(a.data && a.data.room) });
+    else txt = T('target') + ': ' + esc(a.target ? this._ename(a.target) : '—');
+    if (k && !LEC.installed(this._hass)) txt += ' · <b class="lecna">' + T('lecNa') + '</b>';
+    return txt;
+  }
+  _refreshPick() {
+    const pl = this.shadowRoot && this.shadowRoot.querySelector('.plist'); if (!pl) return;
+    const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab); if (!sec) return;
+    pl.innerHTML = this._pickList(sec);
+    pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; });
+  }
+  // senaryo seçicide LEC efektleri: sekmenin odası (oda yoksa bütün LEC odaları); önce "durdur", sonra favoriler, sonra hepsi
+  _lecGroups(sec, have, q) {
+    if (sec.type !== 'scenes' || !LEC.installed(this._hass) || !LEC.rooms) return '';
+    const tab = this._curTab(this._work());
+    const rooms = LEC.hasRoom(tab && tab.area) ? [tab.area] : Object.keys(LEC.rooms);
+    return rooms.map((r) => {
+      const name = LEC.names[r] || this._area(r) || r;
+      const list = LEC.effects[r];
+      if (!list) { LEC.query(this._hass, r); return '<div class="pg">' + esc(this._t('lecGroup', { r: name })) + '</div><div class="empty">' + esc(this._t('lecLoading')) + '</div>'; }
+      const fav = (LEC.favorites || []).map((x) => String(x).toLowerCase());
+      const sorted = list.slice().sort((a, b) => ((fav.indexOf(String(a).toLowerCase()) < 0) - (fav.indexOf(String(b).toLowerCase()) < 0)) || String(a).localeCompare(String(b)));
+      const row = (id, icon, title, sub) => {
+        if (q && (title + ' ' + sub).toLowerCase().indexOf(q) < 0) return '';
+        const on = this._picked.indexOf(id) >= 0, dis = !!have[id];
+        return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
+          '<div class="ico"><ha-icon icon="' + icon + '"></ha-icon></div><div class="t"><b>' + esc(title) + '</b><span>' + esc(sub) + '</span></div>' +
+          '<span class="st">' + esc(dis ? this._t('added') : '') + '</span></div>';
+      };
+      const body = row('lecstop:' + r, 'mdi:stop-circle-outline', this._t('lecStop'), name) +
+        sorted.map((e) => row('lec:' + r + ':' + e, fav.indexOf(String(e).toLowerCase()) >= 0 ? 'mdi:star' : 'mdi:creation', e, name)).join('');
+      return body ? '<div class="pg">' + esc(this._t('lecGroup', { r: name })) + '</div>' + body : '';
+    }).join('');
   }
 
   _colName(c, n) {
@@ -510,6 +565,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (S.type === 'scenes') {
             S.items = S.items || [];
             ids.forEach((id) => {
+              if (id.indexOf('lec:') === 0) {
+                const p = id.split(':'), room = p[1], effect = p.slice(2).join(':');
+                S.items.push({ name: effect, icon: 'mdi:creation', color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: LP_LEC_DOMAIN + '.play', data: { room: room, effect: effect } } });
+                return;
+              }
+              if (id.indexOf('lecstop:') === 0) {
+                S.items.push({ name: this._t('lecStop'), icon: 'mdi:stop-circle-outline', color: '#E5484D', action: { service: LP_LEC_DOMAIN + '.stop', data: { room: id.slice(8) } } });
+                return;
+              }
               const d = id.split('.')[0], st = this._hass.states[id];
               S.items.push({ name: this._ename(id), icon: (st && st.attributes.icon) || (d === 'script' ? 'mdi:play-circle-outline' : d === 'scene' ? 'mdi:palette-outline' : 'mdi:robot'),
                 color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: { service: d === 'automation' ? 'automation.trigger' : d + '.turn_on', target: id } });
@@ -520,6 +584,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           }
         });
       }
+      if (act === 'addlec') return editSec((S) => { S.items = S.items || []; S.items.push({ name: this._t('lecOpen'), icon: 'mdi:creation', color: '#FF6FAE', action: { service: LP_LEC_DOMAIN + '.open' } }); });
       if (act === 'addscph') return editSec((S) => { S.items = S.items || []; S.items.push({ name: this._t('addScPh'), icon: 'mdi:gesture-tap', color: LHD_COLORS[S.items.length % LHD_COLORS.length], action: null }); });
       if (act === 'addph') return editSec((S) => { S.entities = (S.entities || []).concat([{ name: this._t('addPh'), icon: 'mdi:lightbulb-outline' }]); });
       const nt = g('[data-newtab]');
