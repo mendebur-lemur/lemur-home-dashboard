@@ -109,6 +109,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const first = !this._hass;
     this._hass = h;
     if (first) { LEC.load(h); STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
+    LemurLightPopup.update(h);
     if (!this._sig) return;
     (this._embeds || []).forEach((e) => { e.hass = h; });
     const w = this._watched || [];
@@ -336,10 +337,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     const more = (id) => lpFire(this, 'hass-more-info', { entityId: id });
     this._tiles.forEach((b) => {
       const id = b.getAttribute('data-light');
-      // basılı tut: HA'nın ışık penceresi; ayarda seçildiyse ve LEC kuruluysa LEC'in efekt ekranı (lambanın odasıyla)
+      // basılı tut: varsayılan bizim ışık penceremiz; ayarda seçildiyse HA'nın penceresi ya da LEC'in efekt ekranı (lambanın odasıyla)
       const hold = () => {
-        const st = (STORE.data && STORE.data.settings) || {};
-        if (st.lec_hold && LEC.installed(this._hass) && LEC.open(this._hass, LEC.roomOf(id) || tab.area)) return;
+        const mode = lpHoldMode(), h = this._hass, d = id.split('.')[0];
+        if (mode === 'lec' && LEC.installed(h) && LEC.open(h, LEC.roomOf(id) || tab.area)) return;
+        if (mode !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) { LemurLightPopup.open(h, id, b._item, LEC.roomOf(id) || tab.area); return; }
         more(id);
       };
       lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), hold);

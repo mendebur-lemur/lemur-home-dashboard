@@ -1946,10 +1946,10 @@ registerCard(LemurLightCard, {
 
 if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 })();
-/*! Lemur Home Dashboard v0.0.7 | MIT */
+/*! Lemur Home Dashboard v0.0.8 | MIT */
 (() => {
 if (customElements.get('lemur-home-dashboard-card')) return;
-const PANEL_VERSION = '0.0.7';
+const PANEL_VERSION = '0.0.8';
 const CSS = ":host { display: block; color: var(--lp-text); font-family: var(--primary-font-family, Roboto, Noto, sans-serif);\n--lp-text: #FFFFFF; --lp-text2: #D3D3D3;\n--lp-card: rgba(10, 10, 10, 0.4);\n--lp-box-bg: rgba(20, 24, 31, 0.55); --lp-box-border: rgba(255, 255, 255, 0.08);\n--lp-sel: rgba(91, 141, 239, 0.9);\n--lp-on-border: rgb(255, 214, 10); --lp-on-icon: #FFC107; --lp-na: #555555;\n--lp-embed-bg: rgb(28, 28, 28); }\n.wrap { display: grid; grid-template-rows: auto minmax(0, 1fr); grid-gap: 12px; padding: 4px 4px 25px 4px; box-sizing: border-box;\nheight: var(--lp-h, auto); min-height: var(--lp-h, calc(100vh - var(--header-height, 56px)));\n-webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }\n.nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }\n.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);\nborder: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;\noverflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }\n.navb + .navb { margin-left: 8px; }\n.navb.sel { opacity: 1; border: 2px solid var(--lp-sel); }\n.ni { flex: 1 1 auto; width: 40%; min-height: 0; display: flex; align-items: center; justify-content: center; }\n.ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }\n.nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }\n.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }\n.col > .subs { display: grid; grid-gap: 12px; flex: 1 1 auto; min-height: 0; }\n.sub { display: flex; flex-direction: column; min-width: 0; min-height: 0; }\n.sub > .box + .box { margin-top: 12px; }\n.box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; box-sizing: border-box; padding: 20px;\nbackground: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }\n.box > * + * { margin-top: 8px; }\n.box.spread { justify-content: space-between; }\n.box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }\n.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }\n.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }\n.title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }\n.title.season { cursor: pointer; }\n.grid { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }\n.tile { box-sizing: border-box; min-width: 0; min-height: 0; border-radius: 20px; background-color: var(--lp-card); border: 0 solid transparent;\ncolor: var(--lp-text); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4% 0;\ncursor: pointer; overflow: hidden; text-align: center; transition: all 0.2s ease-out; }\n.tile ha-state-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.tile .nm { margin-top: 8px; font-size: 16px; line-height: 19.2px; max-width: 100%; padding: 0 4px; box-sizing: border-box;\noverflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }\n.tile.on { border: 2px solid var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }\n.tile.on ha-state-icon { color: var(--tile-rgb, var(--lp-on-icon)); }\n.tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }\n.tile.na ha-state-icon { color: var(--lp-na); }\n.scene { flex: 0 1 118px; height: auto; min-height: 48px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);\ndisplay: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }\n.scene .si { flex: 0 0 40%; display: flex; justify-content: center; }\n.scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }\n.scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;\n--ha-card-border-width: 0; --ha-card-border-color: transparent; --ha-card-box-shadow: none;\n--primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }\n.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }\n.row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }\n.row.on ha-state-icon { color: var(--lp-on-icon); }\n.rt { min-width: 0; }\n.rn { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.rs { font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.down { -webkit-transform: scale(0.96); transform: scale(0.96); }\n.wrap.edit { position: relative; touch-action: none; }\n.edit .box { cursor: pointer; transition: box-shadow 0.15s; position: relative; }\n.bgrip { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 9px; background: rgba(242, 169, 59, 0.16); color: #F2A93B;\ndisplay: flex; align-items: center; justify-content: center; cursor: grab; z-index: 3; --mdc-icon-size: 18px; }\n.bgrip:hover { background: rgba(242, 169, 59, 0.3); }\n.bgrip ha-icon { pointer-events: none; }\n.edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }\n.edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }\n.edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }\n.edit .tile > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }\n.edit .navb { cursor: pointer; }\n.edit .dragging { opacity: 0.35; }\n.edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }\n.edit .dropr { box-shadow: 6px 0 0 -2px #F2A93B !important; }\n.edit .dropt { box-shadow: 0 -6px 0 -2px #F2A93B !important; }\n.edit .dropd { box-shadow: 0 6px 0 -2px #F2A93B !important; }\n.edit .dropin { box-shadow: 0 0 0 3px #F2A93B !important; }\n.colh { position: absolute; width: 14px; cursor: col-resize; z-index: 5; }\n.colh::after { content: ''; position: absolute; left: 5px; top: 10%; bottom: 10%; width: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .colh::after { background: rgba(242, 169, 59, 0.3); }\n.colh:hover::after, .colh:active::after { background: #F2A93B !important; }\n.rowh { position: absolute; height: 14px; cursor: row-resize; z-index: 5; }\n.rowh::after { content: ''; position: absolute; top: 5px; left: 15%; right: 15%; height: 4px; border-radius: 2px; background: transparent; transition: background 0.15s; }\n.wrap.edit:hover .rowh::after { background: rgba(242, 169, 59, 0.3); }\n.rowh:hover::after, .rowh:active::after { background: #F2A93B !important; }\n.dropline { position: absolute; height: 4px; border-radius: 2px; background: #F2A93B; z-index: 6; pointer-events: none; box-shadow: 0 0 12px rgba(242, 169, 59, 0.6); }\n.eph { flex: 1 1 auto; min-height: 90px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--lp-text2);\nborder: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }\n.box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;\nborder: 2px dashed rgba(242, 169, 59, 0.35); font-size: 15px; padding: 20px; cursor: default; }\n.addsec { margin-top: 14px; padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(242, 169, 59, 0.5); background: rgba(242, 169, 59, 0.12);\ncolor: #F2A93B; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }\n.addsec:hover { background: rgba(242, 169, 59, 0.22); }\n.gsq { position: relative; flex: 0 0 auto; height: 0; }\n.gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }\n.tile.ph { cursor: default; }\n.tile.ph ha-icon { display: block; width: 40%; --mdc-icon-size: 100%; color: var(--lp-text); }\n.edit .box.over { box-shadow: 0 0 0 2px #e5484d; }\n.edit .box.over::after { content: attr(data-over); position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); padding: 4px 12px; border-radius: 12px; max-width: 90%; box-sizing: border-box; text-align: center;\nbackground: #e5484d; color: #fff; font-size: 18px; line-height: 22px; font-weight: 700; pointer-events: none; z-index: 3; }\n.scene.lec.on { box-shadow: inset 0 0 0 2px var(--sc), 0 0 18px -8px var(--sc); background-color: rgba(255, 255, 255, 0.05); }\n.scene.lec.na { opacity: 0.45; }";
 const ADMIN_CSS = ":host { display: block; height: 100vh; height: 100dvh; font-family: var(--lemur-font, Archivo, var(--ha-font-family-body, system-ui), sans-serif); }\n* { box-sizing: border-box; }\nbutton, input, select { font-family: inherit; color: inherit; font-size: inherit; }\nbutton { cursor: pointer; }\nha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px; flex: none; }\n.s14 { width: 14px; height: 14px; } .s16 { width: 16px; height: 16px; } .s18 { width: 18px; height: 18px; } .s24 { width: 24px; height: 24px; }\n.app { position: relative; height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; background: #0B0C0E; color: #ECEDEE;\noverflow: hidden; font-size: 14px; line-height: 1.4;\n--bg: #0B0C0E; --s1: #131417; --s2: #18191D; --s3: #1F2125; --s4: #272A2F; --s5: #30333A;\n--ln: rgba(255,255,255,.06); --ln2: rgba(255,255,255,.10); --ln3: rgba(255,255,255,.18);\n--tx: #ECEDEE; --tx2: #B3B7BE; --mu: #7C818A; --mu2: #5A5E66;\n--ac: #F2A93B; --acs: rgba(242,169,59,.13); --acl: rgba(242,169,59,.55); --actx: #1B1206;\n--red: #EE6A5F; --reds: rgba(238,106,95,.12); --tint: #261C10;\n--r1: 22px; --r2: 14px; --r3: 10px; }\n.grow { flex: 1; }\n.mu { color: var(--mu); }\n.top { display: flex; align-items: center; gap: 10px; min-height: 60px; flex: none; }\n.lg { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #F4B24A, #E2702C); display: grid; place-items: center; color: var(--actx); flex: none; }\n.lg ha-icon { width: 18px; height: 18px; }\n.top h1 { font-size: 16px; font-weight: 600; margin: 0 6px 0 2px; letter-spacing: -.01em; white-space: nowrap; }\n.badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; background: var(--acs); color: var(--ac); border: 1px solid var(--acl); white-space: nowrap; }\n.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: var(--r3);\nborder: 1px solid var(--ln2); background: var(--s2); font-size: 13px; font-weight: 500; color: var(--tx); white-space: nowrap; }\n.btn:hover { background: var(--s3); }\n.btn:disabled { opacity: .35; cursor: default; }\n.btn.ic { width: 34px; padding: 0; }\n.btn.pri { background: var(--ac); color: var(--actx); border-color: var(--ac); }\n.btn.pri:hover { filter: brightness(1.06); }\n.btn.dan { color: var(--red); }\n.btn.dan.ask { background: var(--reds); border-color: rgba(238,106,95,.45); }\n.btn.sm { height: 30px; font-size: 12.5px; padding: 0 10px; }\n.btn.dash { border-style: dashed; background: none; color: var(--tx2); }\n.btn.dash:hover { color: var(--tx); background: var(--s2); }\n.warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }\n.rblock { flex: none; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 10px; }\n.rooms { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 1px; margin-bottom: -1px; position: relative; z-index: 2; align-items: flex-start; scrollbar-width: none; }\n.rooms::-webkit-scrollbar { display: none; }\n.rb { display: flex; align-items: center; justify-content: center; gap: 10px; min-width: 130px; padding: 14px 18px; border-radius: var(--r2); background: var(--s2);\nborder: 1px solid transparent; font-weight: 600; font-size: 16px; line-height: 1.2; white-space: nowrap; color: var(--tx2); cursor: pointer; flex: none; user-select: none; touch-action: none; }\n.rb ha-icon { width: 24px; height: 24px; }\n.rb:hover { background: var(--s3); color: var(--tx); }\n.rb.on { background: var(--tint); color: var(--ac); border: 1px solid var(--acl); border-bottom-color: var(--tint); border-radius: var(--r2) var(--r2) 0 0;\npadding-bottom: 24px; margin-bottom: -1px; }\n.rb.add { background: none; border: 1px dashed var(--ln2); color: var(--mu); font-weight: 500; min-width: 0; }\n.rb.add:hover { color: var(--tx); }\n.rpanel { position: relative; z-index: 1; background: var(--tint); border: 1px solid var(--acl); border-radius: var(--r2); padding: 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }\n.rpanel.first { border-top-left-radius: 0; }\n.fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }\n.fld > label, .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); }\n.inp { flex-shrink: 0; height: 36px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); padding: 0 11px; color: var(--tx); outline: none; min-width: 0; width: 100%; }\n.inp:focus { border-color: var(--acl); background: var(--s3); }\nselect.inp { padding-right: 6px; }\n.iconin { display: flex; align-items: center; gap: 8px; }\n.iconin .pv { width: 36px; height: 36px; border-radius: var(--r3); background: var(--s3); display: grid; place-items: center; flex: none; }\n.iconin .pv ha-icon { width: 20px; height: 20px; }\n.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--s2); border: 1px solid var(--ln2); flex-wrap: wrap; }\n.seg button { height: 30px; padding: 0 12px; border: none; border-radius: 8px; background: none; color: var(--tx2); font-weight: 500; font-size: 13px; white-space: nowrap; }\n.seg button:hover { color: var(--tx); }\n.seg button.on { background: var(--s4); color: var(--tx); box-shadow: 0 1px 2px rgba(0,0,0,.35); }\n.tg { width: 42px; height: 24px; border-radius: 99px; border: none; background: var(--s5); position: relative; flex: none; padding: 0; transition: background .15s; }\n.tg::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }\n.tg.on { background: var(--ac); }\n.tg.on::after { left: 21px; }\n.main { flex: 1; display: flex; gap: 12px; min-height: 0; }\n.pvw { flex: 1 1 auto; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 12px; display: flex; flex-direction: column; gap: 10px; }\n.pvh { display: flex; align-items: center; gap: 8px; color: var(--tx2); font-size: 13px; }\n.pvh b { color: var(--tx); font-weight: 600; }\n.pvh .seg button { height: 26px; padding: 0 10px; font-size: 12px; }\n.pvbox { position: relative; flex: 1; min-height: 200px; overflow: hidden; border-radius: 14px; background: #08090b; }\n.pvc { position: absolute; left: 0; top: 0; transform-origin: 0 0; border-radius: 0; overflow: hidden; }\n.ins { flex: 0 0 420px; min-width: 0; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); display: flex; flex-direction: column; min-height: 0; }\n.ins .sc { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; min-height: 0; flex: 1; scrollbar-width: thin; }\n.ins h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); display: flex; align-items: center; gap: 8px; }\n.narrowv .main { flex-direction: column; overflow-y: auto; }\n.narrowv .pvw { flex: none; height: 46vh; }\n.narrowv .ins { flex: none; }\n.sl { display: flex; flex-direction: column; gap: 6px; }\n.si { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 12px; background: var(--s2); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.si:hover { background: var(--s3); }\n.si.on { background: var(--tint); border-color: var(--acl); }\n.si .ti { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; color: var(--tx2); }\n.si.on .ti { background: var(--acs); color: var(--ac); }\n.si .ti ha-icon { width: 18px; height: 18px; }\n.si .nm { flex: 1; min-width: 0; }\n.si .nm b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.si .nm span { font-size: 12px; color: var(--mu); }\n.cb { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--s4); color: var(--tx2); flex: none; }\n.hd { color: var(--mu2); cursor: grab; display: grid; place-items: center; width: 18px; flex: none; touch-action: none; }\n.hd:hover { color: var(--tx2); }\n.dragging { opacity: .45; }\n.dropb { box-shadow: 0 -2px 0 var(--ac); }\n.dropa { box-shadow: 0 2px 0 var(--ac); }\n.rooms .dropb { box-shadow: -3px 0 0 var(--ac); }\n.rooms .dropa { box-shadow: 3px 0 0 var(--ac); }\n.ed { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 16px; background: var(--s2); border: 1px solid var(--ln); }\n.row2 { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }\n.row2 > .fld { flex: 1 1 140px; }\n.items { display: flex; flex-direction: column; gap: 6px; }\n.it { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 11px; background: var(--s3); }\n.it .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; }\n.it .ico ha-icon, .it .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.it .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }\n.it .inp { height: 30px; font-size: 13px; padding: 0 8px; }\n.it .eid { font-size: 11.5px; color: var(--mu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.it .x { width: 28px; height: 28px; border: none; background: none; color: var(--mu); border-radius: 8px; display: grid; place-items: center; flex: none; }\n.it .x:hover { background: var(--s4); color: var(--red); }\n.it input[type=color] { width: 30px; height: 30px; border: none; border-radius: 9px; padding: 0; background: none; flex: none; cursor: pointer; }\n.it input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }\n.it input[type=color]::-webkit-color-swatch { border: none; border-radius: 9px; }\n.it .sub { display: flex; gap: 6px; }\n.it .sub select { flex: 1; min-width: 0; height: 28px; font-size: 12px; }\n.it.ph { opacity: .75; }\n.acts { display: flex; gap: 8px; flex-wrap: wrap; }\n.empty { padding: 14px; border-radius: 12px; border: 1px dashed var(--ln2); color: var(--mu); font-size: 13px; text-align: center; }\n.hint { font-size: 12.5px; color: var(--mu); }\n.menu { position: absolute; z-index: 30; min-width: 220px; background: var(--s2); border: 1px solid var(--ln2); border-radius: 14px; padding: 6px; box-shadow: 0 18px 40px rgba(0,0,0,.5); }\n.menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: none; background: none; border-radius: 9px; text-align: left; color: var(--tx); }\n.menu button:hover { background: var(--s3); }\n.menu button.dan { color: var(--red); }\n.menu hr { border: none; border-top: 1px solid var(--ln); margin: 6px 4px; }\n.menu .mh { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); padding: 6px 10px 4px; }\n.ov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }\n.dlg { width: min(900px, 100%); max-height: 100%; background: #111215; border: 1px solid var(--ln2); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6); }\n.dlg.sm { width: min(560px, 100%); }\n.dh { display: flex; align-items: center; gap: 12px; padding: 18px 20px 12px; }\n.dh .di { width: 38px; height: 38px; border-radius: 50%; background: var(--s3); display: grid; place-items: center; color: var(--ac); flex: none; }\n.dh h2 { margin: 0; font-size: 18px; font-weight: 600; flex: 1; }\n.db { padding: 4px 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 0; }\n.df { display: flex; gap: 10px; justify-content: flex-end; padding: 12px 20px 18px; border-top: 1px solid var(--ln); align-items: center; }\n.sh { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 0; }\n.srow { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: var(--s1); border: 1px solid var(--ln); }\n.srow .t { flex: 1; min-width: 0; }\n.srow .t b { display: block; font-weight: 600; }\n.srow .t span { font-size: 12.5px; color: var(--mu); }\n.srow .inp { width: 120px; }\n.srow .inp.w { width: 260px; }\n.plist { display: flex; flex-direction: column; gap: 4px; }\n.pg { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); margin: 10px 4px 2px; }\n.pi { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: var(--s1); border: 1px solid transparent; cursor: pointer; user-select: none; }\n.pi:hover { background: var(--s2); }\n.pi.on { border-color: var(--acl); background: var(--tint); }\n.pi.dis { opacity: .45; cursor: default; }\n.pi .ck { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--ln3); display: grid; place-items: center; flex: none; color: var(--actx); }\n.pi.on .ck { background: var(--ac); border-color: var(--ac); }\n.pi .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s3); display: grid; place-items: center; flex: none; }\n.pi .ico ha-state-icon { width: 18px; height: 18px; --mdc-icon-size: 18px; }\n.pi .t { flex: 1; min-width: 0; }\n.pi .t b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.pi .t span { font-size: 12px; color: var(--mu); }\n.pi .st { font-size: 12px; color: var(--tx2); flex: none; }\n.toast { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 50;\ndisplay: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 16px; border-radius: 14px; background: #24262B; border: 1px solid var(--ln2);\nbox-shadow: 0 14px 30px rgba(0,0,0,.45); transition: all .2s; font-size: 13.5px; }\n.toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }\n.toast button { border: none; background: var(--s4); color: var(--ac); font-weight: 600; padding: 6px 10px; border-radius: 9px; }\n.toast button[hidden] { display: none; }\n.lecna { color: #F3B0A9; font-weight: 600; }";
 // Metinler: her metin tr ve en. Arayüzde marka adı geçmez.
@@ -2588,6 +2588,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const first = !this._hass;
     this._hass = h;
     if (first) { LEC.load(h); STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
+    LemurLightPopup.update(h);
     if (!this._sig) return;
     (this._embeds || []).forEach((e) => { e.hass = h; });
     const w = this._watched || [];
@@ -2815,10 +2816,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     const more = (id) => lpFire(this, 'hass-more-info', { entityId: id });
     this._tiles.forEach((b) => {
       const id = b.getAttribute('data-light');
-      // basılı tut: HA'nın ışık penceresi; ayarda seçildiyse ve LEC kuruluysa LEC'in efekt ekranı (lambanın odasıyla)
+      // basılı tut: varsayılan bizim ışık penceremiz; ayarda seçildiyse HA'nın penceresi ya da LEC'in efekt ekranı (lambanın odasıyla)
       const hold = () => {
-        const st = (STORE.data && STORE.data.settings) || {};
-        if (st.lec_hold && LEC.installed(this._hass) && LEC.open(this._hass, LEC.roomOf(id) || tab.area)) return;
+        const mode = lpHoldMode(), h = this._hass, d = id.split('.')[0];
+        if (mode === 'lec' && LEC.installed(h) && LEC.open(h, LEC.roomOf(id) || tab.area)) return;
+        if (mode !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) { LemurLightPopup.open(h, id, b._item, LEC.roomOf(id) || tab.area); return; }
         more(id);
       };
       lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), hold);
@@ -3086,6 +3088,344 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
 }
 
+// Işık penceresi: ışık karosuna basılı tutunca açılır (Hakan'ın tablet panosundaki ışık penceresinin aynısı, yardımcı varlık gerekmeden).
+// Üstte ad + kapat, altında parlaklık kaydırıcısı + güç düğmesi, sonra sekmeler:
+//   Renk: kelvin düğmeleri (2200-6500 K), renk çemberi, 12 renk örneği
+//   Efekt: Lemur Light Effect Card kuruluysa ve ışık bir LEC odasındaysa efekt ekranını o odayla açar; değilse ışığın kendi efekt listesi
+//   Segment: aynı cihazın segment ışıkları varsa (Govee şerit/lamba) segment seçilir, renk o segmente uygulanır
+// Durum pencerenin içinde tutulur (input_select gibi yardımcı varlık yok). Pencere sayfanın kendisine eklenir (panonun ölçeğinden bağımsız).
+// Eski Safari (iOS 12): pointer event yok (dokunma + fare), ?. ?? yok, flex gap yok.
+const LP_POP_KELVIN = [[2200, '#FF9227'], [2700, '#FFA757'], [3200, '#FFB87B'], [3500, '#FFC18D'], [4000, '#FFCEA6'], [6500, '#FFFEFA']];
+const LP_POP_SWATCH = ['#FF3B30', '#FF9500', '#FFD60A', '#A3E635', '#30D158', '#40E0D0', '#32ADE6', '#0A84FF', '#5E5CE6', '#BF5AF2', '#FF6FB5', '#FF2D95'];
+const LP_POP_ACCENT = '#F0A93B';
+const LP_POP_CSS = `
+:host { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 9000; display: block; font-family: var(--paper-font-body1_-_font-family, Roboto, Noto, sans-serif);
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+.bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.18s; }
+.pan { position: absolute; left: 50%; top: 50%; width: 560px; max-width: calc(100vw - 16px); max-height: calc(100vh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch;
+  box-sizing: border-box; padding: 18px; border-radius: 30px; background: #131416; color: #ECEDEF; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.2s ease-out, opacity 0.18s; }
+:host(.in) .bg { opacity: 1; }
+:host(.in) .pan { transform: translate(-50%, -50%); opacity: 1; }
+.box { background: #1E2024; border-radius: 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55); }
+.box + .box { margin-top: 14px; }
+.hd { display: flex; align-items: center; }
+.hd .nm { flex: 1 1 auto; display: flex; align-items: center; height: 56px; padding: 0 18px; min-width: 0; }
+.hd .nm ha-icon, .hd .nm ha-state-icon { --mdc-icon-size: 22px; color: ${LP_POP_ACCENT}; margin-right: 12px; flex: 0 0 auto; }
+.hd .nm b { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.x { flex: 0 0 56px; height: 56px; margin-left: 12px; border-radius: 18px; background: #1E2024; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ECEDEF; }
+.x ha-icon { --mdc-icon-size: 22px; }
+.row { display: flex; align-items: center; padding: 8px; }
+.sl { position: relative; flex: 1 1 auto; height: 74px; border-radius: 14px; background: #0C0D0F; overflow: hidden; cursor: pointer; touch-action: none; }
+.sl .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--lc, ${LP_POP_ACCENT}); opacity: 0.85; transition: width 0.15s; }
+.sl.drag .fill { transition: none; }
+.sl .in { position: relative; display: flex; align-items: center; height: 100%; padding: 0 18px; }
+.sl ha-state-icon, .sl ha-icon { --mdc-icon-size: 24px; color: #8A8F96; margin-right: 14px; flex: 0 0 auto; }
+.sl.on ha-state-icon, .sl.on ha-icon { color: #fff; }
+.sl .tx { min-width: 0; }
+.sl .tx b { display: block; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sl .tx span { display: block; font-size: 13px; color: #8A8F96; margin-top: 2px; }
+.sl.on .tx span { color: rgba(255, 255, 255, 0.85); }
+.pw { flex: 0 0 74px; height: 74px; margin-left: 10px; border-radius: 18px; background: #2A2D33; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #8A8F96; }
+.pw.on { background: ${LP_POP_ACCENT}; color: #1A1105; }
+.pw ha-icon { --mdc-icon-size: 26px; }
+.tabs { display: flex; padding: 5px; }
+.tab { flex: 1 1 0; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8A8F96; cursor: pointer; }
+.tab + .tab { margin-left: 5px; }
+.tab.on { background: ${LP_POP_ACCENT}; color: #1A1105; font-weight: 600; }
+.pane { padding: 18px; }
+.kel { display: grid; grid-template-columns: repeat(6, 1fr); grid-gap: 7px; }
+.kel div { height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #3A2A17;
+  font-family: 'JetBrains Mono', ui-monospace, monospace; cursor: pointer; }
+.kel div.on { box-shadow: 0 0 0 2px #fff; }
+.col { display: grid; grid-template-columns: 177px 1fr; align-items: center; grid-gap: 14px; margin-top: 14px; }
+.wh { position: relative; width: 163px; height: 163px; margin: 0 auto; touch-action: none; }
+.wh canvas { width: 100%; height: 100%; border-radius: 50%; display: block; box-shadow: 0 6px 24px -12px rgba(0, 0, 0, 0.9); }
+.wh .dot { position: absolute; width: 20px; height: 20px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.5);
+  -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); pointer-events: none; left: 50%; top: 50%; }
+.sw { display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 8px; }
+.sw div { height: 51px; border-radius: 11px; cursor: pointer; }
+.fx { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 6px; max-height: 300px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.fx div { font-size: 13px; padding: 11px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: #B5B9C0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.fx div.on { background: rgba(91, 141, 239, 0.28); border-color: rgba(91, 141, 239, 0.95); color: #fff; }
+.lecb { display: flex; align-items: center; justify-content: center; height: 64px; border-radius: 16px; background: linear-gradient(135deg, #FF6FAE, #8E7CFF); color: #fff;
+  font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 12px; }
+.lecb ha-icon { --mdc-icon-size: 22px; margin-right: 10px; }
+.segs { display: grid; grid-gap: 7px; margin-bottom: 14px; }
+.segs div { height: 44px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #B5B9C0; cursor: pointer; }
+.segs div.on { background: ${LP_POP_ACCENT}; color: #1A1105; font-weight: 600; }
+.segs div.lit { box-shadow: inset 0 0 0 2px var(--sc, #fff); }
+.empty { color: #8A8F96; font-size: 14px; text-align: center; padding: 18px 0; }
+@media (max-width: 560px) { .col { grid-template-columns: 1fr; } .pan { padding: 12px; border-radius: 24px; } }
+`;
+const LP_POP_TXT = {
+  tr: { color: 'Renk', effect: 'Efekt', segment: 'Segment', off: 'Kapalı', on: 'Açık', lec: 'Efekt ekranını aç', noFx: 'Bu ışığın efekti yok', unav: 'Ulaşılamıyor', seg: 'Segment {n}' },
+  en: { color: 'Color', effect: 'Effect', segment: 'Segment', off: 'Off', on: 'On', lec: 'Open effect screen', noFx: 'This light has no effects', unav: 'Unavailable', seg: 'Segment {n}' }
+};
+
+// basılı tutunca ne açılır: 'popup' (bu pencere, varsayılan), 'ha' (HA'nın kendi penceresi), 'lec' (LEC efekt ekranı); eski lec_hold ayarı 'lec' sayılır
+function lpHoldMode() {
+  const st = (STORE.data && STORE.data.settings) || {};
+  if (st.hold === 'ha' || st.hold === 'lec' || st.hold === 'popup') return st.hold;
+  return st.lec_hold ? 'lec' : 'popup';
+}
+
+// hsv → rgb (renk çemberi)
+function lpHsv(h, s, v) {
+  const c = v * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = v - c;
+  let r = 0, g = 0, b = 0;
+  if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+  return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+}
+// dokunma + fare ile sürükleme (iOS 12'de pointer event yok)
+function lpDrag(el, onMove, onEnd) {
+  let on = false;
+  const pt = (e) => (e.touches && e.touches.length ? e.touches[0] : (e.changedTouches && e.changedTouches.length ? e.changedTouches[0] : e));
+  const mv = (e) => { if (!on) return; if (e.cancelable) e.preventDefault(); onMove(pt(e), false); };
+  const up = (e) => {
+    if (!on) return; on = false;
+    window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up);
+    window.removeEventListener('touchmove', mv); window.removeEventListener('touchend', up); window.removeEventListener('touchcancel', up);
+    onEnd(pt(e));
+  };
+  const down = (e) => {
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    on = true; if (e.cancelable) e.preventDefault(); onMove(pt(e), true);
+    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', mv, { passive: false }); window.addEventListener('touchend', up); window.addEventListener('touchcancel', up);
+  };
+  el.addEventListener('mousedown', down);
+  el.addEventListener('touchstart', down, { passive: false });
+}
+
+const LP_POP = { cur: null };
+class LemurLightPopup {
+  // id: ışık; item: karodaki ad/simge; room: LEC odası (yoksa sekmenin alanı)
+  static open(hass, id, item, room) {
+    if (LP_POP.cur) LP_POP.cur.close(true);
+    const p = new LemurLightPopup(hass, id, item || {}, room || null);
+    LP_POP.cur = p;
+    return p;
+  }
+  static update(hass) { if (LP_POP.cur) LP_POP.cur.hass = hass; }
+
+  constructor(hass, id, item, room) {
+    this._h = hass; this._id = id; this._item = item; this._room = room;
+    this._lang = pickLang(hass);
+    this._tab = 'color'; this._seg = 0;
+    this._host = document.createElement('div');
+    this._host.className = 'lemur-light-popup';
+    const R = this._host.attachShadow({ mode: 'open' });
+    R.innerHTML = '<style>' + LP_POP_CSS + '</style><div class="bg"></div><div class="pan" role="dialog" aria-modal="true"></div>';
+    this._R = R; this._pan = R.querySelector('.pan');
+    R.querySelector('.bg').addEventListener('click', () => this.close());
+    this._key = (e) => { if (e.key === 'Escape') { e.stopPropagation(); this.close(); } };
+    window.addEventListener('keydown', this._key, true);
+    // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
+    this._pop = () => this.close(true);
+    try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
+    document.body.appendChild(this._host);
+    this._render();
+    requestAnimationFrame(() => requestAnimationFrame(() => this._host.classList.add('in')));
+  }
+  close(fromNav) {
+    if (this._closed) return;
+    this._closed = true;
+    if (LP_POP.cur === this) LP_POP.cur = null;
+    window.removeEventListener('keydown', this._key, true);
+    window.removeEventListener('popstate', this._pop);
+    if (this._pushed && !fromNav) { try { history.back(); } catch (e) {} }
+    this._host.classList.remove('in');
+    setTimeout(() => { if (this._host.parentNode) this._host.parentNode.removeChild(this._host); }, 200);
+  }
+  set hass(h) { this._h = h; if (!this._closed && !this._dragging) this._sync(); }
+  _t(k, v) { let s = (LP_POP_TXT[this._lang] || LP_POP_TXT.en)[k] || k; if (v) Object.keys(v).forEach((x) => { s = s.replace('{' + x + '}', v[x]); }); return s; }
+
+  // aynı cihazın segment ışıkları (ör. light.lantern_floor_lamp_s_segment_001..004)
+  _segments() {
+    const ents = this._h.entities || {}, e = ents[this._id], dv = e && e.device_id;
+    if (!dv) return [];
+    return Object.keys(this._h.states).filter((x) => x !== this._id && x.indexOf('light.') === 0 && /_segment_?\d+$/.test(x) && ents[x] && ents[x].device_id === dv).sort();
+  }
+  _caps(id) {
+    const st = this._h.states[id], a = (st && st.attributes) || {}, m = a.supported_color_modes || [];
+    const color = m.some((x) => ['hs', 'xy', 'rgb', 'rgbw', 'rgbww'].indexOf(x) >= 0);
+    const ct = m.indexOf('color_temp') >= 0 || color;
+    const dim = color || ct || m.indexOf('brightness') >= 0 || m.indexOf('white') >= 0;
+    return { color: color, ct: ct, dim: id.indexOf('light.') === 0 && dim, fx: (a.effect_list || []).filter((x) => x).length > 0 };
+  }
+  _lecRoom() { return LEC.installed(this._h) ? (LEC.roomOf(this._id) || (LEC.hasRoom(this._room) ? this._room : null)) : null; }
+  _tabs() {
+    const c = this._caps(this._id), out = [];
+    if (c.color || c.ct) out.push('color');
+    if (c.fx || this._lecRoom()) out.push('effect');
+    if (this._segments().length) out.push('segment');
+    return out;
+  }
+
+  _render() {
+    const S = this._h.states, st = S[this._id], it = this._item;
+    const name = it.name || (st && st.attributes.friendly_name) || this._id;
+    const icon = it.icon ? '<ha-icon icon="' + esc(it.icon) + '"></ha-icon>' : '<ha-state-icon></ha-state-icon>';
+    const tabs = this._tabs();
+    if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
+    let h = '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
+      '<div class="box row" style="margin-top:14px">' + this._sliderHtml(this._id, name, icon) + '<div class="pw" data-pw><ha-icon icon="mdi:power"></ha-icon></div></div>';
+    if (tabs.length > 1 || (tabs.length === 1 && tabs[0] !== 'color')) {
+      h += '<div class="box tabs" style="margin-top:14px">' + tabs.map((k) => '<div class="tab' + (k === this._tab ? ' on' : '') + '" data-tab="' + k + '">' + esc(this._t(k)) + '</div>').join('') + '</div>';
+    }
+    if (this._tab) h += '<div class="box pane" style="margin-top:14px">' + this._paneHtml() + '</div>';
+    this._pan.innerHTML = h;
+    this._bind();
+    this._sync();
+  }
+  _sliderHtml(id, name, icon) {
+    return '<div class="sl" data-sl="' + esc(id) + '"><div class="fill"></div><div class="in">' + icon + '<div class="tx"><b>' + esc(name) + '</b><span></span></div></div></div>';
+  }
+  _target() { const segs = this._segments(); return this._tab === 'segment' && segs[this._seg] ? segs[this._seg] : this._id; }
+  _colorHtml(id) {
+    const c = this._caps(id);
+    let h = '';
+    if (c.ct) h += '<div class="kel">' + LP_POP_KELVIN.map((k) => '<div data-k="' + k[0] + '" style="background:' + k[1] + '">' + k[0] + 'K</div>').join('') + '</div>';
+    if (c.color) h += '<div class="col"' + (c.ct ? '' : ' style="margin-top:0"') + '><div class="wh"><canvas width="326" height="326"></canvas><div class="dot"></div></div>' +
+      '<div class="sw">' + LP_POP_SWATCH.map((x) => '<div data-rgb="' + x + '" style="background:' + x + '"></div>').join('') + '</div></div>';
+    return h;
+  }
+  _paneHtml() {
+    const S = this._h.states;
+    if (this._tab === 'color') return this._colorHtml(this._id);
+    if (this._tab === 'effect') {
+      const room = this._lecRoom();
+      const list = ((S[this._id] && S[this._id].attributes.effect_list) || []).filter((x) => x);
+      return (room ? '<div class="lecb" data-lec><ha-icon icon="mdi:creation"></ha-icon>' + esc(this._t('lec')) + '</div>' : '') +
+        (list.length ? '<div class="fx">' + list.map((x) => '<div data-fx="' + esc(x) + '">' + esc(x) + '</div>').join('') + '</div>' : (room ? '' : '<div class="empty">' + esc(this._t('noFx')) + '</div>'));
+    }
+    if (this._tab === 'segment') {
+      const segs = this._segments(), id = segs[this._seg];
+      const n = segs.length;
+      return '<div class="segs" style="grid-template-columns:repeat(' + Math.min(n, 6) + ',1fr)">' + segs.map((x, i) => '<div data-seg="' + i + '"' + (i === this._seg ? ' class="on"' : '') + '>' + (i + 1) + '</div>').join('') + '</div>' +
+        '<div class="row" style="padding:0;margin-bottom:14px">' + this._sliderHtml(id, this._t('seg', { n: this._seg + 1 }), '<ha-icon icon="mdi:led-strip-variant"></ha-icon>') +
+        '<div class="pw" data-pws><ha-icon icon="mdi:power"></ha-icon></div></div>' + this._colorHtml(id);
+    }
+    return '';
+  }
+
+  _bind() {
+    const R = this._pan, H = () => this._h;
+    R.querySelector('[data-x]').addEventListener('click', () => this.close());
+    R.querySelector('[data-pw]').addEventListener('click', () => this._toggle(this._id));
+    const pws = R.querySelector('[data-pws]'); if (pws) pws.addEventListener('click', () => this._toggle(this._target()));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-tab]'), (el) => el.addEventListener('click', () => {
+      const k = el.getAttribute('data-tab');
+      // tablet panosundaki gibi: Efekt sekmesi, LEC kuruluysa ve ışığın listesi yoksa doğrudan efekt ekranını açar
+      if (k === 'effect' && this._lecRoom() && !this._caps(this._id).fx) { this._openLec(); return; }
+      this._tab = k; this._render();
+    }));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-seg]'), (el) => el.addEventListener('click', () => { this._seg = +el.getAttribute('data-seg'); this._render(); }));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => el.addEventListener('click', () => {
+      this._call('turn_on', this._target(), { color_temp_kelvin: +el.getAttribute('data-k') });
+    }));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-rgb]'), (el) => el.addEventListener('click', () => {
+      const x = el.getAttribute('data-rgb'); this._call('turn_on', this._target(), { rgb_color: [parseInt(x.slice(1, 3), 16), parseInt(x.slice(3, 5), 16), parseInt(x.slice(5, 7), 16)] });
+    }));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-fx]'), (el) => el.addEventListener('click', () => this._call('turn_on', this._id, { effect: el.getAttribute('data-fx') })));
+    const lec = R.querySelector('[data-lec]'); if (lec) lec.addEventListener('click', () => this._openLec());
+    Array.prototype.forEach.call(R.querySelectorAll('ha-state-icon'), (el) => { el.hass = H(); el.stateObj = H().states[this._id]; });
+    // parlaklık kaydırıcıları: sürükledikçe dolgu değişir, bırakınca (ve sürüklerken 300 ms'de bir) ışığa gönderilir
+    Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
+      const id = sl.getAttribute('data-sl');
+      if (!this._caps(id).dim) return;
+      let pct = 0, last = 0;
+      const send = () => { last = Date.now(); if (pct <= 0) this._call('turn_off', id, {}); else this._call('turn_on', id, { brightness_pct: pct }); };
+      lpDrag(sl, (p) => {
+        this._dragging = true; sl.classList.add('drag');
+        const r = sl.getBoundingClientRect();
+        pct = Math.max(0, Math.min(100, Math.round((p.clientX - r.left) / r.width * 100)));
+        sl.querySelector('.fill').style.width = pct + '%';
+        sl.querySelector('.tx span').textContent = pct ? pct + '%' : this._t('off');
+        if (Date.now() - last > 300) send();
+      }, () => { this._dragging = false; sl.classList.remove('drag'); send(); });
+    });
+    // renk çemberi
+    const wh = R.querySelector('.wh');
+    if (wh) {
+      this._paintWheel(wh.querySelector('canvas'));
+      let hs = null, last = 0;
+      const send = () => { if (!hs) return; last = Date.now(); this._call('turn_on', this._target(), { hs_color: hs }); };
+      lpDrag(wh, (p) => {
+        this._dragging = true;
+        const r = wh.getBoundingClientRect(), rad = r.width / 2;
+        let x = p.clientX - r.left - rad, y = p.clientY - r.top - rad, d = Math.sqrt(x * x + y * y) / rad;
+        if (d > 1) { x /= d; y /= d; d = 1; }
+        hs = [Math.round((Math.atan2(y, x) * 180 / Math.PI + 360) % 360), Math.round(d * 100)];
+        const dot = wh.querySelector('.dot'); dot.style.left = (50 + x / rad * 50) + '%'; dot.style.top = (50 + y / rad * 50) + '%';
+        if (Date.now() - last > 220) send();
+      }, () => { this._dragging = false; setTimeout(send, 120); });
+    }
+  }
+  _paintWheel(cv) {
+    const n = cv.width, c = n / 2, ctx = cv.getContext('2d'), img = ctx.createImageData(n, n), d = img.data;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const dx = x - c + 0.5, dy = y - c + 0.5, r = Math.sqrt(dx * dx + dy * dy) / c, k = 4 * (y * n + x);
+      if (r > 1) { d[k + 3] = 0; continue; }
+      const rgb = lpHsv((Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360, r, 1);
+      d[k] = rgb[0]; d[k + 1] = rgb[1]; d[k + 2] = rgb[2]; d[k + 3] = r > 0.985 ? Math.round((1 - r) / 0.015 * 255) : 255;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  _call(svc, id, data) {
+    const d = id.split('.')[0];
+    if (d !== 'light') { this._h.callService('homeassistant', svc === 'turn_off' ? 'turn_off' : 'turn_on', { entity_id: id }); return; }
+    this._h.callService('light', svc, Object.assign({ entity_id: id }, data));
+  }
+  _toggle(id) { this._h.callService(id.split('.')[0] === 'light' ? 'light' : 'homeassistant', 'toggle', { entity_id: id }); }
+  _openLec() {
+    const room = this._lecRoom();
+    this.close();
+    setTimeout(() => LEC.open(this._h, room), 220);
+  }
+
+  // durumu ekrana yansıt (yeniden çizmeden)
+  _sync() {
+    const R = this._pan, S = this._h.states;
+    if (!R) return;
+    Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
+      const st = S[sl.getAttribute('data-sl')];
+      const on = !!st && st.state === 'on', a = (st && st.attributes) || {};
+      const pct = on ? (typeof a.brightness === 'number' ? Math.max(1, Math.round(a.brightness / 2.55)) : 100) : 0;
+      const rgb = on && a.rgb_color && (a.rgb_color[0] + a.rgb_color[1] + a.rgb_color[2]) > 12 ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
+      sl.classList.toggle('on', on);
+      if (rgb) sl.style.setProperty('--lc', rgb); else sl.style.removeProperty('--lc');
+      sl.querySelector('.fill').style.width = pct + '%';
+      sl.querySelector('.tx span').textContent = !st || st.state === 'unavailable' ? this._t('unav') : (on ? (this._caps(sl.getAttribute('data-sl')).dim ? pct + '%' : this._t('on')) : this._t('off'));
+    });
+    const pw = R.querySelector('[data-pw]'), st = S[this._id];
+    if (pw) pw.classList.toggle('on', !!st && st.state === 'on');
+    const pws = R.querySelector('[data-pws]'), ts = S[this._target()];
+    if (pws) pws.classList.toggle('on', !!ts && ts.state === 'on');
+    Array.prototype.forEach.call(R.querySelectorAll('ha-state-icon'), (el) => { el.hass = this._h; el.stateObj = st; });
+    // seçili renk: çemberdeki nokta, kelvin düğmesi, efekt
+    const tgt = S[this._target()], ta = (tgt && tgt.attributes) || {};
+    const dot = R.querySelector('.wh .dot');
+    if (dot && ta.hs_color && tgt.state === 'on') {
+      const a = ta.hs_color[0] * Math.PI / 180, r = ta.hs_color[1] / 100;
+      dot.style.left = (50 + Math.cos(a) * r * 50) + '%'; dot.style.top = (50 + Math.sin(a) * r * 50) + '%';
+    }
+    Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => {
+      el.classList.toggle('on', !!tgt && tgt.state === 'on' && ta.color_mode === 'color_temp' && Math.abs((ta.color_temp_kelvin || 0) - +el.getAttribute('data-k')) < 120);
+    });
+    const ef = st && st.state === 'on' ? String(st.attributes.effect || '') : '';
+    Array.prototype.forEach.call(R.querySelectorAll('[data-fx]'), (el) => el.classList.toggle('on', !!ef && el.getAttribute('data-fx') === ef));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-seg]'), (el) => {
+      const s2 = S[this._segments()[+el.getAttribute('data-seg')]], a2 = (s2 && s2.attributes) || {};
+      const lit = !!s2 && s2.state === 'on';
+      el.classList.toggle('lit', lit);
+      if (lit && a2.rgb_color) el.style.setProperty('--sc', 'rgb(' + a2.rgb_color.join(',') + ')'); else el.style.removeProperty('--sc');
+    });
+  }
+}
+
 // lemur-home-dashboard-admin: sol menüdeki yönetim paneli.
 // Düzen Light Effect Card'ın kontrol paneliyle aynı aile: üstte sekme şeridi (seçili sekmenin ayarları altında birleşik),
 // solda panonun canlı önizlemesi (tıklayınca bölüm seçilir), sağda bölüm düzenleyici. Her değişiklik anında kaydedilir,
@@ -3111,7 +3451,7 @@ const ADM = {
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
-    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Senaryolara efekt ekranı ve efekt düğmeleri eklenebilir.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecHold: 'Basılı tutunca efekt ekranı', lecHoldT: 'Işık karosuna basılı tutunca HA penceresi yerine efekt ekranı lambanın odasıyla açılır', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Senaryolara efekt ekranı ve efekt düğmeleri eklenebilir.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
@@ -3133,7 +3473,7 @@ const ADM = {
     bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
-    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). Effect screen and effect buttons can be added to scene sections.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecHold: 'Hold for effect screen', lecHoldT: 'Holding a light tile opens the effect screen for that light\'s room instead of the HA dialog', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). Effect screen and effect buttons can be added to scene sections.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
@@ -3475,7 +3815,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
         '<div class="sh">' + t('s_info') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
-        (lec ? '<div class="srow"><div class="t"><b>' + t('lecHold') + '</b><span>' + t('lecHoldT') + '</span></div>' + tg('lec_hold', !!s.lec_hold) + '</div>' : '') +
+        '<div class="srow"><div class="t"><b>' + t('hold') + '</b><span>' + t('holdT') + '</span></div>' + seg('hold', lpHoldMode() === 'lec' && !lec ? 'popup' : lpHoldMode(), [['popup', this._t('hPop')], ['ha', this._t('hHa')]].concat(lec ? [['lec', this._t('hLec')]] : [])) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }

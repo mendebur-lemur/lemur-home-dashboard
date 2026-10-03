@@ -9,6 +9,7 @@ Home Assistant için hazır, tam ekran ev panosu (dashboard). Yeni bir pano aç,
 - **Tek satırla kurulum.** Panonun ham yapılandırmasına `strategy: type: custom:lemur-home-dashboard` yazman yeterli.
 - **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; ek kart ya da tema şart değil.
 - **Her şey yönetim panelinden.** Sekmeler, bölümler, kolon genişlikleri ve hangi cihazın nerede duracağı sol menüdeki "Lemur Home Dashboard"dan düzenlenir; değişiklik evdeki bütün tabletlere aynı anda gelir.
+- **Işık penceresi.** Işık karosuna basılı tutunca parlaklık kaydırıcısı, kelvin düğmeleri, renk çemberi, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçebilirsin.
 - **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir, eski tabletlerde de akıcı çalışır.
 
 ## Kurulum
@@ -32,7 +33,7 @@ Not: Bu panoda Home Assistant'ın kendi düzenleyicisinde "kontrolü al" dersen 
 - **Efekt ekranı düğmesi:** Senaryo bölümüne eklenir; dokununca efekt ekranı sekmenin odasıyla tam ekran açılır.
 - **Efekt düğmeleri:** Senaryoya düğme eklerken cihaz seçicide odanın efektleri de listelenir; seçilen efekt tek dokunuşla başlar. "Efekti durdur" düğmesi de eklenebilir.
 - **Oynayan efekt görünür:** Odada efekt oynarken o odanın ışık karoları efektin renkleriyle parlar, efektin düğmesi yanar.
-- **Basılı tutunca efekt ekranı:** Ayarlardan açılırsa ışık karosuna basılı tutmak efekt ekranını lambanın odasıyla açar.
+- **Işık penceresinden efekt ekranına:** Işık penceresindeki Efekt sekmesi efekt ekranını lambanın odasıyla açar. İstersen ayarlardan ışığa basılı tutmak doğrudan efekt ekranını açsın.
 
 Kurulu değilse bu düğmeler panoda görünmez, başka hiçbir şey değişmez.
 
