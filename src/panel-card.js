@@ -32,6 +32,13 @@ function lpFire(node, type, detail) {
 }
 // Kolon genişlikleri: sayı dizisi (oran, ör. [56, 17, 25.5]); eski kayıtlarda "56%" metni de olabilir.
 const LP_DEFAULT_COLS = [56, 17, 25.5];
+// Kolon içi sütun sayısı (1-3); genişlik kolondan eşit paylaşılır, ayrıca ayarlanmaz.
+function lpSplits(tab, n) {
+  const sp = (tab && tab.splits) || [];
+  const out = [];
+  for (let i = 0; i < n; i++) { const v = parseInt(sp[i], 10); out.push(v >= 1 && v <= 3 ? v : 1); }
+  return out;
+}
 function lpWeights(tab) {
   const c = (tab && tab.columns && tab.columns.length) ? tab.columns : LP_DEFAULT_COLS;
   return c.map((x) => { const v = parseFloat(typeof x === 'object' && x ? x.w : x); return v > 0 ? v : 10; });
@@ -206,41 +213,51 @@ class LemurHomeDashboardCard extends HTMLElement {
     // kolonlara dağıt; başlıksız bölüm aynı kolondaki önceki kutunun içine girer (ör. iklimin altında süpürge)
     // içi boş bölümün başlığı, aynı kolonda arkasından gelen başlıksız bölüme geçer.
     // Düzenleme modunda boş bölüm de bir kutu olarak görünür (içine sürüklenebilsin diye).
-    const widths = lpWeights(tab);
-    const cols = widths.map(() => []), pending = widths.map(() => null);
+    // Yerleşim: kolonlar (genişlik oranı) ve her kolonun içinde 1-3 eşit sütun (tab.splits). Bölümün yeri: col + sub.
+    const widths = lpWeights(tab), splits = lpSplits(tab, widths.length);
+    const cols = widths.map((w, i) => { const a = []; for (let j = 0; j < splits[i]; j++) a.push([]); return a; });
+    const pend = {};
     (tab.sections || []).forEach((s) => {
-      const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0));
+      const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0)), sj = Math.max(0, Math.min(splits[ci] - 1, s.sub || 0)), key = ci + ':' + sj;
       curSec = s.id;
       let b = bodyOf(s);
       if (!b && edit) b = { kind: s.type === 'lights' || s.type === 'scenes' ? 'md' : 'hd', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
-      if (!b) { if (s.title) pending[ci] = s; return; }
-      const boxes = cols[ci];
-      if (!s.title && !pending[ci] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; last.secs.push(s.id); return; }
-      const head = s.title ? s : pending[ci];
-      pending[ci] = null;
+      if (!b) { if (s.title) pend[key] = s; return; }
+      const boxes = cols[ci][sj];
+      if (!s.title && !pend[key] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; last.secs.push(s.id); return; }
+      const head = s.title ? s : pend[key];
+      pend[key] = null;
       boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html,
         secs: head && head !== s ? [head.id, s.id] : [s.id], grow: (head || s).grow || 1 });
     });
     const used = [];
-    cols.forEach((b, i) => { if (b.length || edit) used.push(i); });   // düzenlemede boş kolon da görünür
+    cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
 
     const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni"><ha-icon icon="' + esc(x.icon || 'mdi:home-outline') + '"></ha-icon></div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
       '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
-    // aynı kolonda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
+    // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
     const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi ? ' style="flex:' + b.grow + ' 1 0px;min-height:auto"' : '') + '>' +
+      (edit ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
       b.html + '</div>';   // spread: başlık da dahil hepsi kutuya eşit aralıkla dağılır (tablet panosundaki justify-content: space-between)
+    const subHtml = (i, j, boxes) => '<div class="sub" data-col="' + i + '" data-sub="' + j + '">' +
+      (boxes.length ? boxes.map((b) => boxHtml(b, boxes.length > 1)).join('')
+        : '<div class="box colempty"><span>' + esc(t(lang, 'col_empty')) + '</span><button class="addsec" data-addsec="' + i + ':' + j + '">+ ' + esc(t(lang, 'add_section')) + '</button></div>') + '</div>';
     let grid, body;
     if (used.length) {
       // kolon genişlikleri oran (fr): kolon sayısı ne olursa olsun ekrana sığar, aralıklar taşırmaz
       grid = 'grid-template-columns:' + used.map((i) => widths[i] + 'fr').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
-      body = used.map((i) => '<div class="col" data-col="' + i + '" style="grid-area:c' + i + '">' +
-        (cols[i].length ? cols[i].map((b) => boxHtml(b, cols[i].length > 1)).join('') : '<div class="box colempty">' + esc(t(lang, 'col_empty')) + '</div>') + '</div>').join('');
+      body = used.map((i) => {
+        // normal panoda boş sütun yer kaplamaz; düzenlemede görünür
+        const subs = cols[i].map((boxes, j) => ({ j: j, boxes: boxes })).filter((x) => edit || x.boxes.length);
+        return '<div class="col" data-col="' + i + '" style="grid-area:c' + i + '"><div class="subs" style="grid-template-columns:repeat(' + subs.length + ',minmax(0,1fr))">' +
+          subs.map((x) => subHtml(i, x.j, x.boxes)).join('') + '</div></div>';
+      }).join('');
     } else {
       grid = 'grid-template-columns:1fr;grid-template-areas:\'h\' \'c0\'';
-      body = '<div class="col" style="grid-area:c0"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div>';
+      body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
     R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + '" style="' + grid + '">' + nav + body + '</div>';
@@ -314,11 +331,11 @@ class LemurHomeDashboardCard extends HTMLElement {
         hd.style.top = a.offsetTop + 'px'; hd.style.height = a.offsetHeight + 'px';
         wrap.appendChild(hd);
       }
-      cols.forEach((c) => {
+      arr(R.querySelectorAll('.sub[data-sub]')).forEach((c) => {
         const bx = arr(c.children).filter((x) => x.hasAttribute('data-secs'));
         for (let j = 0; j < bx.length - 1; j++) {
           const hd = document.createElement('div');
-          hd.className = 'rowh'; hd.setAttribute('data-col', c.getAttribute('data-col')); hd.setAttribute('data-j', j);
+          hd.className = 'rowh'; hd.setAttribute('data-col', c.getAttribute('data-col')); hd.setAttribute('data-sub', c.getAttribute('data-sub')); hd.setAttribute('data-j', j);
           hd.style.left = c.offsetLeft + 'px'; hd.style.width = c.offsetWidth + 'px';
           hd.style.top = ((bx[j].offsetTop + bx[j].offsetHeight + bx[j + 1].offsetTop) / 2 - 7) + 'px';
           wrap.appendChild(hd);
@@ -334,8 +351,9 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!ln) { ln = document.createElement('div'); ln.className = 'dropline'; wrap.appendChild(ln); }
       ln.style.left = left + 'px'; ln.style.top = top + 'px'; ln.style.width = width + 'px';
     };
+    // bırakma hedefi: işaretçinin altındaki (ya da en yakın) sütun
     const colAt = (x) => {
-      const cols = arr(R.querySelectorAll('.col[data-col]'));
+      const cols = arr(R.querySelectorAll('.sub[data-sub]'));
       let best = null, bd = 1e9;
       cols.forEach((c) => { const r = c.getBoundingClientRect(); const d = x < r.left ? r.left - x : (x > r.right ? x - r.right : 0); if (d < bd) { bd = d; best = c; } });
       return best;
@@ -354,7 +372,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         D.a = used[k]; D.b = used[k + 1]; D.pa = cols[k].offsetWidth; D.pb = cols[k + 1].offsetWidth; D.W = widths.slice();
       }
       if (rh) {
-        const c = R.querySelector('.col[data-col="' + rh.getAttribute('data-col') + '"]'), j = +rh.getAttribute('data-j');
+        const c = R.querySelector('.sub[data-col="' + rh.getAttribute('data-col') + '"][data-sub="' + rh.getAttribute('data-sub') + '"]'), j = +rh.getAttribute('data-j');
         const bx = arr(c.children).filter((x) => x.hasAttribute('data-secs'));
         D.A = bx[j]; D.B = bx[j + 1]; D.ha = D.A.offsetHeight; D.hb = D.B.offsetHeight;
         D.ga = parseFloat(D.A.style.flexGrow) || 1; D.gb = parseFloat(D.B.style.flexGrow) || 1;
@@ -393,7 +411,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         const last = bx[bx.length - 1];
         const top = before ? before.offsetTop - 8 : (last ? last.offsetTop + last.offsetHeight + 4 : c.offsetTop + 8);
         line(c.offsetLeft, top, c.offsetWidth);
-        D.target = { col: +c.getAttribute('data-col'), before: before ? before.getAttribute('data-secs').split(',')[0] : null };
+        D.target = { col: +c.getAttribute('data-col'), sub: +c.getAttribute('data-sub'), before: before ? before.getAttribute('data-secs').split(',')[0] : null };
         return;
       }
       if (D.kind === 'item') {
@@ -435,10 +453,12 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (d.kind === 'box' && d.target) {
         const nt = clone(), group = d.el.getAttribute('data-secs').split(',');
         const moving = nt.sections.filter((s) => group.indexOf(s.id) >= 0), rest = nt.sections.filter((s) => group.indexOf(s.id) < 0);
-        moving.forEach((s) => { s.col = d.target.col; });
+        const spl = lpSplits(nt, lpWeights(nt).length);
+        const subOf = (x) => Math.min(x.sub || 0, (spl[x.col || 0] || 1) - 1);
+        moving.forEach((x) => { x.col = d.target.col; if (d.target.sub) x.sub = d.target.sub; else delete x.sub; });
         let at = rest.length;
-        if (d.target.before) at = rest.map((s) => s.id).indexOf(d.target.before);
-        else { for (let i = rest.length - 1; i >= 0; i--) if ((rest[i].col || 0) === d.target.col) { at = i + 1; break; } }
+        if (d.target.before) at = rest.map((x) => x.id).indexOf(d.target.before);
+        else { for (let i = rest.length - 1; i >= 0; i--) if ((rest[i].col || 0) === d.target.col && subOf(rest[i]) === d.target.sub) { at = i + 1; break; } }
         if (at < 0) at = rest.length;
         nt.sections = rest.slice(0, at).concat(moving, rest.slice(at));
         if (JSON.stringify(nt.sections) !== JSON.stringify(tab.sections)) emit(nt);
@@ -463,9 +483,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
     if (window.ResizeObserver) { if (this._edRO) this._edRO.disconnect(); this._edRO = new ResizeObserver(() => { if (!D) place(); }); this._edRO.observe(wrap); }
 
-    // tıklama: bölümü seç (sürüklemeden sonra gelen tıklama sayılmaz)
+    // tıklama: bölümü seç (sürüklemeden sonra gelen tıklama sayılmaz); boş sütundaki "+ Bölüm ekle" panelin menüsünü açar
     wrap.addEventListener('click', (e) => {
       if (this._dragged) return;
+      const ad = e.target.closest ? e.target.closest('[data-addsec]') : null;
+      if (ad) { const p = ad.getAttribute('data-addsec').split(':'); return lpFire(this, 'lhd-addsec', { col: +p[0], sub: +p[1], x: e.clientX, y: e.clientY }); }
       const bx = e.target.closest ? e.target.closest('.box[data-secs]') : null; if (!bx) return;
       const hit = e.target.closest('[data-sec]');
       lpFire(this, 'lhd-select', { section: hit ? hit.getAttribute('data-sec') : bx.getAttribute('data-secs').split(',')[0] });

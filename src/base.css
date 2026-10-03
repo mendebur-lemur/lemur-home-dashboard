@@ -28,13 +28,15 @@
 
 /* bölüm kutuları */
 .col { display: flex; flex-direction: column; min-width: 0; min-height: 0; margin: 4px; }
-.col > .box + .box { margin-top: 12px; }
+.col > .subs { display: grid; grid-gap: 12px; flex: 1 1 auto; min-height: 0; }
+.sub { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.sub > .box + .box { margin-top: 12px; }
 .box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 20px;
   background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }
 .box > * + * { margin-top: 8px; }
 .box.spread { justify-content: space-between; }
 .box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }
-.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; }
+.title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
 .title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }
 .title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }
 .title.season { cursor: pointer; }
@@ -74,7 +76,11 @@
 .down { -webkit-transform: scale(0.96); transform: scale(0.96); }
 /* düzenleme modu (yönetim panelindeki önizleme): seç, sürükle, boyutlandır */
 .wrap.edit { position: relative; touch-action: none; }
-.edit .box { cursor: pointer; transition: box-shadow 0.15s; }
+.edit .box { cursor: pointer; transition: box-shadow 0.15s; position: relative; }
+.bgrip { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 9px; background: rgba(242, 169, 59, 0.16); color: #F2A93B;
+  display: flex; align-items: center; justify-content: center; cursor: grab; z-index: 3; --mdc-icon-size: 18px; }
+.bgrip:hover { background: rgba(242, 169, 59, 0.3); }
+.bgrip ha-icon { pointer-events: none; }
 .edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }
 .edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }
 .edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }
@@ -98,7 +104,10 @@
 .eph { flex: 1 1 auto; min-height: 90px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--lp-text2);
   border: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }
 .box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;
-  border: 2px dashed rgba(242, 169, 59, 0.35); font-size: 16px; padding: 20px; }
+  border: 2px dashed rgba(242, 169, 59, 0.35); font-size: 15px; padding: 20px; cursor: default; }
+.addsec { margin-top: 14px; padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(242, 169, 59, 0.5); background: rgba(242, 169, 59, 0.12);
+  color: #F2A93B; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.addsec:hover { background: rgba(242, 169, 59, 0.22); }
 .gsq { position: relative; flex: 0 0 auto; height: 0; }
 .gsq > .grid { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .tile.ph { cursor: default; }
