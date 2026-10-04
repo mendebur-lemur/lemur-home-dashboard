@@ -18,7 +18,7 @@ const ADM = {
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_phone: 'Telefon', scr_here: 'Bu ekran',
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
-    sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
+    sHelp: 'Yardım', repT: 'Sorun bildir', repS: 'Sürüm ve cihaz bilgisiyle GitHub\'da kayıt açar; ne olduğunu yazman yeter', repQ: 'Ne oldu?', repPh: 'Ne yaptın, ne bekliyordun, ne oldu? Örnek: Salon sekmesinde ışık çubuğunu kaydırınca parlaklık değişmiyor.', repInfo: 'Kayda eklenecek bilgiler', repInfoS: 'Kişisel bilgi yok: oda, cihaz ve kişi adları, adresin ya da hesabın eklenmez.', repNoGh: 'GitHub hesabın yoksa metni kopyalayıp geliştiriciye ilet.', repCopy: 'Metni kopyala', repCopied: 'Kopyalandı', repGh: 'GitHub\'da aç', rWhat: 'Ne oldu?', rInfoH: 'Bilgiler', rPanel: 'Pano', rInt: 'entegrasyon', rHa: 'Home Assistant', rBrowser: 'Tarayıcı', rApp: 'HA uygulaması', rScreen: 'Ekran', rTouch: 'dokunmatik', rNoTouch: 'dokunmatik değil', rCanvas: 'kanvas', rLang: 'Dil', rLayout: 'Düzen', rAuto: 'otomatik', rTabs: 'sekme', rSecs: 'bölüm', rItems: 'öğe', rKinds: 'Öğe türleri', rLook: 'Görünüm', rLec: 'Light Effect Card', rErr: 'Son hatalar', rNoErr: 'yok', sBackup: 'Yedek', bkDown: 'Yedeği indir', bkDownS: 'Sekmeler, bölümler ve ayarlar tek dosyada', bkUp: 'Yedekten geri yükle', bkUpS: 'Bir yedek dosyası seç; önce onay sorulur, şu anki düzenin yerine geçer', bkQ: 'Yedek geri yüklensin mi?', bkW: '{d} tarihli yedek (v{v}): {n} sekme, {s} bölüm. Şu anki sekmeler, bölümler ve ayarlar bu yedekle değiştirilir. Geri al ile dönebilirsin.', bkVer: 'Yedek v{v} ile alınmış; yine de yüklenebilir.', bkYes: 'Geri yükle', bkSaved: 'Yedek indirildi', bkOk: 'Yedek geri yüklendi', bkErr: 'Bu dosya bir pano yedeği değil', newsT: 'Yenilikler', newsV: 'v{v} ile gelenler', newsOld: 'Önceki sürümler', newsAll: 'Bütün notlar GitHub\'da', newsOk: 'Tamam', newsLink: 'Yenilikler', sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt: Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
@@ -40,7 +40,7 @@ const ADM = {
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_phone: 'Phone', scr_here: 'This screen',
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
-    sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
+    sHelp: 'Help', repT: 'Report a problem', repS: 'Opens a GitHub issue with the version and device details; you only write what happened', repQ: 'What happened?', repPh: 'What did you do, what did you expect, what happened? Example: swiping a light bar on the Living room tab does not change the brightness.', repInfo: 'Details added to the issue', repInfoS: 'Nothing personal: no room, device or person names, address or account.', repNoGh: 'No GitHub account? Copy the text and send it to the developer.', repCopy: 'Copy text', repCopied: 'Copied', repGh: 'Open on GitHub', rWhat: 'What happened?', rInfoH: 'Details', rPanel: 'Dashboard', rInt: 'integration', rHa: 'Home Assistant', rBrowser: 'Browser', rApp: 'HA app', rScreen: 'Screen', rTouch: 'touch', rNoTouch: 'no touch', rCanvas: 'canvas', rLang: 'Language', rLayout: 'Layout', rAuto: 'automatic', rTabs: 'tabs', rSecs: 'sections', rItems: 'items', rKinds: 'Item kinds', rLook: 'Look', rLec: 'Light Effect Card', rErr: 'Recent errors', rNoErr: 'none', sBackup: 'Backup', bkDown: 'Download backup', bkDownS: 'Tabs, sections and settings in one file', bkUp: 'Restore a backup', bkUpS: 'Pick a backup file; you are asked first, then it replaces the current layout', bkQ: 'Restore this backup?', bkW: 'Backup from {d} (v{v}): {n} tabs, {s} sections. The current tabs, sections and settings are replaced by it. Undo brings them back.', bkVer: 'The backup was made with v{v}; it can still be restored.', bkYes: 'Restore', bkSaved: 'Backup downloaded', bkOk: 'Backup restored', bkErr: 'This file is not a dashboard backup', newsT: 'What\'s new', newsV: 'New in v{v}', newsOld: 'Earlier versions', newsAll: 'All notes on GitHub', newsOk: 'OK', newsLink: 'What\'s new', sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
     bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect: a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
@@ -243,11 +243,122 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._toast(this._t('saved'));
   }
 
+
+
+  // ---- sorun bildir: sürüm ve cihaz bilgisiyle hazır bir GitHub kaydı; kişisel bilgi yok ----
+  async _reportOpen() {
+    this._rep = { text: '', iv: null, copied: false }; this._modal = 'report'; this._render();
+    try { this._rep.iv = (await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/info' })).version; } catch (e) {}
+    if (this._modal === 'report') this._repInfoPaint();
+  }
+  _repInfo() {
+    const t = (k) => this._t(k), H = this._hass || {}, R = this._rep || {}, s = this._settings();
+    const ua = navigator.userAgent || '', app = /Home ?Assistant\//i.test(ua);
+    const m = (re) => { const x = re.exec(ua); return x ? x[1] : null; };
+    const br = (m(/Edg\/(\d+)/) && 'Edge ' + m(/Edg\/(\d+)/)) || (m(/Firefox\/(\d+)/) && 'Firefox ' + m(/Firefox\/(\d+)/)) || (m(/Chrome\/(\d+)/) && 'Chrome ' + m(/Chrome\/(\d+)/)) || (m(/Version\/([\d.]+).*Safari/) && 'Safari ' + m(/Version\/([\d.]+)/)) || '?';
+    const os = /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'iOS ' + ((m(/OS (\d+)_/)) || '') : /Windows/.test(ua) ? 'Windows' : /Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : '?';
+    const tabs = this._work(); let secs = 0, items = 0; const kinds = {};
+    tabs.forEach((x) => (x.sections || []).forEach((sc) => { secs++; (sc.entities || []).forEach((it) => { items++; const k = lhdKind(it); kinds[k] = (kinds[k] || 0) + 1; }); }));
+    const err = (window.__LEMUR_HD_ERR || []).slice(-5);
+    const cv = s.canvas || {};
+    return [
+      [t('rPanel'), 'v' + PANEL_VERSION + (R.iv && R.iv !== PANEL_VERSION ? ' · ' + t('rInt') + ' v' + R.iv : '')],
+      [t('rHa'), (H.config && H.config.version) || '?'],
+      [t('rBrowser'), (app ? t('rApp') + ' · ' : '') + br + ' · ' + os],
+      [t('rScreen'), window.innerWidth + '×' + window.innerHeight + ' · ' + ((navigator.maxTouchPoints || 0) > 0 ? t('rTouch') : t('rNoTouch')) + ' · ' + t('rCanvas') + ' ' + (cv.width || 1280) + '×' + (cv.ref_height || 1075)],
+      [t('rLang'), ((H.locale && H.locale.language) || H.language || '?') + ' → ' + this._lang],
+      [t('rLayout'), (this._isAuto() ? t('rAuto') + ' · ' : '') + tabs.length + ' ' + t('rTabs') + ', ' + secs + ' ' + t('rSecs') + ', ' + items + ' ' + t('rItems')],
+      [t('rKinds'), Object.keys(kinds).sort().map((k) => k + ' ' + kinds[k]).join(', ') || '–'],
+      [t('rLook'), lpIconMode() + (s.bg && s.bg.mode ? ' · ' + s.bg.mode : '') + (s.kiosk && (s.kiosk.hide_header || s.kiosk.hide_sidebar) ? ' · kiosk' : '')],
+      [t('rLec'), LEC.installed(H) ? (LEC.version ? 'v' + LEC.version : '✓') : '–'],
+      [t('rErr'), err.length ? err.join(' | ') : t('rNoErr')],
+    ];
+  }
+  _repBody() {
+    const t = (k) => this._t(k), R = this._rep || {};
+    return '**' + t('rWhat') + '**\n\n' + ((R.text || '').trim() || '…') + '\n\n**' + t('rInfoH') + '**\n\n' + this._repInfo().map((x) => '- ' + x[0] + ': ' + x[1]).join('\n');
+  }
+  _repInfoPaint() { const el = this.shadowRoot && this.shadowRoot.getElementById('repinfo'); if (el) el.innerHTML = this._repInfo().map((x) => '<div><span>' + esc(x[0]) + '</span><b>' + esc(x[1]) + '</b></div>').join(''); }
+  _reportHtml() {
+    const t = (k, v) => esc(this._t(k, v)), R = this._rep || {};
+    return '<div class="ov" data-ovl><div class="dlg sm rep"><div class="dh"><div class="di">' + lpIcon('mdi:chat-question') + '</div><h2>' + t('repT') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="db"><label class="rl" for="repq">' + t('repQ') + '</label><textarea id="repq" class="inp" rows="5" data-repq placeholder="' + t('repPh') + '">' + esc(R.text || '') + '</textarea>' +
+      '<div class="rl">' + t('repInfo') + '<span>' + t('repInfoS') + '</span></div><div class="rinfo" id="repinfo">' + this._repInfo().map((x) => '<div><span>' + esc(x[0]) + '</span><b>' + esc(x[1]) + '</b></div>').join('') + '</div>' +
+      '<p class="rnote">' + t('repNoGh') + '</p></div>' +
+      '<div class="df"><button class="btn" data-a="repcopy">' + (R.copied ? t('repCopied') : t('repCopy')) + '</button><span style="flex:1"></span><button class="btn pri" data-a="repgo">' + t('repGh') + '</button></div></div></div>';
+  }
+  _repGo() {
+    const R = this._rep || {}, first = (R.text || '').trim().split('\n')[0].slice(0, 70);
+    const title = '[v' + PANEL_VERSION + '] ' + (first || this._t('repT'));
+    let body = this._repBody(); if (body.length > 6000) body = body.slice(0, 6000) + '\n…';
+    window.open('https://github.com/mendebur-lemur/lemur-home-dashboard/issues/new?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body), '_blank', 'noopener');
+  }
+  async _repCopy() {
+    const txt = '[v' + PANEL_VERSION + '] ' + this._t('repT') + '\n\n' + this._repBody();
+    let ok = false; try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {}
+    if (!ok) { const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { ok = document.execCommand('copy'); } catch (e) {} ta.remove(); }
+    if (ok && this._rep) { this._rep.copied = true; this._render(); }
+  }
+
+  // ---- yedekle / içe aktar: bütün pano düzeni (sekmeler, bölümler, ayarlar) tek JSON dosyasında ----
+  _backupDown() {
+    const d = STORE.data || {};
+    const out = { format: 'lemur-home-dashboard-backup', version: PANEL_VERSION, date: new Date().toISOString(), data: { tabs: d.tabs || [], settings: d.settings || {}, profiles: d.profiles || {} } };
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
+    a.download = 'lemur-pano-yedek-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    this._toast(this._t('bkSaved'));
+  }
+  _backupRead(f) {
+    const rd = new FileReader();
+    rd.onload = () => {
+      let b = null; try { b = JSON.parse(rd.result); } catch (e) {}
+      if (!b || b.format !== 'lemur-home-dashboard-backup' || !b.data || !Array.isArray(b.data.tabs)) return this._toast(this._t('bkErr'), false);
+      this._bk = b; this._modal = 'restore'; this._render();
+    };
+    rd.readAsText(f);
+  }
+  _restoreHtml() {
+    const t = (k, v) => esc(this._t(k, v)), b = this._bk || {}, D = b.data || {}; let d = ''; try { d = new Date(b.date).toLocaleString(this._lang === 'tr' ? 'tr-TR' : 'en-GB'); } catch (e) {}
+    let secs = 0; (D.tabs || []).forEach((x) => { secs += (x.sections || []).length; });
+    return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di">' + lpIcon('mdi:package-up') + '</div><h2>' + t('bkQ') + '</h2></div>' +
+      '<div class="db"><div>' + t('bkW', { d: d || '?', v: b.version || '?', n: (D.tabs || []).length, s: secs }) + '</div>' + (b.version && b.version !== PANEL_VERSION ? '<div class="rnote">' + t('bkVer', { v: b.version }) + '</div>' : '') + '</div>' +
+      '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="bkyes">' + t('bkYes') + '</button></div></div></div>';
+  }
+  _backupApply() {
+    const b = this._bk; if (!b) return; const D = b.data || {};
+    this._snap();
+    this._commit('tabs', Array.isArray(D.tabs) ? D.tabs : []);
+    this._commit('settings', D.settings && typeof D.settings === 'object' && !Array.isArray(D.settings) ? D.settings : {});
+    if (D.profiles && typeof D.profiles === 'object' && !Array.isArray(D.profiles)) this._commit('profiles', D.profiles);
+    this._bk = null; this._modal = null; this._tab = null; this._render(); this._toast(this._t('bkOk'));
+  }
+  // ---- yenilikler: güncellemeden sonra bir kez, ve Ayarlar → Sürüm'den ----
+  _newsAuto() {
+    let seen = null; try { seen = localStorage.getItem('lemur-hd-news'); } catch (e) { return; }
+    if (seen === PANEL_VERSION) return;
+    const mark = () => { try { localStorage.setItem('lemur-hd-news', PANEL_VERSION); } catch (e) {} };
+    const d = STORE.data || {}, used = (d.tabs && d.tabs.length) || (d.settings && Object.keys(d.settings).length);
+    if (!seen && !used) return mark();                       // ilk kurulumda gösterilecek bir şey yok
+    if (!LHD_CHANGES.length || LHD_CHANGES[0].v !== PANEL_VERSION) return mark();
+    if (this._modal) return;                                   // başka bir pencere açık: bir dahaki sefere
+    this._newsFrom = null; this._newsAll = false; this._modal = 'news';
+  }
+  _newsClose() { try { localStorage.setItem('lemur-hd-news', PANEL_VERSION); } catch (e) {} this._modal = this._newsFrom || null; this._newsFrom = null; this._render(); }
+  _newsHtml() {
+    const t = (k, v) => esc(this._t(k, v)), lines = (c) => c[this._lang] || c.en || [];
+    const one = (c, cur) => '<div class="nv' + (cur ? ' cur' : '') + '"><div class="nvh">' + t('newsV', { v: c.v }) + '</div><ul>' + lines(c).map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul></div>';
+    const rest = LHD_CHANGES.slice(1);
+    return '<div class="ov" data-ovl><div class="dlg sm news"><div class="dh"><div class="di">' + lpIcon('mdi:creation') + '</div><h2>' + t('newsT') + '</h2><button class="btn ic" data-newsclose><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="db">' + (LHD_CHANGES.length ? one(LHD_CHANGES[0], true) : '') +
+      (rest.length ? (this._newsAll ? rest.map((c) => one(c, false)).join('') : '<button class="lnk" data-newsall>' + t('newsOld') + ' ›</button>') : '') + '</div>' +
+      '<div class="df"><a class="btn" href="https://github.com/mendebur-lemur/lemur-home-dashboard/releases" target="_blank" rel="noopener">' + t('newsAll') + '</a><span style="flex:1"></span><button class="btn pri" data-newsclose>' + t('newsOk') + '</button></div></div></div>';
+  }
   // ---- sürüm ve güncelleme: HACS varsa onunla (bilgileri güncelle, indir), yoksa GitHub'daki son sürümü gösterir ----
   _updRow() {
     const t = (k, v) => esc(this._t(k, v)), U = this._upd || { st: 'idle' }, cur = U.cur || PANEL_VERSION;
     const notes = U.url ? ' · <a href="' + esc(U.url) + '" target="_blank" rel="noopener">' + t('updNotes') + '</a>' : '';
-    let sub = t('updInst', { v: cur }), ctl = '<button class="btn" data-updcheck>' + t('updCheck') + '</button>';
+    let sub = t('updInst', { v: cur }) + ' · <a href="#" data-news>' + t('newsLink') + '</a>', ctl = '<button class="btn" data-updcheck>' + t('updCheck') + '</button>';
     if (U.st === 'checking') ctl = '<button class="btn" disabled>' + t('updChecking') + '</button>';
     else if (U.st === 'ok') { sub += ' · <span class="uok">✓ ' + t('updOk') + '</span> · ' + t('updAt', { t: U.at }); ctl = '<button class="btn" data-updcheck>' + t('updAgain') + '</button>'; }
     else if (U.st === 'new') { sub += ' · <b class="unew">' + t('updNew', { v: U.latest }) + '</b>' + notes + (U.ent ? '' : '<br>' + t('updNoHacs')); ctl = U.ent ? '<button class="btn pri" data-updgo>' + t('updGo') + '</button>' : (U.url ? '<a class="btn" href="' + esc(U.url) + '" target="_blank" rel="noopener">' + t('updGh') + '</a>' : ''); }
@@ -352,6 +463,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (this.getAttribute('lang') !== this._lang) this.setAttribute('lang', this._lang);
     const icm = 'ic-' + lpIconMode(); if (this.className !== icm) this.className = icm; this.style.setProperty('--lp-ic-on', lpIconTint());
     if (!LP_MDIC.map) lpMdicLoad();
+    if (!this._newsChk && STORE.data) { this._newsChk = true; this._newsAuto(); }
     const R = this.shadowRoot;
     if (!STORE.data) { R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app"><div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + esc(this._t('title')) + '</h1></div><div class="warn">' + esc(this._t('notLoaded')) + '</div></div>'; return; }
     const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab);
@@ -509,6 +621,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         ('<div class="seg" style="margin-top:8px">' + [['col', 'icCol'], ['lec', 'icLec']].map((x) => '<button data-icset="' + x[0] + '"' + ((this._icSet || 'col') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div>') + '</div>' +
         '<div class="db"><div class="ilist">' + this._iconList() + '</div></div></div></div>';
     }
+    if (md === 'news') return this._newsHtml();
+    if (md === 'report') return this._reportHtml();
+    if (md === 'restore') return this._restoreHtml();
     if (md === 'settings') {
       const s = this._settings();
       const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
@@ -541,6 +656,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         (lec ? '<div class="srow"><div class="t"><b>' + t('lecNav') + '</b><span>' + t('lecNavT') + '</span></div>' + tg('lec_nav', s.lec_nav !== false) + '</div>' : '') +
         '<div class="srow"><div class="t"><b>' + t('hold') + '</b><span>' + t('holdT') + '</span></div>' + seg('hold', lpHoldMode() === 'lec' && !lec ? 'popup' : lpHoldMode(), [['popup', this._t('hPop')], ['ha', this._t('hHa')]].concat(lec ? [['lec', this._t('hLec')]] : [])) + '</div>' +
+        '<div class="sh">' + t('sHelp') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('repT') + '</b><span>' + t('repS') + '</span></div><button class="btn" data-a="report">' + t('repT') + '</button></div>' +
+        '<div class="sh">' + t('sBackup') + '</div>' +
+        '<div class="srow"><div class="t"><b>' + t('bkDown') + '</b><span>' + t('bkDownS') + '</span></div><button class="btn" data-a="bkdown">' + t('bkDown') + '</button></div>' +
+        '<div class="srow"><div class="t"><b>' + t('bkUp') + '</b><span>' + t('bkUpS') + '</span></div><label class="btn">' + t('bkUp') + '<input type="file" accept=".json,application/json" data-bkfile style="display:none"></label></div>' +
         '<div class="sh">' + t('sVer') + '</div>' + this._updRow() +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }
@@ -770,13 +890,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
       const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
       if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
-      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { this._modal = null; this._render(); return; }
+      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); this._modal = null; this._render(); return; }
       if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
       if (act === 'settings') { this._modal = 'settings'; this._menu = null; return this._render(); }
       if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
-      if (act === 'close') { this._modal = null; this._picked = []; this._q = ''; return this._render(); }
+      if (act === 'close') { this._modal = null; this._picked = []; this._q = ''; this._bk = null; return this._render(); }
+      if (act === 'report') return this._reportOpen();
+      if (act === 'repgo') return this._repGo();
+      if (act === 'repcopy') return this._repCopy();
+      if (act === 'bkdown') return this._backupDown();
+      if (act === 'bkyes') return this._backupApply();
       if (act === 'reset') { this._menu = null; this._modal = 'reset'; return this._render(); }
       if (act === 'resetgo') { this._snap(); this._modal = null; this._sec = null; this._commit('tabs', []); this._toast(this._t('resetOk')); return this._render(); }
       if (act === 'deltab') {
@@ -916,6 +1041,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const btn = R.querySelector('[data-a="pickadd"]'); btn.disabled = !this._picked.length; btn.textContent = this._t('addN', { n: this._picked.length });
         return;
       }
+      if (g('[data-news]')) { e.preventDefault(); this._newsFrom = this._modal; this._newsAll = false; this._modal = 'news'; return this._render(); }
+      if (g('[data-newsall]')) { this._newsAll = true; return this._render(); }
+      if (g('[data-newsclose]')) return this._newsClose();
       if (g('[data-updcheck]')) return this._updCheck();
       if (g('[data-updgo]')) return this._updInstall();
       if (g('[data-updrs]')) return this._updSet({ st: 'ask' });
@@ -954,6 +1082,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // çizilmez (odak ve hemen arkasından basılan düğme kaybolmasın); görünen ilgili yazılar yerinde güncellenir, önizleme kendisi güncellenir.
     app.addEventListener('change', (e) => {
       const el = e.target;
+      if (el.hasAttribute && el.hasAttribute('data-bkfile')) { const f = el.files && el.files[0]; el.value = ''; if (f) this._backupRead(f); return; }
       const soft = el.tagName === 'INPUT';
       const f = el.getAttribute && el.getAttribute('data-f');
       if (f === 'tab.name') {
@@ -1007,6 +1136,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('input', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-iq')) { this._iq = el.value; this._refreshIcons(); return; }
+      if (el.hasAttribute && el.hasAttribute('data-repq')) { if (this._rep) { this._rep.text = el.value; this._rep.copied = false; } return; }
       if (el.hasAttribute && el.hasAttribute('data-q')) { this._q = el.value; const pl = R.querySelector('.plist'); if (pl) { pl.innerHTML = this._pickList(sec); pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; }); } return; }
       const f = el.getAttribute && (el.getAttribute('data-f') || el.getAttribute('data-if') || '');
       if (/icon$/.test(f)) { const pv = el.closest('.iconin, .it'); const ic = pv && pv.querySelector('.pv .lic, .ico .lic'); if (ic && /^[a-z]+:[a-z0-9-]+$/.test(el.value.trim())) ic.outerHTML = lpIcon(el.value.trim()); }

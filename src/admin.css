@@ -219,3 +219,23 @@ select.inp { padding-right: 6px; }
 .srow.upd .ubtn { display: flex; gap: 8px; flex: 0 0 auto; }
 .srow.upd a { color: var(--ac); }
 .uok { color: #46CF3C; } .unew { color: var(--ac); } .uerr { color: var(--red); }
+
+.news .db { display: flex; flex-direction: column; gap: 12px; }
+.news .nv { padding: 14px 16px; border-radius: 16px; background: var(--s1); border: 1px solid var(--ln); }
+.news .nv.cur { border-color: var(--acl); background: var(--tint); }
+.news .nvh { font-weight: 700; margin-bottom: 6px; }
+.news .nv.cur .nvh { color: var(--ac); }
+.news ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.news .lnk { align-self: flex-start; background: none; border: 0; color: var(--ac); font: inherit; cursor: pointer; padding: 4px 0; }
+.dh .di .lic { width: 22px; height: 22px; }
+
+.rep .db { display: flex; flex-direction: column; gap: 10px; }
+.rep .rl { font-weight: 600; }
+.rep .rl span { display: block; font-weight: 400; color: var(--mu); font-size: 12.5px; }
+.rep textarea { width: 100%; box-sizing: border-box; min-height: 110px; resize: vertical; font: inherit; }
+.rinfo { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; padding: 12px 14px; border-radius: 14px; background: var(--s1); border: 1px solid var(--ln); font-size: 12.5px; }
+.rinfo > div { display: contents; }
+.rinfo span { color: var(--mu); }
+.rinfo b { font-weight: 500; word-break: break-word; }
+.rnote { color: var(--mu); font-size: 12.5px; margin: 0; }
+label.btn { cursor: pointer; }
