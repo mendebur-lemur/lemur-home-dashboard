@@ -3,6 +3,36 @@
 import json, pathlib, re
 root = pathlib.Path(__file__).parent
 src = root / "src"
+
+# ---- renkli simgeler ----
+# Lemur ailesinin bütün renkli simgelerinin ana kopyası ../lemur-icons klasöründe (Hakan'ın bilgisayarı, git'e girmez).
+# Klasör varsa oradaki dosyalar depodaki kopyaların yerine konur; yoksa depodaki son kopyalarla derlenir.
+#   mdi.json      → frontend/mdi-color.json  (panonun simge seti, "mdi:ad" ve "lhd:ad")
+#   efektler.json → frontend/lec-icons.json  ("lec:ad" efekt simgeleri; Light Effect Card kurulu olmasa da görünür)
+# Simge adları bir kez verildikten sonra değişmez: kayıtlı panolar adı tutar. Silinen ya da adı değişen simge varsa derleme durur.
+import gzip
+ICONS = root.parent / "lemur-icons"
+FE = root / "custom_components/lemur_home_dashboard/frontend"
+for master_name, repo_name in (("mdi.json", "mdi-color.json"), ("efektler.json", "lec-icons.json")):
+    repo_file = FE / repo_name
+    cur = json.loads(repo_file.read_text(encoding="utf-8")) if repo_file.exists() else {}
+    if (ICONS / master_name).exists():
+        master = json.loads((ICONS / master_name).read_text(encoding="utf-8"))
+        gone = sorted(set(cur) - set(master))
+        if gone:
+            raise SystemExit("lemur-icons/" + master_name + " bazı simgeleri silmiş ya da adını değiştirmiş (adlar değişmemeli): " + ", ".join(gone[:10]) + (" …" if len(gone) > 10 else ""))
+        if master != cur:
+            cur = master
+            print(repo_name + " lemur-icons'tan güncellendi:", len(cur))
+    elif not cur:
+        raise SystemExit(repo_name + " yok ve ../lemur-icons bulunamadı")
+    data = json.dumps(dict(sorted(cur.items())), ensure_ascii=False, separators=(",", ":"))
+    if not repo_file.exists() or repo_file.read_text(encoding="utf-8") != data:
+        repo_file.write_text(data, encoding="utf-8")
+    gz = repo_file.with_name(repo_name + ".gz")
+    if not gz.exists() or gzip.decompress(gz.read_bytes()).decode("utf-8") != data:
+        gz.write_bytes(gzip.compress(data.encode("utf-8"), 9, mtime=0))
+
 version = json.loads((root / "custom_components/lemur_home_dashboard/manifest.json").read_text())["version"]
 def load_css(name):
     c = re.sub(r"/\*.*?\*/", "", (src / name).read_text(encoding="utf-8"), flags=re.S)

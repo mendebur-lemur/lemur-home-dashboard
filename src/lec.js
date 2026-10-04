@@ -89,13 +89,14 @@ function lpLecKind(it) {
 }
 
 // Light Effect Card'ın renkli efekt simgeleri: panoda simge adı "lec:aurora" biçiminde yazılır.
-// LEC kuruluysa kendi dosyasından gelir (/lemur_light_effects/lemur-icons.json, ad → SVG); ilk gereken yerde bir kez yüklenir.
+// Panonun kendi kopyasından gelir (/lemur_home_dashboard/lec-icons.json, ad → SVG; kaynağı ../lemur-icons/efektler.json),
+// Light Effect Card kurulu olmasa da görünür. İlk gereken yerde bir kez yüklenir.
 // Yüklenince abone olan kart ve panel yeniden çizilir. LEC kaldırılırsa bu simgelerin yerinde boşluk kalır.
 const LP_LECI = window.__LEMUR_HD_LECI || (window.__LEMUR_HD_LECI = { map: null, loading: null, subs: [] });
 function lpLecIcons() {
   if (LP_LECI.map) return Promise.resolve(LP_LECI.map);
   if (!LP_LECI.loading) {
-    LP_LECI.loading = fetch('/' + LP_LEC_DOMAIN + '/lemur-icons.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
+    LP_LECI.loading = fetch('/lemur_home_dashboard/lec-icons.json?v=' + PANEL_VERSION).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
       LP_LECI.map = m && typeof m === 'object' ? m : {};
       LP_LECI.subs.slice().forEach((f) => { try { f(); } catch (e) {} });
       return LP_LECI.map;
