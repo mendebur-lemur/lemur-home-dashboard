@@ -215,3 +215,7 @@ select.inp { padding-right: 6px; }
 .iconin .pv .lic { width: 22px; height: 22px; }
 .it .ico .lic { width: 22px; height: 22px; }
 .icell .lic { width: 34px; height: 34px; }
+
+.srow.upd .ubtn { display: flex; gap: 8px; flex: 0 0 auto; }
+.srow.upd a { color: var(--ac); }
+.uok { color: #46CF3C; } .unew { color: var(--ac); } .uerr { color: var(--red); }

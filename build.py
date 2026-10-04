@@ -40,8 +40,10 @@ def load_css(name):
 css = load_css("base.css")
 admin_css = load_css("admin.css")
 parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "store.js", "mdic.js", "lec.js", "defaults.js", "scale.js", "strategy.js", "panel-card.js", "lightpop.js", "admin.js")]
+heal = (src / "heal.js").read_text(encoding="utf-8").replace("__VERSION__", version)
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
+{heal}
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';
 const CSS = {json.dumps(css, ensure_ascii=False)};
@@ -52,6 +54,7 @@ const ADMIN_CSS = {json.dumps(admin_css, ensure_ascii=False)};
 // Bu yüzden ilk 30 sn boyunca kayıt defterine bakıp eksikse yeniden kaydediyoruz (aynı sınıf; tarayıcının asıl kaydı zaten bizde).
 const LP_DEFS = [['ll-strategy-dashboard-lemur-home-dashboard', LemurHomeDashboardStrategy], ['lemur-home-dashboard-card', LemurHomeDashboardCard], ['lemur-home-dashboard-admin', LemurHomeDashboardAdmin]];
 const lpDefineAll = () => LP_DEFS.forEach((d) => {{ try {{ if (!window.customElements.get(d[0])) window.customElements.define(d[0], d[1]); }} catch (e) {{}} }});
+window.__LEMUR_HD_VER = PANEL_VERSION;
 lpDefineAll();
 let lpTries = 0;
 const lpTimer = setInterval(() => {{ lpDefineAll(); if (++lpTries > 300) clearInterval(lpTimer); }}, 100);

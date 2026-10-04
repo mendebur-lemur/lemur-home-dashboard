@@ -18,7 +18,7 @@ const ADM = {
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_phone: 'Telefon', scr_here: 'Bu ekran',
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
-    s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
+    sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt: Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
@@ -40,7 +40,7 @@ const ADM = {
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_phone: 'Phone', scr_here: 'This screen',
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
-    s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
+    sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
     bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect: a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
@@ -241,6 +241,74 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._commit('settings', s);
     if (!soft) this._render(); else { this._undoBtn(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = css || LP_DEFAULT_BG; }
     this._toast(this._t('saved'));
+  }
+
+  // ---- sürüm ve güncelleme: HACS varsa onunla (bilgileri güncelle, indir), yoksa GitHub'daki son sürümü gösterir ----
+  _updRow() {
+    const t = (k, v) => esc(this._t(k, v)), U = this._upd || { st: 'idle' }, cur = U.cur || PANEL_VERSION;
+    const notes = U.url ? ' · <a href="' + esc(U.url) + '" target="_blank" rel="noopener">' + t('updNotes') + '</a>' : '';
+    let sub = t('updInst', { v: cur }), ctl = '<button class="btn" data-updcheck>' + t('updCheck') + '</button>';
+    if (U.st === 'checking') ctl = '<button class="btn" disabled>' + t('updChecking') + '</button>';
+    else if (U.st === 'ok') { sub += ' · <span class="uok">✓ ' + t('updOk') + '</span> · ' + t('updAt', { t: U.at }); ctl = '<button class="btn" data-updcheck>' + t('updAgain') + '</button>'; }
+    else if (U.st === 'new') { sub += ' · <b class="unew">' + t('updNew', { v: U.latest }) + '</b>' + notes + (U.ent ? '' : '<br>' + t('updNoHacs')); ctl = U.ent ? '<button class="btn pri" data-updgo>' + t('updGo') + '</button>' : (U.url ? '<a class="btn" href="' + esc(U.url) + '" target="_blank" rel="noopener">' + t('updGh') + '</a>' : ''); }
+    else if (U.st === 'installing') { sub = '<b class="unew">' + t('updIng', { v: U.latest }) + '</b>' + (U.pct != null ? ' %' + U.pct : ''); ctl = ''; }
+    else if (U.st === 'installed') { sub = '<b class="unew">' + t('updDone', { v: U.latest }) + '</b>' + notes; ctl = '<button class="btn pri" data-updrs>' + t('updRestart') + '</button>'; }
+    else if (U.st === 'ask') { sub = '<b>' + t('updAsk') + '</b>'; ctl = '<button class="btn" data-updno>' + t('cancel') + '</button><button class="btn pri" data-updyes style="background:var(--red);border-color:var(--red);color:#fff">' + t('updYes') + '</button>'; }
+    else if (U.st === 'restarting') { sub = '<b class="unew">' + t('updRest') + '</b>'; ctl = ''; }
+    else if (U.st === 'err') { sub += ' · <span class="uerr">' + t('updErr', { e: U.err }) + '</span>'; ctl = '<button class="btn" data-updcheck>' + t('updAgain') + '</button>'; }
+    return '<div class="srow upd" style="flex-wrap:wrap"><div class="t"><b>' + t('updT') + '</b><span>' + sub + '</span></div><div class="ubtn">' + ctl + '</div></div>';
+  }
+  _updSet(o) { this._upd = Object.assign({}, this._upd, o); if (this._modal === 'settings') this._render(); }
+  _updEnt() {
+    const S = this._hass.states;
+    return Object.values(S).find((s) => s.entity_id.indexOf('update.') === 0 && /mendebur-lemur\/lemur-home-dashboard/.test(String(s.attributes.release_url || ''))) || S['update.lemur_home_dashboard_update'] || null;
+  }
+  async _updCheck() {
+    const c = this._hass.connection, vnum = (v) => String(v || '').replace(/^v/i, '').split('.').map((n) => parseInt(n, 10) || 0);
+    const newer = (a, b) => { const x = vnum(a), y = vnum(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; };
+    this._updSet({ st: 'checking', err: null });
+    try {
+      let cur = PANEL_VERSION; try { cur = (await c.sendMessagePromise({ type: 'lemur_home_dashboard/info' })).version || cur; } catch (e) {}
+      // HACS: menüsündeki "Bilgileri güncelle" ile aynı; güncelleme varlığı en yeni sürümü öğrensin
+      try { const L = await c.sendMessagePromise({ type: 'hacs/repositories/list' }); const r = (L || []).filter((x) => /\/lemur-home-dashboard$/i.test(x.full_name || ''))[0]; if (r) { await c.sendMessagePromise({ type: 'hacs/repository/refresh', repository: String(r.id) }); await new Promise((z) => setTimeout(z, 900)); } } catch (e) {}
+      const ent = this._updEnt();
+      let latest = ent && ent.attributes.latest_version, url = ent && ent.attributes.release_url;
+      if (!latest) { const g = await fetch('https://api.github.com/repos/mendebur-lemur/lemur-home-dashboard/releases/latest').then((r) => r.json()); latest = g.tag_name; url = g.html_url; }
+      latest = String(latest || '').replace(/^v/i, '');
+      const at = new Date().toLocaleTimeString(this._lang === 'tr' ? 'tr-TR' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
+      this._updSet(newer(latest, cur) ? { st: 'new', cur: cur, latest: latest, url: url, ent: ent ? ent.entity_id : null, at: at } : { st: 'ok', cur: cur, latest: latest, url: url, at: at });
+    } catch (e) { this._updSet({ st: 'err', err: (e && (e.message || e.code)) || String(e) }); }
+  }
+  async _updInstall() {
+    const U = this._upd || {}; if (!U.ent) return;
+    this._updSet({ st: 'installing', pct: null });
+    try { await this._hass.callService('update', 'install', { entity_id: U.ent }); }
+    catch (e) { return this._updSet({ st: 'err', err: (e && e.message) || String(e) }); }
+    const t0 = Date.now();
+    const tick = () => {
+      const s = this._hass.states[U.ent], a = (s && s.attributes) || {};
+      const done = s && !a.in_progress && String(a.installed_version || '').replace(/^v/i, '') === U.latest;
+      if (done) return this._updSet({ st: 'installed', pct: null });
+      if (Date.now() - t0 > 300000) return this._updSet({ st: 'err', err: 'timeout' });
+      if (typeof a.update_percentage === 'number' || typeof a.in_progress === 'number') this._updSet({ pct: Math.round(a.update_percentage != null ? a.update_percentage : a.in_progress) });
+      this._updT = setTimeout(tick, 1000);
+    };
+    tick();
+  }
+  // yeniden başlat; yeni sürüm cevap verince sayfayı bir kez yenile (o ana kadar bellekte eski kod var)
+  _updRestart() {
+    const want = (this._upd || {}).latest; this._updSet({ st: 'restarting' });
+    this._hass.callService('homeassistant', 'restart').catch(() => {});
+    const t0 = Date.now(); let down = false;
+    const poll = async () => {
+      if (Date.now() - t0 > 600000) return;
+      try {
+        const v = (await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/info' })).version;
+        if (v === want || (down && v)) { await Promise.resolve(window.__LEMUR_HD_HEAL && window.__LEMUR_HD_HEAL()); return location.reload(); }
+      } catch (e) { down = true; }
+      setTimeout(poll, 3000);
+    };
+    setTimeout(poll, 8000);
   }
   _setting(path, value, soft) {
     this._snap();
@@ -473,7 +541,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         (lec ? '<div class="srow"><div class="t"><b>' + t('lecNav') + '</b><span>' + t('lecNavT') + '</span></div>' + tg('lec_nav', s.lec_nav !== false) + '</div>' : '') +
         '<div class="srow"><div class="t"><b>' + t('hold') + '</b><span>' + t('holdT') + '</span></div>' + seg('hold', lpHoldMode() === 'lec' && !lec ? 'popup' : lpHoldMode(), [['popup', this._t('hPop')], ['ha', this._t('hHa')]].concat(lec ? [['lec', this._t('hLec')]] : [])) + '</div>' +
-        '<div class="srow"><div class="t"><b>' + t('version') + '</b><span>' + esc(PANEL_VERSION) + '</span></div></div>' +
+        '<div class="sh">' + t('sVer') + '</div>' + this._updRow() +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }
     if (md === 'reset') {
@@ -848,6 +916,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const btn = R.querySelector('[data-a="pickadd"]'); btn.disabled = !this._picked.length; btn.textContent = this._t('addN', { n: this._picked.length });
         return;
       }
+      if (g('[data-updcheck]')) return this._updCheck();
+      if (g('[data-updgo]')) return this._updInstall();
+      if (g('[data-updrs]')) return this._updSet({ st: 'ask' });
+      if (g('[data-updno]')) return this._updSet({ st: 'installed' });
+      if (g('[data-updyes]')) return this._updRestart();
       const tcl = g('[data-tintc]');
       if (tcl) return this._setting('icon_tint', tcl.getAttribute('data-tintc'));
       const bgc = g('[data-bgcolor]');
