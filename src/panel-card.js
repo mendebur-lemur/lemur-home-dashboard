@@ -250,7 +250,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpMdicOn(), !!LP_MDIC.map]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), !!LP_MDIC.map]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -293,7 +293,7 @@ class LemurHomeDashboardCard extends HTMLElement {
           items.map((it) => {
             if (!it.entity) return '<div class="bar ph"' + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
             tiles.push(it.entity); tileItems.push(it);
-            return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><div class="bf"></div>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<ha-state-icon></ha-state-icon>') + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
+            return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><div class="bf"></div>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
           }).join('') + '</div>';
       }
       // 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
@@ -306,7 +306,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       return open + items.map((it) => {
         if (!it.entity) return '<div class="tile ph"' + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="nm">' + esc(it.name || '') + '</div></div>';
         tiles.push(it.entity); tileItems.push(it);
-        return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<ha-state-icon></ha-state-icon>') + '<div class="nm"></div></div>';
+        return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="nm"></div></div>';
       }).join('') + (fill ? '</div>' : '</div></div>');
     };
     const sceneBtn = (s, it, i) => {
@@ -374,7 +374,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni">' + lpIcon('mdi:creation') + '</div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
     const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
       navFx + '<div class="clock">' + this._time() + '</div></div>';
-    const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
+    const seasonIcon = lpIcon(season === 'winter' ? 'mdi:snowflake' : 'mdi:white-balance-sunny', 'season');
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
     const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi ? ' style="flex:' + b.grow + ' 1 0px;min-height:auto"' : '') + '>' +
@@ -405,7 +405,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + (phone ? ' phone' : '') + '" style="' + grid + '">' + nav + body + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (edit ? ' edit' : '') + (phone ? ' phone' : '') + '" style="' + grid + '">' + nav + body + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -709,7 +709,6 @@ class LemurHomeDashboardCard extends HTMLElement {
     el.style.setProperty('--bar-c', fx ? fx.c[0] : (d === 'light' && rgb ? rgb : LP_BAR_COLOR));
     el.style.setProperty('--p', (na ? 0 : v) + '%');
     const ic = this._icSwap(el, st, it, 1), nm = el.querySelector('.nm'), pc = el.querySelector('.pc');
-    if (ic.tagName !== 'SPAN') { ic.hass = this._hass; ic.stateObj = st; if (it.icon) { const fi = lpFlatIcon(it.icon); ic.icon = fi; ic.setAttribute('icon', fi); } }
     nm.textContent = it.name || a.friendly_name || st.entity_id;
     let txt;
     if (na) txt = t(lang, 'unavailable');
@@ -718,19 +717,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     pc.textContent = txt;
   }
 
-  // karo / çubuk simgesi: renkli stilde varlığın simgesi (kendi simgesi ya da durumuna göre varsayılan) setteyse span.lic.mdic,
-  // değilse HA'nın ha-state-icon'u. Durum değişince (kapı açıldı, priz kapandı) simge de değişir. i: simgenin öğedeki sırası
+  // karo / çubuk simgesi (span.lic.mdic): öğenin simgesi, varlığın HA'daki simgesi ya da durumuna göre varsayılan, hepsi setten.
+  // Durum değişince (kapı açıldı, priz kapandı) simge de değişir. Set yüklenmediyse boş kalır. i: simgenin öğedeki sırası
   _icSwap(el, st, it, i) {
     const old = el.children[i];
-    if (!old || lpIsLecIcon(it.icon)) return old;
-    const name = it.icon || (st.attributes && st.attributes.icon) || lpStateIconName(st);
-    const svg = lpMdicSvg(name), k = svg ? lpMdicKey(name) : null;
-    if (svg) {
-      if (old.tagName === 'SPAN' && old.getAttribute('data-n') === k) return old;
-      const sp = document.createElement('span'); sp.className = 'lic mdic'; sp.setAttribute('data-n', k); sp.innerHTML = svg;
-      el.replaceChild(sp, old); return sp;
-    }
-    if (old.tagName === 'SPAN' && old.classList.contains('mdic')) { const hi = document.createElement('ha-state-icon'); el.replaceChild(hi, old); return hi; }
+    if (!old || lpIsLecIcon(it.icon) || !LP_MDIC.map) { if (!LP_MDIC.map) lpMdicLoad(); return old; }
+    const k = lpMdicKey(lpEntIcon(st, it.icon)) || lpMdicKey(lpStateIconName(st)) || LP_MDIC_FALLBACK;
+    if (old.getAttribute('data-n') !== k) { old.setAttribute('data-n', k); old.innerHTML = LP_MDIC.map[k] || ''; }
     return old;
   }
 
@@ -752,13 +745,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       el.className = 'tile' + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '');
       const rgb = on && !fx && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
-      const ic = this._icSwap(el, st, it, 0);
-      if (ic.tagName !== 'SPAN') {   // renkli simge (span.lic: LEC ya da gömülü set) kendi renginde kalır
-        ic.hass = h; ic.stateObj = st;
-        if (it.icon) { const fi = lpFlatIcon(it.icon); ic.icon = fi; ic.setAttribute('icon', fi); }
-        // HA'nın kendi karosundaki gibi: renkli lambanın simgesi parlaklığa göre hafif koyulaşır
-        ic.style.filter = on && !fx && typeof a.brightness === 'number' ? 'brightness(' + Math.round((a.brightness + 245) / 5) + '%)' : '';
-      }
+      this._icSwap(el, st, it, 0);
       el.lastChild.textContent = it.name || a.friendly_name || id;
     });
     (this._rows || []).forEach((el) => {
@@ -770,8 +757,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       else if (st.state === 'playing') txt = a.media_title ? a.media_title + (a.media_artist ? ' · ' + a.media_artist : '') : t(lang, 'playing');
       else txt = TXT[lang][st.state] ? t(lang, st.state) : st.state;
       el.className = 'row' + (st.state === 'playing' || st.state === 'on' ? ' on' : '');
-      el.innerHTML = '<ha-state-icon></ha-state-icon><div class="rt"><div class="rn">' + esc(a.friendly_name || id) + '</div><div class="rs">' + esc(txt) + '</div></div>';
-      const ic = el.firstChild; ic.hass = h; ic.stateObj = st;
+      el.innerHTML = lpIcon(lpEntIcon(st)) + '<div class="rt"><div class="rn">' + esc(a.friendly_name || id) + '</div><div class="rs">' + esc(txt) + '</div></div>';
     });
     (this._watched || []).forEach((id) => { this._last[id] = S[id]; });
     // LEC düğmeleri: efekti oynuyorsa (ya da efekt ekranı düğmesinin odasında bir efekt oynuyorsa) yanar
