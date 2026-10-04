@@ -25,6 +25,69 @@ function lpPress(el, tap, hold) {
   el.addEventListener('mouseleave', () => { if (!touched) cancel(); });
   el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
+// Kaydırmalı çubuk: dokun aç/kapat, sağa-sola kaydır değer (parlaklık, perde konumu, fan hızı), basılı tut pencere.
+// Kaydırma parmağın başladığı yerden göreli (dokununca değer zıplamaz). Dikey hareket sayfayı kaydırır.
+// o: { tap, hold, can() → kaydırılabilir mi, start() → şu anki değer 0-100, move(v), end() }
+function lpSlide(el, o) {
+  let timer = null, held = false, mode = null, sx = 0, sy = 0, sv = 0, w = 1, touched = false;
+  const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)));
+  const begin = (x, y) => {
+    held = false; mode = null; sx = x; sy = y; clearTimeout(timer);
+    el.classList.add('down');
+    timer = setTimeout(() => { if (mode) return; held = true; el.classList.remove('down'); o.hold(); }, LP_HOLD_MS);
+  };
+  const move = (x, y, e) => {
+    const dx = x - sx, dy = y - sy;
+    if (!mode && !held) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) && o.can()) {
+        mode = 'drag'; clearTimeout(timer); el.classList.remove('down'); el.classList.add('drag');
+        sv = o.start(); w = el.getBoundingClientRect().width || 1; sx = x;
+      } else if (Math.abs(dx) > 10 || Math.abs(dy) > 10) { mode = 'scroll'; clearTimeout(timer); el.classList.remove('down'); }
+    }
+    if (mode === 'drag') { if (e && e.cancelable) e.preventDefault(); o.move(clamp(sv + (x - sx) / w * 100)); }
+  };
+  const end = () => {
+    clearTimeout(timer); el.classList.remove('down');
+    if (mode === 'drag') { el.classList.remove('drag'); o.end(); } else if (!held && !mode) o.tap();
+    mode = null;
+  };
+  el.addEventListener('touchstart', (e) => { touched = true; const p = e.touches[0]; begin(p.clientX, p.clientY); }, { passive: true });
+  el.addEventListener('touchmove', (e) => { const p = e.touches[0]; move(p.clientX, p.clientY, e); }, { passive: false });
+  el.addEventListener('touchend', (e) => { if (e.cancelable) e.preventDefault(); end(); });
+  el.addEventListener('touchcancel', () => { clearTimeout(timer); el.classList.remove('down'); if (mode === 'drag') { el.classList.remove('drag'); o.end(); } mode = 'scroll'; });
+  el.addEventListener('mousedown', (e) => {
+    if (touched || e.button !== 0) return;
+    begin(e.clientX, e.clientY);
+    const mm = (ev) => move(ev.clientX, ev.clientY, ev);
+    const mu = () => { document.removeEventListener('mousemove', mm, true); document.removeEventListener('mouseup', mu, true); end(); };
+    document.addEventListener('mousemove', mm, true); document.addEventListener('mouseup', mu, true);
+  });
+  el.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+// Çubuğun kaydırdığı değer (0-100): ışıkta parlaklık, perdede konum, fanda hız. Kaydırılamayan cihazda null.
+function lpBarCan(st) {
+  if (!st) return false;
+  const d = st.entity_id.split('.')[0], a = st.attributes || {};
+  if (d === 'light') { const m = a.supported_color_modes || []; return !(m.length && m.every((x) => x === 'onoff')); }
+  if (d === 'cover') return typeof a.current_position === 'number';
+  if (d === 'fan') return typeof a.percentage === 'number' || ((a.supported_features || 0) & 1) === 1;
+  return false;
+}
+function lpBarVal(st) {
+  const d = st.entity_id.split('.')[0], a = st.attributes || {};
+  if (d === 'cover') return typeof a.current_position === 'number' ? a.current_position : (st.state === 'open' ? 100 : 0);
+  if (st.state !== 'on') return 0;
+  if (d === 'light' && typeof a.brightness === 'number') return Math.max(1, Math.round(a.brightness / 2.55));
+  if (d === 'fan' && typeof a.percentage === 'number') return a.percentage;
+  return 100;
+}
+function lpBarSet(h, id, v) {
+  const d = id.split('.')[0];
+  if (d === 'light') return v > 0 ? h.callService('light', 'turn_on', { entity_id: id, brightness_pct: v }) : h.callService('light', 'turn_off', { entity_id: id });
+  if (d === 'cover') return h.callService('cover', 'set_cover_position', { entity_id: id, position: v });
+  if (d === 'fan') return v > 0 ? h.callService('fan', 'set_percentage', { entity_id: id, percentage: v }) : h.callService('fan', 'turn_off', { entity_id: id });
+}
+const LP_BAR_COLOR = '#F0A93B';
 function lpFire(node, type, detail) {
   const ev = new Event(type, { bubbles: true, composed: true });
   ev.detail = detail;
@@ -89,8 +152,8 @@ const LP_FX_CSS = LP_FX.map((p) => {
   a += '100%{border-color:' + p.c[0] + ';box-shadow:0 0 18px -6px ' + p.c[0] + '}';
   b += '100%{color:' + p.c[0] + '}';
   return '@keyframes lpfx-' + p.k + '{' + a + '}@keyframes lpfxi-' + p.k + '{' + b + '}' +
-    '.tile.fx-' + p.k + '{border-color:' + p.c[0] + ';animation:lpfx-' + p.k + ' ' + p.d + 's linear infinite}' +
-    '.tile.fx-' + p.k + ' ha-state-icon{animation:lpfxi-' + p.k + ' ' + p.d + 's linear infinite}';
+    '.tile.fx-' + p.k + ',.bar.fx-' + p.k + '{border-color:' + p.c[0] + ';animation:lpfx-' + p.k + ' ' + p.d + 's linear infinite}' +
+    '.tile.fx-' + p.k + ' ha-state-icon,.bar.fx-' + p.k + ' ha-state-icon{animation:lpfxi-' + p.k + ' ' + p.d + 's linear infinite}';
 }).join('');
 
 // Telefon görünümü: dar ekranda (700 px altı) pano ölçeklenmez; üst şerit kayar, bölümler alt alta, karolar 3'lü.
@@ -219,6 +282,18 @@ class LemurHomeDashboardCard extends HTMLElement {
         const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
         const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
         const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
+        // kaydırmalı çubuklar: bölüm ayarı look = 'bar' (her yerde) ya da 'phone' (yalnızca telefonda)
+        if (s.look === 'bar' || (s.look === 'phone' && phone)) {
+          const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
+          // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda sabit yükseklik
+          const br = Math.max(6, Math.ceil(items.length / bc));
+          return { kind: 'md', html: '<div class="bars" data-sec="' + esc(s.id) + '" style="grid-template-columns:repeat(' + bc + ',minmax(0,1fr))' + (phone ? '' : ';grid-template-rows:repeat(' + br + ',minmax(60px,1fr))') + '">' +
+            items.map((it) => {
+              if (!it.entity) return '<div class="bar ph"' + mark(it._i) + '><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
+              tiles.push(it.entity); tileItems.push(it);
+              return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><div class="bf"></div><ha-state-icon></ha-state-icon><div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
+            }).join('') + '</div>' };
+        }
         const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = !phone && r >= 4;
         const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
         const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
@@ -338,7 +413,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       ph.appendChild(el);
       this._embeds.push(el);
     });
-    this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; this._tiles.push(el); });
+    this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; el._bar = el.classList.contains('bar'); this._tiles.push(el); });
     this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => this._rows.push(el));
     // LEC: karoların odaları da sorulur; efekt düğmesi olan odaların ışıkları izlenir (değişince oynayan efekt yeniden sorulur)
     tiles.forEach((id) => { const r = LEC.roomOf(id); if (r) lecRooms[r] = 1; });
@@ -372,7 +447,22 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (mode !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) { LemurLightPopup.open(h, id, b._item, LEC.roomOf(id) || tab.area); return; }
         more(id);
       };
-      lpPress(b, () => this._hass.callService('homeassistant', 'toggle', { entity_id: id }), hold);
+      const tap = () => this._hass.callService('homeassistant', 'toggle', { entity_id: id });
+      if (!b._bar) { lpPress(b, tap, hold); return; }
+      lpSlide(b, {
+        tap: tap, hold: hold,
+        can: () => lpBarCan(this._hass.states[id]),
+        start: () => { const st = this._hass.states[id]; return b._settle && Date.now() < b._settle.until ? b._settle.v : (st ? lpBarVal(st) : 0); },
+        move: (v) => { b._drag = true; b._dv = v; this._paintBar(b, this._hass.states[id], v); },
+        end: () => {
+          b._drag = false; const v = b._dv;
+          if (typeof v !== 'number') return;
+          // gönderilen değer, cihazın yeni durumu gelene kadar (en çok 3 sn) çubukta kalır; geri zıplamaz
+          b._settle = { v: v, until: Date.now() + 3000 };
+          lpBarSet(this._hass, id, v);
+          setTimeout(() => { if (!b._drag) this._paintBar(b, this._hass.states[id]); }, 3100);
+        }
+      });
     });
     this._rows.forEach((b) => lpPress(b, () => more(b.getAttribute('data-row'))));
     R.querySelectorAll('[data-scene]').forEach((b) => lpPress(b, () => {
@@ -518,7 +608,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         const srcType = typeOf(D.el.getAttribute('data-sec'));
         const it = under.closest ? under.closest('[data-idx]') : null;
         if (it && it !== D.el && typeOf(it.getAttribute('data-sec')) === srcType) {
-          const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile');
+          const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile') || it.classList.contains('bar');
           const after = horiz ? e.clientX > r.left + r.width / 2 : e.clientY > r.top + r.height / 2;
           it.classList.add(horiz ? (after ? 'dropr' : 'dropl') : (after ? 'dropd' : 'dropt'));
           D.target = { sec: it.getAttribute('data-sec'), idx: +it.getAttribute('data-idx') + (after ? 1 : 0) };
@@ -592,6 +682,32 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
   }
 
+  // kaydırmalı çubuğu çiz: dolgu değer kadar (ışığın renginde), simge renkli, altta yüzde ya da durum.
+  // v verilirse (kaydırırken) o değer gösterilir; yoksa cihazın durumu (gönderilen değer yerleşene kadar o).
+  _paintBar(el, st, v, fx) {
+    if (!st) return;
+    const a = st.attributes, it = el._item || {}, d = st.entity_id.split('.')[0], lang = this._lang;
+    if (typeof v !== 'number') {
+      v = lpBarVal(st);
+      if (el._settle) { if (Date.now() < el._settle.until && Math.abs(el._settle.v - v) > 1) v = el._settle.v; else el._settle = null; }
+    }
+    if (fx === undefined) fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(st.entity_id)]) : null);
+    const on = v > 0 || LP_ON.indexOf(st.state) >= 0, na = st.state === 'unavailable' || st.state === 'unknown';
+    const rgb = a.rgb_color && a.rgb_color[0] + a.rgb_color[1] + a.rgb_color[2] >= 12 ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
+    el.className = 'bar' + (on && !na ? ' on' : '') + (na ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '') + (el._drag ? ' drag' : '');
+    el.style.setProperty('--bar-c', fx ? fx.c[0] : (d === 'light' && rgb ? rgb : LP_BAR_COLOR));
+    el.style.setProperty('--p', (na ? 0 : v) + '%');
+    const ic = el.children[1], nm = el.querySelector('.nm'), pc = el.querySelector('.pc');
+    ic.hass = this._hass; ic.stateObj = st;
+    if (it.icon) { ic.icon = it.icon; ic.setAttribute('icon', it.icon); }
+    nm.textContent = it.name || a.friendly_name || st.entity_id;
+    let txt;
+    if (na) txt = t(lang, 'unavailable');
+    else if (lpBarCan(st) && (on || d === 'cover')) txt = v + '%';
+    else txt = TXT[lang][st.state] ? t(lang, st.state) : st.state;
+    pc.textContent = txt;
+  }
+
   // --- durum güncellemesi (iskelete dokunmadan) ---
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
@@ -606,6 +722,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0;
       // efekt: ışığın kendi efekti; yoksa LEC'in o odada oynattığı efekt (yanan ışıklarda)
       const fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(id)]) : null);
+      if (el._bar) { if (!el._drag) this._paintBar(el, st, null, fx); return; }
       el.className = 'tile' + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '');
       const rgb = on && !fx && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');

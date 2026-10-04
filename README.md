@@ -12,6 +12,7 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 - **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod, bubble-card ya da başka bir kart veya tema istemez. İklim ve süpürge kartları pakete gömülü gelir.
 - **Her şey yönetim panelinden.** Sol menüdeki **Lemur Home Dashboard** sayfasında sekmeleri, bölümleri, kolon genişliklerini ve hangi cihazın nerede duracağını düzenlersin; canlı önizleme gösterir, değişiklik evdeki bütün tabletlere aynı anda gelir. Her adım geri alınabilir.
 - **Simge seçici.** Sekme, ışık ve düğme simgelerini listeden seçersin: önce o şeye uygun öneriler, aramada Home Assistant'ın bütün simgeleri. Türkçe de arayabilirsin (lamba, kanepe, tavan...).
+- **Kaydırmalı ışık çubukları.** İstersen ışık bölümü kare karolar yerine yatay çubuklarla görünür: dokununca ışık açılır/kapanır, sağa-sola kaydırınca parlaklık değişir, çubuk parlaklık kadar ışığın renginde dolar. Sadece telefonda çubuk, tablette karo da seçilebilir.
 - **Işık penceresi.** Işık karosuna basılı tutunca büyük parlaklık çubuğu, beyaz tonlar, renk çemberi, hazır renkler, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçersin.
 - **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir; 16:10, 4:3 ve geniş ekranlarda aynı oranla görünür, eski tabletlerde (iOS 12) de akıcı çalışır.
 - **Telefonda kendi düzeni.** Oda düğmeleri yana kayar, bölümler alt alta dizilir, düğmeler başparmak boyunda olur.
@@ -102,7 +103,7 @@ Hiçbir şeye dokunmadan da kullanabilirsin. Değiştirmek istersen sol menüden
 
 | Bölüm | Ne gösterir | Dokununca |
 |---|---|---|
-| **Işıklar** | Işık, priz, perde ve fan karoları | Aç/kapat; ışığa basılı tut: [ışık penceresi](#işık-penceresi) |
+| **Işıklar** | Işık, priz, perde ve fan karoları ya da kaydırmalı çubuklar | Aç/kapat; çubukta sağa-sola kaydır: parlaklık (perdede konum, fanda hız); basılı tut: [ışık penceresi](#işık-penceresi) |
 | **Senaryolar** | Script, sahne ve otomasyon düğmeleri, her birinin kendi rengi ve simgesi | Çalıştırır |
 | **İklim** | Klima ve petek kartları; yazın klimalar, kışın petekler | Aç/kapat, sıcaklık |
 | **Süpürge** | Robot süpürge kartı | Başlat, durdur, istasyona gönder |
@@ -117,6 +118,7 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 - **Sekmeler:** Ad, simge ve alan (oda) seçilir. Bir alan seçilen sekmeye **Alandan yeniden doldur** o odanın cihazlarını yeniden yerleştirir. **+ Sekme** boş sekme ya da odası seçilmiş, dolu gelen bir sekme açar.
 - **Kolonlar:** 1 ile 6 arası kolon. Genişlikler önizlemedeki çizgilerden sürüklenerek ayarlanır; **Tablet düzeni** ve **Eşit** hazır oranlardır. Her kolon kendi içinde 1-3 sütuna bölünebilir.
 - **Bölümler:** **Bölüm ekle** ile Işıklar, Senaryolar, İklim, Süpürge ya da Medya bölümü eklenir. Bölümler önizlemede tutamaklarından sürüklenerek kolonlar arasında taşınır, öğeler kendileri sürüklenerek sıralanır.
+- **Işık bölümünün görünümü:** **Karo** (kare karolar), **Kaydırmalı** (yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık) ya da **Telefonda kaydırmalı** (tablette karo, telefonda çubuk). Satırdaki karo ve çubuk sayısı ayrıca seçilir.
 - **Cihaz ekle:** Seçicide aranır, birden fazla cihaz tek seferde eklenir. Işık karosunun adı ve simgesi değiştirilebilir; senaryo düğmesine renk ve simge verilir. İklim kartında sıcaklık ve nem sensörü, dış sıcaklık sensörü, birlikte kontrol edilen ikinci cihaz ve tür (klima/petek) seçilir.
 - **Simge seçici:** Simge alanlarının yanındaki düğme. Önce o şeye uygun simgeler önerilir (oda, ışık ya da senaryo için); arama kutusu Home Assistant'ın bütün simgelerinde arar, Türkçe kelimeleri de tanır. İstersen `mdi:...` adını doğrudan yazarsın.
 - **Önizleme ekranları:** Tablet 16:10, Tablet 4:3, Geniş 16:9, Telefon ve Bu ekran. Bölüm sığmazsa önizlemede uyarı çıkar.
@@ -152,7 +154,7 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 
 ## Telefon
 
-Ekran 700 pikselden darsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler tek sütunda alt alta dizilir, senaryolar iki sütunda durur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
+Ekran 700 pikselden darsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler tek sütunda alt alta dizilir, senaryolar iki sütunda durur. Işık bölümünü **Telefonda kaydırmalı** yaparsan telefonda ışıklar iki sütun kaydırmalı çubuk olur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png" alt="Telefon düzeni" width="320">
 

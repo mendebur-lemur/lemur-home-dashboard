@@ -55,6 +55,23 @@
 .tile.fx { border-width: 2px; border-style: solid; background-color: rgba(255, 255, 255, 0.05); }
 .tile.na ha-state-icon { color: var(--lp-na); }
 
+/* kaydırmalı çubuklar (telefon panosundaki ışık kartı gibi): dokun aç/kapat, sağa-sola kaydır parlaklık; dolgu değer kadar, ışığın renginde */
+.bars { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }
+.bar { position: relative; box-sizing: border-box; min-width: 0; border-radius: 18px; background: var(--lp-card); border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden; display: flex; align-items: center; cursor: pointer; color: var(--lp-text); -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent; touch-action: pan-y; transition: transform 0.1s ease-out, border-color 0.2s; --bar-c: #F0A93B; }
+.bar .bf { position: absolute; left: 0; top: 0; bottom: 0; width: var(--p, 0%); background-color: var(--bar-c); opacity: 0.32; transition: width 0.18s ease-in-out, background-color 0.18s; }
+.bar.drag .bf { transition: background-color 0.18s; }
+.bar.down, .bar.drag { transform: scale(0.98); }
+.bar ha-state-icon, .bar > ha-icon { position: relative; display: block; flex: 0 0 auto; width: 34px; height: 34px; --mdc-icon-size: 34px; margin: 0 14px 0 18px; color: var(--lp-text2); }
+.bar.on ha-state-icon { color: var(--bar-c); }
+.bar.na { opacity: 0.5; }
+.bar.fx { border-width: 2px; border-style: solid; }
+.bar .bt { position: relative; flex: 1 1 auto; min-width: 0; padding-right: 12px; }
+.bar .nm { font-size: 17px; line-height: 21px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar .pc { font-size: 14px; line-height: 18px; font-weight: 600; color: var(--lp-text2); opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar.ph { cursor: default; }
+
 /* senaryo düğmeleri: yükseklik 118, köşe 22, simge 40 px kendi renginde, yazı 18 px sola yaslı */
 .scene { flex: 0 1 118px; height: auto; min-height: 48px; box-sizing: border-box; border-radius: 22px; background: var(--lp-card); color: var(--lp-text);
   display: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }
@@ -84,8 +101,8 @@
 .bgrip ha-icon { pointer-events: none; }
 .edit .box:hover { box-shadow: 0 0 0 2px rgba(242, 169, 59, 0.35); }
 .edit .box.selbox { box-shadow: 0 0 0 3px #F2A93B; }
-.edit .tile, .edit .scene, .edit .row, .edit .emb { cursor: grab; }
-.edit .tile > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }
+.edit .tile, .edit .bar, .edit .scene, .edit .row, .edit .emb { cursor: grab; }
+.edit .tile > *, .edit .bar > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }
 .edit .navb { cursor: pointer; }
 .edit .dragging { opacity: 0.35; }
 .edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }
@@ -135,6 +152,11 @@
 .phone .title { font-size: 15px; padding: 6px 8px 12px; }
 .phone .title.hd { padding: 4px 0 10px; }
 .phone .tile .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
+.phone .bars { flex: 0 0 auto; grid-auto-rows: 58px; }
+.phone .bar { border-radius: 16px; }
+.phone .bar ha-state-icon, .phone .bar > ha-icon { width: 24px; height: 24px; --mdc-icon-size: 24px; margin: 0 10px 0 12px; }
+.phone .bar .nm { font-size: 14px; line-height: 18px; }
+.phone .bar .pc { font-size: 12px; line-height: 15px; }
 .phone .box.spread { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: flex-start; }
 .phone .box.spread > .title { flex: 0 0 100%; }
 .phone .box.spread > * + * { margin-top: 0; }

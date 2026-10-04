@@ -11,7 +11,7 @@ const ADM = {
     tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
-    secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', delSec: 'Bölümü sil',
+    secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda kaydırmalı', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
     t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya',
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Cihaz ekle', addPh: 'Boş yuva', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
@@ -33,7 +33,7 @@ const ADM = {
     tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
-    secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', delSec: 'Delete section',
+    secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Sliders on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
     t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media',
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add device', addPh: 'Empty slot', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
@@ -371,7 +371,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     return '<div class="ed"><div class="row2"><div class="fld"><label>' + t('secTitle') + '</label><input class="inp" data-f="sec.title" value="' + esc(s.title || '') + '" placeholder="' + t('t_' + s.type) + '"></div>' +
       '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div>' + subSeg + '</div>' +
-      (s.type === 'lights' ? '<div class="fld"><label>' + t('tileCols') + '</label><div class="seg">' + [2, 3, 4, 5, 6].map((n) => '<button data-tc="' + n + '"' + ((s.tile_columns || 5) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') +
+      (s.type === 'lights' ? '<div class="fld"><label>' + t('look') + '</label><div class="seg">' + [['tile', 'lookTile'], ['bar', 'lookBar'], ['phone', 'lookPhone']].map((x) => '<button data-look="' + x[0] + '" title="' + t(x[1] + 'T') + '"' + ((s.look || 'tile') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
+        '<div class="row2">' + (s.look !== 'bar' ? '<div class="fld" style="flex:0 0 auto"><label>' + t('tileCols') + '</label><div class="seg">' + [2, 3, 4, 5, 6].map((n) => '<button data-tc="' + n + '"' + ((s.tile_columns || 5) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') +
+        (s.look === 'bar' || s.look === 'phone' ? '<div class="fld" style="flex:0 0 auto"><label>' + t('barCols') + '</label><div class="seg">' + [1, 2, 3].map((n) => '<button data-bc="' + n + '"' + ((s.bar_columns || ((s.entities || []).length > 12 ? 3 : 2)) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') + '</div>' : '') +
       body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
   }
 
@@ -748,6 +750,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (sc) return editSec((S) => { S.col = +sc.getAttribute('data-scol'); delete S.sub; });
       const tc = g('[data-tc]');
       if (tc) return editSec((S) => { S.tile_columns = +tc.getAttribute('data-tc'); });
+      const lk = g('[data-look]');
+      if (lk) return editSec((S) => { const v = lk.getAttribute('data-look'); if (v === 'tile') delete S.look; else S.look = v; });
+      const bcb = g('[data-bc]');
+      if (bcb) return editSec((S) => { S.bar_columns = +bcb.getAttribute('data-bc'); });
       const dl = g('[data-del]');
       if (dl) { const i = +dl.getAttribute('data-del'); return editSec((S) => { (S.type === 'scenes' ? S.items : S.entities).splice(i, 1); }); }
       const pk = g('[data-pk]');
