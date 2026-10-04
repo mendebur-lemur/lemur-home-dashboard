@@ -122,3 +122,25 @@
 .scene.lec.na { opacity: 0.45; }
 /* üst şeritte Efektler (LEC): oda düğmesi gibi, simgesi renkli */
 .navb.fxb .ni ha-icon { color: #FF6FAE; }
+/* --- telefon görünümü (dar ekran): ölçek yok, üst şerit kayar, bölümler alt alta --- */
+.wrap.phone { display: block; height: auto; min-height: 0; padding: 8px 8px 24px; }
+.phone .nav { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; margin: 0 0 10px; padding-bottom: 2px; }
+.phone .nav::-webkit-scrollbar { display: none; }
+.phone .navb { flex: 0 0 84px; height: 84px; border-radius: 16px; padding: 8px 0 6px; }
+.phone .navb + .navb { margin-left: 8px; }
+.phone .ni { width: 46%; }
+.phone .nn { font-size: 12px; line-height: 15px; }
+.phone .clock { display: none; }
+.phone .pcol > .box { margin: 0 0 10px; padding: 14px; min-height: 0; }
+.phone .title { font-size: 15px; padding: 6px 8px 12px; }
+.phone .title.hd { padding: 4px 0 10px; }
+.phone .tile .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
+.phone .box.spread { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: flex-start; }
+.phone .box.spread > .title { flex: 0 0 100%; }
+.phone .box.spread > * + * { margin-top: 0; }
+.phone .box.spread > .scene { flex: 0 0 calc(50% - 4px); height: 64px; min-height: 0; margin-bottom: 8px; border-radius: 18px; }
+.phone .scene .si { flex: 0 0 54px; }
+.phone .scene ha-icon { width: 28px; --mdc-icon-size: 28px; }
+.phone .scene span { font-size: 14px; }
+.phone .box.spread > .emb, .phone .box.spread > .row { flex: 0 0 100%; margin-bottom: 8px; }
+.phone .box.spread > .eph { flex: 0 0 100%; }

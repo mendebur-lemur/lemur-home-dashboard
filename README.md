@@ -10,7 +10,7 @@ Home Assistant için hazır, tam ekran ev panosu (dashboard). Yeni bir pano aç,
 - **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; ek kart ya da tema şart değil.
 - **Her şey yönetim panelinden.** Sekmeler, bölümler, kolon genişlikleri ve hangi cihazın nerede duracağı sol menüdeki "Lemur Home Dashboard"dan düzenlenir; değişiklik evdeki bütün tabletlere aynı anda gelir.
 - **Işık penceresi.** Işık karosuna basılı tutunca parlaklık kaydırıcısı, kelvin düğmeleri, renk çemberi, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçebilirsin.
-- **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir, eski tabletlerde de akıcı çalışır.
+- **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir, eski tabletlerde de akıcı çalışır. Telefonda kendi düzenine geçer: oda düğmeleri yana kayar, bölümler alt alta dizilir.
 
 ## Kurulum
 

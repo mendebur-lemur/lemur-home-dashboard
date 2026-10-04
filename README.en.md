@@ -10,7 +10,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a dashboard,
 - **No other add-ons needed.** One install from HACS.
 - **Edited from its own admin panel.** Tabs, sections, column widths and device placement are edited under "Lemur Home Dashboard" in the sidebar; changes reach every tablet at once.
 - **Light window.** Holding a light tile opens a light window with a brightness slider, colour temperature buttons, a colour wheel, effects and (where available) segments. You can switch to Home Assistant's own dialog in settings.
-- **Fits any screen.** The dashboard scales to the screen and stays smooth on older tablets.
+- **Fits any screen.** The dashboard scales to the screen and stays smooth on older tablets. On phones it switches to its own layout: room buttons scroll sideways, sections stack.
 
 ## Installation
 

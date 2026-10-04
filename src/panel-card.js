@@ -93,6 +93,14 @@ const LP_FX_CSS = LP_FX.map((p) => {
     '.tile.fx-' + p.k + ' ha-state-icon{animation:lpfxi-' + p.k + ' ' + p.d + 's linear infinite}';
 }).join('');
 
+// Telefon görünümü: dar ekranda (700 px altı) pano ölçeklenmez; üst şerit kayar, bölümler alt alta, karolar 3'lü.
+// Yönetim panelinin önizlemesi "Telefon" ekranında config.phone ile zorlar.
+const LP_PHONE_W = 700;
+function lpIsPhone(cfg) {
+  if (cfg && typeof cfg.phone === 'boolean') return cfg.phone;
+  return (window.innerWidth || 1280) < LP_PHONE_W;
+}
+
 // üst şeritteki Efektler düğmesi: LEC kuruluysa varsayılan açık
 function lpLecNav(h) {
   const st = (STORE.data && STORE.data.settings) || {};
@@ -136,12 +144,16 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._last = {}; if (this._sig) this._update();                       // oynayan efekt değişti: karolar ve düğmeler
     });
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
+    // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
+    if (!this._rsz) { this._rsz = () => { const p = lpIsPhone(this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } }; window.addEventListener('resize', this._rsz); }
+    this._phone = lpIsPhone(this._config);
     if (this._hass) this._render();
   }
   disconnectedCallback() {
     if (this._unsub) { this._unsub(); this._unsub = null; }
     if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     clearInterval(this._clock); this._clock = null;
+    if (this._rsz) { window.removeEventListener('resize', this._rsz); this._rsz = null; }
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
     this._sig = null;   // geri takılınca baştan kurulsun (dinleyiciler yeniden bağlansın)
@@ -171,7 +183,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), !!this._config.edit, this._config.selected || '']);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '']);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -185,6 +197,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._missing = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && !S[e.entity]) this._missing.push(e.entity); }));
     const edit = !!this._config.edit, selected = this._config.selected || '';
+    const phone = lpIsPhone(this._config);
     let curSec = '';
     // her öğe hangi bölümün kaçıncı öğesi: düzenleme modunda sürükle-bırak için
     const mark = (i) => ' data-sec="' + esc(curSec) + '" data-idx="' + i + '"';
@@ -205,7 +218,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
         const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
         const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
-        const c = Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = r >= 4;
+        const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = !phone && r >= 4;
         const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
         const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
           : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
@@ -292,7 +305,13 @@ class LemurHomeDashboardCard extends HTMLElement {
       (boxes.length ? boxes.map((b) => boxHtml(b, boxes.length > 1)).join('')
         : '<div class="box colempty"><span>' + esc(t(lang, 'col_empty')) + '</span><button class="addsec" data-addsec="' + i + ':' + j + '">+ ' + esc(t(lang, 'add_section')) + '</button></div>') + '</div>';
     let grid, body;
-    if (used.length) {
+    if (phone) {
+      // telefon: kolonlar soldan sağa, sütunlar sırayla alt alta; boş sütun yer kaplamaz
+      grid = '';
+      const bx = [];
+      cols.forEach((c) => c.forEach((boxes) => boxes.forEach((b) => bx.push(b))));
+      body = '<div class="pcol">' + (bx.length ? bx.map((b) => boxHtml(b, false)).join('') : '<div class="box empty">' + esc(t(lang, 'empty')) + '</div>') + '</div>';
+    } else if (used.length) {
       // kolon genişlikleri oran (fr): kolon sayısı ne olursa olsun ekrana sığar, aralıklar taşırmaz
       grid = 'grid-template-columns:' + used.map((i) => 'minmax(0,' + widths[i] + 'fr)').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
       body = used.map((i) => {
@@ -306,7 +325,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + '" style="' + grid + '">' + nav + body + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap' + (edit ? ' edit' : '') + (phone ? ' phone' : '') + '" style="' + grid + '">' + nav + body + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -388,6 +407,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // boyutlandırma tutamakları: kolonların arasında dikey, aynı kolonda üst üste duran kutuların arasında yatay
     const place = () => {
       if (!wrap.isConnected || D) return;
+      if (wrap.classList.contains('phone')) return;   // telefonda kolon/satır boyutlandırma yok
       // sığmayan kutuyu işaretle
       arr(R.querySelectorAll('.box[data-secs]')).forEach((b) => {
         const over = b.scrollHeight > b.clientHeight + 2 || b.scrollWidth > b.clientWidth + 2;

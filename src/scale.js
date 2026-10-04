@@ -32,6 +32,8 @@ const LemurScale = (() => {
     if (!sr) return;
     style(sr, KID, active && k.hide_header ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
     if (!active) { style(sr, ID, ''); return; }
+    // telefon: ölçekleme yok, pano kendi telefon düzenini çizer (panel-card lpIsPhone ile aynı eşik)
+    if ((window.innerWidth || 1280) < 700) { style(sr, ID, 'hui-view{min-height:0 !important;}'); return; }
     const W = (canvas && canvas.width) || 1280, H = (canvas && canvas.ref_height) || 1075;
     const kap = sr.querySelector('hui-view-container') || r;
     const g = kap.getBoundingClientRect().width;
