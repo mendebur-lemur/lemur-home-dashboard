@@ -239,3 +239,15 @@ select.inp { padding-right: 6px; }
 .rinfo b { font-weight: 500; word-break: break-word; }
 .rnote { color: var(--mu); font-size: 12.5px; margin: 0; }
 label.btn { cursor: pointer; }
+/* öğe ayarları penceresi */
+.imdlg .db { display: flex; flex-direction: column; gap: 14px; }
+.inp.ta { height: auto; min-height: 64px; padding: 8px 10px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.5; white-space: pre; overflow: auto; tab-size: 2; }
+.imact { display: flex; flex-direction: column; gap: 8px; }
+.imact .fld .fld { margin-top: 8px; }
+.imvis { display: flex; flex-direction: column; gap: 10px; }
+.imvis .fld.nar { flex: 0 0 170px; }
+.imerr { margin: 0 20px 10px; padding: 10px 12px; border-radius: 12px; background: rgba(229, 72, 77, .12); color: #FF9592; font-size: 13px; }
+.cnd { color: #F2A93B; font-weight: 600; }
+.it .cty { font-size: 13px; font-weight: 600; }
+.it .x + .x { margin-left: 2px; }
+.it .x[data-im]:hover { color: var(--tx, #fff); }

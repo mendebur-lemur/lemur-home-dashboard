@@ -2,6 +2,17 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.7.0',
+    tr: ['Değer karosu: sensör, zamanlayıcı, sayaç ve seçimler simge, değer + birim ve adıyla görünür; çalışan zamanlayıcı geri sayar.',
+      'Öğe ayarları (⚙): ad, simge, açık/kapalı simgesi, dokununca ve basılı tutunca ne olacağı.',
+      'Sadece şu durumda göster: öğe, seçilen varlığın durumuna göre görünür ya da hiç çizilmez.',
+      'Kart (YAML): bölüme Home Assistant kartı eklenir; düğme bir kartı panonun kendi penceresinde açabilir.',
+      'Sette olmayan simgeler artık Home Assistant\'ın düz simgesiyle çizilir.'],
+    en: ['Value tile: sensors, timers, counters and selects show their icon, value + unit and name; a running timer counts down.',
+      'Item settings (⚙): name, icon, on/off icons, what happens on tap and on hold.',
+      'Only show when: an item shows or is not drawn at all depending on an entity\'s state.',
+      'Card (YAML): add a Home Assistant card to a section; a button can open a card in the dashboard\'s own window.',
+      'Icons not in the set are now drawn with Home Assistant\'s flat icon.'] },
   { v: '0.6.0',
     tr: ['Efekt simgeleri artık panonun kendi kopyasından gelir: Light Effect Card kurulu olmasa da sekmelerde ve öğelerde kullanılabilir.',
       'Ayarlar → Sürüm ve güncelleme: güncellemeyi denetle, HACS ile indir ve Home Assistant\'ı yeniden başlat, hepsi buradan.',

@@ -108,6 +108,8 @@ Hiçbir şeye dokunmadan da kullanabilirsin. Değiştirmek istersen sol menüden
 | **İklim** | Klima ve petek kartları; yazın klimalar, kışın petekler | Aç/kapat, sıcaklık |
 | **Süpürge** | Robot süpürge kartı | Başlat, durdur, istasyona gönder |
 | **Medya** | TV ve hoparlörler | Cihaz penceresi |
+| **Değerler** | Sensör, ikili sensör, zamanlayıcı, sayaç, seçim: simge, değer + birim ve ad; çalışan zamanlayıcı geri sayar | Cihaz penceresi (değiştirilebilir) |
+| **Kartlar** | YAML ile eklenen herhangi bir Home Assistant kartı (markdown, grafik, kurulu özel kartlar) | Kartın kendisi |
 
 Açık ışıklar kendi renginde çerçeveyle görünür, ulaşılamayan cihazlar soluk durur. Otomatik düzen ışık gruplarının üyelerini, segmentleri, gizli ve ayar varlıklarını, parametre isteyen scriptleri atlar.
 
@@ -120,7 +122,9 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 - **Bölümler serbest:** Her bölüm bir kutu ve içine her şey eklenebilir: ışık, priz, perde, senaryo düğmesi, iklim ve süpürge kartı, medya cihazı aynı kutuda olabilir; her öğe kendi türüne göre görünür. **Bölüm ekle**'deki türler (Boş bölüm, Işıklar, Senaryolar, İklim, Süpürge, Medya) sadece başlangıç başlığıdır. Bölümler önizlemede tutamaklarından sürüklenerek kolonlar arasında taşınır; öğeler kendileri sürüklenerek sıralanır ya da başka bir bölüme taşınır.
 - **Işık bölümünün görünümü:** **Karo** (kare karolar), **Kaydırmalı** (yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık) ya da **Telefonda otomatik** (tablette karo, telefonda çubuk). Satırdaki karo ve çubuk sayısı ayrıca seçilir.
 - **Ekle:** Seçicide her tür cihaz listelenir; üstteki süzgeçle (Tümü, Işık ve anahtar, Senaryolar, İklim, Süpürge, Medya) daraltılır, birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur. Işık karosunun adı ve simgesi değiştirilebilir; senaryo düğmesine renk ve simge verilir. İklim kartında sıcaklık ve nem sensörü, dış sıcaklık sensörü, birlikte kontrol edilen ikinci cihaz ve tür (klima/petek) seçilir.
-- **Simge seçici:** Simge alanlarının yanındaki düğme. **Simgeler** sekmesinde panonun 1305 simgesi var; önce o şeye uygun olanlar önerilir (oda, ışık ya da senaryo için), arama kutusu Türkçe kelimeleri de tanır. ★ işaretliler panoya özel çizimler. Light Effect Card kuruluysa **Light Effect Card** sekmesinde onun 356 renkli efekt simgesi de seçilebilir. İstersen `mdi:...` adını doğrudan yazarsın; sette yoksa en yakın simge çizilir.
+- **Simge seçici:** Simge alanlarının yanındaki düğme. **Simgeler** sekmesinde panonun 1305 simgesi var; önce o şeye uygun olanlar önerilir (oda, ışık ya da senaryo için), arama kutusu Türkçe kelimeleri de tanır. ★ işaretliler panoya özel çizimler. Light Effect Card kuruluysa **Light Effect Card** sekmesinde onun 356 renkli efekt simgesi de seçilebilir. İstersen `mdi:...` adını doğrudan yazarsın; sette yoksa Home Assistant'ın düz simgesi çizilir.
+- **Öğe ayarları (⚙):** Her öğenin yanındaki çark. Ad, simge, açıkken ve kapalıyken simge (ör. bağlantı sensörü), **Dokununca** ve **Basılı tutunca** ne olacağı (cihaz penceresi, aç/kapat, servis çalıştır, pencerede kart aç, hiçbir şey ya da YAML), senaryo düğmesinin ne yaptığı ve **Sadece şu durumda göster**: öğe, seçilen varlık belirli bir durumdayken görünür; koşul sağlanmazsa panoda hiç çizilmez, yerinde boşluk kalmaz (önizlemede soluk görünür).
+- **Kart (YAML):** Bölüme Home Assistant kartı ekler; yüklenemezse yerinde kısa bir uyarı çıkar. Düğmeye **Pencerede kart aç** verilirse kart, ışık penceresi gibi panonun kendi penceresinde açılır (dışarı dokun, X ya da geri tuşu kapatır).
 - **Önizleme ekranları:** Tablet 16:10, Tablet 4:3, Geniş 16:9, Telefon ve Bu ekran. Bölüm sığmazsa önizlemede uyarı çıkar.
 - **Geri al:** Her değişiklik geri alınabilir (düğme ya da Ctrl+Z). **⋯** menüsündeki **Otomatik düzene dön** her şeyi sıfırlar.
 

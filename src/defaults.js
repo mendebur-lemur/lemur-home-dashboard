@@ -32,16 +32,34 @@ const LP_AREA_ICONS = [
 // Bir bölüme her türden öğe eklenebilir; her öğe kendi türüne göre çizilir (ışık karosu, senaryo düğmesi, iklim kartı...).
 // Bölümün türü (lights, scenes, climate...) sadece başlangıç başlığı ve simgesi için.
 // Öğe biçimleri: "light.x" ya da { entity, name, icon, ... } (cihaz), { name, icon, color, action } (düğme), { name, icon } (boş karo).
+// Değer gösteren varlıklar (sensör, zamanlayıcı, sayaç, seçim...): kendi karosu var (simge, ad, değer + birim), dokununca cihaz penceresi.
+const LHD_VALUE_DOMAINS = ['sensor', 'binary_sensor', 'timer', 'counter', 'input_number', 'input_select', 'input_text', 'input_datetime', 'number', 'select', 'text',
+  'date', 'time', 'datetime', 'weather', 'sun', 'person', 'device_tracker', 'zone', 'update', 'event', 'calendar', 'todo', 'image'];
 function lhdKind(it) {
   if (!it) return null;
   if (typeof it === 'string') it = { entity: it };
+  if (it.card && typeof it.card === 'object') return 'card';   // gömülü HA kartı
   if (!it.entity) return Object.prototype.hasOwnProperty.call(it, 'action') ? 'scene' : 'ph';
   const d = it.entity.split('.')[0];
   if (d === 'script' || d === 'scene' || d === 'automation' || d === 'button' || d === 'input_button') return 'scene';
   if (d === 'climate') return 'climate';
   if (d === 'vacuum') return 'vacuum';
   if (d === 'media_player') return 'media';
+  if (LHD_VALUE_DOMAINS.indexOf(d) >= 0) return 'value';
   return 'tile';
+}
+// Koşullu görünürlük: öğenin visible alanı { entity, state | states: [...] | not: [...] }. Alan yoksa ya da eksikse öğe hep görünür.
+// Koşul varlığı HA'da yoksa öğe gizli kalır (koşul sağlanamaz).
+function lpVisible(v, S) {
+  if (!v || typeof v !== 'object' || !v.entity) return true;
+  const st = S && S[v.entity], s = st ? String(st.state) : null;
+  if (s === null) return false;
+  const list = (x) => (Array.isArray(x) ? x : [x]).map(String);
+  const want = v.states !== undefined ? list(v.states) : (v.state !== undefined ? list(v.state) : null);
+  if (want && want.indexOf(s) < 0) return false;
+  const not = v.not !== undefined ? list(v.not) : null;
+  if (not && not.indexOf(s) >= 0) return false;
+  return true;
 }
 // Eski kayıtları yeni biçime getirir (v: 2): senaryo öğeleri `items`ten `entities`e geçer; aynı kolon/sütunda başlıksız bölüm,
 // eskiden olduğu gibi önceki bölümün kutusuna girdiği için onunla birleşir (ekranda değişen bir şey olmaz, yönetim panelinde tek bölüm görünür).

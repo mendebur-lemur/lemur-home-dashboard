@@ -116,5 +116,6 @@ function lpIcon(icon, cls, style) {
     const svg = LP_LECI.map && LP_LECI.map[icon.slice(4)];
     return open + tail + (svg || '') + '</span>';
   }
+  if (lpIconFlat(icon)) return open + ' haic' + tail + '<ha-icon icon="' + esc(icon) + '"></ha-icon></span>';   // sette yok: HA'nın düz simgesi
   return open + ' mdic' + tail + (lpMdicSvg(icon || LP_MDIC_FALLBACK) || '') + '</span>';
 }

@@ -12,7 +12,7 @@ const ADM = {
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda otomatik', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
-    t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
+    t_values: 'Değerler', t_cards: 'Kartlar', t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Ekle', addPh: 'Boş karo', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
@@ -25,6 +25,11 @@ const ADM = {
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
     version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    tPop: 'Pencerede açar: {t}', imT: 'Öğe ayarları', imSave: 'Kaydet', iconOn: 'Açıkken simge', iconOff: 'Kapalıyken simge', tapL: 'Dokununca', holdL: 'Basılı tutunca', actL: 'Ne yapar',
+    a_defMore: 'Varsayılan: cihaz penceresi', a_defTog: 'Varsayılan: aç / kapat', a_defHold: 'Varsayılan: ışık ya da cihaz penceresi', a_defRun: 'Varsayılan: seçili hedefi çalıştır', a_more: 'Cihaz penceresi', a_tog: 'Aç / kapat', a_none: 'Hiçbir şey',
+    a_svc: 'Servis çalıştır', a_pop: 'Pencerede kart aç', a_yaml: 'Gelişmiş (YAML)', svc: 'Servis', tgt: 'Hedef varlık', svcData: 'Veri (YAML, isteğe bağlı)', popTitle: 'Pencere başlığı', cardY: 'Kart (YAML)', actY: 'Eylem (YAML)',
+    visL: 'Sadece şu durumda göster', visT: 'Koşul sağlanmazsa öğe panoda hiç çizilmez, yerinde boşluk kalmaz. Önizlemede soluk görünür.', visE: 'Varlık', v_eq: 'şuna eşitse', v_in: 'şunlardan biriyse', v_not: 'şunlar değilse', visV: 'Durum (birden çoksa virgülle)', visNow: 'Şu an: {s}',
+    yamlErr: 'YAML okunamadı: {e}', yamlErrL: 'YAML okunamadı: {n}. satırda girinti ya da yazım hatası var', cardNoType: 'Kartta "type:" satırı yok', addCard: 'Kart (YAML)', addCardT: 'Home Assistant kartını YAML ile ekle (ör. markdown, history-graph ya da kurulu bir özel kart)', cond: 'koşullu', cardItem: 'Kart', svcNeed: 'Servis "alan.servis" biçiminde olmalı (ör. timer.start)',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
   en: {
@@ -34,7 +39,7 @@ const ADM = {
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Auto on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
-    t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
+    t_values: 'Values', t_cards: 'Cards', t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add', addPh: 'Empty tile', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
@@ -47,6 +52,11 @@ const ADM = {
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
     version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    tPop: 'Opens in a window: {t}', imT: 'Item settings', imSave: 'Save', iconOn: 'Icon when on', iconOff: 'Icon when off', tapL: 'On tap', holdL: 'On hold', actL: 'Action',
+    a_defMore: 'Default: more info', a_defTog: 'Default: toggle', a_defHold: 'Default: light or more-info window', a_defRun: 'Default: run the chosen target', a_more: 'More info', a_tog: 'Toggle', a_none: 'Nothing',
+    a_svc: 'Call a service', a_pop: 'Open a card in a window', a_yaml: 'Advanced (YAML)', svc: 'Service', tgt: 'Target entity', svcData: 'Data (YAML, optional)', popTitle: 'Window title', cardY: 'Card (YAML)', actY: 'Action (YAML)',
+    visL: 'Only show when', visT: 'If the condition is not met the item is not drawn at all and leaves no gap. It shows faded in the preview.', visE: 'Entity', v_eq: 'equals', v_in: 'is one of', v_not: 'is none of', visV: 'State (comma for several)', visNow: 'Now: {s}',
+    yamlErr: 'Could not read the YAML: {e}', yamlErrL: 'Could not read the YAML: indentation or syntax error on line {n}', cardNoType: 'The card has no "type:" line', addCard: 'Card (YAML)', addCardT: 'Add a Home Assistant card as YAML (e.g. markdown, history-graph or an installed custom card)', cond: 'conditional', cardItem: 'Card', svcNeed: 'The service must look like "domain.service" (e.g. timer.start)',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
 };
@@ -62,8 +72,8 @@ const LHD_TYPES = {
 // Renk zemini için hazır koyu tonlar (açık renkler de seçilebilir ama yazılar beyaz)
 const LHD_TINT_COLORS = ['#FFC24A', '#E6ECF5', '#5B8DEF', '#4FD1C5', '#7BD83A', '#FF7AB0', '#B07CFF', '#FF8A4A'];
 const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#1d0f12', '#1a160e', '#0d1b1e'];
-const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'];
-const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media' };
+const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'].concat(LHD_VALUE_DOMAINS);
+const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
 const LHD_MAXCOLS = 6;
@@ -513,7 +523,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
-    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
     const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     // LEC kuruluysa bir kez: efektlerin nerede olduğunu anlatan bilgi kutusu ("Tamam" deyince kaybolur)
     const st0 = this._settings();
@@ -541,7 +551,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const colSeg = '<div class="seg">' + Array.apply(null, Array(ncols)).map((x, c) => '<button data-scol="' + c + '"' + (Math.min(s.col || 0, ncols - 1) === c ? ' class="on"' : '') + '>' + esc(this._colName(c, ncols)) + '</button>').join('') + '</div>';
     let body = '';
     const handle = '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span>';
-    const xBtn = (i) => '<button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
+    // her öğenin sağında: ayarlar (ad, simge, dokununca, koşul...) ve sil
+    const xBtn = (i) => '<button class="x" data-im="' + i + '" title="' + t('imT') + '"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon></button><button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
+    const cond = (it) => (it && typeof it === 'object' && it.visible && it.visible.entity ? ' · <b class="cnd">' + t('cond') + '</b>' : '');
     const iconField = (i, cur, ph) => '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(cur || '') + '" placeholder="' + esc(ph) + '" style="height:28px;font-size:12px"><button class="btn sm ic ipb" data-ip="item:' + i + '" title="' + t('iconPick') + '"><ha-icon class="s14" icon="mdi:shape-outline"></ha-icon></button></div>';
     const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
     const hums = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'humidity');
@@ -551,17 +563,21 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // her öğe kendi türüne göre düzenlenir: düğmede renk, simge ve ne çalıştırdığı; karoda ad ve simge; iklimde sensörler
     body = list.length ? '<div class="items" data-dl="items">' + list.map((raw, i) => {
       const k = lhdKind(raw), it = typeof raw === 'string' ? { entity: raw } : raw;
+      if (k === 'card') {
+        return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon('mdi:card-text-outline') + '</div><div class="col"><b class="cty">' + t('cardItem') + ': ' + esc(String(it.card.type || '?')) + '</b>' +
+          '<span class="eid">' + esc(it.card.title || it.card.entity || '') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
+      }
       if (k === 'scene' && !it.entity) {
         return '<div class="it" data-di>' + handle +
           '<input type="color" data-if="' + i + '.color" value="' + esc(it.color || '#5B8DEF') + '">' +
           '<div class="ico">' + lpIcon(it.icon || 'mdi:play', '', 'color:' + esc(it.color || '#5B8DEF')) + '</div>' +
           '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
-          iconField(i, it.icon, 'mdi:play') + '<span class="eid">' + this._scTarget(tab, it) + '</span></div>' + xBtn(i) + '</div>';
+          iconField(i, it.icon, 'mdi:play') + '<span class="eid">' + this._scTarget(tab, it) + cond(it) + '</span></div>' + xBtn(i) + '</div>';
       }
       const st = it.entity ? S[it.entity] : null;
       const ico = it.entity ? lpIcon(lpEntIcon(this._hass.states[it.entity], it.icon)) : lpIcon(it.icon || 'mdi:lightbulb');
       let extra = '';
-      if (k === 'tile' || k === 'ph' || k === 'scene') extra = iconField(i, it.icon, this._t('icon') + ' (mdi:...)');
+      if (k === 'tile' || k === 'ph' || k === 'scene' || k === 'value') extra = iconField(i, it.icon, this._t('icon') + ' (mdi:...)');
       if (k === 'climate') {
         const sel2 = (key, opts, cur, none, title) => '<select class="inp" data-if="' + i + '.' + key + '" title="' + esc(title) + '"><option value="">' + esc(none) + '</option>' +
           opts.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
@@ -572,11 +588,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       }
       return '<div class="it' + (it.entity ? '' : ' ph') + '" data-di>' + handle + '<div class="ico">' + ico + '</div><div class="col">' +
         '<input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + esc(it.entity ? this._ename(it.entity) : this._t('name')) + '">' + extra +
-        '<span class="eid">' + esc(it.entity ? it.entity + (st ? '' : ' · ?') : this._t('addPh')) + '</span></div>' + xBtn(i) + '</div>';
+        '<span class="eid">' + esc(it.entity ? it.entity + (st ? '' : ' · ?') : this._t('addPh')) + cond(it) + '</span></div>' + xBtn(i) + '</div>';
     }).join('') + '</div>' : '<div class="empty">' + t('noItems') + '</div>';
     body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addDev') + '</button>' +
       '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' +
       '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>' +
+      '<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>' +
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
     const kinds = lhdKinds(s), tilesHere = !!kinds.tile || !list.length;
@@ -610,7 +627,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="' + (LHD_TYPES[sec.type] || LHD_TYPES.free).icon + '"></ha-icon></div><h2>' + t('pickT') + ' → ' + esc(sec.title || this._t('t_' + (LHD_TYPES[sec.type] ? sec.type : 'free'))) + '</h2>' +
         '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
         '<div class="db" style="padding-bottom:4px;flex:none;overflow:visible"><input class="inp" data-q placeholder="' + t('search') + '" value="' + esc(this._q) + '">' +
-        '<div class="seg pf" style="margin-top:8px">' + [['all', 'pfAll'], ['lights', 'pfTile'], ['scenes', 't_scenes'], ['climate', 't_climate'], ['vacuum', 't_vacuum'], ['media', 't_media']].map((x) => '<button data-pf="' + x[0] + '"' + ((this._pf || 'all') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
+        '<div class="seg pf" style="margin-top:8px">' + [['all', 'pfAll'], ['lights', 'pfTile'], ['scenes', 't_scenes'], ['values', 't_values'], ['climate', 't_climate'], ['vacuum', 't_vacuum'], ['media', 't_media']].map((x) => '<button data-pf="' + x[0] + '"' + ((this._pf || 'all') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
         '<div class="db"><div class="plist">' + this._pickList(sec) + '</div></div>' +
         '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="pickadd"' + (this._picked.length ? '' : ' disabled') + '>' + t('addN', { n: this._picked.length }) + '</button></div></div></div>';
     }
@@ -622,6 +639,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="db"><div class="ilist">' + this._iconList() + '</div></div></div></div>';
     }
     if (md === 'news') return this._newsHtml();
+    if (md === 'item') return this._imHtml();
     if (md === 'report') return this._reportHtml();
     if (md === 'restore') return this._restoreHtml();
     if (md === 'settings') {
@@ -675,7 +693,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _pickList(sec) {
     const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
     // bölüm serbest: her tür cihaz eklenebilir; üstteki süzgeç sadece listeyi daraltır
-    const pf = this._pf || 'all', doms = pf === 'all' ? LHD_ALL_DOMAINS : (pf === 'lights' ? LHD_TYPES.lights.domains.concat(['lock']) : LHD_TYPES[pf].domains.concat(pf === 'scenes' ? ['button', 'input_button'] : []));
+    const pf = this._pf || 'all', doms = pf === 'all' ? LHD_ALL_DOMAINS : pf === 'values' ? LHD_VALUE_DOMAINS : (pf === 'lights' ? LHD_TYPES.lights.domains.concat(['lock']) : LHD_TYPES[pf].domains.concat(pf === 'scenes' ? ['button', 'input_button'] : []));
     const have = {};
     (sec.entities || []).forEach((x) => {
       if (typeof x === 'string') { have[x] = 1; return; }
@@ -773,6 +791,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _refreshIcons() { const l = this.shadowRoot && this.shadowRoot.querySelector('.ilist'); if (l) l.innerHTML = this._iconList(); }
   _applyIcon(v) {
     const ip = this._ip || {}; this._modal = null; this._ip = null; this._iq = '';
+    if (ip.kind === 'im' && this._im) { this._im.f[ip.key] = v; this._modal = 'item'; return this._render(); }
     const tabs = this._work(), tab = this._curTab(tabs), tabId = tab && tab.id;
     if (ip.kind === 'tab') return this._edit((T) => { const x = T.filter((y) => y.id === tabId)[0]; if (x) x.icon = v; });
     const sec = this._curSec(tab), secId = sec && sec.id, i = ip.idx;
@@ -792,6 +811,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (k === 'open') txt = T('tOpen', { r: rn(a.room || tab.area) });
     else if (k === 'play') txt = T('tPlay', { e: (a.data && a.data.effect) || '?', r: rn(a.data && a.data.room) });
     else if (k === 'stop') txt = T('tStop', { r: rn(a.data && a.data.room) });
+    else if (a.popup) txt = T('tPop', { t: (a.popup.title || (a.popup.card && a.popup.card.type) || '') });
     else txt = T('target') + ': ' + esc(a.target ? this._ename(a.target) : '—');
     if (k && !LEC.installed(this._hass)) txt += ' · <b class="lecna">' + T('lecNa') + '</b>';
     return txt;
@@ -890,13 +910,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
       const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
       if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
-      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); this._modal = null; this._render(); return; }
+      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); if (this._modal === 'item') return; if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); } this._modal = null; this._render(); return; }   // öğe ayarları dışarı tıklayınca kapanmaz (yazılan kaybolmasın)
       if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
       if (act === 'settings') { this._modal = 'settings'; this._menu = null; return this._render(); }
       if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
-      if (act === 'close') { this._modal = null; this._picked = []; this._q = ''; this._bk = null; return this._render(); }
+      if (act === 'close') {
+        if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); }   // simge seçiciden öğe ayarlarına dön
+        this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; return this._render();
+      }
+      if (act === 'imsave') return this._imSave();
+      if (act === 'addcard') return this._imOpen(-1, { card: { type: 'markdown', content: '' } }, true);
       if (act === 'report') return this._reportOpen();
       if (act === 'repgo') return this._repGo();
       if (act === 'repcopy') return this._repCopy();
@@ -954,8 +979,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const v = ipb.getAttribute('data-ip'), tabs0 = this._work(), tab0 = this._curTab(tabs0), sec0 = this._curSec(tab0);
         let cur = '';
         if (v === 'tab') cur = tab0 && tab0.icon;
+        else if (v.indexOf('im:') === 0) cur = this._im ? this._im.f[v.slice(3)] : '';
         else { const i = +v.split(':')[1], L = sec0 && sec0.entities; const it = L && L[i]; cur = it && typeof it === 'object' ? it.icon : ''; }
-        this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
+        this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : v.indexOf('im:') === 0 ? { kind: 'im', key: v.slice(3), cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
         this._iq = ''; this._modal = 'icon'; this._icSet = lpIsLecIcon(cur) ? 'lec' : 'col'; lpMdicLoad(); this._render();
         // dokunmatik ekranda klavye kendiliğinden açılmasın: odak sadece fareli cihazda
         const q = this.shadowRoot.querySelector('[data-iq]'); if (q && !('ontouchstart' in window)) q.focus();
@@ -1030,6 +1056,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (lk) return editSec((S) => { const v = lk.getAttribute('data-look'); if (v === 'tile') delete S.look; else S.look = v; });
       const bcb = g('[data-bc]');
       if (bcb) return editSec((S) => { S.bar_columns = +bcb.getAttribute('data-bc'); });
+      const imb = g('[data-im]');
+      if (imb) { const i = +imb.getAttribute('data-im'), L = (sec && sec.entities) || []; if (L[i] !== undefined) this._imOpen(i, L[i], false); return; }
+      if (g('[data-imvis]') && this._im) { this._im.f.visOn = !this._im.f.visOn; return this._render(); }
       const dl = g('[data-del]');
       if (dl) { const i = +dl.getAttribute('data-del'); return editSec((S) => { (S.entities || []).splice(i, 1); }); }
       const pk = g('[data-pk]');
@@ -1082,6 +1111,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // çizilmez (odak ve hemen arkasından basılan düğme kaybolmasın); görünen ilgili yazılar yerinde güncellenir, önizleme kendisi güncellenir.
     app.addEventListener('change', (e) => {
       const el = e.target;
+      if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT') this._render(); } return; }
       if (el.hasAttribute && el.hasAttribute('data-bkfile')) { const f = el.files && el.files[0]; el.value = ''; if (f) this._backupRead(f); return; }
       const soft = el.tagName === 'INPUT';
       const f = el.getAttribute && el.getAttribute('data-f');
@@ -1136,6 +1166,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('input', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-iq')) { this._iq = el.value; this._refreshIcons(); return; }
+      if (el.hasAttribute && el.hasAttribute('data-imf')) {
+        if (this._im) { const key = el.getAttribute('data-imf'); this._im.f[key] = el.value; if (/icon/.test(key)) { const pv = el.closest('.iconin'); const ic = pv && pv.querySelector('.pv .lic'); if (ic && /^[a-z]+:[a-z0-9-]+$/.test(el.value.trim())) ic.outerHTML = lpIcon(el.value.trim()); } }
+        return;
+      }
       if (el.hasAttribute && el.hasAttribute('data-repq')) { if (this._rep) { this._rep.text = el.value; this._rep.copied = false; } return; }
       if (el.hasAttribute && el.hasAttribute('data-q')) { this._q = el.value; const pl = R.querySelector('.plist'); if (pl) { pl.innerHTML = this._pickList(sec); pl.querySelectorAll('ha-state-icon[data-eid]').forEach((x) => { x.hass = this._hass; x.stateObj = this._hass.states[x.getAttribute('data-eid')]; }); } return; }
       const f = el.getAttribute && (el.getAttribute('data-f') || el.getAttribute('data-if') || '');
@@ -1178,6 +1212,145 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         };
         window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
       });
+    });
+  }
+
+  // --- öğe ayarları penceresi: ad, simge, açık/kapalı simgeleri, dokununca / basılı tutunca, düğmenin eylemi, gömülü kart, koşullu görünürlük ---
+  // Alanlar taslakta (this._im.f) tutulur; "Kaydet"e basınca öğeye yazılır (YAML hatalıysa pencere açık kalır, hata gösterilir).
+  _imOpen(idx, raw, isNew) {
+    const tab = this._curTab(this._work()), sec = this._curSec(tab);
+    if (!tab || !sec) return;
+    const it = typeof raw === 'string' ? { entity: raw } : lhdClone(raw || {});
+    const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '' };
+    const ai = (pre, a, scene) => {
+      const o = {};
+      if (scene && (a === null || a === undefined)) o.K = 'none';
+      else if (a === undefined || a === null || a === '') o.K = 'def';
+      else if (typeof a === 'string') o.K = ['more-info', 'toggle', 'none'].indexOf(a) >= 0 ? a : 'def';
+      else if (a.popup && typeof a.popup === 'object') { o.K = 'popup'; o.Title = a.popup.title || ''; o.Card = a.popup.card ? lhdYamlDump(a.popup.card) : ''; }
+      else {
+        const sv = a.service || a.perform_action, tg = a.target;
+        const simpleT = tg === undefined || typeof tg === 'string' || (tg && typeof tg === 'object' && !Array.isArray(tg) && Object.keys(tg).length === 1 && typeof tg.entity_id === 'string');
+        const ks = Object.keys(a).filter((k) => ['service', 'perform_action', 'target', 'data', 'action'].indexOf(k) < 0);
+        if (typeof sv === 'string' && simpleT && !ks.length && (!a.action || a.action === 'perform-action' || a.action === 'call-service')) {
+          o.K = 'service'; o.Sv = sv; o.Tg = typeof tg === 'string' ? tg : (tg ? tg.entity_id : ''); o.Data = a.data && Object.keys(a.data).length ? lhdYamlDump(a.data) : '';
+        } else if (!sv && (a.action === 'more-info' || a.action === 'toggle' || a.action === 'none') && !a.entity) o.K = a.action;
+        else { o.K = 'yaml'; o.Y = lhdYamlDump(a); }
+      }
+      Object.keys(o).forEach((k) => { f[pre + k] = o[k]; });
+    };
+    ai('tap', it.tap); ai('hold', it.hold);
+    if (!it.entity && Object.prototype.hasOwnProperty.call(it, 'action')) ai('act', it.action, true);
+    if (it.card) f.card = lhdYamlDump(it.card);
+    const v = it.visible && typeof it.visible === 'object' ? it.visible : null;
+    f.visOn = !!(v && v.entity); f.visE = (v && v.entity) || '';
+    f.visM = v && v.not !== undefined ? 'not' : (v && v.states !== undefined ? 'in' : 'eq');
+    const vl = v ? (v.not !== undefined ? v.not : (v.states !== undefined ? v.states : v.state)) : null;
+    f.visV = vl === null || vl === undefined ? '' : [].concat(vl).join(', ');
+    this._im = { tab: tab.id, sec: sec.id, idx: idx, isNew: !!isNew, raw: it, f: f, err: '' };
+    this._modal = 'item'; this._menu = null; this._render();
+  }
+  _imHtml() {
+    const M = this._im; if (!M) return '';
+    const t = (k, v) => esc(this._t(k, v)), f = M.f, it = M.raw, S = this._hass.states;
+    const k = lhdKind(it), st = it.entity ? S[it.entity] : null, d = it.entity ? it.entity.split('.')[0] : '';
+    const inp = (key, ph, list) => '<input class="inp" data-imf="' + key + '" value="' + esc(f[key] || '') + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + (list ? ' list="lhdents"' : '') + ' spellcheck="false">';
+    const ta = (key, rows, ph) => '<textarea class="inp ta" data-imf="' + key + '" rows="' + rows + '" spellcheck="false"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(f[key] || '') + '</textarea>';
+    const fld = (label, html, cls) => '<div class="fld' + (cls ? ' ' + cls : '') + '"><label>' + label + '</label>' + html + '</div>';
+    const icf = (key, label, ph) => fld(label, '<div class="iconin"><div class="pv">' + lpIcon(f[key] || ph || 'mdi:shape-outline') + '</div>' + inp(key, ph) + '<button class="btn sm ic" data-ip="im:' + key + '" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div>');
+    // eylem seçici: pre = tap | hold | act
+    const actF = (pre, label, defLabel, opts) => {
+      const K = f[pre + 'K'] || (opts[0] === 'def' ? 'def' : opts[0]);
+      const names = { def: defLabel, 'more-info': this._t('a_more'), toggle: this._t('a_tog'), none: this._t('a_none'), service: this._t('a_svc'), popup: this._t('a_pop'), yaml: this._t('a_yaml') };
+      let h = '<select class="inp" data-imf="' + pre + 'K">' + opts.map((o) => '<option value="' + o + '"' + (o === K ? ' selected' : '') + '>' + esc(names[o]) + '</option>').join('') + '</select>';
+      if (K === 'service') h += '<div class="row2">' + fld(t('svc'), inp(pre + 'Sv', 'timer.start')) + fld(t('tgt'), inp(pre + 'Tg', 'timer.balik_besleme', true)) + '</div>' + fld(t('svcData'), ta(pre + 'Data', 3, 'duration: "00:10:00"'));
+      if (K === 'popup') h += fld(t('popTitle'), inp(pre + 'Title', this._t('popTitle'))) + fld(t('cardY'), ta(pre + 'Card', 8, 'type: custom:...\nentity: ...'));
+      if (K === 'yaml') h += fld(t('actY'), ta(pre + 'Y', 6, 'action: perform-action\nperform_action: script.turn_on'));
+      return '<div class="imact">' + fld(label, h) + '</div>';
+    };
+    let body = '';
+    if (k === 'card') body += fld(t('cardY'), ta('card', 12, 'type: markdown\ncontent: ...'));
+    else {
+      body += '<div class="row2">' + fld(t('name'), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
+      if (k !== 'climate' && k !== 'vacuum' && k !== 'media') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
+      if (k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
+      if (k === 'value') body += actF('tap', t('tapL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
+      if (k === 'tile' && it.entity) body += actF('tap', t('tapL'), this._t('a_defTog'), ['def', 'more-info', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defHold'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
+      if (k === 'scene' && !it.entity && !lpLecKind(it)) body += actF('act', t('actL'), '', ['none', 'service', 'popup', 'yaml']);
+    }
+    // koşullu görünürlük
+    const vs = f.visE && S[f.visE] ? S[f.visE].state : null;
+    body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('visL') + '</b><span>' + t('visT') + '</span></div><button class="tg' + (f.visOn ? ' on' : '') + '" data-imvis></button></div>' +
+      (f.visOn ? '<div class="row2">' + fld(t('visE'), inp('visE', 'sensor.balik_yem_durumu', true)) +
+        fld('&nbsp;', '<select class="inp" data-imf="visM">' + ['eq', 'in', 'not'].map((m) => '<option value="' + m + '"' + (f.visM === m ? ' selected' : '') + '>' + t('v_' + m) + '</option>').join('') + '</select>', 'nar') + '</div>' +
+        fld(t('visV'), inp('visV', 'aktif')) + (vs !== null ? '<div class="hint">' + t('visNow', { s: vs }) + '</div>' : '') : '') + '</div>';
+    const ents = Object.keys(S).sort();
+    return '<div class="ov" data-ovl><div class="dlg sm imdlg"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('imT') + (it.entity ? ' · ' + esc(this._ename(it.entity)) : '') + '</h2>' +
+      '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' + body + '</div>' +
+      (M.err ? '<div class="imerr">' + esc(M.err) + '</div>' : '') +
+      '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="imsave">' + t('imSave') + '</button></div></div>' +
+      '<datalist id="lhdents">' + ents.map((id) => '<option value="' + esc(id) + '">').join('') + '</datalist></div>';
+  }
+  // taslaktan eylemi kur (hatalıysa Error); undefined: alan silinir (varsayılan davranış)
+  _imAct(pre, scene) {
+    const f = this._im.f, K = f[pre + 'K'] || (scene ? 'none' : 'def'), T = (k, v) => this._t(k, v);
+    const y = (txt) => { try { return lhdYamlParse(txt); } catch (e) { throw new Error(e.line ? T('yamlErrL', { n: e.line }) : T('yamlErr', { e: e.message })); } };
+    if (K === 'def') return undefined;
+    if (K === 'none') return scene ? null : 'none';
+    if (K === 'more-info' || K === 'toggle') return K;
+    if (K === 'service') {
+      const sv = String(f[pre + 'Sv'] || '').trim(), tg = String(f[pre + 'Tg'] || '').trim();
+      if (!/^[a-z0-9_]+\.[a-z0-9_]+$/.test(sv)) throw new Error(T('svcNeed'));
+      const o = { service: sv };
+      if (tg) o.target = tg;
+      const dt = String(f[pre + 'Data'] || '').trim();
+      if (dt) { const v = y(dt); if (v && typeof v === 'object' && !Array.isArray(v)) o.data = v; else throw new Error(T('yamlErr', { e: 'data' })); }
+      return o;
+    }
+    if (K === 'popup') {
+      const c = y(f[pre + 'Card'] || '');
+      if (!c || typeof c !== 'object' || !c.type) throw new Error(T('cardNoType'));
+      const p = { card: c }, ti = String(f[pre + 'Title'] || '').trim();
+      if (ti) p.title = ti;
+      return { popup: p };
+    }
+    if (K === 'yaml') { const v = y(f[pre + 'Y'] || ''); if (!v) return undefined; return v; }
+    return undefined;
+  }
+  _imSave() {
+    const M = this._im; if (!M) return;
+    const f = M.f, k = lhdKind(M.raw);
+    let it = lhdClone(M.raw);
+    const setS = (key, v) => { v = String(v || '').trim(); if (v) it[key] = v; else delete it[key]; };
+    try {
+      if (k === 'card') {
+        let c; try { c = lhdYamlParse(f.card || ''); } catch (e) { throw new Error(e.line ? this._t('yamlErrL', { n: e.line }) : this._t('yamlErr', { e: e.message })); }
+        if (!c || typeof c !== 'object' || !c.type) throw new Error(this._t('cardNoType'));
+        it.card = c;
+      } else {
+        setS('name', f.name);
+        if (k !== 'climate' && k !== 'vacuum' && k !== 'media') setS('icon', f.icon);
+        if (k === 'value') { setS('icon_on', f.icon_on); setS('icon_off', f.icon_off); }
+        if (k === 'value' || (k === 'tile' && it.entity)) {
+          ['tap', 'hold'].forEach((pre) => { const v = this._imAct(pre); if (v === undefined) delete it[pre]; else it[pre] = v; });
+        }
+        if (k === 'scene' && !it.entity && !lpLecKind(it)) it.action = this._imAct('act', true);
+      }
+      if (f.visOn && String(f.visE || '').trim()) {
+        const vals = String(f.visV || '').split(',').map((x) => x.trim()).filter((x) => x !== '');
+        const v = { entity: String(f.visE).trim() };
+        if (f.visM === 'not') v.not = vals;
+        else if (f.visM === 'in' || vals.length > 1) v.states = vals;
+        else if (vals.length) v.state = vals[0];
+        it.visible = v;
+      } else delete it.visible;
+    } catch (e) { M.err = e.message; this._render(); return; }
+    if (it.entity && Object.keys(it).length === 1) it = it.entity;   // sade kalsın
+    this._modal = null; this._im = null;
+    this._edit((T) => {
+      const x = T.filter((y) => y.id === M.tab)[0], S = x && (x.sections || []).filter((z) => z.id === M.sec)[0]; if (!S) return;
+      S.entities = S.entities || [];
+      if (M.isNew) S.entities.push(it); else if (M.idx < S.entities.length) S.entities[M.idx] = it;
     });
   }
 

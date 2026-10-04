@@ -81,6 +81,19 @@ function lpMdicKey(icon) {
   if (/-outline$/.test(k)) { k = k.slice(0, -8); if (M[k]) return k; }
   return lpMdicNear(icon);
 }
+// açıkça verilen simge için katı arama: kendisi, eşleme ya da -outline'sız hali (en yakın benzer aranmaz). Yoksa null:
+// o zaman simge HA'nın düz simgesi olarak çizilir (ha-icon), başka bir simgeye ya da noktaya dönmez.
+function lpMdicStrict(icon) {
+  const M = LP_MDIC.map;
+  if (!M || typeof icon !== 'string') return null;
+  if (M[icon]) return icon;
+  const a = LP_MDIC_ALIAS[icon];
+  if (a && M[a]) return a;
+  if (/^mdi:.+-outline$/.test(icon) && M[icon.slice(0, -8)]) return icon.slice(0, -8);
+  return null;
+}
+// sette karşılığı olmayan simge HA'nın kendi çizimiyle gösterilsin mi (mdi:, hass: ya da başka bir simge paketi; lhd:/lec: hariç)
+const lpIconFlat = (icon) => typeof icon === 'string' && /^[a-z][a-z0-9_-]*:[a-z0-9-]+$/.test(icon) && !lpIsLhdIcon(icon) && icon.indexOf('lec:') !== 0 && !!LP_MDIC.map && !lpMdicStrict(icon);
 // simgenin SVG'si (bulunamazsa yedek simge); set henüz yüklenmediyse yüklemeyi başlatır ve null döner
 function lpMdicSvg(icon) {
   if (!LP_MDIC.map) { lpMdicLoad(); return null; }
@@ -90,7 +103,8 @@ function lpMdicSvg(icon) {
 // bir varlığın simgesi: öğeye verilen, HA'daki kendi simgesi, yoksa durumuna göre varsayılan
 function lpEntIcon(st, own) {
   if (own) return own;
-  if (st && st.attributes && st.attributes.icon && lpMdicKey(st.attributes.icon)) return st.attributes.icon;
+  const k = st && st.attributes && st.attributes.icon ? lpMdicKey(st.attributes.icon) : null;
+  if (k) return k;   // HA'daki simgenin setteki karşılığı (yakını olabilir)
   return lpStateIconName(st) || (st && st.attributes && st.attributes.icon) || LP_MDIC_FALLBACK;
 }
 // kendi simgesi olmayan varlığın varsayılan simgesi (HA'nın seçtiğine yakın), hepsi sette var. Bilinmeyende null

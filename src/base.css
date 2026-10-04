@@ -196,3 +196,30 @@
 .ni .lic { width: 100%; }
 .si .lic { width: 40px; height: 40px; }
 .phone .scene .lic { width: 28px; height: 28px; }
+/* değer karosu (sensör, zamanlayıcı, sayaç...): simge, değer, ad */
+.tile.val .lic { width: 32%; }
+.tile.val .vl { margin-top: 6px; font-size: 17px; line-height: 20px; font-weight: 700; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.val .nm { margin-top: 2px; font-size: 13px; line-height: 16px; color: var(--lp-text2); -webkit-line-clamp: 1; }
+.phone .tile.val .vl { font-size: 13px; line-height: 16px; margin-top: 4px; }
+.phone .tile.val .nm { font-size: 11px; line-height: 13px; }
+.tile.val.na .vl { color: var(--lp-na); font-weight: 500; font-size: 13px; }
+.bar.val { cursor: pointer; }
+.ic-auto .tile.live .lic, .ic-auto .bar.live .lic { filter: none; opacity: 1; }
+.ic-tint .tile.live .lic, .ic-tint .bar.live .lic { color: var(--lp-ic-on); }
+/* sette olmayan simge: HA'nın düz simgesi */
+.lic.haic { position: relative; color: var(--lp-text2); }
+.lic.haic::before { content: ''; display: block; padding-bottom: 100%; }
+.lic.haic ha-icon { position: absolute; left: 0; top: 0; width: 100%; height: 100%; --mdc-icon-size: 100%; display: flex; align-items: center; justify-content: center; }
+.tile.on .lic.haic, .bar.on .lic.haic, .row.on .lic.haic { color: var(--tile-rgb, var(--lp-on-icon)); }
+.tile.live .lic.haic, .bar.live .lic.haic, .navb.sel .lic.haic, .title .lic.haic { color: var(--lp-text); }
+.scene .lic.haic { color: var(--sc, var(--lp-text)); }
+.ic-auto .lic.haic { filter: none !important; }
+/* düzenleme modunda koşulu şu an sağlanmayan öğe */
+[data-hid] { opacity: 0.38; outline: 2px dashed rgba(255, 255, 255, 0.25); outline-offset: -2px; }
+/* gömülü HA kartı */
+.emb.hc { min-height: 40px; }
+.cwarn { display: flex; align-items: center; padding: 14px 16px; border-radius: 14px; background: rgba(229, 72, 77, 0.12); color: #FF9592; font-size: 14px; line-height: 1.35; }
+.cwarn ha-icon { --mdc-icon-size: 20px; margin-right: 10px; flex: 0 0 auto; }
+.ic-tint .lic.haic { color: #7c8598; }
+.ic-tint .tile.on .lic.haic, .ic-tint .bar.on .lic.haic, .ic-tint .tile.live .lic.haic, .ic-tint .navb.sel .lic.haic, .ic-tint .title .lic.haic { color: var(--lp-ic-on); }
+.ic-tint .scene .lic.haic { color: var(--sc, var(--lp-ic-on)); }
