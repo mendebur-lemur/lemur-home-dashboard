@@ -133,7 +133,7 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 - *Language:* automatic (Home Assistant's language), Turkish or English.
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
 - *Background:* dark (default), black, any colour, effect colours, or your own image (an address like `/local/background.jpg`). Effect colours are Light Effect Card's effect palettes (Aurora, Fire, Sunset, Ocean, Galaxy and 25 more): a soft colour glow on a dark background. They can be chosen even without Light Effect Card.
-- *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful) or Flat (all grey). The icon set is a separate file, downloaded once and kept by the browser.
+- *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful), Flat (all grey) or Single colour (the drawings turn into one tone: devices that are off are grey, devices that are on are in the colour you pick; optionally a light that is on shows the lamp's own colour, and a scene button its own colour). The icon set is a separate file, downloaded once and kept by the browser.
 - *HA theme:* the Home Assistant theme used by dialogs (can be left empty).
 - *Hide top bar / Hide sidebar:* Home Assistant's header and sidebar are hidden on this dashboard only.
 - *Canvas:* design width and reference height; the dashboard scales to the screen with this ratio.

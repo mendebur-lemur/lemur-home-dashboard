@@ -250,7 +250,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [];
     (tab.sections || []).forEach((s) => (s.entities || []).forEach((x) => { const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity); }));
-    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), !!LP_MDIC.map]);
+    const sig = JSON.stringify([tab, season, lang, present, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), !!LP_MDIC.map]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -405,7 +405,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (edit ? ' edit' : '') + (phone ? ' phone' : '') + '" style="' + grid + '">' + nav + body + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + nav + body + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -708,6 +708,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     el.className = 'bar' + (on && !na ? ' on' : '') + (na ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '') + (el._drag ? ' drag' : '');
     el.style.setProperty('--bar-c', fx ? fx.c[0] : (d === 'light' && rgb ? rgb : LP_BAR_COLOR));
     el.style.setProperty('--p', (na ? 0 : v) + '%');
+    if (on && !na && !fx && d === 'light' && rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
     const ic = this._icSwap(el, st, it, 1), nm = el.querySelector('.nm'), pc = el.querySelector('.pc');
     nm.textContent = it.name || a.friendly_name || st.entity_id;
     let txt;
@@ -723,7 +724,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const old = el.children[i];
     if (!old || lpIsLecIcon(it.icon) || !LP_MDIC.map) { if (!LP_MDIC.map) lpMdicLoad(); return old; }
     const k = lpMdicKey(lpEntIcon(st, it.icon)) || lpMdicKey(lpStateIconName(st)) || LP_MDIC_FALLBACK;
-    if (old.getAttribute('data-n') !== k) { old.setAttribute('data-n', k); old.innerHTML = LP_MDIC.map[k] || ''; }
+    if (old.getAttribute('data-n') !== k) { old.setAttribute('data-n', k); old.innerHTML = lpMdicGet(k); }
     return old;
   }
 

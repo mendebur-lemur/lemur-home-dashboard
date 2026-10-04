@@ -133,7 +133,7 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır:
 - *Dil:* otomatik (Home Assistant'ın dili), Türkçe ya da İngilizce.
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
 - *Arka plan:* koyu (varsayılan), siyah, istediğin bir renk, efekt renkleri ya da kendi resmin (`/local/zemin.jpg` gibi bir adres). Efekt renkleri Light Effect Card'ın efekt paletleri (Kutup ışığı, Ateş, Gün batımı, Okyanus, Galaksi ve 25 tane daha): koyu zeminde yumuşak bir renk ışıltısı. Light Effect Card kurulu olmasa da seçilebilir.
-- *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli) ya da Düz (hepsi gri). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.
+- *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli), Düz (hepsi gri) ya da Tek renk (çizimler tek tona çevrilir: kapalılar gri, açıklar seçtiğin renkte; istersen açık ışık lambanın kendi renginde, senaryo düğmesi kendi renginde). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
 - *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
 - *Kanvas:* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.

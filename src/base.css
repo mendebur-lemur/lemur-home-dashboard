@@ -181,6 +181,11 @@
 /* simge stili: Otomatik (kapalı cihaz, seçili olmayan oda ve yer tutucu gri), Düz (hepsi gri), Renkli (hiçbiri gri değil) */
 .ic-auto .tile:not(.on) .lic, .ic-auto .bar:not(.on) .lic, .ic-auto .row:not(.on) .lic, .ic-auto .navb:not(.sel):not(.fxb) .ni .lic, .ic-mono .lic { filter: grayscale(1) brightness(1.1); opacity: 0.7; }
 .ic-auto .navb:not(.sel):not(.fxb) .ni .lic { opacity: 0.55; }
+/* Tek renk: kapalı gri, açık seçilen renkte (--lp-ic-on), ışıkta istenirse ışığın kendi rengi, senaryoda düğmenin rengi */
+.ic-tint .lic.mdic { color: #7c8598; }
+.ic-tint .tile.on .lic, .ic-tint .bar.on .lic, .ic-tint .row.on .lic, .ic-tint .navb.sel .lic, .ic-tint .navb.fxb .lic, .ic-tint .title .lic { color: var(--lp-ic-on); }
+.ic-tint.ic-lightc .tile.on .lic, .ic-tint.ic-lightc .bar.on .lic { color: var(--tile-rgb, var(--lp-ic-on)); }
+.ic-tint .scene .lic.mdic { color: var(--sc, var(--lp-ic-on)); }
 .tile.na .lic { opacity: 0.4; }
 .row .lic { flex: 0 0 auto; width: 24px; height: 24px; margin-right: 14px; }
 .title .lic { width: 20px; height: 20px; margin-right: 8px; vertical-align: -4px; }

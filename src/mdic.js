@@ -2,7 +2,8 @@
 // ve "lhd:ad" (panoya özel). Entegrasyon ayrı bir dosya olarak sunar (/lemur_home_dashboard/mdi-color.json, ad → SVG);
 // ilk gereken yerde bir kez yüklenir, tarayıcı önbellekte tutar. Yüklenene kadar simgenin yeri boş kalır.
 // Simge stili (ayar icon_style): Otomatik (varsayılan; kapalı cihaz ve seçili olmayan oda düz/gri, açık olan renkli),
-// Renkli (her zaman renkli), Düz (her zaman gri). Griler CSS ile yapılır (base.css: .ic-auto / .ic-mono).
+// Renkli (her zaman renkli), Düz (her zaman gri), Tek renk (çizimler tek tona çevrilir: kapalı gri, açık seçilen renkte).
+// Griler ve tonlar CSS ile yapılır (base.css: .ic-auto / .ic-mono / .ic-tint).
 const LP_MDIC_URL = '/lemur_home_dashboard/mdi-color.json';
 const LP_MDIC = window.__LEMUR_HD_MDIC || (window.__LEMUR_HD_MDIC = { map: null, loading: null, subs: [], near: {} });
 const lpIsLhdIcon = (i) => typeof i === 'string' && i.indexOf('lhd:') === 0;
@@ -15,8 +16,24 @@ const LP_MDIC_ALIAS = {
   'mdi:led-strip': 'mdi:led-strip-variant', 'mdi:thermometer-auto': 'mdi:thermometer', 'mdi:power-socket': 'mdi:power-socket-eu',
   'mdi:office-building-minus-outline': 'mdi:balcony', 'mdi:door': 'mdi:door-closed', 'mdi:bed-outline': 'mdi:bed', 'mdi:desk': 'lhd:desk-monitor'
 };
-// simge stili: 'auto' | 'full' | 'mono' (eski 'color' değeri Otomatik sayılır)
-function lpIconMode() { const s = (STORE.data && STORE.data.settings) || {}; return s.icon_style === 'full' || s.icon_style === 'mono' ? s.icon_style : 'auto'; }
+// simge stili: 'auto' | 'full' | 'mono' | 'tint' (eski 'color' değeri Otomatik sayılır)
+function lpIconMode() { const s = (STORE.data && STORE.data.settings) || {}; return s.icon_style === 'full' || s.icon_style === 'mono' || s.icon_style === 'tint' ? s.icon_style : 'auto'; }
+// Tek renk stili: açık cihazın rengi (ayar icon_tint) ve ışıkta ışığın kendi rengi (icon_tint_light, varsayılan açık)
+const LP_TINT_DEFAULT = '#FFC24A';
+function lpIconTint() { const s = (STORE.data && STORE.data.settings) || {}; return /^#[0-9a-fA-F]{6}$/.test(s.icon_tint || '') ? s.icon_tint : LP_TINT_DEFAULT; }
+function lpIconTintLight() { const s = (STORE.data && STORE.data.settings) || {}; return s.icon_tint_light !== false; }
+// çizimin tek renk hali: gradyanlar ve renkler kaldırılır, hepsi currentColor (rengi CSS verir); beyaz ayrıntılar
+// (dolu rozet üstündeki tik gibi) koyu zemin rengiyle oyulur. Simge başına bir kez hesaplanır.
+function lpMono(k) {
+  const C = LP_MDIC.mono || (LP_MDIC.mono = {});
+  if (C[k] !== undefined) return C[k];
+  const svg = (LP_MDIC.map && LP_MDIC.map[k]) || '';
+  return (C[k] = svg.replace(/<defs>[\s\S]*?<\/defs>/g, '')
+    .replace(/(stroke|fill)="#[Ff]{6}"/g, '$1="#10141c"')
+    .replace(/(stroke|fill)="(url\(#[^)]+\)|#[0-9A-Fa-f]{6})"/g, '$1="currentColor"'));
+}
+// stile göre simgenin çizimi (Tek renkte tek renk hali)
+function lpMdicGet(k) { return lpIconMode() === 'tint' ? lpMono(k) : (LP_MDIC.map[k] || ''); }
 function lpMdicOn() { return true; }
 function lpMdicLoad() {
   if (LP_MDIC.map) return Promise.resolve(LP_MDIC.map);
@@ -68,7 +85,7 @@ function lpMdicKey(icon) {
 function lpMdicSvg(icon) {
   if (!LP_MDIC.map) { lpMdicLoad(); return null; }
   const k = lpMdicKey(icon);
-  return LP_MDIC.map[k || LP_MDIC_FALLBACK] || '';
+  return lpMdicGet(k || LP_MDIC_FALLBACK);
 }
 // bir varlığın simgesi: öğeye verilen, HA'daki kendi simgesi, yoksa durumuna göre varsayılan
 function lpEntIcon(st, own) {

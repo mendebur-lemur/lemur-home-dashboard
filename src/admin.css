@@ -208,6 +208,7 @@ select.inp { padding-right: 6px; }
 .lic svg { width: 100%; height: 100%; display: block; }
 .rb .lic { width: 26px; height: 26px; }
 :host(.ic-auto) .rb:not(.on) .lic { filter: grayscale(1) brightness(1.15); opacity: 0.55; }
+:host(.ic-tint) .lic.mdic { color: #9AA6BE; } :host(.ic-tint) .rb.on .lic.mdic { color: var(--lp-ic-on, #FFC24A); }
 :host(.ic-mono) .rb .lic, :host(.ic-mono) .it .lic, :host(.ic-mono) .pv .lic, :host(.ic-mono) .pi .lic { filter: grayscale(1) brightness(1.1); opacity: 0.7; }
 .lic.s16 { width: 16px; height: 16px; margin-right: 8px; }
 .pi .ico .lic { width: 22px; height: 22px; }

@@ -33,6 +33,7 @@ const LP_POP_CSS = `
 .sl ha-state-icon, .sl ha-icon { --mdc-icon-size: 24px; color: #8A8F96; margin-right: 14px; flex: 0 0 auto; }
 .sl.on ha-state-icon, .sl.on ha-icon { color: #fff; }
 :host(.ic-auto) .sl:not(.on) .lic, :host(.ic-mono) .lic { filter: grayscale(1) brightness(1.1); opacity: 0.7; }
+:host(.ic-tint) .lic { color: #8A8F96; } :host(.ic-tint) .sl.on .lic { color: #fff; } :host(.ic-tint) .hd .lic { color: var(--lp-ic-on, #FFC24A); }
 .lic { display: inline-block; line-height: 0; flex: 0 0 auto; } .lic svg { width: 100%; height: 100%; display: block; }
 .hd .nm .lic { width: 22px; height: 22px; margin-right: 12px; } .sl .lic { width: 24px; height: 24px; margin-right: 14px; }
 .sl .tx { min-width: 0; }
@@ -182,7 +183,7 @@ class LemurLightPopup {
     const name = it.name || (st && st.attributes.friendly_name) || this._id;
     const icon = lpIcon(lpEntIcon(st, it.icon));
     if (!LP_MDIC.map) lpMdicLoad().then(() => { if (this._host && this._host.isConnected) this._render(); });
-    if (this._host) this._host.className = 'lemur-light-popup ic-' + lpIconMode();
+    if (this._host) { this._host.className = 'lemur-light-popup ic-' + lpIconMode(); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
     const tabs = this._tabs();
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
     let h = '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
