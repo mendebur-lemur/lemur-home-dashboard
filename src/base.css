@@ -26,6 +26,7 @@
 .ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }
 /* renkli simgelerde yalnızca seçili oda renkli, diğerleri soluk */
 .navb:not(.sel) .ni .lic { filter: grayscale(1) brightness(1.15); opacity: 0.55; }
+.navb.fxb .ni .lic { filter: none; opacity: 1; }
 .nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
 

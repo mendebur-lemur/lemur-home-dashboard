@@ -37,6 +37,7 @@ function lpMdicKey(icon) {
   if (!M || typeof icon !== 'string') return null;
   if (lpIsLhdIcon(icon)) return M[icon] ? icon : null;
   if (icon.indexOf('mdi:') !== 0) return null;
+  if (M[icon]) return icon;   // setteki kendi çizimi her zaman önce
   let k = LP_MDIC_ALIAS[icon] || icon;
   if (M[k]) return k;
   if (/-outline$/.test(k)) { k = k.slice(0, -8); if (M[k]) return k; }

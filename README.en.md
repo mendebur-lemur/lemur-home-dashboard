@@ -12,7 +12,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 - **No other add-ons needed.** One install from HACS; no mushroom, card-mod, bubble-card or any other card or theme. The climate and vacuum cards are bundled.
 - **Everything from the admin panel.** In the **Lemur Home Dashboard** page in the sidebar you edit tabs, sections, column widths and where each device goes; a live preview shows the result, and changes reach every tablet in the house at once. Every step can be undone.
 - **Icon picker.** Choose tab, light and button icons from a list: suggestions that fit first, all Home Assistant icons when you search.
-- **Colourful icons.** Set the icon style to **Colourful** in the settings and tiles, room buttons and scenes are drawn with the 377 built-in colourful icons; devices that are off show a faded icon. Nothing else to install.
+- **Colourful icons.** Set the icon style to **Colourful** in the settings and tiles, room buttons and scenes are drawn with the 1305 built-in colourful icons; devices that are off show a faded icon. Nothing else to install.
 - **Slider light bars.** A lights section can show horizontal bars instead of square tiles: tap to toggle, swipe sideways to change brightness, and the bar fills to the brightness in the light's colour. Bars on phones only, tiles on tablets, is an option too.
 - **Light window.** Hold a light tile to open a light window with a big brightness slider, white tones, a colour wheel, preset colours, effects and (if the light has them) segments. You can switch to Home Assistant's own dialog in the settings.
 - **Fits any screen.** The dashboard scales with the screen; it keeps the same proportions on 16:10, 4:3 and wide screens and runs smoothly on old tablets (iOS 12).
