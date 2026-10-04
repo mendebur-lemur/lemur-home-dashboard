@@ -191,6 +191,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   // --- iskelet ---
   _build(tab, tabs, lang, season) {
     const h = this._hass, S = h.states;
+    if (this.getAttribute('lang') !== lang) this.setAttribute('lang', lang);
     const tiles = [], tileItems = [], rows = [], embeds = [];
     const lecRooms = {};   // bu sekmede LEC'ten oynayan efekti sorulacak odalar
     // ayarda olup şu an HA'da olmayan cihazlar: gelince (ör. HA yeniden başladıktan sonra) pano yeniden kurulur
