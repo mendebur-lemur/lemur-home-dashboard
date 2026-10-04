@@ -20,7 +20,6 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 - **Işık efektleri (isteğe bağlı).** [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) kuruluysa üst şeride Efektler düğmesi gelir, oynayan efekt karolarda görünür.
 - Türkçe ve İngilizce arayüz.
 
-> Geliştirme aşamasında. İlk kararlı sürüm (v0.1.0) hazırlanıyor; denemek istersen kurabilirsin, düzenin güncellemelerde korunur.
 
 ## İçindekiler
 

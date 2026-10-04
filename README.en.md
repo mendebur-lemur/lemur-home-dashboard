@@ -20,7 +20,6 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 - **Light effects (optional).** If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is installed, an Effects button appears in the top bar and the playing effect shows on the tiles.
 - Turkish and English interface.
 
-> In development. The first stable release (v0.1.0) is being prepared; you can install it to try, and your layout is kept across updates.
 
 ## Contents
 
