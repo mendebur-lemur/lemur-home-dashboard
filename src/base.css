@@ -124,7 +124,7 @@
 .navb.fxb .ni ha-icon { color: #FF6FAE; }
 /* --- telefon görünümü (dar ekran): ölçek yok, üst şerit kayar, bölümler alt alta --- */
 .wrap.phone { display: block; height: auto; min-height: 0; padding: 8px 8px 24px; }
-.phone .nav { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; margin: 0 0 10px; padding-bottom: 2px; }
+.phone .nav { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 0 10px; padding-bottom: 2px; }
 .phone .nav::-webkit-scrollbar { display: none; }
 .phone .navb { flex: 0 0 84px; height: 84px; border-radius: 16px; padding: 8px 0 6px; }
 .phone .navb + .navb { margin-left: 8px; }
