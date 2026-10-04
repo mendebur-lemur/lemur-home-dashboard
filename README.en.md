@@ -215,8 +215,12 @@ Settings are kept in `.storage/lemur_home_dashboard`. The dashboard is generated
 
 ## License
 
-The code is licensed under **[PolyForm Noncommercial 1.0.0](LICENSE)**: personal, home, educational and non-profit use is allowed; **commercial use is not**. Anyone who copies, changes or builds on the code and shares it must keep the license text and the `Required Notice` line (mendeburlemur and a link to this repository).
+The code is licensed under **[GPL-3.0](LICENSE)** with the additional attribution terms in [NOTICE.md](NOTICE.md):
 
-Images, videos and documentation are licensed under **[CC BY-NC-SA 4.0](LICENSE-DOCS.md)**: they can be shared with credit, for non-commercial purposes and under the same license.
+- Anyone can use, change and share it.
+- Any project that uses or builds on this code must **release its own source code under the same license**; it cannot be turned into a closed-source product.
+- Copies and modified versions must keep this attribution line: *Based on Lemur Home Dashboard by mendeburlemur — https://github.com/mendebur-lemur/lemur-home-dashboard*
 
-For commercial use, ask for permission by [opening an issue](https://github.com/mendebur-lemur/lemur-home-dashboard/issues). v0.1.0 and earlier were released under the MIT license; MIT still applies to those versions.
+Images, videos and documentation are licensed under **[CC BY-NC-SA 4.0](docs/LICENSE.md)**: they can be shared with credit, for non-commercial purposes and under the same license.
+
+v0.1.0 and earlier were released under the MIT license; MIT still applies to those versions.

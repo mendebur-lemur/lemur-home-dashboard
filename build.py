@@ -10,7 +10,7 @@ def load_css(name):
 css = load_css("base.css")
 admin_css = load_css("admin.css")
 parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "store.js", "lec.js", "defaults.js", "scale.js", "strategy.js", "panel-card.js", "lightpop.js", "admin.js")]
-out = f"""/*! Lemur Home Dashboard v{version} | PolyForm-Noncommercial-1.0.0 */
+out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';

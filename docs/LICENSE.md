@@ -6,7 +6,7 @@ Bu depodaki görseller, videolar ve dokümanlar (README dosyaları, `docs/` klas
 - **GayriTicari:** Ticari amaçla kullanılamaz.
 - **AynıLisanslaPaylaş:** Değiştirip paylaşırsan aynı lisansla paylaşmalısın.
 
-Kod bu kapsamda değildir; kodun lisansı [LICENSE](LICENSE) dosyasındadır (PolyForm Noncommercial 1.0.0).
+Kod bu kapsamda değildir; kodun lisansı [LICENSE](../LICENSE) (GPL-3.0) ve [NOTICE.md](../NOTICE.md) dosyalarındadır.
 
 ---
 
@@ -16,6 +16,6 @@ The images, videos and documentation in this repository (the README files and th
 - **NonCommercial:** No commercial use.
 - **ShareAlike:** If you change and share it, share it under the same license.
 
-The code is not covered by this; its license is in [LICENSE](LICENSE) (PolyForm Noncommercial 1.0.0).
+The code is not covered by this; its license is in [LICENSE](../LICENSE) (GPL-3.0) and [NOTICE.md](../NOTICE.md).
 
 Copyright (c) 2026 mendeburlemur

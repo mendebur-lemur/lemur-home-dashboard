@@ -1,4 +1,4 @@
-/*! Lemur Halo Cards v0.2.0 | PolyForm-Noncommercial-1.0.0 | https://github.com/mendebur-lemur/lemur-halo-cards */
+/*! Lemur Halo Cards v0.2.0 | GPL-3.0 | https://github.com/mendebur-lemur/lemur-halo-cards */
 (() => {
 if (window.__lemurCardsLoaded) return;
 window.__lemurCardsLoaded = true;
