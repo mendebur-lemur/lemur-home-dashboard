@@ -253,6 +253,7 @@ class LemurHomeDashboardCard extends HTMLElement {
 
   // --- iskelet ---
   _build(tab, tabs, lang, season) {
+    tab = lhdNormTab(tab);
     const h = this._hass, S = h.states;
     if (this.getAttribute('lang') !== lang) this.setAttribute('lang', lang);
     const tiles = [], tileItems = [], rows = [], embeds = [];
@@ -271,97 +272,96 @@ class LemurHomeDashboardCard extends HTMLElement {
       return '<div class="emb" data-emb="' + (embeds.length - 1) + '"' + mark(i) + '></div>';
     };
     const withIdx = (arr, norm) => (arr || []).map((x, i) => { const e = norm(x); return e ? Object.assign({ _i: i }, e) : null; }).filter(Boolean);
-    const bodyOf = (s) => {
-      if (s.type === 'lights') {
-        // karo: "light.x" ya da { entity, name, icon }; cihazı olmayan { name, icon } boş yuva olarak çizilir (tablet panosundaki gibi)
-        const items = withIdx(s.entities, lpItem).filter((e) => !e.entity || S[e.entity]);
-        if (!items.some((e) => e.entity)) return null;
-        // Tablet panosundaki gibi: 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
-        // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
-        // Karo sayısı ayardaki kadar, ama sütun daraldıysa karolar 70 px'ten küçülmesin diye azalır (kanvas en az W piksel geniş)
-        const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
-        const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
-        const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
-        // kaydırmalı çubuklar: bölüm ayarı look = 'bar' (her yerde) ya da 'phone' (yalnızca telefonda)
-        if (s.look === 'bar' || (s.look === 'phone' && phone)) {
-          const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
-          // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda sabit yükseklik
-          const br = Math.max(6, Math.ceil(items.length / bc));
-          return { kind: 'md', html: '<div class="bars" data-sec="' + esc(s.id) + '" style="grid-template-columns:repeat(' + bc + ',minmax(0,1fr))' + (phone ? '' : ';grid-template-rows:repeat(' + br + ',minmax(60px,1fr))') + '">' +
-            items.map((it) => {
-              if (!it.entity) return '<div class="bar ph"' + mark(it._i) + '><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
-              tiles.push(it.entity); tileItems.push(it);
-              return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><div class="bf"></div><ha-state-icon></ha-state-icon><div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
-            }).join('') + '</div>' };
-        }
-        const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = !phone && r >= 4;
-        const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? 'minmax(84px,1fr)' : '1fr') + ')';
-        const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
-          : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
-        return { kind: 'md', html: open +
+    // Bölüm serbest: öğeler sırayla, kendi türüne göre çizilir. Art arda gelen aynı türden öğeler bir grup olur:
+    // karolar (ışık, priz, perde, fan... ve boş karo) bir ızgara, senaryo düğmeleri, iklim/süpürge kartları ve medya satırları alt alta.
+    // Bölümde sadece karo varsa ızgara kutuyu doldurur (tablet panosundaki gibi); başka öğelerle birlikteyse karolar kare kalır.
+    const tileGrid = (s, items, only) => {
+      // Karo sayısı ayardaki kadar, ama sütun daraldıysa karolar 70 px'ten küçülmesin diye azalır (kanvas en az W piksel geniş)
+      const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
+      const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
+      const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
+      // kaydırmalı çubuklar: bölüm ayarı look = 'bar' (her yerde) ya da 'phone' (telefonda otomatik)
+      if (s.look === 'bar' || (s.look === 'phone' && phone)) {
+        const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
+        // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda ya da başka öğelerle birlikteyken sabit yükseklik
+        const br = Math.max(6, Math.ceil(items.length / bc)), fillB = only && !phone;
+        return '<div class="bars' + (fillB ? '' : ' fixed') + '" data-sec="' + esc(s.id) + '" style="grid-template-columns:repeat(' + bc + ',minmax(0,1fr))' + (fillB ? ';grid-template-rows:repeat(' + br + ',minmax(60px,1fr))' : '') + '">' +
           items.map((it) => {
-            if (!it.entity) return '<div class="tile ph"' + mark(it._i) + '><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="nm">' + esc(it.name || '') + '</div></div>';
+            if (!it.entity) return '<div class="bar ph"' + mark(it._i) + '><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
             tiles.push(it.entity); tileItems.push(it);
-            return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><ha-state-icon></ha-state-icon><div class="nm"></div></div>';
-          }).join('') + (fill ? '</div>' : '</div></div>') };
+            return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><div class="bf"></div><ha-state-icon></ha-state-icon><div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
+          }).join('') + '</div>';
       }
-      if (s.type === 'scenes') {
-        // LEC düğmeleri: LEC kurulu değilse panoda görünmez (düzenlemede soluk görünür)
-        const lecOn = LEC.installed(h);
-        const items = (s.items || []).map((it, i) => ({ it: it, i: i, k: lpLecKind(it) })).filter((x) => x.it && (!x.k || lecOn || edit));
-        if (!items.length) return null;
-        return { kind: 'md', spread: true, html: items.map((x) => {
-          const it = x.it, c = it.color || '#5B8DEF';
-          let lec = '';
-          if (x.k) {
-            const room = x.k === 'open' ? (it.action.room || tab.area || '') : ((it.action.data && it.action.data.room) || '');
-            if (room) lecRooms[room] = 1;
-            lec = ' data-lk="' + esc(x.k) + '" data-lroom="' + esc(room) + '" data-lfx="' + esc((it.action.data && it.action.data.effect) || '') + '"';
-          }
-          return '<div class="scene' + (x.k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + '" data-scene="' + esc(s.id) + ':' + x.i + '"' + lec + mark(x.i) + '><div class="si"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(c) + '"></ha-icon></div><span>' + esc(it.name) + '</span></div>';
-        }).join('') };
+      // 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
+      // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
+      const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = !phone && r >= 4;
+      // başka öğelerle aynı kutudaysa karolar kalan yeri doldurur, gerekirse kısalır (kartlar kendi yüksekliğinde kalır)
+      const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? (only ? 'minmax(84px,1fr)' : 'minmax(56px,1fr)') : '1fr') + ')';
+      const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
+        : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
+      return open + items.map((it) => {
+        if (!it.entity) return '<div class="tile ph"' + mark(it._i) + '><ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon><div class="nm">' + esc(it.name || '') + '</div></div>';
+        tiles.push(it.entity); tileItems.push(it);
+        return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + mark(it._i) + '><ha-state-icon></ha-state-icon><div class="nm"></div></div>';
+      }).join('') + (fill ? '</div>' : '</div></div>');
+    };
+    const sceneBtn = (s, it, i) => {
+      const lecOn = LEC.installed(h), k = lpLecKind(it), c = it.color || '#5B8DEF';
+      let lec = '';
+      if (k) {
+        const room = k === 'open' ? (it.action.room || tab.area || '') : ((it.action.data && it.action.data.room) || '');
+        if (room) lecRooms[room] = 1;
+        lec = ' data-lk="' + esc(k) + '" data-lroom="' + esc(room) + '" data-lfx="' + esc((it.action.data && it.action.data.effect) || '') + '"';
       }
-      if (s.type === 'climate') {
-        const items = withIdx(s.entities, lpEnt).filter((e) => S[e.entity]);
-        if (!items.length) return null;
-        const isAC = (x) => (x.kind ? x.kind === 'ac' : (S[x.entity].attributes.hvac_modes || []).indexOf('cool') >= 0);
-        const ac = items.filter(isAC), rad = items.filter((x) => !isAC(x));
-        const both = ac.length > 0 && rad.length > 0;
-        const list = both ? (season === 'winter' ? rad : ac) : items;
-        return { kind: 'hd', spread: true, season: both, html: list.map((x) => { const c = Object.assign({ type: 'custom:lemur-hd-climate-card' }, x); delete c._i; return emb('lemur-hd-climate-card', c, x.entity, x._i); }).join('') };
-      }
-      if (s.type === 'vacuum') {
-        const items = withIdx(s.entities, lpEnt).filter((e) => S[e.entity]);
-        if (!items.length) return null;
-        return { kind: 'hd', spread: true, html: items.map((x) => { const c = Object.assign({ type: 'custom:lemur-hd-vacuum-card' }, x); delete c._i; return emb('lemur-hd-vacuum-card', c, x.entity, x._i); }).join('') };
-      }
-      if (s.type === 'media') {
-        const items = withIdx(s.entities, lpEnt).filter((e) => S[e.entity]);
-        if (!items.length) return null;
-        return { kind: 'hd', spread: true, html: items.map((x) => { rows.push(x.entity); return '<div class="row" data-row="' + esc(x.entity) + '"' + mark(x._i) + '></div>'; }).join('') };
-      }
-      return null;
+      const st = it.entity ? S[it.entity] : null;
+      const name = it.name || (st ? st.attributes.friendly_name || it.entity : '');
+      const icon = it.icon || (st && st.attributes.icon) || 'mdi:play';
+      return '<div class="scene' + (k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + '" data-scene="' + esc(s.id) + ':' + i + '"' + lec + mark(i) + '><div class="si"><ha-icon icon="' + esc(icon) + '" style="color:' + esc(c) + '"></ha-icon></div><span>' + esc(name) + '</span></div>';
+    };
+    const bodyOf = (s) => {
+      const lecOn = LEC.installed(h);
+      const all = (s.entities || []).map((x, i) => {
+        const k = lhdKind(x); if (!k) return null;
+        const it = typeof x === 'string' ? { entity: x } : x;
+        if (it.entity && !S[it.entity]) return null;                                // HA'da (şimdilik) yok
+        if (k === 'scene' && lpLecKind(it) && !lecOn && !edit) return null;          // LEC kurulu değilse LEC düğmesi görünmez
+        return Object.assign({ _i: i, _k: k === 'ph' ? 'tile' : k }, it);
+      }).filter(Boolean);
+      if (!all.length) return null;
+      // iklim: bölümde hem klima hem petek varsa mevsime göre biri gösterilir (başlıkta Yaz/Kış düğmesi)
+      const isAC = (x) => (x.kind ? x.kind === 'ac' : (S[x.entity].attributes.hvac_modes || []).indexOf('cool') >= 0);
+      const cl = all.filter((x) => x._k === 'climate'), both = cl.some(isAC) && cl.some((x) => !isAC(x));
+      const items = both ? all.filter((x) => x._k !== 'climate' || (season === 'winter' ? !isAC(x) : isAC(x))) : all;
+      if (!items.length) return null;
+      const groups = [];
+      items.forEach((x) => { const g = groups[groups.length - 1]; if (g && g.k === x._k && (x._k === 'tile')) g.items.push(x); else groups.push({ k: x._k, items: [x] }); });
+      const hasTiles = groups.some((g) => g.k === 'tile'), onlyTiles = groups.length === 1 && hasTiles;
+      const html = groups.map((g) => {
+        if (g.k === 'tile') return tileGrid(s, g.items, onlyTiles);
+        return g.items.map((x) => {
+          if (x._k === 'scene') return sceneBtn(s, x, x._i);
+          const c = Object.assign({}, x); delete c._i; delete c._k;
+          if (x._k === 'climate') return emb('lemur-hd-climate-card', Object.assign(c, { type: 'custom:lemur-hd-climate-card' }), x.entity, x._i);
+          if (x._k === 'vacuum') return emb('lemur-hd-vacuum-card', Object.assign(c, { type: 'custom:lemur-hd-vacuum-card' }), x.entity, x._i);
+          rows.push(x.entity); return '<div class="row" data-row="' + esc(x.entity) + '"' + mark(x._i) + '></div>';
+        }).join('');
+      }).join('');
+      // başlık biçimi: karo ya da düğmeyle başlayan bölüm büyük başlık, kartla başlayan küçük başlık
+      const first = groups[0].k;
+      return { kind: first === 'tile' || first === 'scene' ? 'md' : 'hd', spread: !hasTiles, mix: hasTiles && !onlyTiles, season: both, html: html };
     };
 
-    // kolonlara dağıt; başlıksız bölüm aynı kolondaki önceki kutunun içine girer (ör. iklimin altında süpürge)
-    // içi boş bölümün başlığı, aynı kolonda arkasından gelen başlıksız bölüme geçer.
+    // Her bölüm bir kutu. Yerleşim: kolonlar (genişlik oranı) ve her kolonun içinde 1-3 eşit sütun (tab.splits). Bölümün yeri: col + sub.
     // Düzenleme modunda boş bölüm de bir kutu olarak görünür (içine sürüklenebilsin diye).
-    // Yerleşim: kolonlar (genişlik oranı) ve her kolonun içinde 1-3 eşit sütun (tab.splits). Bölümün yeri: col + sub.
     const widths = lpWeights(tab), splits = lpSplits(tab, widths.length);
     const cols = widths.map((w, i) => { const a = []; for (let j = 0; j < splits[i]; j++) a.push([]); return a; });
-    const pend = {};
     (tab.sections || []).forEach((s) => {
-      const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0)), sj = Math.max(0, Math.min(splits[ci] - 1, s.sub || 0)), key = ci + ':' + sj;
+      const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0)), sj = Math.max(0, Math.min(splits[ci] - 1, s.sub || 0));
       curSec = s.id;
       let b = bodyOf(s);
-      if (!b && edit) b = { kind: s.type === 'lights' || s.type === 'scenes' ? 'md' : 'hd', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
-      if (!b) { if (s.title) pend[key] = s; return; }
-      const boxes = cols[ci][sj];
-      if (!s.title && !pend[key] && boxes.length) { const last = boxes[boxes.length - 1]; last.html += b.html; last.spread = last.spread || b.spread; last.secs.push(s.id); return; }
-      const head = s.title ? s : pend[key];
-      pend[key] = null;
-      boxes.push({ title: head ? head.title : (s.type === 'media' ? t(lang, 'media') : ''), kind: b.kind, season: !!b.season && head === s, spread: b.spread, html: b.html,
-        secs: head && head !== s ? [head.id, s.id] : [s.id], grow: (head || s).grow || 1 });
+      if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
+      if (!b) return;
+      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, html: b.html, secs: [s.id], grow: s.grow || 1 });
     });
     const used = [];
     cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
@@ -372,7 +372,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       navFx + '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = season === 'winter' ? '<ha-icon icon="mdi:snowflake" style="color:#7cc8ff"></ha-icon>' : '<ha-icon icon="mdi:white-balance-sunny" style="color:#ffc23d"></ha-icon>';
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
-    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
+    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi ? ' style="flex:' + b.grow + ' 1 0px;min-height:auto"' : '') + '>' +
       (edit ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
@@ -468,7 +468,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     R.querySelectorAll('[data-scene]').forEach((b) => lpPress(b, () => {
       const p = b.getAttribute('data-scene').split(':');
       const s = (tab.sections || []).filter((x) => x.id === p[0])[0];
-      const it = s && s.items && s.items[+p[1]];
+      let it = s && s.entities && s.entities[+p[1]];
+      if (typeof it === 'string') it = { entity: it };
+      if (it && it.entity && !it.action) {   // düğme olarak eklenmiş betik, sahne, otomasyon, buton
+        const d = it.entity.split('.')[0];
+        const sv = d === 'automation' ? 'trigger' : (d === 'button' || d === 'input_button') ? 'press' : 'turn_on';
+        this._hass.callService(d, sv, { entity_id: it.entity }); return;
+      }
       if (!it || !it.action || !it.action.service) return;
       const lk = lpLecKind(it);
       if (lk === 'open') { LEC.open(this._hass, it.action.room || tab.area); return; }
@@ -488,8 +494,9 @@ class LemurHomeDashboardCard extends HTMLElement {
     const emit = (nt) => lpFire(this, 'lhd-change', { tab: nt });
     const zoom = () => { const r = this.getBoundingClientRect(); return (r.width && this.offsetWidth) ? r.width / this.offsetWidth : 1; };
     const secById = (T, id) => (T.sections || []).filter((x) => x.id === id)[0];
-    const listOf = (s) => (s.type === 'scenes' ? (s.items = s.items || []) : (s.entities = s.entities || []));
-    const typeOf = (id) => { const s = secById(tab, id); return s ? s.type : ''; };
+    const listOf = (s) => (s.entities = s.entities || []);
+    // bölümler serbest: her öğe her bölüme taşınabilir
+    const typeOf = (id) => (secById(tab, id) ? 'any' : '');
     const r2 = (x) => Math.round(x * 100) / 100;
     const arr = (x) => Array.prototype.slice.call(x);
     R.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => lpFire(this, 'lhd-tab', { tab: b.getAttribute('data-nav') })));

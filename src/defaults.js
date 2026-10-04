@@ -28,6 +28,48 @@ const LP_AREA_ICONS = [
   [/stüdyo|studyo|studio/i, 'mdi:home-variant-outline']
 ];
 
+// --- Serbest bölümler ---
+// Bir bölüme her türden öğe eklenebilir; her öğe kendi türüne göre çizilir (ışık karosu, senaryo düğmesi, iklim kartı...).
+// Bölümün türü (lights, scenes, climate...) sadece başlangıç başlığı ve simgesi için.
+// Öğe biçimleri: "light.x" ya da { entity, name, icon, ... } (cihaz), { name, icon, color, action } (düğme), { name, icon } (boş karo).
+function lhdKind(it) {
+  if (!it) return null;
+  if (typeof it === 'string') it = { entity: it };
+  if (!it.entity) return Object.prototype.hasOwnProperty.call(it, 'action') ? 'scene' : 'ph';
+  const d = it.entity.split('.')[0];
+  if (d === 'script' || d === 'scene' || d === 'automation' || d === 'button' || d === 'input_button') return 'scene';
+  if (d === 'climate') return 'climate';
+  if (d === 'vacuum') return 'vacuum';
+  if (d === 'media_player') return 'media';
+  return 'tile';
+}
+// Eski kayıtları yeni biçime getirir (v: 2): senaryo öğeleri `items`ten `entities`e geçer; aynı kolon/sütunda başlıksız bölüm,
+// eskiden olduğu gibi önceki bölümün kutusuna girdiği için onunla birleşir (ekranda değişen bir şey olmaz, yönetim panelinde tek bölüm görünür).
+function lhdNormTab(tab) {
+  if (!tab || tab.v === 2) return tab;
+  const out = [];
+  (tab.sections || []).forEach((s0) => {
+    const s = Object.assign({}, s0);
+    s.entities = (s.entities || []).concat(s.items || []);
+    delete s.items;
+    let prev = null;
+    for (let i = out.length - 1; i >= 0; i--) if ((out[i].col || 0) === (s.col || 0) && (out[i].sub || 0) === (s.sub || 0)) { prev = out[i]; break; }
+    if (prev && !s.title) {
+      prev.entities = prev.entities.concat(s.entities);
+      Object.keys(s).forEach((k) => { if (prev[k] === undefined && k !== 'id' && k !== 'title') prev[k] = s[k]; });
+      return;
+    }
+    out.push(s);
+  });
+  return Object.assign({}, tab, { v: 2, sections: out });
+}
+// Bölümdeki öğe türleri (yönetim panelindeki özet için): { tile: 7, scene: 2, ... }
+function lhdKinds(s) {
+  const c = {};
+  ((s && s.entities) || []).forEach((it) => { const k = lhdKind(it); if (k) c[k === 'ph' ? 'tile' : k] = (c[k === 'ph' ? 'tile' : k] || 0) + 1; });
+  return c;
+}
+
 function buildDefaultTabs(hass, lang) {
   const S = hass.states || {};
   const ents = hass.entities || {};   // varlık kaydı özeti (area_id, device_id, hidden, entity_category)
@@ -125,14 +167,13 @@ function buildDefaultTabs(hass, lang) {
 
   const tab = (o) => {
     colorIdx = 0;   // her sekmede renkler baştan: aynı sıradaki düğme aynı renkte
+    // sağ kolon tek bölüm: iklim kartları, süpürgeler ve medya aynı kutuda
     const secs = [
       { id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 },
-      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, items: o.scenes.map(sceneItem) },
-      { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem) },
-      { id: o.id + '-v', type: 'vacuum', col: 2, entities: o.vacuums || [] },
-      { id: o.id + '-m', type: 'media', col: 2, entities: o.medias }
+      { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, entities: o.scenes.map(sceneItem) },
+      { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem).concat(o.vacuums || [], o.medias || []) }
     ];
-    return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, columns: [56, 17, 25.5], sections: secs };
+    return { id: o.id, name: o.name, icon: o.icon, area: o.area || null, v: 2, columns: [56, 17, 25.5], sections: secs };
   };
 
   // Ev sekmesi bütün evin özeti: listeyi tek bir odanın cihazları doldurmasın, odalardan sırayla alınır

@@ -36,6 +36,9 @@
   background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }
 .box > * + * { margin-top: 8px; }
 .box.spread { justify-content: space-between; }
+/* karo ile başka öğelerin karıştığı bölüm: karolar kare, düğmeler ve kartlar altında sabit yükseklikte, kutu yukarıdan dolar */
+.box.mix > .scene { flex: 0 0 72px; }
+.box.mix > .emb, .box.mix > .row { flex: 0 0 auto; }
 .box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }
 .title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
 .title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }
@@ -57,6 +60,7 @@
 
 /* kaydırmalı çubuklar (telefon panosundaki ışık kartı gibi): dokun aç/kapat, sağa-sola kaydır parlaklık; dolgu değer kadar, ışığın renginde */
 .bars { display: grid; grid-gap: 8px; flex: 1 1 auto; min-height: 0; }
+.bars.fixed { flex: 0 0 auto; grid-auto-rows: 72px; }
 .bar { position: relative; box-sizing: border-box; min-width: 0; border-radius: 18px; background: var(--lp-card); border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden; display: flex; align-items: center; cursor: pointer; color: var(--lp-text); -webkit-user-select: none; user-select: none;
   -webkit-tap-highlight-color: transparent; touch-action: pan-y; transition: transform 0.1s ease-out, border-color 0.2s; --bar-c: #F0A93B; }
@@ -166,3 +170,4 @@
 .phone .scene span { font-size: 14px; }
 .phone .box.spread > .emb, .phone .box.spread > .row { flex: 0 0 100%; margin-bottom: 8px; }
 .phone .box.spread > .eph { flex: 0 0 100%; }
+.phone .box.mix > .scene { flex: 0 0 64px; border-radius: 18px; }

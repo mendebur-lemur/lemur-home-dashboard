@@ -117,9 +117,9 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 - **Tabs:** Choose a name, icon and area (room). **Refill from area** places that room's devices again on a tab with an area. **+ Tab** opens an empty tab or a tab for a room, already filled.
 - **Columns:** 1 to 6 columns. Drag the lines in the preview to set widths; **Tablet layout** and **Equal** are presets. Each column can be split into 1-3 sub-columns.
-- **Sections:** **Add section** adds a Lights, Scenes, Climate, Vacuum or Media section. Drag sections by their handle in the preview to move them between columns; drag items themselves to reorder them.
-- **Lights section look:** **Tiles** (square tiles), **Sliders** (horizontal bars: tap to toggle, swipe sideways for brightness) or **Sliders on phone** (tiles on a tablet, bars on a phone). Tiles and bars per row are set separately.
-- **Add devices:** Search in the picker and add several devices at once. A light tile's name and icon can be changed; scene buttons get a colour and icon. For a climate card you choose temperature and humidity sensors, an outdoor temperature sensor, a second device controlled together and the type (air conditioner/radiator).
+- **Free sections:** Each section is a box and anything can go into it: lights, plugs, covers, scene buttons, climate and vacuum cards and media players can share one box; each item shows in its own way. The types in **Add section** (Empty section, Lights, Scenes, Climate, Vacuum, Media) are only a starting title. Drag sections by their handle in the preview to move them between columns; drag items themselves to reorder them or move them to another section.
+- **Lights section look:** **Tiles** (square tiles), **Sliders** (horizontal bars: tap to toggle, swipe sideways for brightness) or **Auto on phone** (tiles on a tablet, bars on a phone). Tiles and bars per row are set separately.
+- **Add:** The picker lists every kind of device; the filter at the top (All, Lights and switches, Scenes, Climate, Vacuum, Media) narrows it, and several devices can be added at once. Scripts, scenes and automations become coloured buttons. A light tile's name and icon can be changed; scene buttons get a colour and icon. For a climate card you choose temperature and humidity sensors, an outdoor temperature sensor, a second device controlled together and the type (air conditioner/radiator).
 - **Icon picker:** The button next to icon fields. Icons that fit (for a room, a light or a scene) are suggested first; the search box searches all Home Assistant icons. You can also type an `mdi:...` name directly.
 - **Preview screens:** Tablet 16:10, Tablet 4:3, Wide 16:9, Phone and This screen. A warning shows in the preview when a section doesn't fit.
 - **Undo:** Every change can be undone (button or Ctrl+Z). **Back to automatic layout** in the **⋯** menu resets everything.
@@ -154,7 +154,7 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 
 ## Phone
 
-When the screen is narrower than 700 pixels, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack in a single column, scenes sit in two columns. Set a lights section to **Sliders on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
+When the screen is narrower than 700 pixels, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack in a single column, scenes sit in two columns. Set a lights section to **Auto on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png" alt="Phone layout" width="320">
 
@@ -183,7 +183,7 @@ The dashboard clears the old page copies kept by the browser and the phone app b
 
 - **"Timeout waiting for strategy element" or an empty dashboard.** Make sure the integration is added ([step 2](#2-add-the-integration)) and Home Assistant was restarted, then reload the page with Ctrl+F5. In the phone app: **Settings → Companion app → Reset frontend cache**.
 - **No Lemur Home Dashboard in the sidebar.** The page is visible to administrators only. The dashboard works for everyone.
-- **A device is missing.** The automatic layout finds devices through Home Assistant areas; devices without an area are collected in the **Other** tab. In the admin panel you can add any device to any section with **Add device**.
+- **A device is missing.** The automatic layout finds devices through Home Assistant areas; devices without an area are collected in the **Other** tab. In the admin panel you can add any device to any section with **Add**.
 - **The dashboard opens in HA's editor and changes don't show up in the panel.** "Take control" was probably used. Turn the contents back into the [two-line code](#3-create-the-dashboard) in the raw configuration editor.
 - **A section doesn't fit.** The admin panel's preview marks it; use fewer items, move the section to another column or widen the column.
 - **Still stuck?** [Open an issue](https://github.com/mendebur-lemur/lemur-home-dashboard/issues); include your Home Assistant version, browser and device and we'll take a quick look.
