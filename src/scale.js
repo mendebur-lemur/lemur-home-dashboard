@@ -26,9 +26,10 @@ const LemurScale = (() => {
     const sr = r && r.shadowRoot;
     const raw = r && r.lovelace && r.lovelace.rawConfig;
     const active = !!sr && (!!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard'));
-    // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde
+    // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde. Yeni HA (2025.x+) menü genişliğini
+    // --ha-sidebar-width ile verir; sadece menüyü gizlemek solda boş şerit bırakıyordu, genişlik de sıfırlanır.
     const k = kiosk || {};
-    style(m, KID, active && k.hide_sidebar ? 'ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
+    style(m, KID, active && k.hide_sidebar ? ':host{--ha-sidebar-width:0px !important;--ha-top-app-bar-width:100% !important}ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
     if (!sr) return;
     style(sr, KID, active && k.hide_header ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
     if (!active) { style(sr, ID, ''); return; }

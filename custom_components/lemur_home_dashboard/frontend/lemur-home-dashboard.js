@@ -2634,9 +2634,10 @@ const LemurScale = (() => {
     const sr = r && r.shadowRoot;
     const raw = r && r.lovelace && r.lovelace.rawConfig;
     const active = !!sr && (!!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard'));
-    // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde
+    // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde. Yeni HA (2025.x+) menü genişliğini
+    // --ha-sidebar-width ile verir; sadece menüyü gizlemek solda boş şerit bırakıyordu, genişlik de sıfırlanır.
     const k = kiosk || {};
-    style(m, KID, active && k.hide_sidebar ? 'ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
+    style(m, KID, active && k.hide_sidebar ? ':host{--ha-sidebar-width:0px !important;--ha-top-app-bar-width:100% !important}ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
     if (!sr) return;
     style(sr, KID, active && k.hide_header ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
     if (!active) { style(sr, ID, ''); return; }
@@ -4192,11 +4193,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const st0 = this._settings();
     const lecInfo = LEC.installed(this._hass) && !st0.lec_seen ? '<div class="lecinfo" data-lecinfo><ha-icon icon="mdi:creation"></ha-icon><div class="t"><b>' + t('lecInfoT') + '</b><span>' + t('lecInfo') + '</span></div>' +
       '<button class="btn sm" data-a="settings">' + t('settings') + '</button><button class="btn sm pri" data-a="lecok">' + t('ok') + '</button></div>' : '';
+    // yeniden çizimde kaydırma yerleri korunsun (ayarlarda bir şey değişince pencere başa atlamasın)
+    const SCR = ['.ov .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
+    SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top + lecInfo +
       '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
       this._menuHtml() + this._modalHtml(tabs, tab, sec) +
       '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
 
+    Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
     this._mountPreview(tab, sec);
     this._bind(tabs, tab, sec);
     if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
