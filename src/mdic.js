@@ -5,7 +5,8 @@
 const LP_MDIC_URL = '/lemur_home_dashboard/mdi-color.json';
 const LP_MDIC = window.__LEMUR_HD_MDIC || (window.__LEMUR_HD_MDIC = { map: null, loading: null, subs: [] });
 // panoya özel simgeler ("lhd:ad", MDI'da karşılığı yok): düz stilde çizilecek MDI simgesi. build.py src/lhd-icons.json'dan doldurur.
-const LP_LHD_FB = LHD_ICON_FB;
+const LP_LHD_FB = {};
+Object.keys(LHD_ICON_FB).forEach((m) => LHD_ICON_FB[m].split(',').forEach((k) => { LP_LHD_FB['lhd:' + k] = 'mdi:' + m; }));
 const lpIsLhdIcon = (i) => typeof i === 'string' && i.indexOf('lhd:') === 0;
 // düz stilde (ha-icon) çizilecek ad: lhd: simgesi yerine yedeği
 function lpFlatIcon(i) { return lpIsLhdIcon(i) ? (LP_LHD_FB[i] || 'mdi:shape-outline') : i; }

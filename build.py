@@ -9,7 +9,11 @@ def load_css(name):
     return "\n".join(l.strip() for l in c.splitlines() if l.strip())
 css = load_css("base.css")
 admin_css = load_css("admin.css")
-lhd_fb = json.dumps(json.loads((src / "lhd-icons.json").read_text(encoding="utf-8")), ensure_ascii=False, separators=(",", ":"))
+# lhd: simgelerinin düz yedekleri, yedeğe göre gruplanmış (küçük kalsın): {"ceiling-light": "pendant-light,ceiling-panel", ...}
+_fb = {}
+for k, v in json.loads((src / "lhd-icons.json").read_text(encoding="utf-8")).items():
+    _fb.setdefault(v[4:], []).append(k[4:])
+lhd_fb = json.dumps({k: ",".join(v) for k, v in sorted(_fb.items())}, ensure_ascii=False, separators=(",", ":"))
 parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "store.js", "mdic.js", "lec.js", "defaults.js", "scale.js", "strategy.js", "panel-card.js", "lightpop.js", "admin.js")]
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
