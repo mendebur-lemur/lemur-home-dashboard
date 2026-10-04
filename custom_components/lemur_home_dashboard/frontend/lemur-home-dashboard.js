@@ -1,4 +1,4 @@
-/*! Lemur Halo Cards (gömülü kopya) v0.2.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
+/*! Lemur Halo Cards (gömülü kopya) v0.2.0 | PolyForm-Noncommercial-1.0.0 | https://github.com/mendebur-lemur/lemur-halo-cards */
 (() => {
 if (window.__lemurHdCardsLoaded) return;
 window.__lemurHdCardsLoaded = true;
@@ -1946,7 +1946,7 @@ registerCard(LemurLightCard, {
 
 if (0) console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 })();
-/*! Lemur Home Dashboard v0.1.0 | MIT */
+/*! Lemur Home Dashboard v0.1.0 | PolyForm-Noncommercial-1.0.0 */
 (() => {
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '0.1.0';
