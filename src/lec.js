@@ -105,7 +105,7 @@ function lpLecIcons() {
 }
 function lpLecIconsSub(f) { LP_LECI.subs.push(f); return () => { LP_LECI.subs = LP_LECI.subs.filter((x) => x !== f); }; }
 const lpIsLecIcon = (i) => typeof i === 'string' && i.indexOf('lec:') === 0;
-// simge HTML'i: "lec:..." ise LEC'in renkli SVG'si, değilse ha-icon. cls ve style isteğe bağlı.
+// simge HTML'i: "lec:..." ise LEC'in renkli SVG'si; renkli stilde "mdi:..." gömülü setten; değilse ha-icon. cls ve style isteğe bağlı.
 function lpIcon(icon, cls, style) {
   const a = (cls ? ' class="' + cls + '"' : '') + (style ? ' style="' + style + '"' : '');
   if (lpIsLecIcon(icon)) {
@@ -113,5 +113,8 @@ function lpIcon(icon, cls, style) {
     const svg = LP_LECI.map && LP_LECI.map[icon.slice(4)];
     return '<span class="lic' + (cls ? ' ' + cls : '') + '"' + (style ? ' style="' + style + '"' : '') + '>' + (svg || '') + '</span>';
   }
+  // renkli simge stili: setteki karşılığı (src/mdic.js); sette yoksa ya da set yükleniyorsa düz simge
+  const mc = lpMdicSvg(icon);
+  if (mc) return '<span class="lic mdic' + (cls ? ' ' + cls : '') + '"' + (style ? ' style="' + style + '"' : '') + '>' + mc + '</span>';
   return '<ha-icon icon="' + String(icon).replace(/[&<>"]/g, '') + '"' + a + '></ha-icon>';
 }
