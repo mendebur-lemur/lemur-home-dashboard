@@ -190,3 +190,23 @@ select.inp { padding-right: 6px; }
 .icell.on { border-color: var(--acl); background: var(--tint); }
 .icell ha-icon { --mdc-icon-size: 26px; width: 26px; height: 26px; color: var(--tx); }
 .icell span { font-size: 10.5px; color: var(--mu); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ayarlar: zemin rengi ve efekt paletleri */
+.bgsw { width: 100%; display: flex; flex-wrap: wrap; margin-top: 4px; }
+.bgc { width: 34px; height: 34px; border-radius: 10px; border: 2px solid var(--ln2); margin: 0 8px 8px 0; cursor: pointer; padding: 0; box-sizing: border-box; position: relative; }
+.bgc.on { border-color: var(--acl); box-shadow: 0 0 0 2px rgba(240, 169, 59, 0.35); }
+.bgc.pick { display: inline-flex; align-items: center; justify-content: center; background: var(--s3); color: var(--tx2); overflow: hidden; }
+.bgc.pick input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.bgfx { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); grid-gap: 8px; margin-top: 4px; }
+.fxs { display: flex; flex-direction: column; align-items: stretch; padding: 6px; border-radius: 12px; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2); cursor: pointer; font-size: 11.5px; }
+.fxs i { display: block; height: 34px; border-radius: 8px; margin-bottom: 5px; }
+.fxs.on { border-color: var(--acl); color: var(--tx); background: var(--s3); }
+.fxs span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+
+/* Light Effect Card'ın renkli simgeleri */
+.lic { display: inline-block; line-height: 0; flex: 0 0 auto; }
+.lic svg { width: 100%; height: 100%; display: block; }
+.rb .lic { width: 26px; height: 26px; }
+.iconin .pv .lic { width: 22px; height: 22px; }
+.it .ico .lic { width: 22px; height: 22px; }
+.icell .lic { width: 34px; height: 34px; }

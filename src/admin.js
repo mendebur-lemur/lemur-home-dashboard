@@ -20,10 +20,10 @@ const ADM = {
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
     s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
-    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Resim için adres yaz (ör. /local/zemin.jpg).', bgDark: 'Koyu', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
+    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt: Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
-    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
+    version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icMdi: 'Simgeler', icLec: 'Renkli (Light Effect Card)', icLecNone: 'Light Effect Card\'ın simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
@@ -42,10 +42,10 @@ const ADM = {
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
     s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
-    bg: 'Background', bgT: 'Dark: the background of the tablet dashboard. For an image, enter its address (e.g. /local/background.jpg).', bgDark: 'Dark', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
+    bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect: a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
-    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
+    version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icMdi: 'Icons', icLec: 'Colourful (Light Effect Card)', icLecNone: 'Could not load the Light Effect Card icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
@@ -59,6 +59,8 @@ const LHD_TYPES = {
   vacuum: { icon: 'mdi:robot-vacuum', domains: ['vacuum'], col: 2 },
   media: { icon: 'mdi:television', domains: ['media_player'], col: 2 }
 };
+// Renk zemini için hazır koyu tonlar (açık renkler de seçilebilir ama yazılar beyaz)
+const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#1d0f12', '#1a160e', '#0d1b1e'];
 const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'];
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
@@ -172,10 +174,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     window.addEventListener('keydown', this._key);
     if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
+    if (!this._leciUnsub) this._leciUnsub = lpLecIconsSub(() => { if (this._hass && STORE.data) this._render(); });
     if (this._hass && STORE.data) { this._sub(); this._render(); }
   }
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
+    if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
     if (this._unsub) { this._unsub(); this._unsub = null; }
     if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     if (this._ro) this._ro.disconnect();
@@ -223,6 +227,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._commit('tabs', tabs);
     if (!soft) this._render(); else this._undoBtn();
     this._toast(msg || this._t('saved'));
+  }
+  // zemin: seçim (bg) ve HA'nın çizdiği CSS metni (background) birlikte kaydedilir
+  _bgSet(b, soft) {
+    this._snap();
+    const s = lhdClone(this._settings());
+    if (b) s.bg = b; else delete s.bg;
+    const css = lpBgCss(b);
+    if (css) s.background = css; else delete s.background;
+    this._commit('settings', s);
+    if (!soft) this._render(); else { this._undoBtn(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = css || LP_DEFAULT_BG; }
+    this._toast(this._t('saved'));
   }
   _setting(path, value, soft) {
     this._snap();
@@ -277,13 +292,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
       '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
 
-    const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle><ha-icon icon="' + esc(x.icon || 'mdi:door') + '"></ha-icon>' + esc(x.name) + '</div>').join('') +
+    const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle>' + lpIcon(x.icon || 'mdi:door') + esc(x.name) + '</div>').join('') +
       '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div></div>';
     const areaOpts = '<option value="">' + t('noArea') + '</option>' + Object.keys(this._hass.areas || {}).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
     const W = tab ? lpWeights(tab) : LP_DEFAULT_COLS, wsum = W.reduce((a, b) => a + b, 0), SP = lpSplits(tab, W.length);
     const rpanel = tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
       '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
-      '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv"><ha-icon icon="' + esc(tab.icon || 'mdi:door') + '"></ha-icon></div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
+      '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv">' + lpIcon(tab.icon || 'mdi:door') + '</div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
       '<div class="fld"><label title="' + t('colHint') + '">' + t('cols') + ' · ' + W.map((x) => Math.round(x / wsum * 100)).join(' / ') + '</label><div class="acts">' +
         '<button class="btn sm ic" data-a="coldel" title="' + t('colDel') + '"' + (W.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:minus"></ha-icon></button>' +
@@ -350,12 +365,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (k === 'scene' && !it.entity) {
         return '<div class="it" data-di>' + handle +
           '<input type="color" data-if="' + i + '.color" value="' + esc(it.color || '#5B8DEF') + '">' +
-          '<div class="ico"><ha-icon icon="' + esc(it.icon || 'mdi:play') + '" style="color:' + esc(it.color || '#5B8DEF') + '"></ha-icon></div>' +
+          '<div class="ico">' + lpIcon(it.icon || 'mdi:play', '', 'color:' + esc(it.color || '#5B8DEF')) + '</div>' +
           '<div class="col"><input class="inp" data-if="' + i + '.name" value="' + esc(it.name || '') + '" placeholder="' + t('name') + '">' +
           iconField(i, it.icon, 'mdi:play') + '<span class="eid">' + this._scTarget(tab, it) + '</span></div>' + xBtn(i) + '</div>';
       }
       const st = it.entity ? S[it.entity] : null;
-      const ico = it.entity ? (it.icon ? '<ha-icon icon="' + esc(it.icon) + '"></ha-icon>' : '<ha-state-icon data-eid="' + esc(it.entity) + '"></ha-state-icon>') : '<ha-icon icon="' + esc(it.icon || 'mdi:lightbulb') + '"></ha-icon>';
+      const ico = it.entity ? (it.icon ? lpIcon(it.icon) : '<ha-state-icon data-eid="' + esc(it.entity) + '"></ha-state-icon>') : lpIcon(it.icon || 'mdi:lightbulb');
       let extra = '';
       if (k === 'tile' || k === 'ph' || k === 'scene') extra = iconField(i, it.icon, this._t('icon') + ' (mdi:...)');
       if (k === 'climate') {
@@ -413,7 +428,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (md === 'icon') {
       return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="mdi:shape-outline"></ha-icon></div><h2>' + t('iconPick') + '</h2>' +
         '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
-        '<div class="db" style="padding-bottom:4px;flex:none;overflow:visible"><input class="inp" data-iq placeholder="' + t('iconSearch') + '" value="' + esc(this._iq || '') + '"></div>' +
+        '<div class="db" style="padding-bottom:4px;flex:none;overflow:visible"><input class="inp" data-iq placeholder="' + t('iconSearch') + '" value="' + esc(this._iq || '') + '">' +
+        (LEC.installed(this._hass) ? '<div class="seg" style="margin-top:8px">' + [['mdi', 'icMdi'], ['lec', 'icLec']].map((x) => '<button data-icset="' + x[0] + '"' + ((this._icSet || 'mdi') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div>' : '') + '</div>' +
         '<div class="db"><div class="ilist">' + this._iconList() + '</div></div></div></div>';
     }
     if (md === 'settings') {
@@ -423,6 +439,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const k = s.kiosk || {}, cv = s.canvas || {};
       // "Resim" seçilince önce adres kutusu açılır; zemin ancak adres yazılınca değişir (yoksa var olmayan bir dosya zemin olurdu)
       const bgImg = (typeof s.background === 'string' && /url\(/.test(s.background)) || !!this._bgImg;
+      const bgMode = this._bgImg ? 'img' : (s.bg && s.bg.mode) || (bgImg ? 'img' : 'dark');
       const bgUrl = typeof s.background === 'string' ? (s.background.match(/url\(['"]?([^'")]+)/) || [])[1] || '' : '';
       const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
       return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('settings') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' +
@@ -430,8 +447,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('lang') + '</b></div>' + seg('language', s.language || 'auto', [['auto', this._t('lAuto')], ['tr', 'Türkçe'], ['en', 'English']]) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
         '<div class="sh">' + t('s_look') + '</div>' +
-        '<div class="srow" style="flex-wrap:wrap"><div class="t"><b>' + t('bg') + '</b><span>' + t('bgT') + '</span></div>' + seg('bgmode', bgImg ? 'img' : 'dark', [['dark', this._t('bgDark')], ['img', this._t('bgImg')]]) +
-        (bgImg ? '<input class="inp w" data-bgurl value="' + esc(bgUrl) + '" placeholder="/local/zemin.jpg" style="width:100%">' + (this._bgBad ? '<span class="lecna" style="width:100%">' + t('bgBad') + '</span>' : '') : '') + '</div>' +
+        '<div class="srow" style="flex-wrap:wrap"><div class="t"><b>' + t('bg') + '</b><span>' + t('bgT') + '</span></div>' + seg('bgmode', bgMode, [['dark', this._t('bgDark')], ['black', this._t('bgBlack')], ['color', this._t('bgColor')], ['fx', this._t('bgFx')], ['img', this._t('bgImg')]]) +
+        (bgMode === 'img' ? '<input class="inp w" data-bgurl value="' + esc(bgUrl) + '" placeholder="/local/zemin.jpg" style="width:100%">' + (this._bgBad ? '<span class="lecna" style="width:100%">' + t('bgBad') + '</span>' : '') : '') +
+        (bgMode === 'color' ? '<div class="bgsw">' + LHD_BG_COLORS.map((c) => '<button class="bgc' + ((s.bg.color || '').toLowerCase() === c ? ' on' : '') + '" data-bgcolor="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') +
+          '<label class="bgc pick" title="' + t('bgColor') + '"><input type="color" data-bgpick value="' + esc(s.bg.color || '#0e1726') + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') +
+        (bgMode === 'fx' ? '<div class="bgfx">' + LP_BG_FX.map((f) => '<button class="fxs' + (s.bg.fx === f[0] ? ' on' : '') + '" data-bgfx="' + f[0] + '"><i style="background:' + lpFxSwatch(f[3]) + '"></i><span>' + esc(this._lang === 'tr' ? f[1] : f[2]) + '</span></button>').join('') + '</div>' : '') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('theme') + '</b><span>' + t('themeT') + '</span></div><input class="inp w" data-sf="theme_name" value="' + esc(s.theme_name || '') + '" placeholder="ios-dark-mode-blue-red"></div>' +
         '<div class="sh">' + t('s_screen') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + tg('kiosk.hide_header', !!k.hide_header) + '</div>' +
@@ -494,6 +514,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _iconList() {
     const q = String(this._iq || '').toLowerCase().trim(), cur = this._ip && this._ip.cur;
+    if (this._icSet === 'lec' && LEC.installed(this._hass)) return this._lecIconList(q, cur);
     const cell = (n) => '<div class="icell' + ('mdi:' + n === cur ? ' on' : '') + '" data-icn="mdi:' + esc(n) + '" title="mdi:' + esc(n) + '"><ha-icon icon="mdi:' + esc(n) + '"></ha-icon><span>' + esc(n) + '</span></div>';
     const sug = LHD_ICON_SUGGEST[this._iconCtx()] || [];
     if (!q) return '<div class="pg">' + esc(this._t('iconSug')) + '</div><div class="igrid">' + sug.map(cell).join('') + '</div>';
@@ -514,6 +535,20 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     h += '<div class="pg">' + esc(this._t('iconAll')) + ' · ' + hits.length + '</div><div class="igrid">' + hits.slice(0, MAX).map((x) => cell(x.n)).join('') + '</div>';
     if (hits.length > MAX) h += '<div class="empty">' + esc(this._t('iconMore', { n: MAX })) + '</div>';
     return h;
+  }
+  // Light Effect Card'ın renkli simgeleri: hepsi bir ızgarada, arama adlarında (Türkçe kelimeler İngilizce karşılıklarıyla)
+  _lecIconList(q, cur) {
+    const M = LP_LECI.map;
+    if (!M) { lpLecIcons().then(() => { if (this._modal === 'icon') this._refreshIcons(); }); return '<div class="empty">' + esc(this._t('iconLoading')) + '</div>'; }
+    let keys = Object.keys(M).sort();
+    if (!keys.length) return '<div class="empty">' + esc(this._t('icLecNone')) + '</div>';
+    if (q) {
+      const nz = (x) => x.replace(/[ıİ]/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c');
+      const terms = []; q.split(/\s+/).filter(Boolean).forEach((w) => { const a = nz(w); terms.push(a); Object.keys(LHD_ICON_TR).forEach((k) => { const b = nz(k); if (b.indexOf(a) === 0 || (b.length > 2 && a.indexOf(b) === 0)) LHD_ICON_TR[k].split(' ').forEach((x) => terms.push(x)); }); });
+      keys = keys.filter((k) => terms.some((tm) => k.replace(/_/g, ' ').indexOf(tm) >= 0 || k.indexOf(tm) >= 0));
+      if (!keys.length) return '<div class="empty">' + esc(this._t('iconNone')) + '</div>';
+    }
+    return '<div class="igrid">' + keys.map((k) => '<div class="icell lec' + ('lec:' + k === cur ? ' on' : '') + '" data-icn="lec:' + esc(k) + '" title="' + esc(k.replace(/_/g, ' ')) + '"><span class="lic">' + M[k] + '</span><span>' + esc(k.replace(/_/g, ' ')) + '</span></div>').join('') + '</div>';
   }
   _refreshIcons() { const l = this.shadowRoot && this.shadowRoot.querySelector('.ilist'); if (l) l.innerHTML = this._iconList(); }
   _applyIcon(v) {
@@ -696,11 +731,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (v === 'tab') cur = tab0 && tab0.icon;
         else { const i = +v.split(':')[1], L = sec0 && sec0.entities; const it = L && L[i]; cur = it && typeof it === 'object' ? it.icon : ''; }
         this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
-        this._iq = ''; this._modal = 'icon'; lhdIconList(); this._render();
+        this._iq = ''; this._modal = 'icon'; this._icSet = lpIsLecIcon(cur) ? 'lec' : 'mdi'; lhdIconList(); this._render();
         // dokunmatik ekranda klavye kendiliğinden açılmasın: odak sadece fareli cihazda
         const q = this.shadowRoot.querySelector('[data-iq]'); if (q && !('ontouchstart' in window)) q.focus();
         return;
       }
+      const ics = g('[data-icset]');
+      if (ics) { this._icSet = ics.getAttribute('data-icset'); this.shadowRoot.querySelectorAll('[data-icset]').forEach((b) => b.classList.toggle('on', b === ics)); this._refreshIcons(); return; }
       const icn = g('[data-icn]');
       if (icn && this._modal === 'icon') return this._applyIcon(icn.getAttribute('data-icn'));
       if (act === 'lecok') return this._setting('lec_seen', true);
@@ -779,12 +816,21 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const btn = R.querySelector('[data-a="pickadd"]'); btn.disabled = !this._picked.length; btn.textContent = this._t('addN', { n: this._picked.length });
         return;
       }
+      const bgc = g('[data-bgcolor]');
+      if (bgc) return this._bgSet({ mode: 'color', color: bgc.getAttribute('data-bgcolor') });
+      const bgf = g('[data-bgfx]');
+      if (bgf) return this._bgSet({ mode: 'fx', fx: bgf.getAttribute('data-bgfx') });
       const st = g('[data-set]');
       if (st) {
         const path = st.getAttribute('data-set'), v = st.getAttribute('data-val');
         if (path === 'bgmode') {
           if (v === 'img') { this._bgImg = true; this._bgBad = false; this._render(); const i = this.shadowRoot.querySelector('[data-bgurl]'); if (i) i.focus(); return; }
-          this._bgImg = false; this._bgBad = false; return this._setting('background', null);
+          this._bgImg = false; this._bgBad = false;
+          const cur = this._settings().bg || {};
+          if (v === 'dark') return this._bgSet(null);
+          if (v === 'black') return this._bgSet({ mode: 'black' });
+          if (v === 'color') return this._bgSet({ mode: 'color', color: cur.color || LHD_BG_COLORS[1] });
+          if (v === 'fx') return this._bgSet({ mode: 'fx', fx: cur.fx || 'aurora' });
         }
         return this._setting(path, v === 'auto' ? null : v);
       }
@@ -816,8 +862,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       }
       if (f === 'tab.icon') {
         const v = el.value.trim() || 'mdi:door';
-        const ic = R.querySelector('.rb.on ha-icon'); if (ic) ic.setAttribute('icon', v);
-        return editTab((T) => { T.icon = v; }, true);
+        const ic = R.querySelector('.rb.on ha-icon'); if (ic && !lpIsLecIcon(v)) ic.setAttribute('icon', v);
+        return editTab((T) => { T.icon = v; }, !lpIsLecIcon(v));
       }
       if (f === 'tab.area') return editTab((T) => { T.area = el.value || null; });
       if (f === 'sec.title') {
@@ -837,13 +883,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (it.entity && Object.keys(it).length === 1) S.entities[i] = it.entity;   // sade kalsın
         }, soft);
       }
+      if (el.hasAttribute && el.hasAttribute('data-bgpick')) return this._bgSet({ mode: 'color', color: el.value }, true);
       const sf = el.getAttribute && el.getAttribute('data-sf');
       if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v, true); }
       if (el.hasAttribute && el.hasAttribute('data-bgurl')) {
         const u = el.value.trim();
         // resim gerçekten açılıyor mu: açılmazsa uyarı (zemin yine kaydedilir, dosya sonradan konabilir)
         if (u) { const im = new Image(); im.onload = () => { if (this._bgBad) { this._bgBad = false; this._render(); } }; im.onerror = () => { this._bgBad = true; if (this._modal === 'settings') this._render(); }; im.src = u; }
-        return this._setting('background', u ? "center / cover no-repeat fixed url('" + u.replace(/'/g, '') + "')" : null, true);
+        return this._bgSet(u ? { mode: 'img', url: u } : null, true);
       }
     });
     app.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('inp') && e.target.tagName === 'INPUT') e.target.blur(); });

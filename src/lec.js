@@ -87,3 +87,31 @@ function lpLecKind(it) {
   if (!s || s.indexOf(LP_LEC_DOMAIN + '.') !== 0) return null;
   return s.split('.')[1];
 }
+
+// Light Effect Card'ın renkli efekt simgeleri: panoda simge adı "lec:aurora" biçiminde yazılır.
+// LEC kuruluysa kendi dosyasından gelir (/lemur_light_effects/lemur-icons.json, ad → SVG); ilk gereken yerde bir kez yüklenir.
+// Yüklenince abone olan kart ve panel yeniden çizilir. LEC kaldırılırsa bu simgelerin yerinde boşluk kalır.
+const LP_LECI = window.__LEMUR_HD_LECI || (window.__LEMUR_HD_LECI = { map: null, loading: null, subs: [] });
+function lpLecIcons() {
+  if (LP_LECI.map) return Promise.resolve(LP_LECI.map);
+  if (!LP_LECI.loading) {
+    LP_LECI.loading = fetch('/' + LP_LEC_DOMAIN + '/lemur-icons.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
+      LP_LECI.map = m && typeof m === 'object' ? m : {};
+      LP_LECI.subs.slice().forEach((f) => { try { f(); } catch (e) {} });
+      return LP_LECI.map;
+    });
+  }
+  return LP_LECI.loading;
+}
+function lpLecIconsSub(f) { LP_LECI.subs.push(f); return () => { LP_LECI.subs = LP_LECI.subs.filter((x) => x !== f); }; }
+const lpIsLecIcon = (i) => typeof i === 'string' && i.indexOf('lec:') === 0;
+// simge HTML'i: "lec:..." ise LEC'in renkli SVG'si, değilse ha-icon. cls ve style isteğe bağlı.
+function lpIcon(icon, cls, style) {
+  const a = (cls ? ' class="' + cls + '"' : '') + (style ? ' style="' + style + '"' : '');
+  if (lpIsLecIcon(icon)) {
+    if (!LP_LECI.map) lpLecIcons();
+    const svg = LP_LECI.map && LP_LECI.map[icon.slice(4)];
+    return '<span class="lic' + (cls ? ' ' + cls : '') + '"' + (style ? ' style="' + style + '"' : '') + '>' + (svg || '') + '</span>';
+  }
+  return '<ha-icon icon="' + String(icon).replace(/[&<>"]/g, '') + '"' + a + '></ha-icon>';
+}

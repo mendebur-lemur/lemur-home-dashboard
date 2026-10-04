@@ -35,7 +35,8 @@
 .box { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; box-sizing: border-box; padding: 20px;
   background: var(--lp-box-bg); border: 1px solid var(--lp-box-border); border-radius: 22px; }
 .box > * + * { margin-top: 8px; }
-.box.spread { justify-content: space-between; }
+/* düğmeler ve kartlar kutunun üstünden başlar (az öğe varsa aralara boşluk dağılmaz) */
+.box.spread { justify-content: flex-start; }
 /* karo ile başka öğelerin karıştığı bölüm: karolar kare, düğmeler ve kartlar altında sabit yükseklikte, kutu yukarıdan dolar */
 .box.mix > .scene { flex: 0 0 72px; }
 .box.mix > .emb, .box.mix > .row { flex: 0 0 auto; }
@@ -171,3 +172,14 @@
 .phone .box.spread > .emb, .phone .box.spread > .row { flex: 0 0 100%; margin-bottom: 8px; }
 .phone .box.spread > .eph { flex: 0 0 100%; }
 .phone .box.mix > .scene { flex: 0 0 64px; border-radius: 18px; }
+
+/* Light Effect Card'ın renkli simgeleri (lec:...): kendi renkleriyle; kapalı karoda soluk ve gri */
+.lic { display: inline-block; line-height: 0; }
+.lic svg { width: 100%; height: 100%; display: block; }
+.tile .lic { display: block; width: 40%; }
+.tile:not(.on) .lic, .bar:not(.on) .lic { filter: grayscale(1) brightness(1.1); opacity: 0.7; }
+.bar .lic { position: relative; flex: 0 0 auto; width: 34px; height: 34px; margin: 0 14px 0 18px; }
+.phone .bar .lic { width: 24px; height: 24px; margin: 0 10px 0 12px; }
+.ni .lic { width: 100%; }
+.si .lic { width: 40px; height: 40px; }
+.phone .scene .lic { width: 28px; height: 28px; }

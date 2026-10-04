@@ -120,7 +120,7 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 - **Bölümler serbest:** Her bölüm bir kutu ve içine her şey eklenebilir: ışık, priz, perde, senaryo düğmesi, iklim ve süpürge kartı, medya cihazı aynı kutuda olabilir; her öğe kendi türüne göre görünür. **Bölüm ekle**'deki türler (Boş bölüm, Işıklar, Senaryolar, İklim, Süpürge, Medya) sadece başlangıç başlığıdır. Bölümler önizlemede tutamaklarından sürüklenerek kolonlar arasında taşınır; öğeler kendileri sürüklenerek sıralanır ya da başka bir bölüme taşınır.
 - **Işık bölümünün görünümü:** **Karo** (kare karolar), **Kaydırmalı** (yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık) ya da **Telefonda otomatik** (tablette karo, telefonda çubuk). Satırdaki karo ve çubuk sayısı ayrıca seçilir.
 - **Ekle:** Seçicide her tür cihaz listelenir; üstteki süzgeçle (Tümü, Işık ve anahtar, Senaryolar, İklim, Süpürge, Medya) daraltılır, birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur. Işık karosunun adı ve simgesi değiştirilebilir; senaryo düğmesine renk ve simge verilir. İklim kartında sıcaklık ve nem sensörü, dış sıcaklık sensörü, birlikte kontrol edilen ikinci cihaz ve tür (klima/petek) seçilir.
-- **Simge seçici:** Simge alanlarının yanındaki düğme. Önce o şeye uygun simgeler önerilir (oda, ışık ya da senaryo için); arama kutusu Home Assistant'ın bütün simgelerinde arar, Türkçe kelimeleri de tanır. İstersen `mdi:...` adını doğrudan yazarsın.
+- **Simge seçici:** Simge alanlarının yanındaki düğme. Light Effect Card kuruluysa **Renkli** sekmesinde onun 356 renkli efekt simgesi de seçilebilir; sekmeler, ışıklar ve düğmeler renkli simgelerle tasarlanabilir. Önce o şeye uygun simgeler önerilir (oda, ışık ya da senaryo için); arama kutusu Home Assistant'ın bütün simgelerinde arar, Türkçe kelimeleri de tanır. İstersen `mdi:...` adını doğrudan yazarsın.
 - **Önizleme ekranları:** Tablet 16:10, Tablet 4:3, Geniş 16:9, Telefon ve Bu ekran. Bölüm sığmazsa önizlemede uyarı çıkar.
 - **Geri al:** Her değişiklik geri alınabilir (düğme ya da Ctrl+Z). **⋯** menüsündeki **Otomatik düzene dön** her şeyi sıfırlar.
 
@@ -132,7 +132,7 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır:
 
 - *Dil:* otomatik (Home Assistant'ın dili), Türkçe ya da İngilizce.
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
-- *Arka plan:* koyu zemin ya da kendi resmin (`/local/zemin.jpg` gibi bir adres).
+- *Arka plan:* koyu (varsayılan), siyah, istediğin bir renk, efekt renkleri ya da kendi resmin (`/local/zemin.jpg` gibi bir adres). Efekt renkleri Light Effect Card'ın efekt paletleri (Kutup ışığı, Ateş, Gün batımı, Okyanus, Galaksi ve 25 tane daha): koyu zeminde yumuşak bir renk ışıltısı. Light Effect Card kurulu olmasa da seçilebilir.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
 - *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
 - *Kanvas:* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.

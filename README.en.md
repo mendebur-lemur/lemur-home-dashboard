@@ -120,7 +120,7 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 - **Free sections:** Each section is a box and anything can go into it: lights, plugs, covers, scene buttons, climate and vacuum cards and media players can share one box; each item shows in its own way. The types in **Add section** (Empty section, Lights, Scenes, Climate, Vacuum, Media) are only a starting title. Drag sections by their handle in the preview to move them between columns; drag items themselves to reorder them or move them to another section.
 - **Lights section look:** **Tiles** (square tiles), **Sliders** (horizontal bars: tap to toggle, swipe sideways for brightness) or **Auto on phone** (tiles on a tablet, bars on a phone). Tiles and bars per row are set separately.
 - **Add:** The picker lists every kind of device; the filter at the top (All, Lights and switches, Scenes, Climate, Vacuum, Media) narrows it, and several devices can be added at once. Scripts, scenes and automations become coloured buttons. A light tile's name and icon can be changed; scene buttons get a colour and icon. For a climate card you choose temperature and humidity sensors, an outdoor temperature sensor, a second device controlled together and the type (air conditioner/radiator).
-- **Icon picker:** The button next to icon fields. Icons that fit (for a room, a light or a scene) are suggested first; the search box searches all Home Assistant icons. You can also type an `mdi:...` name directly.
+- **Icon picker:** The button next to icon fields. With Light Effect Card installed, its 356 colourful effect icons can be chosen too, in the **Colourful** tab, for tabs, lights and buttons. Icons that fit (for a room, a light or a scene) are suggested first; the search box searches all Home Assistant icons. You can also type an `mdi:...` name directly.
 - **Preview screens:** Tablet 16:10, Tablet 4:3, Wide 16:9, Phone and This screen. A warning shows in the preview when a section doesn't fit.
 - **Undo:** Every change can be undone (button or Ctrl+Z). **Back to automatic layout** in the **⋯** menu resets everything.
 
@@ -132,7 +132,7 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 - *Language:* automatic (Home Assistant's language), Turkish or English.
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
-- *Background:* dark, or your own image (an address like `/local/background.jpg`).
+- *Background:* dark (default), black, any colour, effect colours, or your own image (an address like `/local/background.jpg`). Effect colours are Light Effect Card's effect palettes (Aurora, Fire, Sunset, Ocean, Galaxy and 25 more): a soft colour glow on a dark background. They can be chosen even without Light Effect Card.
 - *HA theme:* the Home Assistant theme used by dialogs (can be left empty).
 - *Hide top bar / Hide sidebar:* Home Assistant's header and sidebar are hidden on this dashboard only.
 - *Canvas:* design width and reference height; the dashboard scales to the screen with this ratio.

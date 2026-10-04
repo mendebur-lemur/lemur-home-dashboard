@@ -32,6 +32,8 @@ const LP_POP_CSS = `
 .sl .in { position: relative; display: flex; align-items: center; height: 100%; padding: 0 18px; }
 .sl ha-state-icon, .sl ha-icon { --mdc-icon-size: 24px; color: #8A8F96; margin-right: 14px; flex: 0 0 auto; }
 .sl.on ha-state-icon, .sl.on ha-icon { color: #fff; }
+.lic { display: inline-block; line-height: 0; flex: 0 0 auto; } .lic svg { width: 100%; height: 100%; display: block; }
+.hd .nm .lic { width: 22px; height: 22px; margin-right: 12px; } .sl .lic { width: 24px; height: 24px; margin-right: 14px; }
 .sl .tx { min-width: 0; }
 .sl .tx b { display: block; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sl .tx span { display: block; font-size: 13px; color: #8A8F96; margin-top: 2px; }
@@ -177,7 +179,7 @@ class LemurLightPopup {
   _render() {
     const S = this._h.states, st = S[this._id], it = this._item;
     const name = it.name || (st && st.attributes.friendly_name) || this._id;
-    const icon = it.icon ? '<ha-icon icon="' + esc(it.icon) + '"></ha-icon>' : '<ha-state-icon></ha-state-icon>';
+    const icon = it.icon ? lpIcon(it.icon) : '<ha-state-icon></ha-state-icon>';
     const tabs = this._tabs();
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
     let h = '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
