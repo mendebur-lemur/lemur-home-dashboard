@@ -1,16 +1,21 @@
-// Renkli simge seti: pakete gömülü, Light Effect Card gerekmez. Entegrasyon ayrı bir dosya olarak sunar
+// Renkli simge seti: pakete gömülü, Light Effect Card gerekmez. Anahtarlar "mdi:ad" (MDI adı) ve "lhd:ad" (panoya özel). Entegrasyon ayrı bir dosya olarak sunar
 // (/lemur_home_dashboard/mdi-color.json, "mdi:ad" → SVG). Ana JS'e girmez; ayarda "Simge stili: Renkli" seçiliyse
 // ilk gereken yerde bir kez yüklenir, eski tabletler düz simgede hiç indirmez. Sette olmayan simge düz çizilir (ha-icon).
 // Kapalı ışık ve cihazlarda renkli simge soluk görünür (base.css: .tile:not(.on) .lic).
 const LP_MDIC_URL = '/lemur_home_dashboard/mdi-color.json';
 const LP_MDIC = window.__LEMUR_HD_MDIC || (window.__LEMUR_HD_MDIC = { map: null, loading: null, subs: [] });
+// panoya özel simgeler ("lhd:ad", MDI'da karşılığı yok): düz stilde çizilecek MDI simgesi. build.py src/lhd-icons.json'dan doldurur.
+const LP_LHD_FB = LHD_ICON_FB;
+const lpIsLhdIcon = (i) => typeof i === 'string' && i.indexOf('lhd:') === 0;
+// düz stilde (ha-icon) çizilecek ad: lhd: simgesi yerine yedeği
+function lpFlatIcon(i) { return lpIsLhdIcon(i) ? (LP_LHD_FB[i] || 'mdi:shape-outline') : i; }
 // panonun kendi varsayılanlarında geçip sette birebir olmayanlar: en yakın renkli simge
 const LP_MDIC_ALIAS = {
   'mdi:bed-king-outline': 'mdi:bed-king', 'mdi:table-chair': 'mdi:silverware-fork-knife', 'mdi:flower-outline': 'mdi:flower',
   'mdi:home-variant-outline': 'mdi:home-outline', 'mdi:palette-outline': 'mdi:palette', 'mdi:play-circle-outline': 'mdi:play',
   'mdi:white-balance-sunny': 'mdi:weather-sunny', 'mdi:creation': 'mdi:palette', 'mdi:television-classic': 'mdi:television',
   'mdi:lightbulb-variant': 'mdi:lightbulb', 'mdi:lightbulb-variant-outline': 'mdi:lightbulb-outline', 'mdi:led-strip': 'mdi:led-strip-variant',
-  'mdi:thermometer-auto': 'mdi:thermometer', 'mdi:power-socket': 'mdi:power-socket-eu', 'mdi:power-socket-de': 'mdi:power-socket-eu'
+  'mdi:thermometer-auto': 'mdi:thermometer', 'mdi:power-socket': 'mdi:power-socket-eu', 'mdi:office-building-minus-outline': 'mdi:balcony'
 };
 function lpMdicOn() { const s = STORE.data && STORE.data.settings; return !!(s && s.icon_style === 'color'); }
 function lpMdicLoad() {
@@ -28,7 +33,9 @@ function lpMdicSub(f) { LP_MDIC.subs.push(f); return () => { LP_MDIC.subs = LP_M
 // "mdi:x" simgesinin setteki anahtarı (yoksa null): önce eşleme, sonra kendisi, sonra -outline'sız hali
 function lpMdicKey(icon) {
   const M = LP_MDIC.map;
-  if (!M || typeof icon !== 'string' || icon.indexOf('mdi:') !== 0) return null;
+  if (!M || typeof icon !== 'string') return null;
+  if (lpIsLhdIcon(icon)) return M[icon] ? icon : null;
+  if (icon.indexOf('mdi:') !== 0) return null;
   let k = LP_MDIC_ALIAS[icon] || icon;
   if (M[k]) return k;
   if (/-outline$/.test(k)) { k = k.slice(0, -8); if (M[k]) return k; }
@@ -36,7 +43,7 @@ function lpMdicKey(icon) {
 }
 // renkli stil açıksa simgenin SVG'si; set henüz yüklenmediyse yüklemeyi başlatır ve null döner (yüklenince abone olanlar yeniden çizer)
 function lpMdicSvg(icon) {
-  if (!lpMdicOn() || typeof icon !== 'string' || icon.indexOf('mdi:') !== 0) return null;
+  if (!lpMdicOn() || typeof icon !== 'string' || (icon.indexOf('mdi:') !== 0 && !lpIsLhdIcon(icon))) return null;
   if (!LP_MDIC.map) { lpMdicLoad(); return null; }
   const k = lpMdicKey(icon);
   return k ? LP_MDIC.map[k] : null;

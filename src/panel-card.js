@@ -709,7 +709,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     el.style.setProperty('--bar-c', fx ? fx.c[0] : (d === 'light' && rgb ? rgb : LP_BAR_COLOR));
     el.style.setProperty('--p', (na ? 0 : v) + '%');
     const ic = this._icSwap(el, st, it, 1), nm = el.querySelector('.nm'), pc = el.querySelector('.pc');
-    if (ic.tagName !== 'SPAN') { ic.hass = this._hass; ic.stateObj = st; if (it.icon) { ic.icon = it.icon; ic.setAttribute('icon', it.icon); } }
+    if (ic.tagName !== 'SPAN') { ic.hass = this._hass; ic.stateObj = st; if (it.icon) { const fi = lpFlatIcon(it.icon); ic.icon = fi; ic.setAttribute('icon', fi); } }
     nm.textContent = it.name || a.friendly_name || st.entity_id;
     let txt;
     if (na) txt = t(lang, 'unavailable');
@@ -755,7 +755,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const ic = this._icSwap(el, st, it, 0);
       if (ic.tagName !== 'SPAN') {   // renkli simge (span.lic: LEC ya da gömülü set) kendi renginde kalır
         ic.hass = h; ic.stateObj = st;
-        if (it.icon) { ic.icon = it.icon; ic.setAttribute('icon', it.icon); }
+        if (it.icon) { const fi = lpFlatIcon(it.icon); ic.icon = fi; ic.setAttribute('icon', fi); }
         // HA'nın kendi karosundaki gibi: renkli lambanın simgesi parlaklığa göre hafif koyulaşır
         ic.style.filter = on && !fx && typeof a.brightness === 'number' ? 'brightness(' + Math.round((a.brightness + 245) / 5) + '%)' : '';
       }

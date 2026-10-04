@@ -116,5 +116,5 @@ function lpIcon(icon, cls, style) {
   // renkli simge stili: setteki karşılığı (src/mdic.js); sette yoksa ya da set yükleniyorsa düz simge
   const mc = lpMdicSvg(icon);
   if (mc) return '<span class="lic mdic' + (cls ? ' ' + cls : '') + '"' + (style ? ' style="' + style + '"' : '') + '>' + mc + '</span>';
-  return '<ha-icon icon="' + String(icon).replace(/[&<>"]/g, '') + '"' + a + '></ha-icon>';
+  return '<ha-icon icon="' + String(lpFlatIcon(icon)).replace(/[&<>"]/g, '') + '"' + a + '></ha-icon>';
 }

@@ -566,7 +566,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       keys = keys.filter((k) => terms.some((tm) => k.indexOf(tm) >= 0));
       if (!keys.length) return '<div class="empty">' + esc(this._t('iconNone')) + '</div>';
     }
-    return '<div class="igrid">' + keys.map((k) => { const n = k.slice(4); return '<div class="icell lec' + (k === cur ? ' on' : '') + '" data-icn="' + esc(k) + '" title="' + esc(k) + '"><span class="lic">' + M[k] + '</span><span>' + esc(n) + '</span></div>'; }).join('') + '</div>';
+    return '<div class="igrid">' + keys.map((k) => { const n = k.slice(4); return '<div class="icell lec' + (k === cur ? ' on' : '') + '" data-icn="' + esc(k) + '" title="' + esc(k) + '"><span class="lic">' + M[k] + '</span><span>' + esc(lpIsLhdIcon(k) ? n + ' ★' : n) + '</span></div>'; }).join('') + '</div>';
   }
   _refreshIcons() { const l = this.shadowRoot && this.shadowRoot.querySelector('.ilist'); if (l) l.innerHTML = this._iconList(); }
   _applyIcon(v) {
@@ -749,7 +749,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (v === 'tab') cur = tab0 && tab0.icon;
         else { const i = +v.split(':')[1], L = sec0 && sec0.entities; const it = L && L[i]; cur = it && typeof it === 'object' ? it.icon : ''; }
         this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
-        this._iq = ''; this._modal = 'icon'; this._icSet = lpIsLecIcon(cur) ? 'lec' : (lpMdicOn() ? 'col' : 'mdi'); lhdIconList(); this._render();
+        this._iq = ''; this._modal = 'icon'; this._icSet = lpIsLecIcon(cur) ? 'lec' : (lpMdicOn() || lpIsLhdIcon(cur) ? 'col' : 'mdi'); lhdIconList(); this._render();
         // dokunmatik ekranda klavye kendiliğinden açılmasın: odak sadece fareli cihazda
         const q = this.shadowRoot.querySelector('[data-iq]'); if (q && !('ontouchstart' in window)) q.focus();
         return;
@@ -880,7 +880,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       }
       if (f === 'tab.icon') {
         const v = el.value.trim() || 'mdi:door';
-        const ic = R.querySelector('.rb.on ha-icon'); if (ic && !lpIsLecIcon(v)) ic.setAttribute('icon', v);
+        const ic = R.querySelector('.rb.on ha-icon'); if (ic && !lpIsLecIcon(v)) ic.setAttribute('icon', lpFlatIcon(v));
         return editTab((T) => { T.icon = v; }, !lpIsLecIcon(v));
       }
       if (f === 'tab.area') return editTab((T) => { T.area = el.value || null; });

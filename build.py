@@ -9,6 +9,7 @@ def load_css(name):
     return "\n".join(l.strip() for l in c.splitlines() if l.strip())
 css = load_css("base.css")
 admin_css = load_css("admin.css")
+lhd_fb = json.dumps(json.loads((src / "lhd-icons.json").read_text(encoding="utf-8")), ensure_ascii=False, separators=(",", ":"))
 parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "store.js", "mdic.js", "lec.js", "defaults.js", "scale.js", "strategy.js", "panel-card.js", "lightpop.js", "admin.js")]
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
@@ -16,6 +17,7 @@ if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';
 const CSS = {json.dumps(css, ensure_ascii=False)};
 const ADMIN_CSS = {json.dumps(admin_css, ensure_ascii=False)};
+const LHD_ICON_FB = {lhd_fb};
 {chr(10).join(parts)}
 // Bazı eklentiler sayfa açılırken window.customElements'i kendi kopyasıyla değiştiriyor (scoped registry polyfill).
 // Biz ondan önce yüklenirsek tanımımız yeni kopyada görünmez; HA pano stratejisini bulamaz ("Timeout waiting for strategy element").
