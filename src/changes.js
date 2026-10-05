@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.12.3',
+    tr: ['Işık düğmeleri anında tepki verir: dokununca cihazın cevabı beklenmez. Açarken düğme ışığın son renginde yanar; gerçek durum gelince gerekirse düzelir, 5 sn içinde cevap gelmezse eski haline döner.'],
+    en: ['Light buttons react instantly: no waiting for the device. Turning on lights the button in the light\'s last colour; it is corrected when the real state arrives and goes back if there is no reply within 5 s.'] },
   { v: '0.12.2',
     tr: ['Ayarlar: "Sürüm ve güncelleme" en üstte; güncellemeler tek dokunuşla denetlenir.'],
     en: ['Settings: "Version and updates" is now at the top; check for updates with one tap.'] },

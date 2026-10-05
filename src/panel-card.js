@@ -117,6 +117,52 @@ function lpHas(tag) {
 const lpItem = (x) => (typeof x === 'string' ? { entity: x } : (x && (x.entity || x.name) ? x : null));
 // karoda "açık" sayılan durumlar (ışık, priz, perde açık, medya çalıyor...)
 const LP_ON = ['on', 'open', 'opening', 'closing', 'playing', 'cleaning'];
+// Anında tepki: aç/kapat'a dokununca karo cihazın cevabını beklemeden yeni durumda çizilir.
+// Işığın son rengi ve parlaklığı bu tarayıcıda hatırlanır (lhd-light-mem); açarken karo o renkte yanar.
+// Gerçek durum gelince (ya da 5 sn içinde gelmezse) karo gerçeğe göre yeniden çizilir; başka yerden değiştiyse gerçek olan kalır.
+const LP_OPT = window.__LEMUR_HD_OPT || (window.__LEMUR_HD_OPT = { mem: null, pend: {}, t: null });
+const LP_OPT_DOMAINS = ['light', 'switch', 'input_boolean', 'fan'];
+const LP_OPT_MS = 5000;
+function lpOptMem() {
+  if (!LP_OPT.mem) {
+    let m = null; try { m = JSON.parse(localStorage.getItem('lhd-light-mem') || 'null'); } catch (e) {}
+    LP_OPT.mem = m && typeof m === 'object' && !Array.isArray(m) ? m : {};
+  }
+  return LP_OPT.mem;
+}
+// yanan ışığın rengini ve parlaklığını hatırla (değiştiyse kaydet; yazma 2 sn toplanır)
+function lpOptRemember(st) {
+  if (!st || st.state !== 'on' || st.entity_id.indexOf('light.') !== 0) return;
+  const a = st.attributes || {}, o = {};
+  if (Array.isArray(a.rgb_color) && a.rgb_color.length >= 3) o.rgb_color = a.rgb_color.slice(0, 3);
+  if (typeof a.brightness === 'number') o.brightness = a.brightness;
+  if (typeof a.color_mode === 'string') o.color_mode = a.color_mode;
+  const M = lpOptMem(), id = st.entity_id;
+  if (M[id] && JSON.stringify(M[id]) === JSON.stringify(o)) return;
+  M[id] = o;
+  clearTimeout(LP_OPT.t);
+  LP_OPT.t = setTimeout(() => { try { localStorage.setItem('lhd-light-mem', JSON.stringify(M)); } catch (e) {} }, 2000);
+}
+// dokunuşta beklenen durumu hazırla; aç/kapat edilebilen bir cihaz değilse false
+function lpOptToggle(h, id) {
+  const st = h && h.states[id], d = String(id).split('.')[0];
+  if (!st || LP_OPT_DOMAINS.indexOf(d) < 0 || (st.state !== 'on' && st.state !== 'off')) return false;
+  const on = st.state === 'off', a = Object.assign({}, st.attributes);
+  if (d === 'light') {
+    if (on) Object.assign(a, lpOptMem()[id] || {});
+    else ['rgb_color', 'brightness', 'hs_color', 'xy_color', 'rgbw_color', 'rgbww_color', 'color_temp', 'color_temp_kelvin', 'effect'].forEach((k) => { delete a[k]; });
+  }
+  LP_OPT.pend[id] = { from: st, st: Object.assign({}, st, { state: on ? 'on' : 'off', attributes: a }), until: Date.now() + LP_OPT_MS };
+  return true;
+}
+// çizimde kullanılacak durum: cevap beklenirken beklenen durum, gelince (ya da süre dolunca) gerçeği
+function lpEff(S, id) {
+  const p = LP_OPT.pend[id], r = S[id];
+  if (!p) return r;
+  if (r && Date.now() < p.until && r.state === p.from.state) return p.st;
+  delete LP_OPT.pend[id];
+  return r;
+}
 
 // Efekt oynayan ışık: çerçeve ve simge efektin adına göre seçilen paletle döner, hafif parlar (tablet panosundaki Govee karoları).
 const LP_FX = [
@@ -634,7 +680,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         more(id);
       };
       const it = b._item || {};
-      const tap0 = it.tap ? () => this._act(it.tap, id) : () => this._hass.callService('homeassistant', 'toggle', { entity_id: id });
+      const tap0 = () => this._act(it.tap, id, 'toggle');
       const tap = () => this._confirm(it, tap0);
       const hold2 = it.hold ? () => this._act(it.hold, id) : hold;   // öğede tap/hold verildiyse o
       if (!b._bar) { lpPress(b, tap, hold2); return; }
@@ -976,6 +1022,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     const v = lpTpl(this._hass, s, this._tplCb);
     return v === null ? '…' : v;
   }
+  // aç/kapat dokunuşu: karoyu hemen beklenen durumda çiz, süre dolunca gerçeğe göre yeniden çiz
+  _optTap(id) {
+    if (!lpOptToggle(this._hass, id) || !this._sig) return;
+    delete this._last[id]; this._update();
+    setTimeout(() => { if (this._sig && this._hass) { delete this._last[id]; this._update(); } }, LP_OPT_MS + 100);
+  }
   _repaint() {
     if (!this._hass || !this._sig) return;
     this._last = {};
@@ -1009,7 +1061,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!a) return;
     if (typeof a === 'string') {
       if (a === 'more-info') { if (id) lpFire(this, 'hass-more-info', { entityId: id }); return; }
-      if (a === 'toggle') { if (id) h.callService('homeassistant', 'toggle', { entity_id: id }); return; }
+      if (a === 'toggle') { if (id) { this._optTap(id); h.callService('homeassistant', 'toggle', { entity_id: id }); } return; }
       return;
     }
     if (typeof a !== 'object') return;
@@ -1082,7 +1134,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       (this._watched || []).forEach((id) => { if (this._last[id] && S[id] !== this._last[id]) { const r = LEC.roomOf(id); if (r && !seen[r] && this._lecRooms.indexOf(r) >= 0) { seen[r] = 1; LEC.watch(h, r); } } });
     }
     (this._tiles || []).forEach((el) => {
-      const id = el.getAttribute('data-light'), st = S[id];
+      const id = el.getAttribute('data-light'), st = lpEff(S, id);
+      lpOptRemember(S[id]);
       if (!st || this._last[id] === st) return;
       const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0;
       // efekt: ışığın kendi efekti; yoksa LEC'in o odada oynattığı efekt (yanan ışıklarda)
@@ -1117,7 +1170,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._txEls || []).forEach((el) => { el.textContent = this._tx(el.getAttribute('data-tx')); });
     (this._ssEls || []).forEach((el) => { const it = el._item || {}; el.textContent = this._sec2(it, it.entity ? S[it.entity] : null) || ''; });
     (this._ents || []).forEach((el) => {
-      const id = el.getAttribute('data-ent'), st = S[id];
+      const id = el.getAttribute('data-ent'), st = lpEff(S, id);
+      lpOptRemember(S[id]);
       if (!st || (this._last[id] === st && el.getAttribute('data-p'))) return;
       el.setAttribute('data-p', '1');
       this._paintEnt(el, st);
