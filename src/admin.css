@@ -258,3 +258,9 @@ label.btn { cursor: pointer; }
 .zones { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .zones input[type=color] { width: 36px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; }
 .zones .inp { width: 70px; height: 30px; }
+.hsw { width: 22px; height: 22px; min-width: 0; padding: 0 !important; border-radius: 50% !important; border: 2px solid transparent !important; margin: 0 2px; }
+.hsw.on { border-color: #fff !important; }
+.scrows { display: flex; flex-direction: column; gap: 6px; }
+.scr { display: flex; gap: 8px; align-items: center; }
+.scr .inp { flex: 1 1 auto; }
+.scr input[type=color] { width: 40px; height: 32px; padding: 0; border: none; background: none; cursor: pointer; }

@@ -39,7 +39,8 @@ function lhdKind(it) {
   if (!it) return null;
   if (typeof it === 'string') it = { entity: it };
   if (it.card && typeof it.card === 'object') return 'card';   // gömülü HA kartı
-  if (typeof it.pet === 'string') return 'pet';       // besleme kartı (evcil hayvan)
+  if (typeof it.pet === 'string') return 'pet';
+  if (typeof it.subtitle === 'string') return 'sub';           // bölüm içinde alt başlık (yalnız yazı, tam satır)       // besleme kartı (evcil hayvan)
   if (!it.entity) return Object.prototype.hasOwnProperty.call(it, 'action') ? 'scene' : 'ph';
   const d = it.entity.split('.')[0];
   if (d === 'script' || d === 'scene' || d === 'automation' || d === 'button' || d === 'input_button') return 'scene';
