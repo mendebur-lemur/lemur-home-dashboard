@@ -252,3 +252,9 @@ label.btn { cursor: pointer; }
 .it .x + .x { margin-left: 2px; }
 .it .x[data-im]:hover { color: var(--tx, #fff); }
 .imdlg .seg { flex-wrap: wrap; } .imdlg .fld.nar2 { flex: 1 1 200px; }
+.clrf .seg { align-items: center; }
+.clrf input[type=color] { width: 40px; height: 28px; padding: 0; border: none; background: none; cursor: pointer; opacity: .45; }
+.clrf input[type=color].set { opacity: 1; }
+.zones { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.zones input[type=color] { width: 36px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; }
+.zones .inp { width: 70px; height: 30px; }

@@ -25,6 +25,9 @@ const ADM = {
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
     version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    lookL: 'Görünüm', lk_tile: 'Karo', lk_button: 'Düğme', lk_row: 'Satır', lk_halo: 'Halo', colorsL: 'Renkler', cIcon: 'Simge', cOn: 'Açıkken', cBg: 'Arka plan', cNone: 'Yok',
+    zonesL: 'Değere göre renk', zonesT: '4 sınır, 5 renk: değer bir sınıra eşit ya da büyükse bir sonraki renge geçer (Halo kartlarındaki bölgeler gibi). Çerçeve, değer ve simge bu renkte.', zLim: 'Sınır {n}',
+    cardTapT: 'Verilmezse kartın kendi dokunma davranışı', a_defCard: 'Varsayılan: kartın kendisi',
     fillL: 'Doldurma', fillC: 'İçeriğe göre', fillF: 'Kutuyu doldur', fillT: 'Kutuyu doldur: düğmeler ve karolar kutunun yüksekliğine eşit dağılır', alignL: 'Hizalama', alTop: 'Üst', alCenter: 'Orta', alSpread: 'Eşit dağıt',
     sizeL: 'Boyut', sz_row: 'Satır boyu', icSizeL: 'Simge boyutu', txSizeL: 'Yazı boyutu', sz_auto: 'Otomatik', sz_s: 'Küçük', sz_m: 'Orta', sz_l: 'Büyük',
     tPop: 'Pencerede açar: {t}', imT: 'Öğe ayarları', imSave: 'Kaydet', iconOn: 'Açıkken simge', iconOff: 'Kapalıyken simge', tapL: 'Dokununca', holdL: 'Basılı tutunca', actL: 'Ne yapar',
@@ -54,6 +57,9 @@ const ADM = {
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
     version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    lookL: 'Look', lk_tile: 'Tile', lk_button: 'Button', lk_row: 'Row', lk_halo: 'Halo', colorsL: 'Colours', cIcon: 'Icon', cOn: 'When on', cBg: 'Background', cNone: 'None',
+    zonesL: 'Colour by value', zonesT: '4 limits, 5 colours: when the value reaches a limit it moves to the next colour (like the zones in Halo cards). The frame, value and icon take this colour.', zLim: 'Limit {n}',
+    cardTapT: 'If not set, the card handles taps itself', a_defCard: 'Default: the card itself',
     fillL: 'Fill', fillC: 'Fit content', fillF: 'Fill the box', fillT: 'Fill the box: buttons and tiles share the box height evenly', alignL: 'Alignment', alTop: 'Top', alCenter: 'Middle', alSpread: 'Spread evenly',
     sizeL: 'Size', sz_row: 'Full row', icSizeL: 'Icon size', txSizeL: 'Text size', sz_auto: 'Auto', sz_s: 'Small', sz_m: 'Medium', sz_l: 'Large',
     tPop: 'Opens in a window: {t}', imT: 'Item settings', imSave: 'Save', iconOn: 'Icon when on', iconOff: 'Icon when off', tapL: 'On tap', holdL: 'On hold', actL: 'Action',
@@ -77,6 +83,7 @@ const LHD_TYPES = {
 const LHD_TINT_COLORS = ['#FFC24A', '#E6ECF5', '#5B8DEF', '#4FD1C5', '#7BD83A', '#FF7AB0', '#B07CFF', '#FF8A4A'];
 const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#1d0f12', '#1a160e', '#0d1b1e'];
 const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'].concat(LHD_VALUE_DOMAINS);
+const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
@@ -1074,6 +1081,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (bcb) return editSec((S) => { S.bar_columns = +bcb.getAttribute('data-bc'); });
       const imb = g('[data-im]');
       if (imb) { const i = +imb.getAttribute('data-im'), L = (sec && sec.entities) || []; if (L[i] !== undefined) this._imOpen(i, L[i], false); return; }
+      const icl = g('[data-imclr]');
+      if (icl && this._im) { this._im.f[icl.getAttribute('data-imclr')] = ''; return this._render(); }
+      if (g('[data-imzone]') && this._im) { this._im.f.zOn = !this._im.f.zOn; return this._render(); }
       const isg = g('[data-imseg]');
       if (isg && this._im) { const p = isg.getAttribute('data-imseg').split(':'); this._im.f[p[0]] = p[1]; return this._render(); }
       if (g('[data-imvis]') && this._im) { this._im.f.visOn = !this._im.f.visOn; return this._render(); }
@@ -1129,7 +1139,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // çizilmez (odak ve hemen arkasından basılan düğme kaybolmasın); görünen ilgili yazılar yerinde güncellenir, önizleme kendisi güncellenir.
     app.addEventListener('change', (e) => {
       const el = e.target;
-      if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT') this._render(); } return; }
+      if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT' || (el.type === 'color' && /^(color|color_on|bg)$/.test(el.getAttribute('data-imf')))) this._render(); } return; }
       if (el.hasAttribute && el.hasAttribute('data-bkfile')) { const f = el.files && el.files[0]; el.value = ''; if (f) this._backupRead(f); return; }
       const soft = el.tagName === 'INPUT';
       const f = el.getAttribute && el.getAttribute('data-f');
@@ -1239,7 +1249,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const tab = this._curTab(this._work()), sec = this._curSec(tab);
     if (!tab || !sec) return;
     const it = typeof raw === 'string' ? { entity: raw } : lhdClone(raw || {});
-    const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '', size: it.size || '', icon_size: it.icon_size || '', text_size: it.text_size || '' };
+    const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '', size: it.size || '', icon_size: it.icon_size || '', text_size: it.text_size || '',
+      look: it.look || '', color: it.color || '', color_on: it.color_on || '', bg: it.bg || '' };
+    const z = it.zones && typeof it.zones === 'object' ? it.zones : null;
+    f.zOn = !!z;
+    for (let q = 0; q < 4; q++) f['zt' + q] = z && z.t && z.t[q] !== undefined && z.t[q] !== null ? String(z.t[q]) : String(LHD_ZONE_DEF.t[q]);
+    for (let q = 0; q < 5; q++) f['zc' + q] = (z && z.c && z.c[q]) || LHD_ZONE_DEF.c[q];
     const ai = (pre, a, scene) => {
       const o = {};
       if (scene && (a === null || a === undefined)) o.K = 'none';
@@ -1287,18 +1302,35 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="imact">' + fld(label, h) + '</div>';
     };
     let body = '';
-    if (k === 'card') body += fld(t('cardY'), ta('card', 12, 'type: markdown\ncontent: ...'));
+    if (k === 'card') body += fld(t('cardY'), ta('card', 12, 'type: markdown\ncontent: ...')) +
+      actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
     else {
       body += '<div class="row2">' + fld(t('name'), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
       if (k !== 'climate' && k !== 'vacuum' && k !== 'media') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
       if (k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
-      // boyut (ızgaradaki karolar) ve simge / yazı boyutu
+      // görünüm: eylem düğmesi karo/satır, varlık düğme/satır, sayısal değer Halo kartı
       const sg = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + ((f[key] || '') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
-      const inGrid = k === 'tile' || k === 'ph' || k === 'value';
+      const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
+        : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
+          : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
+      if (lks) body += fld(t('lookL'), sg('look', lks.map((x) => [x[0], this._t(x[1])])));
+      const L0 = f.look || '';
+      const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');
       if (inGrid) body += fld(t('sizeL'), sg('size', [['', '1×1'], ['2x1', '2×1'], ['1x2', '1×2'], ['2x2', '2×2'], ['row', this._t('sz_row')]]));
-      if (inGrid || k === 'scene') {
+      if ((inGrid || k === 'scene' || L0 === 'button' || L0 === 'row') && L0 !== 'halo') {
         const so = [['', this._t('sz_auto')], ['s', this._t('sz_s')], ['m', this._t('sz_m')], ['l', this._t('sz_l')]];
         body += fld(t('icSizeL'), sg('icon_size', so)) + fld(t('txSizeL'), sg('text_size', so));
+      }
+      // renkler: simge rengi, açıkken renk, arka plan; sayısal değerde değere göre renk
+      if ((k === 'tile' || k === 'value') && it.entity && L0 !== 'halo') {
+        const two = k === 'tile' || LP_VAL_ONOFF.indexOf(d) >= 0;
+        const cf = (key, label) => '<div class="fld clrf"><label>' + label + '</label><div class="seg"><button data-imclr="' + key + '"' + (f[key] ? '' : ' class="on"') + '>' + t('cNone') + '</button>' +
+          '<input type="color" data-imf="' + key + '" value="' + esc(f[key] || '#FFC24A') + '"' + (f[key] ? ' class="set"' : '') + '></div></div>';
+        body += fld(t('colorsL'), '<div class="row2">' + cf('color', t('cIcon')) + (two ? cf('color_on', t('cOn')) : '') + cf('bg', t('cBg')) + '</div>');
+        if (k === 'value' && !two) {
+          body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('zonesL') + '</b><span>' + t('zonesT') + '</span></div><button class="tg' + (f.zOn ? ' on' : '') + '" data-imzone></button></div>' +
+            (f.zOn ? '<div class="zones">' + [0, 1, 2, 3, 4].map((q) => '<input type="color" data-imf="zc' + q + '" value="' + esc(f['zc' + q]) + '">' + (q < 4 ? '<input class="inp" type="number" step="any" data-imf="zt' + q + '" value="' + esc(f['zt' + q]) + '" title="' + esc(this._t('zLim', { n: q + 1 })) + '">' : '')).join('') + '</div>' : '') + '</div>';
+        }
       }
       if (k === 'value') body += actF('tap', t('tapL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
       if (k === 'tile' && it.entity) body += actF('tap', t('tapL'), this._t('a_defTog'), ['def', 'more-info', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defHold'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
@@ -1350,6 +1382,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const setS = (key, v) => { v = String(v || '').trim(); if (v) it[key] = v; else delete it[key]; };
     try {
       if (k === 'card') {
+        ['tap', 'hold'].forEach((pre) => { const v = this._imAct(pre); if (v === undefined) delete it[pre]; else it[pre] = v; });
         let c; try { c = lhdYamlParse(f.card || ''); } catch (e) { throw new Error(e.line ? this._t('yamlErrL', { n: e.line }) : this._t('yamlErr', { e: e.message })); }
         if (!c || typeof c !== 'object' || !c.type) throw new Error(this._t('cardNoType'));
         it.card = c;
@@ -1357,7 +1390,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         setS('name', f.name);
         if (k !== 'climate' && k !== 'vacuum' && k !== 'media') setS('icon', f.icon);
         if (k === 'value') { setS('icon_on', f.icon_on); setS('icon_off', f.icon_off); }
-        if (k === 'tile' || k === 'ph' || k === 'value') setS('size', f.size);
+        if (k === 'tile' || k === 'ph' || k === 'value' || k === 'scene') setS('size', f.size);
+        if (k === 'scene' || k === 'value' || (k === 'tile' && it.entity)) setS('look', f.look);
+        if ((k === 'tile' || k === 'value') && it.entity) {
+          setS('color', f.color); setS('color_on', f.color_on); setS('bg', f.bg);
+          if (k === 'value' && f.zOn) {
+            const tt = [0, 1, 2, 3].map((q) => { const v = parseFloat(String(f['zt' + q]).replace(',', '.')); return isNaN(v) ? null : v; });
+            it.zones = { t: tt, c: [0, 1, 2, 3, 4].map((q) => f['zc' + q]) };
+          } else delete it.zones;
+        }
         if (k === 'tile' || k === 'ph' || k === 'value' || k === 'scene') { setS('icon_size', f.icon_size); setS('text_size', f.text_size); }
         if (k === 'value' || (k === 'tile' && it.entity)) {
           ['tap', 'hold'].forEach((pre) => { const v = this._imAct(pre); if (v === undefined) delete it[pre]; else it[pre] = v; });

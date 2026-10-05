@@ -225,9 +225,9 @@
 .ic-tint .scene .lic.haic { color: var(--sc, var(--lp-ic-on)); }
 /* v0.8: içerik kesilmesin. Karo + düğme karışık ya da yalnız düğme/kart olan kutu, içeriğinden kısa olamaz;
    aynı sütundaki öbür kutu kalan yeri alır. İçerik sığdığında görünüm aynıdır. */
-.box.mix, .box.spread { overflow: visible; min-height: auto; }
+.box.mix, .box.spread, .box.fit { overflow: visible; min-height: auto; }
 .box.mix > .grid, .box.mix > .bars { min-height: auto; }
-.phone .box.mix, .phone .box.spread { min-height: 0; }
+.phone .box.mix, .phone .box.spread, .phone .box.fit { min-height: 0; }
 /* B1 kutuyu doldur: düğmeler ve karolar kutunun yüksekliğine eşit dağılır */
 .box.fill > .scene { flex: 1 1 0px; min-height: 48px; }
 .box.fill > .grid, .box.fill > .bars { flex: 1 1 auto; }
@@ -259,3 +259,33 @@
    düzenlemedeki seçim çerçevesine yer bırakır. */
 .sub { overflow-y: auto; overflow-x: hidden; padding: 4px; margin: -4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .sub::-webkit-scrollbar { display: none; }
+/* v0.9 görünümler. Satır: simge, ad, değer tek satırda; kutuya yan yana */
+.vrows { display: grid; grid-gap: 8px; flex: 0 0 auto; }
+.vrow { display: flex; align-items: center; height: 44px; padding: 0 12px; border-radius: 14px; background: var(--lp-card); cursor: pointer; min-width: 0; box-sizing: border-box; color: var(--lp-text); transition: all 0.2s ease-out; }
+.vrow .lic { flex: 0 0 auto; width: var(--lp-icw, 22px); height: var(--lp-icw, 22px); margin-right: 10px; }
+.vrow .rn { flex: 1 1 auto; min-width: 0; font-size: var(--lp-fs, 15px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vrow .rv { flex: 0 0 auto; margin-left: 8px; font-size: var(--lp-fs, 15px); font-weight: 700; white-space: nowrap; }
+.vrow.on { box-shadow: inset 0 0 0 2px var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }
+.vrow.na { opacity: 0.5; }
+.phone .vrow { height: 40px; }
+/* düğme görünümündeki varlık: ad ve altında durum/değer */
+.scene.ebtn .sb { flex: 1 1 auto; min-width: 0; padding-left: 6px; }
+.scene.ebtn .sn { display: block; font-size: var(--lp-fs, 18px); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scene.ebtn .sv { display: block; font-style: normal; font-size: 14px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scene.ebtn.on { box-shadow: inset 0 0 0 2px var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }
+.scene.ebtn.na { opacity: 0.5; }
+.box.mix > .vrows, .box.fill > .vrows { flex: 0 0 auto; }
+/* eylem öğesi karo görünümünde (düğme gibi çalışır) */
+.tile.act .nm { margin-top: 8px; }
+.ic-auto .tile.act .lic, .ic-auto .vrow.act .lic { filter: none; opacity: 1; }
+.ic-tint .tile.act .lic.mdic, .ic-tint .vrow.act .lic.mdic { color: var(--sc, var(--lp-ic-on)); }
+.ic-auto .vrow:not(.on):not(.live):not(.act) .lic, .ic-auto .ebtn:not(.on):not(.live) .lic { filter: grayscale(1) brightness(1.1); opacity: 0.7; }
+.ic-tint .vrow.on .lic, .ic-tint .vrow.live .lic, .ic-tint .ebtn.on .lic, .ic-tint .ebtn.live .lic { color: var(--lp-ic-on); }
+/* A4 renkler: öğeye verilen simge rengi (tek renk simge), eşiğe göre renk (çerçeve ve değer) */
+.icc .lic, .icc .lic.haic { color: var(--ic) !important; filter: none !important; opacity: 1 !important; }
+.tile.zc { border: 2px solid var(--tile-rgb); }
+.tile.val.zc .vl, .vrow.zc .rv, .ebtn.zc .sv { color: var(--tile-rgb); }
+/* gömülü karta dokunma katmanı */
+.emb { position: relative; }
+.tapov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 2; cursor: pointer; border-radius: 20px; }
+.tapov.down { background: rgba(255, 255, 255, 0.06); }

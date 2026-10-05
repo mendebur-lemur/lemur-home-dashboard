@@ -2,6 +2,15 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.9.0',
+    tr: ['Öğe ayarı Görünüm: düğme ışıkların yanında karo olabilir; değerler ve cihazlar ince satır ya da düğme, sayısal değerler Halo kartı olarak çizilebilir.',
+      'Öğe renkleri: simge rengi, açıkken renk, arka plan tonu; sayısal değerde 4 sınır ve 5 renkle değere göre renk.',
+      'Kart öğesine ve Halo görünümüne dokununca / basılı tutunca eylem: kartın kendi tıklaması yerine o çalışır.',
+      'Kare karolu kutu da artık kesilmez, karoların boyuna kadar uzar.'],
+    en: ['Item setting Look: a button can be a tile next to the lights; values and devices can be thin rows or buttons, numeric values a Halo card.',
+      'Item colours: icon colour, colour when on, background tint; numeric values can be coloured by value with 4 limits and 5 colours.',
+      'Tap / hold action on card items and the Halo look: it runs instead of the card\'s own tap.',
+      'A box with square tiles is no longer cut off either; it grows to fit the tiles.'] },
   { v: '0.8.0',
     tr: ['Bölüme düğme eklenince kutu artık kesilmez: kutu içeriği kadar uzar, ekrana sığmayan sütun kendi içinde kayar.',
       'Bölüm ayarı Doldurma: "Kutuyu doldur" seçilince düğmeler ve karolar kutunun yüksekliğine eşit dağılır.',
