@@ -82,6 +82,9 @@ out = halo.rstrip() + "\n" + out
 dst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard.js"
 dst.write_text(out, encoding="utf-8")
 # sıkıştırılmış kopya: Home Assistant'ın web sunucusu (aiohttp) tarayıcı gzip kabul ediyorsa .gz dosyasını gönderir (~580 KB yerine ~170 KB)
+# .gz yalnız içerik değişince yeniden yazılır: zlib sürümleri aynı veriyi farklı baytlarla sıkıştırabilir,
+# her derlemede yazılırsa GitHub'daki denetim (git diff) içerik aynıyken de "değişti" der.
 gz = dst.with_name(dst.name + ".gz")
-gz.write_bytes(gzip.compress(out.encode("utf-8"), 9, mtime=0))
+if not gz.exists() or gzip.decompress(gz.read_bytes()).decode("utf-8") != out:
+    gz.write_bytes(gzip.compress(out.encode("utf-8"), 9, mtime=0))
 print(dst, len(out.encode()))
