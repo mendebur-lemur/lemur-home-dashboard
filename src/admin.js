@@ -968,7 +968,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       });
       this._pv.addEventListener('lhd-change', (e) => { const nt = e.detail.tab; this._edit((T) => { const i = T.map((x) => x.id).indexOf(nt.id); if (i >= 0) { lhdFitSplits(nt, this._cw()); T[i] = nt; } }); });
     }
-    const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '', phone: this._screenKey() === 'phone' || (this._screenKey() === 'here' && window.innerWidth < LP_PHONE_W) };
+    const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '', phone: this._screenKey() === 'phone' || (this._screenKey() === 'here' && lpPhoneScreen()) };
     if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
     box.appendChild(this._pv);
     this._pv.hass = this._hass;
@@ -988,7 +988,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const cv = this._settings().canvas || {}, W = cv.width || 1280, H = cv.ref_height || 1075;
     const sc = LHD_SCREENS.filter((x) => x[0] === this._screenKey())[0];
     const sw = sc[1] || window.innerWidth, sh = sc[2] || window.innerHeight;
-    const ph = sc[0] === 'phone' || (sc[0] === 'here' && window.innerWidth < LP_PHONE_W);
+    const ph = sc[0] === 'phone' || (sc[0] === 'here' && lpPhoneScreen());
     // telefon: pano ölçeklenmez, ekranın kendi genişliğinde çizilir ve aşağı kayar
     const cw = ph ? sw : Math.max(W, Math.floor(sw / sh * H)), ch = ph ? sh : Math.floor(sh * cw / sw);
     box.style.overflowY = ph ? 'auto' : '';

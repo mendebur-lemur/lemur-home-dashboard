@@ -295,3 +295,15 @@ label.btn { cursor: pointer; }
 .cepv { padding: 14px; border-radius: 18px; background: #0b0e15; border: 1px solid var(--ln); --ha-card-background: rgb(28, 28, 28); --card-background-color: rgb(28, 28, 28); --ha-card-border-radius: 20px; --primary-text-color: #fff; --secondary-text-color: #D3D3D3; }
 .cepv .cwarn { display: flex; align-items: center; gap: 8px; color: #FF9592; font-size: 13px; }
 .ceed { min-height: 120px; }
+
+/* dar ekran (telefon): üst çubuk sığmazsa alt satıra geçer, başlık gizlenir; düğmeler ekrandan taşmaz */
+@media (max-width: 600px) {
+  .top { flex-wrap: wrap; row-gap: 8px; padding: 6px 0; }
+  .top h1, .top .badge { display: none; }
+  .modeseg button { white-space: nowrap; }
+  .srow { flex-wrap: wrap; }
+  .srow .t { flex: 1 1 100%; }
+  .srow .inp.w { width: 100%; }
+  .df { flex-wrap: wrap; }
+  .srow .seg { flex-wrap: wrap; max-width: 100%; }
+}

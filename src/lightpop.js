@@ -52,6 +52,7 @@ const LP_POP_CSS = `
 .kel div { height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #3A2A17;
   font-family: 'JetBrains Mono', ui-monospace, monospace; cursor: pointer; }
 .kel div.on { box-shadow: 0 0 0 2px #fff; }
+@media (max-width: 360px) { .kel { grid-template-columns: repeat(3, 1fr); } }   /* dar telefonda 6 kelvin düğmesi sığmıyor: 2 satır */
 .col { display: grid; grid-template-columns: 177px 1fr; align-items: center; grid-gap: 14px; margin-top: 14px; }
 .wh { position: relative; width: 163px; height: 163px; margin: 0 auto; touch-action: none; }
 .wh canvas { width: 100%; height: 100%; border-radius: 50%; display: block; box-shadow: 0 6px 24px -12px rgba(0, 0, 0, 0.9); }
@@ -153,14 +154,19 @@ class LemurLightPopup {
     this._host.classList.remove('in');
     setTimeout(() => { if (this._host.parentNode) this._host.parentNode.removeChild(this._host); }, 200);
   }
-  set hass(h) { this._h = h; if (!this._closed && !this._dragging) this._sync(); }
+  // HA her durum değişiminde hass gönderir: pencere yalnız kendi ışıklarından biri değiştiyse yeniden çizilir
+  set hass(h) { this._h = h; if (!this._closed && !this._dragging) this._sync(true); }
   _t(k, v) { let s = (LP_POP_TXT[this._lang] || LP_POP_TXT.en)[k] || k; if (v) Object.keys(v).forEach((x) => { s = s.replace('{' + x + '}', v[x]); }); return s; }
 
   // aynı cihazın segment ışıkları (ör. light.lantern_floor_lamp_s_segment_001..004)
+  // (bütün varlıkları taramak pahalı: varlık listesi değişmedikçe önceki sonuç kullanılır)
   _segments() {
-    const ents = this._h.entities || {}, e = ents[this._id], dv = e && e.device_id;
-    if (!dv) return [];
-    return Object.keys(this._h.states).filter((x) => x !== this._id && x.indexOf('light.') === 0 && /_segment_?\d+$/.test(x) && ents[x] && ents[x].device_id === dv).sort();
+    const ents = this._h.entities || {};
+    if (this._segC && this._segC.e === ents) return this._segC.v;
+    const e = ents[this._id], dv = e && e.device_id;
+    const v = !dv ? [] : Object.keys(this._h.states).filter((x) => x !== this._id && x.indexOf('light.') === 0 && /_segment_?\d+$/.test(x) && ents[x] && ents[x].device_id === dv).sort();
+    this._segC = { e: ents, v: v };
+    return v;
   }
   _caps(id) {
     const st = this._h.states[id], a = (st && st.attributes) || {}, m = a.supported_color_modes || [];
@@ -261,7 +267,7 @@ class LemurLightPopup {
         sl.querySelector('.fill').style.width = pct + '%';
         sl.querySelector('.tx span').textContent = pct ? pct + '%' : this._t('off');
         if (Date.now() - last > 300) send();
-      }, () => { this._dragging = false; sl.classList.remove('drag'); send(); });
+      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); send(); });
     });
     // renk çemberi
     const wh = R.querySelector('.wh');
@@ -277,7 +283,7 @@ class LemurLightPopup {
         hs = [Math.round((Math.atan2(y, x) * 180 / Math.PI + 360) % 360), Math.round(d * 100)];
         const dot = wh.querySelector('.dot'); dot.style.left = (50 + x / rad * 50) + '%'; dot.style.top = (50 + y / rad * 50) + '%';
         if (Date.now() - last > 220) send();
-      }, () => { this._dragging = false; setTimeout(send, 120); });
+      }, () => { this._dragging = false; this._seen = null; setTimeout(send, 120); });
     }
   }
   _paintWheel(cv) {
@@ -303,9 +309,14 @@ class LemurLightPopup {
   }
 
   // durumu ekrana yansıt (yeniden çizmeden)
-  _sync() {
+  _sync(onlyIfChanged) {
     const R = this._pan, S = this._h.states;
     if (!R) return;
+    const ids = [this._id, this._target()].concat(this._segments());
+    Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => ids.push(sl.getAttribute('data-sl')));
+    const seen = ids.map((i) => S[i]), L = this._seen;
+    if (onlyIfChanged && L && L.length === seen.length && seen.every((x, i) => x === L[i])) return;
+    this._seen = seen;
     Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
       const st = S[sl.getAttribute('data-sl')];
       const on = !!st && st.state === 'on', a = (st && st.attributes) || {};

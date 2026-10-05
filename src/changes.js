@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.12.4',
+    tr: ['Yatay tutulan telefonda ve dikey tutulan tablette pano telefon düzenine geçer (yazılar artık küçülmüyor, karolar uzamıyor); karo sayısı ekran genişliğine göre artar.',
+      'Telefonda medya satırları kutudan taşmıyor; yönetim paneli ve ayarlar dar ekrana sığıyor; ışık penceresinde beyaz ton düğmeleri dar telefonda iki satır.',
+      'Daha hızlı: pano dosyası sıkıştırılmış gelir (~580 KB yerine ~170 KB), ışık penceresi yalnız kendi ışıkları değişince yeniden çizilir.'],
+    en: ['A phone held sideways and a tablet held upright now get the phone layout (no more tiny text or stretched tiles); the number of tiles grows with the screen width.',
+      'Media rows no longer overflow on phones; the admin panel and settings fit narrow screens; the light window\'s white-tone buttons wrap to two rows on small phones.',
+      'Faster: the dashboard file is served compressed (~170 KB instead of ~580 KB) and the light window only redraws when its own lights change.'] },
   { v: '0.12.3',
     tr: ['Işık düğmeleri anında tepki verir: dokununca cihazın cevabı beklenmez. Açarken düğme ışığın son renginde yanar; gerçek durum gelince gerekirse düzelir, 5 sn içinde cevap gelmezse eski haline döner.'],
     en: ['Light buttons react instantly: no waiting for the device. Turning on lights the button in the light\'s last colour; it is corrected when the real state arrives and goes back if there is no reply within 5 s.'] },

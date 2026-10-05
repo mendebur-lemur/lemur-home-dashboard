@@ -9,13 +9,17 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 **Quick install:** [Open in HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) → Download → restart Home Assistant → [add the integration](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → put `strategy: type: custom:lemur-home-dashboard` in a new dashboard. Step-by-step guide [below](#installation).
 
 - **One-line setup.** Two lines in the dashboard's raw configuration and the rest arrives on its own. Rooms come from your Home Assistant areas; lights, scenes, air conditioners, radiators, vacuums and media players are found in those areas.
-- **No other add-ons needed.** One install from HACS; no mushroom, card-mod, bubble-card or any other card or theme. The climate and vacuum cards are bundled.
-- **Everything from the admin panel.** In the **Lemur Home Dashboard** page in the sidebar you edit tabs, sections, column widths and where each device goes; a live preview shows the result, and changes reach every tablet in the house at once. Every step can be undone.
+- **No other add-ons needed.** One install from HACS; no mushroom, card-mod, bubble-card or any other card or theme. The Lemur Halo cards (climate, vacuum, sensor, weather, energy, security, room, light) are bundled.
+- **Everything from the admin panel.** In the **Lemur Home Dashboard** page in the sidebar you edit tabs, sections, column widths and where each device goes; a live preview shows the result, and changes reach every tablet in the house at once. Every step can be undone. **Simple** mode shows only the basics, **Advanced** mode adds sizes, colours, conditions and cards; complex settings have a **?** help next to them.
 - **Icon picker.** Choose tab, light and button icons from a list: suggestions that fit first, all Home Assistant icons when you search.
-- **Its own icon set.** Every icon on the dashboard is drawn from 1305 built-in colourful icons; Home Assistant's icons are not used. In the default **Automatic** style, devices that are off are grey and devices that are on are colourful; you can also make them all colourful or all grey.
+- **Its own icon set.** Every icon on the dashboard is drawn from 1305 built-in colourful icons; an `mdi:` name that isn't in the set is drawn with Home Assistant's flat icon. In the default **Automatic** style, devices that are off are grey and devices that are on are colourful; you can also make them all colourful or all grey.
 - **Slider light bars.** A lights section can show horizontal bars instead of square tiles: tap to toggle, swipe sideways to change brightness, and the bar fills to the brightness in the light's colour. Bars on phones only, tiles on tablets, is an option too.
 - **Light window.** Hold a light tile to open a light window with a big brightness slider, white tones, a colour wheel, preset colours, effects and (if the light has them) segments. You can switch to Home Assistant's own dialog in the settings.
-- **Fits any screen.** The dashboard scales with the screen; it keeps the same proportions on 16:10, 4:3 and wide screens and runs smoothly on old tablets (iOS 12).
+- **Instant response.** Tap a light, switch or fan and the tile changes without waiting for the device; turning a light on shows its last colour. If the device reports something else, the real state is shown.
+- **Feeding card.** A feeding reminder for a cat, dog, fish...: green on time, red when late; tap "Fed", get a phone notification when late, optionally run an automatic feeder.
+- **Card picker.** Pick Halo cards, Home Assistant cards and installed custom cards from a list; they are added with the card's own visual editor and a live preview.
+- **Second line and templates.** State, last changed or an attribute under a tile; Home Assistant templates in the name and second line. A button can ask before running.
+- **Fits any screen.** The dashboard scales with the screen; it keeps the same proportions on 16:10, 4:3 and wide screens and runs smoothly on old tablets (iOS 12). Phones, phones held sideways and tablets held upright get their own layout.
 - **Its own phone layout.** Room buttons scroll sideways, sections stack, buttons are thumb-sized.
 - **Seasonal climate.** Air conditioners in summer, radiators in winter; automatic or by hand.
 - **Light effects (optional).** If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is installed, an Effects button appears in the top bar and the playing effect shows on the tiles.
@@ -103,15 +107,16 @@ Room buttons and a clock at the top, columns below. Each column holds one or mor
 
 | Section | What it shows | On tap |
 |---|---|---|
-| **Lights** | Light, plug, cover and fan tiles, or slider bars | Toggle; swipe a bar sideways: brightness (cover position, fan speed); hold: [light window](#light-window) |
+| **Lights** | Light, plug, cover and fan tiles, or slider bars | Toggle (instantly); swipe a bar sideways: brightness (cover position, fan speed); hold: [light window](#light-window) |
 | **Scenes** | Script, scene and automation buttons, each with its own colour and icon | Runs it |
 | **Climate** | Air conditioner and radiator cards; air conditioners in summer, radiators in winter | On/off, temperature |
 | **Vacuum** | Robot vacuum card | Start, stop, send to dock |
 | **Media** | TVs and speakers | Device dialog |
 | **Values** | Sensors, binary sensors, timers, counters, selects: icon, value + unit and name; a running timer counts down | Device dialog (configurable) |
-| **Cards** | Any Home Assistant card added as YAML (markdown, graphs, installed custom cards) | The card itself |
+| **Cards** | Any card added from the card picker or as YAML: Halo cards, Home Assistant cards, installed custom cards | The card itself |
+| **Pet** | Feeding card: last feeding, next feeding and a colour for the status | "Fed"; hold: recent feedings |
 
-Lights that are on get a frame in their own colour; unavailable devices are dimmed. The automatic layout skips light group members, segments, hidden and config entities, and scripts that need input.
+Lights that are on get a frame in their own colour; unavailable devices are dimmed. A tap does not wait for the device; each light's last colour is remembered in the browser, and if there is no reply within 5 seconds the tile goes back. The automatic layout skips light group members, segments, hidden and config entities, and scripts that need input.
 
 ## Admin panel
 
@@ -142,16 +147,18 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 **Settings** at the top right apply to every tablet in the house:
 
+- *Version and updates:* at the top; installed version, what's new and **Check for updates**. A new version is installed from here through HACS, then Home Assistant restarts.
 - *Language:* automatic (Home Assistant's language), Turkish or English.
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
 - *Background:* dark (default), black, any colour, effect colours, or your own image (an address like `/local/background.jpg`). Effect colours are Light Effect Card's effect palettes (Aurora, Fire, Sunset, Ocean, Galaxy and 25 more): a soft colour glow on a dark background. They can be chosen even without Light Effect Card.
 - *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful), Flat (all grey) or Single colour (the drawings turn into one tone: devices that are off are grey, devices that are on are in the colour you pick; optionally a light that is on shows the lamp's own colour, and a scene button its own colour). The icon set is a separate file, downloaded once and kept by the browser.
 - *HA theme:* the Home Assistant theme used by dialogs (can be left empty).
 - *Hide top bar / Hide sidebar:* Home Assistant's header and sidebar are hidden on this dashboard only.
-- *Canvas:* design width and reference height; the dashboard scales to the screen with this ratio.
+- *Canvas (Advanced):* design width and reference height; the dashboard scales to the screen with this ratio.
 - *Holding a light:* Light window (default), HA dialog or (with Light Effect Card) the effect screen.
 - *Lemur Light Effect Card:* whether it is installed, and the Effects button in the top bar.
-- *Version.*
+- *Report a problem:* opens a GitHub issue with the version and device details (no room, device or person names).
+- *Backup:* tabs, sections, settings and pets in one file; restoring asks first.
 
 ## Light window
 
@@ -167,7 +174,7 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 
 ## Phone
 
-When the screen is narrower than 700 pixels, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack in a single column, scenes sit in two columns. Set a lights section to **Auto on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
+When the screen is narrower than 700 pixels, a phone is held sideways (less than 500 pixels high) or a tablet is held upright, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack, scenes sit in two columns and the page scrolls. The number of tiles per row grows with the width (3 on a phone, 6 on an upright tablet). Set a lights section to **Auto on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png" alt="Phone layout" width="320">
 
@@ -217,7 +224,7 @@ Each one installs on its own; installed together, they recognize each other.
 |---|---|---|
 | **Lemur Home Dashboard** (this repository) | A ready-made tablet dashboard set up with one line, with its own admin panel | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) |
 | **[Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card)** | An effect screen that manages every effect-capable light room by room. When installed, the dashboard gets an Effects button and effect buttons. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-light-effect-card&category=integration) |
-| **[Lemur Halo Cards](https://github.com/mendebur-lemur/lemur-halo-cards)** | Eight cards that tell the state with a coloured halo: climate, sensor, weather, vacuum, energy, security... The dashboard's climate and vacuum cards come from this family and are bundled; install it separately to use them on other dashboards. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
+| **[Lemur Halo Cards](https://github.com/mendebur-lemur/lemur-halo-cards)** | Eight cards that tell the state with a coloured halo: climate, sensor, weather, vacuum, energy, security... All eight are bundled with the dashboard and can be added from the card picker; install it separately to use them on other dashboards. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
 
 ## Development
 

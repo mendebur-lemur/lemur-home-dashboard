@@ -81,4 +81,7 @@ halo = halo.replace("/*! Lemur Halo Cards", "/*! Lemur Halo Cards (gömülü kop
 out = halo.rstrip() + "\n" + out
 dst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard.js"
 dst.write_text(out, encoding="utf-8")
+# sıkıştırılmış kopya: Home Assistant'ın web sunucusu (aiohttp) tarayıcı gzip kabul ediyorsa .gz dosyasını gönderir (~580 KB yerine ~170 KB)
+gz = dst.with_name(dst.name + ".gz")
+gz.write_bytes(gzip.compress(out.encode("utf-8"), 9, mtime=0))
 print(dst, len(out.encode()))

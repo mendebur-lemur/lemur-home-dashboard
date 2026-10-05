@@ -205,9 +205,12 @@ const LP_FX_CSS = LP_FX.map((p) => {
 // Telefon görünümü: dar ekranda (700 px altı) pano ölçeklenmez; üst şerit kayar, bölümler alt alta, karolar 3'lü.
 // Yönetim panelinin önizlemesi "Telefon" ekranında config.phone ile zorlar.
 const LP_PHONE_W = 700;
+// telefon düzeninde kartın genişliği (yönetim panelinin telefon önizlemesinde çerçevenin genişliği); geniş ekranda karo sayısı artar (karo ~120 px): 390 px'te 3, 800 px'te 6
+const lpPhoneW = (el) => Math.min((el && el.getBoundingClientRect().width) || window.innerWidth || 390, 1100);
+const lpPhoneKey = (el, cfg) => (lpIsPhone(cfg) ? 'p' + Math.floor(lpPhoneW(el) / 120) : 't');
 function lpIsPhone(cfg) {
   if (cfg && typeof cfg.phone === 'boolean') return cfg.phone;
-  return (window.innerWidth || 1280) < LP_PHONE_W;
+  return lpPhoneScreen();   // src/scale.js
 }
 
 // üst şeritteki Efektler düğmesi: LEC kuruluysa varsayılan açık
@@ -351,8 +354,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub(() => { this._sig = null; this._render(); });   // renkli simge seti yüklendi
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
-    if (!this._rsz) { this._rsz = () => { const p = lpIsPhone(this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } }; window.addEventListener('resize', this._rsz); }
-    this._phone = lpIsPhone(this._config);
+    if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } }; window.addEventListener('resize', this._rsz); }
+    this._phone = lpPhoneKey(this, this._config);
     if (this._hass) this._render();
   }
   disconnectedCallback() {
@@ -478,7 +481,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       }
       // 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
       // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
-      const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = lpGridRows(items, c), fill = !phone && (r >= 4 || !!s.fill);
+      const c = phone ? Math.max(Math.min(s.tile_columns || 5, 3), Math.min(8, Math.floor(lpPhoneW(this) / 120))) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = lpGridRows(items, c), fill = !phone && (r >= 4 || !!s.fill);
       // başka öğelerle aynı kutudaysa karolar kalan yeri doldurur, gerekirse kısalır (kartlar kendi yüksekliğinde kalır)
       const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? (only ? 'minmax(84px,1fr)' : 'minmax(56px,1fr)') : '1fr') + ')' + (items.some((x) => x.size) ? ';grid-auto-flow:row dense' : '');
       const G = typeof s.gap === 'number' ? s.gap : 8, gs2 = gs + (typeof s.gap === 'number' ? ';grid-gap:' + G + 'px' : '');   // bölüm ayarı Aralık

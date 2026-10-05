@@ -9,13 +9,17 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 **Hızlı kurulum:** [HACS'ta aç](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) → İndir → Home Assistant'ı yeniden başlat → [entegrasyonu ekle](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → yeni panoya `strategy: type: custom:lemur-home-dashboard` yaz. Adım adım anlatım [aşağıda](#kurulum).
 
 - **Tek satırla kurulum.** Panonun ham yapılandırmasına iki satır yazarsın, gerisi kendiliğinden gelir. Odalar Home Assistant alanlarından, ışıklar, senaryolar, klimalar, petekler, süpürge ve medya cihazları o alanlardan bulunur.
-- **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod, bubble-card ya da başka bir kart veya tema istemez. İklim ve süpürge kartları pakete gömülü gelir.
-- **Her şey yönetim panelinden.** Sol menüdeki **Lemur Home Dashboard** sayfasında sekmeleri, bölümleri, kolon genişliklerini ve hangi cihazın nerede duracağını düzenlersin; canlı önizleme gösterir, değişiklik evdeki bütün tabletlere aynı anda gelir. Her adım geri alınabilir.
+- **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod, bubble-card ya da başka bir kart veya tema istemez. Lemur Halo kartları (iklim, süpürge, sensör, hava, enerji, güvenlik, oda, ışık) pakete gömülü gelir.
+- **Her şey yönetim panelinden.** Sol menüdeki **Lemur Home Dashboard** sayfasında sekmeleri, bölümleri, kolon genişliklerini ve hangi cihazın nerede duracağını düzenlersin; canlı önizleme gösterir, değişiklik evdeki bütün tabletlere aynı anda gelir. Her adım geri alınabilir. **Basit** modda yalnız temel ayarlar görünür, **Gelişmiş** modda boyutlar, renkler, koşullar ve kartlar açılır; karmaşık ayarların yanında **?** yardımı var.
 - **Simge seçici.** Sekme, ışık ve düğme simgelerini listeden seçersin: önce o şeye uygun öneriler, aramada Home Assistant'ın bütün simgeleri. Türkçe de arayabilirsin (lamba, kanepe, tavan...).
-- **Kendi simge seti.** Panodaki bütün simgeler pakete gömülü 1305 renkli simgeden çizilir; Home Assistant simgeleri kullanılmaz. Varsayılan **Otomatik** stilde kapalı cihazlar gri, açıklar renkli görünür; istersen hepsi renkli ya da hepsi gri olabilir.
+- **Kendi simge seti.** Panodaki bütün simgeler pakete gömülü 1305 renkli simgeden çizilir; sette olmayan bir `mdi:` adı yazarsan Home Assistant'ın düz simgesi çizilir. Varsayılan **Otomatik** stilde kapalı cihazlar gri, açıklar renkli görünür; istersen hepsi renkli ya da hepsi gri olabilir.
 - **Kaydırmalı ışık çubukları.** İstersen ışık bölümü kare karolar yerine yatay çubuklarla görünür: dokununca ışık açılır/kapanır, sağa-sola kaydırınca parlaklık değişir, çubuk parlaklık kadar ışığın renginde dolar. Sadece telefonda çubuk, tablette karo da seçilebilir.
 - **Işık penceresi.** Işık karosuna basılı tutunca büyük parlaklık çubuğu, beyaz tonlar, renk çemberi, hazır renkler, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçersin.
-- **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir; 16:10, 4:3 ve geniş ekranlarda aynı oranla görünür, eski tabletlerde (iOS 12) de akıcı çalışır.
+- **Anında tepki.** Işığa, prize ya da fana dokununca karo cihazın cevabını beklemeden değişir; açarken ışığın son renginde yanar. Cihaz başka bir şey bildirirse gerçek durum gösterilir.
+- **Besleme kartı.** Kedi, köpek, balık... için besleme hatırlatıcısı: zamanında yeşil, gecikince kırmızı; dokun "Besledim", gecikince telefona bildirim, istersen otomatik yemlik.
+- **Kart seçici.** Halo kartları, Home Assistant kartları ve kurulu özel kartlar listeden seçilir; kartın kendi görsel düzenleyicisi ve canlı önizlemeyle eklenir.
+- **İkinci satır ve şablon.** Karonun altına durum, son değişim ya da öznitelik; ad ve ikinci satırda Home Assistant şablonu. İstersen düğme çalışmadan önce onay sorar.
+- **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir; 16:10, 4:3 ve geniş ekranlarda aynı oranla görünür, eski tabletlerde (iOS 12) de akıcı çalışır. Telefonda, yatay tutulan telefonda ve dikey tutulan tablette kendi düzenine geçer.
 - **Telefonda kendi düzeni.** Oda düğmeleri yana kayar, bölümler alt alta dizilir, düğmeler başparmak boyunda olur.
 - **Mevsime göre iklim.** Yazın klimalar, kışın petekler gösterilir; otomatik ya da elle.
 - **Işık efektleri (isteğe bağlı).** [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) kuruluysa üst şeride Efektler düğmesi gelir, oynayan efekt karolarda görünür.
@@ -103,15 +107,16 @@ Hiçbir şeye dokunmadan da kullanabilirsin. Değiştirmek istersen sol menüden
 
 | Bölüm | Ne gösterir | Dokununca |
 |---|---|---|
-| **Işıklar** | Işık, priz, perde ve fan karoları ya da kaydırmalı çubuklar | Aç/kapat; çubukta sağa-sola kaydır: parlaklık (perdede konum, fanda hız); basılı tut: [ışık penceresi](#işık-penceresi) |
+| **Işıklar** | Işık, priz, perde ve fan karoları ya da kaydırmalı çubuklar | Aç/kapat (anında); çubukta sağa-sola kaydır: parlaklık (perdede konum, fanda hız); basılı tut: [ışık penceresi](#işık-penceresi) |
 | **Senaryolar** | Script, sahne ve otomasyon düğmeleri, her birinin kendi rengi ve simgesi | Çalıştırır |
 | **İklim** | Klima ve petek kartları; yazın klimalar, kışın petekler | Aç/kapat, sıcaklık |
 | **Süpürge** | Robot süpürge kartı | Başlat, durdur, istasyona gönder |
 | **Medya** | TV ve hoparlörler | Cihaz penceresi |
 | **Değerler** | Sensör, ikili sensör, zamanlayıcı, sayaç, seçim: simge, değer + birim ve ad; çalışan zamanlayıcı geri sayar | Cihaz penceresi (değiştirilebilir) |
-| **Kartlar** | YAML ile eklenen herhangi bir Home Assistant kartı (markdown, grafik, kurulu özel kartlar) | Kartın kendisi |
+| **Kartlar** | Kart seçiciden ya da YAML ile eklenen herhangi bir kart: Halo kartları, Home Assistant kartları, kurulu özel kartlar | Kartın kendisi |
+| **Evcil hayvan** | Besleme kartı: son besleme, sıradaki besleme ve renkle durum | "Besledim"; basılı tut: son beslemeler |
 
-Açık ışıklar kendi renginde çerçeveyle görünür, ulaşılamayan cihazlar soluk durur. Otomatik düzen ışık gruplarının üyelerini, segmentleri, gizli ve ayar varlıklarını, parametre isteyen scriptleri atlar.
+Açık ışıklar kendi renginde çerçeveyle görünür, ulaşılamayan cihazlar soluk durur. Dokununca karo cihazın cevabını beklemez; ışığın son rengi bu tarayıcıda hatırlanır, cevap 5 saniyede gelmezse karo eski haline döner. Otomatik düzen ışık gruplarının üyelerini, segmentleri, gizli ve ayar varlıklarını, parametre isteyen scriptleri atlar.
 
 ## Yönetim paneli
 
@@ -142,16 +147,18 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 
 Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır:
 
+- *Sürüm ve güncelleme:* en üstte; yüklü sürüm, yenilikler ve **Güncellemeleri denetle**. Yeni sürüm varsa HACS ile buradan kurulur, ardından Home Assistant yeniden başlatılır.
 - *Dil:* otomatik (Home Assistant'ın dili), Türkçe ya da İngilizce.
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
 - *Arka plan:* koyu (varsayılan), siyah, istediğin bir renk, efekt renkleri ya da kendi resmin (`/local/zemin.jpg` gibi bir adres). Efekt renkleri Light Effect Card'ın efekt paletleri (Kutup ışığı, Ateş, Gün batımı, Okyanus, Galaksi ve 25 tane daha): koyu zeminde yumuşak bir renk ışıltısı. Light Effect Card kurulu olmasa da seçilebilir.
 - *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli), Düz (hepsi gri) ya da Tek renk (çizimler tek tona çevrilir: kapalılar gri, açıklar seçtiğin renkte; istersen açık ışık lambanın kendi renginde, senaryo düğmesi kendi renginde). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
 - *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
-- *Kanvas:* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.
+- *Kanvas (Gelişmiş):* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.
 - *Işığa basılı tutunca:* Işık penceresi (varsayılan), HA penceresi ya da (Light Effect Card kuruluysa) efekt ekranı.
 - *Lemur Light Effect Card:* kurulu olup olmadığı ve üst şeritteki Efektler düğmesi.
-- *Sürüm.*
+- *Sorun bildir:* sürüm ve cihaz bilgisiyle GitHub'da kayıt açar (oda, cihaz ya da kişi adı eklenmez).
+- *Yedek:* sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada indirilir; geri yüklemeden önce onay sorulur.
 
 ## Işık penceresi
 
@@ -167,7 +174,7 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 
 ## Telefon
 
-Ekran 700 pikselden darsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler tek sütunda alt alta dizilir, senaryolar iki sütunda durur. Işık bölümünü **Telefonda otomatik** yaparsan telefonda ışıklar iki sütun kaydırmalı çubuk olur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
+Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden az) ya da tablet dikey tutulmuşsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler alt alta dizilir, senaryolar iki sütunda durur, sayfa aşağı kayar. Karo sayısı ekranın genişliğine göre artar (telefonda 3, dikey tablette 6). Işık bölümünü **Telefonda otomatik** yaparsan telefonda ışıklar iki sütun kaydırmalı çubuk olur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png" alt="Telefon düzeni" width="320">
 
@@ -217,7 +224,7 @@ Pano, tarayıcının ve telefon uygulamasının sakladığı eski sayfa kopyalar
 |---|---|---|
 | **Lemur Home Dashboard** (bu depo) | Tek satırla kurulan, kendi yönetim paneli olan hazır tablet panosu | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) |
 | **[Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card)** | Efekt destekleyen bütün ışıkları oda oda yöneten efekt ekranı. Kuruluysa panoda Efektler düğmesi ve efekt düğmeleri açılır. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-light-effect-card&category=integration) |
-| **[Lemur Halo Cards](https://github.com/mendebur-lemur/lemur-halo-cards)** | Durumu renkli haleyle anlatan sekiz kart: iklim, sensör, hava, süpürge, enerji, güvenlik... Panodaki iklim ve süpürge kartları bu ailedendir ve pakete gömülü gelir; başka panolarda kullanmak için ayrıca kurabilirsin. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
+| **[Lemur Halo Cards](https://github.com/mendebur-lemur/lemur-halo-cards)** | Durumu renkli haleyle anlatan sekiz kart: iklim, sensör, hava, süpürge, enerji, güvenlik... Sekizi de panoya gömülü gelir, kart seçiciden eklenir; başka panolarda kullanmak için ayrıca kurabilirsin. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
 
 ## Geliştirme
 
