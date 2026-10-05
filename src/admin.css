@@ -264,3 +264,17 @@ label.btn { cursor: pointer; }
 .scr { display: flex; gap: 8px; align-items: center; }
 .scr .inp { flex: 1 1 auto; }
 .scr input[type=color] { width: 40px; height: 32px; padding: 0; border: none; background: none; cursor: pointer; }
+/* basit / gelişmiş mod ve ? yardım */
+.modeseg { margin-right: 4px; }
+.hlp { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 6px; padding: 0; border-radius: 50%; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2);
+  font: 700 11px/1 inherit; cursor: pointer; vertical-align: 1px; text-transform: none; letter-spacing: 0; }
+.hlp:hover { background: #F2A93B; border-color: #F2A93B; color: #111; }
+.hlpov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 60; background: rgba(0, 0, 0, .55); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.hlpd { width: min(520px, 100%); max-height: 100%; overflow: auto; background: #111215; border: 1px solid var(--ln2); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+.hlpd .hb { padding: 4px 22px 20px; font-size: 14px; line-height: 1.55; color: var(--tx); }
+.hlpd .hb p { margin: 0 0 10px; white-space: pre-line; }
+.hlpd .hb b { color: #F2A93B; font-weight: 600; }
+.advnote { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(242, 169, 59, .1); color: var(--tx2); font-size: 13px; line-height: 1.4; }
+.advnote ha-icon { color: #F2A93B; --mdc-icon-size: 20px; flex: none; }
+.advnote span { flex: 1; }
+.advb { color: var(--mu); font-weight: 600; }

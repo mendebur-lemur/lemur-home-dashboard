@@ -115,6 +115,8 @@ Açık ışıklar kendi renginde çerçeveyle görünür, ulaşılamayan cihazla
 
 ## Yönetim paneli
 
+**Basit / Gelişmiş:** Üst çubuktaki anahtar. Basit modda (varsayılan) yalnız temel ayarlar görünür: sekme, bölüm, cihaz ekleme, ad, simge, görünüm ve dokununca ne olacağı. Gelişmiş modda boyutlar, renkler, koşullu görünürlük, özel eylemler, kartlar ve bölüm yerleşimi de açılır. Mod değişince ayar silinmez; basit modda gizlenen ayarlar çalışmaya devam eder. Karmaşık ayarların yanındaki **?** ne işe yaradığını ve nasıl ayarlandığını örnekle anlatır.
+
 Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte sekmeler, solda canlı önizleme, sağda seçili sekmenin bölümleri.
 
 - **Sekmeler:** Ad, simge ve alan (oda) seçilir. Bir alan seçilen sekmeye **Alandan yeniden doldur** o odanın cihazlarını yeniden yerleştirir. **+ Sekme** boş sekme ya da odası seçilmiş, dolu gelen bir sekme açar.

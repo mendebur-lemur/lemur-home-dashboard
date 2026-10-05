@@ -115,6 +115,8 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 ## Admin panel
 
+**Simple / Advanced:** The switch in the top bar. Simple mode (the default) shows only the basics: tabs, sections, adding devices, name, icon, look and what a tap does. Advanced mode also opens sizes, colours, conditional visibility, custom actions, cards and section layout. Switching never deletes settings; those hidden in simple mode keep working. The **?** next to complex settings explains what they do and how to set them up, with an example.
+
 **Lemur Home Dashboard** in the sidebar (administrators only). Tabs at the top, a live preview on the left, the selected tab's sections on the right.
 
 - **Tabs:** Choose a name, icon and area (room). **Refill from area** places that room's devices again on a tab with an area. **+ Tab** opens an empty tab or a tab for a room, already filled.

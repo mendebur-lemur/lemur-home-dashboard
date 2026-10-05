@@ -12,7 +12,7 @@ const ADM = {
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda otomatik', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
-    t_values: 'Değerler', t_cards: 'Kartlar', t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
+    t_values: 'Değerler', t_cards: 'Kartlar', t_subs: 'Alt başlık', t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Ekle', addPh: 'Boş karo', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
@@ -25,6 +25,7 @@ const ADM = {
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
     version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    modeSimple: 'Basit', modeAdv: 'Gelişmiş', modeT: 'Basit modda yalnız temel ayarlar görünür; gelişmiş ayarlar silinmez, çalışmaya devam eder.', advHas: 'Bu öğede gelişmiş ayarlar var (boyut, renk, koşul ya da özel eylem). Basit modda gizli ama çalışıyor.', advTag: 'gelişmiş', helpT: 'Yardım',
     gapL: 'Aralık', gapAuto: 'Otomatik', heightL: 'Yükseklik', h_rows: '{n} satır', addSub: 'Alt başlık', addSubT: 'Bölümün içinde küçük bir ara başlık (ör. karoların altında BAĞLANTI)', subItem: 'Alt başlık', subText: 'Yazı',
     scL: 'Duruma göre renk', scT: 'Bir varlığın durumuna göre renk (ör. yem durumu: aktif → yeşil, acil → kırmızı). Metin değerlerde de çalışır.', scE: 'Varlık (boşsa öğenin kendisi)', scState: 'Durum', scAdd: 'Satır ekle', cFixed: 'Sabit renk',
     addPet: 'Evcil hayvan', addPetT: 'Besleme kartı: kedi, köpek, balık... için besleme hatırlatıcısı', t_pets: 'Besleme', petItem: 'Besleme kartı', petKind: 'Tür',
@@ -51,7 +52,7 @@ const ADM = {
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Auto on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
-    t_values: 'Values', t_cards: 'Cards', t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
+    t_values: 'Values', t_cards: 'Cards', t_subs: 'Subtitle', t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add', addPh: 'Empty tile', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
@@ -64,6 +65,7 @@ const ADM = {
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
     version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    modeSimple: 'Simple', modeAdv: 'Advanced', modeT: 'Simple mode shows only the basic settings; advanced settings are kept and keep working.', advHas: 'This item has advanced settings (size, colour, condition or a custom action). They are hidden in simple mode but still work.', advTag: 'advanced', helpT: 'Help',
     gapL: 'Spacing', gapAuto: 'Auto', heightL: 'Height', h_rows: '{n} rows', addSub: 'Subtitle', addSubT: 'A small heading inside the section (e.g. CONNECTION under the tiles)', subItem: 'Subtitle', subText: 'Text',
     scL: 'Colour by state', scT: 'Colour by an entity\'s state (e.g. feeding status: active → green, urgent → red). Works for text values too.', scE: 'Entity (empty: the item itself)', scState: 'State', scAdd: 'Add row', cFixed: 'Fixed colour',
     addPet: 'Pet', addPetT: 'Feeding card: a feeding reminder for a cat, dog, fish...', t_pets: 'Feeding', petItem: 'Feeding card', petKind: 'Kind',
@@ -99,7 +101,7 @@ const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#
 const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'].concat(LHD_VALUE_DOMAINS);
 const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
-const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards', pet: 't_pets' };
+const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
 const LHD_MAXCOLS = 6;
@@ -510,6 +512,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
     const top = '<div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + t('title') + '</h1>' +
       (this._isAuto() ? '<span class="badge" title="' + t('autoT') + '">' + t('auto') + '</span>' : '') + '<div class="grow"></div>' +
+      '<div class="seg modeseg" title="' + t('modeT') + '"><button data-mode="simple"' + (this._adv() ? '' : ' class="on"') + '>' + t('modeSimple') + '</button><button data-mode="adv"' + (this._adv() ? ' class="on"' : '') + '>' + t('modeAdv') + '</button></div>' + this._hb('mode') +
       '<button class="btn ic" data-a="undo" title="' + t('undoK') + '"' + (this._undo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:undo"></ha-icon></button>' +
       '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
       '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
@@ -527,7 +530,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<span class="btn sm" style="pointer-events:none;min-width:38px">' + W.length + '</span>' +
         '<button class="btn sm ic" data-a="coladd" title="' + t('colAdd') + '"' + (W.length >= LHD_MAXCOLS ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:plus"></ha-icon></button>' +
         (W.length === 3 ? '<button class="btn sm" data-a="coltab">' + t('colTab') + '</button>' : '') + '<button class="btn sm" data-a="coleq">' + t('colEq') + '</button></div></div>' +
-      '<div class="fld"><label title="' + t('splitsT') + '">' + t('splits') + '</label><div class="acts">' + SP.map((v, i) => '<div class="seg"><button disabled style="opacity:.6">' + esc(this._colName(i, W.length)) + '</button>' + [1, 2, 3].map((n) => '<button data-split="' + i + ':' + n + '"' + (v === n ? ' class="on"' : (!lhdCanSplit(tab, i, n, this._cw()) ? ' disabled title="' + esc(t('splitNarrow')) + '"' : '')) + '>' + n + '</button>').join('') + '</div>').join('') + '</div></div>' +
+      (!this._adv() ? '' : '<div class="fld"><label title="' + t('splitsT') + '">' + t('splits') + this._hb('splits') + '</label><div class="acts">' + SP.map((v, i) => '<div class="seg"><button disabled style="opacity:.6">' + esc(this._colName(i, W.length)) + '</button>' + [1, 2, 3].map((n) => '<button data-split="' + i + ':' + n + '"' + (v === n ? ' class="on"' : (!lhdCanSplit(tab, i, n, this._cw()) ? ' disabled title="' + esc(t('splitNarrow')) + '"' : '')) + '>' + n + '</button>').join('') + '</div>').join('') + '</div></div>') +
       (tab.area ? '<button class="btn sm" data-a="refill" title="' + t('refillT') + '"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('refill') + '</button>' : '') +
       '<button class="btn sm dan' + (this._ask === 'deltab' ? ' ask' : '') + '" data-a="deltab"' + (tabs.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'deltab' ? t('sure') : t('delTab')) + '</button></div>' : '';
 
@@ -561,7 +564,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top + lecInfo +
       '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
-      this._menuHtml() + this._modalHtml(tabs, tab, sec) +
+      this._menuHtml() + this._modalHtml(tabs, tab, sec) + this._helpHtml() +
       '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
 
     Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
@@ -580,7 +583,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const handle = '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span>';
     // her öğenin sağında: ayarlar (ad, simge, dokununca, koşul...) ve sil
     const xBtn = (i) => '<button class="x" data-im="' + i + '" title="' + t('imT') + '"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon></button><button class="x" data-del="' + i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>';
-    const cond = (it) => (it && typeof it === 'object' && it.visible && it.visible.entity ? ' · <b class="cnd">' + t('cond') + '</b>' : '');
+    const cond = (it) => (it && typeof it === 'object' && it.visible && it.visible.entity ? ' · <b class="cnd">' + t('cond') + '</b>' : '') +
+      (!this._adv() && lhdItemAdv(it) ? ' · <b class="advb">' + t('advTag') + '</b>' : '');
     const iconField = (i, cur, ph) => '<div class="sub"><input class="inp" data-if="' + i + '.icon" value="' + esc(cur || '') + '" placeholder="' + esc(ph) + '" style="height:28px;font-size:12px"><button class="btn sm ic ipb" data-ip="item:' + i + '" title="' + t('iconPick') + '"><ha-icon class="s14" icon="mdi:shape-outline"></ha-icon></button></div>';
     const temps = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'temperature');
     const hums = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && S[id].attributes.device_class === 'humidity');
@@ -627,11 +631,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<span class="eid">' + esc(it.entity ? it.entity + (st ? '' : ' · ?') : this._t('addPh')) + cond(it) + '</span></div>' + xBtn(i) + '</div>';
     }).join('') + '</div>' : '<div class="empty">' + t('noItems') + '</div>';
     body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addDev') + '</button>' +
-      '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' +
-      '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>' +
-      '<button class="btn sm dash" data-a="addsub" title="' + t('addSubT') + '"><ha-icon class="s16" icon="mdi:format-header-pound"></ha-icon>' + t('addSub') + '</button>' +
+      (!this._adv() ? '' : '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' +
+      '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>') +
+      (!this._adv() ? '' : '<button class="btn sm dash" data-a="addsub" title="' + t('addSubT') + '"><ha-icon class="s16" icon="mdi:format-header-pound"></ha-icon>' + t('addSub') + '</button>') +
       '<button class="btn sm dash" data-a="addpet" title="' + t('addPetT') + '"><ha-icon class="s16" icon="mdi:paw"></ha-icon>' + t('addPet') + '</button>' +
-      '<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>' +
+      (!this._adv() ? '' : '<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>') +
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
     const kinds = lhdKinds(s), tilesHere = !!kinds.tile || !list.length;
@@ -640,14 +644,25 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       (s.look === 'bar' || s.look === 'phone' ? '<div class="fld" style="flex:0 0 auto"><label>' + t('barCols') + '</label><div class="seg">' + [1, 2, 3].map((n) => '<button data-bc="' + n + '"' + ((s.bar_columns || ((kinds.tile || 0) > 12 ? 3 : 2)) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') + '</div>' : '';
     return '<div class="ed"><div class="row2"><div class="fld"><label>' + t('secTitle') + '</label><input class="inp" data-f="sec.title" value="' + esc(s.title || '') + '" placeholder="' + t('titleOpt') + '"></div>' +
       '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div>' + subSeg + '</div>' +
-      lookHtml + this._secBoxHtml(s) + body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
+      lookHtml + (this._adv() ? this._secBoxHtml(s) : '') + body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
+  }
+
+  // Basit / Gelişmiş mod (tarayıcıya göre; varsayılan basit). Basit modda gelişmiş ayarlar gizlenir, silinmez.
+  _adv() { try { return localStorage.getItem('lhd-admin-mode') === 'adv'; } catch (e) { return false; } }
+  // ? yardım düğmesi ve penceresi
+  _hb(key) { return LHD_HELP[key] ? '<button class="hlp" data-help="' + key + '" title="' + esc(this._t('helpT')) + '">?</button>' : ''; }
+  _helpHtml() {
+    const h = this._help && LHD_HELP[this._help]; if (!h) return '';
+    const L = h[this._lang] || h.en;
+    return '<div class="hlpov" data-hlpov><div class="hlpd"><div class="dh"><div class="di"><ha-icon icon="mdi:help-circle-outline"></ha-icon></div><h2>' + esc(L[0]) + '</h2><button class="btn ic" data-hlpx><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="hb">' + L.slice(1).map((p) => '<p>' + esc(p).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>') + '</p>').join('') + '</div></div></div>';
   }
 
   // bölümün kutu ayarları: doldurma (içeriğe göre / kutuyu doldur) ve hizalama (üst / orta / eşit dağıt)
   _secBoxHtml(s) {
     const t = (k) => esc(this._t(k));
     const seg = (attr, cur, opts) => '<div class="seg">' + opts.map((o) => '<button ' + attr + '="' + o[0] + '"' + (cur === o[0] ? ' class="on"' : '') + (o[2] ? ' title="' + esc(o[2]) + '"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
-    return '<div class="row2"><div class="fld" style="flex:0 0 auto"><label>' + t('fillL') + '</label>' + seg('data-sfill', s.fill ? '1' : '', [['', this._t('fillC')], ['1', this._t('fillF'), this._t('fillT')]]) + '</div>' +
+    return '<div class="row2"><div class="fld" style="flex:0 0 auto"><label>' + t('fillL') + this._hb('fill') + '</label>' + seg('data-sfill', s.fill ? '1' : '', [['', this._t('fillC')], ['1', this._t('fillF'), this._t('fillT')]]) + '</div>' +
       (s.fill ? '' : '<div class="fld" style="flex:0 0 auto"><label>' + t('alignL') + '</label>' + seg('data-salign', s.align === 'center' || s.align === 'spread' ? s.align : '', [['', this._t('alTop')], ['center', this._t('alCenter')], ['spread', this._t('alSpread')]]) + '</div>') +
       '<div class="fld" style="flex:0 0 auto"><label>' + t('gapL') + '</label>' + seg('data-sgap', typeof s.gap === 'number' ? String(s.gap) : '', [['', this._t('gapAuto')], ['0', '0'], ['6', '6'], ['12', '12'], ['18', '18'], ['24', '24']]) + '</div></div>';
   }
@@ -716,7 +731,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="sh">' + t('s_screen') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + tg('kiosk.hide_header', !!k.hide_header) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + tg('kiosk.hide_sidebar', !!k.hide_sidebar) + '</div>' +
-        '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>' +
+        (!this._adv() ? '' : '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" style="width:90px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" style="width:90px"></div>') +
         '<div class="sh">' + t('s_info') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         (lec ? '<div class="srow"><div class="t"><b>' + t('lecNav') + '</b><span>' + t('lecNavT') + '</span></div>' + tg('lec_nav', s.lec_nav !== false) + '</div>' : '') +
@@ -1113,6 +1128,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (bcb) return editSec((S) => { S.bar_columns = +bcb.getAttribute('data-bc'); });
       const imb = g('[data-im]');
       if (imb) { const i = +imb.getAttribute('data-im'), L = (sec && sec.entities) || []; if (L[i] !== undefined) this._imOpen(i, L[i], false); return; }
+      const hlp = g('[data-help]');
+      if (hlp) { e.preventDefault(); e.stopPropagation(); this._help = hlp.getAttribute('data-help'); return this._render(); }
+      if (g('[data-hlpx]') || (g('[data-hlpov]') && e.target === g('[data-hlpov]'))) { this._help = null; return this._render(); }
+      const mdb = g('[data-mode]');
+      if (mdb) { try { localStorage.setItem('lhd-admin-mode', mdb.getAttribute('data-mode')); } catch (x) {} return this._render(); }
+      if (g('[data-advon]')) { try { localStorage.setItem('lhd-admin-mode', 'adv'); } catch (x) {} return this._render(); }
       const isw = g('[data-imsw]');
       if (isw && this._im) { const p = isw.getAttribute('data-imsw').split(':'); this._im.f[p[0]] = p[1]; return this._render(); }
       if (g('[data-imsc]') && this._im) { this._im.f.scOn = !this._im.f.scOn; return this._render(); }
@@ -1333,6 +1354,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const M = this._im; if (!M) return '';
     const t = (k, v) => esc(this._t(k, v)), f = M.f, it = M.raw, S = this._hass.states;
     const k = lhdKind(it), st = it.entity ? S[it.entity] : null, d = it.entity ? it.entity.split('.')[0] : '';
+    const adv = this._adv(), hb = (x) => this._hb(x);   // basit modda gelişmiş ayarlar gizli (silinmez)
     const inp = (key, ph, list) => '<input class="inp" data-imf="' + key + '" value="' + esc(f[key] || '') + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + (list ? ' list="lhdents"' : '') + ' spellcheck="false">';
     const ta = (key, rows, ph) => '<textarea class="inp ta" data-imf="' + key + '" rows="' + rows + '" spellcheck="false"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(f[key] || '') + '</textarea>';
     const fld = (label, html, cls) => '<div class="fld' + (cls ? ' ' + cls : '') + '"><label>' + label + '</label>' + html + '</div>';
@@ -1340,12 +1362,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // eylem seçici: pre = tap | hold | act
     const actF = (pre, label, defLabel, opts) => {
       const K = f[pre + 'K'] || (opts[0] === 'def' ? 'def' : opts[0]);
+      if (!adv) { opts = opts.filter((o) => ['def', 'more-info', 'toggle', 'none'].indexOf(o) >= 0); if (opts.indexOf(K) < 0) return ''; }   // basit: yalnız temel eylemler
       const names = { def: defLabel, 'more-info': this._t('a_more'), toggle: this._t('a_tog'), none: this._t('a_none'), service: this._t('a_svc'), popup: this._t('a_pop'), yaml: this._t('a_yaml') };
       let h = '<select class="inp" data-imf="' + pre + 'K">' + opts.map((o) => '<option value="' + o + '"' + (o === K ? ' selected' : '') + '>' + esc(names[o]) + '</option>').join('') + '</select>';
       if (K === 'service') h += '<div class="row2">' + fld(t('svc'), inp(pre + 'Sv', 'timer.start')) + fld(t('tgt'), inp(pre + 'Tg', 'timer.balik_besleme', true)) + '</div>' + fld(t('svcData'), ta(pre + 'Data', 3, 'duration: "00:10:00"'));
-      if (K === 'popup') h += fld(t('popTitle'), inp(pre + 'Title', this._t('popTitle'))) + fld(t('cardY'), ta(pre + 'Card', 8, 'type: custom:...\nentity: ...'));
+      if (K === 'popup') h += fld(t('popTitle') + hb('popup'), inp(pre + 'Title', this._t('popTitle'))) + fld(t('cardY'), ta(pre + 'Card', 8, 'type: custom:...\nentity: ...'));
       if (K === 'yaml') h += fld(t('actY'), ta(pre + 'Y', 6, 'action: perform-action\nperform_action: script.turn_on'));
-      return '<div class="imact">' + fld(label, h) + '</div>';
+      return '<div class="imact">' + fld(label + hb('actions'), h) + '</div>';
     };
     let body = '';
     if (k === 'pet') {
@@ -1354,59 +1377,61 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       body += fld(t('name'), inp('pName', 'Pamuk')) +
         fld(t('petKind'), sgp('pKind', Object.keys(LP_PET_KINDS).map((x) => [x, this._t('pk_' + x)]))) +
         icf('pIcon', t('icon'), LP_PET_KINDS[f.pKind] || 'mdi:paw') +
-        fld(t('petSched'), sgp('pMode', [['interval', this._t('pm_interval')], ['times', this._t('pm_times')]])) +
+        fld(t('petSched') + hb('pet'), sgp('pMode', [['interval', this._t('pm_interval')], ['times', this._t('pm_times')]])) +
         (f.pMode === 'times' ? fld(t('petTimes'), inp('pTimes', '08:00, 20:00')) : fld(t('petEvery'), '<input class="inp" type="number" min="0.5" step="0.5" data-imf="pEvery" value="' + esc(f.pEvery) + '">')) +
         '<div class="row2">' + fld(t('petSoon'), '<input class="inp" type="number" min="0" step="5" data-imf="pSoon" value="' + esc(f.pSoon) + '">') + fld(t('petGrace'), '<input class="inp" type="number" min="0" step="5" data-imf="pGrace" value="' + esc(f.pGrace) + '">') + '</div>' +
         fld(t('petNotify'), '<select class="inp" data-imf="pNotify"><option value="">' + t('petNoNotify') + '</option>' + nts.map((x) => '<option value="notify.' + esc(x) + '"' + (f.pNotify === 'notify.' + x ? ' selected' : '') + '>notify.' + esc(x) + '</option>').join('') + '</select>') +
-        fld(t('petFeeder'), '<div class="row2">' + inp('pFeedSv', 'button.press') + inp('pFeedTg', 'button.yemlik', true) + '</div><div class="hint">' + t('petFeederT') + '</div>') +
+        (!adv ? '' : fld(t('petFeeder'), '<div class="row2">' + inp('pFeedSv', 'button.press') + inp('pFeedTg', 'button.yemlik', true) + '</div><div class="hint">' + t('petFeederT') + '</div>')) +
         '<div class="hint">' + esc(this._t('petEnt', { n: f.pName || '…' })) + '</div>';
     }
-    if (k === 'card') body += fld(t('cardY'), ta('card', 12, 'type: markdown\ncontent: ...')) +
+    if (k === 'card') body += fld(t('cardY') + hb('card'), ta('card', 12, 'type: markdown\ncontent: ...')) + (!adv ? '' :
       fld(t('heightL'), '<div class="seg">' + [['', this._t('sz_auto')], ['1', this._t('h_rows', { n: 1 })], ['1.5', this._t('h_rows', { n: '1,5' })], ['2', this._t('h_rows', { n: 2 })]].map((o) => '<button data-imseg="height:' + o[0] + '"' + (f.height === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>') +
-      actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
+      actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
     else if (k === 'sub') body += fld(t('subText'), inp('subtitle', 'BAĞLANTI'));
     else if (k !== 'pet') {
       body += '<div class="row2">' + fld(t('name'), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
       if (k !== 'climate' && k !== 'vacuum' && k !== 'media') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
-      if (k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
+      if (adv && k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
       // görünüm: eylem düğmesi karo/satır, varlık düğme/satır, sayısal değer Halo kartı
       const sg = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + ((f[key] || '') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
       const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
         : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
           : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
-      if (lks) body += fld(t('lookL'), sg('look', lks.map((x) => [x[0], this._t(x[1])])));
+      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo') : lks;
+      if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2 .map((x) => [x[0], this._t(x[1])])));
       const L0 = f.look || '';
       const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');
-      if (inGrid) body += fld(t('sizeL'), sg('size', [['', '1×1'], ['2x1', '2×1'], ['1x2', '1×2'], ['2x2', '2×2'], ['row', this._t('sz_row')]]));
-      if (L0 === 'halo') body += fld(t('heightL'), sg('height', [['', this._t('sz_auto')], ['1', this._t('h_rows', { n: 1 })], ['1.5', this._t('h_rows', { n: '1,5' })], ['2', this._t('h_rows', { n: 2 })]]));
-      if (inGrid || k === 'scene' || L0 === 'button' || L0 === 'row' || L0 === 'halo') {
+      if (adv && inGrid) body += fld(t('sizeL') + hb('size'), sg('size', [['', '1×1'], ['2x1', '2×1'], ['1x2', '1×2'], ['2x2', '2×2'], ['row', this._t('sz_row')]]));
+      if (adv && L0 === 'halo') body += fld(t('heightL') + hb('halo'), sg('height', [['', this._t('sz_auto')], ['1', this._t('h_rows', { n: 1 })], ['1.5', this._t('h_rows', { n: '1,5' })], ['2', this._t('h_rows', { n: 2 })]]));
+      if (adv && (inGrid || k === 'scene' || L0 === 'button' || L0 === 'row' || L0 === 'halo')) {
         const so = [['', this._t('sz_auto')], ['s', this._t('sz_s')], ['m', this._t('sz_m')], ['l', this._t('sz_l')]];
         body += fld(t('icSizeL'), sg('icon_size', so)) + fld(t('txSizeL'), sg('text_size', so));
       }
       // renkler: simge rengi, açıkken renk, arka plan; sayısal değerde değere göre renk
-      if ((k === 'tile' || k === 'value') && it.entity) {
+      if (adv && (k === 'tile' || k === 'value') && it.entity) {
         const two = k === 'tile' || LP_VAL_ONOFF.indexOf(d) >= 0;
         // renk alanı: Yok, Halo renkleri (hazır), serbest renk
         const sw = (key) => Object.keys(LP_HALO_RGB).map((n) => '<button class="hsw' + ((f[key] || '').toUpperCase() === LP_HALO_RGB[n] ? ' on' : '') + '" data-imsw="' + key + ':' + LP_HALO_RGB[n] + '" style="background:' + LP_HALO_RGB[n] + '" title="' + n + '"></button>').join('');
         const cf = (key, label) => '<div class="fld clrf"><label>' + label + '</label><div class="seg"><button data-imclr="' + key + '"' + (f[key] ? '' : ' class="on"') + '>' + t('cNone') + '</button>' + sw(key) +
           '<input type="color" data-imf="' + key + '" value="' + esc(LP_HALO_RGB[f[key]] || f[key] || '#FFC24A') + '"' + (f[key] ? ' class="set"' : '') + '></div></div>';
-        body += L0 === 'halo' ? fld(t('colorsL'), cf('color', t('cFixed'))) : fld(t('colorsL'), cf('color', t('cIcon')) + (two ? cf('color_on', t('cOn')) : '') + (L0 === 'row' || L0 === 'button' ? '' : cf('bg', t('cBg'))));
+        body += L0 === 'halo' ? fld(t('colorsL') + hb('colors'), cf('color', t('cFixed'))) : fld(t('colorsL') + hb('colors'), cf('color', t('cIcon')) + (two ? cf('color_on', t('cOn')) : '') + (L0 === 'row' || L0 === 'button' ? '' : cf('bg', t('cBg'))));
         // duruma göre renk (metin değerler de)
-        body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('scL') + '</b><span>' + t('scT') + '</span></div><button class="tg' + (f.scOn ? ' on' : '') + '" data-imsc></button></div>' +
+        body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('scL') + hb('statecol') + '</b><span>' + t('scT') + '</span></div><button class="tg' + (f.scOn ? ' on' : '') + '" data-imsc></button></div>' +
           (f.scOn ? fld(t('scE'), inp('scE', it.entity, true)) + '<div class="scrows">' + f.scRows.map((r, q) => '<div class="scr"><input class="inp" data-imsr="' + q + ':0" value="' + esc(r[0]) + '" placeholder="' + t('scState') + '">' +
             '<input type="color" data-imsr="' + q + ':1" value="' + esc(LP_HALO_RGB[r[1]] || r[1] || '#28BE64') + '"></div>').join('') + '</div><button class="btn sm" data-imscadd>+ ' + t('scAdd') + '</button>' : '') + '</div>';
         if (k === 'value' && !two && L0 !== 'halo') {
-          body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('zonesL') + '</b><span>' + t('zonesT') + '</span></div><button class="tg' + (f.zOn ? ' on' : '') + '" data-imzone></button></div>' +
+          body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('zonesL') + hb('zones') + '</b><span>' + t('zonesT') + '</span></div><button class="tg' + (f.zOn ? ' on' : '') + '" data-imzone></button></div>' +
             (f.zOn ? '<div class="zones">' + [0, 1, 2, 3, 4].map((q) => '<input type="color" data-imf="zc' + q + '" value="' + esc(f['zc' + q]) + '">' + (q < 4 ? '<input class="inp" type="number" step="any" data-imf="zt' + q + '" value="' + esc(f['zt' + q]) + '" title="' + esc(this._t('zLim', { n: q + 1 })) + '">' : '')).join('') + '</div>' : '') + '</div>';
         }
       }
-      if (k === 'value') body += actF('tap', t('tapL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
-      if (k === 'tile' && it.entity) body += actF('tap', t('tapL'), this._t('a_defTog'), ['def', 'more-info', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defHold'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
-      if (k === 'scene' && !it.entity && !lpLecKind(it)) body += actF('act', t('actL'), '', ['none', 'service', 'popup', 'yaml']);
+      if (k === 'value') body += actF('tap', t('tapL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + (!adv ? '' : actF('hold', t('holdL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
+      if (k === 'tile' && it.entity) body += actF('tap', t('tapL'), this._t('a_defTog'), ['def', 'more-info', 'service', 'popup', 'none', 'yaml']) + (!adv ? '' : actF('hold', t('holdL'), this._t('a_defHold'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
+      if (adv && k === 'scene' && !it.entity && !lpLecKind(it)) body += actF('act', t('actL'), '', ['none', 'service', 'popup', 'yaml']);
     }
-    // koşullu görünürlük
+    // koşullu görünürlük (gelişmiş)
     const vs = f.visE && S[f.visE] ? S[f.visE].state : null;
-    body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('visL') + '</b><span>' + t('visT') + '</span></div><button class="tg' + (f.visOn ? ' on' : '') + '" data-imvis></button></div>' +
+    if (!adv && lhdItemAdv(it)) body = '<div class="advnote"><ha-icon icon="mdi:tune-variant"></ha-icon><span>' + t('advHas') + '</span><button class="btn sm" data-advon>' + t('modeAdv') + '</button></div>' + body;
+    if (adv) body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('visL') + hb('visible') + '</b><span>' + t('visT') + '</span></div><button class="tg' + (f.visOn ? ' on' : '') + '" data-imvis></button></div>' +
       (f.visOn ? '<div class="row2">' + fld(t('visE'), inp('visE', 'sensor.balik_yem_durumu', true)) +
         fld('&nbsp;', '<select class="inp" data-imf="visM">' + ['eq', 'in', 'not'].map((m) => '<option value="' + m + '"' + (f.visM === m ? ' selected' : '') + '>' + t('v_' + m) + '</option>').join('') + '</select>', 'nar') + '</div>' +
         fld(t('visV'), inp('visV', 'aktif')) + (vs !== null ? '<div class="hint">' + t('visNow', { s: vs }) + '</div>' : '') : '') + '</div>';

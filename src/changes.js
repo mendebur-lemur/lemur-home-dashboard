@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.11.0',
+    tr: ['Yönetim panelinde Basit ve Gelişmiş mod: Basit modda yalnız temel ayarlar görünür; gelişmiş ayarlar silinmez, çalışmaya devam eder. Üst çubuktan değiştirilir, bu tarayıcıda hatırlanır.',
+      'Karmaşık ayarların yanında ? yardım: ne işe yaradığı, nasıl ayarlandığı ve bir örnek.',
+      'Basit modda gelişmiş ayarı olan öğe "gelişmiş" işaretiyle görünür.'],
+    en: ['Simple and Advanced mode in the admin panel: simple mode shows only the basics; advanced settings are kept and keep working. Switch it in the top bar; it is remembered in this browser.',
+      'A ? help next to complex settings: what it does, how to set it up and an example.',
+      'In simple mode, items with advanced settings carry an "advanced" mark.'] },
   { v: '0.10.0',
     tr: ['Besleme kartı: kedi, köpek, balık... için besleme hatırlatıcısı. Zamanında yeşil, yaklaşınca sarı, zamanı gelince turuncu, gecikince kırmızı ve yanıp söner.',
       'Karta dokun: "Besledim" (10 sn içinde yeniden dokununca geri alınır). Basılı tut: son beslemeler.',
