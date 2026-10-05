@@ -78,6 +78,13 @@ const LHD_HELP = {
       '**Hizalama** (içeriğe göre olan kutuda): Üst, Orta ya da Eşit dağıt. Başlık hep üstte kalır.', '**Aralık**: öğeler arasındaki boşluk (0-24 px). Otomatik: bugünkü (doldururken 12 px).'],
     en: ['Fill, alignment, spacing', '**Fit content**: items keep their size from the top of the box. **Fill the box**: buttons, tiles and cards share the box height evenly.',
       '**Alignment** (for fit content): Top, Middle or Spread evenly. The title always stays on top.', '**Spacing**: the gap between items (0-24 px). Auto: as before (12 px when filling).'] },
+  tpl: {
+    tr: ['Şablon metin ve ikinci satır', 'Ad ya da ikinci satır Home Assistant şablonu olabilir: {{ ... }} ve {% ... %}. Home Assistant hesaplar, değer değişince yazı kendiliğinden güncellenir.',
+      '**İkinci satır**: Durum (cihazın durumu, birimiyle), Son değişim ("5 dk önce"), Öznitelik (ör. brightness, battery) ya da Şablon.',
+      "Örnekler: {{ states('sensor.esp_wifi') }} dBm  ·  {% if is_state('binary_sensor.sol_baglanti', 'on') %}Bağlı{% else %}Bağlantı yok{% endif %}  ·  Çevrimiçi · {{ states('sensor.esp_wifi') }} dBm"],
+    en: ['Template text and second line', "The name or the second line can be a Home Assistant template: {{ ... }} and {% ... %}. Home Assistant renders it and the text updates by itself.",
+      '**Second line**: State (with unit), Last changed ("5 min ago"), Attribute (e.g. brightness, battery) or Template.',
+      "Examples: {{ states('sensor.esp_wifi') }} dBm  ·  {% if is_state('binary_sensor.left_link', 'on') %}Connected{% else %}No connection{% endif %}  ·  Online · {{ states('sensor.esp_wifi') }} dBm"] },
   splits: {
     tr: ['Kolon içi sütun', 'Bir kolonu eşit genişlikte 2 ya da 3 sütuna böler; her bölüm hangi sütunda duracağını kendi ayarından seçer.', 'Örnek: orta kolonda yan yana iki senaryo bölümü. Kolon çok darsa bölünmez, önce kolon sayısını azalt.'],
     en: ['Sub-columns', 'Splits a column into 2 or 3 equal sub-columns; each section picks its sub-column in its own settings.', 'Example: two scene sections side by side in the middle column. A column that is too narrow can\'t be split; reduce the number of columns first.'] }

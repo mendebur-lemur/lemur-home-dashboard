@@ -25,6 +25,8 @@ const ADM = {
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
     version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    secL: 'İkinci satır', sc_none: 'Yok', sc_state: 'Durum', sc_lc: 'Son değişim', sc_attr: 'Öznitelik', sc_tpl: 'Yazı ya da şablon', swapL: 'Ad üstte, değer altta', cfmL: 'Dokununca onay iste', cfmT: 'Yanlışlıkla dokunmaya karşı: önce "çalıştırılsın mı?" diye sorar', cfmText: 'Soru (boşsa "<ad> çalıştırılsın mı?")', nameTplT: 'Ad ve ikinci satırda Home Assistant şablonu yazılabilir: {{ ... }}',
+    cpT: 'Kart ekle', cpSearch: 'Kart ara', cpHalo: 'Halo kartları', cpHa: 'Home Assistant kartları', cpCustom: 'Kurulu özel kartlar', cpYaml: 'YAML ile yaz', ceT: 'Kartı düzenle', cePv: 'Önizleme', ceVisual: 'Görsel', ceYaml: 'YAML', ceNoEd: 'Bu kartın görsel düzenleyicisi yok; YAML ile düzenle.', ceLoad: 'Düzenleyici yükleniyor…', ceEdit: 'Görsel düzenle', ceBack: 'Geri',
     modeSimple: 'Basit', modeAdv: 'Gelişmiş', modeT: 'Basit modda yalnız temel ayarlar görünür; gelişmiş ayarlar silinmez, çalışmaya devam eder.', advHas: 'Bu öğede gelişmiş ayarlar var (boyut, renk, koşul ya da özel eylem). Basit modda gizli ama çalışıyor.', advTag: 'gelişmiş', helpT: 'Yardım',
     gapL: 'Aralık', gapAuto: 'Otomatik', heightL: 'Yükseklik', h_rows: '{n} satır', addSub: 'Alt başlık', addSubT: 'Bölümün içinde küçük bir ara başlık (ör. karoların altında BAĞLANTI)', subItem: 'Alt başlık', subText: 'Yazı',
     scL: 'Duruma göre renk', scT: 'Bir varlığın durumuna göre renk (ör. yem durumu: aktif → yeşil, acil → kırmızı). Metin değerlerde de çalışır.', scE: 'Varlık (boşsa öğenin kendisi)', scState: 'Durum', scAdd: 'Satır ekle', cFixed: 'Sabit renk',
@@ -42,7 +44,7 @@ const ADM = {
     a_defMore: 'Varsayılan: cihaz penceresi', a_defTog: 'Varsayılan: aç / kapat', a_defHold: 'Varsayılan: ışık ya da cihaz penceresi', a_defRun: 'Varsayılan: seçili hedefi çalıştır', a_more: 'Cihaz penceresi', a_tog: 'Aç / kapat', a_none: 'Hiçbir şey',
     a_svc: 'Servis çalıştır', a_pop: 'Pencerede kart aç', a_yaml: 'Gelişmiş (YAML)', svc: 'Servis', tgt: 'Hedef varlık', svcData: 'Veri (YAML, isteğe bağlı)', popTitle: 'Pencere başlığı', cardY: 'Kart (YAML)', actY: 'Eylem (YAML)',
     visL: 'Sadece şu durumda göster', visT: 'Koşul sağlanmazsa öğe panoda hiç çizilmez, yerinde boşluk kalmaz. Önizlemede soluk görünür.', visE: 'Varlık', v_eq: 'şuna eşitse', v_in: 'şunlardan biriyse', v_not: 'şunlar değilse', visV: 'Durum (birden çoksa virgülle)', visNow: 'Şu an: {s}',
-    yamlErr: 'YAML okunamadı: {e}', yamlErrL: 'YAML okunamadı: {n}. satırda girinti ya da yazım hatası var', cardNoType: 'Kartta "type:" satırı yok', addCard: 'Kart (YAML)', addCardT: 'Home Assistant kartını YAML ile ekle (ör. markdown, history-graph ya da kurulu bir özel kart)', cond: 'koşullu', cardItem: 'Kart', svcNeed: 'Servis "alan.servis" biçiminde olmalı (ör. timer.start)',
+    yamlErr: 'YAML okunamadı: {e}', yamlErrL: 'YAML okunamadı: {n}. satırda girinti ya da yazım hatası var', cardNoType: 'Kartta "type:" satırı yok', addCard: 'Kart', addCardT: 'Halo kartı, Home Assistant kartı ya da kurulu bir özel kart ekle; listeden seç, görsel ayarla', cond: 'koşullu', cardItem: 'Kart', svcNeed: 'Servis "alan.servis" biçiminde olmalı (ör. timer.start)',
     close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
   },
   en: {
@@ -65,6 +67,8 @@ const ADM = {
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
     version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    secL: 'Second line', sc_none: 'None', sc_state: 'State', sc_lc: 'Last changed', sc_attr: 'Attribute', sc_tpl: 'Text or template', swapL: 'Name on top, value below', cfmL: 'Ask before running', cfmT: 'Against accidental taps: asks "run it?" first', cfmText: 'Question (empty: "Run <name>?")', nameTplT: 'Name and second line accept a Home Assistant template: {{ ... }}',
+    cpT: 'Add a card', cpSearch: 'Search cards', cpHalo: 'Halo cards', cpHa: 'Home Assistant cards', cpCustom: 'Installed custom cards', cpYaml: 'Write YAML', ceT: 'Edit card', cePv: 'Preview', ceVisual: 'Visual', ceYaml: 'YAML', ceNoEd: 'This card has no visual editor; edit it as YAML.', ceLoad: 'Loading the editor…', ceEdit: 'Visual edit', ceBack: 'Back',
     modeSimple: 'Simple', modeAdv: 'Advanced', modeT: 'Simple mode shows only the basic settings; advanced settings are kept and keep working.', advHas: 'This item has advanced settings (size, colour, condition or a custom action). They are hidden in simple mode but still work.', advTag: 'advanced', helpT: 'Help',
     gapL: 'Spacing', gapAuto: 'Auto', heightL: 'Height', h_rows: '{n} rows', addSub: 'Subtitle', addSubT: 'A small heading inside the section (e.g. CONNECTION under the tiles)', subItem: 'Subtitle', subText: 'Text',
     scL: 'Colour by state', scT: 'Colour by an entity\'s state (e.g. feeding status: active → green, urgent → red). Works for text values too.', scE: 'Entity (empty: the item itself)', scState: 'State', scAdd: 'Add row', cFixed: 'Fixed colour',
@@ -82,7 +86,7 @@ const ADM = {
     a_defMore: 'Default: more info', a_defTog: 'Default: toggle', a_defHold: 'Default: light or more-info window', a_defRun: 'Default: run the chosen target', a_more: 'More info', a_tog: 'Toggle', a_none: 'Nothing',
     a_svc: 'Call a service', a_pop: 'Open a card in a window', a_yaml: 'Advanced (YAML)', svc: 'Service', tgt: 'Target entity', svcData: 'Data (YAML, optional)', popTitle: 'Window title', cardY: 'Card (YAML)', actY: 'Action (YAML)',
     visL: 'Only show when', visT: 'If the condition is not met the item is not drawn at all and leaves no gap. It shows faded in the preview.', visE: 'Entity', v_eq: 'equals', v_in: 'is one of', v_not: 'is none of', visV: 'State (comma for several)', visNow: 'Now: {s}',
-    yamlErr: 'Could not read the YAML: {e}', yamlErrL: 'Could not read the YAML: indentation or syntax error on line {n}', cardNoType: 'The card has no "type:" line', addCard: 'Card (YAML)', addCardT: 'Add a Home Assistant card as YAML (e.g. markdown, history-graph or an installed custom card)', cond: 'conditional', cardItem: 'Card', svcNeed: 'The service must look like "domain.service" (e.g. timer.start)',
+    yamlErr: 'Could not read the YAML: {e}', yamlErrL: 'Could not read the YAML: indentation or syntax error on line {n}', cardNoType: 'The card has no "type:" line', addCard: 'Card', addCardT: 'Add a Halo card, a Home Assistant card or an installed custom card; pick from the list, set it up visually', cond: 'conditional', cardItem: 'Card', svcNeed: 'The service must look like "domain.service" (e.g. timer.start)',
     close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
   }
 };
@@ -99,6 +103,26 @@ const LHD_TYPES = {
 const LHD_TINT_COLORS = ['#FFC24A', '#E6ECF5', '#5B8DEF', '#4FD1C5', '#7BD83A', '#FF7AB0', '#B07CFF', '#FF8A4A'];
 const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#1d0f12', '#1a160e', '#0d1b1e'];
 const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'].concat(LHD_VALUE_DOMAINS);
+// Kart seçicideki listeler. Halo: [tür, ad tr, ad en, açıklama tr, açıklama en, simge]; HA: [tür, ad tr, ad en, simge]
+const LHD_HALO_CARDS = [
+  ['sensor', 'Sensör', 'Sensor', 'Değere göre renk alan haleli değer', 'A value with a halo coloured by the value', 'mdi:thermometer'],
+  ['climate', 'İklim', 'Climate', 'Klima ve petek', 'Air conditioner and radiator', 'mdi:thermostat'],
+  ['air', 'Hava temizleyici', 'Air purifier', 'Fan ve hava kalitesi', 'Fan and air quality', 'mdi:air-purifier'],
+  ['vacuum', 'Süpürge', 'Vacuum', 'Robot süpürge', 'Robot vacuum', 'mdi:robot-vacuum'],
+  ['energy', 'Enerji', 'Energy', 'Güç ve tüketim', 'Power and consumption', 'mdi:lightning-bolt'],
+  ['security', 'Güvenlik', 'Security', 'Alarm, kapı, pencere', 'Alarm, doors, windows', 'mdi:shield-home'],
+  ['room', 'Oda', 'Room', 'Odanın özeti', 'Room summary', 'mdi:sofa-outline'],
+  ['light', 'Işık', 'Light', 'Işık ve parlaklık', 'Light and brightness', 'mdi:lightbulb']
+];
+const LHD_HA_CARDS = [
+  ['tile', 'Karo', 'Tile', 'mdi:square-rounded-outline'], ['entities', 'Varlıklar', 'Entities', 'mdi:format-list-bulleted'], ['button', 'Düğme', 'Button', 'mdi:gesture-tap-button'],
+  ['glance', 'Bakış', 'Glance', 'mdi:view-module-outline'], ['markdown', 'Yazı (Markdown)', 'Markdown', 'mdi:language-markdown-outline'], ['history-graph', 'Geçmiş grafiği', 'History graph', 'mdi:chart-line'],
+  ['statistics-graph', 'İstatistik grafiği', 'Statistics graph', 'mdi:chart-bar'], ['gauge', 'Gösterge', 'Gauge', 'mdi:gauge'], ['sensor', 'Sensör', 'Sensor', 'mdi:eye-outline'],
+  ['thermostat', 'Termostat', 'Thermostat', 'mdi:thermostat'], ['weather-forecast', 'Hava durumu', 'Weather forecast', 'mdi:weather-partly-cloudy'], ['media-control', 'Medya', 'Media control', 'mdi:play-box-outline'],
+  ['light', 'Işık', 'Light', 'mdi:lightbulb-outline'], ['picture-entity', 'Resimli varlık', 'Picture entity', 'mdi:image-outline'], ['map', 'Harita', 'Map', 'mdi:map-outline'],
+  ['calendar', 'Takvim', 'Calendar', 'mdi:calendar'], ['todo-list', 'Yapılacaklar', 'To-do list', 'mdi:clipboard-list-outline'], ['alarm-panel', 'Alarm paneli', 'Alarm panel', 'mdi:shield-home-outline'],
+  ['area', 'Alan', 'Area', 'mdi:texture-box'], ['logbook', 'Kayıt defteri', 'Logbook', 'mdi:format-list-text'], ['iframe', 'Web sayfası', 'Webpage', 'mdi:web']
+];
 const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs' };
@@ -569,6 +593,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
     Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
     this._mountPreview(tab, sec);
+    this._ceMount();
     this._bind(tabs, tab, sec);
     if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
   }
@@ -635,7 +660,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>') +
       (!this._adv() ? '' : '<button class="btn sm dash" data-a="addsub" title="' + t('addSubT') + '"><ha-icon class="s16" icon="mdi:format-header-pound"></ha-icon>' + t('addSub') + '</button>') +
       '<button class="btn sm dash" data-a="addpet" title="' + t('addPetT') + '"><ha-icon class="s16" icon="mdi:paw"></ha-icon>' + t('addPet') + '</button>' +
-      (!this._adv() ? '' : '<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>') +
+      ('<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>') +
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
     const kinds = lhdKinds(s), tilesHere = !!kinds.tile || !list.length;
@@ -702,6 +727,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     if (md === 'news') return this._newsHtml();
     if (md === 'item') return this._imHtml();
+    if (md === 'cardpick') return this._cpHtml();
+    if (md === 'cardedit') return this._ceHtml();
     if (md === 'report') return this._reportHtml();
     if (md === 'restore') return this._restoreHtml();
     if (md === 'settings') {
@@ -972,7 +999,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const g = (sel) => (e.target.closest ? e.target.closest(sel) : null);
       const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
       if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
-      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); if (this._modal === 'item') return; if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); } this._modal = null; this._render(); return; }   // öğe ayarları dışarı tıklayınca kapanmaz (yazılan kaybolmasın)
+      if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); if (this._modal === 'item' || this._modal === 'cardedit') return; if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); } this._modal = null; this._render(); return; }   // öğe ayarları dışarı tıklayınca kapanmaz (yazılan kaybolmasın)
       if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
@@ -980,12 +1007,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
       if (act === 'close') {
         if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); }   // simge seçiciden öğe ayarlarına dön
-        this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; return this._render();
+        if (this._modal === 'cardedit' && this._ce && this._ce.im) { this._im = this._ce.im; this._ce = null; this._modal = 'item'; return this._render(); }
+        this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; this._ce = null; return this._render();
       }
       if (act === 'imsave') return this._imSave();
       if (act === 'addsub') return editSec((S) => { S.entities = (S.entities || []).concat([{ subtitle: this._t('subItem').toLocaleUpperCase(this._lang === 'tr' ? 'tr' : 'en') }]); });
       if (act === 'addpet') return this._imOpen(-1, { pet: '' }, true);
-      if (act === 'addcard') return this._imOpen(-1, { card: { type: 'markdown', content: '' } }, true);
+      if (act === 'addcard') { this._cpq = ''; this._modal = 'cardpick'; this._menu = null; return this._render(); }
       if (act === 'report') return this._reportOpen();
       if (act === 'repgo') return this._repGo();
       if (act === 'repcopy') return this._repCopy();
@@ -1141,6 +1169,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const icl = g('[data-imclr]');
       if (icl && this._im) { this._im.f[icl.getAttribute('data-imclr')] = ''; return this._render(); }
       if (g('[data-imzone]') && this._im) { this._im.f.zOn = !this._im.f.zOn; return this._render(); }
+      const itg = g('[data-imtg]');
+      if (itg && this._im) { const kk = itg.getAttribute('data-imtg'); this._im.f[kk] = !this._im.f[kk]; return this._render(); }
+      if (g('[data-ceopen]') && this._im) {
+        let c; try { c = lhdYamlParse(this._im.f.card || ''); } catch (x) { c = null; }
+        return this._ceOpen(c && c.type ? c : { type: 'markdown', content: '' }, this._im);
+      }
+      const cpi = g('[data-cpk]');
+      if (cpi) return this._cpPick(cpi.getAttribute('data-cpk'));
+      if (g('[data-cpyaml]')) { this._modal = null; return this._imOpen(-1, { card: { type: 'markdown', content: '' } }, true); }
+      const cev = g('[data-cev]');
+      if (cev && this._ce) { this._ceSetView(cev.getAttribute('data-cev')); return; }
+      if (g('[data-cesave]') && this._ce) return this._ceSave();
+      if (g('[data-ceback]') && this._ce) { const back = this._ce.im; this._ce = null; if (back) { this._im = back; this._modal = 'item'; } else this._modal = 'cardpick'; return this._render(); }
       const isg = g('[data-imseg]');
       if (isg && this._im) { const p = isg.getAttribute('data-imseg').split(':'); this._im.f[p[0]] = p[1]; return this._render(); }
       if (g('[data-imvis]') && this._im) { this._im.f.visOn = !this._im.f.visOn; return this._render(); }
@@ -1251,6 +1292,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('input', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-iq')) { this._iq = el.value; this._refreshIcons(); return; }
+      if (el.hasAttribute && el.hasAttribute('data-cpq')) { this._cpq = el.value; const l = R.querySelector('.cplist'); if (l) { const tmp = document.createElement('div'); tmp.innerHTML = this._cpHtml(); const nl = tmp.querySelector('.cplist'); if (nl) l.innerHTML = nl.innerHTML; } return; }
+      if (el.hasAttribute && el.hasAttribute('data-ceyaml')) { if (this._ce) { this._ce.yaml = el.value; clearTimeout(this._ce.yT); const C = this._ce; C.yT = setTimeout(() => { try { const c = lhdYamlParse(C.yaml); if (c && c.type) { C.cfg = c; this._cePreview(); } } catch (e) {} }, 500); } return; }
       if (el.hasAttribute && el.hasAttribute('data-imsr')) { if (this._im) { const p = el.getAttribute('data-imsr').split(':'); this._im.f.scRows[+p[0]][+p[1]] = el.value; } return; }
       if (el.hasAttribute && el.hasAttribute('data-imf')) {
         if (this._im) { const key = el.getAttribute('data-imf'); this._im.f[key] = el.value; if (/icon/.test(key)) { const pv = el.closest('.iconin'); const ic = pv && pv.querySelector('.pv .lic'); if (ic && /^[a-z]+:[a-z0-9-]+$/.test(el.value.trim())) ic.outerHTML = lpIcon(el.value.trim()); } }
@@ -1308,7 +1351,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (!tab || !sec) return;
     const it = typeof raw === 'string' ? { entity: raw } : lhdClone(raw || {});
     const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '', size: it.size || '', icon_size: it.icon_size || '', text_size: it.text_size || '',
-      look: it.look || '', color: it.color || '', color_on: it.color_on || '', bg: it.bg || '', height: it.height ? String(it.height) : '', subtitle: it.subtitle || '' };
+      look: it.look || '', color: it.color || '', color_on: it.color_on || '', bg: it.bg || '', height: it.height ? String(it.height) : '', subtitle: it.subtitle || '',
+      swap: !!it.swap, cfm: !!it.confirm, cfmText: typeof it.confirm === 'string' ? it.confirm : '' };
+    const s2 = it.secondary || '';
+    f.secK = !s2 ? '' : s2 === 'state' || s2 === 'last_changed' ? s2 : s2.indexOf('attr:') === 0 ? 'attr' : 'tpl';
+    f.secAttr = f.secK === 'attr' ? s2.slice(5) : ''; f.secTpl = f.secK === 'tpl' ? s2 : '';
     const sc = it.state_colors && typeof it.state_colors === 'object' ? it.state_colors : null;
     f.scOn = !!sc; f.scE = (sc && sc.entity) || '';
     f.scRows = sc && sc.map ? Object.keys(sc.map).map((x) => [x, sc.map[x]]) : [];
@@ -1384,12 +1431,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         (!adv ? '' : fld(t('petFeeder'), '<div class="row2">' + inp('pFeedSv', 'button.press') + inp('pFeedTg', 'button.yemlik', true) + '</div><div class="hint">' + t('petFeederT') + '</div>')) +
         '<div class="hint">' + esc(this._t('petEnt', { n: f.pName || '…' })) + '</div>';
     }
-    if (k === 'card') body += fld(t('cardY') + hb('card'), ta('card', 12, 'type: markdown\ncontent: ...')) + (!adv ? '' :
+    if (k === 'card') body += '<button class="btn sm" data-ceopen><ha-icon class="s16" icon="mdi:pencil-box-outline"></ha-icon>' + t('ceEdit') + '</button>' + (!adv ? '' : fld(t('cardY') + hb('card'), ta('card', 12, 'type: markdown\ncontent: ...'))) + (!adv ? '' :
       fld(t('heightL'), '<div class="seg">' + [['', this._t('sz_auto')], ['1', this._t('h_rows', { n: 1 })], ['1.5', this._t('h_rows', { n: '1,5' })], ['2', this._t('h_rows', { n: 2 })]].map((o) => '<button data-imseg="height:' + o[0] + '"' + (f.height === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>') +
       actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
     else if (k === 'sub') body += fld(t('subText'), inp('subtitle', 'BAĞLANTI'));
     else if (k !== 'pet') {
-      body += '<div class="row2">' + fld(t('name'), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
+      body += '<div class="row2">' + fld(t('name') + (adv ? hb('tpl') : ''), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
       if (k !== 'climate' && k !== 'vacuum' && k !== 'media') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
       if (adv && k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
       // görünüm: eylem düğmesi karo/satır, varlık düğme/satır, sayısal değer Halo kartı
@@ -1426,6 +1473,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       }
       if (k === 'value') body += actF('tap', t('tapL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + (!adv ? '' : actF('hold', t('holdL'), this._t('a_defMore'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
       if (k === 'tile' && it.entity) body += actF('tap', t('tapL'), this._t('a_defTog'), ['def', 'more-info', 'service', 'popup', 'none', 'yaml']) + (!adv ? '' : actF('hold', t('holdL'), this._t('a_defHold'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
+      // ikinci satır (gelişmiş), değer öğesinde ad/değer yer değiştirme, onay sorusu (basit modda da)
+      if (adv && (k === 'tile' || k === 'value' || k === 'scene') && L0 !== 'halo') {
+        const attrs = st ? Object.keys(st.attributes || {}).filter((x) => ['friendly_name', 'icon', 'entity_picture', 'supported_features', 'supported_color_modes'].indexOf(x) < 0) : [];
+        const opts = [['', 'sc_none']].concat(it.entity ? [['state', 'sc_state'], ['last_changed', 'sc_lc']] : []).concat(attrs.length ? [['attr', 'sc_attr']] : []).concat([['tpl', 'sc_tpl']]);
+        body += fld(t('secL') + hb('tpl'), '<select class="inp" data-imf="secK">' + opts.map((o) => '<option value="' + o[0] + '"' + (f.secK === o[0] ? ' selected' : '') + '>' + t(o[1]) + '</option>').join('') + '</select>' +
+          (f.secK === 'attr' ? '<select class="inp" data-imf="secAttr">' + attrs.map((x) => '<option' + (f.secAttr === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') + '</select>' : '') +
+          (f.secK === 'tpl' ? inp('secTpl', "{{ states('sensor.x') }}") : ''));
+        if (k === 'value' && (!L0 || L0 === 'tile')) body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>';
+      }
+      if ((k === 'scene' || ((k === 'tile' || k === 'value') && it.entity)) && L0 !== 'halo') {
+        body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('cfmL') + '</b><span>' + t('cfmT') + '</span></div><button class="tg' + (f.cfm ? ' on' : '') + '" data-imtg="cfm"></button></div>' +
+          (f.cfm ? fld(t('cfmText'), inp('cfmText', '')) : '') + '</div>';
+      }
       if (adv && k === 'scene' && !it.entity && !lpLecKind(it)) body += actF('act', t('actL'), '', ['none', 'service', 'popup', 'yaml']);
     }
     // koşullu görünürlük (gelişmiş)
@@ -1503,6 +1563,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (k !== 'climate' && k !== 'vacuum' && k !== 'media') setS('icon', f.icon);
         if (k === 'value') { setS('icon_on', f.icon_on); setS('icon_off', f.icon_off); }
         if (k === 'tile' || k === 'ph' || k === 'value' || k === 'scene') setS('size', f.size);
+        if (k === 'tile' || k === 'value' || k === 'scene') {
+          const sv2 = f.secK === 'attr' ? (f.secAttr ? 'attr:' + f.secAttr : '') : f.secK === 'tpl' ? String(f.secTpl || '').trim() : f.secK;
+          setS('secondary', sv2);
+          if (k === 'value' && f.swap) it.swap = true; else delete it.swap;
+          if (f.cfm) it.confirm = String(f.cfmText || '').trim() || true; else delete it.confirm;
+        }
         if (k === 'scene' || k === 'value' || (k === 'tile' && it.entity)) setS('look', f.look);
         if ((k === 'tile' || k === 'value') && it.entity) {
           setS('color', f.color); setS('color_on', f.color_on); setS('bg', f.bg);
@@ -1536,6 +1602,124 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       S.entities = S.entities || [];
       if (M.isNew) S.entities.push(it); else if (M.idx < S.entities.length) S.entities[M.idx] = it;
     });
+  }
+
+  // ---- kart seçici (D1, D2) ve kart düzenleyici ----
+  // Liste: Halo kartları (panonun gömülü kopyası), Home Assistant kartları, kurulu özel kartlar (window.customCards).
+  // Seçilen kartın örnek ayarı kartın kendisinden (getStubConfig) alınır, düzenleyicisi (getConfigElement) açılır, yanında canlı önizleme.
+  _cpList() {
+    const L = this._lang === 'tr' ? 0 : 1, out = [];
+    LHD_HALO_CARDS.forEach((x) => out.push({ g: 'halo', key: 'custom:lemur-hd-' + x[0] + '-card', name: x[L + 1], desc: x[L + 3], icon: x[5] }));
+    LHD_HA_CARDS.forEach((x) => out.push({ g: 'ha', key: x[0], name: x[L + 1], icon: x[3] }));
+    (window.customCards || []).forEach((c) => { if (!c || !c.type || /^lemur-hd-/.test(c.type)) return; out.push({ g: 'custom', key: 'custom:' + c.type, name: c.name || c.type, desc: c.description || '', icon: 'mdi:puzzle-outline' }); });
+    return out;
+  }
+  _cpHtml() {
+    const t = (k, v) => esc(this._t(k, v)), q = (this._cpq || '').toLowerCase();
+    const L = this._cpList().filter((x) => !q || (x.name + ' ' + x.key + ' ' + (x.desc || '')).toLowerCase().indexOf(q) >= 0);
+    const grp = (g, title) => { const a = L.filter((x) => x.g === g); return a.length ? '<div class="pg">' + title + '</div><div class="cpg">' + a.map((x) => '<button class="cpi" data-cpk="' + esc(x.key) + '">' + lpIcon(x.icon) + '<span><b>' + esc(x.name) + '</b>' + (x.desc ? '<i>' + esc(x.desc) + '</i>' : '') + '</span></button>').join('') + '</div>' : ''; };
+    return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="mdi:card-plus-outline"></ha-icon></div><h2>' + t('cpT') + this._hb('card') + '</h2>' +
+      '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="db" style="padding-bottom:4px;flex:none;overflow:visible"><input class="inp" data-cpq placeholder="' + t('cpSearch') + '" value="' + esc(this._cpq || '') + '"></div>' +
+      '<div class="db"><div class="cplist">' + grp('halo', t('cpHalo')) + grp('ha', t('cpHa')) + grp('custom', t('cpCustom')) + '</div></div>' +
+      (this._adv() ? '<div class="df"><button class="btn" data-cpyaml><ha-icon class="s16" icon="mdi:code-braces"></ha-icon>' + t('cpYaml') + '</button></div>' : '') + '</div></div>';
+  }
+  // kartın sınıfı (yüklenene kadar bekler; en çok 4 sn)
+  _cardClass(type) {
+    const tag = type.indexOf('custom:') === 0 ? type.slice(7) : 'hui-' + type + '-card';
+    const now = customElements.get(tag);
+    if (now) return Promise.resolve(now);
+    return lpCardHelpers().then((H) => {
+      if (H && H.createCardElement && type.indexOf('custom:') !== 0) { try { H.createCardElement({ type: type }); } catch (e) {} }
+      return Promise.race([customElements.whenDefined(tag).then(() => customElements.get(tag)), new Promise((r) => setTimeout(() => r(null), 4000))]);
+    });
+  }
+  _cpPick(type) {
+    const ents = Object.keys(this._hass.states);
+    this._cardClass(type).then((C) => {
+      let p = Promise.resolve({});
+      try { if (C && C.getStubConfig) p = Promise.resolve(C.getStubConfig(this._hass, ents, ents)); } catch (e) {}
+      return p.catch(() => ({}));
+    }).then((stub) => {
+      const cfg = Object.assign({ type: type }, stub || {}, { type: type });
+      this._ceOpen(cfg, null);
+    });
+  }
+  _ceOpen(cfg, im) {
+    this._ce = { cfg: lhdClone(cfg), im: im, view: 'visual', ed: null, edFor: null, noEd: false, yaml: lhdYamlDump(cfg), err: '' };
+    if (im) { this._imKeep = im; }
+    this._modal = 'cardedit'; this._render();
+  }
+  _ceHtml() {
+    const C = this._ce; if (!C) return '';
+    const t = (k) => esc(this._t(k)), vis = C.view === 'visual' && !C.noEd;
+    return '<div class="ov" data-ovl><div class="dlg cedlg"><div class="dh"><div class="di"><ha-icon icon="mdi:pencil-box-outline"></ha-icon></div><h2>' + t('ceT') + ' · ' + esc(C.cfg.type) + '</h2>' +
+      '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="cebody"><div class="cel"><div class="seg">' + [['visual', 'ceVisual'], ['yaml', 'ceYaml']].map((x) => '<button data-cev="' + x[0] + '"' + ((vis ? 'visual' : 'yaml') === x[0] ? ' class="on"' : '') + (x[0] === 'visual' && C.noEd ? ' disabled' : '') + '>' + t(x[1]) + '</button>').join('') + '</div>' +
+      (C.noEd ? '<div class="hint">' + t('ceNoEd') + '</div>' : '') +
+      (vis ? '<div class="ceed" data-ceed><div class="hint">' + t('ceLoad') + '</div></div>' : '<textarea class="inp ta" data-ceyaml rows="16" spellcheck="false">' + esc(C.yaml) + '</textarea>') +
+      (C.err ? '<div class="imerr" style="margin:8px 0 0">' + esc(C.err) + '</div>' : '') + '</div>' +
+      '<div class="cer"><div class="lbl">' + t('cePv') + '</div><div class="cepv" data-cepv></div></div></div>' +
+      '<div class="df"><button class="btn" data-ceback>' + t('ceBack') + '</button><span class="grow"></span><button class="btn pri" data-cesave>' + t('imSave') + '</button></div></div></div>';
+  }
+  // render sonrası: düzenleyici ve önizleme öğeleri (yeniden çizimde kaybolmasınlar diye saklanır, yerine takılır)
+  _ceMount() {
+    const C = this._ce; if (!C || this._modal !== 'cardedit') return;
+    const R = this.shadowRoot, slot = R.querySelector('[data-ceed]'), pv = R.querySelector('[data-cepv]');
+    if (pv) {
+      if (!C.pvHost) { C.pvHost = document.createElement('div'); C.pvHost.className = 'cepvh'; this._cePreview(); }
+      pv.appendChild(C.pvHost);
+    }
+    if (!slot) return;
+    if (C.ed && C.edFor === C.cfg.type) { slot.innerHTML = ''; slot.appendChild(C.ed); try { C.ed.hass = this._hass; } catch (e) {} return; }
+    const type = C.cfg.type;
+    const tag = type.indexOf('custom:') === 0 ? type.slice(7) : 'hui-' + type + '-card';
+    this._cardClass(type).then((K) => (K && K.getConfigElement ? Promise.resolve(K.getConfigElement()) : null)).then((ed) => {
+      if (this._ce !== C) return;
+      // kartın verdiği düzenleyici tanımsızsa (ör. gömülü Halo kopyası) kartın adıyla kayıtlı düzenleyici
+      if ((!ed || typeof ed.setConfig !== 'function') && customElements.get(tag + '-editor')) ed = document.createElement(tag + '-editor');
+      if (ed && typeof ed.setConfig !== 'function') ed = null;
+      if (!ed) { C.noEd = true; C.view = 'yaml'; return this._render(); }
+      C.ed = ed; C.edFor = type;
+      try { ed.hass = this._hass; ed.lovelace = { config: { views: [] }, editMode: true }; } catch (e) {}
+      try { ed.setConfig(lhdClone(C.cfg)); } catch (e) { C.noEd = true; C.view = 'yaml'; return this._render(); }
+      ed.addEventListener('config-changed', (ev) => {
+        ev.stopPropagation();
+        const c = ev.detail && ev.detail.config; if (!c) return;
+        C.cfg = lhdClone(c); C.yaml = lhdYamlDump(C.cfg); C.err = '';
+        clearTimeout(C.pvT); C.pvT = setTimeout(() => this._cePreview(), 250);
+      });
+      const s2 = this.shadowRoot && this.shadowRoot.querySelector('[data-ceed]');
+      if (s2) { s2.innerHTML = ''; s2.appendChild(ed); }
+    }).catch(() => { C.noEd = true; C.view = 'yaml'; this._render(); });
+  }
+  _cePreview() {
+    const C = this._ce; if (!C || !C.pvHost) return;
+    lpMountCard(C.pvHost, lhdClone(C.cfg), () => this._hass, this._lang, (el) => { C.pvEl = el; });
+  }
+  _ceSetView(v) {
+    const C = this._ce;
+    if (v === 'visual' && C.view === 'yaml') {
+      try { const c = lhdYamlParse(C.yaml); if (!c || !c.type) throw new Error(this._t('cardNoType')); C.cfg = c; if (C.ed) { try { C.ed.setConfig(lhdClone(c)); } catch (e) {} } C.err = ''; }
+      catch (e) { C.err = e.line ? this._t('yamlErrL', { n: e.line }) : e.message; return this._render(); }
+      this._cePreview();
+    }
+    if (v === 'yaml') C.yaml = lhdYamlDump(C.cfg);
+    C.view = v; this._render();
+  }
+  _ceSave() {
+    const C = this._ce;
+    if (C.view === 'yaml') {
+      try { const c = lhdYamlParse(C.yaml); if (!c || !c.type) throw new Error(this._t('cardNoType')); C.cfg = c; }
+      catch (e) { C.err = e.line ? this._t('yamlErrL', { n: e.line }) : e.message; return this._render(); }
+    }
+    const cfg = C.cfg, im = C.im;
+    this._ce = null;
+    if (im) { im.f.card = lhdYamlDump(cfg); this._im = im; this._modal = 'item'; return this._render(); }   // öğe ayarlarına dön (Kaydet orada)
+    this._modal = null;
+    const tab = this._curTab(this._work()), sec = this._curSec(tab); if (!tab || !sec) return this._render();
+    const tid = tab.id, sid = sec.id;
+    this._edit((T) => { const x = T.filter((y) => y.id === tid)[0], S = x && (x.sections || []).filter((z) => z.id === sid)[0]; if (S) { S.entities = S.entities || []; S.entities.push({ card: cfg }); } });
   }
 
   // iklim cihazı eklenirken aynı alandaki harici sıcaklık/nem sensörü önerilir (otomatik düzendeki kural)

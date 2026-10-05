@@ -2,6 +2,15 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.12.0',
+    tr: ['İkinci satır: durum, son değişim, öznitelik ya da yazı; değer karosunda ad üstte, değer altta seçeneği.',
+      'Ad ve ikinci satırda Home Assistant şablonu ({{ }} / {% %}); değer değişince yazı kendiliğinden güncellenir.',
+      'Dokununca onay iste: "Evi Kapa çalıştırılsın mı?"',
+      'Kart seçici: Halo kartları, Home Assistant kartları ve kurulu özel kartlar listeden; görsel düzenleyici ve canlı önizleme.'],
+    en: ['Second line: state, last changed, an attribute or text; a value tile can put the name on top and the value below.',
+      'Home Assistant templates ({{ }} / {% %}) in the name and second line; the text updates by itself.',
+      'Ask before running: "Run Close the house?"',
+      'Card picker: Halo cards, Home Assistant cards and installed custom cards from a list; visual editor and live preview.'] },
   { v: '0.11.0',
     tr: ['Yönetim panelinde Basit ve Gelişmiş mod: Basit modda yalnız temel ayarlar görünür; gelişmiş ayarlar silinmez, çalışmaya devam eder. Üst çubuktan değiştirilir, bu tarayıcıda hatırlanır.',
       'Karmaşık ayarların yanında ? yardım: ne işe yaradığı, nasıl ayarlandığı ve bir örnek.',

@@ -83,6 +83,7 @@
   display: -webkit-box; display: flex; align-items: center; cursor: pointer; overflow: hidden; transition: all 0.2s ease-out; }
 .scene .si { flex: 0 0 40%; display: flex; justify-content: center; }
 .scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }
+.scene span span { padding-left: 0; font-size: inherit; }
 .scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* gömülü kartlar (iklim, süpürge): zemin ve köşe tablettekiyle aynı */
@@ -330,3 +331,12 @@
 .tile.val.wide .lic { grid-row: 1 / 3; align-self: center; margin-right: 0; }
 .tile.val.wide .vl { margin-top: 0; text-align: left; padding: 0; align-self: end; }
 .tile.val.wide .nm { text-align: left; padding: 0; align-self: start; }
+/* A5 ikinci satır */
+.tile .sl { margin-top: 2px; font-size: 12.5px; line-height: 15px; color: var(--lp-text2); max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.wide .sl { text-align: left; padding: 0; }
+.tile.val.wide .sl { grid-column: 2; }
+.scene .s2w { display: block; flex: 1 1 auto; min-width: 0; padding-left: 6px; }
+.scene .s2w b { display: block; font-weight: 400; font-size: var(--lp-fs, 18px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scene .s2w .ss { display: block; font-style: normal; font-size: 13.5px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phone .tile .sl { font-size: 10.5px; line-height: 13px; }
+.si .lic.haic { flex: 0 0 auto; }

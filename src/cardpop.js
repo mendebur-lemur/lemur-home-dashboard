@@ -3,8 +3,8 @@
 // Eylem { popup: { title, card } } kartı panonun kendi penceresinde açar (ışık penceresi gibi): dışarı dokun, X ya da geri tuşu kapatır.
 // Kart yüklenemezse yerinde kısa bir uyarı çıkar; pano bozulmaz.
 const LP_CARD_TXT = {
-  tr: { bad: 'Kart ayarı eksik: type yok', fail: 'Kart yüklenemedi: {t}', close: 'Kapat' },
-  en: { bad: 'Card config is missing its type', fail: 'Card could not be loaded: {t}', close: 'Close' }
+  tr: { bad: 'Kart ayarı eksik: type yok', fail: 'Kart yüklenemedi: {t}', close: 'Kapat', yes: 'Evet', no: 'Vazgeç', ask: '{n} çalıştırılsın mı?' },
+  en: { bad: 'Card config is missing its type', fail: 'Card could not be loaded: {t}', close: 'Close', yes: 'Yes', no: 'Cancel', ask: 'Run {n}?' }
 };
 const lpCardT = (lang, k, v) => { let s = (LP_CARD_TXT[lang] || LP_CARD_TXT.en)[k] || k; if (v) Object.keys(v).forEach((x) => { s = s.split('{' + x + '}').join(v[x]); }); return s; };
 const LP_CH = { p: null };
@@ -66,6 +66,10 @@ const LP_CPOP_CSS = `
 .phr b { flex: 0 0 auto; font-weight: 600; margin-right: 14px; font-variant-numeric: tabular-nums; }
 .phr span { flex: 1 1 auto; color: #9aa0a8; }
 .phr i { font-style: normal; color: #9aa0a8; font-size: 13px; }
+.cfm { display: flex; margin-top: 4px; }
+.cfm > div { flex: 1 1 0; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600; cursor: pointer; background: #1E2024; }
+.cfm > div + div { margin-left: 12px; }
+.cfm .ok { background: #F0A93B; color: #111; }
 `;
 const LP_CPOP = { cur: null };
 class LemurCardPopup {
@@ -78,6 +82,14 @@ class LemurCardPopup {
     return x;
   }
   static update(hass) { if (LP_CPOP.cur) LP_CPOP.cur.hass = hass; }
+  // onay sorusu ("Evi Kapa çalıştırılsın mı?"): Evet'e basınca yes() çalışır
+  static confirm(hass, lang, text, yes) {
+    const p = LemurCardPopup.open(hass, { title: text, html: '<div class="cfm"><div data-no>' + esc(lpCardT(lang, 'no')) + '</div><div class="ok" data-yes>' + esc(lpCardT(lang, 'yes')) + '</div></div>' }, lang);
+    const R = p._host.shadowRoot;
+    R.querySelector('[data-no]').addEventListener('click', () => p.close());
+    R.querySelector('[data-yes]').addEventListener('click', () => { p.close(); yes(); });
+    return p;
+  }
   constructor(hass, p, lang) {
     this._h = hass; this._els = [];
     this._host = document.createElement('div');
