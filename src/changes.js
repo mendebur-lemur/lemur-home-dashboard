@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.12.2',
+    tr: ['Ayarlar: "Sürüm ve güncelleme" en üstte; güncellemeler tek dokunuşla denetlenir.'],
+    en: ['Settings: "Version and updates" is now at the top; check for updates with one tap.'] },
   { v: '0.12.1',
     tr: ['Güvenlik düzeltmeleri: pencere içeriği, bağlantılar, yedekten geri yükleme ve simge dosyaları denetleniyor.',
       'Besleme: bir dakika içinde ikinci "Besledim" sayılmaz, otomatik yemlik iki kez çalışmaz. Yemlik servisi izinli alanlardan biri olmalı (button, switch, script...).',

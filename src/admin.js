@@ -755,6 +755,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const bgUrl = typeof s.background === 'string' ? (s.background.match(/url\(['"]?([^'")]+)/) || [])[1] || '' : '';
       const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
       return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('settings') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' +
+        '<div class="sh">' + t('sVer') + '</div>' + this._updRow() +   // en üstte (Light Effect Card ile aynı)
         '<div class="sh">' + t('s_board') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('lang') + '</b></div>' + seg('language', s.language || 'auto', [['auto', this._t('lAuto')], ['tr', 'Türkçe'], ['en', 'English']]) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
@@ -781,7 +782,6 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="sh">' + t('sBackup') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('bkDown') + '</b><span>' + t('bkDownS') + '</span></div><button class="btn" data-a="bkdown">' + t('bkDown') + '</button></div>' +
         '<div class="srow"><div class="t"><b>' + t('bkUp') + '</b><span>' + t('bkUpS') + '</span></div><label class="btn">' + t('bkUp') + '<input type="file" accept=".json,application/json" data-bkfile style="display:none"></label></div>' +
-        '<div class="sh">' + t('sVer') + '</div>' + this._updRow() +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
     }
     if (md === 'reset') {
