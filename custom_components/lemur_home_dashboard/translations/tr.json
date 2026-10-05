@@ -6,6 +6,37 @@
         "description": "Hazır ev panosunu ekler. Bir pano oluştur ve ham yapılandırmasına `strategy: type: custom:lemur-home-dashboard` yaz. Panoyu sol menüdeki \"Lemur Home Dashboard\" bölümünden düzenle."
       }
     },
-    "abort": { "single_instance_allowed": "Zaten kurulu." }
+    "abort": {
+      "single_instance_allowed": "Zaten kurulu."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "feeding": {
+        "state": {
+          "ok": "Zamanında",
+          "soon": "Yaklaşıyor",
+          "due": "Zamanı geldi",
+          "late": "Gecikti",
+          "never": "Hiç beslenmedi"
+        }
+      }
+    }
+  },
+  "services": {
+    "feed": {
+      "name": "Besle",
+      "description": "Bir evcil hayvanı beslendi olarak kaydeder (besleme kartındaki gibi).",
+      "fields": {
+        "pet": {
+          "name": "Hayvan",
+          "description": "Hayvanın kimliği ya da adı"
+        },
+        "undo": {
+          "name": "Geri al",
+          "description": "Son beslemeyi geri al"
+        }
+      }
+    }
   }
 }

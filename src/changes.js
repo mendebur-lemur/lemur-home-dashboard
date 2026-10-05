@@ -2,6 +2,15 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.10.0',
+    tr: ['Besleme kartı: kedi, köpek, balık... için besleme hatırlatıcısı. Zamanında yeşil, yaklaşınca sarı, zamanı gelince turuncu, gecikince kırmızı ve yanıp söner.',
+      'Karta dokun: "Besledim" (10 sn içinde yeniden dokununca geri alınır). Basılı tut: son beslemeler.',
+      'Her N saatte bir ya da günün belli saatlerinde; gecikince telefona bildirim, istersen otomatik yemlik.',
+      'Home Assistant\'ta her hayvan için besleme durumu ve "besledim" düğmesi oluşur; otomasyonlarda kullanılabilir.'],
+    en: ['Feeding card: a feeding reminder for a cat, dog, fish... Green on time, yellow when due soon, orange when due, red and blinking when late.',
+      'Tap the card: "Fed" (tap again within 10 s to undo). Hold: recent feedings.',
+      'Every N hours or at set times of day; a phone notification when late, and an automatic feeder if you have one.',
+      'Home Assistant gets a feeding status and a "fed" button for every pet, usable in automations.'] },
   { v: '0.9.0',
     tr: ['Öğe ayarı Görünüm: düğme ışıkların yanında karo olabilir; değerler ve cihazlar ince satır ya da düğme, sayısal değerler Halo kartı olarak çizilebilir.',
       'Öğe renkleri: simge rengi, açıkken renk, arka plan tonu; sayısal değerde 4 sınır ve 5 renkle değere göre renk.',

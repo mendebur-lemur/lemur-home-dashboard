@@ -6,6 +6,37 @@
         "description": "Adds the ready-made home dashboard. Create a dashboard and put `strategy: type: custom:lemur-home-dashboard` in its raw configuration. Edit the dashboard from \"Lemur Home Dashboard\" in the sidebar."
       }
     },
-    "abort": { "single_instance_allowed": "Already set up." }
+    "abort": {
+      "single_instance_allowed": "Already set up."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "feeding": {
+        "state": {
+          "ok": "On time",
+          "soon": "Soon",
+          "due": "Due",
+          "late": "Late",
+          "never": "Never fed"
+        }
+      }
+    }
+  },
+  "services": {
+    "feed": {
+      "name": "Feed",
+      "description": "Records a pet as fed (same as the feeding card).",
+      "fields": {
+        "pet": {
+          "name": "Pet",
+          "description": "The pet's id or name"
+        },
+        "undo": {
+          "name": "Undo",
+          "description": "Take back the last feeding"
+        }
+      }
+    }
   }
 }

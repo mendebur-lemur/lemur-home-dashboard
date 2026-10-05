@@ -289,3 +289,25 @@
 .emb { position: relative; }
 .tapov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 2; cursor: pointer; border-radius: 20px; }
 .tapov.down { background: rgba(255, 255, 255, 0.06); }
+/* besleme kartı: solda hayvanın simgesi, arkasında durumun renginde nefes alan hale; gecikince hale ve çerçeve yanıp söner */
+.pets { display: grid; grid-gap: 8px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); flex: 0 0 auto; }
+.petc { position: relative; display: flex; align-items: center; min-height: 96px; padding: 14px 16px 14px 14px; border-radius: 20px; background: var(--lp-embed-bg);
+  overflow: hidden; cursor: pointer; box-sizing: border-box; color: var(--lp-text); --pc: 150,150,150; transition: transform 0.1s ease-out; }
+.petc::before { content: ''; position: absolute; left: -46px; top: 50%; width: 170px; height: 170px; margin-top: -85px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(var(--pc), 0.55) 0%, rgba(var(--pc), 0.2) 42%, rgba(var(--pc), 0) 70%); animation: lppetb 4.4s ease-in-out infinite; }
+.petc .pi { position: relative; flex: 0 0 62px; height: 62px; border-radius: 50%; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center; margin-right: 14px; }
+.petc .pi .lic { width: 38px; height: 38px; }
+.petc .pt { position: relative; flex: 1 1 auto; min-width: 0; }
+.petc .pt b { display: block; font-size: 18px; line-height: 22px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.petc .ps { display: block; margin-top: 2px; font-size: 15px; line-height: 19px; font-weight: 600; color: rgb(var(--pc)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.petc .pn { display: block; margin-top: 1px; font-size: 13px; line-height: 17px; color: var(--lp-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.petc.st-never .ps { color: var(--lp-text2); }
+.petc.st-due { box-shadow: inset 0 0 0 2px rgba(var(--pc), 0.7); }
+.petc.st-late { animation: lppetf 1.2s ease-in-out infinite; }
+.petc.st-late::before { animation-duration: 1.2s; }
+.petc.just .ps { color: rgb(40, 190, 100); }
+.petc.down { transform: scale(0.97); }
+@keyframes lppetb { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+@keyframes lppetf { 0%, 100% { box-shadow: inset 0 0 0 2px rgba(var(--pc), 0.25); } 50% { box-shadow: inset 0 0 0 2px rgba(var(--pc), 1); } }
+.box.mix > .pets, .box.fill > .pets { flex: 0 0 auto; }
+.phone .pets { grid-template-columns: 1fr; }

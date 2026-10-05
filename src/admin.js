@@ -25,6 +25,11 @@ const ADM = {
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
     version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
+    addPet: 'Evcil hayvan', addPetT: 'Besleme kartı: kedi, köpek, balık... için besleme hatırlatıcısı', t_pets: 'Besleme', petItem: 'Besleme kartı', petKind: 'Tür',
+    pk_cat: 'Kedi', pk_dog: 'Köpek', pk_fish: 'Balık', pk_bird: 'Kuş', pk_rabbit: 'Tavşan', pk_turtle: 'Kaplumbağa', pk_other: 'Diğer',
+    petSched: 'Ne zaman beslenir', pm_interval: 'Her N saatte bir', pm_times: 'Günün belli saatlerinde', petEvery: 'Kaç saatte bir', petTimes: 'Saatler (virgülle)',
+    petSoon: 'Yaklaşıyor uyarısı (dk önce)', petGrace: 'Gecikme payı (dk)', petNotify: 'Gecikince bildirim', petNoNotify: 'Bildirim yok', petFeeder: 'Otomatik yemlik (isteğe bağlı)', petFeederT: 'Besledim deyince bu servis de çalışır (ör. button.press)',
+    petEnt: 'Home Assistant\'ta "{n} besleme" durumu ve "{n} besledim" düğmesi oluşur; otomasyonlarda kullanılabilir.', petNeedName: 'Hayvanın adını yaz',
     lookL: 'Görünüm', lk_tile: 'Karo', lk_button: 'Düğme', lk_row: 'Satır', lk_halo: 'Halo', colorsL: 'Renkler', cIcon: 'Simge', cOn: 'Açıkken', cBg: 'Arka plan', cNone: 'Yok',
     zonesL: 'Değere göre renk', zonesT: '4 sınır, 5 renk: değer bir sınıra eşit ya da büyükse bir sonraki renge geçer (Halo kartlarındaki bölgeler gibi). Çerçeve, değer ve simge bu renkte.', zLim: 'Sınır {n}',
     cardTapT: 'Verilmezse kartın kendi dokunma davranışı', a_defCard: 'Varsayılan: kartın kendisi',
@@ -57,6 +62,11 @@ const ADM = {
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
     version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
+    addPet: 'Pet', addPetT: 'Feeding card: a feeding reminder for a cat, dog, fish...', t_pets: 'Feeding', petItem: 'Feeding card', petKind: 'Kind',
+    pk_cat: 'Cat', pk_dog: 'Dog', pk_fish: 'Fish', pk_bird: 'Bird', pk_rabbit: 'Rabbit', pk_turtle: 'Turtle', pk_other: 'Other',
+    petSched: 'When to feed', pm_interval: 'Every N hours', pm_times: 'At set times of day', petEvery: 'Every how many hours', petTimes: 'Times (comma separated)',
+    petSoon: 'Soon warning (min before)', petGrace: 'Grace time (min)', petNotify: 'Notify when late', petNoNotify: 'No notification', petFeederT: 'Also runs this service on "fed" (e.g. button.press)', petFeeder: 'Automatic feeder (optional)',
+    petEnt: 'Home Assistant gets a "{n} feeding" status and a "{n} fed" button, usable in automations.', petNeedName: 'Write the pet\'s name',
     lookL: 'Look', lk_tile: 'Tile', lk_button: 'Button', lk_row: 'Row', lk_halo: 'Halo', colorsL: 'Colours', cIcon: 'Icon', cOn: 'When on', cBg: 'Background', cNone: 'None',
     zonesL: 'Colour by value', zonesT: '4 limits, 5 colours: when the value reaches a limit it moves to the next colour (like the zones in Halo cards). The frame, value and icon take this colour.', zLim: 'Limit {n}',
     cardTapT: 'If not set, the card handles taps itself', a_defCard: 'Default: the card itself',
@@ -84,7 +94,7 @@ const LHD_TINT_COLORS = ['#FFC24A', '#E6ECF5', '#5B8DEF', '#4FD1C5', '#7BD83A', 
 const LHD_BG_COLORS = ['#0b0e15', '#0e1726', '#101418', '#0f1a14', '#1a1024', '#1d0f12', '#1a160e', '#0d1b1e'];
 const LHD_ALL_DOMAINS = ['light', 'switch', 'cover', 'fan', 'input_boolean', 'lock', 'script', 'scene', 'automation', 'button', 'input_button', 'climate', 'vacuum', 'media_player'].concat(LHD_VALUE_DOMAINS);
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
-const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards' };
+const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', value: 't_values', card: 't_cards', pet: 't_pets' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
 const LHD_MAXCOLS = 6;
@@ -324,7 +334,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   // ---- yedekle / içe aktar: bütün pano düzeni (sekmeler, bölümler, ayarlar) tek JSON dosyasında ----
   _backupDown() {
     const d = STORE.data || {};
-    const out = { format: 'lemur-home-dashboard-backup', version: PANEL_VERSION, date: new Date().toISOString(), data: { tabs: d.tabs || [], settings: d.settings || {}, profiles: d.profiles || {} } };
+    const out = { format: 'lemur-home-dashboard-backup', version: PANEL_VERSION, date: new Date().toISOString(), data: { tabs: d.tabs || [], settings: d.settings || {}, profiles: d.profiles || {}, pets: d.pets || {} } };
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
     a.download = 'lemur-pano-yedek-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
@@ -352,6 +362,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._commit('tabs', Array.isArray(D.tabs) ? D.tabs : []);
     this._commit('settings', D.settings && typeof D.settings === 'object' && !Array.isArray(D.settings) ? D.settings : {});
     if (D.profiles && typeof D.profiles === 'object' && !Array.isArray(D.profiles)) this._commit('profiles', D.profiles);
+    if (D.pets && typeof D.pets === 'object' && !Array.isArray(D.pets)) this._commit('pets', D.pets);
     this._bk = null; this._modal = null; this._tab = null; this._render(); this._toast(this._t('bkOk'));
   }
   // ---- yenilikler: güncellemeden sonra bir kez, ve Ayarlar → Sürüm'den ----
@@ -574,6 +585,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // her öğe kendi türüne göre düzenlenir: düğmede renk, simge ve ne çalıştırdığı; karoda ad ve simge; iklimde sensörler
     body = list.length ? '<div class="items" data-dl="items">' + list.map((raw, i) => {
       const k = lhdKind(raw), it = typeof raw === 'string' ? { entity: raw } : raw;
+      if (k === 'pet') {
+        const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {};
+        return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon(P.icon || LP_PET_KINDS[P.kind] || 'mdi:paw') + '</div><div class="col"><b class="cty">' + esc(P.name || it.pet) + '</b>' +
+          '<span class="eid">' + t('petItem') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
+      }
       if (k === 'card') {
         return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon('mdi:card-text-outline') + '</div><div class="col"><b class="cty">' + t('cardItem') + ': ' + esc(String(it.card.type || '?')) + '</b>' +
           '<span class="eid">' + esc(it.card.title || it.card.entity || '') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
@@ -604,6 +620,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     body += '<div class="acts"><button class="btn sm" data-a="pick"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addDev') + '</button>' +
       '<button class="btn sm dash" data-a="addph"><ha-icon class="s16" icon="mdi:square-rounded-outline"></ha-icon>' + t('addPh') + '</button>' +
       '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>' +
+      '<button class="btn sm dash" data-a="addpet" title="' + t('addPetT') + '"><ha-icon class="s16" icon="mdi:paw"></ha-icon>' + t('addPet') + '</button>' +
       '<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>' +
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
@@ -940,6 +957,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; return this._render();
       }
       if (act === 'imsave') return this._imSave();
+      if (act === 'addpet') return this._imOpen(-1, { pet: '' }, true);
       if (act === 'addcard') return this._imOpen(-1, { card: { type: 'markdown', content: '' } }, true);
       if (act === 'report') return this._reportOpen();
       if (act === 'repgo') return this._repGo();
@@ -1275,6 +1293,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     ai('tap', it.tap); ai('hold', it.hold);
     if (!it.entity && Object.prototype.hasOwnProperty.call(it, 'action')) ai('act', it.action, true);
     if (it.card) f.card = lhdYamlDump(it.card);
+    if (Object.prototype.hasOwnProperty.call(it, 'pet')) {
+      const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}, fd = P.feeder || {};
+      Object.assign(f, { pName: P.name || '', pKind: P.kind || 'cat', pIcon: P.icon || '', pMode: P.mode === 'times' ? 'times' : 'interval', pEvery: String(P.every_h || 12),
+        pTimes: (P.times || ['08:00', '20:00']).join(', '), pSoon: String(P.soon_min || 60), pGrace: String(P.grace_min || 30), pNotify: P.notify || '', pFeedSv: fd.service || '', pFeedTg: fd.target || '' });
+    }
     const v = it.visible && typeof it.visible === 'object' ? it.visible : null;
     f.visOn = !!(v && v.entity); f.visE = (v && v.entity) || '';
     f.visM = v && v.not !== undefined ? 'not' : (v && v.states !== undefined ? 'in' : 'eq');
@@ -1302,9 +1325,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="imact">' + fld(label, h) + '</div>';
     };
     let body = '';
+    if (k === 'pet') {
+      const sgp = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + (f[key] === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const nts = Object.keys((this._hass.services && this._hass.services.notify) || {}).sort();
+      body += fld(t('name'), inp('pName', 'Pamuk')) +
+        fld(t('petKind'), sgp('pKind', Object.keys(LP_PET_KINDS).map((x) => [x, this._t('pk_' + x)]))) +
+        icf('pIcon', t('icon'), LP_PET_KINDS[f.pKind] || 'mdi:paw') +
+        fld(t('petSched'), sgp('pMode', [['interval', this._t('pm_interval')], ['times', this._t('pm_times')]])) +
+        (f.pMode === 'times' ? fld(t('petTimes'), inp('pTimes', '08:00, 20:00')) : fld(t('petEvery'), '<input class="inp" type="number" min="0.5" step="0.5" data-imf="pEvery" value="' + esc(f.pEvery) + '">')) +
+        '<div class="row2">' + fld(t('petSoon'), '<input class="inp" type="number" min="0" step="5" data-imf="pSoon" value="' + esc(f.pSoon) + '">') + fld(t('petGrace'), '<input class="inp" type="number" min="0" step="5" data-imf="pGrace" value="' + esc(f.pGrace) + '">') + '</div>' +
+        fld(t('petNotify'), '<select class="inp" data-imf="pNotify"><option value="">' + t('petNoNotify') + '</option>' + nts.map((x) => '<option value="notify.' + esc(x) + '"' + (f.pNotify === 'notify.' + x ? ' selected' : '') + '>notify.' + esc(x) + '</option>').join('') + '</select>') +
+        fld(t('petFeeder'), '<div class="row2">' + inp('pFeedSv', 'button.press') + inp('pFeedTg', 'button.yemlik', true) + '</div><div class="hint">' + t('petFeederT') + '</div>') +
+        '<div class="hint">' + esc(this._t('petEnt', { n: f.pName || '…' })) + '</div>';
+    }
     if (k === 'card') body += fld(t('cardY'), ta('card', 12, 'type: markdown\ncontent: ...')) +
       actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']);
-    else {
+    else if (k !== 'pet') {
       body += '<div class="row2">' + fld(t('name'), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
       if (k !== 'climate' && k !== 'vacuum' && k !== 'media') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
       if (k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
@@ -1381,12 +1417,29 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     let it = lhdClone(M.raw);
     const setS = (key, v) => { v = String(v || '').trim(); if (v) it[key] = v; else delete it[key]; };
     try {
+      if (k === 'pet') {
+        const name = String(f.pName || '').trim();
+        if (!name) throw new Error(this._t('petNeedName'));
+        const pets = lhdClone((STORE.data && STORE.data.pets) || {});
+        let id = it.pet;
+        if (!id) { const base = lhdSlug(name) || 'pet'; id = base; let q = 2; while (pets[id]) id = base + '_' + (q++); it.pet = id; }
+        const num = (x, d) => { const v = parseFloat(String(x).replace(',', '.')); return v >= 0 ? v : d; };
+        const P = { name: name, kind: f.pKind || 'other', mode: f.pMode === 'times' ? 'times' : 'interval', every_h: num(f.pEvery, 12) || 12,
+          times: String(f.pTimes || '').split(/[,;\s]+/).map((x) => x.trim()).filter((x) => /^\d{1,2}:\d{2}$/.test(x)),
+          soon_min: num(f.pSoon, 60), grace_min: num(f.pGrace, 30) };
+        if (String(f.pIcon || '').trim()) P.icon = String(f.pIcon).trim();
+        if (f.pNotify) P.notify = f.pNotify;
+        const fsv = String(f.pFeedSv || '').trim();
+        if (/^[a-z0-9_]+\.[a-z0-9_]+$/.test(fsv)) { P.feeder = { service: fsv }; if (String(f.pFeedTg || '').trim()) P.feeder.target = String(f.pFeedTg).trim(); }
+        pets[id] = P;
+        this._commit('pets', pets);
+      }
       if (k === 'card') {
         ['tap', 'hold'].forEach((pre) => { const v = this._imAct(pre); if (v === undefined) delete it[pre]; else it[pre] = v; });
         let c; try { c = lhdYamlParse(f.card || ''); } catch (e) { throw new Error(e.line ? this._t('yamlErrL', { n: e.line }) : this._t('yamlErr', { e: e.message })); }
         if (!c || typeof c !== 'object' || !c.type) throw new Error(this._t('cardNoType'));
         it.card = c;
-      } else {
+      } else if (k !== 'pet') {
         setS('name', f.name);
         if (k !== 'climate' && k !== 'vacuum' && k !== 'media') setS('icon', f.icon);
         if (k === 'value') { setS('icon_on', f.icon_on); setS('icon_off', f.icon_off); }

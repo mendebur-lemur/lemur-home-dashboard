@@ -60,6 +60,12 @@ const LP_CPOP_CSS = `
 .cb { min-height: 40px; }
 .cwarn { display: flex; align-items: center; padding: 14px 16px; border-radius: 14px; background: rgba(229, 72, 77, 0.12); color: #FF9592; font-size: 14px; line-height: 1.35; }
 .cwarn ha-icon { --mdc-icon-size: 20px; margin-right: 10px; flex: 0 0 auto; }
+.phist { background: #1E2024; border-radius: 18px; padding: 6px 0; }
+.phr { display: flex; align-items: center; padding: 10px 18px; font-size: 15px; }
+.phr + .phr { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.phr b { flex: 0 0 auto; font-weight: 600; margin-right: 14px; font-variant-numeric: tabular-nums; }
+.phr span { flex: 1 1 auto; color: #9aa0a8; }
+.phr i { font-style: normal; color: #9aa0a8; font-size: 13px; }
 `;
 const LP_CPOP = { cur: null };
 class LemurCardPopup {
@@ -90,7 +96,8 @@ class LemurCardPopup {
     this._pop = () => this.close(true);
     try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
     document.body.appendChild(this._host);
-    lpMountCard(R.querySelector('.cb'), p.card, () => this._h, lang, (el) => { this._els.push(el); });
+    if (typeof p.html === 'string') R.querySelector('.cb').innerHTML = p.html;   // hazır içerik (ör. son beslemeler)
+    else lpMountCard(R.querySelector('.cb'), p.card, () => this._h, lang, (el) => { this._els.push(el); });
     requestAnimationFrame(() => requestAnimationFrame(() => this._host.classList.add('in')));
   }
   set hass(h) { this._h = h; if (!this._closed) this._els.forEach((e) => { e.hass = h; }); }

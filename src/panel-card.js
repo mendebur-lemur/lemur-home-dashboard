@@ -308,6 +308,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
   _tick() {
     const c = this.shadowRoot && this.shadowRoot.querySelector('.clock'); if (c) c.textContent = this._time();
+    (this._pets || []).forEach((el) => lpPetPaint(el, this._lang, Date.now()));   // "2 sa önce", durum rengi
     this._ticks = (this._ticks || 0) + 1;
     if (this._ticks % 20 === 0 && this._def && this._hass) { this._def = null; this._render(); }   // otomatik düzen 5 dk'da bir tazelenir
   }
@@ -457,10 +458,12 @@ class LemurHomeDashboardCard extends HTMLElement {
       const items = both ? all.filter((x) => x._k !== 'climate' || (season === 'winter' ? !isAC(x) : isAC(x))) : all;
       if (!items.length) return null;
       const groups = [];
-      items.forEach((x) => { const g = groups[groups.length - 1]; if (g && g.k === x._k && (x._k === 'tile' || x._k === 'vrow')) g.items.push(x); else groups.push({ k: x._k, items: [x] }); });
+      items.forEach((x) => { const g = groups[groups.length - 1]; if (g && g.k === x._k && (x._k === 'tile' || x._k === 'vrow' || x._k === 'pet')) g.items.push(x); else groups.push({ k: x._k, items: [x] }); });
       const hasTiles = groups.some((g) => g.k === 'tile'), onlyTiles = groups.length === 1 && hasTiles;
       const html = groups.map((g) => {
         if (g.k === 'tile') return tileGrid(s, g.items, onlyTiles);
+        // besleme kartları: kutuya sığdığı kadar yan yana (en az 220 px)
+        if (g.k === 'pet') return '<div class="pets">' + g.items.map((x) => '<div class="petc" data-pet="' + esc(x.pet) + '"' + hidA(x) + mark(x._i) + '></div>').join('') + '</div>';
         // satırlar: ince yatay satırlar, kutuya sığdığı kadar yan yana (en az 170 px)
         if (g.k === 'vrow') return '<div class="vrows" style="grid-template-columns:repeat(' + (phone ? 1 : Math.max(1, Math.min(s.row_columns || 3, g.items.length))) + ',minmax(0,1fr))">' +
           g.items.map((x) => (x._act ? actEl(s, x, 'row') : entEl(x, 'row'))).join('') + '</div>';
@@ -556,6 +559,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       ph._item = ci;
       lpMountCard(ph, ci.card, () => this._hass, lang, (el) => { if (ph.isConnected && this._embeds) this._embeds.push(el); });
     });
+    this._pets = []; R.querySelectorAll('[data-pet]').forEach((el) => this._pets.push(el));
     this._ents = []; R.querySelectorAll('[data-ent]').forEach((el) => { el._item = ents[+el.getAttribute('data-ei')]; this._ents.push(el); });
     this._vals = []; R.querySelectorAll('[data-val]').forEach((el) => { el._item = vals[+el.getAttribute('data-vi')]; el._bar = el.classList.contains('bar'); this._vals.push(el); });
     this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; el._bar = el.classList.contains('bar'); this._tiles.push(el); });
@@ -618,6 +622,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       const holdDef = () => { const hm = lpHoldMode(); if (!it._val && hm !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) LemurLightPopup.open(this._hass, id, it, LEC.roomOf(id) || tab.area); else more(id); };
       lpPress(b, () => this._act(it.tap, id, it._val ? 'more-info' : 'toggle'), it.hold ? () => this._act(it.hold, id) : holdDef);
     });
+    // besleme kartı: dokun "Besledim" (10 sn içinde yeniden dokununca geri alınır), basılı tut son beslemeler
+    this._pets.forEach((b) => lpPress(b, () => {
+      const id = b.getAttribute('data-pet'), now = Date.now();
+      if (!STORE.data || !(STORE.data.pets || {})[id]) return;
+      if (b._fedAt && now - b._fedAt < 10000) { b._fedAt = 0; b._pk = null; lpPetPaint(b, lang, now); STORE.feed(id, true); return; }
+      b._fedAt = now; b._pk = null; lpPetPaint(b, lang, now); STORE.feed(id, false);
+      setTimeout(() => { b._pk = null; lpPetPaint(b, this._lang, Date.now()); }, 10100);
+    }, () => lpPetHistory(this._hass, this._lang, b.getAttribute('data-pet'))));
     // gömülü kart (kart öğesi ya da Halo görünümü): öğede tap/hold verildiyse kartın üstüne şeffaf katman, kartın kendi tıklaması yerine o çalışır
     R.querySelectorAll('[data-hc],[data-emb]').forEach((ph) => {
       const it = ph._item; if (!it || (!it.tap && !it.hold)) return;
@@ -1022,6 +1034,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       el.setAttribute('data-p', '1');
       this._paintVal(el, st);
     });
+    (this._pets || []).forEach((el) => lpPetPaint(el, lang, Date.now()));
     (this._ents || []).forEach((el) => {
       const id = el.getAttribute('data-ent'), st = S[id];
       if (!st || (this._last[id] === st && el.getAttribute('data-p'))) return;

@@ -1,0 +1,11 @@
+feed:
+  fields:
+    pet:
+      required: true
+      example: "pamuk"
+      selector:
+        text:
+    undo:
+      default: false
+      selector:
+        boolean:

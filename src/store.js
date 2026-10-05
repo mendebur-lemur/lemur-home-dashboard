@@ -59,5 +59,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     }
     return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/season', season: value }) : Promise.resolve();
   },
+  // Besleme kartı: "Besledim" (ve geri al). Her kullanıcı yapabilir; sonuç abonelikle bütün ekranlara gelir.
+  feed(pet, undo) { return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/feed', pet: pet, undo: !!undo }) : Promise.resolve(); },
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });
