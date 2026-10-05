@@ -155,6 +155,12 @@ function lpOptToggle(h, id) {
   LP_OPT.pend[id] = { from: st, st: Object.assign({}, st, { state: on ? 'on' : 'off', attributes: a }), until: Date.now() + LP_OPT_MS };
   return true;
 }
+// yedek kontrol (twins.py): lambanın yedeği ve son 30 dakikada yedek yolun kullanıldığı zaman
+const lpTwinOf = (id) => { const T = STORE.data && STORE.data.twins; const r = T && T[id]; return r && typeof r.backup === 'string' ? r.backup : null; };
+function lpFbAt(id) {
+  const F = STORE.data && STORE.data.fallback, v = F && F[id]; if (!v) return null;
+  const ms = Date.parse(v); return ms && Date.now() - ms < 30 * 60000 ? ms : null;
+}
 // çizimde kullanılacak durum: cevap beklenirken beklenen durum, gelince (ya da süre dolunca) gerçeği
 function lpEff(S, id) {
   const p = LP_OPT.pend[id], r = S[id];
@@ -962,7 +968,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (fx === undefined) fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(st.entity_id)]) : null);
     const on = v > 0 || LP_ON.indexOf(st.state) >= 0, na = st.state === 'unavailable' || st.state === 'unknown';
     const rgb = a.rgb_color && a.rgb_color[0] + a.rgb_color[1] + a.rgb_color[2] >= 12 ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
-    el.className = 'bar' + (on && !na ? ' on' : '') + (na ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '') + (el._drag ? ' drag' : '');
+    el.className = 'bar' + (on && !na ? ' on' : '') + (na ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '') + (el._drag ? ' drag' : '') + (el._fb ? ' fbk' : '');
     el.style.setProperty('--bar-c', fx ? fx.c[0] : (d === 'light' && rgb ? rgb : LP_BAR_COLOR));
     el.style.setProperty('--p', (na ? 0 : v) + '%');
     if (on && !na && !fx && d === 'light' && rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
@@ -1064,7 +1070,14 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!a) return;
     if (typeof a === 'string') {
       if (a === 'more-info') { if (id) lpFire(this, 'hass-more-info', { entityId: id }); return; }
-      if (a === 'toggle') { if (id) { this._optTap(id); h.callService('homeassistant', 'toggle', { entity_id: id }); } return; }
+      if (a === 'toggle') {
+        if (!id) return;
+        this._optTap(id);
+        // yedek kontrolü olan lamba: entegrasyon önce hızlı yoldan dener, cevap gelmezse yedekten gönderir (twins.py)
+        if (lpTwinOf(id)) h.callService('lemur_home_dashboard', 'control', { entity_id: id, action: 'toggle' });
+        else h.callService('homeassistant', 'toggle', { entity_id: id });
+        return;
+      }
       return;
     }
     if (typeof a !== 'object') return;
@@ -1108,7 +1121,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const na = st.state === 'unavailable' || (!it._val && st.state === 'unknown');
     const two = !it._val || LP_VAL_ONOFF.indexOf(d) >= 0;
     const on = it._val ? two && LP_VAL_ON.indexOf(st.state) >= 0 : LP_ON.indexOf(st.state) >= 0;
-    el.className = (row ? 'vrow' : 'scene ebtn') + (on ? ' on' : '') + (!two && !na ? ' live' : '') + (na ? ' na' : '');
+    el.className = (row ? 'vrow' : 'scene ebtn') + (on ? ' on' : '') + (!two && !na ? ' live' : '') + (na ? ' na' : '') + (el._fb ? ' fbk' : '');
     const rgb = on && !it._val && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
     if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
     const mono = this._colorize(el, it, st, on);
@@ -1139,12 +1152,14 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._tiles || []).forEach((el) => {
       const id = el.getAttribute('data-light'), st = lpEff(S, id);
       lpOptRemember(S[id]);
+      const fb = lpFbAt(id);
+      if (el._fb !== fb) { el._fb = fb; delete this._last[id]; el.title = fb ? t(lang, 'fb', { t: new Date(fb).toLocaleTimeString(lang === 'tr' ? 'tr-TR' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) }) : ''; }
       if (!st || this._last[id] === st) return;
       const a = st.attributes, it = el._item || {}, on = LP_ON.indexOf(st.state) >= 0;
       // efekt: ışığın kendi efekti; yoksa LEC'in o odada oynattığı efekt (yanan ışıklarda)
       const fx = lpFx(st) || (st.state === 'on' ? lpFxByName(LEC.playing[LEC.roomOf(id)]) : null);
       if (el._bar) { if (!el._drag) this._paintBar(el, st, null, fx); return; }
-      el.className = 'tile' + (el._wide ? ' wide' : '') + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '');
+      el.className = 'tile' + (el._wide ? ' wide' : '') + (on ? ' on' : '') + (st.state === 'unavailable' || st.state === 'unknown' ? ' na' : '') + (fx ? ' fx fx-' + fx.k : '') + (el._fb ? ' fbk' : '');
       const rgb = on && !fx && a.rgb_color ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       if (rgb) el.style.setProperty('--tile-rgb', rgb); else el.style.removeProperty('--tile-rgb');
       const mono = this._colorize(el, it, st, on);
@@ -1175,6 +1190,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._ents || []).forEach((el) => {
       const id = el.getAttribute('data-ent'), st = lpEff(S, id);
       lpOptRemember(S[id]);
+      const fb = lpFbAt(id);
+      if (el._fb !== fb) { el._fb = fb; el.removeAttribute('data-p'); el.title = fb ? t(lang, 'fb', { t: new Date(fb).toLocaleTimeString(lang === 'tr' ? 'tr-TR' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) }) : ''; }
       if (!st || (this._last[id] === st && el.getAttribute('data-p'))) return;
       el.setAttribute('data-p', '1');
       this._paintEnt(el, st);

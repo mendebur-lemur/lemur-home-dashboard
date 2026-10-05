@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.13.0',
+    tr: ['Yedek kontrol (Gelişmiş): Home Assistant\'ta iki kez görünen lambaya (ör. Govee LAN ve Matter) ikinci kopyası yedek olarak seçilir. Komut önce hızlı yoldan gider; lamba birkaç saniye içinde cevap vermezse yedekten gönderilir, karonun köşesinde turuncu nokta çıkar.',
+      'Duvar anahtarları (Ayarlar → Gelişmiş): yalnız sinyal veren röle bir lambaya bağlanır; elle basınca lamba açılır/kapanır, açarken parlaklık ve kelvin verilebilir. Aynı anahtarı kullanan HA otomasyonu varsa uyarılır.',
+      'Yeni servis: lemur_home_dashboard.control (yedekli aç / kapa / tersine çevir).'],
+    en: ['Backup control (Advanced): a lamp that shows up twice in Home Assistant (e.g. Govee LAN and Matter) gets its second copy as a backup. The command goes the fast way first; if the lamp does not answer within a few seconds it is sent through the backup and an orange dot appears in the tile\'s corner.',
+      'Wall switches (Settings → Advanced): a relay that only gives a signal is bound to a lamp; pressing it toggles the lamp, with optional brightness and kelvin for turning on. You are warned if an HA automation uses the same switch.',
+      'New service: lemur_home_dashboard.control (on / off / toggle with backup).'] },
   { v: '0.12.4',
     tr: ['Yatay tutulan telefonda ve dikey tutulan tablette pano telefon düzenine geçer (yazılar artık küçülmüyor, karolar uzamıyor); karo sayısı ekran genişliğine göre artar.',
       'Telefonda medya satırları kutudan taşmıyor; yönetim paneli ve ayarlar dar ekrana sığıyor; ışık penceresinde beyaz ton düğmeleri dar telefonda iki satır.',

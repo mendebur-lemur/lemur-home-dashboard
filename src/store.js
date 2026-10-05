@@ -37,6 +37,11 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
       lhdHealCheck(this.conn);
       // kendi kaydımızın yankısı beklenirken gelen eski veri ekrandakini ezmesin
       this.conn.subscribeMessage((msg) => {
+        if (msg && msg.__fb) {   // bir lamba yedek yoldan kontrol edildi (src: twins.py)
+          if (!this.data) return;
+          this.data = Object.assign({}, this.data, { fallback: Object.assign({}, this.data.fallback, msg.__fb) });
+          const d = this.data; this.subs.forEach((f) => f(d)); return;
+        }
         if (msg && msg.__feed) {   // yalnız bir hayvanın besleme kaydı değişti
           if (!this.data) return;
           this.data = Object.assign({}, this.data, { feed: Object.assign({}, this.data.feed, msg.__feed) });

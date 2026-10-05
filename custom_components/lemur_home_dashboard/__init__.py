@@ -25,6 +25,7 @@ from datetime import timedelta
 
 from . import pets as P
 from . import safety as SF
+from . import twins as TW
 
 from .const import (
     DOMAIN,
@@ -45,7 +46,8 @@ _LOGGER = logging.getLogger(__name__)
 
 # Empty config means "build the default layout from the home's areas" (done in the browser, src/defaults.js).
 # pets / feed: feeding reminders (pets.py); older stored data simply has none
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}}
+# twins / walls: backup control and wall switches (twins.py)
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": []}
 PLATFORMS = ["sensor", "button"]
 
 
@@ -57,6 +59,12 @@ class PanelData:
         self.store: Store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
         self.data: dict[str, Any] = json.loads(json.dumps(DEFAULT_DATA))
         self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
+        self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
+
+    @callback
+    def _fallback_used(self, eid: str, when: str) -> None:
+        """A light was controlled through its backup twin: tell the screens (not saved)."""
+        async_dispatcher_send(self.hass, SIGNAL_UPDATE, {"__fb": {eid: when}})
 
     async def async_load(self) -> None:
         stored = await self.store.async_load()
@@ -231,6 +239,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.info("Pet %s was fed less than a minute ago; feeding not repeated", pid)
 
     hass.services.async_register(DOMAIN, "feed", _svc_feed, schema=vol.Schema({vol.Required("pet"): str, vol.Optional("undo", default=False): bool}))
+
+    async def _svc_control(call) -> None:
+        d = _data(hass)
+        if d is None:
+            return
+        extra = {k: call.data[k] for k in ("brightness_pct", "color_temp_kelvin") if k in call.data}
+        for eid in call.data["entity_id"]:
+            await d.twins.control(eid, call.data["action"], extra, call.context)
+
+    hass.services.async_register(DOMAIN, "control", _svc_control, schema=vol.Schema({
+        vol.Required("entity_id"): vol.All(vol.Any(str, [str]), lambda v: [v] if isinstance(v, str) else v),
+        vol.Optional("action", default="toggle"): vol.In(["toggle", "turn_on", "turn_off"]),
+        vol.Optional("brightness_pct"): vol.All(vol.Coerce(int), vol.Range(min=1, max=100)),
+        vol.Optional("color_temp_kelvin"): vol.All(vol.Coerce(int), vol.Range(min=1500, max=9000)),
+    }))
+    data.twins.listen()
     entry.async_on_unload(async_track_time_interval(hass, data.async_tick, timedelta(minutes=1)))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     if PANEL_URL not in hass.data.get("frontend_panels", {}):
@@ -251,6 +275,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     hass.services.async_remove(DOMAIN, "feed")
+    hass.services.async_remove(DOMAIN, "control")
+    d = _data(hass)
+    if d is not None:
+        d.twins.stop()
     hass.data.pop(DOMAIN, None)
     async_remove_panel(hass, PANEL_URL)
     return True
@@ -267,7 +295,9 @@ def ws_get(hass, connection, msg):
     if data is None:
         connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
         return
-    connection.send_result(msg["id"], _for_user(connection, data.data))
+    out = _for_user(connection, data.data)
+    out = dict(out, fallback=dict(data.twins.fallback))   # last backup use per light (in memory)
+    connection.send_result(msg["id"], out)
 
 
 def _for_user(connection, payload: dict) -> dict:
@@ -281,7 +311,7 @@ def _for_user(connection, payload: dict) -> dict:
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/set",
-        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets"]),
+        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls"]),
         vol.Required("value"): vol.Any(list, dict),
     }
 )
@@ -306,7 +336,15 @@ def ws_set(hass, connection, msg):
             return
     elif key == "tabs":
         value = SF.clean_tabs(value)
+    elif key in ("twins", "walls"):
+        try:
+            value = (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)
+        except vol.Invalid as err:
+            connection.send_error(msg["id"], "invalid", f"{key}: {err}")
+            return
     data.data[key] = value
+    if key == "walls":
+        data.twins.listen()
     if key == "pets":
         data.refresh_all()
         async_dispatcher_send(hass, SIGNAL_PETS)
@@ -360,7 +398,7 @@ def ws_season(hass, connection, msg):
 def ws_subscribe(hass, connection, msg):
     @callback
     def _forward(payload):
-        connection.send_message(websocket_api.event_message(msg["id"], payload if "__feed" in payload else _for_user(connection, payload)))
+        connection.send_message(websocket_api.event_message(msg["id"], payload if ("__feed" in payload or "__fb" in payload) else _for_user(connection, payload)))
 
     connection.subscriptions[msg["id"]] = async_dispatcher_connect(hass, SIGNAL_UPDATE, _forward)
     connection.send_result(msg["id"])

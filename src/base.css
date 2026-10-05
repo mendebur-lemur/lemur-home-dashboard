@@ -340,3 +340,7 @@
 .scene .s2w .ss { display: block; font-style: normal; font-size: 13.5px; color: var(--lp-text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .phone .tile .sl { font-size: 10.5px; line-height: 13px; }
 .si .lic.haic { flex: 0 0 auto; }
+
+/* yedek kontrol kullanıldı (son 30 dk): köşede turuncu nokta */
+.tile.fbk, .scene.fbk { position: relative; }
+.tile.fbk::after, .bar.fbk::after, .scene.fbk::after { content: ''; position: absolute; top: 8px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #F0A93B; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35); pointer-events: none; }

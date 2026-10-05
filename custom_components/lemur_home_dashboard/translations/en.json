@@ -37,6 +37,28 @@
           "description": "Take back the last feeding"
         }
       }
+    },
+    "control": {
+      "name": "Control with backup",
+      "description": "Turns a light on, off or toggles it. If the light has a backup twin set in the admin panel and does not answer in a few seconds, the same command is sent to the twin.",
+      "fields": {
+        "entity_id": {
+          "name": "Light",
+          "description": "Lights or switches"
+        },
+        "action": {
+          "name": "Action",
+          "description": "toggle, turn_on or turn_off"
+        },
+        "brightness_pct": {
+          "name": "Brightness",
+          "description": "When turning on"
+        },
+        "color_temp_kelvin": {
+          "name": "Colour temperature",
+          "description": "When turning on"
+        }
+      }
     }
   }
 }

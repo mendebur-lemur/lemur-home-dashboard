@@ -9,3 +9,36 @@ feed:
       default: false
       selector:
         boolean:
+control:
+  fields:
+    entity_id:
+      required: true
+      example: "light.alt_kat_wc_tavan_govee"
+      selector:
+        entity:
+          multiple: true
+          domain:
+            - light
+            - switch
+            - fan
+            - input_boolean
+    action:
+      default: toggle
+      selector:
+        select:
+          options:
+            - toggle
+            - turn_on
+            - turn_off
+    brightness_pct:
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+    color_temp_kelvin:
+      selector:
+        number:
+          min: 2000
+          max: 9000
+          unit_of_measurement: K

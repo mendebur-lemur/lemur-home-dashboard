@@ -1,6 +1,24 @@
 // Yönetim panelindeki ? yardım pencereleri: [başlık, paragraflar...]. **kalın** yazılabilir. tr ve en.
 // Her biri: ne işe yarar, nasıl ayarlanır, bir örnek.
 const LHD_HELP = {
+  twin: {
+    tr: ['Yedek kontrol', 'Bazı lambalar Home Assistant\'ta iki kez görünür: örneğin bir Govee lamba hem govee2mqtt (LAN, hızlı) hem Matter (yavaş ama güvenilir) ile. Buraya lambanın ikinci kopyası seçilir.',
+      'Dokununca komut her zaman bu öğenin kendisinden (hızlı yoldan) gider. Lambanın açık mı kapalı mı olduğu iki kopyadan hangisi en son değiştiyse ondan okunur; biri takılı kalırsa öbürü düzeltir.',
+      'Lamba birkaç saniye içinde cevap vermezse aynı komut yedekten gönderilir ve karonun köşesinde turuncu bir nokta çıkar (30 dakika kalır). Normalde gecikme değişmez.',
+      'Örnek: Alt Kat WC Tavan (govee2mqtt) öğesine yedek olarak "Alt Kat WC Tavan (Matter)" seç. Wi-Fi gidip geldiğinde govee2mqtt takılsa bile lamba açılıp kapanır.'],
+    en: ['Backup control', 'Some lamps show up twice in Home Assistant: for example a Govee lamp through govee2mqtt (LAN, fast) and Matter (slower but reliable). Pick the lamp\'s second copy here.',
+      'A tap always sends the command through this item first (the fast path). Whether the lamp is on is read from whichever copy changed last, so a stuck one is corrected by the other.',
+      'If the lamp does not answer within a few seconds, the same command is sent through the backup and an orange dot appears in the tile\'s corner (for 30 minutes). Normally nothing gets slower.',
+      'Example: give the Downstairs WC Ceiling (govee2mqtt) item the backup "Downstairs WC Ceiling (Matter)". Even if govee2mqtt gets stuck after a Wi-Fi drop, the lamp still turns on and off.'] },
+  walls: {
+    tr: ['Duvar anahtarları', 'Duvardaki anahtarın arkasındaki röle (Sonoff, ESPHome...) lambanın elektriğini kesmiyor, yalnız sinyal veriyorsa buradan bir lambaya bağlanır.',
+      'Anahtara elle basınca lamba açılır ya da kapanır; yedek kontrolü olan lambada yedek yol da kullanılır. Home Assistant\'tan ya da bir otomasyondan rölenin değişmesi yok sayılır.',
+      'Açarken parlaklık ve renk sıcaklığı verilebilir (boş bırakılırsa lamba son ayarıyla açılır).',
+      'Aynı anahtar için Home Assistant\'ta ayrıca bir otomasyon varsa onu kapat; yoksa her basışta iki kez çalışır.'],
+    en: ['Wall switches', 'If the relay behind a wall switch (Sonoff, ESPHome...) does not cut the lamp\'s power but only gives a signal, bind it to a lamp here.',
+      'Pressing the switch by hand turns the lamp on or off; a lamp with backup control also uses the backup path. Relay changes made by Home Assistant or an automation are ignored.',
+      'Brightness and colour temperature can be set for turning on (left empty, the lamp turns on with its last setting).',
+      'If Home Assistant also has an automation for the same switch, turn it off; otherwise each press runs twice.'] },
   mode: {
     tr: ['Basit ve Gelişmiş mod', 'Basit modda yalnız temel ayarlar görünür: sekme, bölüm, cihaz ekleme, ad, simge, görünüm ve dokununca ne olacağı.',
       'Gelişmiş modda boyutlar, renkler, koşullu görünürlük, özel eylemler, kartlar ve bölüm yerleşimi de açılır.',

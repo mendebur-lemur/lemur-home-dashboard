@@ -307,3 +307,10 @@ label.btn { cursor: pointer; }
   .df { flex-wrap: wrap; }
   .srow .seg { flex-wrap: wrap; max-width: 100%; }
 }
+
+/* duvar anahtarları (Ayarlar → Gelişmiş): anahtar ve lamba geniş, parlaklık / kelvin / kaldır alt satırda */
+.wallrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; width: 100%; padding: 10px 0; border-top: 1px solid var(--ln); align-items: end; }
+.wallrow .fld { margin: 0; min-width: 0; }
+.wallrow select.inp, .wallrow input.inp { width: 100%; box-sizing: border-box; }
+.wallrow .btn.dan { justify-self: start; }
+.wallrow .wallw { grid-column: 1 / -1; color: var(--ac); }

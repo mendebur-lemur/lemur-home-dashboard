@@ -18,7 +18,7 @@ const ADM = {
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_phone: 'Telefon', scr_here: 'Bu ekran',
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
-    sHelp: 'Yardım', repT: 'Sorun bildir', repS: 'Sürüm ve cihaz bilgisiyle GitHub\'da kayıt açar; ne olduğunu yazman yeter', repQ: 'Ne oldu?', repPh: 'Ne yaptın, ne bekliyordun, ne oldu? Örnek: Salon sekmesinde ışık çubuğunu kaydırınca parlaklık değişmiyor.', repInfo: 'Kayda eklenecek bilgiler', repInfoS: 'Kişisel bilgi yok: oda, cihaz ve kişi adları, adresin ya da hesabın eklenmez.', repNoGh: 'GitHub hesabın yoksa metni kopyalayıp geliştiriciye ilet.', repCopy: 'Metni kopyala', repCopied: 'Kopyalandı', repGh: 'GitHub\'da aç', rWhat: 'Ne oldu?', rInfoH: 'Bilgiler', rPanel: 'Pano', rInt: 'entegrasyon', rHa: 'Home Assistant', rBrowser: 'Tarayıcı', rApp: 'HA uygulaması', rScreen: 'Ekran', rTouch: 'dokunmatik', rNoTouch: 'dokunmatik değil', rCanvas: 'kanvas', rLang: 'Dil', rLayout: 'Düzen', rAuto: 'otomatik', rTabs: 'sekme', rSecs: 'bölüm', rItems: 'öğe', rKinds: 'Öğe türleri', rLook: 'Görünüm', rLec: 'Light Effect Card', rErr: 'Son hatalar', rNoErr: 'yok', sBackup: 'Yedek', bkDown: 'Yedeği indir', bkDownS: 'Sekmeler, bölümler ve ayarlar tek dosyada', bkUp: 'Yedekten geri yükle', bkUpS: 'Bir yedek dosyası seç; önce onay sorulur, şu anki düzenin yerine geçer', bkQ: 'Yedek geri yüklensin mi?', bkW: '{d} tarihli yedek (v{v}): {n} sekme, {s} bölüm. Şu anki sekmeler, bölümler ve ayarlar bu yedekle değiştirilir. Geri al ile dönebilirsin.', bkVer: 'Yedek v{v} ile alınmış; yine de yüklenebilir.', bkSvc: 'Bu yedekteki hayvanlar şu servisleri kendiliğinden çalıştırır:', bkYes: 'Geri yükle', bkSaved: 'Yedek indirildi', bkOk: 'Yedek geri yüklendi', bkErr: 'Bu dosya bir pano yedeği değil', newsT: 'Yenilikler', newsV: 'v{v} ile gelenler', newsOld: 'Önceki sürümler', newsAll: 'Bütün notlar GitHub\'da', newsOk: 'Tamam', newsLink: 'Yenilikler', sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
+    sHelp: 'Yardım', repT: 'Sorun bildir', repS: 'Sürüm ve cihaz bilgisiyle GitHub\'da kayıt açar; ne olduğunu yazman yeter', repQ: 'Ne oldu?', repPh: 'Ne yaptın, ne bekliyordun, ne oldu? Örnek: Salon sekmesinde ışık çubuğunu kaydırınca parlaklık değişmiyor.', repInfo: 'Kayda eklenecek bilgiler', repInfoS: 'Kişisel bilgi yok: oda, cihaz ve kişi adları, adresin ya da hesabın eklenmez.', repNoGh: 'GitHub hesabın yoksa metni kopyalayıp geliştiriciye ilet.', repCopy: 'Metni kopyala', repCopied: 'Kopyalandı', repGh: 'GitHub\'da aç', rWhat: 'Ne oldu?', rInfoH: 'Bilgiler', rPanel: 'Pano', rInt: 'entegrasyon', rHa: 'Home Assistant', rBrowser: 'Tarayıcı', rApp: 'HA uygulaması', rScreen: 'Ekran', rTouch: 'dokunmatik', rNoTouch: 'dokunmatik değil', rCanvas: 'kanvas', rLang: 'Dil', rLayout: 'Düzen', rAuto: 'otomatik', rTabs: 'sekme', rSecs: 'bölüm', rItems: 'öğe', rKinds: 'Öğe türleri', rLook: 'Görünüm', rLec: 'Light Effect Card', rErr: 'Son hatalar', rNoErr: 'yok', sBackup: 'Yedek', bkDown: 'Yedeği indir', bkDownS: 'Sekmeler, bölümler ve ayarlar tek dosyada', bkUp: 'Yedekten geri yükle', bkUpS: 'Bir yedek dosyası seç; önce onay sorulur, şu anki düzenin yerine geçer', bkQ: 'Yedek geri yüklensin mi?', bkW: '{d} tarihli yedek (v{v}): {n} sekme, {s} bölüm. Şu anki sekmeler, bölümler ve ayarlar bu yedekle değiştirilir. Geri al ile dönebilirsin.', bkVer: 'Yedek v{v} ile alınmış; yine de yüklenebilir.', bkSvc: 'Bu yedekteki hayvanlar şu servisleri kendiliğinden çalıştırır:', twinL: 'Yedek kontrol', twinNone: 'Yok', twinT: 'Lamba cevap vermezse komut buradan da gönderilir', sWalls: 'Duvar anahtarları', wallsT: 'Röle yalnız sinyal veriyorsa elle basınca seçilen lamba açılır/kapanır', wallSw: 'Anahtar', wallLight: 'Lamba', wallBr: 'Parlaklık %', wallK: 'Kelvin', wallAdd: 'Anahtar ekle', wallDel: 'Kaldır', wallPick: 'Seç…', wallNone: 'Henüz duvar anahtarı yok.', wallAuto: 'Bu anahtar için HA\'da ayrıca bir otomasyon varsa kapat: {n}', bkYes: 'Geri yükle', bkSaved: 'Yedek indirildi', bkOk: 'Yedek geri yüklendi', bkErr: 'Bu dosya bir pano yedeği değil', newsT: 'Yenilikler', newsV: 'v{v} ile gelenler', newsOld: 'Önceki sürümler', newsAll: 'Bütün notlar GitHub\'da', newsOk: 'Tamam', newsLink: 'Yenilikler', sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
     bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt: Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
@@ -60,7 +60,7 @@ const ADM = {
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
     scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_phone: 'Phone', scr_here: 'This screen',
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
-    sHelp: 'Help', repT: 'Report a problem', repS: 'Opens a GitHub issue with the version and device details; you only write what happened', repQ: 'What happened?', repPh: 'What did you do, what did you expect, what happened? Example: swiping a light bar on the Living room tab does not change the brightness.', repInfo: 'Details added to the issue', repInfoS: 'Nothing personal: no room, device or person names, address or account.', repNoGh: 'No GitHub account? Copy the text and send it to the developer.', repCopy: 'Copy text', repCopied: 'Copied', repGh: 'Open on GitHub', rWhat: 'What happened?', rInfoH: 'Details', rPanel: 'Dashboard', rInt: 'integration', rHa: 'Home Assistant', rBrowser: 'Browser', rApp: 'HA app', rScreen: 'Screen', rTouch: 'touch', rNoTouch: 'no touch', rCanvas: 'canvas', rLang: 'Language', rLayout: 'Layout', rAuto: 'automatic', rTabs: 'tabs', rSecs: 'sections', rItems: 'items', rKinds: 'Item kinds', rLook: 'Look', rLec: 'Light Effect Card', rErr: 'Recent errors', rNoErr: 'none', sBackup: 'Backup', bkDown: 'Download backup', bkDownS: 'Tabs, sections and settings in one file', bkUp: 'Restore a backup', bkUpS: 'Pick a backup file; you are asked first, then it replaces the current layout', bkQ: 'Restore this backup?', bkW: 'Backup from {d} (v{v}): {n} tabs, {s} sections. The current tabs, sections and settings are replaced by it. Undo brings them back.', bkVer: 'The backup was made with v{v}; it can still be restored.', bkSvc: 'The pets in this backup run these services on their own:', bkYes: 'Restore', bkSaved: 'Backup downloaded', bkOk: 'Backup restored', bkErr: 'This file is not a dashboard backup', newsT: 'What\'s new', newsV: 'New in v{v}', newsOld: 'Earlier versions', newsAll: 'All notes on GitHub', newsOk: 'OK', newsLink: 'What\'s new', sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
+    sHelp: 'Help', repT: 'Report a problem', repS: 'Opens a GitHub issue with the version and device details; you only write what happened', repQ: 'What happened?', repPh: 'What did you do, what did you expect, what happened? Example: swiping a light bar on the Living room tab does not change the brightness.', repInfo: 'Details added to the issue', repInfoS: 'Nothing personal: no room, device or person names, address or account.', repNoGh: 'No GitHub account? Copy the text and send it to the developer.', repCopy: 'Copy text', repCopied: 'Copied', repGh: 'Open on GitHub', rWhat: 'What happened?', rInfoH: 'Details', rPanel: 'Dashboard', rInt: 'integration', rHa: 'Home Assistant', rBrowser: 'Browser', rApp: 'HA app', rScreen: 'Screen', rTouch: 'touch', rNoTouch: 'no touch', rCanvas: 'canvas', rLang: 'Language', rLayout: 'Layout', rAuto: 'automatic', rTabs: 'tabs', rSecs: 'sections', rItems: 'items', rKinds: 'Item kinds', rLook: 'Look', rLec: 'Light Effect Card', rErr: 'Recent errors', rNoErr: 'none', sBackup: 'Backup', bkDown: 'Download backup', bkDownS: 'Tabs, sections and settings in one file', bkUp: 'Restore a backup', bkUpS: 'Pick a backup file; you are asked first, then it replaces the current layout', bkQ: 'Restore this backup?', bkW: 'Backup from {d} (v{v}): {n} tabs, {s} sections. The current tabs, sections and settings are replaced by it. Undo brings them back.', bkVer: 'The backup was made with v{v}; it can still be restored.', bkSvc: 'The pets in this backup run these services on their own:', twinL: 'Backup control', twinNone: 'None', twinT: 'If the lamp does not answer, the command is also sent through this', sWalls: 'Wall switches', wallsT: 'If the relay only gives a signal, pressing it by hand toggles the chosen lamp', wallSw: 'Switch', wallLight: 'Lamp', wallBr: 'Brightness %', wallK: 'Kelvin', wallAdd: 'Add switch', wallDel: 'Remove', wallPick: 'Pick…', wallNone: 'No wall switches yet.', wallAuto: 'If HA also has an automation for this switch, turn it off: {n}', bkYes: 'Restore', bkSaved: 'Backup downloaded', bkOk: 'Backup restored', bkErr: 'This file is not a dashboard backup', newsT: 'What\'s new', newsV: 'New in v{v}', newsOld: 'Earlier versions', newsAll: 'All notes on GitHub', newsOk: 'OK', newsLink: 'What\'s new', sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
     bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect: a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
@@ -191,6 +191,11 @@ function lhdFitSplits(T, cw) {
 }
 let lhdSeq = 0;
 const lhdId = (p) => p + Date.now().toString(36) + (lhdSeq++).toString(36);
+// yedek kontrol ve duvar anahtarı için izinli alanlar (custom_components/.../twins.py ile aynı)
+const LHD_TWIN_DOMAINS = ['light', 'switch', 'fan', 'input_boolean'];
+const LHD_WALL_DOMAINS = ['switch', 'input_boolean', 'binary_sensor', 'light'];
+// lambanın adından "govee", "matter", parantez içi gibi ekleri at: iki kopyayı eşleştirmek için
+const lhdTwinKey = (s) => String(s || '').toLocaleLowerCase('tr').replace(/\([^)]*\)/g, ' ').replace(/\b(govee|matter|mqtt|lan|zigbee|wifi|wi-fi|esp|light|lamba|ışık)\b/g, ' ').replace(/[^a-z0-9çğıöşü]+/g, ' ').trim();
 const LHD_REPO_URL = /^https:\/\/github\.com\/mendebur-lemur\/lemur-home-dashboard(\/[^\s"'<>]*)?$/;
 const lhdSlug = (x) => String(x || '').replace(/İ/g, 'i').toLowerCase().replace(/[çćč]/g, 'c').replace(/ğ/g, 'g').replace(/[ıîí]/g, 'i').replace(/[öô]/g, 'o').replace(/ş/g, 's').replace(/[üû]/g, 'u')
   .replace(/[âáà]/g, 'a').replace(/[éè]/g, 'e').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
@@ -443,6 +448,56 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return '<div class="srow upd" style="flex-wrap:wrap"><div class="t"><b>' + t('updT') + '</b><span>' + sub + '</span></div><div class="ubtn">' + ctl + '</div></div>';
   }
   _updSet(o) { this._upd = Object.assign({}, this._upd, o); if (this._modal === 'settings') this._render(); }
+  // yedek kontrol adayları: aynı alanda, adı aynı (govee / matter / parantez içi ekler hariç) başka bir lamba ya da anahtar
+  _twinCands(eid) {
+    const H = this._hass, E = H.entities || {}, D = H.devices || {}, S = H.states;
+    const area = (id) => { const e = E[id]; if (!e) return null; return e.area_id || (e.device_id && D[e.device_id] ? D[e.device_id].area_id : null); };
+    const me = E[eid] || {}, myArea = area(eid), myKey = lhdTwinKey(this._ename(eid));
+    return Object.keys(S).filter((x) => {
+      if (x === eid || LHD_TWIN_DOMAINS.indexOf(x.split('.')[0]) < 0) return false;
+      const e = E[x]; if (e && e.entity_category) return false;   // gizli olabilir: yedek kopya genelde gizlenir
+      if (/_segment_?\d+$/.test(x)) return false;                       // aynı lambanın segmentleri değil
+      if (me.device_id && e && e.device_id === me.device_id) return false;   // ikinci kopya başka bir entegrasyondan gelir
+      if (!myKey || lhdTwinKey(this._ename(x)) !== myKey) return false;
+      const ax = area(x); return !myArea || !ax || ax === myArea;   // alanı olmayan kopya da olur (Matter cihazına çoğu zaman alan verilmez)
+    }).sort();
+  }
+  // ---- duvar anahtarları (Ayarlar, gelişmiş) ----
+  _walls() { return lhdClone(this._wallDraft || (STORE.data && STORE.data.walls) || []); }
+  _wallsHtml() {
+    const t = (k, v) => esc(this._t(k, v)), W = this._walls(), S = this._hass.states;
+    const ents = (doms) => Object.keys(S).filter((x) => doms.indexOf(x.split('.')[0]) >= 0).sort();
+    const sel = (i, key, list, cur) => '<select class="inp" data-wl="' + i + ':' + key + '"><option value="">' + t('wallPick') + '</option>' + list.map((x) => '<option value="' + esc(x) + '"' + (cur === x ? ' selected' : '') + '>' + esc(this._ename(x)) + '</option>').join('') + '</select>';
+    // aynı anahtarı kullanan açık otomasyonlar (HA'nın "ilgili öğeler" araması; bir kez sorulur)
+    const C = this._wallAutos || (this._wallAutos = {});
+    const autos = (sw) => {
+      if (!C[sw]) { C[sw] = []; this._hass.callWS({ type: 'search/related', item_type: 'entity', item_id: sw }).then((r) => { C[sw] = (r && r.automation) || []; if (C[sw].length && this._modal === 'settings') this._render(); }).catch(() => {}); }
+      return C[sw].filter((x) => S[x] && S[x].state === 'on');
+    };
+    const sws = ents(LHD_WALL_DOMAINS), lights = ents(LHD_TWIN_DOMAINS);
+    let h = '<div class="sh">' + t('sWalls') + this._hb('walls') + '</div><div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><span>' + t('wallsT') + '</span></div>';
+    if (!W.length) h += '<div class="mu" style="flex:1 1 100%">' + t('wallNone') + '</div>';
+    W.forEach((w, i) => {
+      h += '<div class="wallrow">' +
+        '<div class="fld"><label>' + t('wallSw') + '</label>' + sel(i, 'switch', sws, w.switch) + '</div>' +
+        '<div class="fld"><label>' + t('wallLight') + '</label>' + sel(i, 'light', lights, w.light) + '</div>' +
+        '<div class="fld"><label>' + t('wallBr') + '</label><input class="inp" type="number" min="1" max="100" data-wl="' + i + ':brightness" value="' + esc(w.brightness || '') + '" placeholder="—"></div>' +
+        '<div class="fld"><label>' + t('wallK') + '</label><input class="inp" type="number" min="2000" max="9000" step="100" data-wl="' + i + ':kelvin" value="' + esc(w.kelvin || '') + '" placeholder="—"></div>' +
+        '<button class="btn sm dan" data-wldel="' + i + '">' + t('wallDel') + '</button>' +
+        (w.switch && autos(w.switch).length ? '<div class="hint wallw">' + t('wallAuto', { n: autos(w.switch).map((x) => (S[x].attributes.friendly_name || x)).join(', ') }) + '</div>' : '') + '</div>';
+    });
+    return h + '<button class="btn sm" data-wladd><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('wallAdd') + '</button></div>';
+  }
+  _wallSet(i, key, v) {
+    const W = this._walls(); if (!W[i]) return;
+    if (key === 'brightness' || key === 'kelvin') { const n = parseFloat(v); if (n > 0) W[i][key] = Math.round(n); else delete W[i][key]; }
+    else if (v) W[i][key] = v; else delete W[i][key];
+    // yarım satır (anahtar ya da lamba seçilmemiş) sunucuya gitmez; bitince kaydedilir
+    this._wallDraft = W;
+    const ok = W.filter((w) => w.switch && w.light);
+    if (ok.length === W.length) { this._wallDraft = null; this._commit('walls', W); }
+    this._render();
+  }
   _updEnt() {
     // yalnız HACS'in oluşturduğu güncelleme varlığı (başka bir entegrasyon aynı adresi taklit edemesin)
     const S = this._hass.states, E = this._hass.entities || {};
@@ -777,6 +832,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         (lec ? '<div class="srow"><div class="t"><b>' + t('lecNav') + '</b><span>' + t('lecNavT') + '</span></div>' + tg('lec_nav', s.lec_nav !== false) + '</div>' : '') +
         '<div class="srow"><div class="t"><b>' + t('hold') + '</b><span>' + t('holdT') + '</span></div>' + seg('hold', lpHoldMode() === 'lec' && !lec ? 'popup' : lpHoldMode(), [['popup', this._t('hPop')], ['ha', this._t('hHa')]].concat(lec ? [['lec', this._t('hLec')]] : [])) + '</div>' +
+        (this._adv() ? this._wallsHtml() : '') +
         '<div class="sh">' + t('sHelp') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('repT') + '</b><span>' + t('repS') + '</span></div><button class="btn" data-a="report">' + t('repT') + '</button></div>' +
         '<div class="sh">' + t('sBackup') + '</div>' +
@@ -1213,6 +1269,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (g('[data-newsall]')) { this._newsAll = true; return this._render(); }
       if (g('[data-newsclose]')) return this._newsClose();
       if (g('[data-updcheck]')) return this._updCheck();
+      if (g('[data-wladd]')) { const W = this._walls(); W.push({}); this._wallDraft = W; return this._render(); }
+      if (g('[data-wldel]')) { const W = this._walls(); W.splice(+g('[data-wldel]').getAttribute('data-wldel'), 1); this._wallDraft = null; const ok = W.filter((w) => w.switch && w.light); this._commit('walls', ok); return this._render(); }
       if (g('[data-updgo]')) return this._updInstall();
       if (g('[data-updrs]')) return this._updSet({ st: 'ask' });
       if (g('[data-updno]')) return this._updSet({ st: 'installed' });
@@ -1251,6 +1309,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('change', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT' || (el.type === 'color' && /^(color|color_on|bg)$/.test(el.getAttribute('data-imf')))) this._render(); } return; }
+      if (el.hasAttribute && el.hasAttribute('data-wl')) { const p = el.getAttribute('data-wl').split(':'); this._wallSet(+p[0], p[1], el.value); return; }
       if (el.hasAttribute && el.hasAttribute('data-bkfile')) { const f = el.files && el.files[0]; el.value = ''; if (f) this._backupRead(f); return; }
       const soft = el.tagName === 'INPUT';
       const f = el.getAttribute && el.getAttribute('data-f');
@@ -1366,6 +1425,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '', size: it.size || '', icon_size: it.icon_size || '', text_size: it.text_size || '',
       look: it.look || '', color: it.color || '', color_on: it.color_on || '', bg: it.bg || '', height: it.height ? String(it.height) : '', subtitle: it.subtitle || '',
       swap: !!it.swap, cfm: !!it.confirm, cfmText: typeof it.confirm === 'string' ? it.confirm : '' };
+    const tw = it.entity && STORE.data && STORE.data.twins && STORE.data.twins[it.entity];
+    f.twin = (tw && tw.backup) || '';
     const s2 = it.secondary || '';
     f.secK = !s2 ? '' : s2 === 'state' || s2 === 'last_changed' ? s2 : s2.indexOf('attr:') === 0 ? 'attr' : 'tpl';
     f.secAttr = f.secK === 'attr' ? s2.slice(5) : ''; f.secTpl = f.secK === 'tpl' ? s2 : '';
@@ -1466,6 +1527,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (adv && (inGrid || k === 'scene' || L0 === 'button' || L0 === 'row' || L0 === 'halo')) {
         const so = [['', this._t('sz_auto')], ['s', this._t('sz_s')], ['m', this._t('sz_m')], ['l', this._t('sz_l')]];
         body += fld(t('icSizeL'), sg('icon_size', so)) + fld(t('txSizeL'), sg('text_size', so));
+      }
+      // yedek kontrol: lambanın ikinci kopyası (ör. Matter); yalnız gelişmiş modda ve ikinci kopya bulunursa
+      if (adv && it.entity && LHD_TWIN_DOMAINS.indexOf(d) >= 0) {
+        const cands = this._twinCands(it.entity);
+        if (f.twin && cands.indexOf(f.twin) < 0) cands.unshift(f.twin);
+        if (cands.length) body += fld(t('twinL') + hb('twin'), '<select class="inp" data-imf="twin"><option value="">' + t('twinNone') + '</option>' +
+          cands.map((x) => '<option value="' + esc(x) + '"' + (f.twin === x ? ' selected' : '') + '>' + esc(this._ename(x)) + ' (' + esc(x) + ')</option>').join('') + '</select><div class="hint">' + t('twinT') + '</div>');
       }
       // renkler: simge rengi, açıkken renk, arka plan; sayısal değerde değere göre renk
       if (adv && (k === 'tile' || k === 'value') && it.entity) {
@@ -1609,6 +1677,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         it.visible = v;
       } else delete it.visible;
     } catch (e) { M.err = e.message; this._render(); return; }
+    // yedek kontrol bütün ev için tutulur (öğeye değil lambaya bağlı)
+    if (it.entity && LHD_TWIN_DOMAINS.indexOf(it.entity.split('.')[0]) >= 0) {
+      const T = lhdClone((STORE.data && STORE.data.twins) || {}), cur = (T[it.entity] && T[it.entity].backup) || '';
+      if ((f.twin || '') !== cur) { if (f.twin) T[it.entity] = { backup: f.twin }; else delete T[it.entity]; this._commit('twins', T); }
+    }
     if (it.entity && Object.keys(it).length === 1) it = it.entity;   // sade kalsın
     this._modal = null; this._im = null;
     this._edit((T) => {

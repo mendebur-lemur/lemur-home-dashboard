@@ -37,6 +37,28 @@
           "description": "Son beslemeyi geri al"
         }
       }
+    },
+    "control": {
+      "name": "Yedekli kontrol",
+      "description": "Işığı açar, kapatır ya da tersine çevirir. Yönetim panelinde yedeği seçilmiş ışık birkaç saniye içinde cevap vermezse aynı komut yedeğe gönderilir.",
+      "fields": {
+        "entity_id": {
+          "name": "Işık",
+          "description": "Işıklar ya da anahtarlar"
+        },
+        "action": {
+          "name": "Eylem",
+          "description": "toggle, turn_on ya da turn_off"
+        },
+        "brightness_pct": {
+          "name": "Parlaklık",
+          "description": "Açarken"
+        },
+        "color_temp_kelvin": {
+          "name": "Renk sıcaklığı",
+          "description": "Açarken"
+        }
+      }
     }
   }
 }
