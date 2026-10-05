@@ -24,6 +24,7 @@ from homeassistant.util import dt as dt_util
 from datetime import timedelta
 
 from . import pets as P
+from . import safety as SF
 
 from .const import (
     DOMAIN,
@@ -55,6 +56,7 @@ class PanelData:
         self.hass = hass
         self.store: Store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
         self.data: dict[str, Any] = json.loads(json.dumps(DEFAULT_DATA))
+        self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
 
     async def async_load(self) -> None:
         stored = await self.store.async_load()
@@ -71,17 +73,23 @@ class PanelData:
 
     # ---- feeding reminders ----
     def pets(self) -> dict:
-        return self.data.get("pets") or {}
+        """Only well-formed pets (a broken stored record must not stop the minute tick)."""
+        pets = self.data.get("pets")
+        if not isinstance(pets, dict):
+            return {}
+        return {pid: pet for pid, pet in pets.items() if isinstance(pid, str) and isinstance(pet, dict)}
 
     def rec(self, pid: str) -> dict:
-        return (self.data.get("feed") or {}).get(pid) or {}
+        feed = self.data.get("feed")
+        rec = feed.get(pid) if isinstance(feed, dict) else None
+        return rec if isinstance(rec, dict) else {}
 
     def status(self, pid: str) -> str:
         return P.status(self.pets().get(pid) or {}, self.rec(pid), dt_util.now())
 
     @callback
     def set_rec(self, pid: str, rec: dict) -> None:
-        feed = dict(self.data.get("feed") or {})
+        feed = dict(self.data.get("feed") if isinstance(self.data.get("feed"), dict) else {})
         feed[pid] = rec
         self.data["feed"] = feed
 
@@ -90,7 +98,10 @@ class PanelData:
         """After the pets changed: recompute the next feeding of every pet."""
         now = dt_util.now()
         for pid, pet in self.pets().items():
-            self.set_rec(pid, P.refresh(pet, self.rec(pid), now))
+            try:
+                self.set_rec(pid, P.refresh(pet, self.rec(pid), now))
+            except Exception as err:  # noqa: BLE001 - one broken pet must not stop the others
+                _LOGGER.warning("Pet %s could not be refreshed: %s", pid, err)
 
     def find(self, key: str) -> str | None:
         key = str(key or "").strip()
@@ -102,24 +113,52 @@ class PanelData:
                 return pid
         return None
 
-    async def async_feed(self, pid: str, by: str = "", take_back: bool = False) -> None:
+    @callback
+    def changed_feed(self, pid: str) -> None:
+        """Only one feeding record changed: save, and send just that record to the screens."""
+        self.store.async_delay_save(lambda: self.data, 1.0)
+        async_dispatcher_send(self.hass, SIGNAL_UPDATE, {"__feed": {pid: self.rec(pid)}})
+
+    async def async_feed(self, pid: str, by: str = "", take_back: bool = False) -> bool:
+        """Record a feeding (or take the last one back). False: unknown pet, or fed less than a minute ago."""
         pet = self.pets().get(pid)
         if pet is None:
-            return
+            return False
         now = dt_util.now()
+        if not take_back:
+            last = P.parse(self.rec(pid).get("last"))
+            if last is not None and timedelta(0) <= now - last < timedelta(seconds=SF.FEED_MIN_SECONDS):
+                return False   # a second tap / call within a minute: already fed
         self.set_rec(pid, P.undo(pet, self.rec(pid), now) if take_back else P.fed(pet, self.rec(pid), now, by))
-        self.changed()
+        self.changed_feed(pid)
         async_dispatcher_send(self.hass, SIGNAL_TICK)
+        if not take_back:
+            await self._run_feeder(pid, pet, now)
+        return True
+
+    async def _run_feeder(self, pid: str, pet: dict, now) -> None:
         feeder = pet.get("feeder")
-        if not take_back and isinstance(feeder, dict) and "." in str(feeder.get("service") or ""):
-            dom, svc = str(feeder["service"]).split(".", 1)
+        if not isinstance(feeder, dict) or not feeder.get("service"):
+            return
+        service = feeder.get("service")
+        if not SF.safe_feeder_service(service):
+            _LOGGER.warning("Feeder %s of %s is not allowed (domains: %s)", service, pid, ", ".join(SF.FEEDER_DOMAINS))
+            return
+        prev = self._feeder_at.get(pid)
+        if prev is not None and now - prev < timedelta(seconds=SF.FEED_MIN_SECONDS):
+            return   # fed, taken back and fed again: the feeder does not drop food twice
+        self._feeder_at[pid] = now
+        dom, svc = service.split(".", 1)
+        try:
             sdata = dict(feeder.get("data") or {})
-            if feeder.get("target"):
-                sdata["entity_id"] = feeder["target"]
-            try:
-                await self.hass.services.async_call(dom, svc, sdata, blocking=False)
-            except Exception as err:  # noqa: BLE001 - a broken feeder must not break the feeding record
-                _LOGGER.warning("Feeder %s failed: %s", feeder.get("service"), err)
+        except (TypeError, ValueError):
+            sdata = {}
+        if feeder.get("target"):
+            sdata["entity_id"] = feeder["target"]
+        try:
+            await self.hass.services.async_call(dom, svc, sdata, blocking=False)
+        except Exception as err:  # noqa: BLE001 - a broken feeder must not break the feeding record
+            _LOGGER.warning("Feeder %s failed: %s", service, err)
 
     async def async_tick(self, _now=None) -> None:
         """Every minute: statuses for the entities, a notification when a pet becomes late."""
@@ -127,29 +166,37 @@ class PanelData:
         dirty = False
         tr = (self.hass.config.language or "").lower().startswith("tr")
         for pid, pet in self.pets().items():
-            rec = self.rec(pid)
-            due0 = P.parse(rec.get("due"))
-            if not rec.get("last") and pet.get("mode") == "times" and (due0 is None or due0 <= now):   # hiç beslenmedi: sıradaki saati göster
-                rec = P.refresh(pet, rec, now)
-                if rec.get("due"):
-                    self.set_rec(pid, rec)
-                    dirty = True
-            st = P.status(pet, rec, now)
-            notify = str(pet.get("notify") or "")
-            if st == "late" and notify.startswith("notify.") and rec.get("due") and rec.get("notified") != rec.get("due"):
-                rec = dict(rec)
-                rec["notified"] = rec.get("due")
-                self.set_rec(pid, rec)
-                dirty = True
-                name = pet.get("name") or pid
-                msg = f"{name} beslenmeyi bekliyor." if tr else f"{name} is waiting to be fed."
-                try:
-                    await self.hass.services.async_call("notify", notify.split(".", 1)[1], {"title": "Besleme" if tr else "Feeding", "message": msg}, blocking=False)
-                except Exception as err:  # noqa: BLE001
-                    _LOGGER.warning("Feeding notification %s failed: %s", notify, err)
+            try:
+                dirty = await self._tick_pet(pid, pet, now, tr) or dirty
+            except Exception as err:  # noqa: BLE001 - one broken pet must not stop the others
+                _LOGGER.warning("Pet %s: %s", pid, err)
         if dirty:
             self.changed()
         async_dispatcher_send(self.hass, SIGNAL_TICK)
+
+    async def _tick_pet(self, pid: str, pet: dict, now, tr: bool) -> bool:
+        dirty = False
+        rec = self.rec(pid)
+        due0 = P.parse(rec.get("due"))
+        if not rec.get("last") and pet.get("mode") == "times" and (due0 is None or due0 <= now):   # hiç beslenmedi: sıradaki saati göster
+            rec = P.refresh(pet, rec, now)
+            if rec.get("due"):
+                self.set_rec(pid, rec)
+                dirty = True
+        st = P.status(pet, rec, now)
+        notify = str(pet.get("notify") or "")
+        if st == "late" and SF.NOTIFY_RE.match(notify) and rec.get("due") and rec.get("notified") != rec.get("due"):
+            rec = dict(rec)
+            rec["notified"] = rec.get("due")
+            self.set_rec(pid, rec)
+            dirty = True
+            name = pet.get("name") or pid
+            msg = f"{name} beslenmeyi bekliyor." if tr else f"{name} is waiting to be fed."
+            try:
+                await self.hass.services.async_call("notify", notify.split(".", 1)[1], {"title": "Besleme" if tr else "Feeding", "message": msg}, blocking=False)
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.warning("Feeding notification %s failed: %s", notify, err)
+        return dirty
 
 
 async def _register_static(hass: HomeAssistant) -> None:
@@ -180,7 +227,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         pid = d.find(call.data["pet"]) if d else None
         if pid is None:
             raise vol.Invalid(f"Unknown pet: {call.data['pet']}")
-        await d.async_feed(pid, "service", bool(call.data.get("undo")))
+        if not await d.async_feed(pid, "service", bool(call.data.get("undo"))):
+            _LOGGER.info("Pet %s was fed less than a minute ago; feeding not repeated", pid)
 
     hass.services.async_register(DOMAIN, "feed", _svc_feed, schema=vol.Schema({vol.Required("pet"): str, vol.Optional("undo", default=False): bool}))
     entry.async_on_unload(async_track_time_interval(hass, data.async_tick, timedelta(minutes=1)))
@@ -219,7 +267,15 @@ def ws_get(hass, connection, msg):
     if data is None:
         connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
         return
-    connection.send_result(msg["id"], data.data)
+    connection.send_result(msg["id"], _for_user(connection, data.data))
+
+
+def _for_user(connection, payload: dict) -> dict:
+    """Non-admin users (the wall tablet) do not see the pets' feeder service and notification target."""
+    user = connection.user
+    if user is not None and user.is_admin:
+        return payload
+    return SF.public_data(payload)
 
 
 @websocket_api.websocket_command(
@@ -242,6 +298,14 @@ def ws_set(hass, connection, msg):
     if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
         connection.send_error(msg["id"], "invalid", f"{key}: wrong type or too large")
         return
+    if key == "pets":
+        try:
+            value = SF.PETS_SCHEMA(value)
+        except vol.Invalid as err:
+            connection.send_error(msg["id"], "invalid", f"pets: {err}")
+            return
+    elif key == "tabs":
+        value = SF.clean_tabs(value)
     data.data[key] = value
     if key == "pets":
         data.refresh_all()
@@ -265,7 +329,9 @@ async def ws_feed(hass, connection, msg):
         connection.send_error(msg["id"], "not_found", "Unknown pet")
         return
     user = connection.user
-    await data.async_feed(msg["pet"], (user.name if user else "") or "", msg["undo"])
+    if not await data.async_feed(msg["pet"], (user.name if user else "") or "", msg["undo"]):
+        connection.send_error(msg["id"], "too_soon", "Fed less than a minute ago")
+        return
     connection.send_result(msg["id"], data.rec(msg["pet"]))
 
 
@@ -294,7 +360,7 @@ def ws_season(hass, connection, msg):
 def ws_subscribe(hass, connection, msg):
     @callback
     def _forward(payload):
-        connection.send_message(websocket_api.event_message(msg["id"], payload))
+        connection.send_message(websocket_api.event_message(msg["id"], payload if "__feed" in payload else _for_user(connection, payload)))
 
     connection.subscriptions[msg["id"]] = async_dispatcher_connect(hass, SIGNAL_UPDATE, _forward)
     connection.send_result(msg["id"])

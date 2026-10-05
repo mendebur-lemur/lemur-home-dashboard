@@ -72,5 +72,5 @@ function lpPetHistory(h, lang, id) {
   const fmt = (ts) => { const d = new Date(ts), p = (n) => (n < 10 ? '0' : '') + n; return p(d.getDate()) + '.' + p(d.getMonth() + 1) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); };
   const html = '<div class="phist">' + (log.length ? log.map((x) => '<div class="phr"><b>' + esc(fmt(x.t)) + '</b><span>' + esc(lpPetDur(lang, Date.now() - Date.parse(x.t))) + '</span><i>' + esc(x.by || '') + '</i></div>').join('')
     : '<div class="phr"><span>' + esc(lpPetT(lang, 'none')) + '</span></div>') + '</div>';
-  LemurCardPopup.open(h, { title: (pet.name || '') + ' · ' + lpPetT(lang, 'hist'), html: html }, lang);
+  LemurCardPopup._openHtml(h, (pet.name || '') + ' · ' + lpPetT(lang, 'hist'), html, lang);
 }

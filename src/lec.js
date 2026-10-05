@@ -97,7 +97,7 @@ function lpLecIcons() {
   if (LP_LECI.map) return Promise.resolve(LP_LECI.map);
   if (!LP_LECI.loading) {
     LP_LECI.loading = fetch('/lemur_home_dashboard/lec-icons.json?v=' + PANEL_VERSION).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
-      LP_LECI.map = m && typeof m === 'object' ? m : {};
+      LP_LECI.map = lhdSafeIcons(m, /^[a-z0-9_-]{1,60}$/);   // yalnız temiz SVG'ler (src/safe.js)
       LP_LECI.subs.slice().forEach((f) => { try { f(); } catch (e) {} });
       return LP_LECI.map;
     });

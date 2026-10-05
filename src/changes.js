@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.12.1',
+    tr: ['Güvenlik düzeltmeleri: pencere içeriği, bağlantılar, yedekten geri yükleme ve simge dosyaları denetleniyor.',
+      'Besleme: bir dakika içinde ikinci "Besledim" sayılmaz, otomatik yemlik iki kez çalışmaz. Yemlik servisi izinli alanlardan biri olmalı (button, switch, script...).',
+      'Yönetici olmayan kullanıcılar (duvar tableti) yemlik servisini ve bildirim hedefini görmez.'],
+    en: ['Security fixes: popup content, links, backup restore and icon files are checked.',
+      'Feeding: a second "Fed" within a minute is not counted and the automatic feeder does not run twice. The feeder service must be in an allowed domain (button, switch, script...).',
+      'Non-admin users (the wall tablet) do not see the feeder service or the notification target.'] },
   { v: '0.12.0',
     tr: ['İkinci satır: durum, son değişim, öznitelik ya da yazı; değer karosunda ad üstte, değer altta seçeneği.',
       'Ad ve ikinci satırda Home Assistant şablonu ({{ }} / {% %}); değer değişince yazı kendiliğinden güncellenir.',

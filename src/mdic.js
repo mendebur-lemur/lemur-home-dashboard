@@ -39,7 +39,7 @@ function lpMdicLoad() {
   if (LP_MDIC.map) return Promise.resolve(LP_MDIC.map);
   if (!LP_MDIC.loading) {
     LP_MDIC.loading = fetch(LP_MDIC_URL + '?v=' + PANEL_VERSION).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
-      LP_MDIC.map = m && typeof m === 'object' ? m : {};
+      LP_MDIC.map = lhdSafeIcons(m, /^(mdi|lhd):[a-z0-9-]+$/);   // yalnız temiz SVG'ler (src/safe.js)
       LP_MDIC.subs.slice().forEach((f) => { try { f(); } catch (e) {} });
       return LP_MDIC.map;
     });

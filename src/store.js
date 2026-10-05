@@ -36,7 +36,14 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
       this.data = d;
       lhdHealCheck(this.conn);
       // kendi kaydımızın yankısı beklenirken gelen eski veri ekrandakini ezmesin
-      this.conn.subscribeMessage((msg) => { if (this.pending) return; this.data = msg; this.subs.forEach((f) => f(msg)); }, { type: 'lemur_home_dashboard/subscribe' });
+      this.conn.subscribeMessage((msg) => {
+        if (msg && msg.__feed) {   // yalnız bir hayvanın besleme kaydı değişti
+          if (!this.data) return;
+          this.data = Object.assign({}, this.data, { feed: Object.assign({}, this.data.feed, msg.__feed) });
+          const d = this.data; this.subs.forEach((f) => f(d)); return;
+        }
+        if (this.pending) return; this.data = msg; this.subs.forEach((f) => f(msg));
+      }, { type: 'lemur_home_dashboard/subscribe' });
       // bağlantı koparsa (HA yeniden başladı, tablet uyudu) dönüşte güncel ayarı al; o arada yapılan değişiklikler kaçmasın
       if (this.conn.addEventListener) this.conn.addEventListener('ready', () => {
         this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/get' }).then((n) => { if (n && !this.pending) { this.data = n; this.subs.forEach((f) => f(n)); } }).catch(() => {});
@@ -60,6 +67,6 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/season', season: value }) : Promise.resolve();
   },
   // Besleme kartı: "Besledim" (ve geri al). Her kullanıcı yapabilir; sonuç abonelikle bütün ekranlara gelir.
-  feed(pet, undo) { return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/feed', pet: pet, undo: !!undo }) : Promise.resolve(); },
+  feed(pet, undo) { return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/feed', pet: pet, undo: !!undo }).catch(() => null) : Promise.resolve(); },   // bir dakikadan kısa sürede ikinci besleme sayılmaz (too_soon)
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });

@@ -223,7 +223,11 @@ Pano, tarayıcının ve telefon uygulamasının sakladığı eski sayfa kopyalar
 
 ```bash
 python3 build.py          # src/ klasörünü custom_components/.../frontend/ içine tek dosya olarak paketler
+pip install -r tests/requirements.txt && pytest   # entegrasyon testleri
+node --test tests/*.test.js                       # tarayıcı tarafı güvenlik denetimleri (src/safe.js)
 ```
+
+**Güvenlik:** Hayvanların yemlik servisi yalnız izinli alanlardan olabilir (switch, button, input_button, timer, script, fan, number, select, esphome, notify, input_boolean, light), bildirim hedefi `notify.*` olmalı. "Besledim" bir dakika içinde ikinci kez sayılmaz. Yönetici olmayan kullanıcılar yemlik servisini ve bildirim hedefini görmez. Yedekten geri yüklemede sekmeler ve hayvanlar denetlenir, çalışacak servisler onay penceresinde gösterilir.
 
 Ayarlar `.storage/lemur_home_dashboard` içinde tutulur. Pano `custom:lemur-home-dashboard` stratejisiyle üretilir; her sekme tek bir `custom:lemur-home-dashboard-card` kartı içeren bir görünümdür.
 

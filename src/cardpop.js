@@ -74,7 +74,10 @@ const LP_CPOP_CSS = `
 const LP_CPOP = { cur: null };
 class LemurCardPopup {
   // p: { title, card }
-  static open(hass, p, lang) {
+  // p: { title, card }. Hazır HTML içerik yalnız panonun kendi pencerelerinden (_openHtml): ayardan gelen html kabul edilmez
+  static open(hass, p, lang) { p = p || {}; return LemurCardPopup._open(hass, { title: p.title, card: p.card }, lang); }
+  static _openHtml(hass, title, html, lang) { return LemurCardPopup._open(hass, { title: title, html: html }, lang); }
+  static _open(hass, p, lang) {
     if (LP_CPOP.cur) LP_CPOP.cur.close(true);
     if (typeof LP_POP !== 'undefined' && LP_POP.cur) LP_POP.cur.close(true);
     const x = new LemurCardPopup(hass, p || {}, lang || pickLang(hass));
@@ -84,7 +87,7 @@ class LemurCardPopup {
   static update(hass) { if (LP_CPOP.cur) LP_CPOP.cur.hass = hass; }
   // onay sorusu ("Evi Kapa çalıştırılsın mı?"): Evet'e basınca yes() çalışır
   static confirm(hass, lang, text, yes) {
-    const p = LemurCardPopup.open(hass, { title: text, html: '<div class="cfm"><div data-no>' + esc(lpCardT(lang, 'no')) + '</div><div class="ok" data-yes>' + esc(lpCardT(lang, 'yes')) + '</div></div>' }, lang);
+    const p = LemurCardPopup._openHtml(hass, text, '<div class="cfm"><div data-no>' + esc(lpCardT(lang, 'no')) + '</div><div class="ok" data-yes>' + esc(lpCardT(lang, 'yes')) + '</div></div>', lang);
     const R = p._host.shadowRoot;
     R.querySelector('[data-no]').addEventListener('click', () => p.close());
     R.querySelector('[data-yes]').addEventListener('click', () => { p.close(); yes(); });

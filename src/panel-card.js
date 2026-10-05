@@ -3,7 +3,7 @@
 // Çizim iki aşamalı: iskelet sekme ya da ayar değişince bir kez kurulur (_build), durum değişince sadece karolar güncellenir (_update).
 // Böylece gömülü kartların (iklim, süpürge) halesi ve karoların efekt animasyonu her durum değişiminde baştan başlamaz.
 // Eski Safari (iOS 12) için ?. ve ?? yok, pointer event yok (touch + mouse).
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const LP_HOLD_MS = 500;
 
 // Dokun / basılı tut. Parmak kayarsa (kaydırma) hiçbir şey yapmaz.
@@ -532,7 +532,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       let b = bodyOf(s);
       if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
       if (!b) return;
-      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id], grow: s.grow || 1, gap: typeof s.gap === 'number' ? s.gap : null,
+      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id], grow: parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1, gap: typeof s.gap === 'number' ? s.gap : null,
         fill: !!s.fill, align: !s.fill && (s.align === 'center' || s.align === 'spread') ? s.align : '' });   // doldururken hizalama yok (aralık kaybolmasın)
     });
     const used = [];
@@ -1013,11 +1013,11 @@ class LemurHomeDashboardCard extends HTMLElement {
       return;
     }
     if (typeof a !== 'object') return;
-    if (a.popup) { LemurCardPopup.open(h, a.popup, this._lang); return; }
+    if (a.popup) { const pp = lhdIsObj(a.popup) ? a.popup : {}; LemurCardPopup.open(h, { title: pp.title, card: pp.card }, this._lang); return; }   // pencere içeriği yalnız kart
     const sv = a.service || a.perform_action;
     if (!sv && typeof a.action === 'string') {
       if (a.action === 'navigate' && a.navigation_path) { history.pushState(null, '', a.navigation_path); lpFire(window, 'location-changed', { replace: false }); return; }
-      if (a.action === 'url' && a.url_path) { window.open(a.url_path); return; }
+      if (a.action === 'url' && lhdSafeUrl(a.url_path)) { window.open(a.url_path, '_blank', 'noopener'); return; }
       if (a.action === 'more-info' || a.action === 'toggle') this._act(a.action, a.entity || id); 
       return;
     }
