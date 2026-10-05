@@ -178,6 +178,42 @@ function lpSeason() {
   return m >= 5 && m <= 9 ? 'summer' : 'winter';
 }
 
+// Öğe boyutu (size): karonun ızgarada kapladığı hücre. '1x1' (varsayılan), '2x1', '1x2', '2x2', 'row' (satır boyu)
+function lpSpan(it, c) {
+  const z = String((it && it.size) || '');
+  if (z === 'row') return [c, 1];
+  const m = /^([1-3])x([1-3])$/.exec(z);
+  return m ? [Math.min(+m[1], c), +m[2]] : [1, 1];
+}
+// Izgaranın satır sayısı: öğeler sırayla, boşlukları dolduran (dense) yerleşimle; hepsi 1x1 ise ceil(n / c)
+function lpGridRows(items, c) {
+  const occ = [];
+  const free = (r, x, w, h) => { for (let j = r; j < r + h; j++) for (let i = x; i < x + w; i++) if (occ[j] && occ[j][i]) return false; return true; };
+  let rows = 0;
+  items.forEach((it) => {
+    const sp = lpSpan(it, c), w = sp[0], h = sp[1];
+    for (let r = 0; ; r++) {
+      let done = false;
+      for (let x = 0; x + w <= c; x++) if (free(r, x, w, h)) {
+        for (let j = r; j < r + h; j++) { occ[j] = occ[j] || []; for (let i = x; i < x + w; i++) occ[j][i] = 1; }
+        rows = Math.max(rows, r + h); done = true; break;
+      }
+      if (done) break;
+    }
+  });
+  return rows;
+}
+// Simge ve yazı boyutu (icon_size / text_size: 's' | 'm' | 'l'; yoksa bugünkü ölçü). Öğenin style'ına CSS değişkeni olarak yazılır.
+const LP_ICW = { tile: { s: '28%', m: '40%', l: '56%' }, val: { s: '24%', m: '32%', l: '46%' }, bar: { s: '24px', m: '34px', l: '46px' }, scene: { s: '28px', m: '40px', l: '58px' } };
+const LP_FS = { tile: { s: 13, m: 16, l: 20 }, val: { s: 14, m: 17, l: 22 }, bar: { s: 14, m: 17, l: 21 }, scene: { s: 15, m: 18, l: 23 } };
+function lpItemStyle(it, kind, c) {
+  let st = '';
+  if (c) { const sp = lpSpan(it, c); if (it.size === 'row') st += 'grid-column:1/-1;'; else { if (sp[0] > 1) st += 'grid-column:span ' + sp[0] + ';'; if (sp[1] > 1) st += 'grid-row:span ' + sp[1] + ';'; } }
+  if (it.icon_size && LP_ICW[kind][it.icon_size]) st += '--lp-icw:' + LP_ICW[kind][it.icon_size] + ';';
+  if (it.text_size && LP_FS[kind][it.text_size]) st += '--lp-fs:' + LP_FS[kind][it.text_size] + 'px;';
+  return st;
+}
+const lpStyleA = (st) => (st ? ' style="' + st + '"' : '');
 // Değer karosu: açık/kapalı durumu olan alanlar ve "açık" sayılan durumları
 const LP_VAL_ONOFF = ['binary_sensor', 'timer', 'person', 'device_tracker', 'update', 'calendar'];
 const LP_VAL_ON = ['on', 'active', 'home', 'open'];
@@ -303,11 +339,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     // düzenleme modunda koşulu şu an sağlanmayan öğe soluk görünür (normal panoda hiç çizilmez, yer kaplamaz)
     const hidA = (it) => (it._hid ? ' data-hid="1"' : '');
     // değer karosu (sensör, zamanlayıcı...): simge, değer, ad. Çubuk görünümünde yatay çubuk
-    const valTile = (it, bar) => {
+    const valTile = (it, bar, c) => {
       vals.push(it);
       const ic = lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>';
-      if (bar) return '<div class="bar val" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + hidA(it) + mark(it._i) + '>' + ic + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
-      return '<div class="tile val" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + hidA(it) + mark(it._i) + '>' + ic + '<div class="vl"></div><div class="nm"></div></div>';
+      if (bar) return '<div class="bar val" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'bar', c)) + hidA(it) + mark(it._i) + '>' + ic + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
+      return '<div class="tile val" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'val', c)) + hidA(it) + mark(it._i) + '>' + ic + '<div class="vl"></div><div class="nm"></div></div>';
     };
     const emb = (tag, cfg, id, i) => {
       if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"' + mark(i) + '></div>'; }
@@ -327,27 +363,28 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (s.look === 'bar' || (s.look === 'phone' && phone)) {
         const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
         // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda ya da başka öğelerle birlikteyken sabit yükseklik
-        const br = Math.max(6, Math.ceil(items.length / bc)), fillB = only && !phone;
-        return '<div class="bars' + (fillB ? '' : ' fixed') + '" data-sec="' + esc(s.id) + '" style="grid-template-columns:repeat(' + bc + ',minmax(0,1fr))' + (fillB ? ';grid-template-rows:repeat(' + br + ',minmax(60px,1fr))' : '') + '">' +
+        const br = Math.max(6, lpGridRows(items, bc)), fillB = only && !phone;
+        const dense = items.some((x) => x.size) ? ';grid-auto-flow:row dense' : '';
+        return '<div class="bars' + (fillB ? '' : ' fixed') + '" data-sec="' + esc(s.id) + '" style="grid-template-columns:repeat(' + bc + ',minmax(0,1fr))' + (fillB ? ';grid-template-rows:repeat(' + br + ',minmax(60px,1fr))' : '') + dense + '">' +
           items.map((it) => {
-            if (it._val) return valTile(it, true);
-            if (!it.entity) return '<div class="bar ph"' + hidA(it) + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
+            if (it._val) return valTile(it, true, bc);
+            if (!it.entity) return '<div class="bar ph"' + lpStyleA(lpItemStyle(it, 'bar', bc)) + hidA(it) + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="bt"><div class="nm">' + esc(it.name || '') + '</div></div></div>';
             tiles.push(it.entity); tileItems.push(it);
-            return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + hidA(it) + mark(it._i) + '><div class="bf"></div>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
+            return '<div class="bar" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'bar', bc)) + hidA(it) + mark(it._i) + '><div class="bf"></div>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
           }).join('') + '</div>';
       }
       // 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
       // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
-      const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = Math.ceil(items.length / c), fill = !phone && r >= 4;
+      const c = phone ? Math.min(s.tile_columns || 5, 3) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = lpGridRows(items, c), fill = !phone && (r >= 4 || !!s.fill);
       // başka öğelerle aynı kutudaysa karolar kalan yeri doldurur, gerekirse kısalır (kartlar kendi yüksekliğinde kalır)
-      const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? (only ? 'minmax(84px,1fr)' : 'minmax(56px,1fr)') : '1fr') + ')';
+      const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? (only ? 'minmax(84px,1fr)' : 'minmax(56px,1fr)') : '1fr') + ')' + (items.some((x) => x.size) ? ';grid-auto-flow:row dense' : '');
       const open = fill ? '<div class="grid" data-sec="' + esc(s.id) + '" style="' + gs + '">'
         : '<div class="gsq" data-sec="' + esc(s.id) + '" style="padding-bottom:calc((100% - ' + (8 * (c - 1)) + 'px) / ' + c + ' * ' + r + ' + ' + (8 * (r - 1)) + 'px)"><div class="grid" style="' + gs + '">';
       return open + items.map((it) => {
-        if (it._val) return valTile(it, false);
-        if (!it.entity) return '<div class="tile ph"' + hidA(it) + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="nm">' + esc(it.name || '') + '</div></div>';
+        if (it._val) return valTile(it, false, c);
+        if (!it.entity) return '<div class="tile ph"' + lpStyleA(lpItemStyle(it, 'tile', c)) + hidA(it) + mark(it._i) + '>' + lpIcon(it.icon || 'mdi:lightbulb') + '<div class="nm">' + esc(it.name || '') + '</div></div>';
         tiles.push(it.entity); tileItems.push(it);
-        return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + hidA(it) + mark(it._i) + '>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="nm"></div></div>';
+        return '<div class="tile" data-light="' + esc(it.entity) + '" data-ti="' + (tileItems.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'tile', c)) + hidA(it) + mark(it._i) + '>' + (lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>') + '<div class="nm"></div></div>';
       }).join('') + (fill ? '</div>' : '</div></div>');
     };
     const sceneBtn = (s, it, i) => {
@@ -361,7 +398,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const st = it.entity ? S[it.entity] : null;
       const name = it.name || (st ? st.attributes.friendly_name || it.entity : '');
       const icon = it.icon || (st && st.attributes.icon) || 'mdi:play';
-      return '<div class="scene' + (k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + '" data-scene="' + esc(s.id) + ':' + i + '"' + lec + hidA(it) + mark(i) + '><div class="si">' + lpIcon(icon, '', 'color:' + esc(c)) + '</div><span>' + esc(name) + '</span></div>';
+      return '<div class="scene' + (k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + ';' + lpItemStyle(it, 'scene', 0) + '" data-scene="' + esc(s.id) + ':' + i + '"' + lec + hidA(it) + mark(i) + '><div class="si">' + lpIcon(icon, '', 'color:' + esc(c)) + '</div><span>' + esc(name) + '</span></div>';
     };
     const bodyOf = (s) => {
       const lecOn = LEC.installed(h);
@@ -410,7 +447,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       let b = bodyOf(s);
       if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
       if (!b) return;
-      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, html: b.html, secs: [s.id], grow: s.grow || 1 });
+      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, html: b.html, secs: [s.id], grow: s.grow || 1,
+        fill: !!s.fill, align: s.align === 'center' || s.align === 'spread' ? s.align : '' });
     });
     const used = [];
     cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
@@ -421,7 +459,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       navFx + '<div class="clock">' + this._time() + '</div></div>';
     const seasonIcon = lpIcon(season === 'winter' ? 'mdi:snowflake' : 'mdi:white-balance-sunny', 'season');
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
-    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
+    // fill: öğeler kutunun yüksekliğini doldurur; align: içeriğe göre olan kutuda öğeler ortada ya da eşit aralıkla
+    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (b.fill ? ' fill' : '') + (b.align ? ' al-' + b.align : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi ? ' style="flex:' + b.grow + ' 1 0px;min-height:auto"' : '') + '>' +
       (edit ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +

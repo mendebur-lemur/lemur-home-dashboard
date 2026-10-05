@@ -2,6 +2,17 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.8.0',
+    tr: ['Bölüme düğme eklenince kutu artık kesilmez: kutu içeriği kadar uzar, ekrana sığmayan sütun kendi içinde kayar.',
+      'Bölüm ayarı Doldurma: "Kutuyu doldur" seçilince düğmeler ve karolar kutunun yüksekliğine eşit dağılır.',
+      'Bölüm ayarı Hizalama: üst, orta ya da eşit dağıt.',
+      'Öğe ayarı Boyut: karo 1×1, 2×1, 1×2, 2×2 ya da satır boyu.',
+      'Öğe ayarı Simge boyutu ve Yazı boyutu: küçük, orta, büyük.'],
+    en: ['A section no longer cuts off buttons: the box grows with its content and a column that doesn\'t fit the screen scrolls by itself.',
+      'Section setting Fill: with "Fill the box", buttons and tiles share the box height evenly.',
+      'Section setting Alignment: top, middle or spread evenly.',
+      'Item setting Size: a tile can be 1×1, 2×1, 1×2, 2×2 or a full row.',
+      'Item settings Icon size and Text size: small, medium, large.'] },
   { v: '0.7.0',
     tr: ['Değer karosu: sensör, zamanlayıcı, sayaç ve seçimler simge, değer + birim ve adıyla görünür; çalışan zamanlayıcı geri sayar.',
       'Öğe ayarları (⚙): ad, simge, açık/kapalı simgesi, dokununca ve basılı tutunca ne olacağı.',

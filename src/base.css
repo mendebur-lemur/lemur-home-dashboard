@@ -223,3 +223,39 @@
 .ic-tint .lic.haic { color: #7c8598; }
 .ic-tint .tile.on .lic.haic, .ic-tint .bar.on .lic.haic, .ic-tint .tile.live .lic.haic, .ic-tint .navb.sel .lic.haic, .ic-tint .title .lic.haic { color: var(--lp-ic-on); }
 .ic-tint .scene .lic.haic { color: var(--sc, var(--lp-ic-on)); }
+/* v0.8: içerik kesilmesin. Karo + düğme karışık ya da yalnız düğme/kart olan kutu, içeriğinden kısa olamaz;
+   aynı sütundaki öbür kutu kalan yeri alır. İçerik sığdığında görünüm aynıdır. */
+.box.mix, .box.spread { overflow: visible; min-height: auto; }
+.box.mix > .grid, .box.mix > .bars { min-height: auto; }
+.phone .box.mix, .phone .box.spread { min-height: 0; }
+/* B1 kutuyu doldur: düğmeler ve karolar kutunun yüksekliğine eşit dağılır */
+.box.fill > .scene { flex: 1 1 0px; min-height: 48px; }
+.box.fill > .grid, .box.fill > .bars { flex: 1 1 auto; }
+.box.fill > .emb, .box.fill > .row { flex: 0 0 auto; }
+/* B2 hizalama (içeriğe göre olan kutuda); başlık hep üstte kalır.
+   Orta: öğeler başlığın altındaki alanın ortasında. Eşit dağıt: ilk öğe üstte, son öğe altta, aralar eşit. */
+.box.al-center { justify-content: center; }
+.box.al-center > .title { margin-bottom: auto; }
+.box.al-center > .title ~ :last-child { margin-bottom: auto; }
+.box.al-spread > * + *:not(.title + *) { margin-top: auto; }
+/* A2 simge ve yazı boyutu (öğeye verilirse; yoksa bugünkü ölçü) */
+.tile .lic { width: var(--lp-icw, 40%); }
+.tile.val .lic { width: var(--lp-icw, 32%); }
+.tile .nm { font-size: var(--lp-fs, 16px); line-height: calc(var(--lp-fs, 16px) * 1.2); }
+.tile.val .vl { font-size: var(--lp-fs, 17px); line-height: calc(var(--lp-fs, 17px) + 3px); }
+.tile.val .nm { font-size: 13px; line-height: 16px; }
+.bar .lic { width: var(--lp-icw, 34px); height: var(--lp-icw, 34px); }
+.bar .nm { font-size: var(--lp-fs, 17px); line-height: calc(var(--lp-fs, 17px) + 4px); }
+.si .lic { width: var(--lp-icw, 40px); height: var(--lp-icw, 40px); }
+.scene span { font-size: var(--lp-fs, 18px); }
+.phone .bar .lic { width: 24px; height: 24px; }
+.phone .bar .nm { font-size: 14px; line-height: 18px; }
+.phone .tile .nm { font-size: 12px; line-height: 15px; }
+.phone .tile.val .nm { font-size: 11px; line-height: 13px; }
+.phone .tile.val .vl { font-size: 13px; line-height: 16px; }
+.phone .scene .lic { width: 28px; height: 28px; }
+.phone .scene span { font-size: 14px; }
+/* Sütun içeriği ekrandan uzunsa sütun kendi içinde kayar (kesilmez); kaydırma çubuğu görünmez. Dolgu + eksi kenar boşluğu düzeni değiştirmez,
+   düzenlemedeki seçim çerçevesine yer bırakır. */
+.sub { overflow-y: auto; overflow-x: hidden; padding: 4px; margin: -4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.sub::-webkit-scrollbar { display: none; }

@@ -251,3 +251,4 @@ label.btn { cursor: pointer; }
 .it .cty { font-size: 13px; font-weight: 600; }
 .it .x + .x { margin-left: 2px; }
 .it .x[data-im]:hover { color: var(--tx, #fff); }
+.imdlg .seg { flex-wrap: wrap; } .imdlg .fld.nar2 { flex: 1 1 200px; }
