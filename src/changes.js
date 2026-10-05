@@ -2,6 +2,11 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.14.0',
+    tr: ['217 yeni renkli simge (★, panoya özel): ışık yerleri (asma tavan şeridi, TV arkası, yatak/koltuk/tezgah altı, niş, süpürgelik...), dikey ve katlanır storlar, ısıtma ve havalandırma, mutfak, banyo, güvenlik, enerji ve sigorta, ağ ve akıllı ev donanımı, bahçe ve havuz, evcil hayvan, bebek, sağlık, oyun, yeni oda simgeleri ve 18 senaryo simgesi (okuma, banyo, romantik, Ramazan, yılbaşı...). Set artık 1522 simge.',
+      'Simge aramasında yeni Türkçe kelimeler: havuz, sulama, akvaryum, sigorta, şarj, semaver, şömine, oyun, Ramazan, tansiyon ve daha fazlası.'],
+    en: ['217 new colourful icons (★, dashboard-only): light placements (drop-ceiling strip, behind the TV, under the bed/sofa/counter, niche, skirting...), vertical and pleated blinds, heating and ventilation, kitchen, bathroom, security, energy and fuses, network and smart home hardware, garden and pool, pets, baby, health, games, new room icons and 18 scene icons (reading, bath time, romantic, Ramadan, new year...). The set now has 1522 icons.',
+      'More Turkish words in the icon search: pool, irrigation, aquarium, fuse, charging, samovar, fireplace, games, Ramadan, blood pressure and more.'] },
   { v: '0.13.0',
     tr: ['Yedek kontrol (Gelişmiş): Home Assistant\'ta iki kez görünen lambaya (ör. Govee LAN ve Matter) ikinci kopyası yedek olarak seçilir. Komut önce hızlı yoldan gider; lamba birkaç saniye içinde cevap vermezse yedekten gönderilir, karonun köşesinde turuncu nokta çıkar.',
       'Duvar anahtarları (Ayarlar → Gelişmiş): yalnız sinyal veren röle bir lambaya bağlanır; elle basınca lamba açılır/kapanır, açarken parlaklık ve kelvin verilebilir. Aynı anahtarı kullanan HA otomasyonu varsa uyarılır.',

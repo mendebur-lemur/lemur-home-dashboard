@@ -152,7 +152,22 @@ const LHD_ICON_TR = { salon: 'sofa living couch', oturma: 'sofa couch', kanepe: 
   perde: 'curtains blinds', panjur: 'blinds shutter', pencere: 'window', cam: 'window', tv: 'television', televizyon: 'television', ekran: 'monitor', klima: 'air-conditioner', petek: 'radiator',
   ısıtma: 'heat radiator fire', soğutma: 'snowflake', süpürge: 'vacuum', supurge: 'vacuum', müzik: 'music', muzik: 'music', film: 'movie', sinema: 'movie', gece: 'night moon', gündüz: 'sun', gunduz: 'sun',
   güneş: 'sun', gunes: 'sun', parti: 'party', kitap: 'book', okuma: 'book', uyku: 'sleep', kahve: 'coffee', yemek: 'silverware food', kapat: 'power', güç: 'power', guc: 'power', priz: 'socket',
-  fan: 'fan', vantilatör: 'fan', dolap: 'wardrobe cupboard', ayna: 'mirror', efekt: 'creation magic', renk: 'palette', yangın: 'fire', ateş: 'fire', kar: 'snowflake', kalp: 'heart', yıldız: 'star', alarm: 'alarm' };
+  fan: 'fan', vantilatör: 'fan', dolap: 'wardrobe cupboard', ayna: 'mirror', efekt: 'creation magic', renk: 'palette', yangın: 'fire', ateş: 'fire', kar: 'snowflake', kalp: 'heart', yıldız: 'star',
+  havuz: 'pool', sulama: 'sprinkler irrigation garden-tap rain', çim: 'lawn', cim: 'lawn', akvaryum: 'aquarium fish', balık: 'fish aquarium', balik: 'fish aquarium',
+  bebek: 'baby', kedi: 'cat', köpek: 'dog', kopek: 'dog', hamster: 'hamster', tavuk: 'chicken', kümes: 'chicken', sigorta: 'fuse circuit-breaker residual', kaçak: 'residual',
+  elektrik: 'power grid fuse energy', enerji: 'energy power-station', şarj: 'charger battery power-station', sarj: 'charger battery power-station', pil: 'battery', akü: 'battery power-station',
+  araba: 'car garage', araç: 'car', motor: 'motorbike', bisiklet: 'bike', modem: 'modem', wifi: 'wifi mesh access-point', internet: 'modem mesh wifi cloud', kamera: 'camera peephole nvr',
+  güvenlik: 'panic lock camera beam fire-extinguisher', guvenlik: 'panic lock camera beam fire-extinguisher', kilit: 'lock keyfob', kumanda: 'remote keyfob',
+  çay: 'tea samovar', cay: 'tea samovar', semaver: 'samovar', su: 'water tap well', pompa: 'pump', tank: 'tank', sauna: 'steam sauna', duş: 'shower', dus: 'shower', buhar: 'steam',
+  ütü: 'garment-steamer', utu: 'garment-steamer', çamaşır: 'laundry clothes', camasir: 'laundry clothes', kurutma: 'clothes-airer dehydrator', oyun: 'gaming foosball pinball pool-table dartboard table-tennis playroom',
+  piyano: 'piano', gitar: 'guitar', davul: 'drum', ramazan: 'ramadan', yılbaşı: 'new-year', yilbasi: 'new-year', doğum: 'birthday', dogum: 'birthday', romantik: 'romantic', rahat: 'relax',
+  meditasyon: 'meditation', spor: 'workout steps', fırtına: 'storm lightning', firtina: 'storm lightning', şimşek: 'lightning', tatil: 'vacation', odak: 'focus', sağlık: 'heart blood-pressure thermometer-body first-aid medicine',
+  saglik: 'heart blood-pressure thermometer-body first-aid medicine', ilaç: 'medicine', ilac: 'medicine', nabız: 'heart-rate', nabiz: 'heart-rate', tansiyon: 'blood-pressure', şömine: 'fireplace', somine: 'fireplace',
+  mangal: 'fire-pit pizza-oven', pirinç: 'rice', meyve: 'juicer', blender: 'blender', bulaşık: 'dishwasher', bulasik: 'dishwasher', çöp: 'trash recycling', cop: 'trash recycling', hamak: 'hammock',
+  şemsiye: 'umbrella', semsiye: 'umbrella', salıncak: 'swing', salincak: 'swing', şarap: 'wine', sarap: 'wine', atölye: 'workshop', atolye: 'workshop', veranda: 'porch sunroom', teras: 'terrace',
+  çatı: 'roof', cati: 'roof', uydu: 'satellite', anten: 'antenna', radyo: 'radio', hoparlör: 'audio speaker', hoparlor: 'audio speaker', ses: 'audio voice', güncelleme: 'update', guncelleme: 'update',
+  bağlantı: 'offline wifi mesh', baglanti: 'offline wifi mesh', raf: 'shelf bookshelf', niş: 'niche', nis: 'niche', süpürgelik: 'skirting', supurgelik: 'skirting', tezgah: 'counter vanity toe-kick',
+  saç: 'hair', sac: 'hair', tıraş: 'shaver', tiras: 'shaver', vitrin: 'display-cabinet', alarm: 'alarm panic' };
 const LHD_ICONS = { list: null, loading: null };
 function lhdIconList() {
   if (LHD_ICONS.list) return Promise.resolve(LHD_ICONS.list);
