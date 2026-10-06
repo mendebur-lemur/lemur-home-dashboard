@@ -84,6 +84,14 @@ function lhdLiveSub(conn, msg, onMsg, onReady) {
   };
   go(gen, 0);
   if (conn.addEventListener) conn.addEventListener('ready', () => { gen++; const g = gen; go(g, 0); if (onReady) onReady(g === gen); });
+  // bekçi: yeniden bağlanmalarda abonelik nadiren yine de kayboluyor (canlı HA'da görüldü); 30 sn'de bir bakılır,
+  // bağlantı açıkken kütüphanenin abonelik listesinde bizimki yoksa yeniden abone olunur ve güncel veri istenir
+  setInterval(() => {
+    const m = conn.commands;
+    if (!conn.connected || !m || typeof m.forEach !== 'function') return;
+    let ok = false; m.forEach((v) => { if (v && v.callback === onMsg) ok = true; });
+    if (!ok) { gen++; go(gen, 0); if (onReady) onReady(true); }
+  }, 30000);
 }
 // istek, entegrasyon henüz yüklenmemişse (HA açılıyor) birkaç kez yeniden denenir
 function lhdRetryMsg(conn, msg, n) {

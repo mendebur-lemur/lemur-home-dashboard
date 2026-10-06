@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.17.4',
+    tr: ['Canlı bağlantıya bekçi: tablet ayar değişikliklerini dinlediği bağlantıyı yine de kaybederse 30 saniye içinde fark edip yeniden bağlanır ve güncel ayarı alır.'],
+    en: ['A watchdog for the live connection: if a tablet still loses the connection it listens to for settings changes, it notices within 30 seconds, reconnects and fetches the current settings.'] },
   { v: '0.17.3',
     tr: ['HA yeniden başladıktan sonra tabletler ayar değişikliklerini sayfa yenilenene kadar görmüyordu (canlı bağlantı sessizce kopuyordu); artık bağlantı kendiliğinden yenileniyor. HA açılırken yüklenen pano da entegrasyonu bekleyip açılıyor.',
       'Telefon genişliğinde yönetim paneli: Ayarlar önizlemenin altında kaldığı için açılmıyor gibiydi, artık üstte açılıyor. Otomatik kur / Stil seç alt çubuğu ve önizleme başlığı dar ekrana sığıyor.',
