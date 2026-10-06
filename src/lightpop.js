@@ -102,6 +102,12 @@ const LP_POP_CSS = `
 .segs div.on, .fx div.on { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(91, 141, 239, 0.9); color: #fff; font-weight: 600; }
 :host(.sheet) .grab { background: rgba(255, 255, 255, 0.25); }
 @media (max-width: 560px) { .col { grid-template-columns: 1fr; } .pan { padding: 12px; border-radius: 24px; } }
+/* önizleme kutusunun içinde (Otomatik kur / Stil seç): ekran yerine kutuya göre */
+:host(.inbox) { position: absolute; z-index: 50; }
+:host(.inbox) .pan { max-width: calc(100% - 16px); max-height: calc(100% - 24px); }
+:host(.inbox.sheet) .pan { max-width: 100%; max-height: 90%; }
+:host(.inbox.ph) .col { grid-template-columns: 1fr; }
+:host(.inbox.ph:not(.sheet)) .pan { padding: 12px; border-radius: 24px; }
 `;
 const LP_POP_TXT = {
   tr: { color: 'Renk', effect: 'Efekt', segment: 'Segment', off: 'Kapalı', on: 'Açık', lec: 'Efekt ekranını aç', noFx: 'Bu ışığın efekti yok', unav: 'Ulaşılamıyor', seg: 'Segment {n}' },
@@ -146,19 +152,22 @@ function lpDrag(el, onMove, onEnd) {
 const LP_POP = { cur: null };
 class LemurLightPopup {
   // id: ışık; item: karodaki ad/simge; room: LEC odası (yoksa sekmenin alanı)
-  static open(hass, id, item, room) {
+  // opts.mount: pencere bu kutunun içinde açılır (Otomatik kur / Stil seç önizlemesi); opts.sheet: alttan, opts.phone: telefon ölçüsü
+  static open(hass, id, item, room, opts) {
     if (LP_POP.cur) LP_POP.cur.close(true);
-    const p = new LemurLightPopup(hass, id, item || {}, room || null);
+    const p = new LemurLightPopup(hass, id, item || {}, room || null, opts);
     LP_POP.cur = p;
     return p;
   }
   static update(hass) { if (LP_POP.cur) LP_POP.cur.hass = hass; }
 
-  constructor(hass, id, item, room) {
+  constructor(hass, id, item, room, opts) {
+    opts = opts || {};
     this._h = hass; this._id = id; this._item = item; this._room = room;
     this._lang = pickLang(hass);
     this._tab = 'color'; this._seg = 0;
-    this._sheet = lpPhoneScreen() && lpPhoneCfg().sheet;
+    this._mount = opts.mount || null; this._inPh = !!opts.phone;
+    this._sheet = this._mount ? !!opts.sheet : lpPhoneScreen() && lpPhoneCfg().sheet;
     this._host = document.createElement('div');
     this._host.className = 'lemur-light-popup';
     const R = this._host.attachShadow({ mode: 'open' });
@@ -186,8 +195,9 @@ class LemurLightPopup {
     window.addEventListener('keydown', this._key, true);
     // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
     this._pop = () => this.close(true);
-    try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
-    document.body.appendChild(this._host);
+    if (this._mount) this._pushed = false;   // önizlemede tarayıcı geçmişine dokunulmaz
+    else try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
+    (this._mount || document.body).appendChild(this._host);
     this._render();
     requestAnimationFrame(() => requestAnimationFrame(() => this._host.classList.add('in')));
   }
@@ -237,7 +247,7 @@ class LemurLightPopup {
     const icon = lpIcon(lpEntIcon(st, it.icon));
     if (!LP_MDIC.map) lpMdicLoad().then(() => { if (this._host && this._host.isConnected) this._render(); });
     // sınıf baştan yazılırken açılış sınıfı (in) korunur; yoksa sekme değişince pencere görünmez olur ama ekranı kaplamaya devam eder
-    if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (this._sheet ? ' sheet' : '') + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
+    if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (this._sheet ? ' sheet' : '') + (this._mount ? ' inbox' + (this._inPh ? ' ph' : '') : '') + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
     const tabs = this._tabs();
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
     let h = (this._sheet ? '<div class="grab"></div>' : '') + '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +

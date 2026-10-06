@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.17.2',
+    tr: ['Görünüm ayarları tek yerde: arka plan (Renk ve Resim dahil), ışık ve iklim görünümü, telefon düzeni ve Efektler düğmesi artık Stil seç\'te. Ayarlar\'daki Stil seç kartı oraya götürür; üst çubuktaki düğme de vurgulu.',
+      'Otomatik kur ve Stil seç önizlemesinde ışık penceresi: "Işık penceresi" düğmesi ya da pencere seçimi önizlemede bir ışığın penceresini açar (telefonda alttan ya da ortada).',
+      'Ayarlar yan panelinde ezilen yazılar ve kayan düğmeler düzeldi: yazı sığmazsa seçenekler alt satıra geçiyor. Önizleme başlığı da tek satır kalıyor.'],
+    en: ['Look settings in one place: background (including Colour and Image), light and climate look, phone layout and the Effects button are now in Choose a style. The Choose a style card in Settings takes you there; the top bar button is highlighted too.',
+      'Light window in the auto setup and Choose a style preview: the "Light window" button or the window choice opens a light\'s window in the preview (from the bottom or in the middle on phones).',
+      'Squeezed text and shifted buttons in the Settings side panel fixed: when the text doesn\'t fit, options move to the next line. The preview header stays on one line too.'] },
   { v: '0.17.1',
     tr: ['Stil seç artık üst çubukta, Ayarlar düğmesinin yanında.',
       'Otomatik kur: hayali evde üstte 4 düğme (Ev, Salon, Yatak Odası, Diğer); Diğer sekmesinin ne olduğu da görünüyor. İklim kartlarında Halo seçili başlıyor.',

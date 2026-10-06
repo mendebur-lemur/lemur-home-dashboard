@@ -365,3 +365,25 @@ label.btn { cursor: pointer; }
 .aklec b { display: block; font-size: 15px; } .aklec span { display: block; font-size: 12.5px; color: var(--mu); line-height: 1.4; margin: 6px 0 12px; }
 .aklec .btn { text-decoration: none; display: inline-flex; }
 .akpvh .seg + .seg { margin-left: -4px; }
+.akscr { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow-x: hidden; scrollbar-width: none; }
+.akscr::-webkit-scrollbar { display: none; }
+.akbg i { display: flex; align-items: center; justify-content: center; } .akbg i ha-icon { --mdc-icon-size: 22px; color: var(--mu); }
+.akbgx { margin-top: 12px; } .akbgx .hint { display: block; margin-top: 6px; }
+.akpvh .btn.sm { flex: 0 0 auto; }
+/* Stil seç: üst çubukta vurgulu, Ayarlar'da yönlendiren kart */
+.btn.stl { background: var(--acs); border-color: var(--acl); color: var(--tx); } .btn.stl ha-icon { color: var(--ac); }
+.srow.stl { background: var(--acs); border-color: var(--acl); }
+.srow.stl .stli { flex: 0 0 40px; height: 40px; border-radius: 12px; background: rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; color: var(--ac); }
+/* Ayarlar yan panelde dar: yazı en az 230 piksel; seçenekler sığmazsa alt satıra geçer (yazı sütun sütun ezilmesin) */
+.dlg.dock .srow { flex-wrap: wrap; row-gap: 12px; }
+.dlg.dock .srow > .t { flex: 1 1 230px; min-width: 230px; }
+.dlg.dock .srow.upd > .t, .dlg.dock .srow.stl > .t { min-width: 0; flex-basis: 150px; }
+.dlg.dock .srow .inp.w { width: 100%; }
+.dlg.dock .srow .seg { flex-wrap: wrap; max-width: 100%; }
+.dlg.dock .srow.stl { flex-wrap: nowrap; }
+/* önizleme başlığı: ipucu tek satır, sığmazsa üç noktayla kısalır (yan panel açıkken iki satıra bölünüyordu) */
+.pvh .pvhint { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pvh .seg { flex: 0 0 auto; flex-wrap: nowrap; }
+@media (max-width: 600px) { .pvh { flex-wrap: wrap; } .pvh .seg { flex-wrap: wrap; } }
+.akpvh .seg { flex: 0 0 auto; flex-wrap: nowrap; } .akpvh .seg button { white-space: nowrap; }
+.akpvh > span { flex: 1 1 0; min-width: 0; }
