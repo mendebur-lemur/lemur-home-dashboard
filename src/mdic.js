@@ -17,11 +17,11 @@ const LP_MDIC_ALIAS = {
   'mdi:office-building-minus-outline': 'mdi:balcony', 'mdi:door': 'mdi:door-closed', 'mdi:bed-outline': 'mdi:bed', 'mdi:desk': 'lhd:desk-monitor'
 };
 // simge stili: 'auto' | 'full' | 'mono' | 'tint' (eski 'color' değeri Otomatik sayılır)
-function lpIconMode() { const s = (STORE.data && STORE.data.settings) || {}; return s.icon_style === 'full' || s.icon_style === 'mono' || s.icon_style === 'tint' ? s.icon_style : 'auto'; }
+function lpIconMode() { const s = lpSettings(); return s.icon_style === 'full' || s.icon_style === 'mono' || s.icon_style === 'tint' ? s.icon_style : 'auto'; }
 // Tek renk stili: açık cihazın rengi (ayar icon_tint) ve ışıkta ışığın kendi rengi (icon_tint_light, varsayılan açık)
 const LP_TINT_DEFAULT = '#FFC24A';
-function lpIconTint() { const s = (STORE.data && STORE.data.settings) || {}; return /^#[0-9a-fA-F]{6}$/.test(s.icon_tint || '') ? s.icon_tint : LP_TINT_DEFAULT; }
-function lpIconTintLight() { const s = (STORE.data && STORE.data.settings) || {}; return s.icon_tint_light !== false; }
+function lpIconTint() { const s = lpSettings(); return /^#[0-9a-fA-F]{6}$/.test(s.icon_tint || '') ? s.icon_tint : LP_TINT_DEFAULT; }
+function lpIconTintLight() { const s = lpSettings(); return s.icon_tint_light !== false; }
 // çizimin tek renk hali: gradyanlar ve renkler kaldırılır, hepsi currentColor (rengi CSS verir); beyaz ayrıntılar
 // (dolu rozet üstündeki tik gibi) koyu zemin rengiyle oyulur. Simge başına bir kez hesaplanır.
 function lpMono(k) {

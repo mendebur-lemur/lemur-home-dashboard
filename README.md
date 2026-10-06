@@ -21,6 +21,8 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 - **Yedek kontrol ve duvar anahtarları (Gelişmiş).** İki entegrasyonda görünen lambaya (ör. Govee LAN ve Matter) yedek seçilir: komut hızlı yoldan gider, lamba cevap vermezse yedekten tekrar gönderilir. Yalnız sinyal veren duvar rölesi bir lambaya bağlanır; internet ya da Wi-Fi gidip gelse de anahtar çalışır.
 - **İkinci satır ve şablon.** Karonun altına durum, son değişim ya da öznitelik; ad ve ikinci satırda Home Assistant şablonu. İstersen düğme çalışmadan önce onay sorar.
 - **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir; 16:10, 4:3 ve geniş ekranlarda aynı oranla görünür, eski tabletlerde (iOS 12) de akıcı çalışır. Telefonda, yatay tutulan telefonda ve dikey tutulan tablette kendi düzenine geçer.
+- **Otomatik kur.** Yönetim panelindeki … menüsünden açılır. Solda dolu bir hayali evin canlı önizlemesi var: evinde henüz birkaç cihaz olsa da panonun nereye varabileceğini görürsün. Sağda büyük seçenekler: hangi odalar sekme olsun, hangi cihazlar dahil olsun, tablet ve telefon için ayrı ayrı görünüm, arka plan ve ışık efektleri. Önizleme her seçimde değişir; Uygula panoyu kendi evinden kurar, beğenmezsen geri alırsın.
+- **Stil seç.** Aynı pencere, sekmelerine dokunmadan: ışık ve iklim görünümü, arka plan, telefon ve efekt ayarlarını topluca değiştirir. Önizlemede kendi panonu ya da örnek evi görürsün; beğenirsen Uygula.
 - **Telefonda kendi düzeni.** Oda düğmeleri yana kayar, bölümler alt alta dizilir, düğmeler başparmak boyunda olur. İstersen odalar ya da kategoriler (Işıklar, İklim, Senaryolar) ekranın altına iner, ışıklar tek sıra olur, ışık penceresi alttan açılır.
 - **Mevsime göre iklim.** Yazın klimalar, kışın petekler gösterilir; otomatik ya da elle.
 - **Işık efektleri (isteğe bağlı).** [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) kuruluysa üst şeride Efektler düğmesi gelir, oynayan efekt karolarda görünür.
@@ -183,9 +185,11 @@ Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden a
 
 **Ayarlar → Telefon** seçenekleri birbirinden bağımsızdır, istediğin birleşimi seçebilirsin. Tablet hiçbirinden etkilenmez:
 
-- *Gezinme:* **Üstte odalar** (yukarıdaki düzen), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Altta kategoriler** (altta Işıklar, İklim, Senaryolar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
+- *Gezinme:* **Altta kategoriler** (varsayılan), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Üstte odalar** (yukarıdaki eski düzen). **Altta kategoriler** (altta Işıklar, İklim, Senaryolar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
 - *Işıklar:* **Bölümdeki gibi**, hep **Karo** ya da **Tek sıra** (her ışık bir satır: dokun aç/kapat, sağa sola kaydır parlaklık).
-- *Işık penceresi alttan:* Basılı tutunca açılan pencere ekranın altından gelir, aşağı çekince kapanır.
+- *Işık penceresi alttan* (varsayılan açık): Basılı tutunca açılan pencere ekranın altından gelir, aşağı çekince kapanır.
+
+Bu seçenekler yönetim panelindeki **Telefon** önizlemesinde de görünür.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png" alt="Telefon düzeni" width="320">
 

@@ -412,3 +412,6 @@
 .cstep { display: flex; align-items: center; justify-content: center; margin-top: 12px; padding: 6px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); }
 .cstep .cbt { flex: 0 0 52px; width: 52px; height: 44px; border-radius: 12px; font-size: 24px !important; }
 .cstep .ctg { flex: 1 1 auto; font-size: 26px; }
+/* yönetim panelindeki önizlemede alt çubuk ekranın değil önizlemenin altında durur */
+.edit .pbar { position: -webkit-sticky; position: sticky; margin: 12px -4px -25px; }
+.edit.pb { padding-bottom: 25px; }

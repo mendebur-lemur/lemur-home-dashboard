@@ -75,3 +75,6 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
   feed(pet, undo) { return this.conn ? this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/feed', pet: pet, undo: !!undo }).catch(() => null) : Promise.resolve(); },   // bir dakikadan kısa sürede ikinci besleme sayılmaz (too_soon)
   onChange(f) { this.subs.push(f); return () => { this.subs = this.subs.filter((x) => x !== f); }; }
 });
+// Panonun ayarları. Otomatik kur önizlemesi (hayali ev) çizilirken kısa süre kendi seçimleriyle değiştirilir (LP_OVR.s)
+const LP_OVR = { s: null };
+function lpSettings() { return LP_OVR.s || (STORE.data && STORE.data.settings) || {}; }

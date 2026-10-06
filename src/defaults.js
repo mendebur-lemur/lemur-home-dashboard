@@ -90,7 +90,14 @@ function lhdKinds(s) {
   return c;
 }
 
-function buildDefaultTabs(hass, lang) {
+// opts (Otomatik kur penceresi; verilmezse bugünkü otomatik düzen):
+//   areas: sekme olacak alanlar, bu sırayla (verilirse küçük oda ve 7 sekme sınırı yok)
+//   home: bütün evin özeti "Ev" sekmesi (varsayılan var), other: kalan cihazlar için "Diğer" sekmesi (varsayılan var)
+//   types: { lights, climate, vacuum, media, scenes } hangi cihaz türleri girsin (varsayılan hepsi)
+//   look: ışık bölümünün görünümü: 'tiles' (karo, varsayılan) | 'bar' (kaydırmalı çubuk) | 'phone' (telefonda çubuk)
+function buildDefaultTabs(hass, lang, opts) {
+  opts = opts || {};
+  const TY = Object.assign({ lights: true, climate: true, vacuum: true, media: true, scenes: true }, opts.types || {});
   const S = hass.states || {};
   const ents = hass.entities || {};   // varlık kaydı özeti (area_id, device_id, hidden, entity_category)
   const devs = hass.devices || {};
@@ -134,13 +141,13 @@ function buildDefaultTabs(hass, lang) {
   Object.keys(S).forEach((id) => {
     if (!usable(id)) return;
     const d = dom(id);
-    if (d === 'light') lights.push(id);
-    else if (d === 'switch' && lightLikeSwitch(id)) lights.push(id);
-    else if (d === 'climate') controls.push(id);
-    else if (d === 'media_player') medias.push(id);
-    else if (d === 'scene') scenes.push(id);
-    else if (d === 'script' && !scriptNeedsInput(id)) scenes.push(id);   // parametre isteyen yardımcı betikler düğme olamaz
-    else if (d === 'vacuum') vacuums.push(id);
+    if (d === 'light') { if (TY.lights) lights.push(id); }
+    else if (d === 'switch' && lightLikeSwitch(id)) { if (TY.lights) lights.push(id); }
+    else if (d === 'climate') { if (TY.climate) controls.push(id); }
+    else if (d === 'media_player') { if (TY.media) medias.push(id); }
+    else if (d === 'scene') { if (TY.scenes) scenes.push(id); }
+    else if (d === 'script' && !scriptNeedsInput(id)) { if (TY.scenes) scenes.push(id); }   // parametre isteyen yardımcı betikler düğme olamaz
+    else if (d === 'vacuum') { if (TY.vacuum) vacuums.push(id); }
   });
   const devOf = (id) => (ents[id] && ents[id].device_id) || null;
   const climateItem = (id) => lpClimateItem(hass, id);
@@ -169,7 +176,8 @@ function buildDefaultTabs(hass, lang) {
   // alan sırası: kat seviyesi (yoksa en sona), sonra kayıt sırası
   const areaIds = Object.keys(areas);
   const levelOf = (aid) => { const f = floors[areas[aid].floor_id]; return f && typeof f.level === 'number' ? f.level : 9999; };
-  const order = areaIds.map((aid, i) => ({ aid: aid, i: i })).sort((a, b) => (levelOf(a.aid) - levelOf(b.aid)) || (a.i - b.i)).map((x) => x.aid);
+  const pick = Array.isArray(opts.areas) ? opts.areas.filter((a) => areas[a]) : null;
+  const order = pick || areaIds.map((aid, i) => ({ aid: aid, i: i })).sort((a, b) => (levelOf(a.aid) - levelOf(b.aid)) || (a.i - b.i)).map((x) => x.aid);
   const areaRank = {}; order.forEach((aid, i) => { areaRank[aid] = i; });
   const byArea = (a, b) => {
     const ra = areaRank[areaOf(a)], rb = areaRank[areaOf(b)];
@@ -189,7 +197,7 @@ function buildDefaultTabs(hass, lang) {
     colorIdx = 0;   // her sekmede renkler baştan: aynı sıradaki düğme aynı renkte
     // sağ kolon tek bölüm: iklim kartları, süpürgeler ve medya aynı kutuda
     const secs = [
-      { id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 },
+      Object.assign({ id: o.id + '-l', type: 'lights', title: o.lightTitle, col: 0, entities: o.lights, tile_columns: 5 }, opts.look === 'bar' || opts.look === 'phone' ? { look: opts.look } : {}),
       { id: o.id + '-s', type: 'scenes', title: o.sceneTitle, col: 1, entities: o.scenes.map(sceneItem) },
       { id: o.id + '-c', type: 'climate', title: o.controlTitle, col: 2, entities: o.controls.map(climateItem).concat(o.vacuums || [], o.medias || []) }
     ];
@@ -213,7 +221,7 @@ function buildDefaultTabs(hass, lang) {
 
   const tabs = [];
   const usedIds = { home: true, other: true };
-  tabs.push(tab({
+  if (opts.home !== false) tabs.push(tab({
     id: 'home', name: t(lang, 'home'), icon: 'mdi:home-outline',
     lights: spread(lightList.filter((id) => lightRank(id) < 2), lightRank, 20),
     scenes: (globalScenes.length ? globalScenes : scenes.slice().sort(byName)).slice(0, 6),
@@ -226,8 +234,8 @@ function buildDefaultTabs(hass, lang) {
   const small = {};
   order.forEach((aid) => {
     const L = lightsIn(aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
-    if (!C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
-    if (tabs.length >= 7) { small[aid] = true; return; }   // Ev + 6 oda dolu: kalan odalar "Diğer"e
+    if (!pick && !C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
+    if (tabs.length >= (pick ? 12 : 7)) { small[aid] = true; return; }   // Ev + 6 oda dolu: kalan odalar "Diğer"e (elle seçilince 12)
     const sc = inArea(scenes, aid);
     const ar = areas[aid];
     const aname = ar.name || aid;
@@ -241,8 +249,8 @@ function buildDefaultTabs(hass, lang) {
     }));
   });
 
-  if (tabs.length > 1) {
-    const rest = (id) => { const a = areaOf(id); return !a || small[a] || !areas[a]; };
+  if (opts.other !== false && tabs.length > (opts.home === false ? 0 : 1)) {
+    const rest = (id) => { const a = areaOf(id); return !a || small[a] || !areas[a] || (pick && pick.indexOf(a) < 0); };
     const L = lightList.filter(rest).sort(byArea);
     const C = controls.filter(rest).sort(byArea);
     const M = medias.filter(rest).sort(byArea);
@@ -253,7 +261,7 @@ function buildDefaultTabs(hass, lang) {
       lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'shortcuts'), controlTitle: t(lang, 'other_control')
     }));
   }
-  return tabs.slice(0, 8);
+  return tabs.slice(0, pick ? 14 : 8);
 }
 
 

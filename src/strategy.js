@@ -3,7 +3,8 @@
 
 // Varsayılan zemin: tablet panosundaki arka plan resminin kendisi neredeyse düz koyu lacivert (#0b0e15), kenarlara doğru
 // hafif kararıyor. Resim dosyası gerekmesin diye aynısı CSS ile çiziliyor.
-const LP_DEFAULT_BG = 'radial-gradient(ellipse at center, #0b0e15 0%, #0b0e15 55%, #0a0c13 100%) fixed';
+// koyu zemin (Ayarlar → Arka plan → Koyu). v0.17'den beri varsayılan zemin efekt renkleri (Meditasyon), aşağıda
+const LP_DARK_BG = 'radial-gradient(ellipse at center, #0b0e15 0%, #0b0e15 55%, #0a0c13 100%) fixed';
 
 // Zemin seçenekleri (ayarlar → Arka plan): koyu (varsayılan), siyah, renk, efekt renkleri, resim.
 // Efekt renkleri Lemur Light Effect Card'ın efekt paletleri: her efektin renk tonları (hue), kartın arkasındaki ışıltı gibi
@@ -39,6 +40,16 @@ function lpBgCss(b) {
   return null;
 }
 
+// varsayılan zemin: hiç seçilmediyse efekt renkleri (Meditasyon). Koyu seçildiyse { mode: 'dark' } saklanır
+const LP_DEFAULT_BG_SEL = { mode: 'fx', fx: 'zen' };
+const LP_DEFAULT_BG = lpBgCss(LP_DEFAULT_BG_SEL);
+// ayarlardan çizilecek zemin: kayıtlı CSS, yoksa seçime göre (Koyu ya da varsayılan)
+function lpBgOf(s) {
+  s = s || {};
+  if (typeof s.background === 'string' && s.background) return s.background;
+  return s.bg && s.bg.mode === 'dark' ? LP_DARK_BG : (s.bg && s.bg.mode ? (lpBgCss(s.bg) || LP_DARK_BG) : LP_DEFAULT_BG);
+}
+
 class LemurHomeDashboardStrategy extends HTMLElement {
   static async generate(config, hass) {
     const lang = pickLang(hass);
@@ -51,7 +62,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     const settings = data.settings || {};
     LemurScale.set(settings.canvas || null, settings.kiosk || null);
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
-    const bg = settings.background || LP_DEFAULT_BG;
+    const bg = lpBgOf(settings);
     window.__LHD_VIEWS = tabs.map((x) => x.id);   // kartın gezinmesi bilsin: hangi sekmelerin HA'da görünümü var
     return {
       views: tabs.map((tab) => {

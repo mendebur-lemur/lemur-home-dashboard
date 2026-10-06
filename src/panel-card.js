@@ -212,7 +212,8 @@ const LP_FX_CSS = LP_FX.map((p) => {
 // Yönetim panelinin önizlemesi "Telefon" ekranında config.phone ile zorlar.
 const LP_PHONE_W = 700;
 // telefon düzeninde kartın genişliği (yönetim panelinin telefon önizlemesinde çerçevenin genişliği); geniş ekranda karo sayısı artar (karo ~120 px): 390 px'te 3, 800 px'te 6
-const lpPhoneW = (el) => Math.min((el && el.getBoundingClientRect().width) || window.innerWidth || 390, 1100);
+// genişlik ölçeklemeden bağımsız (offsetWidth): yönetim panelindeki küçültülmüş telefon önizlemesi de gerçek telefon gibi sayılır
+const lpPhoneW = (el) => Math.min((el && (el.offsetWidth || el.getBoundingClientRect().width)) || window.innerWidth || 390, 1100);
 const lpPhoneKey = (el, cfg) => (lpIsPhone(cfg) ? 'p' + Math.floor(lpPhoneW(el) / 120) : 't');
 function lpIsPhone(cfg) {
   if (cfg && typeof cfg.phone === 'boolean') return cfg.phone;
@@ -221,28 +222,28 @@ function lpIsPhone(cfg) {
 
 // üst şeritteki Efektler düğmesi: LEC kuruluysa varsayılan açık
 function lpLecNav(h) {
-  const st = (STORE.data && STORE.data.settings) || {};
+  const st = lpSettings();
   return LEC.installed(h) && st.lec_nav !== false;
 }
 
 // üst şerit (ayar nav): oda düğmelerinin genişliği ve yüksekliği (tuval pikseli; varsayılan 235×155, tablet panosundaki ölçü),
 // cols: düğmeler ilk N kolonun genişliğini eşit paylaşır ve N. kolonun kenarında biter (0 = kapalı), fx_in: Efektler de bu alanda
 function lpNavCfg() {
-  const st = (STORE.data && STORE.data.settings) || {}, n = lhdIsObj(st.nav) ? st.nav : {};
+  const st = lpSettings(), n = lhdIsObj(st.nav) ? st.nav : {};
   const num = (v, lo, hi) => { const x = typeof v === 'string' ? parseFloat(v) : v; return typeof x === 'number' && isFinite(x) ? Math.max(lo, Math.min(hi, Math.round(x))) : null; };
   return { w: num(n.w, 80, 400), h: num(n.h, 60, 260), cols: num(n.cols, 0, 6) || 0, fx_in: n.fx_in === true };
 }
 
 // telefon seçenekleri (ayar phone), her biri ayrı açılır:
-//   nav: 'top' (varsayılan: oda düğmeleri üstte) | 'rooms' (odalar altta) | 'cats' (altta kategoriler: Işıklar, İklim, Senaryolar...)
-//   lights: 'auto' (bölüm ayarındaki gibi) | 'tiles' (karo) | 'rows' (tek sıra, kaydırarak parlaklık)
-//   sheet: ışık penceresi ekranın altından açılır
+//   nav: 'cats' (v0.17 varsayılan: altta kategoriler: Işıklar, İklim, Senaryolar...) | 'rooms' (odalar altta) | 'top' (oda düğmeleri üstte, eski düzen)
+//   lights: 'auto' (bölüm ayarındaki gibi, varsayılan) | 'tiles' (karo) | 'rows' (tek sıra, kaydırarak parlaklık)
+//   sheet: ışık penceresi ekranın altından açılır (varsayılan açık; kapatılınca false saklanır)
 function lpPhoneCfg() {
-  const st = (STORE.data && STORE.data.settings) || {}, p = lhdIsObj(st.phone) ? st.phone : {};
-  return { nav: p.nav === 'rooms' || p.nav === 'cats' ? p.nav : 'top', lights: p.lights === 'tiles' || p.lights === 'rows' ? p.lights : 'auto', sheet: p.sheet === true };
+  const st = lpSettings(), p = lhdIsObj(st.phone) ? st.phone : {};
+  return { nav: p.nav === 'rooms' || p.nav === 'top' ? p.nav : 'cats', lights: p.lights === 'tiles' || p.lights === 'rows' ? p.lights : 'auto', sheet: p.sheet !== false };
 }
 // iklim kartlarının stili (ayar climate_style): 'halo' (varsayılan, Halo iklim kartı) ya da 'rows' (sade satır: durum, hedef, mod, fan, salınım)
-function lpClimStyle() { const st = (STORE.data && STORE.data.settings) || {}; return st.climate_style === 'rows' ? 'rows' : 'halo'; }
+function lpClimStyle() { const st = lpSettings(); return st.climate_style === 'rows' ? 'rows' : 'halo'; }
 const LP_HVAC = {
   tr: { off: 'Kapalı', heat: 'Isıtma', cool: 'Soğutma', auto: 'Otomatik', heat_cool: 'Otomatik', dry: 'Nem alma', fan_only: 'Fan' },
   en: { off: 'Off', heat: 'Heat', cool: 'Cool', auto: 'Auto', heat_cool: 'Auto', dry: 'Dry', fan_only: 'Fan' } };
@@ -300,7 +301,7 @@ function lpCatView(tabs, cur) {
 
 // Mevsim: ayarda yoksa aya göre (Mayıs-Eylül yaz). Kış'ta petek, Yaz'da klima kartları.
 function lpSeason() {
-  const d = STORE.data, s = d && d.settings && d.settings.season;
+  const s = lpSettings().season;
   if (s === 'summer' || s === 'winter') return s;
   const m = new Date().getMonth() + 1;
   return m >= 5 && m <= 9 ? 'summer' : 'winter';
@@ -407,6 +408,8 @@ class LemurHomeDashboardCard extends HTMLElement {
   set hass(h) {
     const first = !this._hass;
     this._hass = h;
+    // Otomatik kur önizlemesi (hayali ev): sahte hass ile çizilir, panonun kayıtlı verisine ve LEC'e dokunulmaz
+    if (first && this._config && this._config.demo) { this._render(); return; }
     if (first) { LEC.load(h); STORE.load(h).then(() => this._render()).catch(() => this._render()); return; }
     LemurLightPopup.update(h);
     LemurCardPopup.update(h);
@@ -421,7 +424,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
       this._def = null;
       const st = (d && d.settings) || {};
-      if (!this._config.edit) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
+      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
       this._render();
     });
     if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
@@ -451,6 +454,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
 
   _tabs() {
+    if (this._config && this._config.demo) return this._config.demo_tabs || [];
     const d = STORE.data;
     if (d && d.tabs && d.tabs.length) return d.tabs;
     if (!this._def) this._def = buildDefaultTabs(this._hass, pickLang(this._hass));
@@ -467,6 +471,11 @@ class LemurHomeDashboardCard extends HTMLElement {
 
   _render() {
     if (!this._hass) return;
+    // önizleme kartı kendi ayarlarıyla çizilir (bu kartın çizimi bitince panonun ayarlarına dönülür)
+    if (this._config && this._config.demo) { LP_OVR.s = this._config.demo_settings || {}; try { this._render0(); } finally { LP_OVR.s = null; } return; }
+    this._render0();
+  }
+  _render0() {
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
     const h = this._hass, S = h.states, lang = pickLang(h);
     const tabs = this._tabs();
@@ -474,6 +483,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!tab) { this.shadowRoot.innerHTML = ''; this._sig = null; return; }
     const season = lpSeason();
     // telefonda altta kategoriler: sayfa bütün sekmelerden kurulur (düzenleme önizlemesinde değil)
+    // düzenleme önizlemesinde de telefon seçenekleri görünür; kategori sayfası yerine sekmenin kendisi düzenlenir
     const pc = lpPhoneCfg(), ph = lpIsPhone(this._config) && !this._config.edit;
     this._cat = ph && pc.nav === 'cats' ? lpCatView(tabs, tab) : null;
     const view = this._cat ? this._cat.tab : tab;
@@ -689,14 +699,16 @@ class LemurHomeDashboardCard extends HTMLElement {
         '<div class="nav navr" style="grid-area:1 / ' + (navCols + 1) + ' / 2 / -1;' + nst + '">' + (nc.fx_in ? '' : navFx) + clock + '</div>'
       : '<div class="nav"' + (nst ? ' style="' + nst + '"' : '') + '>' + navBtns + navFx + clock + '</div>';
     // telefon: odalar ya da kategoriler altta (uygulama gibi); üstte yalnız sayfanın adı ve saat
-    const pcf = lpPhoneCfg(), pbOn = phone && !edit && pcf.nav !== 'top', cv = pbOn ? this._cat : null;
+    const pcf = lpPhoneCfg(), pbOn = phone && pcf.nav !== 'top';
+    // önizlemede (düzenleme) kategori çubuğu görünür ama sayfa sekmenin kendisidir: üstte sekmenin adı
+    const cv = pbOn ? (this._cat || (edit && pcf.nav === 'cats' ? lpCatView(tabs, tab) : null)) : null, cvPage = cv && !edit;
     let pHead = '', pBar = '';
     if (pbOn) {
       const fxI = lpLecNav(h) ? '<div class="pbi fxb" data-navfx>' + lpIcon('mdi:creation') + '<span>' + esc(t(lang, 'effects')) + '</span></div>' : '';
       if (cv) {
         pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
-        pHead = '<div class="phd"><b>' + esc(t(lang, 'c_' + cv.cat)) + '</b>' + clock + '</div>' +
-          (cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
+        pHead = '<div class="phd"><b>' + esc(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') + '</b>' + clock + '</div>' +
+          (cvPage && cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
         pHead = '<div class="phd"><b>' + esc(tab.name || '') + '</b>' + clock + '</div>';
@@ -780,19 +792,20 @@ class LemurHomeDashboardCard extends HTMLElement {
     R.querySelectorAll('[data-nav]').forEach((b) => lpPress(b, () => {
       const id = b.getAttribute('data-nav');
       if (id === tab.id) return;
+      if (this._config.demo) { this._config = Object.assign({}, this._config, { tab: id }); this._sig = null; this._render(); return; }
       const base = location.pathname.split('/').slice(0, 2).join('/');
       // pano açıkken eklenen sekmenin HA'da henüz görünümü yok: sayfa baştan yüklenir, pano yeniden üretilir
       if (window.__LHD_VIEWS && window.__LHD_VIEWS.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
       history.pushState(null, '', base + '/' + id);
       lpFire(window, 'location-changed', { replace: false });
     }));
-    const more = (id) => lpFire(this, 'hass-more-info', { entityId: id });
+    const more = (id) => { if (!this._config.demo) lpFire(this, 'hass-more-info', { entityId: id }); };
     this._tiles.forEach((b) => {
       const id = b.getAttribute('data-light');
       // basılı tut: varsayılan bizim ışık penceremiz; ayarda seçildiyse HA'nın penceresi ya da LEC'in efekt ekranı (lambanın odasıyla)
       const hold = () => {
         const mode = lpHoldMode(), h = this._hass, d = id.split('.')[0];
-        if (mode === 'lec' && LEC.installed(h) && LEC.open(h, LEC.roomOf(id) || tab.area)) return;
+        if (mode === 'lec' && !this._config.demo && LEC.installed(h) && LEC.open(h, LEC.roomOf(id) || tab.area)) return;
         if (mode !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) { LemurLightPopup.open(h, id, b._item, LEC.roomOf(id) || tab.area); return; }
         more(id);
       };
@@ -852,13 +865,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!it || !it.action) return;
       if (!it.action.service) { this._act(it.action, it.entity); return; }   // pencerede kart aç, HA biçimli eylem...
       const lk = lpLecKind(it);
+      if (lk && this._config.demo) return;   // önizlemede efekt ekranı açılmaz, efekt çalmaz
       if (lk === 'open') { LEC.open(this._hass, it.action.room || tab.area); return; }
       if (lk) { LEC.run(this._hass, it.action); return; }
       // servis: hedef varlık kimliği, liste ya da { area_id, entity_id... } olabilir; data ile birleşir (_act)
       this._act(it.action, it.entity);
     }), (() => { const it0 = sceneItem(b); return it0 && it0.hold ? () => this._act(it0.hold, it0.entity) : null; })()));
     R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter')));
-    R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => LEC.open(this._hass, tab.area)));
+    R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => { if (this._config.demo) return; LEC.open(this._hass, tab.area); }));
     // telefon kategorileri: alttaki kategori, üstteki oda; ışıklarda sağa sola kaydırınca sonraki / önceki oda
     const goCat = (c, room) => { LP_PH.cat = c; LP_PH.room = room; this._sig = null; this._render(); try { window.scrollTo(0, 0); } catch (e) {} };
     R.querySelectorAll('[data-cat]').forEach((b) => lpPress(b, () => goCat(b.getAttribute('data-cat'), LP_PH.room)));

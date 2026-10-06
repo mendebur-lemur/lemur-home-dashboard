@@ -21,6 +21,8 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 - **Backup control and wall switches (Advanced).** A lamp that shows up in two integrations (e.g. Govee LAN and Matter) gets a backup: the command goes the fast way, and if the lamp does not answer it is sent again through the backup. A wall relay that only gives a signal is bound to a lamp; the switch keeps working even when the internet or Wi-Fi comes and goes.
 - **Second line and templates.** State, last changed or an attribute under a tile; Home Assistant templates in the name and second line. A button can ask before running.
 - **Fits any screen.** The dashboard scales with the screen; it keeps the same proportions on 16:10, 4:3 and wide screens and runs smoothly on old tablets (iOS 12). Phones, phones held sideways and tablets held upright get their own layout.
+- **Auto setup.** Opens from the … menu in the admin panel. On the left a live preview of a well-equipped made-up home: even with just a few devices at home you see where the dashboard can go. On the right large options: which rooms become tabs, which devices go in, a separate look for tablets and phones, background and light effects. The preview changes with every choice; Apply builds the dashboard from your own home, and undo takes it back.
+- **Choose a style.** The same window, without touching your tabs: changes the light and climate look, background, phone and effect settings all at once. The preview shows your own dashboard or the example home; Apply if you like it.
 - **Its own phone layout.** Room buttons scroll sideways, sections stack, buttons are thumb-sized. Optionally the rooms or categories (Lights, Climate, Scenes) move to the bottom of the screen, lights go one per row and the light window slides up from the bottom.
 - **Seasonal climate.** Air conditioners in summer, radiators in winter; automatic or by hand.
 - **Light effects (optional).** If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is installed, an Effects button appears in the top bar and the playing effect shows on the tiles.
@@ -183,9 +185,11 @@ When the screen is narrower than 700 pixels, a phone is held sideways (less than
 
 The **Settings → Phone** options are independent of each other, so any combination can be chosen. Tablets are not affected:
 
-- *Navigation:* **Rooms on top** (the layout above), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Categories at the bottom** (Lights, Climate, Scenes and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
+- *Navigation:* **Categories at the bottom** (default), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Rooms on top** (the old layout above). **Categories at the bottom** (Lights, Climate, Scenes and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
 - *Lights:* **As in the section**, always **Tiles** or **One per row** (each light a row: tap to toggle, swipe for brightness).
-- *Light window from the bottom:* The window opened by holding a light slides up from the bottom; pull it down to close.
+- *Light window from the bottom* (on by default): The window opened by holding a light slides up from the bottom; pull it down to close.
+
+These options also show in the **Phone** preview of the admin panel.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png" alt="Phone layout" width="320">
 

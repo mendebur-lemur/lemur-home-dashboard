@@ -78,6 +78,29 @@ const LP_POP_CSS = `
   padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); opacity: 1; transition: transform 0.26s ease-out; }
 :host(.sheet.in) .pan { transform: translateY(0); }
 :host(.sheet) .grab { display: block; width: 44px; height: 5px; border-radius: 9px; background: #3A3F4A; margin: 2px auto 12px; }
+/* v0.17 panonun genel stili (base.css ile aynı ölçüler): pencere bölüm kutusu gibi cam, içindekiler karo gibi;
+   seçili sekme oda düğmesi gibi mavi kenarlı, açık ışık karo gibi ışığın renginde kenarlı */
+.bg { background: rgba(5, 7, 12, 0.42); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.pan { background: rgba(20, 24, 31, 0.72); -webkit-backdrop-filter: blur(26px) saturate(1.3); backdrop-filter: blur(26px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 26px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); }
+:host(.sheet) .pan { border-bottom: 0; }
+.box { background: rgba(10, 10, 10, 0.4); border: 0; border-radius: 20px; box-shadow: none; }
+.hd .nm b { font-size: 16px; font-weight: 700; }
+.x { background: rgba(10, 10, 10, 0.4); border-radius: 20px; }
+.row { padding: 6px; }
+.sl { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; box-sizing: border-box; }
+.sl .fill { background-color: transparent; background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, var(--lc, ${LP_POP_ACCENT}) 100%); opacity: 0.34; }
+.sl.on { border: 2px solid var(--lc, rgb(255, 214, 10)); background: rgba(255, 255, 255, 0.05); }
+.sl.on ha-state-icon, .sl.on ha-icon { color: var(--lc, #FFC107); }
+.pw { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; box-sizing: border-box; color: #D3D3D3; }
+.pw.on { background: rgba(255, 255, 255, 0.05); border: 2px solid rgb(255, 214, 10); color: #FFC107; }
+.tabs { padding: 6px; }
+.tab { height: 46px; border-radius: 15px; color: #D3D3D3; font-size: 14px; border: 2px solid transparent; box-sizing: border-box; }
+.tab.on { background: rgba(255, 255, 255, 0.05); border-color: rgba(91, 141, 239, 0.9); color: #fff; font-weight: 700; }
+.kel div, .sw div { border-radius: 12px; }
+.segs div, .fx div { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; color: #D3D3D3; box-sizing: border-box; }
+.segs div.on, .fx div.on { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(91, 141, 239, 0.9); color: #fff; font-weight: 600; }
+:host(.sheet) .grab { background: rgba(255, 255, 255, 0.25); }
 @media (max-width: 560px) { .col { grid-template-columns: 1fr; } .pan { padding: 12px; border-radius: 24px; } }
 `;
 const LP_POP_TXT = {
@@ -87,7 +110,7 @@ const LP_POP_TXT = {
 
 // basılı tutunca ne açılır: 'popup' (bu pencere, varsayılan), 'ha' (HA'nın kendi penceresi), 'lec' (LEC efekt ekranı); eski lec_hold ayarı 'lec' sayılır
 function lpHoldMode() {
-  const st = (STORE.data && STORE.data.settings) || {};
+  const st = lpSettings();
   if (st.hold === 'ha' || st.hold === 'lec' || st.hold === 'popup') return st.hold;
   return st.lec_hold ? 'lec' : 'popup';
 }
@@ -330,6 +353,7 @@ class LemurLightPopup {
   _openLec() {
     const room = this._lecRoom();
     this.close();
+    if (this._h && this._h.lhdDemo) return;   // otomatik kur önizlemesi
     setTimeout(() => LEC.open(this._h, room), 220);
   }
 

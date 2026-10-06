@@ -20,10 +20,10 @@ const ADM = {
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
     sHelp: 'Yardım', repT: 'Sorun bildir', repS: 'Sürüm ve cihaz bilgisiyle GitHub\'da kayıt açar; ne olduğunu yazman yeter', repQ: 'Ne oldu?', repPh: 'Ne yaptın, ne bekliyordun, ne oldu? Örnek: Salon sekmesinde ışık çubuğunu kaydırınca parlaklık değişmiyor.', repInfo: 'Kayda eklenecek bilgiler', repInfoS: 'Kişisel bilgi yok: oda, cihaz ve kişi adları, adresin ya da hesabın eklenmez.', repNoGh: 'GitHub hesabın yoksa metni kopyalayıp geliştiriciye ilet.', repCopy: 'Metni kopyala', repCopied: 'Kopyalandı', repGh: 'GitHub\'da aç', rWhat: 'Ne oldu?', rInfoH: 'Bilgiler', rPanel: 'Pano', rInt: 'entegrasyon', rHa: 'Home Assistant', rBrowser: 'Tarayıcı', rApp: 'HA uygulaması', rScreen: 'Ekran', rTouch: 'dokunmatik', rNoTouch: 'dokunmatik değil', rCanvas: 'kanvas', rLang: 'Dil', rLayout: 'Düzen', rAuto: 'otomatik', rTabs: 'sekme', rSecs: 'bölüm', rItems: 'öğe', rKinds: 'Öğe türleri', rLook: 'Görünüm', rLec: 'Light Effect Card', rErr: 'Son hatalar', rNoErr: 'yok', sBackup: 'Yedek', bkDown: 'Yedeği indir', bkDownS: 'Sekmeler, bölümler ve ayarlar tek dosyada', bkUp: 'Yedekten geri yükle', bkUpS: 'Bir yedek dosyası seç; önce onay sorulur, şu anki düzenin yerine geçer', bkQ: 'Yedek geri yüklensin mi?', bkW: '{d} tarihli yedek (v{v}): {n} sekme, {s} bölüm. Şu anki sekmeler, bölümler ve ayarlar bu yedekle değiştirilir. Geri al ile dönebilirsin.', bkVer: 'Yedek v{v} ile alınmış; yine de yüklenebilir.', bkSvc: 'Bu yedekteki hayvanlar şu servisleri kendiliğinden çalıştırır:', twinL: 'Yedek kontrol', twinNone: 'Yok', twinT: 'Lamba cevap vermezse komut buradan da gönderilir', sWalls: 'Duvar anahtarları', wallsT: 'Röle yalnız sinyal veriyorsa elle basınca seçilen lamba açılır/kapanır', wallSw: 'Anahtar', wallLight: 'Lamba', wallBr: 'Parlaklık %', wallK: 'Kelvin', wallAdd: 'Anahtar ekle', wallDel: 'Kaldır', wallPick: 'Seç…', wallNone: 'Henüz duvar anahtarı yok.', wallAuto: 'Bu anahtar için HA\'da ayrıca bir otomasyon varsa kapat: {n}', bkYes: 'Geri yükle', bkSaved: 'Yedek indirildi', bkOk: 'Yedek geri yüklendi', bkErr: 'Bu dosya bir pano yedeği değil', newsT: 'Yenilikler', newsV: 'v{v} ile gelenler', newsOld: 'Önceki sürümler', newsAll: 'Bütün notlar GitHub\'da', newsOk: 'Tamam', newsLink: 'Yenilikler', sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
-    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt: Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
+    bg: 'Arka plan', bgT: 'Koyu: tablet panosundaki zemin. Renk: istediğin düz renk. Efekt (varsayılan, Meditasyon): Light Effect Card\'ın efekt renkleriyle yumuşak ışıltı. Resim: /local/zemin.jpg gibi bir adres.', bgDark: 'Koyu', bgBlack: 'Siyah', bgColor: 'Renk', bgFx: 'Efekt', bgImg: 'Resim', bgUrl: 'Resim adresi', bgBad: 'Bu adreste resim açılmadı: dosyayı HA\'nın config/www klasörüne koy, adresi /local/dosya.jpg diye yaz.',
     theme: 'HA teması', themeT: 'Boş bırakılabilir; açılır pencereler bu temayla gelir.', kHeader: 'Üst barı gizle', kHeaderT: 'Bu panoda HA\'nın başlık çubuğu görünmez.',
     kSide: 'Yan menüyü gizle', kSideT: 'Bu panoda HA\'nın sol menüsü görünmez.', canvas: 'Kanvas', canvasT: 'Tasarım genişliği ve referans yüksekliği (px). Pano ekrana bu oranla ölçeklenir.',
-    navAl: 'Oda düğmelerini kolona hizala', navAlT: 'Üst şeritteki oda düğmeleri seçilen kolonun sağ kenarında biter ve aradaki alanı eşit paylaşır. Her ekran boyutunda aynı hizada kalır.', navNo: 'Kapalı', navCol: '{n}. kolona kadar', navFx: 'Efektler de hizalı alanda', navFxT: 'Açıkken Efektler düğmesi oda düğmeleriyle birlikte hizalanır; kapalıyken saatin yanında durur.', navSz: 'Oda düğmelerinin boyutu', navSzT: 'Genişlik ve yükseklik (piksel). Boş bırakılırsa 235 × 155.', navSzA: 'Yükseklik (piksel). Kolona hizalıyken genişlik kendiliğinden ayarlanır. Boş bırakılırsa 155.', navW: 'Genişlik', navH: 'Yükseklik', clSt: 'İklim ve süpürge kartları', clStT: 'Halo: büyük, halkalı kartlar. Sade: tek satır; iklimde durum, sıcaklık ve hedef, süpürgede durum, pil, başlat ve istasyon. Karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü (cihaz destekliyorsa).', clHalo: 'Halo', clRows: 'Sade', s_phone: 'Telefon', phNav: 'Gezinme', phNavT: 'Üstte odalar: bugünkü düzen. Altta odalar: oda düğmeleri ekranın altında, uygulama gibi. Altta kategoriler: altta Işıklar, İklim, Senaryolar; ışıklarda odalar arasında sağa sola kaydırarak geçilir.', phTop: 'Üstte odalar', phRooms: 'Altta odalar', phCats: 'Altta kategoriler', phLights: 'Işıklar', phLightsT: 'Bölüm ayarındaki gibi, hep karo ya da tek sıra (her ışık bir satır; dokun aç/kapat, sağa sola kaydır parlaklık).', phLAuto: 'Bölümdeki gibi', phLTiles: 'Karo', phLRows: 'Tek sıra', phSheet: 'Işık penceresi alttan', phSheetT: 'Basılı tutunca açılan pencere ekranın altından gelir; aşağı çekince kapanır. Tablet etkilenmez.', version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
+    navAl: 'Oda düğmelerini kolona hizala', navAlT: 'Üst şeritteki oda düğmeleri seçilen kolonun sağ kenarında biter ve aradaki alanı eşit paylaşır. Her ekran boyutunda aynı hizada kalır.', navNo: 'Kapalı', navCol: '{n}. kolona kadar', navFx: 'Efektler de hizalı alanda', navFxT: 'Açıkken Efektler düğmesi oda düğmeleriyle birlikte hizalanır; kapalıyken saatin yanında durur.', navSz: 'Oda düğmelerinin boyutu', navSzT: 'Genişlik ve yükseklik (piksel). Boş bırakılırsa 235 × 155.', navSzA: 'Yükseklik (piksel). Kolona hizalıyken genişlik kendiliğinden ayarlanır. Boş bırakılırsa 155.', navW: 'Genişlik', navH: 'Yükseklik', clSt: 'İklim ve süpürge kartları', clStT: 'Halo: büyük, halkalı kartlar. Sade: tek satır; iklimde durum, sıcaklık ve hedef, süpürgede durum, pil, başlat ve istasyon. Karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü (cihaz destekliyorsa).', clHalo: 'Halo', clRows: 'Sade', s_phone: 'Telefon', phNav: 'Gezinme', phNavT: 'Altta kategoriler (önerilen): altta Işıklar, İklim, Senaryolar; ışıklarda odalar arasında sağa sola kaydırarak geçilir. Altta odalar: oda düğmeleri ekranın altında, uygulama gibi. Üstte odalar: eski düzen, oda düğmeleri üstte.', phTop: 'Üstte odalar', phRooms: 'Altta odalar', phCats: 'Altta kategoriler', phLights: 'Işıklar', phLightsT: 'Bölüm ayarındaki gibi, hep karo ya da tek sıra (her ışık bir satır; dokun aç/kapat, sağa sola kaydır parlaklık).', phLAuto: 'Bölümdeki gibi', phLTiles: 'Karo', phLRows: 'Tek sıra', phSheet: 'Işık penceresi alttan', phSheetT: 'Basılı tutunca açılan pencere ekranın altından gelir; aşağı çekince kapanır. Tablet etkilenmez.', akT: 'Otomatik kur', akHint: 'Pano HA\'daki alanlardan ve cihazlardan kurulur. Seç, aşağıda sonucu gör, Uygula.', akRooms: 'Odalar (her biri bir sekme)', akHome: 'Ev sekmesi', akHomeT: 'Bütün evin özeti: odalardan sırayla ışıklar, senaryolar, iklim', akOther: 'Diğer sekmesi', akOtherT: 'Seçilmeyen odaların ve alanı olmayan cihazların sekmesi', akWhat: 'Neler dahil olsun', akL: 'Işıklar', akS: 'Senaryolar', akC: 'İklim', akV: 'Süpürge', akM: 'Medya', akLook: 'Görünüm', akLights: 'Işıklar', akTiles: 'Karo', akBars: 'Kaydırmalı çubuk', akPhoneBars: 'Telefonda çubuk', akRes: 'Sonuç · {n} sekme', akSum: '{l} ışık · {s} senaryo · {c} kart', akNone: 'Seçimle hiç sekme oluşmuyor.', akWarn: 'Uygula mevcut sekmelerin yerine geçer. Beğenmezsen üstteki geri al ile dönebilirsin; ayarların kalır.', akGo: 'Uygula', akOk: 'Pano otomatik kuruldu', akNoAreas: 'HA\'da henüz alan (oda) yok. Ayarlar → Alanlar\'dan oda ekleyince burada çıkar.', akRoomsT: 'Senin evindeki alanlar; seçilenler birer sekme olur. Önizleme hayali bir evden.', akTabs: 'Sekmeler', akTilesT: 'Kare karolar, tablet gibi', akBarsT: 'Dokun aç/kapat, kaydır parlaklık', akPhoneBarsT: 'Tablette karo, telefonda çubuk', akHaloT: 'Büyük, halkalı kartlar', akRowsT: 'Tek satır, dokununca açılır', akBgZen: 'Meditasyon', akBgAur: 'Kutup ışığı', akBgSun: 'Gün batımı', akBgOce: 'Okyanus', akPhone: 'Telefon', akPhoneT: 'Önizlemede Telefon\'a geçince görünür', akCatsT: 'Altta Işıklar, İklim, Senaryolar', akRoomsBT: 'Oda düğmeleri altta', akTopT: 'Oda düğmeleri üstte', akPvTab: 'Tablet', akPvPh: 'Telefon', akPvNote: 'Hayali bir ev: senin panon seçtiğin odalarla, kendi cihazlarından kurulur. Önizlemeye dokunup deneyebilirsin.', akTablet: 'Tablet', akTabletT: 'Önizleme tablete geçer', akPLSame: 'Tabletteki gibi', akPLSameT: 'Bölümün ayarı geçerli', akSheetOn: 'Alttan açılsın', akSheetOnT: 'Aşağı çekince kapanır', akSheetOff: 'Ortada açılsın', akSheetOffT: 'Tabletteki gibi pencere', akBgKeep: 'Seçmezsen şimdiki arka planın kalır', akLec: 'Işık efektleri', akLecT: 'Lemur Light Effect Card ile', akLecOn: 'Efektler açık', akLecOnT: 'Üst şeritte Efektler düğmesi; ışık penceresinde Efekt sekmesi', akLecOff: 'Efektler gizli', akLecWhy: 'Işıklarına hareketli efektler: ateş, kutup ışığı, gökkuşağı ve onlarcası', akLecHow: 'İsteğe bağlı. HACS\'tan Lemur Light Effect Card\'ı indir, Ayarlar → Cihazlar ve servisler\'den entegrasyonu ekle, HA\'yı yeniden başlat. Pano onu kendisi tanır, ayar gerekmez: Efektler düğmesi, ışık penceresindeki Efekt sekmesi ve senaryolardaki efekt düğmeleri kendiliğinden açılır. Kaldırırsan bunlar gizlenir, pano bozulmaz.', akLecGet: 'HACS\'ta aç', akST: 'Stil seç', akSHint: 'Sekmelerine dokunulmaz; görünüm ayarları topluca değişir. Önizlemede dene, beğenirsen Uygula.', akSrcMine: 'Benim evim', akSrcDemo: 'Örnek ev', akPvMine: 'Kendi panon. Önizlemede dokunuşlar cihazlarına gitmez.', akResS: 'Sekmelerin aynı kalır', akWarnS: 'Işık görünümü, iklim kartları, arka plan, telefon ve efekt ayarları değişir. Beğenmezsen geri al ile dönebilirsin.', akOkS: 'Stil uygulandı', version: 'Sürüm', lec: 'Lemur Light Effect Card', lecOn: 'Kurulu ({v}). Efekt ekranı üst şeritten, ışık penceresinden ve senaryo düğmelerinden açılır.', lecOff: 'Kurulu değil. Işık efektleri için isteğe bağlı olarak kurulabilir; kurulunca efekt düğmeleri burada açılır.', lecNav: 'Üst şeritte Efektler', lecNavT: 'Panonun üst şeridinde, oda düğmelerinin yanında efekt ekranını açan düğme', lecInfoT: 'Lemur Light Effect Card kurulu', lecInfo: 'Panonun üst şeridine Efektler düğmesi eklendi: dokununca efekt ekranı o sekmenin odasıyla açılır. Senaryo bölümlerine tek tek efekt düğmesi de ekleyebilirsin (bölümü seç → Düğme ekle → Işık efektleri). Işık penceresindeki Efekt sekmesi de efekt ekranını açar.', ok: 'Tamam', iconPick: 'Simge seç', iconSug: 'Önerilen', iconAll: 'Arama sonuçları', iconSearch: 'Ara (ör. lamba, sofa, tavan)', iconMore: 'İlk {n} sonuç gösteriliyor, aramayı daralt', iconNone: 'Bulunamadı. Simgenin adını mdi:... diye yazabilirsin.', iconLoading: 'Simgeler yükleniyor…', icCol: 'Simgeler', iconEvery: 'Tüm simgeler', icColNone: 'Simgeler yüklenemedi.', icStyle: 'Simge stili', icStyleT: 'Otomatik: kapalı cihazlar gri, açıklar renkli. Renkli: hepsi renkli. Düz: hepsi gri. Tek renk: çizgiler tek tonda; kapalılar gri, açıklar seçtiğin renkte.', icAuto: 'Otomatik', icFlat: 'Düz', icColor: 'Renkli', icTint: 'Tek renk', icTintC: 'Renk seç', icTintL: 'Işıkta ışığın rengi', icTintLT: 'Tek renk stilinde açık ışığın simgesi lambanın kendi renginde görünür.', icLec: 'Efekt simgeleri', icLecNone: 'Efekt simgeleri yüklenemedi.', hold: 'Işığa basılı tutunca', holdT: 'Işık karosuna basılı tutunca açılan pencere', hPop: 'Işık penceresi', hHa: 'HA penceresi', hLec: 'Efekt ekranı', lecOpen: 'Efekt ekranı', lecStop: 'Efekti durdur', lecGroup: 'Işık efektleri · {r}', lecLoading: 'Efektler yükleniyor…', tOpen: 'Efekt ekranı · {r}', tPlay: 'Efekt: {e} · {r}', tStop: 'Efekti durdur · {r}', roomByTab: 'sekmenin odası', lecNa: 'Lemur Light Effect Card kurulu değil: bu düğme panoda görünmez',
     resetAll: 'Otomatik düzene dön', resetQ: 'Bütün sekme ve bölümler silinir, pano yeniden evin alanlarından kurulur. Ayarlar kalır.', resetOk: 'Otomatik düzene dönüldü',
     secL: 'İkinci satır', sc_none: 'Yok', sc_state: 'Durum', sc_lc: 'Son değişim', sc_attr: 'Öznitelik', sc_tpl: 'Yazı ya da şablon', swapL: 'Ad üstte, değer altta', cfmL: 'Dokununca onay iste', cfmT: 'Yanlışlıkla dokunmaya karşı: önce "çalıştırılsın mı?" diye sorar', cfmText: 'Soru (boşsa "<ad> çalıştırılsın mı?")', nameTplT: 'Ad ve ikinci satırda Home Assistant şablonu yazılabilir: {{ ... }}',
     cpT: 'Kart ekle', cpSearch: 'Kart ara', cpHalo: 'Halo kartları', cpHa: 'Home Assistant kartları', cpCustom: 'Kurulu özel kartlar', cpYaml: 'YAML ile yaz', ceT: 'Kartı düzenle', cePv: 'Önizleme', ceVisual: 'Görsel', ceYaml: 'YAML', ceNoEd: 'Bu kartın görsel düzenleyicisi yok; YAML ile düzenle.', ceLoad: 'Düzenleyici yükleniyor…', ceEdit: 'Görsel düzenle', ceBack: 'Geri',
@@ -62,10 +62,10 @@ const ADM = {
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
     sHelp: 'Help', repT: 'Report a problem', repS: 'Opens a GitHub issue with the version and device details; you only write what happened', repQ: 'What happened?', repPh: 'What did you do, what did you expect, what happened? Example: swiping a light bar on the Living room tab does not change the brightness.', repInfo: 'Details added to the issue', repInfoS: 'Nothing personal: no room, device or person names, address or account.', repNoGh: 'No GitHub account? Copy the text and send it to the developer.', repCopy: 'Copy text', repCopied: 'Copied', repGh: 'Open on GitHub', rWhat: 'What happened?', rInfoH: 'Details', rPanel: 'Dashboard', rInt: 'integration', rHa: 'Home Assistant', rBrowser: 'Browser', rApp: 'HA app', rScreen: 'Screen', rTouch: 'touch', rNoTouch: 'no touch', rCanvas: 'canvas', rLang: 'Language', rLayout: 'Layout', rAuto: 'automatic', rTabs: 'tabs', rSecs: 'sections', rItems: 'items', rKinds: 'Item kinds', rLook: 'Look', rLec: 'Light Effect Card', rErr: 'Recent errors', rNoErr: 'none', sBackup: 'Backup', bkDown: 'Download backup', bkDownS: 'Tabs, sections and settings in one file', bkUp: 'Restore a backup', bkUpS: 'Pick a backup file; you are asked first, then it replaces the current layout', bkQ: 'Restore this backup?', bkW: 'Backup from {d} (v{v}): {n} tabs, {s} sections. The current tabs, sections and settings are replaced by it. Undo brings them back.', bkVer: 'The backup was made with v{v}; it can still be restored.', bkSvc: 'The pets in this backup run these services on their own:', twinL: 'Backup control', twinNone: 'None', twinT: 'If the lamp does not answer, the command is also sent through this', sWalls: 'Wall switches', wallsT: 'If the relay only gives a signal, pressing it by hand toggles the chosen lamp', wallSw: 'Switch', wallLight: 'Lamp', wallBr: 'Brightness %', wallK: 'Kelvin', wallAdd: 'Add switch', wallDel: 'Remove', wallPick: 'Pick…', wallNone: 'No wall switches yet.', wallAuto: 'If HA also has an automation for this switch, turn it off: {n}', bkYes: 'Restore', bkSaved: 'Backup downloaded', bkOk: 'Backup restored', bkErr: 'This file is not a dashboard backup', newsT: 'What\'s new', newsV: 'New in v{v}', newsOld: 'Earlier versions', newsAll: 'All notes on GitHub', newsOk: 'OK', newsLink: 'What\'s new', sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
-    bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect: a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
+    bg: 'Background', bgT: 'Dark: the tablet dashboard background. Colour: any solid colour. Effect (default, Meditation): a soft glow in the effect colours of Light Effect Card. Image: an address like /local/background.jpg.', bgDark: 'Dark', bgBlack: 'Black', bgColor: 'Colour', bgFx: 'Effect', bgImg: 'Image', bgUrl: 'Image address', bgBad: 'No image opens at this address: put the file in HA\'s config/www folder and write /local/file.jpg.',
     theme: 'HA theme', themeT: 'Optional; dialogs open with this theme.', kHeader: 'Hide the top bar', kHeaderT: 'Home Assistant\'s header is hidden on this dashboard.',
     kSide: 'Hide the sidebar', kSideT: 'Home Assistant\'s sidebar is hidden on this dashboard.', canvas: 'Canvas', canvasT: 'Design width and reference height (px). The dashboard scales to the screen with this ratio.',
-    navAl: 'Align room buttons to a column', navAlT: 'The room buttons in the top bar end at the right edge of the chosen column and share the space evenly. They stay aligned on every screen size.', navNo: 'Off', navCol: 'Up to column {n}', navFx: 'Effects inside the aligned area', navFxT: 'When on, the Effects button is aligned together with the room buttons; when off it sits next to the clock.', navSz: 'Room button size', navSzT: 'Width and height (pixels). Empty means 235 × 155.', navSzA: 'Height (pixels). While aligned to a column the width is set automatically. Empty means 155.', navW: 'Width', navH: 'Height', clSt: 'Climate and vacuum cards', clStT: 'Halo: the large cards with a ring. Simple: one row; for climate the status, temperature and target, for vacuums the status, battery, start and dock. Tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction (when the device supports them).', clHalo: 'Halo', clRows: 'Simple', s_phone: 'Phone', phNav: 'Navigation', phNavT: 'Rooms on top: today\'s layout. Rooms at the bottom: room buttons at the bottom of the screen, like an app. Categories at the bottom: Lights, Climate, Scenes at the bottom; in lights, swipe left and right to move between rooms.', phTop: 'Rooms on top', phRooms: 'Rooms at the bottom', phCats: 'Categories at the bottom', phLights: 'Lights', phLightsT: 'As set in the section, always tiles, or one per row (each light a row; tap to toggle, swipe for brightness).', phLAuto: 'As in the section', phLTiles: 'Tiles', phLRows: 'One per row', phSheet: 'Light window from the bottom', phSheetT: 'The window opened by holding a light slides up from the bottom; pull it down to close. Tablets are not affected.', version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
+    navAl: 'Align room buttons to a column', navAlT: 'The room buttons in the top bar end at the right edge of the chosen column and share the space evenly. They stay aligned on every screen size.', navNo: 'Off', navCol: 'Up to column {n}', navFx: 'Effects inside the aligned area', navFxT: 'When on, the Effects button is aligned together with the room buttons; when off it sits next to the clock.', navSz: 'Room button size', navSzT: 'Width and height (pixels). Empty means 235 × 155.', navSzA: 'Height (pixels). While aligned to a column the width is set automatically. Empty means 155.', navW: 'Width', navH: 'Height', clSt: 'Climate and vacuum cards', clStT: 'Halo: the large cards with a ring. Simple: one row; for climate the status, temperature and target, for vacuums the status, battery, start and dock. Tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction (when the device supports them).', clHalo: 'Halo', clRows: 'Simple', s_phone: 'Phone', phNav: 'Navigation', phNavT: 'Categories at the bottom (recommended): Lights, Climate, Scenes at the bottom; in lights, swipe left and right to move between rooms. Rooms at the bottom: room buttons at the bottom of the screen, like an app. Rooms on top: the old layout with room buttons on top.', phTop: 'Rooms on top', phRooms: 'Rooms at the bottom', phCats: 'Categories at the bottom', phLights: 'Lights', phLightsT: 'As set in the section, always tiles, or one per row (each light a row; tap to toggle, swipe for brightness).', phLAuto: 'As in the section', phLTiles: 'Tiles', phLRows: 'One per row', phSheet: 'Light window from the bottom', phSheetT: 'The window opened by holding a light slides up from the bottom; pull it down to close. Tablets are not affected.', akT: 'Auto setup', akHint: 'The dashboard is built from your HA areas and devices. Choose, see the result below, Apply.', akRooms: 'Rooms (one tab each)', akHome: 'Home tab', akHomeT: 'A summary of the whole home: lights, scenes and climate taken from the rooms in turn', akOther: 'Other tab', akOtherT: 'A tab for rooms you did not pick and devices without an area', akWhat: 'What to include', akL: 'Lights', akS: 'Scenes', akC: 'Climate', akV: 'Vacuum', akM: 'Media', akLook: 'Look', akLights: 'Lights', akTiles: 'Tiles', akBars: 'Slider bars', akPhoneBars: 'Bars on phones', akRes: 'Result · {n} tabs', akSum: '{l} lights · {s} scenes · {c} cards', akNone: 'This selection gives no tabs.', akWarn: 'Apply replaces your current tabs. If you don\'t like it, use undo at the top; your settings stay.', akGo: 'Apply', akOk: 'Dashboard set up automatically', akNoAreas: 'There are no areas (rooms) in HA yet. Add rooms in Settings → Areas and they show up here.', akRoomsT: 'The areas in your home; each one you pick becomes a tab. The preview is a made-up home.', akTabs: 'Tabs', akTilesT: 'Square tiles, like a tablet', akBarsT: 'Tap to toggle, swipe for brightness', akPhoneBarsT: 'Tiles on tablets, bars on phones', akHaloT: 'Large cards with a ring', akRowsT: 'One row, opens on tap', akBgZen: 'Meditation', akBgAur: 'Aurora', akBgSun: 'Sunset', akBgOce: 'Ocean', akPhone: 'Phone', akPhoneT: 'Switch the preview to Phone to see it', akCatsT: 'Lights, Climate, Scenes at the bottom', akRoomsBT: 'Room buttons at the bottom', akTopT: 'Room buttons on top', akPvTab: 'Tablet', akPvPh: 'Phone', akPvNote: 'A made-up home: your dashboard is built from your own devices in the rooms you pick. Tap the preview to try it.', akTablet: 'Tablet', akTabletT: 'The preview switches to tablet', akPLSame: 'Same as tablet', akPLSameT: 'The section setting applies', akSheetOn: 'From the bottom', akSheetOnT: 'Pull down to close', akSheetOff: 'In the middle', akSheetOffT: 'A window, like on tablets', akBgKeep: 'If you pick none, your current background stays', akLec: 'Light effects', akLecT: 'With Lemur Light Effect Card', akLecOn: 'Effects on', akLecOnT: 'Effects button in the top bar; Effect tab in the light window', akLecOff: 'Effects hidden', akLecWhy: 'Moving effects for your lights: fire, aurora, rainbow and dozens more', akLecHow: 'Optional. Download Lemur Light Effect Card from HACS, add the integration in Settings → Devices & services and restart HA. The dashboard detects it on its own, no setup needed: the Effects button, the Effect tab in the light window and effect buttons in scenes appear by themselves. If you remove it they are hidden and the dashboard keeps working.', akLecGet: 'Open in HACS', akST: 'Choose a style', akSHint: 'Your tabs stay as they are; only the look changes, all at once. Try it in the preview and Apply if you like it.', akSrcMine: 'My home', akSrcDemo: 'Example home', akPvMine: 'Your own dashboard. Taps in the preview do not reach your devices.', akResS: 'Your tabs stay the same', akWarnS: 'Light look, climate cards, background, phone and effect settings change. If you don\'t like it, use undo to go back.', akOkS: 'Style applied', version: 'Version', lec: 'Lemur Light Effect Card', lecOn: 'Installed ({v}). The effect screen opens from the top bar, the light window and scene buttons.', lecOff: 'Not installed. Optional, for light effects; effect buttons turn on here once it is installed.', lecNav: 'Effects in the top bar', lecNavT: 'A button next to the room buttons at the top that opens the effect screen', lecInfoT: 'Lemur Light Effect Card is installed', lecInfo: 'An Effects button was added to the top bar of the dashboard: it opens the effect screen for that tab\'s room. You can also add single effect buttons to scene sections (select the section → Add button → Light effects). The Effect tab in the light window opens the effect screen too.', ok: 'OK', iconPick: 'Choose icon', iconSug: 'Suggested', iconAll: 'Search results', iconSearch: 'Search (e.g. lamp, sofa, ceiling)', iconMore: 'Showing the first {n} results, narrow the search', iconNone: 'Nothing found. You can type the icon name as mdi:...', iconLoading: 'Loading icons…', icCol: 'Icons', iconEvery: 'All icons', icColNone: 'Could not load the icons.', icStyle: 'Icon style', icStyleT: 'Automatic: devices that are off are grey, devices that are on are colourful. Colourful: all colourful. Flat: all grey. Single colour: one tone; devices that are off are grey, devices that are on are in the colour you pick.', icAuto: 'Automatic', icFlat: 'Flat', icColor: 'Colourful', icTint: 'Single colour', icTintC: 'Pick a colour', icTintL: 'Light colour on lights', icTintLT: 'In single colour style, a light that is on shows its icon in the lamp\'s own colour.', icLec: 'Effect icons', icLecNone: 'Could not load the effect icons.', hold: 'Holding a light', holdT: 'What opens when you hold a light tile', hPop: 'Light window', hHa: 'HA dialog', hLec: 'Effect screen', lecOpen: 'Effect screen', lecStop: 'Stop effect', lecGroup: 'Light effects · {r}', lecLoading: 'Loading effects…', tOpen: 'Effect screen · {r}', tPlay: 'Effect: {e} · {r}', tStop: 'Stop effect · {r}', roomByTab: 'the tab\'s room', lecNa: 'Lemur Light Effect Card is not installed: this button is hidden on the dashboard',
     resetAll: 'Back to automatic layout', resetQ: 'Every tab and section is deleted and the dashboard is rebuilt from your areas. Settings stay.', resetOk: 'Back to automatic layout',
     secL: 'Second line', sc_none: 'None', sc_state: 'State', sc_lc: 'Last changed', sc_attr: 'Attribute', sc_tpl: 'Text or template', swapL: 'Name on top, value below', cfmL: 'Ask before running', cfmT: 'Against accidental taps: asks "run it?" first', cfmText: 'Question (empty: "Run <name>?")', nameTplT: 'Name and second line accept a Home Assistant template: {{ ... }}',
     cpT: 'Add a card', cpSearch: 'Search cards', cpHalo: 'Halo cards', cpHa: 'Home Assistant cards', cpCustom: 'Installed custom cards', cpYaml: 'Write YAML', ceT: 'Edit card', cePv: 'Preview', ceVisual: 'Visual', ceYaml: 'YAML', ceNoEd: 'This card has no visual editor; edit it as YAML.', ceLoad: 'Loading the editor…', ceEdit: 'Visual edit', ceBack: 'Back',
@@ -322,7 +322,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const css = lpBgCss(b);
     if (css) s.background = css; else delete s.background;
     this._commit('settings', s);
-    if (!soft) this._render(); else { this._undoBtn(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = css || LP_DEFAULT_BG; }
+    if (!soft) this._render(); else { this._undoBtn(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = lpBgOf(s); }
     this._toast(this._t('saved'));
   }
 
@@ -583,9 +583,98 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _phoneRows(seg, tg) {
     const t = (k, v) => this._t(k, v), pc = lpPhoneCfg();
     return '<div class="sh">' + t('s_phone') + '</div>' +
-      '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('phNav') + '</b><span>' + t('phNavT') + '</span></div>' + seg('phone.nav', pc.nav === 'top' ? 'auto' : pc.nav, [['auto', t('phTop')], ['rooms', t('phRooms')], ['cats', t('phCats')]]) + '</div>' +
+      '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('phNav') + '</b><span>' + t('phNavT') + '</span></div>' + seg('phone.nav', pc.nav, [['cats', t('phCats')], ['rooms', t('phRooms')], ['top', t('phTop')]]) + '</div>' +
       '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('phLights') + '</b><span>' + t('phLightsT') + '</span></div>' + seg('phone.lights', pc.lights, [['auto', t('phLAuto')], ['tiles', t('phLTiles')], ['rows', t('phLRows')]]) + '</div>' +
       '<div class="srow"><div class="t"><b>' + t('phSheet') + '</b><span>' + t('phSheetT') + '</span></div>' + tg('phone.sheet', pc.sheet) + '</div>';
+  }
+  // Otomatik kur (mode 'kur') ve Stil seç (mode 'stil') aynı pencereyi kullanır: solda önizleme, sağda büyük seçenekler.
+  // Kur: sekmeler senin alanlarından yeniden kurulur. Stil: sekmelerine dokunulmaz, yalnız görünüm ayarları topluca değişir.
+  _autoInit(mode) {
+    const A = this._hass.areas || {}, F = this._hass.floors || {};
+    const lv = (a) => { const f = F[A[a].floor_id]; return f && typeof f.level === 'number' ? f.level : 9999; };
+    const order = Object.keys(A).map((a, i) => ({ a: a, i: i })).sort((x, y) => (lv(x.a) - lv(y.a)) || (x.i - y.i)).map((x) => x.a);
+    const def = {}; buildDefaultTabs(this._hass, this._lang).forEach((T) => { if (T.area) def[T.area] = true; });
+    const areas = {}; order.forEach((a) => { areas[a] = !!def[a]; });
+    const st = this._settings(), m = st.bg && st.bg.mode;
+    const bg = !m ? (typeof st.background === 'string' && st.background ? null : 'zen') : m === 'dark' || m === 'black' ? m : m === 'fx' ? (st.bg.fx || 'zen') : null;
+    const pc = lpPhoneCfg(), stil = mode === 'stil';
+    // stilde ışık görünümü: sekmelerdeki ışık bölümlerinin çoğu çubuksa çubuk
+    let nb = 0, nt = 0; if (stil) this._work().forEach((T) => (T.sections || []).forEach((x) => { if (x.type === 'lights') { if (x.look === 'bar') nb++; else nt++; } }));
+    this._ak = { mode: stil ? 'stil' : 'kur', src: stil ? 'mine' : 'demo', order: order, areas: areas, home: true, other: true,
+      types: { lights: true, scenes: true, climate: true, vacuum: true, media: true }, look: nb > nt ? 'bar' : 'tiles', clim: lpClimStyle() === 'rows' ? 'rows' : 'halo',
+      bg: bg, nav: pc.nav, plights: pc.lights, sheet: pc.sheet, lec: st.lec_nav !== false, pv: 'tablet' };
+    this._ak.look0 = this._ak.look;
+    // önizlemenin hayali evi (dokunulunca durumu değişir; pencere açık kaldıkça aynı ev)
+    const home = lhdDemoHome(this._lang);
+    this._akDemo = lhdDemoHass(this._hass, home, () => { if (this._akCard) this._akCard.hass = this._akHassFor(); });
+    this._akTab = null; this._akCard = null;
+  }
+  _akLecOk() { return LEC.installed(this._hass); }
+  // önizlemenin hass'ı: hayali ev ya da (stilde "Benim evim") senin evin; senin evinde dokunuşlar cihazlara gitmez
+  _akHassFor() {
+    // hayali evde efektler kurulu gibi görünür (potansiyeli görsün); kendi evinde yalnız kuruluysa
+    const K = this._ak, comps = K.lec && (K.src !== 'mine' || this._akLecOk()) ? ['lemur_light_effects'] : [];
+    if (K.src === 'mine') return Object.assign({}, this._hass, { lhdDemo: true, callService: () => Promise.resolve(), config: Object.assign({}, this._hass.config, { components: comps }) });
+    return Object.assign({}, this._akDemo, { lhdDemo: true, states: Object.assign({}, this._akDemo.states), config: Object.assign({}, this._akDemo.config, { components: comps }) });
+  }
+  _akBgSel(k) { return k === 'dark' || k === 'black' ? { mode: k } : { mode: 'fx', fx: k }; }
+  _akBgCss(k) { return k === 'dark' ? LP_DARK_BG : lpBgCss(this._akBgSel(k)); }
+  // stilde ışık görünümü sekmelere uygulanır (yalnız değiştirildiyse; "telefonda çubuk" gibi özel seçimler korunur)
+  _akLook(tabs) {
+    const K = this._ak; if (K.look === K.look0) return tabs;
+    return tabs.map((T) => Object.assign({}, T, { sections: (T.sections || []).map((x) => { if (x.type !== 'lights') return x; const o = Object.assign({}, x); if (K.look === 'bar') o.look = 'bar'; else delete o.look; return o; }) }));
+  }
+  _akTabs() {
+    const K = this._ak;
+    if (K.mode === 'stil') return K.src === 'mine' ? this._akLook(this._work()) : buildDefaultTabs(this._akDemo, this._lang, { look: K.look });
+    return buildDefaultTabs(this._akDemo, this._lang, { home: K.home, other: K.other, types: K.types, look: K.look });
+  }
+  _akSettings() {
+    const K = this._ak, s = Object.assign({}, this._settings());
+    s.climate_style = K.clim === 'rows' ? 'rows' : null;
+    s.phone = Object.assign({}, lhdIsObj(s.phone) ? s.phone : {}, { nav: K.nav, lights: K.plights, sheet: K.sheet });
+    s.lec_nav = K.lec;
+    if (K.bg) { s.bg = this._akBgSel(K.bg); s.background = this._akBgCss(K.bg); }
+    if (K.src !== 'mine') s.nav = null;   // hayali evin sekmeleri farklı: senin üst şerit hizan ona uymaz
+    return s;
+  }
+  // önizleme kartını yerleştir ve ölçekle: tablet 1280×800, telefon 390×844 ekrana sığdırılır
+  _akMount() {
+    const R = this.shadowRoot, box = R.querySelector('.akpvc'), wrap = R.querySelector('.akpv'); if (!box || !wrap || !this._ak) return;
+    const K = this._ak, ph = K.pv === 'phone', tabs = this._akTabs();
+    let card = this._akCard;
+    if (!card) card = this._akCard = document.createElement('lemur-home-dashboard-card');
+    else if (card._config && card._config.tab && tabs.some((x) => x.id === card._config.tab)) this._akTab = card._config.tab;   // önizlemede açılan sekme kalsın
+    if (!tabs.some((x) => x.id === this._akTab)) this._akTab = tabs.length ? tabs[0].id : null;
+    card.setConfig({ type: 'custom:lemur-home-dashboard-card', demo: true, demo_tabs: tabs, demo_settings: this._akSettings(), tab: this._akTab, phone: ph });
+    box.innerHTML = ''; box.appendChild(card);
+    card.hass = this._akHassFor();
+    const W = ph ? 390 : 1280, H = ph ? 844 : 800;
+    const z = Math.min(wrap.clientWidth / W, wrap.clientHeight / H) || 0.5;
+    box.style.width = W + 'px'; box.style.height = H + 'px'; box.style.overflowY = ph ? 'auto' : 'hidden';
+    box.style.setProperty('--lp-h', H + 'px');
+    const bgc = K.bg ? this._akBgCss(K.bg) : lpBgOf(this._settings());
+    box.style.background = String(bgc || LP_DARK_BG).replace(/ fixed/g, '');
+    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - W * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - H * z) / 2) + 'px) scale(' + z + ')';
+  }
+  _autoOpts() { const K = this._ak; return { areas: K.order.filter((a) => K.areas[a]), home: K.home, other: K.other, types: K.types, look: K.look }; }
+  _autoApply() {
+    if (!this._ak) return;
+    const K = this._ak, stil = K.mode === 'stil';
+    let tabs = null;
+    if (!stil) { tabs = buildDefaultTabs(this._hass, this._lang, this._autoOpts()); if (!tabs.length) return; }
+    this._snap();
+    if (tabs) this._commit('tabs', tabs);
+    else if (K.look !== K.look0) this._commit('tabs', this._akLook(this._work()));
+    const s = lhdClone(this._settings());
+    if (K.clim === 'rows') s.climate_style = 'rows'; else delete s.climate_style;
+    if (K.bg) { s.bg = this._akBgSel(K.bg); const css = lpBgCss(s.bg); if (css) s.background = css; else delete s.background; }
+    s.phone = Object.assign({}, lhdIsObj(s.phone) ? s.phone : {}, { nav: K.nav, lights: K.plights, sheet: K.sheet });
+    if (this._akLecOk()) s.lec_nav = K.lec;
+    this._commit('settings', s);
+    this._modal = null; this._sec = null; if (tabs) this._tab = tabs[0].id; this._ak = null; this._akCard = null; this._akDemo = null;
+    this._toast(this._t(stil ? 'akOkS' : 'akOk'));
+    this._render();
   }
   _setting(path, value, soft) {
     this._snap();
@@ -673,7 +762,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const ins = '<div class="ins"><div class="sc">' +
       '<h3>' + t('sections') + '<span class="grow"></span><button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button></h3>' + secList +
       (sec ? this._secEditor(tab, sec, ncols) : '') +
-      (this._isAuto() ? '<div class="hint">' + t('autoT') + '</div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
+      (this._isAuto() ? '<div class="hint">' + t('autoT') + ' <button class="btn sm" data-a="autokur"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('akT') + '</button></div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
 
     const scr = this._screenKey();
     const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span>· ' + t('pvHint') + '</span><span class="grow"></span>' +
@@ -687,15 +776,20 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const lecInfo = LEC.installed(this._hass) && !st0.lec_seen ? '<div class="lecinfo" data-lecinfo><ha-icon icon="mdi:creation"></ha-icon><div class="t"><b>' + t('lecInfoT') + '</b><span>' + t('lecInfo') + '</span></div>' +
       '<button class="btn sm" data-a="settings">' + t('settings') + '</button><button class="btn sm pri" data-a="lecok">' + t('ok') + '</button></div>' : '';
     // yeniden çizimde kaydırma yerleri korunsun (ayarlarda bir şey değişince pencere başa atlamasın)
-    const SCR = ['.ov .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
+    const SCR = ['.akr2', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
     SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
+    // Ayarlar önizlemenin üstünü kapatmaz: sağdaki panelin yerinde açılır, önizleme değişiklikleri canlı gösterir
+    let modal = this._modalHtml(tabs, tab, sec), dock = '';
+    const OV = '<div class="ov" data-ovl><div class="dlg sm">';
+    if (this._modal === 'settings' && modal.indexOf(OV) === 0) { dock = '<div class="dlg sm dock">' + modal.slice(OV.length, modal.length - 6); modal = ''; }
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + '">' + top + lecInfo +
-      '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + ins + '</div>' +
-      this._menuHtml() + this._modalHtml(tabs, tab, sec) + this._helpHtml() +
+      '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + (dock || ins) + '</div>' +
+      this._menuHtml() + modal + this._helpHtml() +
       '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
 
     Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
     this._mountPreview(tab, sec);
+    if (this._modal === 'auto') this._akMount();
     this._ceMount();
     this._bind(tabs, tab, sec);
     if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
@@ -799,7 +893,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const m = this._menu; if (!m) return '';
     const t = (k) => esc(this._t(k));
     let inner = '';
-    if (m.kind === 'more') inner = '<button class="dan" data-a="reset"><ha-icon class="s16" icon="mdi:restore"></ha-icon>' + t('resetAll') + '</button>';
+    if (m.kind === 'more') inner = '<button data-a="autokur"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('akT') + '</button><button data-a="stilsec"><ha-icon class="s16" icon="mdi:palette-outline"></ha-icon>' + t('akST') + '</button><hr><button class="dan" data-a="reset"><ha-icon class="s16" icon="mdi:restore"></ha-icon>' + t('resetAll') + '</button>';
     if (m.kind === 'addtab') {
       const used = {}; this._work().forEach((x) => { if (x.area) used[x.area] = 1; });
       const areas = Object.keys(this._hass.areas || {}).filter((a) => !used[a]);
@@ -841,7 +935,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const k = s.kiosk || {}, cv = s.canvas || {};
       // "Resim" seçilince önce adres kutusu açılır; zemin ancak adres yazılınca değişir (yoksa var olmayan bir dosya zemin olurdu)
       const bgImg = (typeof s.background === 'string' && /url\(/.test(s.background)) || !!this._bgImg;
-      const bgMode = this._bgImg ? 'img' : (s.bg && s.bg.mode) || (bgImg ? 'img' : 'dark');
+      const bgSel = s.bg && s.bg.mode ? s.bg : (bgImg ? { mode: 'img' } : LP_DEFAULT_BG_SEL);
+      const bgMode = this._bgImg ? 'img' : bgSel.mode;
       const bgUrl = typeof s.background === 'string' ? (s.background.match(/url\(['"]?([^'")]+)/) || [])[1] || '' : '';
       const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
       return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di"><ha-icon icon="mdi:cog-outline"></ha-icon></div><h2>' + t('settings') + '</h2><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="db">' +
@@ -852,9 +947,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="sh">' + t('s_look') + '</div>' +
         '<div class="srow" style="flex-wrap:wrap"><div class="t"><b>' + t('bg') + '</b><span>' + t('bgT') + '</span></div>' + seg('bgmode', bgMode, [['dark', this._t('bgDark')], ['black', this._t('bgBlack')], ['color', this._t('bgColor')], ['fx', this._t('bgFx')], ['img', this._t('bgImg')]]) +
         (bgMode === 'img' ? '<input class="inp w" data-bgurl value="' + esc(bgUrl) + '" placeholder="/local/zemin.jpg" style="width:100%">' + (this._bgBad ? '<span class="lecna" style="width:100%">' + t('bgBad') + '</span>' : '') : '') +
-        (bgMode === 'color' ? '<div class="bgsw">' + LHD_BG_COLORS.map((c) => '<button class="bgc' + ((s.bg.color || '').toLowerCase() === c ? ' on' : '') + '" data-bgcolor="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') +
-          '<label class="bgc pick" title="' + t('bgColor') + '"><input type="color" data-bgpick value="' + esc(s.bg.color || '#0e1726') + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') +
-        (bgMode === 'fx' ? '<div class="bgfx">' + LP_BG_FX.map((f) => '<button class="fxs' + (s.bg.fx === f[0] ? ' on' : '') + '" data-bgfx="' + f[0] + '"><i style="background:' + lpFxSwatch(f[3]) + '"></i><span>' + esc(this._lang === 'tr' ? f[1] : f[2]) + '</span></button>').join('') + '</div>' : '') + '</div>' +
+        (bgMode === 'color' ? '<div class="bgsw">' + LHD_BG_COLORS.map((c) => '<button class="bgc' + ((bgSel.color || '').toLowerCase() === c ? ' on' : '') + '" data-bgcolor="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') +
+          '<label class="bgc pick" title="' + t('bgColor') + '"><input type="color" data-bgpick value="' + esc(bgSel.color || '#0e1726') + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') +
+        (bgMode === 'fx' ? '<div class="bgfx">' + LP_BG_FX.map((f) => '<button class="fxs' + (bgSel.fx === f[0] ? ' on' : '') + '" data-bgfx="' + f[0] + '"><i style="background:' + lpFxSwatch(f[3]) + '"></i><span>' + esc(this._lang === 'tr' ? f[1] : f[2]) + '</span></button>').join('') + '</div>' : '') + '</div>' +
         '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('icStyle') + '</b><span>' + t('icStyleT') + '</span></div>' + seg('icon_style', lpIconMode(), [['auto', this._t('icAuto')], ['full', this._t('icColor')], ['mono', this._t('icFlat')], ['tint', this._t('icTint')]]) +
           (lpIconMode() === 'tint' ? '<div class="bgsw" style="width:100%">' + LHD_TINT_COLORS.map((c) => '<button class="bgc' + (lpIconTint().toLowerCase() === c.toLowerCase() ? ' on' : '') + '" data-tintc="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') + '<label class="bgc pick" title="' + t('icTintC') + '"><input type="color" data-tintpick value="' + esc(lpIconTint()) + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') + '</div>' +
         (lpIconMode() === 'tint' ? '<div class="srow"><div class="t"><b>' + t('icTintL') + '</b><span>' + t('icTintLT') + '</span></div>' + tg('icon_tint_light', lpIconTintLight()) + '</div>' : '') +
@@ -877,6 +972,47 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('bkDown') + '</b><span>' + t('bkDownS') + '</span></div><button class="btn" data-a="bkdown">' + t('bkDown') + '</button></div>' +
         '<div class="srow"><div class="t"><b>' + t('bkUp') + '</b><span>' + t('bkUpS') + '</span></div><label class="btn">' + t('bkUp') + '<input type="file" accept=".json,application/json" data-bkfile style="display:none"></label></div>' +
         '</div><div class="df"><button class="btn" data-a="close">' + t('close') + '</button></div></div></div>';
+    }
+    if (md === 'auto' && this._ak) {
+      // Otomatik kur / Stil seç: solda önizleme (seçimlerle anında değişir), sağda büyük seçenekler
+      const K = this._ak, A = this._hass.areas || {}, stil = K.mode === 'stil', tr = this._lang === 'tr';
+      const opt = (k, on, icon, label, sub) => '<button class="ako' + (on ? ' on' : '') + '" data-ak="' + k + '">' + lpIcon(icon, 'akoi') + '<b>' + label + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</button>';   // yazılar t() ile zaten kaçışlı
+      let n = 0;
+      const step = (title, sub, body) => '<div class="akst"><div class="aksh"><i>' + (++n) + '</i><div><b>' + title + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</div></div>' + body + '</div>';
+      const sub = (x) => '<div class="aksub">' + x + '</div>';
+      const res = stil ? [] : buildDefaultTabs(this._hass, this._lang, this._autoOpts());
+      const cnt = (ty) => res.reduce((m, T) => m + (T.sections || []).filter((x) => x.type === ty).reduce((q, x) => q + (x.entities || []).length, 0), 0);
+      const rooms = K.order.length ? '<div class="akgrid rooms">' + K.order.map((a) => opt('area:' + a, K.areas[a], (A[a] && A[a].icon) || 'mdi:door', esc((A[a] && A[a].name) || a))).join('') + '</div>' : '<div class="hint">' + t('akNoAreas') + '</div>';
+      // arka plan: küçük örnekler; efekt renklerinin hepsi, koyu ve siyah
+      const sw = (k, css, label) => '<button class="akbg' + (K.bg === k ? ' on' : '') + '" data-ak="bg:' + k + '"><i style="background:' + esc(css) + '"></i><span>' + esc(label) + '</span></button>';
+      const bgs = '<div class="akbgs">' + sw('dark', LP_DARK_BG.replace(/ fixed/g, ''), this._t('bgDark')) + sw('black', '#000', this._t('bgBlack')) +
+        LP_BG_FX.map((f) => sw(f[0], lpFxSwatch(f[3]), tr ? f[1] : f[2])).join('') + '</div>';
+      const lecOk = this._akLecOk(), lecUrl = 'https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-light-effect-card&category=integration';
+      const lec = lecOk ? '<div class="akgrid">' + opt('lec:1', K.lec, 'mdi:creation', t('akLecOn'), t('akLecOnT')) + opt('lec:0', !K.lec, 'mdi:creation-outline', t('akLecOff'), '') + '</div>'
+        : '<div class="aklec"><ha-icon icon="mdi:creation"></ha-icon><div><b>' + t('akLecWhy') + '</b><span>' + t('akLecHow') + '</span>' +
+          '<a class="btn" href="' + lecUrl + '" target="_blank" rel="noopener"><ha-icon class="s16" icon="mdi:download"></ha-icon>' + t('akLecGet') + '</a></div></div>';
+      const srcSeg = stil ? '<div class="seg">' + [['mine', t('akSrcMine')], ['demo', t('akSrcDemo')]].map((x) => '<button data-ak="src:' + x[0] + '"' + (K.src === x[0] ? ' class="on"' : '') + '>' + x[1] + '</button>').join('') + '</div>' : '';
+      const body =
+        (stil ? '' :
+          step(t('akRooms'), t('akRoomsT'), rooms) +
+          step(t('akTabs'), '', '<div class="akgrid">' + opt('home', K.home, 'lhd:room-whole-home', t('akHome'), t('akHomeT')) + opt('other', K.other, 'mdi:dots-horizontal-circle-outline', t('akOther'), t('akOtherT')) + '</div>') +
+          step(t('akWhat'), '', '<div class="akgrid">' + [['lights', 'akL', 'mdi:lightbulb-group'], ['scenes', 'akS', 'lhd:scene-switch'], ['climate', 'akC', 'mdi:thermostat'], ['vacuum', 'akV', 'mdi:robot-vacuum'], ['media', 'akM', 'mdi:speaker']].map((x) => opt('type:' + x[0], K.types[x[0]], x[2], t(x[1]))).join('') + '</div>')) +
+        step(t('akTablet'), t('akTabletT'),
+          sub(t('akLights')) + '<div class="akgrid">' + opt('look:tiles', K.look === 'tiles', 'mdi:view-grid-outline', t('akTiles'), t('akTilesT')) + opt('look:bar', K.look === 'bar', 'mdi:view-sequential-outline', t('akBars'), t('akBarsT')) + '</div>' +
+          sub(t('clSt')) + '<div class="akgrid">' + opt('clim:halo', K.clim === 'halo', 'mdi:circle-slice-8', t('clHalo'), t('akHaloT')) + opt('clim:rows', K.clim === 'rows', 'mdi:format-list-bulleted', t('clRows'), t('akRowsT')) + '</div>') +
+        step(t('akPhone'), t('akPhoneT'),
+          sub(t('phNav')) + '<div class="akgrid">' + opt('nav:cats', K.nav === 'cats', 'mdi:shape-outline', t('phCats'), t('akCatsT')) + opt('nav:rooms', K.nav === 'rooms', 'mdi:dock-bottom', t('phRooms'), t('akRoomsBT')) + opt('nav:top', K.nav === 'top', 'mdi:dock-top', t('phTop'), t('akTopT')) + '</div>' +
+          sub(t('akLights')) + '<div class="akgrid">' + opt('plights:auto', K.plights === 'auto', 'mdi:link-variant', t('akPLSame'), t('akPLSameT')) + opt('plights:tiles', K.plights === 'tiles', 'mdi:view-grid-outline', t('phLTiles'), t('akTilesT')) + opt('plights:rows', K.plights === 'rows', 'mdi:view-sequential-outline', t('phLRows'), t('akBarsT')) + '</div>' +
+          sub(t('phSheet')) + '<div class="akgrid">' + opt('sheet:1', K.sheet, 'mdi:dock-bottom', t('akSheetOn'), t('akSheetOnT')) + opt('sheet:0', !K.sheet, 'mdi:dock-window', t('akSheetOff'), t('akSheetOffT')) + '</div>') +
+        step(t('bg'), stil || K.bg ? '' : t('akBgKeep'), bgs) +
+        step(t('akLec'), t('akLecT'), lec);
+      const foot = stil ? '<div class="aksum"><b>' + t('akResS') + '</b><span>' + t('akWarnS') + '</span></div>'
+        : '<div class="aksum"><b>' + t('akRes', { n: res.length }) + '</b><span>' + (res.length ? t('akSum', { l: cnt('lights'), s: cnt('scenes'), c: cnt('climate') }) + ' · ' + t('akWarn') : t('akNone')) + '</span></div>';
+      return '<div class="akw"><div class="akwin"><div class="akhd"><div class="di"><ha-icon icon="' + (stil ? 'mdi:palette-outline' : 'mdi:auto-fix') + '"></ha-icon></div><div class="akht"><h2>' + t(stil ? 'akST' : 'akT') + '</h2><span>' + t(stil ? 'akSHint' : 'akHint') + '</span></div><button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+        '<div class="akbody"><div class="akl"><div class="akpvh"><div class="seg">' + [['tablet', t('akPvTab')], ['phone', t('akPvPh')]].map((x) => '<button data-ak="pv:' + x[0] + '"' + (K.pv === x[0] ? ' class="on"' : '') + '>' + x[1] + '</button>').join('') + '</div>' + srcSeg +
+        '<span>' + t(K.src === 'mine' ? 'akPvMine' : 'akPvNote') + '</span></div><div class="akpv"><div class="akpvc"></div></div></div>' +
+        '<div class="akr2">' + body + '</div></div>' +
+        '<div class="akft">' + foot + '<button class="btn lg" data-a="close">' + t('cancel') + '</button><button class="btn lg pri" data-a="autogo"' + (stil || res.length ? '' : ' disabled') + '>' + t('akGo') + '</button></div></div></div>';
     }
     if (md === 'reset') {
       return '<div class="ov" data-ovl><div class="dlg sm"><div class="dh"><div class="di" style="color:var(--red)"><ha-icon icon="mdi:restore"></ha-icon></div><h2>' + t('resetAll') + '</h2></div>' +
@@ -1067,7 +1203,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     box.appendChild(this._pv);
     this._pv.hass = this._hass;
     const s = this._settings();
-    box.style.background = typeof s.background === 'string' ? s.background : LP_DEFAULT_BG;
+    box.style.background = lpBgOf(s);
     if (this._ro) { this._ro.disconnect(); this._ro.observe(box.parentNode); }
     this._fit();
   }
@@ -1089,7 +1225,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const z = Math.min(wrap.clientWidth / cw, wrap.clientHeight / ch) || 0.5;
     box.style.width = cw + 'px'; box.style.height = ch + 'px';
     box.style.setProperty('--lp-h', ch + 'px');
-    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - cw * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - ch * z) / 2) + 'px) scale(' + z + ')';
+    box.style.transform = 'translate(' + Math.max(0, (wrap.clientWidth - cw * z) / 2) + 'px,' + Math.max(0, (wrap.clientHeight - ch * z) / 2) + 'px) scale(' + z + ')';    // telefon önizlemesinde kart, kutunun gerçek genişliğine göre yeniden kurulsun (ilk kurulumda kutu henüz ölçülmemişti)
+    const card = box.querySelector('lemur-home-dashboard-card');
+    if (card && ph && card._config && lpPhoneKey(card, card._config) !== card._phone) { card._phone = lpPhoneKey(card, card._config); card._sig = null; if (card._render) card._render(); }
   }
 
   // ---- olaylar ----
@@ -1127,6 +1265,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'bkdown') return this._backupDown();
       if (act === 'bkyes') return this._backupApply();
       if (act === 'reset') { this._menu = null; this._modal = 'reset'; return this._render(); }
+      if (act === 'autokur' || act === 'stilsec') { this._menu = null; this._autoInit(act === 'stilsec' ? 'stil' : 'kur'); this._modal = 'auto'; return this._render(); }
+      if (act === 'autogo') return this._autoApply();
+      const ak = g('[data-ak]');
+      if (ak && this._ak) {
+        const p = ak.getAttribute('data-ak').split(':'), K = this._ak;
+        if (p[0] === 'area') K.areas[p[1]] = !K.areas[p[1]];
+        else if (p[0] === 'type') K.types[p[1]] = !K.types[p[1]];
+        else if (p[0] === 'home' || p[0] === 'other') K[p[0]] = !K[p[0]];
+        else if (p[0] === 'sheet' || p[0] === 'lec') K[p[0]] = p[1] === '1';
+        else if (p[0] === 'src') { K.src = p[1]; this._akTab = null; if (this._akCard && this._akCard._config) this._akCard._config.tab = null; }
+        else K[p[0]] = p[1];
+        // telefon seçimi önizlemeyi telefona, tablet seçimi tablete çevirir: seçilenin etkisi hemen görünsün
+        if (p[0] === 'nav' || p[0] === 'plights' || p[0] === 'sheet') K.pv = 'phone';
+        else if (p[0] === 'look' || p[0] === 'clim') K.pv = 'tablet';
+        return this._render();
+      }
       if (act === 'resetgo') { this._snap(); this._modal = null; this._sec = null; this._commit('tabs', []); this._toast(this._t('resetOk')); return this._render(); }
       if (act === 'deltab') {
         if (this._ask !== 'deltab') { this._ask = 'deltab'; return this._render(); }
@@ -1326,17 +1480,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           if (v === 'img') { this._bgImg = true; this._bgBad = false; this._render(); const i = this.shadowRoot.querySelector('[data-bgurl]'); if (i) i.focus(); return; }
           this._bgImg = false; this._bgBad = false;
           const cur = this._settings().bg || {};
-          if (v === 'dark') return this._bgSet(null);
+          if (v === 'dark') return this._bgSet({ mode: 'dark' });
           if (v === 'black') return this._bgSet({ mode: 'black' });
           if (v === 'color') return this._bgSet({ mode: 'color', color: cur.color || LHD_BG_COLORS[1] });
-          if (v === 'fx') return this._bgSet({ mode: 'fx', fx: cur.fx || 'aurora' });
+          if (v === 'fx') return this._bgSet({ mode: 'fx', fx: cur.fx || 'zen' });
         }
         return this._setting(path, v === 'auto' ? null : v);
       }
       const tgl = g('[data-tg]');
       if (tgl) {
         const path = tgl.getAttribute('data-tg'); const cur = tgl.classList.contains('on');
-        if (path === 'lec_nav' || path === 'icon_tint_light') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
+        if (path === 'lec_nav' || path === 'icon_tint_light' || path === 'phone.sheet') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
         return this._setting(path, cur ? null : true);
       }
     });
