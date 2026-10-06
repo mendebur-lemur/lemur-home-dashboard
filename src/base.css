@@ -17,7 +17,7 @@
 
 /* üst şerit: oda düğmeleri 235×155, aralık 8, saat kalan alanın ortasında */
 .nav { grid-area: h; display: flex; align-items: center; min-width: 0; margin: 4px 4px 8px 4px; }
-.navb { flex: 0 1 235px; min-width: 0; height: 155px; box-sizing: border-box; border-radius: 15px; background: var(--lp-card);
+.navb { flex: 0 1 var(--lp-nav-w, 235px); min-width: 0; height: var(--lp-nav-h, 155px); box-sizing: border-box; border-radius: 15px; background: var(--lp-card);
   border: 0 none; opacity: 0.85; padding: 9.4px 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;
   overflow: hidden; transition: all 0.3s ease-out; color: var(--lp-text); }
 .navb + .navb { margin-left: 8px; }
@@ -43,7 +43,7 @@
 .box.mix > .emb, .box.mix > .row { flex: 0 0 auto; }
 .box.empty { align-items: center; justify-content: center; color: var(--lp-text2); font-size: 18px; text-align: center; padding: 40px; }
 .title { flex: 0 0 auto; text-align: center; font-size: 18px; line-height: 22px; font-weight: 700; padding: 19px 16px 20px; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
-.title.hd { padding: 10px 0 14px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }
+.title.hd { padding: 19px 0 20px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.01em; }
 .title.hd ha-icon { display: block; width: 20px; height: 20px; --mdc-icon-size: 20px; margin-right: 8px; }
 .title.season { cursor: pointer; }
 
@@ -157,7 +157,7 @@
 .phone .clock { display: none; }
 .phone .pcol > .box { margin: 0 0 10px; padding: 14px; min-height: 0; }
 .phone .title { font-size: 15px; padding: 6px 8px 12px; }
-.phone .title.hd { padding: 4px 0 10px; }
+.phone .title.hd { padding: 6px 0 12px; }
 .phone .tile .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
 .phone .bars { flex: 0 0 auto; grid-auto-rows: 58px; }
 .phone .bar { border-radius: 16px; }
@@ -344,3 +344,6 @@
 /* yedek kontrol kullanıldı (son 30 dk): köşede turuncu nokta */
 .tile.fbk, .scene.fbk { position: relative; }
 .tile.fbk::after, .bar.fbk::after, .scene.fbk::after { content: ''; position: absolute; top: 8px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #F0A93B; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35); pointer-events: none; }
+/* v0.15 üst şerit kolona hizalı: oda düğmeleri alanı eşit paylaşır; sağ parçada Efektler ve saat */
+.nav.navl > .navb { flex: 1 1 0px; }
+.nav.navr > .clock:first-child { margin-left: 0; }

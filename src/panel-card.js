@@ -225,6 +225,14 @@ function lpLecNav(h) {
   return LEC.installed(h) && st.lec_nav !== false;
 }
 
+// üst şerit (ayar nav): oda düğmelerinin genişliği ve yüksekliği (tuval pikseli; varsayılan 235×155, tablet panosundaki ölçü),
+// cols: düğmeler ilk N kolonun genişliğini eşit paylaşır ve N. kolonun kenarında biter (0 = kapalı), fx_in: Efektler de bu alanda
+function lpNavCfg() {
+  const st = (STORE.data && STORE.data.settings) || {}, n = lhdIsObj(st.nav) ? st.nav : {};
+  const num = (v, lo, hi) => { const x = typeof v === 'string' ? parseFloat(v) : v; return typeof x === 'number' && isFinite(x) ? Math.max(lo, Math.min(hi, Math.round(x))) : null; };
+  return { w: num(n.w, 80, 400), h: num(n.h, 60, 260), cols: num(n.cols, 0, 6) || 0, fx_in: n.fx_in === true };
+}
+
 // Mevsim: ayarda yoksa aya göre (Mayıs-Eylül yaz). Kış'ta petek, Yaz'da klima kartları.
 function lpSeason() {
   const d = STORE.data, s = d && d.settings && d.settings.season;
@@ -407,7 +415,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (x && x.visible) vis.push(lpVisible(x.visible, S));   // koşullu öğe: koşul değişince iskelet yeniden kurulur
       if (x && x.state_colors) vis.push(lpMapColor(x, S));      // duruma göre renk (Halo kartı yeniden kurulur)
     }));
-    const sig = JSON.stringify([tab, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), !!LP_MDIC.map]);
+    const sig = JSON.stringify([tab, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), !!LP_MDIC.map, lpNavCfg()]);
     if (sig !== this._sig) { this._sig = sig; this._build(tab, tabs, lang, season); }
     this._update();
   }
@@ -595,8 +603,16 @@ class LemurHomeDashboardCard extends HTMLElement {
 
     // Lemur Light Effect Card kuruluysa üst şeridin sonunda "Efektler": efekt ekranını bu sekmenin odasıyla açar (ayarlardan kapatılabilir)
     const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni">' + lpIcon('mdi:creation') + '</div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
-    const nav = '<div class="nav">' + tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div></div>').join('') +
-      navFx + '<div class="clock">' + this._time() + '</div></div>';
+    const navBtns = tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div></div>').join('');
+    const clock = '<div class="clock">' + this._time() + '</div>';
+    const nc = lpNavCfg(), nst = (nc.w ? '--lp-nav-w:' + nc.w + 'px;' : '') + (nc.h ? '--lp-nav-h:' + nc.h + 'px;' : '');
+    // kolona hizala: düğmeler ilk N kolonun üstünü eşit paylaşır, sağ kenarları N. kolonun kutusuyla aynı çizgide biter;
+    // Efektler (içeride değilse) ve saat kalan kolonların üstünde. Telefonda ve kolon sayısı yetmezse normal şerit.
+    const navCols = !phone && nc.cols > 0 && nc.cols < used.length ? nc.cols : 0;
+    const nav = navCols
+      ? '<div class="nav navl" style="grid-area:1 / 1 / 2 / ' + (navCols + 1) + ';' + nst + '">' + navBtns + (nc.fx_in ? navFx : '') + '</div>' +
+        '<div class="nav navr" style="grid-area:1 / ' + (navCols + 1) + ' / 2 / -1;' + nst + '">' + (nc.fx_in ? '' : navFx) + clock + '</div>'
+      : '<div class="nav"' + (nst ? ' style="' + nst + '"' : '') + '>' + navBtns + navFx + clock + '</div>';
     const seasonIcon = lpIcon(season === 'winter' ? 'mdi:snowflake' : 'mdi:white-balance-sunny', 'season');
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
     // fill: öğeler kutunun yüksekliğini doldurur; align: içeriğe göre olan kutuda öğeler ortada ya da eşit aralıkla
@@ -746,8 +762,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const lk = lpLecKind(it);
       if (lk === 'open') { LEC.open(this._hass, it.action.room || tab.area); return; }
       if (lk) { LEC.run(this._hass, it.action); return; }
-      const sv = it.action.service.split('.');
-      this._hass.callService(sv[0], sv[1], it.action.target ? { entity_id: it.action.target } : (it.action.data || {}));
+      // servis: hedef varlık kimliği, liste ya da { area_id, entity_id... } olabilir; data ile birleşir (_act)
+      this._act(it.action, it.entity);
     }), (() => { const it0 = sceneItem(b); return it0 && it0.hold ? () => this._act(it0.hold, it0.entity) : null; })()));
     R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter')));
     R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => LEC.open(this._hass, tab.area)));

@@ -2,6 +2,15 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.15.0',
+    tr: ['Üst şerit (Ayarlar → Görünüm): oda düğmelerinin boyutu ayarlanabilir; Kolona hizala ile düğmeler seçilen kolonun kenarında biter, her ekran boyutunda aynı hizada kalır. Efektler düğmesi hizalı alana alınabilir.',
+      'Işık penceresi: Renk, Efekt ya da Segment sekmesine geçince pencere görünmez oluyor ama ekranı kaplamaya devam ediyordu; bir süre hiçbir dokunuş algılanmıyordu. Düzeltildi.',
+      'Senaryo düğmeleri: hedefi oda ya da birden çok cihaz olan servisler (ör. bir alanın bütün ışıklarını kapat) artık çalışıyor.',
+      'Düğmeli başlıklı bölümler (mevsim düğmeli iklim bölümü) öbür bölümlerle aynı hizadan başlıyor.'],
+    en: ['Top bar (Settings → Look): the room buttons can be resized; with Align to a column they end at the edge of the chosen column on every screen size. The Effects button can join the aligned area.',
+      'Light window: switching to the Color, Effect or Segment tab made the window invisible while it kept covering the screen, so taps were ignored for a while. Fixed.',
+      'Scene buttons: services that target an area or several devices (e.g. turn off all lights in an area) now work.',
+      'Sections with a button in the title (the climate section with the season button) now start level with the other sections.'] },
   { v: '0.14.0',
     tr: ['217 yeni renkli simge (★, panoya özel): ışık yerleri (asma tavan şeridi, TV arkası, yatak/koltuk/tezgah altı, niş, süpürgelik...), dikey ve katlanır storlar, ısıtma ve havalandırma, mutfak, banyo, güvenlik, enerji ve sigorta, ağ ve akıllı ev donanımı, bahçe ve havuz, evcil hayvan, bebek, sağlık, oyun, yeni oda simgeleri ve 18 senaryo simgesi (okuma, banyo, romantik, Ramazan, yılbaşı...). Set artık 1522 simge.',
       'Simge aramasında yeni Türkçe kelimeler: havuz, sulama, akvaryum, sigorta, şarj, semaver, şömine, oyun, Ramazan, tansiyon ve daha fazlası.'],

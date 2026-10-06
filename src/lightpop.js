@@ -189,7 +189,8 @@ class LemurLightPopup {
     const name = it.name || (st && st.attributes.friendly_name) || this._id;
     const icon = lpIcon(lpEntIcon(st, it.icon));
     if (!LP_MDIC.map) lpMdicLoad().then(() => { if (this._host && this._host.isConnected) this._render(); });
-    if (this._host) { this._host.className = 'lemur-light-popup ic-' + lpIconMode(); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
+    // sınıf baştan yazılırken açılış sınıfı (in) korunur; yoksa sekme değişince pencere görünmez olur ama ekranı kaplamaya devam eder
+    if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
     const tabs = this._tabs();
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
     let h = '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
