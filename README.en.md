@@ -150,22 +150,32 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 ### Settings
 
-**Settings** at the top right apply to every tablet in the house:
+**Settings** at the top right apply to every tablet in the house. The look settings (background, light and climate look, phone layout, the Effects button) are in **Choose a style**; the card in Settings takes you there.
 
 - *Version and updates:* at the top; installed version, what's new and **Check for updates**. A new version is installed from here through HACS, then Home Assistant restarts.
 - *Language:* automatic (Home Assistant's language), Turkish or English.
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
-- *Background:* dark (default), black, any colour, effect colours, or your own image (an address like `/local/background.jpg`). Effect colours are Light Effect Card's effect palettes (Aurora, Fire, Sunset, Ocean, Galaxy and 25 more): a soft colour glow on a dark background. They can be chosen even without Light Effect Card.
 - *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful), Flat (all grey) or Single colour (the drawings turn into one tone: devices that are off are grey, devices that are on are in the colour you pick; optionally a light that is on shows the lamp's own colour, and a scene button its own colour). The icon set is a separate file, downloaded once and kept by the browser.
-- *Climate and vacuum cards:* **Halo** (the large cards with a ring) or **Simple** (each device one row: for climate the status, temperature and target, for vacuums the status, battery, start and dock; tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction; only the buttons the device supports are shown).
 - *Top bar:* Room button size (default 235 × 155) and **Align to a column**: the buttons end at the right edge of the chosen column and share the space evenly; they stay aligned on every screen size. With Light Effect Card installed, the Effects button can join the aligned area or stay next to the clock.
 - *HA theme:* the Home Assistant theme used by dialogs (can be left empty).
 - *Hide top bar / Hide sidebar:* Home Assistant's header and sidebar are hidden on this dashboard only.
 - *Canvas (Advanced):* design width and reference height; the dashboard scales to the screen with this ratio.
 - *Holding a light:* Light window (default), HA dialog or (with Light Effect Card) the effect screen.
-- *Lemur Light Effect Card:* whether it is installed, and the Effects button in the top bar.
+- *Lemur Light Effect Card:* whether it is installed (the Effects button is in Choose a style).
 - *Report a problem:* opens a GitHub issue with the version and device details (no room, device or person names).
 - *Backup:* tabs, sections, settings and pets in one file; restoring asks first.
+
+### Choose a style
+
+In the top bar, next to Settings. A preview on the left (your own dashboard or the example home, tablet or phone), large options on the right; every choice shows in the preview right away, and **Apply** saves them all at once. Your tabs are not touched, and undo takes it back.
+
+- *Tablet:* lights as **Tiles** or **Slider bars**; climate and vacuum cards **Halo** (the large cards with a ring) or **Simple** (each device one row; tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction).
+- *Phone:* navigation (categories at the bottom, rooms at the bottom, rooms on top), lights (same as tablet, tiles, one per row) and whether the light window opens from the bottom or in the middle.
+- *Background:* effect colours (Meditation by default; Aurora, Fire, Sunset, Ocean and 25 more), Dark, Black, any colour or your own image (an address like `/local/background.jpg`).
+- *Light effects:* with Light Effect Card installed, the Effects button is turned on or off; without it, this explains what the card does and how to install it.
+- The **Light window** button opens a light's window in the preview.
+
+![Choose a style](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/settings.png)
 
 ## Light window
 
@@ -183,7 +193,7 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 
 When the screen is narrower than 700 pixels, a phone is held sideways (less than 500 pixels high) or a tablet is held upright, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack, scenes sit in two columns and the page scrolls. The number of tiles per row grows with the width (3 on a phone, 6 on an upright tablet). Set a lights section to **Auto on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
 
-The **Settings → Phone** options are independent of each other, so any combination can be chosen. Tablets are not affected:
+The **Choose a style → Phone** options are independent of each other, so any combination can be chosen. Tablets are not affected:
 
 - *Navigation:* **Categories at the bottom** (default), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Rooms on top** (the old layout above). **Categories at the bottom** (Lights, Climate, Scenes and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
 - *Lights:* **As in the section**, always **Tiles** or **One per row** (each light a row: tap to toggle, swipe for brightness).
@@ -191,13 +201,13 @@ The **Settings → Phone** options are independent of each other, so any combina
 
 These options also show in the **Phone** preview of the admin panel.
 
-<img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png" alt="Phone layout" width="320">
+![Phone: categories at the bottom, simple climate rows, light window from the bottom](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png)
 
 ## Light effects (optional)
 
 If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is installed too, the dashboard recognizes it on its own, and the admin panel tells you on first open:
 
-- **Effects in the top bar:** Appears next to the room buttons on its own; tap it and the effect screen opens full screen for that tab's room. Can be turned off in the settings.
+- **Effects in the top bar:** Appears next to the room buttons on its own; tap it and the effect screen opens full screen for that tab's room. Can be turned off in Choose a style.
 - **Effect screen button:** Can also be added to a scene section.
 - **Effect buttons:** When adding a button to a scene section, the room's effects are listed in the **Light effects** group of the picker; the chosen effect starts with one tap. A **Stop effect** button can be added too.
 - **The playing effect shows:** While an effect plays in a room, that room's light tiles glow in the effect's colours and the effect's button lights up.
@@ -228,8 +238,8 @@ The dashboard clears the old page copies kept by the browser and the phone app b
 | Home tab | Room tab |
 |---|---|
 | ![Home tab](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/dashboard.png) | ![Room tab](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/room.png) |
-| **Admin panel** | **Settings** |
-| ![Admin panel](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/admin.png) | ![Settings](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/settings.png) |
+| **Admin panel** | **Auto setup** |
+| ![Admin panel](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/admin.png) | ![Auto setup](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/auto-setup.png) |
 
 ## The Lemur family
 

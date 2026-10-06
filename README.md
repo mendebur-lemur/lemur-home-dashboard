@@ -150,22 +150,32 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 
 ### Ayarlar
 
-Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır:
+Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. Görünümle ilgili olanlar (arka plan, ışık ve iklim görünümü, telefon düzeni, Efektler düğmesi) **Stil seç**'tedir; Ayarlar'daki kart oraya götürür.
 
 - *Sürüm ve güncelleme:* en üstte; yüklü sürüm, yenilikler ve **Güncellemeleri denetle**. Yeni sürüm varsa HACS ile buradan kurulur, ardından Home Assistant yeniden başlatılır.
 - *Dil:* otomatik (Home Assistant'ın dili), Türkçe ya da İngilizce.
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
-- *Arka plan:* koyu (varsayılan), siyah, istediğin bir renk, efekt renkleri ya da kendi resmin (`/local/zemin.jpg` gibi bir adres). Efekt renkleri Light Effect Card'ın efekt paletleri (Kutup ışığı, Ateş, Gün batımı, Okyanus, Galaksi ve 25 tane daha): koyu zeminde yumuşak bir renk ışıltısı. Light Effect Card kurulu olmasa da seçilebilir.
 - *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli), Düz (hepsi gri) ya da Tek renk (çizimler tek tona çevrilir: kapalılar gri, açıklar seçtiğin renkte; istersen açık ışık lambanın kendi renginde, senaryo düğmesi kendi renginde). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.
-- *İklim ve süpürge kartları:* **Halo** (büyük, halkalı kartlar) ya da **Sade** (her cihaz tek satır: iklimde durum, sıcaklık ve hedef, süpürgede durum, pil, başlat ve istasyon; karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü; yalnız cihazın desteklediği düğmeler görünür).
 - *Üst şerit:* Oda düğmelerinin boyutu (varsayılan 235 × 155) ve **Kolona hizala**: düğmeler seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır; her ekran boyutunda aynı hizada kalır. Light Effect Card kuruluysa Efektler düğmesi hizalı alana alınabilir ya da saatin yanında kalır.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
 - *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
 - *Kanvas (Gelişmiş):* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.
 - *Işığa basılı tutunca:* Işık penceresi (varsayılan), HA penceresi ya da (Light Effect Card kuruluysa) efekt ekranı.
-- *Lemur Light Effect Card:* kurulu olup olmadığı ve üst şeritteki Efektler düğmesi.
+- *Lemur Light Effect Card:* kurulu olup olmadığı (Efektler düğmesi Stil seç'te).
 - *Sorun bildir:* sürüm ve cihaz bilgisiyle GitHub'da kayıt açar (oda, cihaz ya da kişi adı eklenmez).
 - *Yedek:* sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada indirilir; geri yüklemeden önce onay sorulur.
+
+### Stil seç
+
+Üst çubukta, Ayarlar'ın yanında. Solda önizleme (kendi panon ya da örnek ev, tablet ya da telefon), sağda büyük seçenekler; her seçim önizlemede anında görünür, **Uygula** hepsini birden kaydeder. Sekmelere dokunmaz, beğenmezsen geri al.
+
+- *Tablet:* ışıklar **Karo** ya da **Kaydırmalı çubuk**; iklim ve süpürge kartları **Halo** (büyük, halkalı kartlar) ya da **Sade** (her cihaz tek satır; karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü).
+- *Telefon:* gezinme (altta kategoriler, altta odalar, üstte odalar), ışıklar (tabletteki gibi, karo, tek sıra) ve ışık penceresinin alttan mı ortada mı açılacağı.
+- *Arka plan:* Efekt renkleri (varsayılan Meditasyon; Kutup ışığı, Ateş, Gün batımı, Okyanus ve 25 tane daha), Koyu, Siyah, istediğin bir renk ya da kendi resmin (`/local/zemin.jpg` gibi bir adres).
+- *Işık efektleri:* Light Effect Card kuruluysa Efektler düğmesi açılıp kapanır; kurulu değilse ne işe yaradığı ve nasıl kurulduğu anlatılır.
+- **Işık penceresi** düğmesi önizlemede bir ışığın penceresini açar.
+
+![Stil seç](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/settings.png)
 
 ## Işık penceresi
 
@@ -183,7 +193,7 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 
 Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden az) ya da tablet dikey tutulmuşsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler alt alta dizilir, senaryolar iki sütunda durur, sayfa aşağı kayar. Karo sayısı ekranın genişliğine göre artar (telefonda 3, dikey tablette 6). Işık bölümünü **Telefonda otomatik** yaparsan telefonda ışıklar iki sütun kaydırmalı çubuk olur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
 
-**Ayarlar → Telefon** seçenekleri birbirinden bağımsızdır, istediğin birleşimi seçebilirsin. Tablet hiçbirinden etkilenmez:
+**Stil seç → Telefon** seçenekleri birbirinden bağımsızdır, istediğin birleşimi seçebilirsin. Tablet hiçbirinden etkilenmez:
 
 - *Gezinme:* **Altta kategoriler** (varsayılan), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Üstte odalar** (yukarıdaki eski düzen). **Altta kategoriler** (altta Işıklar, İklim, Senaryolar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
 - *Işıklar:* **Bölümdeki gibi**, hep **Karo** ya da **Tek sıra** (her ışık bir satır: dokun aç/kapat, sağa sola kaydır parlaklık).
@@ -191,13 +201,13 @@ Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden a
 
 Bu seçenekler yönetim panelindeki **Telefon** önizlemesinde de görünür.
 
-<img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png" alt="Telefon düzeni" width="320">
+![Telefon: altta kategoriler, sade iklim satırları, alttan açılan ışık penceresi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png)
 
 ## Işık efektleri (isteğe bağlı)
 
 [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) ayrıca kuruluysa pano onu kendiliğinden tanır, yönetim paneli de ilk açılışta haber verir:
 
-- **Üst şeritte Efektler:** Oda düğmelerinin yanına kendiliğinden gelir; dokununca efekt ekranı o sekmenin odasıyla tam ekran açılır. Ayarlardan kapatılabilir.
+- **Üst şeritte Efektler:** Oda düğmelerinin yanına kendiliğinden gelir; dokununca efekt ekranı o sekmenin odasıyla tam ekran açılır. Stil seç'ten kapatılabilir.
 - **Efekt ekranı düğmesi:** İstersen senaryo bölümüne de eklenir.
 - **Efekt düğmeleri:** Senaryoya düğme eklerken seçicide **Işık efektleri** grubunda odanın efektleri listelenir; seçilen efekt tek dokunuşla başlar. **Efekti durdur** düğmesi de eklenebilir.
 - **Oynayan efekt görünür:** Odada efekt oynarken o odanın ışık karoları efektin renkleriyle parlar, efektin düğmesi yanar.
@@ -228,8 +238,8 @@ Pano, tarayıcının ve telefon uygulamasının sakladığı eski sayfa kopyalar
 | Ev sekmesi | Oda sekmesi |
 |---|---|
 | ![Ev sekmesi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/dashboard.png) | ![Oda sekmesi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/room.png) |
-| **Yönetim paneli** | **Ayarlar** |
-| ![Yönetim paneli](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/admin.png) | ![Ayarlar](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/settings.png) |
+| **Yönetim paneli** | **Otomatik kur** |
+| ![Yönetim paneli](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/admin.png) | ![Otomatik kur](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/auto-setup.png) |
 
 ## Lemur ailesi
 
