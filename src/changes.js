@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.17.1',
+    tr: ['Stil seç artık üst çubukta, Ayarlar düğmesinin yanında.',
+      'Otomatik kur: hayali evde üstte 4 düğme (Ev, Salon, Yatak Odası, Diğer); Diğer sekmesinin ne olduğu da görünüyor. İklim kartlarında Halo seçili başlıyor.',
+      'Otomatik kur: telefon önizlemesinde ışık karoları minicik yuvarlaklar gibi çıkıyordu, düzeldi. Işık efektleri adımı kartın kurulu olup olmadığını yazıyor.'],
+    en: ['Choose a style is now in the top bar, next to Settings.',
+      'Auto setup: the made-up home has 4 buttons on top (Home, Living Room, Bedroom, Other), so you also see what the Other tab is. Climate cards start with Halo selected.',
+      'Auto setup: light tiles in the phone preview showed up as tiny circles, fixed. The light effects step says whether the card is installed.'] },
   { v: '0.17.0',
     tr: ['Otomatik kur (… menüsü, ilk kurulumda panelde de): solda 4 odalı dolu bir hayali evin canlı önizlemesi, sağda büyük seçenekler: odalar, Ev ve Diğer sekmeleri, neler dahil olsun, tablet ve telefon için ayrı ayrı görünüm, 32 arka plan, ışık efektleri. Önizleme her seçimde değişir; Uygula senin evinden kurar, geri alınabilir.',
       'Stil seç (… menüsü): aynı pencere, sekmelerine dokunmadan. Görünümü kendi panonda ya da örnek evde dene, beğenirsen tek dokunuşla uygula.',
