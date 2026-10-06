@@ -1264,7 +1264,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
-      if (act === 'settings') { this._modal = 'settings'; this._menu = null; return this._render(); }
+      if (act === 'settings') {
+        this._modal = 'settings'; this._menu = null; this._render();
+        // dar ekranda (telefon) yan panel önizlemenin altında kalıyordu: Ayarlar'a basınca bir şey olmuyor gibiydi
+        if (this._narrowNow) { const d = this.shadowRoot.querySelector('.dlg.dock'); if (d && d.scrollIntoView) d.scrollIntoView({ block: 'start' }); }
+        return;
+      }
       if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
       if (act === 'close') {
         if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); }   // simge seçiciden öğe ayarlarına dön

@@ -68,3 +68,27 @@ function lhdCleanPets(p) {
   });
   return out;
 }
+
+// Canlı abonelik, HA yeniden başlayınca da sürsün: websocket kütüphanesi dönüşte aboneliği kendisi yenilemeye çalışır ama
+// entegrasyon o an henüz yüklenmemişse "Unknown command" alır ve abonelik sessizce ölür (tablet ayar değişikliklerini
+// sayfa yenilenene kadar görmezdi). Burada yenilemeyi biz yaparız: bağlantı her hazır olduğunda yeniden abone olunur,
+// komut henüz yoksa 5 sn arayla denenir; onReady o sırada güncel veriyi yeniden ister.
+function lhdLiveSub(conn, msg, onMsg, onReady) {
+  if (!conn || !conn.subscribeMessage) return;
+  let gen = 0;
+  const go = (g, n) => {
+    if (g !== gen) return;
+    conn.subscribeMessage(onMsg, msg, { resubscribe: false }).catch((e) => {
+      if (g === gen && n < 36 && e && e.code === 'unknown_command') setTimeout(() => go(g, n + 1), 5000);
+    });
+  };
+  go(gen, 0);
+  if (conn.addEventListener) conn.addEventListener('ready', () => { gen++; const g = gen; go(g, 0); if (onReady) onReady(g === gen); });
+}
+// istek, entegrasyon henüz yüklenmemişse (HA açılıyor) birkaç kez yeniden denenir
+function lhdRetryMsg(conn, msg, n) {
+  return conn.sendMessagePromise(msg).catch((e) => {
+    if ((n || 0) < 36 && e && e.code === 'unknown_command') return new Promise((r) => setTimeout(r, 5000)).then(() => lhdRetryMsg(conn, msg, (n || 0) + 1));
+    throw e;
+  });
+}

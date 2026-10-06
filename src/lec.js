@@ -21,7 +21,9 @@ const LEC = window.__LEMUR_HD_LEC || (window.__LEMUR_HD_LEC = {
     this.loading = conn.sendMessagePromise({ type: LP_LEC_DOMAIN + '/get' }).then((d) => {
       this._put(d || {});
       // LEC'in ayarı değişince (oda listesi, favoriler) canlı gelsin
-      conn.subscribeMessage((m) => { this._put(m || {}); this._emit('rooms'); }, { type: LP_LEC_DOMAIN + '/subscribe' }).catch(() => {});
+      lhdLiveSub(conn, { type: LP_LEC_DOMAIN + '/subscribe' }, (m) => { this._put(m || {}); this._emit('rooms'); }, () => {
+        lhdRetryMsg(conn, { type: LP_LEC_DOMAIN + '/get' }).then((d) => { this._put(d || {}); this._emit('rooms'); }).catch(() => {});
+      });
       conn.sendMessagePromise({ type: LP_LEC_DOMAIN + '/info' }).then((r) => { this.version = (r && r.version) || null; this._emit('info'); }).catch(() => {});
       this._emit('rooms');
       return this;

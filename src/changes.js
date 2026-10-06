@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.17.3',
+    tr: ['HA yeniden başladıktan sonra tabletler ayar değişikliklerini sayfa yenilenene kadar görmüyordu (canlı bağlantı sessizce kopuyordu); artık bağlantı kendiliğinden yenileniyor. HA açılırken yüklenen pano da entegrasyonu bekleyip açılıyor.',
+      'Telefon genişliğinde yönetim paneli: Ayarlar önizlemenin altında kaldığı için açılmıyor gibiydi, artık üstte açılıyor. Otomatik kur / Stil seç alt çubuğu ve önizleme başlığı dar ekrana sığıyor.',
+      'Telefondaki alt çubuk daha koyu: arkasındaki karoların yazıları görünmüyor.'],
+    en: ['After an HA restart, tablets did not see settings changes until the page was reloaded (the live connection dropped silently); the connection now renews by itself. A dashboard loaded while HA is starting also waits for the integration.',
+      'Admin panel at phone width: Settings opened below the preview and looked like it did nothing; it now opens on top. The auto setup / Choose a style footer and preview header fit narrow screens.',
+      'The bottom bar on phones is darker, so tile labels behind it no longer show through.'] },
   { v: '0.17.2',
     tr: ['Görünüm ayarları tek yerde: arka plan (Renk ve Resim dahil), ışık ve iklim görünümü, telefon düzeni ve Efektler düğmesi artık Stil seç\'te. Ayarlar\'daki Stil seç kartı oraya götürür; üst çubuktaki düğme de vurgulu.',
       'Otomatik kur ve Stil seç önizlemesinde ışık penceresi: "Işık penceresi" düğmesi ya da pencere seçimi önizlemede bir ışığın penceresini açar (telefonda alttan ya da ortada).',

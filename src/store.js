@@ -32,11 +32,11 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     if (this.data) return Promise.resolve(this.data);
     if (this.loading) return this.loading;
     this.conn = hass.connection;
-    this.loading = this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/get' }).then((d) => {
+    this.loading = lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((d) => {   // HA açılırken entegrasyon henüz yoksa bekleyip yeniden dener
       this.data = d;
       lhdHealCheck(this.conn);
       // kendi kaydımızın yankısı beklenirken gelen eski veri ekrandakini ezmesin
-      this.conn.subscribeMessage((msg) => {
+      lhdLiveSub(this.conn, { type: 'lemur_home_dashboard/subscribe' }, (msg) => {
         if (msg && msg.__fb) {   // bir lamba yedek yoldan kontrol edildi (src: twins.py)
           if (!this.data) return;
           this.data = Object.assign({}, this.data, { fallback: Object.assign({}, this.data.fallback, msg.__fb) });
@@ -48,10 +48,9 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
           const d = this.data; this.subs.forEach((f) => f(d)); return;
         }
         if (this.pending) return; this.data = msg; this.subs.forEach((f) => f(msg));
-      }, { type: 'lemur_home_dashboard/subscribe' });
-      // bağlantı koparsa (HA yeniden başladı, tablet uyudu) dönüşte güncel ayarı al; o arada yapılan değişiklikler kaçmasın
-      if (this.conn.addEventListener) this.conn.addEventListener('ready', () => {
-        this.conn.sendMessagePromise({ type: 'lemur_home_dashboard/get' }).then((n) => { if (n && !this.pending) { this.data = n; this.subs.forEach((f) => f(n)); } }).catch(() => {});
+      }, () => {
+        // bağlantı koparsa (HA yeniden başladı, tablet uyudu) dönüşte güncel ayarı al; o arada yapılan değişiklikler kaçmasın
+        lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((n) => { if (n && !this.pending) { this.data = n; this.subs.forEach((f) => f(n)); } }).catch(() => {});
       });
       return d;
     }).catch((e) => { this.loading = null; throw e; });

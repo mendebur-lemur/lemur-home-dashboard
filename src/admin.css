@@ -386,4 +386,10 @@ label.btn { cursor: pointer; }
 .pvh .seg { flex: 0 0 auto; flex-wrap: nowrap; }
 @media (max-width: 600px) { .pvh { flex-wrap: wrap; } .pvh .seg { flex-wrap: wrap; } }
 .akpvh .seg { flex: 0 0 auto; flex-wrap: nowrap; } .akpvh .seg button { white-space: nowrap; }
-.akpvh > span { flex: 1 1 0; min-width: 0; }
+.akpvh { flex-wrap: wrap; row-gap: 8px; } .akpvh > span { flex: 1 1 260px; min-width: 200px; }   /* dar pencerede ipucu sütun gibi ezilmesin, alta geçsin */
+/* dar ekranda (telefon) ayarlar önizlemenin üstünde; Otomatik kur / Stil seç alt çubuğunda özet üstte, düğmeler altta yan yana */
+.narrowv .dlg.dock { order: -1; }
+@media (max-width: 700px) {
+  .akft { flex-wrap: wrap; row-gap: 10px; } .aksum { flex: 1 1 100%; } .akft .btn { flex: 1 1 0; min-width: 0; }
+  .akhd .akht span { display: none; }
+}

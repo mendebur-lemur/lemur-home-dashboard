@@ -358,7 +358,7 @@
 .pp + .pp { margin-left: 6px; }
 .pp.sel { border-color: var(--lp-sel); background: rgba(91, 141, 239, 0.18); font-weight: 700; }
 .pbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; padding: 8px 6px calc(10px + env(safe-area-inset-bottom, 0px));
-  background: rgba(14, 17, 23, 0.9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, 0.07); }
+  background: rgba(14, 17, 23, 0.95); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-top: 1px solid rgba(255, 255, 255, 0.07); }
 .pbi { flex: 1 1 0px; min-width: 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--lp-text2); }
 .pbi .lic { width: 30px; height: 30px; margin: 2px 0 3px; }
 .pbi span:last-child { font-size: 11.5px; line-height: 14px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; box-sizing: border-box; }
