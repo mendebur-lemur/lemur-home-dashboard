@@ -347,3 +347,68 @@
 /* v0.15 üst şerit kolona hizalı: oda düğmeleri alanı eşit paylaşır; sağ parçada Efektler ve saat */
 .nav.navl > .navb { flex: 1 1 0px; }
 .nav.navr > .clock:first-child { margin-left: 0; }
+/* v0.16 telefon: odalar ya da kategoriler altta (uygulama gibi); üstte sayfanın adı ve saat */
+.phone.pb { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+.phd { display: flex; align-items: center; justify-content: space-between; margin: 6px 6px 12px; }
+.phd b { font-size: 26px; line-height: 32px; font-weight: 800; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phone .phd .clock { display: block; flex: 0 0 auto; margin: 0; font-size: 20px; line-height: 32px; }
+.ppills { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -4px 12px; padding: 0 4px; }
+.ppills::-webkit-scrollbar { display: none; }
+.pp { flex: 0 0 auto; padding: 8px 14px; border-radius: 99px; background: var(--lp-card); border: 1px solid var(--lp-box-border); font-size: 14px; line-height: 18px; color: var(--lp-text); cursor: pointer; white-space: nowrap; }
+.pp + .pp { margin-left: 6px; }
+.pp.sel { border-color: var(--lp-sel); background: rgba(91, 141, 239, 0.18); font-weight: 700; }
+.pbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; padding: 8px 6px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(14, 17, 23, 0.9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.pbi { flex: 1 1 0px; min-width: 0; display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--lp-text2); }
+.pbi .lic { width: 30px; height: 30px; margin: 2px 0 3px; }
+.pbi span:last-child { font-size: 11.5px; line-height: 14px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; box-sizing: border-box; }
+.pbi.sel { color: var(--lp-text); }
+.pbi.sel .lic { background: rgba(91, 141, 239, 0.18); border-radius: 12px; box-shadow: 0 0 0 4px rgba(91, 141, 239, 0.18); }
+.ic-auto .pbi:not(.sel):not(.fxb) .lic { filter: grayscale(1) brightness(1.1); opacity: 0.55; }
+/* telefonda kaydırma çubukları cam görünümde: dolgu soldan sağa açılan hafif bir parıltı, açık çubuğun kenarı ışığın renginde */
+.phone .bar .bf { background-color: transparent; background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, var(--bar-c) 100%); opacity: 0.34; }
+.phone .bar.on { border-color: var(--bar-c); background: rgba(255, 255, 255, 0.05); }
+/* v0.16 sade satır (iklim ve süpürge, ayar climate_style = rows): taslaktaki gibi tek satır, dokununca altı açılır */
+.clr { box-sizing: border-box; border-radius: 16px; padding: 15px 12px 15px 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); color: var(--lp-text); --clc: var(--lp-text2); cursor: pointer; }
+.clr.open { background: rgba(255, 255, 255, 0.07); }
+.clr.k-heat { --clc: #FF8A3D; } .clr.k-cool { --clc: #4FB8FF; } .clr.k-dry { --clc: #4FD1C5; } .clr.k-fan { --clc: #A3B1C6; } .clr.k-err { --clc: #FF6B6B; }
+.clr.na { opacity: 0.5; }
+.cl1 { display: flex; align-items: center; min-height: 32px; }
+.cli { flex: 0 0 auto; display: flex; margin-right: 12px; }
+.cli .lic { width: 32px; height: 32px; }
+.ct { flex: 1 1 auto; min-width: 0; }
+.ct b { display: block; font-size: 15px; line-height: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct span { display: block; margin-top: 1px; font-size: 12.5px; line-height: 15px; color: var(--lp-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct em { font-style: normal; font-weight: 600; color: var(--clc); }
+.crt { flex: 0 0 auto; display: flex; align-items: center; margin-left: 8px; }
+.clr button { font: inherit; color: var(--lp-text); border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; padding: 0; }
+.cbt, .cib { flex: 0 0 32px; width: 32px; height: 32px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); font-size: 18px !important; line-height: 32px; display: flex; align-items: center; justify-content: center; --mdc-icon-size: 18px; }
+.cib + .cib { margin-left: 6px; }
+.cib.on { color: var(--clc) !important; background: rgba(255, 255, 255, 0.14); }
+.ctg { flex: 0 0 auto; min-width: 58px; padding: 0 6px; box-sizing: border-box; text-align: center; font-size: 17px; font-weight: 700; }
+.cl2 { display: flex; flex-wrap: wrap; margin-top: 10px; }
+.clr .cch { margin: 0 6px 6px 0; height: 38px; padding: 0 12px; border-radius: 11px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+.cch.one { align-items: center; }
+.cch i { font-style: normal; font-size: 10.5px; line-height: 12px; color: var(--lp-text2); }
+.cch b { font-size: 13px; line-height: 16px; font-weight: 700; white-space: nowrap; }
+.cch.on b { color: var(--clc); }
+.cch.sel { background: rgba(255, 255, 255, 0.14); }
+.clr .cch.cinf { align-items: center; padding: 0 10px; --mdc-icon-size: 20px; }
+.cmenu { display: flex; flex-wrap: wrap; margin-top: 2px; }
+.cop { margin: 0 6px 6px 0; height: 32px; padding: 0 12px !important; border-radius: 10px; background: rgba(255, 255, 255, 0.05); font-size: 13px !important; }
+.cop.sel { background: rgba(255, 255, 255, 0.16); color: var(--clc) !important; font-weight: 700; }
+.box > .clr + .clr { margin-top: var(--lp-gap, 8px); }
+.phone .box.spread > .clr { flex: 0 0 100%; margin-bottom: 8px; }
+/* kategori sayfasında oda ara başlığı (taslaktaki gibi küçük, sola dayalı) */
+.subt.csub { text-align: left; font-size: 12.5px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 4px 0; }
+.subt.csub:first-child { padding-top: 2px; }
+.box > .subt.csub + .clr, .box > .subt.csub + .emb { margin-top: 8px; }
+.phone .box.spread > .subt { flex: 0 0 100%; box-sizing: border-box; margin-bottom: 8px; }
+.phone .box > .clr + .clr, .phone .box > .subt.csub + .clr { margin-top: 0; }
+.phone .pcol > .box.catc { padding: 12px; }
+/* kapalı kartta sağda yalnız hedef sıcaklık; açılınca ortada büyük − hedef + */
+.ctv { font-size: 18px; min-width: 0; padding: 0 2px; }
+.chev { flex: 0 0 auto; display: flex; margin-left: 4px; color: var(--lp-text2); --mdc-icon-size: 22px; opacity: 0.7; }
+.cstep { display: flex; align-items: center; justify-content: center; margin-top: 12px; padding: 6px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); }
+.cstep .cbt { flex: 0 0 52px; width: 52px; height: 44px; border-radius: 12px; font-size: 24px !important; }
+.cstep .ctg { flex: 1 1 auto; font-size: 26px; }

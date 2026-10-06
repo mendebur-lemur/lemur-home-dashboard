@@ -21,7 +21,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 - **Backup control and wall switches (Advanced).** A lamp that shows up in two integrations (e.g. Govee LAN and Matter) gets a backup: the command goes the fast way, and if the lamp does not answer it is sent again through the backup. A wall relay that only gives a signal is bound to a lamp; the switch keeps working even when the internet or Wi-Fi comes and goes.
 - **Second line and templates.** State, last changed or an attribute under a tile; Home Assistant templates in the name and second line. A button can ask before running.
 - **Fits any screen.** The dashboard scales with the screen; it keeps the same proportions on 16:10, 4:3 and wide screens and runs smoothly on old tablets (iOS 12). Phones, phones held sideways and tablets held upright get their own layout.
-- **Its own phone layout.** Room buttons scroll sideways, sections stack, buttons are thumb-sized.
+- **Its own phone layout.** Room buttons scroll sideways, sections stack, buttons are thumb-sized. Optionally the rooms or categories (Lights, Climate, Scenes) move to the bottom of the screen, lights go one per row and the light window slides up from the bottom.
 - **Seasonal climate.** Air conditioners in summer, radiators in winter; automatic or by hand.
 - **Light effects (optional).** If [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) is installed, an Effects button appears in the top bar and the playing effect shows on the tiles.
 - Turkish and English interface.
@@ -155,6 +155,7 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
 - *Background:* dark (default), black, any colour, effect colours, or your own image (an address like `/local/background.jpg`). Effect colours are Light Effect Card's effect palettes (Aurora, Fire, Sunset, Ocean, Galaxy and 25 more): a soft colour glow on a dark background. They can be chosen even without Light Effect Card.
 - *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful), Flat (all grey) or Single colour (the drawings turn into one tone: devices that are off are grey, devices that are on are in the colour you pick; optionally a light that is on shows the lamp's own colour, and a scene button its own colour). The icon set is a separate file, downloaded once and kept by the browser.
+- *Climate and vacuum cards:* **Halo** (the large cards with a ring) or **Simple** (each device one row: for climate the status, temperature and target, for vacuums the status, battery, start and dock; tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction; only the buttons the device supports are shown).
 - *Top bar:* Room button size (default 235 × 155) and **Align to a column**: the buttons end at the right edge of the chosen column and share the space evenly; they stay aligned on every screen size. With Light Effect Card installed, the Effects button can join the aligned area or stay next to the clock.
 - *HA theme:* the Home Assistant theme used by dialogs (can be left empty).
 - *Hide top bar / Hide sidebar:* Home Assistant's header and sidebar are hidden on this dashboard only.
@@ -179,6 +180,12 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 ## Phone
 
 When the screen is narrower than 700 pixels, a phone is held sideways (less than 500 pixels high) or a tablet is held upright, the dashboard switches to its phone layout: room buttons become a strip that scrolls sideways, sections stack, scenes sit in two columns and the page scrolls. The number of tiles per row grows with the width (3 on a phone, 6 on an upright tablet). Set a lights section to **Auto on phone** and its lights become two columns of slider bars on a phone. No separate dashboard needed; the same dashboard opens in tablet layout on a tablet and phone layout on a phone.
+
+The **Settings → Phone** options are independent of each other, so any combination can be chosen. Tablets are not affected:
+
+- *Navigation:* **Rooms on top** (the layout above), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Categories at the bottom** (Lights, Climate, Scenes and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
+- *Lights:* **As in the section**, always **Tiles** or **One per row** (each light a row: tap to toggle, swipe for brightness).
+- *Light window from the bottom:* The window opened by holding a light slides up from the bottom; pull it down to close.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/phone.png" alt="Phone layout" width="320">
 

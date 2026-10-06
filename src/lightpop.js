@@ -72,6 +72,12 @@ const LP_POP_CSS = `
 .segs div.on { background: ${LP_POP_ACCENT}; color: #1A1105; font-weight: 600; }
 .segs div.lit { box-shadow: inset 0 0 0 2px var(--sc, #fff); }
 .empty { color: #8A8F96; font-size: 14px; text-align: center; padding: 18px 0; }
+.grab { display: none; }
+/* telefon seçeneği: pencere ekranın altından açılır, aşağı çekince kapanır */
+:host(.sheet) .pan { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-width: 100%; max-height: 90vh; border-radius: 28px 28px 0 0;
+  padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); opacity: 1; transition: transform 0.26s ease-out; }
+:host(.sheet.in) .pan { transform: translateY(0); }
+:host(.sheet) .grab { display: block; width: 44px; height: 5px; border-radius: 9px; background: #3A3F4A; margin: 2px auto 12px; }
 @media (max-width: 560px) { .col { grid-template-columns: 1fr; } .pan { padding: 12px; border-radius: 24px; } }
 `;
 const LP_POP_TXT = {
@@ -129,12 +135,30 @@ class LemurLightPopup {
     this._h = hass; this._id = id; this._item = item; this._room = room;
     this._lang = pickLang(hass);
     this._tab = 'color'; this._seg = 0;
+    this._sheet = lpPhoneScreen() && lpPhoneCfg().sheet;
     this._host = document.createElement('div');
     this._host.className = 'lemur-light-popup';
     const R = this._host.attachShadow({ mode: 'open' });
     R.innerHTML = '<style>' + LP_POP_CSS + '</style><div class="bg"></div><div class="pan" role="dialog" aria-modal="true"></div>';
     this._R = R; this._pan = R.querySelector('.pan');
     R.querySelector('.bg').addEventListener('click', () => this.close());
+    // alttan açılan pencere: başlıktan ya da tutamaktan aşağı çekince kapanır (kaydırıcılar ve renk çemberi kendi sürüklemesini kullanır)
+    let sy = null;
+    this._pan.addEventListener('touchstart', (e) => {
+      const t = e.target && e.target.closest ? e.target.closest('[data-sl], .wh, .fx, .segs') : null;
+      sy = this._sheet && !t && this._pan.scrollTop <= 0 ? e.touches[0].clientY : null;
+    }, { passive: true });
+    this._pan.addEventListener('touchmove', (e) => {
+      if (sy === null) return;
+      const dy = e.touches[0].clientY - sy;
+      if (dy > 0) { this._pan.style.transition = 'none'; this._pan.style.transform = 'translateY(' + dy + 'px)'; }
+    }, { passive: true });
+    this._pan.addEventListener('touchend', (e) => {
+      if (sy === null) return;
+      const dy = e.changedTouches[0].clientY - sy; sy = null;
+      this._pan.style.transition = ''; this._pan.style.transform = '';
+      if (dy > 90) this.close();
+    }, { passive: true });
     this._key = (e) => { if (e.key === 'Escape') { e.stopPropagation(); this.close(); } };
     window.addEventListener('keydown', this._key, true);
     // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
@@ -190,10 +214,10 @@ class LemurLightPopup {
     const icon = lpIcon(lpEntIcon(st, it.icon));
     if (!LP_MDIC.map) lpMdicLoad().then(() => { if (this._host && this._host.isConnected) this._render(); });
     // sınıf baştan yazılırken açılış sınıfı (in) korunur; yoksa sekme değişince pencere görünmez olur ama ekranı kaplamaya devam eder
-    if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
+    if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (this._sheet ? ' sheet' : '') + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
     const tabs = this._tabs();
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
-    let h = '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
+    let h = (this._sheet ? '<div class="grab"></div>' : '') + '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
       '<div class="box row" style="margin-top:14px">' + this._sliderHtml(this._id, name, icon) + '<div class="pw" data-pw><ha-icon icon="mdi:power"></ha-icon></div></div>';
     if (tabs.length > 1 || (tabs.length === 1 && tabs[0] !== 'color')) {
       h += '<div class="box tabs" style="margin-top:14px">' + tabs.map((k) => '<div class="tab' + (k === this._tab ? ' on' : '') + '" data-tab="' + k + '">' + esc(this._t(k)) + '</div>').join('') + '</div>';

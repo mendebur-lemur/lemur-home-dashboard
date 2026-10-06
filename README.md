@@ -21,7 +21,7 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 - **Yedek kontrol ve duvar anahtarları (Gelişmiş).** İki entegrasyonda görünen lambaya (ör. Govee LAN ve Matter) yedek seçilir: komut hızlı yoldan gider, lamba cevap vermezse yedekten tekrar gönderilir. Yalnız sinyal veren duvar rölesi bir lambaya bağlanır; internet ya da Wi-Fi gidip gelse de anahtar çalışır.
 - **İkinci satır ve şablon.** Karonun altına durum, son değişim ya da öznitelik; ad ve ikinci satırda Home Assistant şablonu. İstersen düğme çalışmadan önce onay sorar.
 - **Her ekrana uyar.** Pano ekranın boyutuna göre ölçeklenir; 16:10, 4:3 ve geniş ekranlarda aynı oranla görünür, eski tabletlerde (iOS 12) de akıcı çalışır. Telefonda, yatay tutulan telefonda ve dikey tutulan tablette kendi düzenine geçer.
-- **Telefonda kendi düzeni.** Oda düğmeleri yana kayar, bölümler alt alta dizilir, düğmeler başparmak boyunda olur.
+- **Telefonda kendi düzeni.** Oda düğmeleri yana kayar, bölümler alt alta dizilir, düğmeler başparmak boyunda olur. İstersen odalar ya da kategoriler (Işıklar, İklim, Senaryolar) ekranın altına iner, ışıklar tek sıra olur, ışık penceresi alttan açılır.
 - **Mevsime göre iklim.** Yazın klimalar, kışın petekler gösterilir; otomatik ya da elle.
 - **Işık efektleri (isteğe bağlı).** [Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card) kuruluysa üst şeride Efektler düğmesi gelir, oynayan efekt karolarda görünür.
 - Türkçe ve İngilizce arayüz.
@@ -155,6 +155,7 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır:
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
 - *Arka plan:* koyu (varsayılan), siyah, istediğin bir renk, efekt renkleri ya da kendi resmin (`/local/zemin.jpg` gibi bir adres). Efekt renkleri Light Effect Card'ın efekt paletleri (Kutup ışığı, Ateş, Gün batımı, Okyanus, Galaksi ve 25 tane daha): koyu zeminde yumuşak bir renk ışıltısı. Light Effect Card kurulu olmasa da seçilebilir.
 - *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli), Düz (hepsi gri) ya da Tek renk (çizimler tek tona çevrilir: kapalılar gri, açıklar seçtiğin renkte; istersen açık ışık lambanın kendi renginde, senaryo düğmesi kendi renginde). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.
+- *İklim ve süpürge kartları:* **Halo** (büyük, halkalı kartlar) ya da **Sade** (her cihaz tek satır: iklimde durum, sıcaklık ve hedef, süpürgede durum, pil, başlat ve istasyon; karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü; yalnız cihazın desteklediği düğmeler görünür).
 - *Üst şerit:* Oda düğmelerinin boyutu (varsayılan 235 × 155) ve **Kolona hizala**: düğmeler seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır; her ekran boyutunda aynı hizada kalır. Light Effect Card kuruluysa Efektler düğmesi hizalı alana alınabilir ya da saatin yanında kalır.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
 - *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
@@ -179,6 +180,12 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 ## Telefon
 
 Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden az) ya da tablet dikey tutulmuşsa pano telefon düzenine geçer: oda düğmeleri yana kayan bir şerit olur, bölümler alt alta dizilir, senaryolar iki sütunda durur, sayfa aşağı kayar. Karo sayısı ekranın genişliğine göre artar (telefonda 3, dikey tablette 6). Işık bölümünü **Telefonda otomatik** yaparsan telefonda ışıklar iki sütun kaydırmalı çubuk olur. Ayrı bir pano gerekmez; aynı pano tablette tablet, telefonda telefon düzeniyle açılır.
+
+**Ayarlar → Telefon** seçenekleri birbirinden bağımsızdır, istediğin birleşimi seçebilirsin. Tablet hiçbirinden etkilenmez:
+
+- *Gezinme:* **Üstte odalar** (yukarıdaki düzen), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Altta kategoriler** (altta Işıklar, İklim, Senaryolar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
+- *Işıklar:* **Bölümdeki gibi**, hep **Karo** ya da **Tek sıra** (her ışık bir satır: dokun aç/kapat, sağa sola kaydır parlaklık).
+- *Işık penceresi alttan:* Basılı tutunca açılan pencere ekranın altından gelir, aşağı çekince kapanır.
 
 <img src="https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/phone.png" alt="Telefon düzeni" width="320">
 

@@ -2,6 +2,13 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.16.0',
+    tr: ['Telefon (Ayarlar → Telefon), birbirinden bağımsız seçenekler: odalar ya da kategoriler (Işıklar, İklim, Senaryolar, Efektler) ekranın altında; ışıklar karo ya da tek sıra; ışık penceresi alttan açılır. Kategorilerde ışıklar oda oda, sağa sola kaydırarak gezilir.',
+      'İklim ve süpürge kartları (Ayarlar → Görünüm): Halo ya da Sade. Sade stilde her cihaz tek satır: iklimde durum, sıcaklık ve hedef, süpürgede durum, pil, başlat ve istasyon. Karta dokununca genişler: hedef − +, aç/kapat, mod, fan, salınım ya da durdur, bul, emiş gücü. Kategorilerdeki İklim sayfasında odalar tek kutuda, ara başlıklarla.',
+      'Telefonda kaydırma çubukları cam görünümde: dolgu hafif bir parıltı, açık çubuğun kenarı ışığın renginde.'],
+    en: ['Phone (Settings → Phone), independent options: rooms or categories (Lights, Climate, Scenes, Effects) at the bottom of the screen; lights as tiles or one per row; the light window slides up from the bottom. In categories, lights are browsed room by room by swiping left and right.',
+      'Climate and vacuum cards (Settings → Look): Halo or Simple. In the simple style each device is one row: for climate the status, temperature and target, for vacuums the status, battery, start and dock. Tap the card to expand it: target − +, power, mode, fan, swing or stop, locate, suction. The Climate category page shows all rooms in one box with subheadings.',
+      'Slider bars on phones have a glass look: the fill is a soft glow and a bar that is on gets an edge in the light\'s colour.'] },
   { v: '0.15.0',
     tr: ['Üst şerit (Ayarlar → Görünüm): oda düğmelerinin boyutu ayarlanabilir; Kolona hizala ile düğmeler seçilen kolonun kenarında biter, her ekran boyutunda aynı hizada kalır. Efektler düğmesi hizalı alana alınabilir.',
       'Işık penceresi: Renk, Efekt ya da Segment sekmesine geçince pencere görünmez oluyor ama ekranı kaplamaya devam ediyordu; bir süre hiçbir dokunuş algılanmıyordu. Düzeltildi.',
