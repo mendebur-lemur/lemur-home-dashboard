@@ -257,6 +257,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       };
     }
     window.addEventListener('keydown', this._key);
+    if (!this._nw) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }   // yeni sürüm uyarısı (src/store.js)
     if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
     if (!this._leciUnsub) this._leciUnsub = lpLecIconsSub(() => { if (this._hass && STORE.data) this._render(); });
     if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub(() => { if (this._hass && STORE.data) { this._render(); if (this._modal === 'icon') this._refreshIcons(); } });
@@ -264,6 +265,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
+    if (this._nw) { this._nw = 0; lhdNewerUse(false); }
     if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
     if (this._unsub) { this._unsub(); this._unsub = null; }
@@ -552,7 +554,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     };
     tick();
   }
-  // yeniden başlat; yeni sürüm cevap verince sayfayı bir kez yenile (o ana kadar bellekte eski kod var)
+  // kullanıcı Yeniden başlat'a bastı: yeni sürüm cevap verince sayfayı bir kez yenile (o ana kadar bellekte eski kod var)
   _updRestart() {
     const want = (this._upd || {}).latest; this._updSet({ st: 'restarting' });
     this._hass.callService('homeassistant', 'restart').catch(() => {});
@@ -561,7 +563,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (Date.now() - t0 > 600000) return;
       try {
         const v = (await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/info' })).version;
-        if (v === want || (down && v)) { await Promise.resolve(window.__LEMUR_HD_HEAL && window.__LEMUR_HD_HEAL()); return location.reload(); }
+        if (v === want || (down && v)) return location.reload();   // kullanıcı Yeniden başlat'a bastı
       } catch (e) { down = true; }
       setTimeout(poll, 3000);
     };

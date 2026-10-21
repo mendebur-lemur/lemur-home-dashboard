@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.17.5',
+    tr: ['Güncellemeden sonra pano artık sayfayı kendiliğinden yenilemiyor ve tarayıcının önbelleğine dokunmuyor. Yeni sürüm yüklendiğinde panonun üstünde "Yeni sürüm yüklendi, görmek için sayfayı yenile" uyarısı çıkıyor; sayfa ancak Yenile\'ye basınca yenileniyor.'],
+    en: ['After an update the dashboard no longer reloads the page by itself and no longer touches the browser cache. When a new version is installed, a "A new version is installed, reload the page to use it" notice shows at the top of the dashboard; the page only reloads when you press Reload.'] },
   { v: '0.17.4',
     tr: ['Canlı bağlantıya bekçi: tablet ayar değişikliklerini dinlediği bağlantıyı yine de kaybederse 30 saniye içinde fark edip yeniden bağlanır ve güncel ayarı alır.'],
     en: ['A watchdog for the live connection: if a tablet still loses the connection it listens to for settings changes, it notices within 30 seconds, reconnects and fetches the current settings.'] },

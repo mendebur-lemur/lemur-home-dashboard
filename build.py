@@ -40,10 +40,10 @@ def load_css(name):
 css = load_css("base.css")
 admin_css = load_css("admin.css")
 parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "cardpop.js", "pet.js", "yaml.js", "help.js", "admin.js")]
-heal = (src / "heal.js").read_text(encoding="utf-8").replace("__VERSION__", version) + "\n" + (src / "errlog.js").read_text(encoding="utf-8")
+errlog = (src / "errlog.js").read_text(encoding="utf-8")
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
-{heal}
+{errlog}
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';
 const CSS = {json.dumps(css, ensure_ascii=False)};

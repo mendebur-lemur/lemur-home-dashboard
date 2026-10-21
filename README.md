@@ -222,7 +222,7 @@ Kurulu değilse bu düğmeler panoda görünmez, başka hiçbir şey değişmez.
 1. **HACS → Lemur Home Dashboard → ⋮ → Bilgileri güncelle**, sonra **İndir** (ya da Ayarlar'daki güncelleme bildiriminden **Güncelle**). HACS özel depolara kendiliğinden ancak 48 saatte bir bakar; "Bilgileri güncelle" bunu beklemeden yapar.
 2. Home Assistant'ı yeniden başlat.
 
-Pano, tarayıcının ve telefon uygulamasının sakladığı eski sayfa kopyalarını kendisi temizler; eski sürüm bir kez gelirse sayfa bir kez yenilenir. Sekmelerin, bölümlerin ve ayarların güncellemede silinmez.
+Güncellemeden sonra pano ya da yönetim paneli açıksa üstte "Yeni sürüm yüklendi, görmek için sayfayı yenile" uyarısı çıkar; **Yenile**'ye basınca yeni sürüm açılır. Sayfa kendiliğinden yenilenmez. Sekmelerin, bölümlerin ve ayarların güncellemede silinmez.
 
 ## Sorun giderme
 

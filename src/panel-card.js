@@ -435,6 +435,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     for (let i = 0; i < m.length; i++) if (h.states[m[i]]) { this._render(); return; }
   }
   connectedCallback() {
+    // yeni sürüm uyarısı (src/store.js): yalnız gerçek pano sayar, yönetim panelindeki önizleme kartı saymaz
+    if (!this._nw && !(this._config && this._config.demo)) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
       this._def = null;
       const st = (d && d.settings) || {};
@@ -455,6 +457,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._hass) this._render();
   }
   disconnectedCallback() {
+    if (this._nw) { this._nw = 0; lhdNewerUse(false); }
     if (this._unsub) { this._unsub(); this._unsub = null; }
     if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
     if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
@@ -492,6 +495,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   _render0() {
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
     const h = this._hass, S = h.states, lang = pickLang(h);
+    if (this._nw) LHD_NEWER.lang = lang;
     const tabs = this._tabs();
     const tab = tabs.filter((x) => x.id === (this._config && this._config.tab))[0] || tabs[0];
     if (!tab) { this.shadowRoot.innerHTML = ''; this._sig = null; return; }

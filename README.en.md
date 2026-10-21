@@ -222,7 +222,7 @@ If it isn't installed, these buttons don't show on the dashboard and nothing els
 1. **HACS → Lemur Home Dashboard → ⋮ → Update information**, then **Download** (or **Update** from the update notice in Settings). HACS checks custom repositories on its own only every 48 hours; "Update information" does it right away.
 2. Restart Home Assistant.
 
-The dashboard clears the old page copies kept by the browser and the phone app by itself; if the old version shows up once, the page reloads once. Your tabs, sections and settings are kept across updates.
+After an update, if the dashboard or the admin panel is open, a "A new version is installed, reload the page to use it" notice shows at the top; press **Reload** to open the new version. The page never reloads by itself. Your tabs, sections and settings are kept across updates.
 
 ## Troubleshooting
 
