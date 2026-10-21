@@ -33,8 +33,8 @@ _LOGGER = logging.getLogger(__name__)
 
 CONTROL_DOMAINS = ("light", "switch", "fan", "input_boolean")
 WALL_DOMAINS = ("switch", "input_boolean", "binary_sensor", "light")
-OFF_WAIT = 2.0      # seconds the twin gets to report "off"
-ON_WAIT = 3.0       # seconds the twin gets to report "on" (brightness / colour may follow)
+OFF_WAIT = 3.0      # seconds the twin gets to report "off"
+ON_WAIT = 5.0       # seconds the twin gets to report "on" (brightness / colour may follow)
 MAX_TWINS = 200
 MAX_WALLS = 50
 
@@ -137,8 +137,14 @@ class Twins:
 
     async def _wait(self, eid: str, backup: str, target: bool, timeout: float) -> bool:
         """True when the twin (the reliable side) reports the wanted state in time.
-        If the twin is unavailable, the light's own state counts."""
+        If the twin is unavailable, the light's own state counts. A fresh report of
+        the wanted state from the light itself also counts: the twin (Matter) can lag
+        a few seconds behind. A state that was already there (stale) does not."""
+        fresh = {"v": False}
+
         def ok() -> bool:
+            if fresh["v"]:
+                return True
             vb = _onoff(self.hass.states.get(backup))
             if vb is None:
                 return _onoff(self.hass.states.get(eid)) == target
@@ -149,7 +155,9 @@ class Twins:
         done = asyncio.Event()
 
         @callback
-        def _changed(_ev: Event) -> None:
+        def _changed(ev: Event) -> None:
+            if ev.data.get("entity_id") == eid and _onoff(ev.data.get("new_state")) == target:
+                fresh["v"] = True
             if ok():
                 done.set()
 

@@ -70,6 +70,21 @@ async def test_stuck_fast_side_uses_backup(hass, hass_ws_client, setup_lhd, monk
     assert FAST in hass.data[DOMAIN].twins.fallback
 
 
+async def test_fresh_fast_report_counts_when_twin_lags(hass, hass_ws_client, setup_lhd, monkeypatch):
+    from custom_components.lemur_home_dashboard import twins as TW
+    monkeypatch.setattr(TW, "ON_WAIT", 0.4)
+    # LAN reaches the lamp and reports "on"; Matter is still "off" (it lags)
+    _set(hass, FAST, "off")
+    _set(hass, SLOW, "off")
+    await _setup_twin(hass, hass_ws_client)
+    ons = async_mock_service(hass, "light", "turn_on")
+    hass.loop.call_later(0.1, lambda: _set(hass, FAST, "on"))
+    res = await hass.data[DOMAIN].twins.control(FAST, "toggle")
+    assert res == "primary"
+    assert [c.data["entity_id"] for c in ons] == [FAST]
+    assert hass.data[DOMAIN].twins.fallback == {}
+
+
 async def test_no_twin_is_plain(hass, setup_lhd):
     _set(hass, "light.other", "off")
     ons = async_mock_service(hass, "light", "turn_on")
