@@ -415,3 +415,21 @@
 /* yönetim panelindeki önizlemede alt çubuk ekranın değil önizlemenin altında durur */
 .edit .pbar { position: -webkit-sticky; position: sticky; margin: 12px -4px -25px; }
 .edit.pb { padding-bottom: 25px; }
+
+/* Saatte parlaklık (ayar bright, isteğe bağlı): saatin olduğu alan kaydırılınca odadaki açık ışıklar birlikte değişir.
+   Gizli (varsayılan): yalnız saat görünür, kaydırınca kutu, dolgu ve yüzde belirir. Kutu: oda düğmesi gibi zemin. */
+.bbar { position: relative; flex: 1 0 150px; align-self: stretch; height: var(--lp-nav-h, 155px); margin-left: 8px; min-width: 0; box-sizing: border-box; border-radius: 15px; border: 2px solid transparent; overflow: hidden; display: flex; align-items: center; padding: 0 24px; cursor: ew-resize; user-select: none; -webkit-user-select: none; touch-action: pan-y; transition: border-color .35s, background-color .35s; }
+.nav.navr > .bbar:first-child { margin-left: 0; }
+.bbar.bbbox { background: var(--lp-card); }
+.bbar .clock { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; flex: none; pointer-events: none; }
+.bbar .bbf { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: rgba(240, 169, 59, 0.32); opacity: 0; transition: opacity .35s; pointer-events: none; }
+.bbar.bbal .bbf { opacity: 1; transition: width .25s; }
+.bbar.bbal.bbon { border-color: rgba(240, 169, 59, 0.55); }
+.bbar.bbdrag { border-color: rgba(240, 169, 59, 0.65); background: var(--lp-card); transition: none; }
+.bbar.bbdrag .bbf { opacity: 1; transition: none; }
+.bbar .bbi { position: relative; flex: 0 0 auto; width: calc(var(--lp-nav-h, 155px) * 0.55); height: calc(var(--lp-nav-h, 155px) * 0.55); display: flex; align-items: center; justify-content: center; }
+.bbar .bbi svg, .bbar .bbi ha-icon { display: block; width: 100%; height: 100%; --mdc-icon-size: 100%; }
+.bbar.bboff .bbi { filter: grayscale(1); opacity: 0.45; }
+.bbar .bbv { position: relative; margin-left: auto; font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; transition: opacity .35s; pointer-events: none; }
+.bbar.bbdrag .bbv, .bbar.bbal.bbon .bbv { opacity: 1; }
+.edit .bbar { cursor: default; }

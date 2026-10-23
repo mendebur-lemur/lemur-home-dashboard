@@ -233,6 +233,13 @@ function lpNavCfg() {
   const num = (v, lo, hi) => { const x = typeof v === 'string' ? parseFloat(v) : v; return typeof x === 'number' && isFinite(x) ? Math.max(lo, Math.min(hi, Math.round(x))) : null; };
   return { w: num(n.w, 80, 400), h: num(n.h, 60, 260), cols: num(n.cols, 0, 6) || 0, fx_in: n.fx_in === true };
 }
+// Saatte parlaklık (ayar bright, isteğe bağlı, varsayılan kapalı): üst şeritte saatin olduğu alan kaydırılınca sekmenin
+// odasındaki açık ışıkların hepsi aynı parlaklığa gelir. look: yok = gizli (yalnız saat, kaydırınca belirir), 'box' = oda
+// düğmesi gibi kutu; icon: true = solda ampul simgesi; value: 'always' = dolgu ve yüzde hep görünür (yoksa yalnız kaydırırken).
+function lpBrightCfg() {
+  const s = lpSettings(), b = lhdIsObj(s.bright) ? s.bright : {};
+  return { on: b.on === true, box: b.look === 'box', icon: b.icon === true, always: b.value === 'always' };
+}
 
 // telefon seçenekleri (ayar phone), her biri ayrı açılır:
 //   nav: 'cats' (v0.17 varsayılan: altta kategoriler: Işıklar, İklim, Senaryolar...) | 'rooms' (odalar altta) | 'top' (oda düğmeleri üstte, eski düzen)
@@ -707,7 +714,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     // Lemur Light Effect Card kuruluysa üst şeridin sonunda "Efektler": efekt ekranını bu sekmenin odasıyla açar (ayarlardan kapatılabilir)
     const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni">' + lpIcon('mdi:creation') + '</div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
     const navBtns = tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div></div>').join('');
-    const clock = '<div class="clock">' + this._time() + '</div>';
+    const clock0 = '<div class="clock">' + this._time() + '</div>';
+    const bbc = lpBrightCfg();
+    this._bbTab = tab;
+    const clock = bbc.on && !phone ? '<div class="bbar' + (bbc.box ? ' bbbox' : '') + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div>' +
+      (bbc.icon ? lpIcon('lhd:bulb-bright', 'bbi') : '') + clock0 + '<span class="bbv"></span></div>' : clock0;
     const nc = lpNavCfg(), nst = (nc.w ? '--lp-nav-w:' + nc.w + 'px;' : '') + (nc.h ? '--lp-nav-h:' + nc.h + 'px;' : '');
     // kolona hizala: düğmeler ilk N kolonun üstünü eşit paylaşır, sağ kenarları N. kolonun kutusuyla aynı çizgide biter;
     // Efektler (içeride değilse) ve saat kalan kolonların üstünde. Telefonda ve kolon sayısı yetmezse normal şerit.
@@ -725,11 +736,11 @@ class LemurHomeDashboardCard extends HTMLElement {
       const fxI = lpLecNav(h) ? '<div class="pbi fxb" data-navfx>' + lpIcon('mdi:creation') + '<span>' + esc(t(lang, 'effects')) + '</span></div>' : '';
       if (cv) {
         pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
-        pHead = '<div class="phd"><b>' + esc(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') + '</b>' + clock + '</div>' +
+        pHead = '<div class="phd"><b>' + esc(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') + '</b>' + clock0 + '</div>' +
           (cvPage && cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
-        pHead = '<div class="phd"><b>' + esc(tab.name || '') + '</b>' + clock + '</div>';
+        pHead = '<div class="phd"><b>' + esc(tab.name || '') + '</b>' + clock0 + '</div>';
       }
       pBar = '<div class="pbar">' + pBar + '</div>';
     }
@@ -806,6 +817,8 @@ class LemurHomeDashboardCard extends HTMLElement {
 
     // düzenleme modu (yönetim panelindeki önizleme): cihazlara dokunulmaz; tıklama seçer, sürükleme taşır, çizgiler boyutlandırır
     if (edit) { this._editBind(R, tab, widths, used); return; }
+    const bbEl = R.querySelector('[data-bbar]');
+    if (bbEl) this._bbBind(bbEl);
     // dokunuşlar
     R.querySelectorAll('[data-nav]').forEach((b) => lpPress(b, () => {
       const id = b.getAttribute('data-nav');
@@ -1395,6 +1408,83 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
 
   // --- durum güncellemesi (iskelete dokunmadan) ---
+  // Saatte parlaklık: etkilenen ışıklar sekmedeki ışık karoları ve sekmenin odası (alanı) varsa o alandaki bütün ışıklar;
+  // yalnız o an açık ve kısılabilir olanlar.
+  _bbIds() {
+    const h = this._hass, S = h.states, out = [], tab = this._bbTab;
+    const add = (id) => {
+      if (!id || id.split('.')[0] !== 'light' || out.indexOf(id) >= 0) return;
+      const st = S[id]; if (st && st.state === 'on' && lpBarCan(st)) out.push(id);
+    };
+    (this._tiles || []).forEach((b) => add(b.getAttribute('data-light')));
+    if (tab && tab.area) {
+      const ents = h.entities || {}, devs = h.devices || {};
+      Object.keys(ents).forEach((id) => {
+        const e = ents[id];
+        if (!e || e.hidden || e.entity_category || id.split('.')[0] !== 'light') return;
+        const d = e.device_id && devs[e.device_id];
+        if ((e.area_id || (d && d.area_id)) === tab.area) add(id);
+      });
+    }
+    return out;
+  }
+  // kaydırınca etkilenecekler: açık ışıklar; hiçbiri açık değilse bu alandan en son kapatılanlar (yeniden açılır)
+  _bbTargets() { const L = this._bbIds(); return L.length ? L : (this._bbLast || []); }
+  _bbVal(L) {
+    if (typeof this._bbDrag === 'number') return this._bbDrag;
+    if (this._bbHold && Date.now() < this._bbHold.until) return this._bbHold.v;
+    if (!L.length) return 0;
+    let s = 0; L.forEach((id) => { s += lpBarVal(this._hass.states[id]); });
+    return Math.round(s / L.length);
+  }
+  _bbPaint() {
+    const el = this.shadowRoot && this.shadowRoot.querySelector('[data-bbar]');
+    if (!el || !this._hass) return;
+    const L = this._bbIds(), v = this._bbVal(L), lang = this._lang || 'tr';
+    el.classList.toggle('bbon', L.length > 0);
+    el.classList.toggle('bboff', !L.length && typeof this._bbDrag !== 'number');
+    el.querySelector('.bbf').style.width = v + '%';
+    el.querySelector('.bbv').textContent = v === 0 ? t(lang, 'off') : '%' + v;
+  }
+  // göreli kaydırma (panodaki çubuklar gibi): yatay hareket 8 px'i geçince başlar, dikey hareket sayfayı kaydırır;
+  // bırakınca tek komut: %0 ise kapat, değilse brightness_pct. Gönderilen değer 3 sn ekranda kalır.
+  _bbBind(el) {
+    let down = false, mode = null, sx = 0, sy = 0, sv = 0, w = 1, pid = null;
+    el.addEventListener('pointerdown', (e) => {
+      if (!this._bbTargets().length) return;
+      down = true; mode = null; sx = e.clientX; sy = e.clientY; pid = e.pointerId;
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!mode) {
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+          mode = 'drag'; sv = this._bbVal(this._bbIds()); w = el.getBoundingClientRect().width || 1; sx = e.clientX;
+          el.classList.add('bbdrag'); try { el.setPointerCapture(pid); } catch (x) {}
+        } else if (Math.abs(dy) > 10) { down = false; return; }
+      }
+      if (mode === 'drag') {
+        if (e.cancelable) e.preventDefault();
+        this._bbDrag = Math.max(0, Math.min(100, Math.round(sv + (e.clientX - sx) / w * 100)));
+        this._bbPaint();
+      }
+    });
+    const finish = (send) => {
+      if (!down) return;
+      down = false; el.classList.remove('bbdrag');
+      if (mode !== 'drag') return;
+      const v = this._bbDrag, L = this._bbTargets(); this._bbDrag = null;
+      if (send && typeof v === 'number' && L.length && !(this._config && this._config.demo)) {
+        this._bbHold = { v: v, until: Date.now() + 3000 };
+        if (v === 0) { this._bbLast = L.slice(); this._hass.callService('light', 'turn_off', { entity_id: L }); }
+        else this._hass.callService('light', 'turn_on', { entity_id: L, brightness_pct: v });
+        setTimeout(() => this._bbPaint(), 3100);
+      }
+      this._bbPaint();
+    };
+    el.addEventListener('pointerup', () => finish(true));
+    el.addEventListener('pointercancel', () => finish(false));
+  }
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
     // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor
@@ -1452,6 +1542,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     this._timers();
     (this._watched || []).forEach((id) => { this._last[id] = S[id]; });
+    this._bbPaint();
     // LEC düğmeleri: efekti oynuyorsa (ya da efekt ekranı düğmesinin odasında bir efekt oynuyorsa) yanar
     const R = this.shadowRoot;
     if (R) Array.prototype.forEach.call(R.querySelectorAll('.scene[data-lk]'), (el) => {
