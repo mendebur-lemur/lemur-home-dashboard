@@ -54,24 +54,21 @@ Gerekenler: Home Assistant 2024.8 ya da daha yeni bir sürüm ve [HACS](https://
 
 ### 1. HACS ile indir
 
-En kolay yol bu düğme. Home Assistant adresini bir kez sorar, sonra depoyu doğrudan HACS'ta açar:
+Lemur Home Dashboard HACS'ın resmi listesinde; özel depo eklemeye gerek yok. En kolay yol bu düğme. Home Assistant adresini bir kez sorar, sonra panoyu doğrudan HACS'ta açar:
 
 [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
 
-1. Açılan pencerede **Ekle**'ye bas (depo HACS'a eklenir).
-2. Sağ alttaki **İndir** düğmesine bas, sürümü seçme penceresinde tekrar **İndir**.
-3. **Ayarlar → Sistem → sağ üstteki ⏻ → Home Assistant'ı yeniden başlat**. Ayarlar sayfasında "Yeniden başlatma gerekli" uyarısı da çıkar, oradan da yapabilirsin.
+1. Sağ alttaki **İndir** düğmesine bas, sürümü seçme penceresinde tekrar **İndir**.
+2. **Ayarlar → Sistem → sağ üstteki ⏻ → Home Assistant'ı yeniden başlat**. Ayarlar sayfasında "Yeniden başlatma gerekli" uyarısı da çıkar, oradan da yapabilirsin.
 
 <details>
-<summary>Düğme çalışmazsa: elle ekleme</summary>
+<summary>Düğme çalışmazsa: HACS'ta ara</summary>
 
 1. Sol menüden **HACS**'ı aç.
-2. Sağ üstteki **⋮** menüsü → **Özel depolar** (*Custom repositories*).
-3. **Depo** alanına şu adresi yapıştır:
-   `https://github.com/mendebur-lemur/lemur-home-dashboard`
-4. **Tür** olarak **Entegrasyon** (*Integration*) seç ve **Ekle**'ye bas. Pencereyi kapat.
-5. HACS'ın arama kutusuna **Lemur Home Dashboard** yaz, sonuca tıkla.
-6. **İndir** → **İndir**, ardından Home Assistant'ı yeniden başlat.
+2. Arama kutusuna **Lemur Home Dashboard** yaz, sonuca tıkla.
+3. **İndir** → **İndir**, ardından Home Assistant'ı yeniden başlat.
+
+Daha önce özel depo olarak eklediysen bir şey yapman gerekmez; kurulumun ve güncellemelerin aynen sürer. İstersen HACS → ⋮ → **Özel depolar**'daki kaydı silebilirsin.
 
 </details>
 
@@ -220,7 +217,7 @@ Kurulu değilse bu düğmeler panoda görünmez, başka hiçbir şey değişmez.
 
 ## Güncelleme
 
-1. **HACS → Lemur Home Dashboard → ⋮ → Bilgileri güncelle**, sonra **İndir** (ya da Ayarlar'daki güncelleme bildiriminden **Güncelle**). HACS özel depolara kendiliğinden ancak 48 saatte bir bakar; "Bilgileri güncelle" bunu beklemeden yapar.
+1. **HACS → Lemur Home Dashboard → ⋮ → Bilgileri güncelle**, sonra **İndir** (ya da Ayarlar'daki güncelleme bildiriminden **Güncelle**). HACS yeni sürümleri kendisi de belli aralıklarla denetler; "Bilgileri güncelle" bunu beklemeden yapar.
 2. Home Assistant'ı yeniden başlat.
 
 Güncellemeden sonra pano ya da yönetim paneli açıksa üstte "Yeni sürüm yüklendi, görmek için sayfayı yenile" uyarısı çıkar; **Yenile**'ye basınca yeni sürüm açılır. Sayfa kendiliğinden yenilenmez. Sekmelerin, bölümlerin ve ayarların güncellemede silinmez.

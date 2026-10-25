@@ -54,24 +54,21 @@ Requirements: Home Assistant 2024.8 or newer and [HACS](https://hacs.xyz/docs/us
 
 ### 1. Download with HACS
 
-The easiest way is this button. It asks for your Home Assistant address once, then opens the repository directly in HACS:
+Lemur Home Dashboard is in the HACS default list; no custom repository needed. The easiest way is this button. It asks for your Home Assistant address once, then opens the dashboard directly in HACS:
 
 [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
 
-1. Press **Add** in the window that opens (the repository is added to HACS).
-2. Press **Download** at the bottom right, then **Download** again in the version window.
-3. **Settings → System → ⏻ at the top right → Restart Home Assistant**. A "Restart required" notice also shows up in Settings; you can restart from there too.
+1. Press **Download** at the bottom right, then **Download** again in the version window.
+2. **Settings → System → ⏻ at the top right → Restart Home Assistant**. A "Restart required" notice also shows up in Settings; you can restart from there too.
 
 <details>
-<summary>If the button doesn't work: add it by hand</summary>
+<summary>If the button doesn't work: search in HACS</summary>
 
 1. Open **HACS** in the sidebar.
-2. **⋮** menu at the top right → **Custom repositories**.
-3. Paste this address into **Repository**:
-   `https://github.com/mendebur-lemur/lemur-home-dashboard`
-4. Choose **Integration** as **Type** and press **Add**. Close the window.
-5. Type **Lemur Home Dashboard** into the HACS search box and click the result.
-6. **Download** → **Download**, then restart Home Assistant.
+2. Type **Lemur Home Dashboard** into the search box and click the result.
+3. **Download** → **Download**, then restart Home Assistant.
+
+If you added it earlier as a custom repository, there is nothing to do; your install and updates keep working. You can remove the entry under HACS → ⋮ → **Custom repositories** if you like.
 
 </details>
 
@@ -220,7 +217,7 @@ If it isn't installed, these buttons don't show on the dashboard and nothing els
 
 ## Updating
 
-1. **HACS → Lemur Home Dashboard → ⋮ → Update information**, then **Download** (or **Update** from the update notice in Settings). HACS checks custom repositories on its own only every 48 hours; "Update information" does it right away.
+1. **HACS → Lemur Home Dashboard → ⋮ → Update information**, then **Download** (or **Update** from the update notice in Settings). HACS also checks for new versions on its own from time to time; "Update information" does it right away.
 2. Restart Home Assistant.
 
 After an update, if the dashboard or the admin panel is open, a "A new version is installed, reload the page to use it" notice shows at the top; press **Reload** to open the new version. The page never reloads by itself. Your tabs, sections and settings are kept across updates.
