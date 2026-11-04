@@ -30,6 +30,7 @@ from . import twins as TW
 from .const import (
     DOMAIN,
     JS_FILE,
+    LOADER_FILE,
     MAX_CONFIG_BYTES,
     PANEL_ELEMENT,
     PANEL_URL,
@@ -224,8 +225,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     if not hass.data.get(f"{DOMAIN}_static"):
         await _register_static(hass)
-        # loaded on every page, so the strategy, the card and the scaling are defined before a dashboard opens
-        add_extra_js_url(hass, f"{URL_BASE}/{JS_FILE}?v={VERSION}")
+        # Every page loads the small loader. It defines the strategy element at once and loads the main file
+        # (strategy, card, scaling) in the background. The main file is large; on slow tablets and in the HA
+        # Android app HA's strategy wait ran out before it was ready (GitHub #3). Registered for both frontend
+        # builds, so browsers that get HA's legacy build load it too.
+        add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
+        add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
         for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True

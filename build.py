@@ -55,6 +55,7 @@ const ADMIN_CSS = {json.dumps(admin_css, ensure_ascii=False)};
 const LP_DEFS = [['ll-strategy-dashboard-lemur-home-dashboard', LemurHomeDashboardStrategy], ['lemur-home-dashboard-card', LemurHomeDashboardCard], ['lemur-home-dashboard-admin', LemurHomeDashboardAdmin]];
 const lpDefineAll = () => LP_DEFS.forEach((d) => {{ try {{ if (!window.customElements.get(d[0])) window.customElements.define(d[0], d[1]); }} catch (e) {{}} }});
 window.__LEMUR_HD_VER = PANEL_VERSION;
+window.__LEMUR_HD_STRATEGY = LemurHomeDashboardStrategy;  // yükleyici (loader.js) generate() çağrısını buraya devreder
 lpDefineAll();
 let lpTries = 0;
 const lpTimer = setInterval(() => {{ lpDefineAll(); if (++lpTries > 300) clearInterval(lpTimer); }}, 100);
@@ -88,3 +89,11 @@ gz = dst.with_name(dst.name + ".gz")
 if not gz.exists() or gzip.decompress(gz.read_bytes()).decode("utf-8") != out:
     gz.write_bytes(gzip.compress(out.encode("utf-8"), 9, mtime=0))
 print(dst, len(out.encode()))
+
+# Yükleyici (2026-11-04, GitHub #3): her sayfaya bu küçük dosya yüklenir; strateji elemanını hemen tanımlar,
+# ana dosyayı arkadan yükler. Ana dosya büyük olduğu için yavaş cihazlarda HA'nın strateji bekleme süresi doluyordu.
+loader = (src / "loader.js").read_text(encoding="utf-8").replace("__VERSION__", version)
+ldst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashboard-loader.js"
+if not ldst.exists() or ldst.read_text(encoding="utf-8") != loader:
+    ldst.write_text(loader, encoding="utf-8")
+print(ldst, len(loader.encode()))
