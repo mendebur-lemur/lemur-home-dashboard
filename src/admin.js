@@ -537,6 +537,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       latest = String(latest || '').replace(/^v/i, '');
       if (!LHD_REPO_URL.test(String(url || ''))) url = null;   // bağlantı yalnız projenin GitHub sayfasına
       const at = new Date().toLocaleTimeString(this._lang === 'tr' ? 'tr-TR' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
+      // HACS yeni sürümü indirmiş ama Home Assistant henüz yeniden başlamamış: güncelleme varlığı "güncel" der,
+      // update.install "No update available" hatası verir. Bu durumda yalnız yeniden başlatma önerilir.
+      const dl = ent && String(ent.attributes.installed_version || '').replace(/^v/i, '');
+      if (newer(latest, cur) && dl && !newer(latest, dl)) { this._updSet({ st: 'installed', cur: cur, latest: latest, url: url, at: at }); return; }
       this._updSet(newer(latest, cur) ? { st: 'new', cur: cur, latest: latest, url: url, ent: ent ? ent.entity_id : null, at: at } : { st: 'ok', cur: cur, latest: latest, url: url, at: at });
     } catch (e) { this._updSet({ st: 'err', err: (e && (e.message || e.code)) || String(e) }); }
   }
@@ -544,7 +548,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const U = this._upd || {}; if (!U.ent) return;
     this._updSet({ st: 'installing', pct: null });
     try { await this._hass.callService('update', 'install', { entity_id: U.ent }); }
-    catch (e) { return this._updSet({ st: 'err', err: (e && e.message) || String(e) }); }
+    catch (e) {
+      // başka bir yerden (HACS sayfası) zaten indirildiyse: hata değil, yeniden başlatma bekleniyor
+      const s = this._hass.states[U.ent], iv = String((s && s.attributes.installed_version) || '').replace(/^v/i, '');
+      if (iv && iv === U.latest) return this._updSet({ st: 'installed', pct: null });
+      return this._updSet({ st: 'err', err: (e && e.message) || String(e) });
+    }
     const t0 = Date.now();
     const tick = () => {
       const s = this._hass.states[U.ent], a = (s && s.attributes) || {};

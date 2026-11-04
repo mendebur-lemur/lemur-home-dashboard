@@ -34,6 +34,10 @@ for master_name, repo_name in (("mdi.json", "mdi-color.json"), ("efektler.json",
         gz.write_bytes(gzip.compress(data.encode("utf-8"), 9, mtime=0))
 
 version = json.loads((root / "custom_components/lemur_home_dashboard/manifest.json").read_text())["version"]
+# Yenilikler penceresi yalnız ilk kayıt paketin sürümüyle aynıysa çıkar (2026-11-04: 0.17.6'da kalmıştı)
+_m = re.search(r"const LHD_CHANGES = \[\s*\{\s*v:\s*'([^']+)'", (src / "changes.js").read_text(encoding="utf-8"))
+if not _m or _m.group(1) != version:
+    raise SystemExit("src/changes.js en üstteki kayıt v" + (_m.group(1) if _m else "?") + ", paket v" + version + ": Yenilikler'e bu sürümün satırını ekle")
 def load_css(name):
     c = re.sub(r"/\*.*?\*/", "", (src / name).read_text(encoding="utf-8"), flags=re.S)
     return "\n".join(l.strip() for l in c.splitlines() if l.strip())

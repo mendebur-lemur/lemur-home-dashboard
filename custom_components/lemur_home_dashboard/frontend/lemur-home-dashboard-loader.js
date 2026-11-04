@@ -1,4 +1,4 @@
-/*! Lemur Home Dashboard yükleyici v0.19.1 */
+/*! Lemur Home Dashboard yükleyici v0.19.2 */
 // Her sayfaya yüklenen küçük dosya (2026-11-04, GitHub #3).
 // Ana dosya ~700 KB. Yavaş tabletlerde ve HA Android uygulamasında, HA'nın pano stratejisini
 // bekleme süresi dolmadan inip çalışamıyor, pano "Timeout waiting for strategy element" veriyordu.
@@ -6,7 +6,7 @@
 // ana dosyanın yüklenmesi beklenir ve iş asıl stratejiye devredilir.
 (function () {
   var NAME = 'll-strategy-dashboard-lemur-home-dashboard';
-  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.19.1';
+  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.19.2';
   var W = window;
   var loading = null;
 
@@ -21,9 +21,13 @@
       var tries = 0;
       function attempt() {
         var s = document.createElement('script');
+        // Modül olarak yüklenir (eskiden de HA bunu modül olarak yüklüyordu): üst düzey adlar genel alana
+        // taşmaz, katı kip korunur, yönetim paneli de aynı adresi modül olarak yüklediği için dosya bir kez çalışır.
+        // Modül desteklemeyen eski tarayıcıda klasik betik olarak yüklenir.
+        if ('noModule' in HTMLScriptElement.prototype) s.type = 'module';
+        else s.charset = 'utf-8';
         s.src = MAIN + (tries ? '&r=' + tries : '');
         s.async = true;
-        s.charset = 'utf-8';  // klasik betik sayfanın kodlamasını alır; ana dosya UTF-8
         s.onload = function () {
           if (ready()) resolve();
           else retry(new Error('Lemur Home Dashboard yüklendi ama tanımlanmadı'));
