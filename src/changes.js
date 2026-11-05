@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.21.4',
+    tr: ['Düzenlerken öğeyi sürükleyince artık çizgi yerine öğenin kendisi parmağı izliyor; öteki öğeler canlı olarak kenara kayıyor, bırakınca nereye gideceği görünüyor. Önizlemedeki bölüm kutuları ve sağdaki Bölümler, öğeler ve sekmeler listesi de aynı şekilde canlı sıralanıyor.', 'Otomatik kur\'daki Işık efektleri adımı kurulumu Marketplace\'e göre anlatıyor.'],
+    en: ['When you drag an item while editing, the item itself now follows your finger instead of a line; the other items move aside live, so you see where it lands. Section boxes in the preview and the Sections, items and tabs lists on the right reorder live the same way.', 'The Light effects step in Auto setup now explains the setup with the Marketplace.'] },
   { v: '0.21.3',
     tr: ['Kameralar: sayfa açılınca bazı kameralar ilk görüntüde hata verdiği için bazen "Görüntü alınamıyor" çıkıyordu. Artık birkaç saniye içinde yeniden deneniyor; yazı ancak üç deneme üst üste başarısız olursa çıkıyor.'],
     en: ['Cameras: some cameras fail on the first picture after the page opens, so "No picture" sometimes showed. The picture is now retried within a few seconds; the message only shows after three failed tries in a row.'] },

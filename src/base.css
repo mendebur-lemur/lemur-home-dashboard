@@ -112,6 +112,8 @@
 .edit .tile > *, .edit .bar > *, .edit .scene > *, .edit .row > *, .edit .emb > *, .edit .title.season { pointer-events: none; }
 .edit .navb { cursor: pointer; }
 .edit .dragging { opacity: 0.35; }
+.lpghost { position: absolute !important; margin: 0 !important; pointer-events: none; z-index: 20; opacity: 0.95; transform: scale(1.05); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55); transition: none !important; }
+.lpgbox { width: 240px; padding: 14px 18px; border-radius: 18px; background: rgba(30, 32, 36, 0.96); border: 2px solid #F2A93B; color: #ECEDEF; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transform: none; }
 .edit .dropl { box-shadow: -6px 0 0 -2px #F2A93B !important; }
 .edit .dropr { box-shadow: 6px 0 0 -2px #F2A93B !important; }
 .edit .dropt { box-shadow: 0 -6px 0 -2px #F2A93B !important; }

@@ -1036,7 +1036,24 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (Math.abs(e.clientX - D.sx) + Math.abs(e.clientY - D.sy) < 6) return;
         D.on = true;
         if (D.kind === 'box' || D.kind === 'item') D.el.classList.add('dragging');
-        if (D.kind === 'col' || D.kind === 'row') arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { if (x !== D.el) x.style.display = 'none'; });
+        // kutu: küçük bir başlık kartı imleci izler; kutunun kendisi canlı olarak yeni yerine geçer, ötekiler kayar
+        if (D.kind === 'box') {
+          D.home = { p: D.el.parentNode, n: D.el.nextSibling };
+          const tl = D.el.querySelector('.title'), g = document.createElement('div');
+          g.className = 'lpghost lpgbox'; g.textContent = (tl && tl.textContent.trim()) || '⠿';
+          wrap.appendChild(g); D.gh = g; D.gx = 24; D.gy = 26;
+        }
+        // öğe: tutulan karo parmağı/imleci izler (kopyası), yerinde soluk hali kalır ve öteki öğeler canlı olarak kenara kayar
+        if (D.kind === 'item') {
+          const er = D.el.getBoundingClientRect();
+          D.home = { p: D.el.parentNode, n: D.el.nextSibling };
+          D.gx = (D.sx - er.left) / D.z; D.gy = (D.sy - er.top) / D.z;
+          const g = D.el.cloneNode(true); g.classList.remove('dragging'); g.classList.add('lpghost');
+          g.removeAttribute('data-idx'); g.removeAttribute('data-sec');
+          g.style.width = D.el.offsetWidth + 'px'; g.style.height = D.el.offsetHeight + 'px';
+          wrap.appendChild(g); D.gh = g;
+        }
+        if (D.kind !== 'item') arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { if (x !== D.el) x.style.display = 'none'; });   // kutu kayarken tutamaklar yerinde kalmasın
       }
       if (D.kind === 'col') {
         // kolon, içindeki sütun sayısı kadar daralabilir: her sütun en dar kanvasta (W, genelde 1280) en az 150 px.
@@ -1060,21 +1077,34 @@ class LemurHomeDashboardCard extends HTMLElement {
         return;
       }
       if (D.kind === 'box') {
+        if (D.gh) { const wr = wrap.getBoundingClientRect(); D.gh.style.left = ((e.clientX - wr.left) / D.z - D.gx) + 'px'; D.gh.style.top = ((e.clientY - wr.top) / D.z - D.gy) + 'px'; }
         const c = colAt(e.clientX); if (!c) return;
         const bx = arr(c.children).filter((x) => x.hasAttribute('data-secs') && x !== D.el);
         let before = null;
         for (let i = 0; i < bx.length; i++) { const r = bx[i].getBoundingClientRect(); if (e.clientY < r.top + r.height / 2) { before = bx[i]; break; } }
-        const last = bx[bx.length - 1];
-        const top = before ? before.offsetTop - 8 : (last ? last.offsetTop + last.offsetHeight + 4 : c.offsetTop + 8);
-        line(c.offsetLeft, top, c.offsetWidth);
+        // kutu hemen oraya geçer (sütunun boş yer tutucusu varsa onun önüne)
+        const ref = before || (bx.length ? bx[bx.length - 1].nextSibling : (c.firstChild || null));
+        if (D.el.parentNode !== c || (ref !== D.el && D.el.nextSibling !== ref)) { try { c.insertBefore(D.el, ref); } catch (x) {} }
         D.target = { col: +c.getAttribute('data-col'), sub: +c.getAttribute('data-sub'), before: before ? before.getAttribute('data-secs').split(',')[0] : null };
         return;
       }
       if (D.kind === 'item') {
         clearMarks(); D.target = null;
+        if (D.gh) { const wr = wrap.getBoundingClientRect(); D.gh.style.left = ((e.clientX - wr.left) / D.z - D.gx) + 'px'; D.gh.style.top = ((e.clientY - wr.top) / D.z - D.gy) + 'px'; }
         const under = R.elementFromPoint ? R.elementFromPoint(e.clientX, e.clientY) : null; if (!under) return;
         const srcType = typeOf(D.el.getAttribute('data-sec'));
         const it = under.closest ? under.closest('[data-idx]') : null;
+        // aynı türden öğenin üstünde (karo karonun, çubuk çubuğun): öğe hemen oraya taşınır, ötekiler kayar
+        if (it && it !== D.el && it.classList[0] === D.el.classList[0] && typeOf(it.getAttribute('data-sec')) === srcType) {
+          const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile') || it.classList.contains('bar') || it.classList.contains('cam');
+          const after = horiz ? e.clientX > r.left + r.width / 2 : e.clientY > r.top + r.height / 2;
+          const ref = after ? it.nextSibling : it;
+          if (ref !== D.el && D.el.nextSibling !== ref) it.parentNode.insertBefore(D.el, ref);
+          D.live = true;
+          return;
+        }
+        if (it === D.el) return;
+        // başka türden öğe (ör. karo bölümünde satır): eski işaretle gösterilir
         if (it && it !== D.el && typeOf(it.getAttribute('data-sec')) === srcType) {
           const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile') || it.classList.contains('bar');
           const after = horiz ? e.clientX > r.left + r.width / 2 : e.clientY > r.top + r.height / 2;
@@ -1084,7 +1114,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         }
         // öğenin üstünde değil: aynı türden bir bölümün kutusuna bırakılırsa sona eklenir
         const bx = under.closest ? under.closest('.box[data-secs]') : null;
-        if (bx) {
+        if (bx && !(D.live && bx.contains(D.el))) {   // canlı taşınan öğe bu kutudaysa yeri zaten belli
           const sid = bx.getAttribute('data-secs').split(',').filter((id) => typeOf(id) === srcType)[0];
           if (sid) { bx.classList.add('dropin'); const s = secById(tab, sid); D.target = { sec: sid, idx: listOf(JSON.parse(JSON.stringify(s))).length }; }
         }
@@ -1096,7 +1126,19 @@ class LemurHomeDashboardCard extends HTMLElement {
       clearMarks();
       const ln = R.querySelector('.dropline'); if (ln) ln.remove();
       if (d.el) d.el.classList.remove('dragging');
+      if (d.gh) d.gh.remove();
       if (!d.on) return;   // sürüklenmedi: tıklama olarak kalır
+      // canlı taşınan öğe: yeni yeri yanındaki öğeden okunur (sonraki öğenin önü ya da öncekinin arkası)
+      let liveT = null;
+      if (d.kind === 'item' && d.live && !d.target) {
+        const sib = (fw) => { let x = fw ? d.el.nextElementSibling : d.el.previousElementSibling; while (x && !x.hasAttribute('data-idx')) x = fw ? x.nextElementSibling : x.previousElementSibling; return x; };
+        const nx = sib(true), pv = sib(false);
+        liveT = nx ? { sec: nx.getAttribute('data-sec'), idx: +nx.getAttribute('data-idx') } : pv ? { sec: pv.getAttribute('data-sec'), idx: +pv.getAttribute('data-idx') + 1 } : null;
+      }
+      // değişiklik olmazsa (ya da kaydedilmezse) öğe/kutu eski yerine döner; kaydedilirse pano zaten yeniden çizilir
+      if (d.home && d.home.p) { try { d.home.p.insertBefore(d.el, d.home.n && d.home.n.parentNode === d.home.p ? d.home.n : null); } catch (e) {} }
+      if (liveT) d.target = liveT;
+      arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { x.style.display = ''; });
       this._dragged = true; setTimeout(() => { this._dragged = false; }, 0);
       if (d.kind === 'col') { const nt = clone(); nt.columns = d.W; return emit(nt); }
       if (d.kind === 'row') {
