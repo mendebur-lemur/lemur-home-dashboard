@@ -50,9 +50,11 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 
 ## Installation
 
-Requirements: Home Assistant 2024.8 or newer and [HACS](https://hacs.xyz/docs/use/). No other cards, themes or add-ons.
+Requirements: Home Assistant 2024.8 or newer and [HACS](https://hacs.xyz/docs/use/) (not needed on Home Assistant 2026.11 and later, where Settings → **Marketplace** replaced it). No other cards, themes or add-ons.
 
 ### 1. Download with HACS
+
+**Home Assistant 2026.11 and later:** Settings → **Marketplace** replaces HACS, nothing to install. Search for "Lemur Home Dashboard" in Marketplace and press **Download**; the button below opens Marketplace too. The next steps are the same.
 
 Lemur Home Dashboard is in the HACS default list; no custom repository needed. The easiest way is this button. It asks for your Home Assistant address once, then opens the dashboard directly in HACS:
 
@@ -150,7 +152,7 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 **Settings** at the top right apply to every tablet in the house. The look settings (background, light and climate look, phone layout, the Effects button) are in **Choose a style**; the card in Settings takes you there.
 
-- *Version and updates:* at the top; installed version, what's new and **Check for updates**. A new version is installed from here through HACS, then Home Assistant restarts.
+- *Version and updates:* at the top; installed version, what's new and **Check for updates**. A new version is installed from here through HACS or Marketplace, then Home Assistant restarts.
 - *Language:* automatic (Home Assistant's language), Turkish or English.
 - *Season:* air conditioners in summer, radiators in winter in the climate section. Automatic: May-September is summer.
 - *Icon style:* Automatic (default; devices that are off and rooms that are not selected are grey, the rest colourful), Colourful (all colourful), Flat (all grey) or Single colour (the drawings turn into one tone: devices that are off are grey, devices that are on are in the colour you pick; optionally a light that is on shows the lamp's own colour, and a scene button its own colour). The icon set is a separate file, downloaded once and kept by the browser.

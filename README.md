@@ -50,9 +50,11 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 
 ## Kurulum
 
-Gerekenler: Home Assistant 2024.8 ya da daha yeni bir sürüm ve [HACS](https://hacs.xyz/docs/use/). Başka kart, tema ya da eklenti gerekmez.
+Gerekenler: Home Assistant 2024.8 ya da daha yeni bir sürüm ve [HACS](https://hacs.xyz/docs/use/) (Home Assistant 2026.11 ve sonrasında gerekmez; yerini Ayarlar → **Marketplace** aldı). Başka kart, tema ya da eklenti gerekmez.
 
 ### 1. HACS ile indir
+
+**Home Assistant 2026.11 ve sonrası:** HACS yerine Ayarlar → **Marketplace** var, ayrıca kurmana gerek yok. Marketplace'te "Lemur Home Dashboard" diye arat ve **İndir**'e bas; aşağıdaki düğme de Marketplace'i açar. Sonraki adımlar aynı.
 
 Lemur Home Dashboard HACS'ın resmi listesinde; özel depo eklemeye gerek yok. En kolay yol bu düğme. Home Assistant adresini bir kez sorar, sonra panoyu doğrudan HACS'ta açar:
 
@@ -150,7 +152,7 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 
 Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. Görünümle ilgili olanlar (arka plan, ışık ve iklim görünümü, telefon düzeni, Efektler düğmesi) **Stil seç**'tedir; Ayarlar'daki kart oraya götürür.
 
-- *Sürüm ve güncelleme:* en üstte; yüklü sürüm, yenilikler ve **Güncellemeleri denetle**. Yeni sürüm varsa HACS ile buradan kurulur, ardından Home Assistant yeniden başlatılır.
+- *Sürüm ve güncelleme:* en üstte; yüklü sürüm, yenilikler ve **Güncellemeleri denetle**. Yeni sürüm varsa HACS ya da Marketplace ile buradan kurulur, ardından Home Assistant yeniden başlatılır.
 - *Dil:* otomatik (Home Assistant'ın dili), Türkçe ya da İngilizce.
 - *Mevsim:* iklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.
 - *Simge stili:* Otomatik (varsayılan; kapalı cihazlar ve seçili olmayan odalar gri, açıklar renkli), Renkli (hepsi renkli), Düz (hepsi gri) ya da Tek renk (çizimler tek tona çevrilir: kapalılar gri, açıklar seçtiğin renkte; istersen açık ışık lambanın kendi renginde, senaryo düğmesi kendi renginde). Simge seti ayrı bir dosyadır; bir kez indirilir, tarayıcı saklar.

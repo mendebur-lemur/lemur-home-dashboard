@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.20.1',
+    tr: ['Sürüm bölümü Home Assistant 2026.11\'in Marketplace\'iyle de çalışıyor (HACS\'ın yerini aldı): yeni sürüm görünüyor, Güncelle düğmesi indiriyor.'],
+    en: ['The Version section also works with Home Assistant 2026.11\'s Marketplace (which replaced HACS): new versions show up and the Update button downloads them.'] },
   { v: '0.20.0',
     tr: ['Kameralar: Cihaz ekle\'den bir kamera seçince bölümde anlık görüntü karosu olarak görünür; görüntü birkaç saniyede bir yenilenir (öğe ayarından 5 sn - 1 dk). Dokununca panonun penceresinde canlı görüntü açılır. Kamera kapalıysa "Kamera çevrimdışı" yazar. Bölüm ekle\'de Kameralar bölümü de var.'],
     en: ['Cameras: pick a camera in Add device and it shows as a snapshot tile; the picture refreshes every few seconds (5 s to 1 min in the item settings). Tap it for the live view in the dashboard\'s own window. An offline camera shows "Camera offline". Add section also has a Cameras section.'] },
