@@ -667,7 +667,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         // besleme kartları: kutuya sığdığı kadar yan yana (en az 220 px)
         // kameralar: anlık görüntü karosu (16:9); kutuya sığdığı kadar yan yana, her biri en az 240 px (telefonda tek sütun). Dokununca canlı görüntü penceresi
         if (g.k === 'camera') return '<div class="cams" style="grid-template-columns:' + (phone ? '1fr' : 'repeat(auto-fit,minmax(240px,1fr))') + '">' +
-          g.items.map((x) => { cams.push(x); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span>' + esc(t(lang, 'cam_off')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
+          g.items.map((x) => { cams.push(x); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span class="c0">' + esc(t(lang, 'cam_off')) + '</span><span class="c1">' + esc(t(lang, 'cam_nopic')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
         if (g.k === 'pet') return '<div class="pets">' + g.items.map((x) => '<div class="petc" data-pet="' + esc(x.pet) + '"' + hidA(x) + mark(x._i) + '></div>').join('') + '</div>';
         // satırlar: ince yatay satırlar, kutuya sığdığı kadar yan yana (en az 170 px)
         if (g.k === 'vrow') return '<div class="vrows" style="grid-template-columns:repeat(' + (phone ? 1 : Math.max(1, Math.min(s.row_columns || 3, g.items.length))) + ',minmax(0,1fr))">' +
@@ -1501,8 +1501,9 @@ class LemurHomeDashboardCard extends HTMLElement {
     el._busy = true; el._at = Date.now();
     const url = p + (p.indexOf('?') >= 0 ? '&' : '?') + '_=' + el._at;
     const im = new Image();
-    im.onload = () => { el._busy = false; const img = el.querySelector('img'); if (img) img.src = im.src; el.classList.add('ok'); };
-    im.onerror = () => { el._busy = false; };
+    im.onload = () => { el._busy = false; const img = el.querySelector('img'); if (img) img.src = im.src; el.classList.add('ok'); el.classList.remove('nop'); };
+    // kamera açık görünüyor ama görüntü vermiyor (ör. tablet ekranı kapalı, kamera kapalı): "Görüntü alınamıyor"; denemeye devam edilir
+    im.onerror = () => { el._busy = false; el.classList.add('nop'); el.classList.remove('ok'); };
     im.src = this._hass && this._hass.hassUrl ? this._hass.hassUrl(url) : url;
   }
   _camTick() {

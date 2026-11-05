@@ -441,6 +441,8 @@
 .cam .cnm { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 14px 10px; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cam .cof { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; flex-direction: column; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.55); font-size: 13px; padding-bottom: 20px; }
 .cam .cof .lic, .cam .cof ha-icon { width: 34px; height: 34px; --mdc-icon-size: 34px; opacity: 0.7; margin-bottom: 6px; }
-.cam.na img { display: none; }
-.cam.na .cof { display: flex; }
+.cam.na img, .cam.nop img { display: none; }
+.cam.na .cof, .cam.nop .cof { display: flex; }
+.cam .cof .c1, .cam.nop:not(.na) .cof .c0 { display: none; }
+.cam.nop:not(.na) .cof .c1 { display: inline; }
 .cam:active { transform: scale(0.985); }

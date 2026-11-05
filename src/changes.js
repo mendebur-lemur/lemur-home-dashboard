@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.20.2',
+    tr: ['Kameralar: kamera açık görünüp görüntü vermiyorsa karo boş kalmıyor, "Görüntü alınamıyor" yazıyor; görüntü gelince kendiliğinden düzeliyor.'],
+    en: ['Cameras: when a camera shows as on but gives no picture, the tile no longer stays blank; it shows "No picture" and recovers by itself when the picture comes back.'] },
   { v: '0.20.1',
     tr: ['Sürüm bölümü Home Assistant 2026.11\'in Marketplace\'iyle de çalışıyor (HACS\'ın yerini aldı): yeni sürüm görünüyor, Güncelle düğmesi indiriyor.'],
     en: ['The Version section also works with Home Assistant 2026.11\'s Marketplace (which replaced HACS): new versions show up and the Update button downloads them.'] },
