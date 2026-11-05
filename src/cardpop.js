@@ -49,6 +49,9 @@ const LP_CPOP_CSS = `
 .pan { position: absolute; left: 50%; top: 50%; width: 640px; max-width: calc(100vw - 16px); max-height: calc(100vh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch;
   box-sizing: border-box; padding: 18px; border-radius: 30px; background: #131416; color: #ECEDEF; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
   transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.2s ease-out, opacity 0.18s; }
+/* geniş pencere (kameranın canlı görüntüsü): ekrana sığan en büyük boy; yükseklik başlık ve kenar boşluklarıyla birlikte ekrana sığar (3:2'ye göre) */
+.pan.wide { width: calc(100vw - 32px); width: min(calc(100vw - 32px), calc((100vh - 140px) * 1.5)); max-width: none; max-height: calc(100vh - 16px); padding: 14px; }
+.pan.wide .hd { margin-bottom: 10px; }
 :host(.in) .bg { opacity: 1; }
 :host(.in) .pan { transform: translate(-50%, -50%); opacity: 1; }
 .hd { display: flex; align-items: center; margin-bottom: 14px; }
@@ -77,6 +80,7 @@ class LemurCardPopup {
   // p: { title, card }. Hazır HTML içerik yalnız panonun kendi pencerelerinden (_openHtml): ayardan gelen html kabul edilmez
   static open(hass, p, lang) { p = p || {}; return LemurCardPopup._open(hass, { title: p.title, card: p.card }, lang); }
   static _openHtml(hass, title, html, lang) { return LemurCardPopup._open(hass, { title: title, html: html }, lang); }
+  // p.wide: ekrana sığan en büyük pencere (kamera)
   static _open(hass, p, lang) {
     if (LP_CPOP.cur) LP_CPOP.cur.close(true);
     if (typeof LP_POP !== 'undefined' && LP_POP.cur) LP_POP.cur.close(true);
@@ -99,7 +103,7 @@ class LemurCardPopup {
     this._host.className = 'lemur-card-popup';
     const R = this._host.attachShadow({ mode: 'open' });
     const title = p.title ? String(p.title) : '';
-    R.innerHTML = '<style>' + LP_CPOP_CSS + '</style><div class="bg"></div><div class="pan" role="dialog" aria-modal="true">' +
+    R.innerHTML = '<style>' + LP_CPOP_CSS + '</style><div class="bg"></div><div class="pan' + (p.wide ? ' wide' : '') + '" role="dialog" aria-modal="true">' +
       (title ? '<div class="hd"><div class="nm"><b>' + esc(title) + '</b></div><div class="x" data-x title="' + esc(lpCardT(lang, 'close')) + '"><ha-icon icon="mdi:close"></ha-icon></div></div>'
         : '<div class="x solo" data-x title="' + esc(lpCardT(lang, 'close')) + '"><ha-icon icon="mdi:close"></ha-icon></div>') +
       '<div class="cb"></div></div>';

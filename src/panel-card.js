@@ -671,7 +671,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         // "Satırda kaç kamera" (s.cam_columns 1-4) seçiliyse o kadar; telefonda en fazla 2
         const camN = Math.max(0, Math.min(4, +s.cam_columns || 0)), camP = phone ? Math.min(camN || 1, 2) : camN;
         if (g.k === 'camera') return '<div class="cams" style="grid-template-columns:' + (camP ? 'repeat(' + camP + ',minmax(0,1fr))' : 'repeat(auto-fit,minmax(240px,1fr))') + '">' +
-          g.items.map((x) => { cams.push(x); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span class="c0">' + esc(t(lang, 'cam_off')) + '</span><span class="c1">' + esc(t(lang, 'cam_nopic')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
+          g.items.map((x) => { cams.push(Object.assign({}, x, { _secRef: s.cam_refresh })); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span class="c0">' + esc(t(lang, 'cam_off')) + '</span><span class="c1">' + esc(t(lang, 'cam_nopic')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
         if (g.k === 'pet') return '<div class="pets">' + g.items.map((x) => '<div class="petc" data-pet="' + esc(x.pet) + '"' + hidA(x) + mark(x._i) + '></div>').join('') + '</div>';
         // satırlar: ince yatay satırlar, kutuya sığdığı kadar yan yana (en az 170 px)
         if (g.k === 'vrow') return '<div class="vrows" style="grid-template-columns:repeat(' + (phone ? 1 : Math.max(1, Math.min(s.row_columns || 3, g.items.length))) + ',minmax(0,1fr))">' +
@@ -807,7 +807,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._txEls = Array.prototype.slice.call(R.querySelectorAll('[data-tx]'));
     this._ssEls = []; R.querySelectorAll('[data-ss]').forEach((el) => { el._item = ssItems[+el.getAttribute('data-ss')]; this._ssEls.push(el); });
     this._pets = []; R.querySelectorAll('[data-pet]').forEach((el) => this._pets.push(el));
-    // kameralar: görüntü birkaç saniyede bir yenilenir (öğe ayarı refresh, sn; varsayılan 10). Sekme görünmüyorsa yenilenmez.
+    // kameralar: görüntü birkaç saniyede bir yenilenir (öğe ayarı refresh, yoksa bölüm ayarı cam_refresh, sn; varsayılan 10). Sekme görünmüyorsa yenilenmez.
     this._cams = []; R.querySelectorAll('[data-cam]').forEach((el) => { el._item = cams[+el.getAttribute('data-cmi')]; el._at = 0; this._cams.push(el); });
     clearInterval(this._camT); this._camT = this._cams.length ? setInterval(() => this._camTick(), 1000) : null;
     this._ents = []; R.querySelectorAll('[data-ent]').forEach((el) => { el._item = ents[+el.getAttribute('data-ei')]; this._ents.push(el); });
@@ -1515,7 +1515,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const now = Date.now();
     (this._cams || []).forEach((el) => {
       if (el.classList.contains('na') || !el._pic) return;
-      const r = Math.max(2, Math.min(600, parseFloat((el._item || {}).refresh) || 10));
+      const it = el._item || {}, r = Math.max(2, Math.min(600, parseFloat(it.refresh) || parseFloat(it._secRef) || 10));   // öğenin ayarı, yoksa bölümün (cam_refresh)
       if (now - el._at >= r * 1000) this._camLoad(el);
     });
   }
@@ -1523,7 +1523,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const id = el.getAttribute('data-cam'), st = this._hass.states[id], it = el._item || {};
     if (!st) return;
     const name = this._tx(it.name) || st.attributes.friendly_name || id;
-    LemurCardPopup._open(this._hass, { title: name, card: { type: 'picture-entity', entity: id, camera_view: 'live', show_name: false, show_state: false } }, this._lang);
+    LemurCardPopup._open(this._hass, { title: name, card: { type: 'picture-entity', entity: id, camera_view: 'live', show_name: false, show_state: false }, wide: true }, this._lang);
   }
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
