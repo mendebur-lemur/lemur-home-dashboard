@@ -110,7 +110,10 @@ class LemurCardPopup {
     // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
     this._pop = () => this.close(true);
     try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
-    document.body.appendChild(this._host);
+    // Home Assistant'ın içine takılır, body'ye değil: HA'nın yeni kartları hass'ı sayfadaki <home-assistant>'tan "bağlam" (context)
+    // olarak alıyor. Dışarıda kalan kart (ör. kameranın canlı görüntüsü, ha-camera-stream) hass'ı bulamayıp boş kalıyordu (2026-11-05).
+    const haEl = document.querySelector('home-assistant');
+    (haEl && haEl.shadowRoot ? haEl.shadowRoot : document.body).appendChild(this._host);
     if (typeof p.html === 'string') R.querySelector('.cb').innerHTML = p.html;   // hazır içerik (ör. son beslemeler)
     else lpMountCard(R.querySelector('.cb'), p.card, () => this._h, lang, (el) => { this._els.push(el); });
     requestAnimationFrame(() => requestAnimationFrame(() => this._host.classList.add('in')));

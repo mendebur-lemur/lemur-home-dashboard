@@ -94,11 +94,12 @@ function lhdKinds(s) {
 // opts (Otomatik kur penceresi; verilmezse bugünkü otomatik düzen):
 //   areas: sekme olacak alanlar, bu sırayla (verilirse küçük oda ve 7 sekme sınırı yok)
 //   home: bütün evin özeti "Ev" sekmesi (varsayılan var), other: kalan cihazlar için "Diğer" sekmesi (varsayılan var)
-//   types: { lights, climate, vacuum, media, scenes } hangi cihaz türleri girsin (varsayılan hepsi)
+//   types: { lights, climate, vacuum, media, scenes, camera } hangi cihaz türleri girsin (varsayılan hepsi, kamera hariç;
+//          camera açıksa bütün kameralar en sonda ayrı "Kameralar" sekmesinde)
 //   look: ışık bölümünün görünümü: 'tiles' (karo, varsayılan) | 'bar' (kaydırmalı çubuk) | 'phone' (telefonda çubuk)
 function buildDefaultTabs(hass, lang, opts) {
   opts = opts || {};
-  const TY = Object.assign({ lights: true, climate: true, vacuum: true, media: true, scenes: true }, opts.types || {});
+  const TY = Object.assign({ lights: true, climate: true, vacuum: true, media: true, scenes: true, camera: false }, opts.types || {});
   const S = hass.states || {};
   const ents = hass.entities || {};   // varlık kaydı özeti (area_id, device_id, hidden, entity_category)
   const devs = hass.devices || {};
@@ -262,7 +263,21 @@ function buildDefaultTabs(hass, lang, opts) {
       lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'shortcuts'), controlTitle: t(lang, 'other_control')
     }));
   }
-  return tabs.slice(0, pick ? 14 : 8);
+  const out = tabs.slice(0, pick ? 14 : 8);
+  if (TY.camera) { const ct = lhdCameraTab(hass, lang, usedIds.cameras ? 'lhd-cameras' : 'cameras', usable, byArea); if (ct) out.push(ct); }
+  return out;
+}
+
+// Kameralar sekmesi: evdeki bütün kameralar tek sekmede, tek sütun bir kamera bölümünde (oda sırasıyla, sonra ada göre).
+// "+ Sekme" menüsü ve Otomatik kur kullanır. Kamera yoksa null.
+function lhdCameraTab(hass, lang, id, usable, sort) {
+  const S = hass.states || {}, ents = hass.entities || {};
+  const ok = usable || ((x) => { const e = ents[x]; return !(e && (e.hidden || e.hidden_by || e.entity_category || e.disabled_by)); });
+  const nm = (x) => String((S[x].attributes && S[x].attributes.friendly_name) || x);
+  const ids = Object.keys(S).filter((x) => x.split('.')[0] === 'camera' && ok(x)).sort(sort || ((a, b) => nm(a).localeCompare(nm(b), lang)));
+  if (!ids.length) return null;
+  return { id: id, name: t(lang, 'cameras'), icon: 'mdi:cctv', area: null, v: 2, columns: [100],
+    sections: [{ id: id + '-k', type: 'camera', title: '', col: 0, entities: ids }] };
 }
 
 

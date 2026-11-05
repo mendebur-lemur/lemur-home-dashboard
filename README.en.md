@@ -2,21 +2,22 @@
 
 **[Türkçe](README.md)** · English
 
-A ready-made, full-screen home dashboard for Home Assistant. Create a new dashboard, paste one line, and a dashboard with your rooms, lights, scenes, climate and media controls builds itself from the devices in your home. Designed for wall tablets and kiosk screens, and it works on phones too.
+A ready-made, full-screen home dashboard for Home Assistant. Add the integration, and a dashboard with your rooms, lights, scenes, climate, media and camera controls builds itself from the devices in your home. Designed for wall tablets and kiosk screens, and it works on phones too.
 
 ![Lemur Home Dashboard in use](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/demo.webp)
 
-**Quick install:** [Open in HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) → Download → restart Home Assistant → [add the integration](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → put `strategy: type: custom:lemur-home-dashboard` in a new dashboard. Step-by-step guide [below](#installation).
+**Quick install:** [Open in Marketplace](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) (opens in HACS before Home Assistant 2026.11) → Download → restart Home Assistant → [add the integration](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → reload the page; the dashboard is ready in the sidebar. Step-by-step guide [below](#installation).
 
-- **One-line setup.** Two lines in the dashboard's raw configuration and the rest arrives on its own. Rooms come from your Home Assistant areas; lights, scenes, air conditioners, radiators, vacuums and media players are found in those areas.
-- **No other add-ons needed.** One install from HACS; no mushroom, card-mod, bubble-card or any other card or theme. The Lemur Halo cards (climate, vacuum, sensor, weather, energy, security, room, light) are bundled.
+- **A dashboard that sets itself up.** Adding the integration also creates the dashboard; you write no configuration. Rooms come from your Home Assistant areas; lights, scenes, air conditioners, radiators, vacuums and media players are found in those areas.
+- **No other add-ons needed.** One install from Marketplace (or HACS); no mushroom, card-mod, bubble-card or any other card or theme. The Lemur Halo cards (climate, vacuum, sensor, weather, energy, security, room, light) are bundled.
 - **Everything from the admin panel.** In the **Lemur Home Dashboard** page in the sidebar you edit tabs, sections, column widths and where each device goes; a live preview shows the result, and changes reach every tablet in the house at once. Every step can be undone. **Simple** mode shows only the basics, **Advanced** mode adds sizes, colours, conditions and cards; complex settings have a **?** help next to them.
 - **Icon picker.** Choose tab, light and button icons from a list: suggestions that fit first, all Home Assistant icons when you search.
-- **Its own icon set.** Every icon on the dashboard is drawn from 1522 built-in colourful icons; an `mdi:` name that isn't in the set is drawn with Home Assistant's flat icon. In the default **Automatic** style, devices that are off are grey and devices that are on are colourful; you can also make them all colourful or all grey.
+- **Its own icon set.** Every icon on the dashboard is drawn from 1751 built-in colourful icons; an `mdi:` name that isn't in the set is drawn with Home Assistant's flat icon. In the default **Automatic** style, devices that are off are grey and devices that are on are colourful; you can also make them all colourful or all grey.
 - **Slider light bars.** A lights section can show horizontal bars instead of square tiles: tap to toggle, swipe sideways to change brightness, and the bar fills to the brightness in the light's colour. Bars on phones only, tiles on tablets, is an option too.
 - **Light window.** Hold a light tile to open a light window with a big brightness slider, white tones, a colour wheel, preset colours, effects and (if the light has them) segments. You can switch to Home Assistant's own dialog in the settings.
 - **Instant response.** Tap a light, switch or fan and the tile changes without waiting for the device; turning a light on shows its last colour. If the device reports something else, the real state is shown.
 - **Feeding card.** A feeding reminder for a cat, dog, fish...: green on time, red when late; tap "Fed", get a phone notification when late, optionally run an automatic feeder.
+- **Cameras.** Cameras show as snapshot tiles that refresh every few seconds; tap one for the live view. A tile says so when the camera is off or gives no picture.
 - **Card picker.** Pick Halo cards, Home Assistant cards and installed custom cards from a list; they are added with the card's own visual editor and a live preview.
 - **Backup control and wall switches (Advanced).** A lamp that shows up in two integrations (e.g. Govee LAN and Matter) gets a backup: the command goes the fast way, and if the lamp does not answer it is sent again through the backup. A wall relay that only gives a signal is bound to a lamp; the switch keeps working even when the internet or Wi-Fi comes and goes.
 - **Second line and templates.** State, last changed or an attribute under a tile; Home Assistant templates in the name and second line. A button can ask before running.
@@ -32,7 +33,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 ## Contents
 
 - [Installation](#installation)
-  - [1. Download with HACS](#1-download-with-hacs)
+  - [1. Download](#1-download)
   - [2. Add the integration](#2-add-the-integration)
   - [3. Create the dashboard](#3-create-the-dashboard)
   - [4. Edit in the admin panel](#4-edit-in-the-admin-panel)
@@ -50,27 +51,25 @@ A ready-made, full-screen home dashboard for Home Assistant. Create a new dashbo
 
 ## Installation
 
-Requirements: Home Assistant 2024.8 or newer and [HACS](https://hacs.xyz/docs/use/) (not needed on Home Assistant 2026.11 and later, where Settings → **Marketplace** replaced it). No other cards, themes or add-ons.
+Requirements: Home Assistant 2024.8 or newer. On Home Assistant 2026.11 and later, community add-ons are installed from **Settings → Marketplace**, nothing extra to install; on older versions you need [HACS](https://hacs.xyz/docs/use/). No other cards, themes or add-ons.
 
-### 1. Download with HACS
+### 1. Download
 
-**Home Assistant 2026.11 and later:** Settings → **Marketplace** replaces HACS, nothing to install. Search for "Lemur Home Dashboard" in Marketplace and press **Download**; the button below opens Marketplace too. The next steps are the same.
+Lemur Home Dashboard is in the community catalog; no custom repository needed. The easiest way is this button. It asks for your Home Assistant address once, then opens the dashboard directly (in Marketplace on 2026.11 and later, in HACS on older versions):
 
-Lemur Home Dashboard is in the HACS default list; no custom repository needed. The easiest way is this button. It asks for your Home Assistant address once, then opens the dashboard directly in HACS:
+[![Open in Marketplace / HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
 
-[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
-
-1. Press **Download** at the bottom right, then **Download** again in the version window.
+1. Press **Download**, then **Download** again in the version window.
 2. **Settings → System → ⏻ at the top right → Restart Home Assistant**. A "Restart required" notice also shows up in Settings; you can restart from there too.
 
 <details>
-<summary>If the button doesn't work: search in HACS</summary>
+<summary>If the button doesn't work: search by hand</summary>
 
-1. Open **HACS** in the sidebar.
+1. **Home Assistant 2026.11 and later:** **Settings → Marketplace**. On older versions, **HACS** in the sidebar.
 2. Type **Lemur Home Dashboard** into the search box and click the result.
 3. **Download** → **Download**, then restart Home Assistant.
 
-If you added it earlier as a custom repository, there is nothing to do; your install and updates keep working. You can remove the entry under HACS → ⋮ → **Custom repositories** if you like.
+If you added it earlier as a HACS custom repository, there is nothing to do; your install and updates keep working (it moves to Marketplace by itself when you update to 2026.11).
 
 </details>
 
@@ -78,9 +77,13 @@ If you added it earlier as a custom repository, there is nothing to do; your ins
 
 [![Add the integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard)
 
-Without the button: **Settings → Devices & services → Add integration** → type "Lemur" → **Lemur Home Dashboard** → **Submit**. No questions are asked. A **Lemur Home Dashboard** page is added to the sidebar (visible to administrators only).
+Without the button: **Settings → Devices & services → Add integration** → type "Lemur" → **Lemur Home Dashboard** → **Submit**. **Create the dashboard** is on by default; change the dashboard name if you like. A **Lemur Home Dashboard** admin page is added to the sidebar (visible to administrators only).
+
+Reload the page once: the dashboard is created for you and shows up in the sidebar. Then skip step 3.
 
 ### 3. Create the dashboard
+
+If you turned **Create the dashboard** off in step 2, or want a second dashboard, create it yourself:
 
 1. **Settings → Dashboards → Add dashboard → New dashboard from scratch**, give it a name (for example "Tablet") and press **Create**.
 2. Open the new dashboard and press **✏️ (Edit)** at the top right.
@@ -114,7 +117,7 @@ Room buttons and a clock at the top, columns below. Each column holds one or mor
 | **Climate** | Air conditioner and radiator cards; air conditioners in summer, radiators in winter | On/off, temperature |
 | **Vacuum** | Robot vacuum card | Start, stop, send to dock |
 | **Media** | TVs and speakers | Device dialog |
-| **Cameras** | Camera snapshots, refreshed every few seconds (5 s to 1 min in the item settings); "Camera offline" when the camera is off | Live view window |
+| **Cameras** | Camera snapshots, refreshed every few seconds (5 s to 1 min in the item settings). "Camera offline" when the camera is off, "No picture" when it is on but gives no picture | Live view window |
 | **Values** | Sensors, binary sensors, timers, counters, selects: icon, value + unit and name; a running timer counts down | Device dialog (configurable) |
 | **Cards** | Any card added from the card picker or as YAML: Halo cards, Home Assistant cards, installed custom cards | The card itself |
 | **Pet** | Feeding card: last feeding, next feeding and a colour for the status | "Fed"; hold: recent feedings |
@@ -129,13 +132,15 @@ Lights that are on get a frame in their own colour; unavailable devices are dimm
 
 - **Tabs:** Choose a name, icon and area (room). **Refill from area** places that room's devices again on a tab with an area. **+ Tab** opens an empty tab or a tab for a room, already filled.
 - **Columns:** 1 to 6 columns. Drag the lines in the preview to set widths; **Tablet layout** and **Equal** are presets. Each column can be split into 1-3 sub-columns.
-- **Free sections:** Each section is a box and anything can go into it: lights, plugs, covers, scene buttons, climate and vacuum cards and media players can share one box; each item shows in its own way. The types in **Add section** (Empty section, Lights, Scenes, Climate, Vacuum, Media) are only a starting title. Drag sections by their handle in the preview to move them between columns; drag items themselves to reorder them or move them to another section.
+- **Free sections:** Each section is a box and anything can go into it: lights, plugs, covers, scene buttons, climate and vacuum cards, media players and cameras can share one box; each item shows in its own way. The types in **Add section** (Empty section, Lights, Scenes, Climate, Vacuum, Media, Cameras) are only a starting title. Drag sections by their handle in the preview to move them between columns; drag items themselves to reorder them or move them to another section.
 - **Lights section look:** **Tiles** (square tiles), **Sliders** (horizontal bars: tap to toggle, swipe sideways for brightness) or **Auto on phone** (tiles on a tablet, bars on a phone). Tiles and bars per row are set separately.
-- **Add:** The picker lists every kind of device; the filter at the top (All, Lights and switches, Scenes, Climate, Vacuum, Media) narrows it, and several devices can be added at once. Scripts, scenes and automations become coloured buttons. A light tile's name and icon can be changed; scene buttons get a colour and icon. For a climate card you choose temperature and humidity sensors, an outdoor temperature sensor, a second device controlled together and the type (air conditioner/radiator).
-- **Icon picker:** The button next to icon fields. The **Icons** tab has the dashboard's 1522 icons; icons that fit (for a room, a light or a scene) are suggested first, and the search box understands Turkish words too. Icons marked ★ are dashboard-only drawings. With Light Effect Card installed, its 356 colourful effect icons can be chosen too, in the **Light Effect Card** tab. You can also type an `mdi:...` name directly; if it is not in the set, Home Assistant's flat icon is drawn.
+- **Add:** The picker lists every kind of device; the filter at the top (All, Lights and switches, Scenes, Values, Climate, Vacuum, Media, Cameras) narrows it, and several devices can be added at once. Scripts, scenes and automations become coloured buttons. A light tile's name and icon can be changed; scene buttons get a colour and icon. For a climate card you choose temperature and humidity sensors, an outdoor temperature sensor, a second device controlled together and the type (air conditioner/radiator).
+- **Icon picker:** The button next to icon fields. The **Icons** tab has the dashboard's 1751 icons; icons that fit (for a room, a light or a scene) are suggested first, and the search box understands Turkish words too. Icons marked ★ are dashboard-only drawings. With Light Effect Card installed, its 356 colourful effect icons can be chosen too, in the **Light Effect Card** tab. You can also type an `mdi:...` name directly; if it is not in the set, Home Assistant's flat icon is drawn.
 - **Item settings (⚙):** The cog next to each item. Name, icon, icons for on and off (e.g. a connectivity sensor), what happens **On tap** and **On hold** (more info, toggle, call a service, open a card in a window, nothing or YAML), what a scene button does, and **Only show when**: the item shows only while the chosen entity is in a given state; otherwise it is not drawn at all and leaves no gap (it shows faded in the preview).
 - **Size and layout:** In item ⚙, a tile's size (1×1, 2×1, 1×2, 2×2, full row) and icon and text size (small / medium / large). In the section editor, **Fill** (fit content, or fill the box: buttons and tiles share the box height evenly) and **Alignment** (top, middle, spread evenly). If content doesn't fit, the box grows; a column taller than the screen scrolls by itself, so nothing is cut off.
 - **Look and colour:** Item ⚙ → **Look**: a scene/action button can be a Button, a Tile (in the same grid as the lights) or a Row; a value item a Tile, Button, Row or Halo (numeric values as a Halo sensor card); a light or switch a Tile, Button or Row. **Colours**: icon colour, colour when on, background tint; numeric values can be **coloured by value** (4 limits, 5 colours). Card items and the Halo look can get tap / hold actions too, which then run instead of the card's own tap.
+- **Camera:** Pick a camera in Add device; in the item's ⚙ choose how often the picture refreshes (5 s, 10 s, 30 s, 1 min). The picture does not refresh while the tab is not on screen. Tap the tile for the live view in the dashboard's own window. A camera section's settings have **Cameras per row** (Auto: as many as fit the box; 1, 2, 3, 4; at most 2 on phones).
+- **Cameras tab:** **Cameras tab** in the **+ Tab** menu puts all cameras in one tab, in a single-column section. Check **Cameras** in Auto setup and the cameras get their own tab at the end (unchecked, cameras stay out of the automatic layout).
 - **Feeding card:** Add a **Pet** to a section: name, kind (cat, dog, fish, bird, rabbit, turtle, other), every N hours or at set times of day, a soon warning and grace time, a notification when late, and an optional automatic feeder. The card is green on time, yellow when due soon, orange when due, red and blinking when late; tap to record "Fed" (tap again within 10 s to undo), hold for recent feedings. Home Assistant gets a feeding sensor (ok, soon, due, late, never) and a "fed" button for every pet, plus the `lemur_home_dashboard.feed` service.
 - **Spacing, height, colour:** In the section editor, **Spacing** (0-24 px between items; 12 by default when filling the box). For the Halo look and card items, **Height** (1, 1.5, 2 rows), and icon and text size for Halo. Colours offer the Halo colours in one tap; **Colour by state** maps an entity's state to a colour (works for text values too). A **Subtitle** item puts a small heading inside a section.
 - **Second line, templates, confirmation:** Item ⚙ → **Second line** (state, last changed, attribute, text or template); the name and second line accept Home Assistant templates ({{ }} / {% %}). **Ask before running** asks first when the button is pressed.
@@ -196,7 +201,7 @@ When the screen is narrower than 700 pixels, a phone is held sideways (less than
 
 The **Choose a style → Phone** options are independent of each other, so any combination can be chosen. Tablets are not affected:
 
-- *Navigation:* **Categories at the bottom** (default), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Rooms on top** (the old layout above). **Categories at the bottom** (Lights, Climate, Scenes and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
+- *Navigation:* **Categories at the bottom** (default), **Rooms at the bottom** (room buttons at the bottom of the screen, like an app; the tab name and clock on top) or **Rooms on top** (the old layout above). **Categories at the bottom** (Lights, Climate, Scenes, Cameras when there are cameras and, with Light Effect Card installed, Effects). A category page shows the sections of that kind from every tab on one page, under the tab names. Lights have a room strip on top; swipe left and right to move between rooms, and **All** shows every light in the home (a lamp on two tabs appears once).
 - *Lights:* **As in the section**, always **Tiles** or **One per row** (each light a row: tap to toggle, swipe for brightness).
 - *Light window from the bottom* (on by default): The window opened by holding a light slides up from the bottom; pull it down to close.
 
@@ -220,7 +225,11 @@ If it isn't installed, these buttons don't show on the dashboard and nothing els
 
 ## Updating
 
-1. **HACS → Lemur Home Dashboard → ⋮ → Update information**, then **Download** (or **Update** from the update notice in Settings). HACS also checks for new versions on its own from time to time; "Update information" does it right away.
+The easiest way is the admin panel: **Settings → Version and updates → Check for updates**. If there is a new version, **Update** downloads it and **Restart** restarts Home Assistant.
+
+Or from Home Assistant:
+
+1. **Update** from the update notice in **Settings**. Or in Marketplace (HACS on older versions): **Lemur Home Dashboard → ⋮ → Update information**, then **Download**.
 2. Restart Home Assistant.
 
 After an update, if the dashboard or the admin panel is open, a "A new version is installed, reload the page to use it" notice shows at the top; press **Reload** to open the new version. The page never reloads by itself. Your tabs, sections and settings are kept across updates.
@@ -228,6 +237,8 @@ After an update, if the dashboard or the admin panel is open, a "A new version i
 ## Troubleshooting
 
 - **"Timeout waiting for strategy element" or an empty dashboard.** Make sure the integration is added ([step 2](#2-add-the-integration)) and Home Assistant was restarted, then reload the page with Ctrl+F5. In the phone app: **Settings → Companion app → Reset frontend cache**.
+- **The dashboard was not created.** **Create the dashboard** must be on when you add the integration; the dashboard is created on the first page an administrator opens after setup. Reload the page. If it is still missing, create it by hand with [step 3](#3-create-the-dashboard).
+- **A camera tile says "No picture".** The camera shows as on in Home Assistant but gives no picture: check the camera itself or its integration's settings (printer cameras, for example, need LAN live view turned on). The tile recovers by itself when the picture comes back.
 - **No Lemur Home Dashboard in the sidebar.** The page is visible to administrators only. The dashboard works for everyone.
 - **A device is missing.** The automatic layout finds devices through Home Assistant areas; devices without an area are collected in the **Other** tab. In the admin panel you can add any device to any section with **Add**.
 - **The dashboard opens in HA's editor and changes don't show up in the panel.** "Take control" was probably used. Turn the contents back into the [two-line code](#3-create-the-dashboard) in the raw configuration editor.

@@ -274,9 +274,11 @@ const lpNum = (st) => { const x = st ? parseFloat(st.state) : NaN; return isFini
 
 // kategori görünümünün durumu (hangi kategori, ışıklarda hangi oda): bütün sekme kartları paylaşır
 const LP_PH = window.__LEMUR_HD_PH || (window.__LEMUR_HD_PH = { cat: null, room: null });
-const LP_CATS = ['lights', 'climate', 'scenes', 'other'];
-const LP_CAT_IC = { lights: 'mdi:lightbulb-group', climate: 'mdi:thermostat', scenes: 'lhd:scene-switch', other: 'mdi:view-grid-outline' };
-const lpSecCat = (s) => (s && (s.type === 'lights' || s.type === 'climate' || s.type === 'scenes') ? s.type : 'other');
+const LP_CATS = ['lights', 'climate', 'scenes', 'camera', 'other'];
+const LP_CAT_IC = { lights: 'mdi:lightbulb-group', climate: 'mdi:thermostat', scenes: 'lhd:scene-switch', camera: 'mdi:cctv', other: 'mdi:view-grid-outline' };
+// kamera: kamera bölümü ya da yalnız kameralardan oluşan bölüm (Kameralar kategorisi bütün sekmelerin kameralarını toplar)
+const lpCamOnly = (s) => (s.entities || []).length > 0 && s.entities.every((x) => { const e = lpEnt(x); return !!e && String(e.entity).indexOf('camera.') === 0; });
+const lpSecCat = (s) => (!s ? 'other' : s.type === 'lights' || s.type === 'climate' || s.type === 'scenes' ? s.type : s.type === 'camera' || lpCamOnly(s) ? 'camera' : 'other');
 // kategori görünümü: bütün sekmelerin o türdeki bölümleri tek sayfada (her biri sekmenin adıyla). Işıklarda oda oda gezilir
 // ("Tümü" bütün evin ışıkları, aynı cihaz iki sekmede varsa bir kez). Kayıtlı sekmeler değişmez, sayfa yalnız çizilirken kurulur.
 function lpCatView(tabs, cur) {
@@ -666,7 +668,9 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (g.k === 'tile') return tileGrid(s, g.items, onlyTiles);
         // besleme kartları: kutuya sığdığı kadar yan yana (en az 220 px)
         // kameralar: anlık görüntü karosu (16:9); kutuya sığdığı kadar yan yana, her biri en az 240 px (telefonda tek sütun). Dokununca canlı görüntü penceresi
-        if (g.k === 'camera') return '<div class="cams" style="grid-template-columns:' + (phone ? '1fr' : 'repeat(auto-fit,minmax(240px,1fr))') + '">' +
+        // "Satırda kaç kamera" (s.cam_columns 1-4) seçiliyse o kadar; telefonda en fazla 2
+        const camN = Math.max(0, Math.min(4, +s.cam_columns || 0)), camP = phone ? Math.min(camN || 1, 2) : camN;
+        if (g.k === 'camera') return '<div class="cams" style="grid-template-columns:' + (camP ? 'repeat(' + camP + ',minmax(0,1fr))' : 'repeat(auto-fit,minmax(240px,1fr))') + '">' +
           g.items.map((x) => { cams.push(x); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span class="c0">' + esc(t(lang, 'cam_off')) + '</span><span class="c1">' + esc(t(lang, 'cam_nopic')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
         if (g.k === 'pet') return '<div class="pets">' + g.items.map((x) => '<div class="petc" data-pet="' + esc(x.pet) + '"' + hidA(x) + mark(x._i) + '></div>').join('') + '</div>';
         // satırlar: ince yatay satırlar, kutuya sığdığı kadar yan yana (en az 170 px)

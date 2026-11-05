@@ -3,7 +3,11 @@
     "step": {
       "user": {
         "title": "Lemur Home Dashboard",
-        "description": "Hazır ev panosunu ekler. Bir pano oluştur ve ham yapılandırmasına `strategy: type: custom:lemur-home-dashboard` yaz. Panoyu sol menüdeki \"Lemur Home Dashboard\" bölümünden düzenle."
+        "description": "Hazır ev panosunu ekler. \"Panoyu oluştur\" açıksa pano senin için oluşturulur; sayfayı bir kez yenileyince kenar çubuğunda görünür. Panoyu sol menüdeki \"Lemur Home Dashboard\" bölümünden düzenlersin. (Kendin oluşturmak istersen: yeni bir panonun ham yapılandırmasına `strategy: type: custom:lemur-home-dashboard` yaz.)",
+        "data": {
+          "create_dashboard": "Panoyu oluştur",
+          "dashboard_title": "Pano adı"
+        }
       }
     },
     "abort": {

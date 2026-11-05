@@ -3,7 +3,11 @@
     "step": {
       "user": {
         "title": "Lemur Home Dashboard",
-        "description": "Adds the ready-made home dashboard. Create a dashboard and put `strategy: type: custom:lemur-home-dashboard` in its raw configuration. Edit the dashboard from \"Lemur Home Dashboard\" in the sidebar."
+        "description": "Adds the ready-made home dashboard. With \"Create the dashboard\" on, the dashboard is created for you and shows up in the sidebar after you reload the page once. Edit it from \"Lemur Home Dashboard\" in the sidebar. (To create it yourself instead: a new dashboard with `strategy: type: custom:lemur-home-dashboard` in its raw configuration.)",
+        "data": {
+          "create_dashboard": "Create the dashboard",
+          "dashboard_title": "Dashboard name"
+        }
       }
     },
     "abort": {

@@ -2,21 +2,22 @@
 
 Türkçe · **[English](README.en.md)**
 
-Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır yaz; odaların, ışıkların, senaryoların, iklim ve medya kontrollerinin olduğu pano evindeki cihazlardan kendiliğinden kurulsun. Duvar tabletleri ve kiosk ekranları için tasarlandı, telefonda da çalışır.
+Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, ışıkların, senaryoların, iklim, medya ve kamera kontrollerinin olduğu pano evindeki cihazlardan kendiliğinden kurulsun. Duvar tabletleri ve kiosk ekranları için tasarlandı, telefonda da çalışır.
 
 ![Lemur Home Dashboard kullanımda](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/demo.webp)
 
-**Hızlı kurulum:** [HACS'ta aç](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) → İndir → Home Assistant'ı yeniden başlat → [entegrasyonu ekle](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → yeni panoya `strategy: type: custom:lemur-home-dashboard` yaz. Adım adım anlatım [aşağıda](#kurulum).
+**Hızlı kurulum:** [Marketplace'te aç](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) (Home Assistant 2026.11 öncesinde HACS'ta açılır) → İndir → Home Assistant'ı yeniden başlat → [entegrasyonu ekle](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard) → sayfayı yenile; pano kenar çubuğunda hazır. Adım adım anlatım [aşağıda](#kurulum).
 
-- **Tek satırla kurulum.** Panonun ham yapılandırmasına iki satır yazarsın, gerisi kendiliğinden gelir. Odalar Home Assistant alanlarından, ışıklar, senaryolar, klimalar, petekler, süpürge ve medya cihazları o alanlardan bulunur.
-- **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod, bubble-card ya da başka bir kart veya tema istemez. Lemur Halo kartları (iklim, süpürge, sensör, hava, enerji, güvenlik, oda, ışık) pakete gömülü gelir.
+- **Kendiliğinden kurulan pano.** Entegrasyonu eklerken pano da oluşturulur; hiçbir yapılandırma yazmazsın. Odalar Home Assistant alanlarından, ışıklar, senaryolar, klimalar, petekler, süpürge ve medya cihazları o alanlardan bulunur.
+- **Başka eklenti gerekmez.** Marketplace'ten (ya da HACS'tan) tek seferde kurulur; mushroom, card-mod, bubble-card ya da başka bir kart veya tema istemez. Lemur Halo kartları (iklim, süpürge, sensör, hava, enerji, güvenlik, oda, ışık) pakete gömülü gelir.
 - **Her şey yönetim panelinden.** Sol menüdeki **Lemur Home Dashboard** sayfasında sekmeleri, bölümleri, kolon genişliklerini ve hangi cihazın nerede duracağını düzenlersin; canlı önizleme gösterir, değişiklik evdeki bütün tabletlere aynı anda gelir. Her adım geri alınabilir. **Basit** modda yalnız temel ayarlar görünür, **Gelişmiş** modda boyutlar, renkler, koşullar ve kartlar açılır; karmaşık ayarların yanında **?** yardımı var.
 - **Simge seçici.** Sekme, ışık ve düğme simgelerini listeden seçersin: önce o şeye uygun öneriler, aramada Home Assistant'ın bütün simgeleri. Türkçe de arayabilirsin (lamba, kanepe, tavan...).
-- **Kendi simge seti.** Panodaki bütün simgeler pakete gömülü 1522 renkli simgeden çizilir; sette olmayan bir `mdi:` adı yazarsan Home Assistant'ın düz simgesi çizilir. Varsayılan **Otomatik** stilde kapalı cihazlar gri, açıklar renkli görünür; istersen hepsi renkli ya da hepsi gri olabilir.
+- **Kendi simge seti.** Panodaki bütün simgeler pakete gömülü 1751 renkli simgeden çizilir; sette olmayan bir `mdi:` adı yazarsan Home Assistant'ın düz simgesi çizilir. Varsayılan **Otomatik** stilde kapalı cihazlar gri, açıklar renkli görünür; istersen hepsi renkli ya da hepsi gri olabilir.
 - **Kaydırmalı ışık çubukları.** İstersen ışık bölümü kare karolar yerine yatay çubuklarla görünür: dokununca ışık açılır/kapanır, sağa-sola kaydırınca parlaklık değişir, çubuk parlaklık kadar ışığın renginde dolar. Sadece telefonda çubuk, tablette karo da seçilebilir.
 - **Işık penceresi.** Işık karosuna basılı tutunca büyük parlaklık çubuğu, beyaz tonlar, renk çemberi, hazır renkler, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçersin.
 - **Anında tepki.** Işığa, prize ya da fana dokununca karo cihazın cevabını beklemeden değişir; açarken ışığın son renginde yanar. Cihaz başka bir şey bildirirse gerçek durum gösterilir.
 - **Besleme kartı.** Kedi, köpek, balık... için besleme hatırlatıcısı: zamanında yeşil, gecikince kırmızı; dokun "Besledim", gecikince telefona bildirim, istersen otomatik yemlik.
+- **Kameralar.** Kameralar anlık görüntü karosu olarak görünür ve birkaç saniyede bir yenilenir; dokununca canlı görüntü açılır. Kamera kapalıysa ya da görüntü vermiyorsa karoda yazar.
 - **Kart seçici.** Halo kartları, Home Assistant kartları ve kurulu özel kartlar listeden seçilir; kartın kendi görsel düzenleyicisi ve canlı önizlemeyle eklenir.
 - **Yedek kontrol ve duvar anahtarları (Gelişmiş).** İki entegrasyonda görünen lambaya (ör. Govee LAN ve Matter) yedek seçilir: komut hızlı yoldan gider, lamba cevap vermezse yedekten tekrar gönderilir. Yalnız sinyal veren duvar rölesi bir lambaya bağlanır; internet ya da Wi-Fi gidip gelse de anahtar çalışır.
 - **İkinci satır ve şablon.** Karonun altına durum, son değişim ya da öznitelik; ad ve ikinci satırda Home Assistant şablonu. İstersen düğme çalışmadan önce onay sorar.
@@ -32,7 +33,7 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 ## İçindekiler
 
 - [Kurulum](#kurulum)
-  - [1. HACS ile indir](#1-hacs-ile-indir)
+  - [1. Panoyu indir](#1-panoyu-indir)
   - [2. Entegrasyonu ekle](#2-entegrasyonu-ekle)
   - [3. Panoyu oluştur](#3-panoyu-oluştur)
   - [4. Yönetim panelinde düzenle](#4-yönetim-panelinde-düzenle)
@@ -50,27 +51,25 @@ Home Assistant için hazır, tam ekran ev panosu. Yeni bir pano aç, tek satır 
 
 ## Kurulum
 
-Gerekenler: Home Assistant 2024.8 ya da daha yeni bir sürüm ve [HACS](https://hacs.xyz/docs/use/) (Home Assistant 2026.11 ve sonrasında gerekmez; yerini Ayarlar → **Marketplace** aldı). Başka kart, tema ya da eklenti gerekmez.
+Gerekenler: Home Assistant 2024.8 ya da daha yeni bir sürüm. Home Assistant 2026.11 ve sonrasında topluluk eklentileri **Ayarlar → Marketplace**'ten kurulur, ayrıca bir şey kurman gerekmez; daha eski sürümlerde [HACS](https://hacs.xyz/docs/use/) gerekir. Başka kart, tema ya da eklenti gerekmez.
 
-### 1. HACS ile indir
+### 1. Panoyu indir
 
-**Home Assistant 2026.11 ve sonrası:** HACS yerine Ayarlar → **Marketplace** var, ayrıca kurmana gerek yok. Marketplace'te "Lemur Home Dashboard" diye arat ve **İndir**'e bas; aşağıdaki düğme de Marketplace'i açar. Sonraki adımlar aynı.
+Lemur Home Dashboard topluluk kataloğunda; özel depo eklemeye gerek yok. En kolay yol bu düğme. Home Assistant adresini bir kez sorar, sonra panoyu doğrudan açar (2026.11 ve sonrasında Marketplace'te, daha eski sürümlerde HACS'ta):
 
-Lemur Home Dashboard HACS'ın resmi listesinde; özel depo eklemeye gerek yok. En kolay yol bu düğme. Home Assistant adresini bir kez sorar, sonra panoyu doğrudan HACS'ta açar:
+[![Marketplace'te / HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
 
-[![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration)
-
-1. Sağ alttaki **İndir** düğmesine bas, sürümü seçme penceresinde tekrar **İndir**.
+1. **İndir**'e bas, sürümü seçme penceresinde tekrar **İndir**.
 2. **Ayarlar → Sistem → sağ üstteki ⏻ → Home Assistant'ı yeniden başlat**. Ayarlar sayfasında "Yeniden başlatma gerekli" uyarısı da çıkar, oradan da yapabilirsin.
 
 <details>
-<summary>Düğme çalışmazsa: HACS'ta ara</summary>
+<summary>Düğme çalışmazsa: elle ara</summary>
 
-1. Sol menüden **HACS**'ı aç.
+1. **Home Assistant 2026.11 ve sonrası:** **Ayarlar → Marketplace**. Daha eski sürümlerde sol menüden **HACS**.
 2. Arama kutusuna **Lemur Home Dashboard** yaz, sonuca tıkla.
 3. **İndir** → **İndir**, ardından Home Assistant'ı yeniden başlat.
 
-Daha önce özel depo olarak eklediysen bir şey yapman gerekmez; kurulumun ve güncellemelerin aynen sürer. İstersen HACS → ⋮ → **Özel depolar**'daki kaydı silebilirsin.
+Daha önce HACS'a özel depo olarak eklediysen bir şey yapman gerekmez; kurulumun ve güncellemelerin aynen sürer (2026.11'e geçerken Marketplace'e kendiliğinden taşınır).
 
 </details>
 
@@ -78,9 +77,13 @@ Daha önce özel depo olarak eklediysen bir şey yapman gerekmez; kurulumun ve g
 
 [![Entegrasyonu ekle](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=lemur_home_dashboard)
 
-Düğmeyi kullanmıyorsan: **Ayarlar → Cihazlar ve hizmetler → Entegrasyon ekle** → "Lemur" yaz → **Lemur Home Dashboard** → **Gönder**. Soru sorulmaz. Sol menüye **Lemur Home Dashboard** sayfası eklenir (yalnızca yöneticiler görür).
+Düğmeyi kullanmıyorsan: **Ayarlar → Cihazlar ve hizmetler → Entegrasyon ekle** → "Lemur" yaz → **Lemur Home Dashboard** → **Gönder**. **Panoyu oluştur** açık gelir; istersen panonun adını değiştir. Sol menüye **Lemur Home Dashboard** yönetim sayfası eklenir (yalnızca yöneticiler görür).
+
+Sayfayı bir kez yenile: pano kendiliğinden oluşturulur ve sol menüde görünür. Bu durumda 3. adımı atla.
 
 ### 3. Panoyu oluştur
+
+2. adımda **Panoyu oluştur**'u kapattıysan ya da ikinci bir pano istiyorsan elle de oluşturabilirsin:
 
 1. **Ayarlar → Panolar → Pano ekle → Sıfırdan yeni pano oluştur**, bir ad ver (örneğin "Tablet") ve **Oluştur**.
 2. Yeni panoyu aç, sağ üstteki **✏️ (Düzenle)** düğmesine bas.
@@ -114,7 +117,7 @@ Hiçbir şeye dokunmadan da kullanabilirsin. Değiştirmek istersen sol menüden
 | **İklim** | Klima ve petek kartları; yazın klimalar, kışın petekler | Aç/kapat, sıcaklık |
 | **Süpürge** | Robot süpürge kartı | Başlat, durdur, istasyona gönder |
 | **Medya** | TV ve hoparlörler | Cihaz penceresi |
-| **Kameralar** | Kameraların anlık görüntüsü; birkaç saniyede bir yenilenir (öğe ayarından 5 sn - 1 dk), kamera kapalıysa "Kamera çevrimdışı" | Canlı görüntü penceresi |
+| **Kameralar** | Kameraların anlık görüntüsü; birkaç saniyede bir yenilenir (öğe ayarından 5 sn - 1 dk). Kamera kapalıysa "Kamera çevrimdışı", açık ama görüntü vermiyorsa "Görüntü alınamıyor" | Canlı görüntü penceresi |
 | **Değerler** | Sensör, ikili sensör, zamanlayıcı, sayaç, seçim: simge, değer + birim ve ad; çalışan zamanlayıcı geri sayar | Cihaz penceresi (değiştirilebilir) |
 | **Kartlar** | Kart seçiciden ya da YAML ile eklenen herhangi bir kart: Halo kartları, Home Assistant kartları, kurulu özel kartlar | Kartın kendisi |
 | **Evcil hayvan** | Besleme kartı: son besleme, sıradaki besleme ve renkle durum | "Besledim"; basılı tut: son beslemeler |
@@ -129,13 +132,15 @@ Sol menüdeki **Lemur Home Dashboard** (yalnızca yöneticiler görür). Üstte 
 
 - **Sekmeler:** Ad, simge ve alan (oda) seçilir. Bir alan seçilen sekmeye **Alandan yeniden doldur** o odanın cihazlarını yeniden yerleştirir. **+ Sekme** boş sekme ya da odası seçilmiş, dolu gelen bir sekme açar.
 - **Kolonlar:** 1 ile 6 arası kolon. Genişlikler önizlemedeki çizgilerden sürüklenerek ayarlanır; **Tablet düzeni** ve **Eşit** hazır oranlardır. Her kolon kendi içinde 1-3 sütuna bölünebilir.
-- **Bölümler serbest:** Her bölüm bir kutu ve içine her şey eklenebilir: ışık, priz, perde, senaryo düğmesi, iklim ve süpürge kartı, medya cihazı aynı kutuda olabilir; her öğe kendi türüne göre görünür. **Bölüm ekle**'deki türler (Boş bölüm, Işıklar, Senaryolar, İklim, Süpürge, Medya) sadece başlangıç başlığıdır. Bölümler önizlemede tutamaklarından sürüklenerek kolonlar arasında taşınır; öğeler kendileri sürüklenerek sıralanır ya da başka bir bölüme taşınır.
+- **Bölümler serbest:** Her bölüm bir kutu ve içine her şey eklenebilir: ışık, priz, perde, senaryo düğmesi, iklim ve süpürge kartı, medya cihazı, kamera aynı kutuda olabilir; her öğe kendi türüne göre görünür. **Bölüm ekle**'deki türler (Boş bölüm, Işıklar, Senaryolar, İklim, Süpürge, Medya, Kameralar) sadece başlangıç başlığıdır. Bölümler önizlemede tutamaklarından sürüklenerek kolonlar arasında taşınır; öğeler kendileri sürüklenerek sıralanır ya da başka bir bölüme taşınır.
 - **Işık bölümünün görünümü:** **Karo** (kare karolar), **Kaydırmalı** (yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık) ya da **Telefonda otomatik** (tablette karo, telefonda çubuk). Satırdaki karo ve çubuk sayısı ayrıca seçilir.
-- **Ekle:** Seçicide her tür cihaz listelenir; üstteki süzgeçle (Tümü, Işık ve anahtar, Senaryolar, İklim, Süpürge, Medya) daraltılır, birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur. Işık karosunun adı ve simgesi değiştirilebilir; senaryo düğmesine renk ve simge verilir. İklim kartında sıcaklık ve nem sensörü, dış sıcaklık sensörü, birlikte kontrol edilen ikinci cihaz ve tür (klima/petek) seçilir.
-- **Simge seçici:** Simge alanlarının yanındaki düğme. **Simgeler** sekmesinde panonun 1522 simgesi var; önce o şeye uygun olanlar önerilir (oda, ışık ya da senaryo için), arama kutusu Türkçe kelimeleri de tanır. ★ işaretliler panoya özel çizimler. Light Effect Card kuruluysa **Light Effect Card** sekmesinde onun 356 renkli efekt simgesi de seçilebilir. İstersen `mdi:...` adını doğrudan yazarsın; sette yoksa Home Assistant'ın düz simgesi çizilir.
+- **Ekle:** Seçicide her tür cihaz listelenir; üstteki süzgeçle (Tümü, Işık ve anahtar, Senaryolar, Değerler, İklim, Süpürge, Medya, Kameralar) daraltılır, birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur. Işık karosunun adı ve simgesi değiştirilebilir; senaryo düğmesine renk ve simge verilir. İklim kartında sıcaklık ve nem sensörü, dış sıcaklık sensörü, birlikte kontrol edilen ikinci cihaz ve tür (klima/petek) seçilir.
+- **Simge seçici:** Simge alanlarının yanındaki düğme. **Simgeler** sekmesinde panonun 1751 simgesi var; önce o şeye uygun olanlar önerilir (oda, ışık ya da senaryo için), arama kutusu Türkçe kelimeleri de tanır. ★ işaretliler panoya özel çizimler. Light Effect Card kuruluysa **Light Effect Card** sekmesinde onun 356 renkli efekt simgesi de seçilebilir. İstersen `mdi:...` adını doğrudan yazarsın; sette yoksa Home Assistant'ın düz simgesi çizilir.
 - **Öğe ayarları (⚙):** Her öğenin yanındaki çark. Ad, simge, açıkken ve kapalıyken simge (ör. bağlantı sensörü), **Dokununca** ve **Basılı tutunca** ne olacağı (cihaz penceresi, aç/kapat, servis çalıştır, pencerede kart aç, hiçbir şey ya da YAML), senaryo düğmesinin ne yaptığı ve **Sadece şu durumda göster**: öğe, seçilen varlık belirli bir durumdayken görünür; koşul sağlanmazsa panoda hiç çizilmez, yerinde boşluk kalmaz (önizlemede soluk görünür).
 - **Boyut ve yerleşim:** Öğe ⚙'de karonun boyutu (1×1, 2×1, 1×2, 2×2, satır boyu), simge ve yazı boyutu (küçük / orta / büyük). Bölüm düzenleyicide **Doldurma** (içeriğe göre ya da kutuyu doldur: düğmeler ve karolar kutunun yüksekliğine eşit dağılır) ve **Hizalama** (üst, orta, eşit dağıt). İçerik kutuya sığmazsa kutu uzar; sütun ekrandan uzunsa kendi içinde kayar, hiçbir öğe kesilmez.
 - **Görünüm ve renk:** Öğe ⚙ → **Görünüm**: senaryo/eylem düğmesi Düğme, Karo (ışıklarla aynı ızgarada) ya da Satır; değer öğesi Karo, Düğme, Satır ya da Halo (sayısal değerler Halo sensör kartı olarak); ışık ve anahtar Karo, Düğme ya da Satır. **Renkler**: simge rengi, açıkken renk, arka plan tonu; sayısal değerde **Değere göre renk** (4 sınır, 5 renk). Kart öğesine ve Halo görünümüne de dokununca / basılı tutunca eylemi verilebilir; o zaman kartın kendi tıklaması yerine o çalışır.
+- **Kamera:** Cihaz ekle'den bir kamera seçilir; öğe ⚙'de görüntünün ne sıklıkla yenileneceği seçilir (5 sn, 10 sn, 30 sn, 1 dk). Sekme ekranda değilken görüntü yenilenmez. Karoya dokununca canlı görüntü panonun kendi penceresinde açılır. Kamera bölümünün ayarında **Satırda kaç kamera** seçilir (Oto: kutuya sığdığı kadar; 1, 2, 3, 4; telefonda en fazla 2).
+- **Kameralar sekmesi:** **+ Sekme** menüsündeki **Kameralar sekmesi** evdeki bütün kameraları tek sekmede, tek sütunluk bir bölümde toplar. Otomatik kur'da **Kameralar** işaretlenirse kameralar en sonda ayrı bir sekmede olur (işaretlenmezse kameralar otomatik düzene girmez).
 - **Besleme kartı:** Bölüme **Evcil hayvan** eklenir: ad, tür (kedi, köpek, balık, kuş, tavşan, kaplumbağa, diğer), her N saatte bir ya da günün belli saatlerinde, yaklaşıyor uyarısı ve gecikme payı, gecikince bildirim, isteğe bağlı otomatik yemlik. Kart zamanında yeşil, yaklaşınca sarı, zamanı gelince turuncu, gecikince kırmızı ve yanıp söner; dokununca "Besledim" kaydedilir (10 sn içinde yeniden dokununca geri alınır), basılı tutunca son beslemeler açılır. Home Assistant'ta her hayvan için `sensor.<ad>_besleme` (ok, soon, due, late, never) ve `button.<ad>_besledim` oluşur; `lemur_home_dashboard.feed` servisi de var.
 - **Aralık, yükseklik, renk:** Bölüm düzenleyicide **Aralık** (öğeler arası 0-24 px; kutuyu doldururken varsayılan 12). Halo görünümünde ve kart öğelerinde **Yükseklik** (1, 1,5, 2 satır), Halo'da simge ve yazı boyutu da. Renklerde Halo renkleri tek dokunuşla; **Duruma göre renk** bir varlığın durumunu renge eşler (metin değerlerde de çalışır). **Alt başlık** öğesi bölümün içine küçük bir ara başlık koyar.
 - **İkinci satır, şablon, onay:** Öğe ⚙ → **İkinci satır** (durum, son değişim, öznitelik, yazı ya da şablon); ad ve ikinci satırda Home Assistant şablonu ({{ }} / {% %}) yazılabilir. **Dokununca onay iste** düğmeye basınca önce sorar.
@@ -196,7 +201,7 @@ Ekran 700 pikselden darsa, telefon yatay tutulmuşsa (yükseklik 500 pikselden a
 
 **Stil seç → Telefon** seçenekleri birbirinden bağımsızdır, istediğin birleşimi seçebilirsin. Tablet hiçbirinden etkilenmez:
 
-- *Gezinme:* **Altta kategoriler** (varsayılan), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Üstte odalar** (yukarıdaki eski düzen). **Altta kategoriler** (altta Işıklar, İklim, Senaryolar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
+- *Gezinme:* **Altta kategoriler** (varsayılan), **Altta odalar** (oda düğmeleri ekranın altında, uygulama gibi; üstte sekmenin adı ve saat) ya da **Üstte odalar** (yukarıdaki eski düzen). **Altta kategoriler** (altta Işıklar, İklim, Senaryolar, kamera varsa Kameralar ve Light Effect Card kuruluysa Efektler). Kategori sayfası bütün sekmelerin o türdeki bölümlerini sekme adlarıyla tek sayfada gösterir. Işıklarda üstte oda şeridi vardır; odalar arasında sağa sola kaydırarak geçilir, **Tümü** bütün evin ışıklarıdır (aynı lamba iki sekmede varsa bir kez).
 - *Işıklar:* **Bölümdeki gibi**, hep **Karo** ya da **Tek sıra** (her ışık bir satır: dokun aç/kapat, sağa sola kaydır parlaklık).
 - *Işık penceresi alttan* (varsayılan açık): Basılı tutunca açılan pencere ekranın altından gelir, aşağı çekince kapanır.
 
@@ -220,7 +225,11 @@ Kurulu değilse bu düğmeler panoda görünmez, başka hiçbir şey değişmez.
 
 ## Güncelleme
 
-1. **HACS → Lemur Home Dashboard → ⋮ → Bilgileri güncelle**, sonra **İndir** (ya da Ayarlar'daki güncelleme bildiriminden **Güncelle**). HACS yeni sürümleri kendisi de belli aralıklarla denetler; "Bilgileri güncelle" bunu beklemeden yapar.
+En kolayı yönetim panelinden: **Ayarlar → Sürüm ve güncelleme → Güncellemeleri denetle**. Yeni sürüm varsa **Güncelle** indirir, **Yeniden başlat** Home Assistant'ı yeniden başlatır.
+
+Ya da Home Assistant'tan:
+
+1. **Ayarlar**'daki güncelleme bildiriminden **Güncelle**. Ya da Marketplace'te (eski sürümlerde HACS'ta) **Lemur Home Dashboard → ⋮ → Bilgileri güncelle**, sonra **İndir**.
 2. Home Assistant'ı yeniden başlat.
 
 Güncellemeden sonra pano ya da yönetim paneli açıksa üstte "Yeni sürüm yüklendi, görmek için sayfayı yenile" uyarısı çıkar; **Yenile**'ye basınca yeni sürüm açılır. Sayfa kendiliğinden yenilenmez. Sekmelerin, bölümlerin ve ayarların güncellemede silinmez.
@@ -228,6 +237,8 @@ Güncellemeden sonra pano ya da yönetim paneli açıksa üstte "Yeni sürüm y�
 ## Sorun giderme
 
 - **"Timeout waiting for strategy element" ya da pano boş.** Entegrasyonun eklendiğinden ([adım 2](#2-entegrasyonu-ekle)) ve Home Assistant'ın yeniden başlatıldığından emin ol, sonra sayfayı Ctrl+F5 ile yenile. Telefon uygulamasında **Ayarlar → Companion app → Reset frontend cache**.
+- **Pano kendiliğinden oluşmadı.** Entegrasyonu eklerken **Panoyu oluştur** açık olmalı; pano, kurulumdan sonra bir yönetici hesabıyla açılan ilk sayfada oluşur. Sayfayı yenile. Yine yoksa [3. adımla](#3-panoyu-oluştur) elle oluştur.
+- **Kamera karosunda "Görüntü alınamıyor".** Kamera Home Assistant'ta açık görünüyor ama görüntü vermiyor: kameranın kendisini ya da entegrasyonunun ayarlarını kontrol et (ör. yazıcı kameralarında yerel ağdan canlı izleme açık olmalı). Görüntü gelince karo kendiliğinden düzelir.
 - **Sol menüde Lemur Home Dashboard yok.** Sayfa yalnızca yönetici kullanıcılara görünür. Pano herkes için çalışır.
 - **Bir cihaz panoda yok.** Otomatik düzen cihazları Home Assistant alanlarından bulur; alanı olmayan cihazlar **Diğer** sekmesinde toplanır. Yönetim panelinde istediğin bölüme **Ekle** ile ekleyebilirsin.
 - **Pano HA düzenleyicisinde açılıyor ve değişiklikler panele yansımıyor.** Panoda "Kontrolü al" denmiş olabilir. Ham yapılandırma düzenleyicisinde içeriği yine [iki satırlık koda](#3-panoyu-oluştur) çevir.

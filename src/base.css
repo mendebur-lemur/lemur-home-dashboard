@@ -434,7 +434,7 @@
 .bbar.bbdrag .bbv, .bbar.bbal.bbon .bbv { opacity: 1; }
 .edit .bbar { cursor: default; }
 /* kameralar (2026-11-05): 16:9 anlık görüntü karosu, adı sol altta; çevrimdışıysa sade yüz */
-.cams { display: grid; grid-gap: 8px; flex: 0 0 auto; }
+.cams { display: grid; grid-gap: 8px; flex: 0 0 auto; align-self: stretch; width: 100%; box-sizing: border-box; }
 .cam { position: relative; padding-top: 56.25%; border-radius: 18px; overflow: hidden; background: var(--lp-embed-bg); cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cam img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
 .cam.ok img { opacity: 1; }

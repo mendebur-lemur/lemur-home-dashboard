@@ -231,7 +231,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed):
+        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
 
@@ -412,5 +412,28 @@ def ws_subscribe(hass, connection, msg):
 @websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/info"})
 @callback
 def ws_info(hass, connection, msg):
-    """Version of the integration, so an outdated script in a browser cache can ask for a reload."""
-    connection.send_result(msg["id"], {"version": VERSION})
+    """Version of the integration, so an outdated script in a browser cache can ask for a reload.
+    For admins it also says whether the dashboard should still be created (src/autodash.js)."""
+    res = {"version": VERSION}
+    entry = _entry(hass)
+    if entry is not None and connection.user and connection.user.is_admin and entry.data.get("create_dashboard") and not entry.data.get("dashboard_done"):
+        res["setup_dashboard"] = {"title": entry.data.get("dashboard_title") or "Lemur Home Dashboard"}
+    connection.send_result(msg["id"], res)
+
+
+def _entry(hass: HomeAssistant) -> ConfigEntry | None:
+    entries = hass.config_entries.async_entries(DOMAIN)
+    return entries[0] if entries else None
+
+
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/dashboard_claim"})
+@websocket_api.require_admin
+@callback
+def ws_dashboard_claim(hass, connection, msg):
+    """One browser gets to create the dashboard: the first claim returns true and marks it done,
+    so two open tabs do not create it twice."""
+    entry = _entry(hass)
+    ok = bool(entry is not None and entry.data.get("create_dashboard") and not entry.data.get("dashboard_done"))
+    if ok:
+        hass.config_entries.async_update_entry(entry, data={**entry.data, "dashboard_done": True})
+    connection.send_result(msg["id"], {"ok": ok, "title": (entry.data.get("dashboard_title") if entry else None) or "Lemur Home Dashboard"})
