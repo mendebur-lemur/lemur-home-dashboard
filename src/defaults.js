@@ -85,6 +85,37 @@ function lhdNormTab(tab) {
   return Object.assign({}, tab, { v: 2, sections: out });
 }
 // Bölümdeki öğe türleri (yönetim panelindeki özet için): { tile: 7, scene: 2, ... }
+// Telefona özel ayarlar (v0.22) için öğenin kalıcı anahtarı: cihaz kimliği, yoksa türüne göre ad/simge.
+// Öğe listede yer değiştirse de anahtar aynı kalır (sıra numarası kullanılmaz).
+function lhdItemKey(x) {
+  if (typeof x === 'string') return x;
+  if (!x || typeof x !== 'object') return '';
+  if (x.entity) return String(x.entity);
+  if (x.pet) return 'pet:' + x.pet;
+  if (x.card && typeof x.card === 'object') return 'card:' + (x.card.type || '') + ':' + (x.card.title || x.card.entity || '');
+  if (x.subtitle) return 'sub:' + x.subtitle;
+  return 'n:' + (x.name || '') + '|' + (x.icon || '');
+}
+// Telefondaki bölüm sırası: bugünkü telefon düzeni kolon kolon (kolon, alt sütun, listedeki yer) dizer.
+// ord verilirse (settings.phone.order[sekme]) o sıra; listede olmayan bölümler varsayılan yerlerine göre sona.
+function lhdPhoneOrder(T, ord) {
+  const secs = (T && T.sections) || [];
+  const cols = (T && T.columns && T.columns.length) ? T.columns.length : 3, sp = (T && T.splits) || [];
+  const key = (s, i) => { const c = Math.max(0, Math.min(cols - 1, +s.col || 0)), n = parseInt(sp[c], 10) >= 1 && parseInt(sp[c], 10) <= 3 ? parseInt(sp[c], 10) : 1; return [c, Math.max(0, Math.min(n - 1, +s.sub || 0)), i]; };
+  const base = secs.map((s, i) => ({ s: s, k: key(s, i) })).sort((a, b) => (a.k[0] - b.k[0]) || (a.k[1] - b.k[1]) || (a.k[2] - b.k[2])).map((x) => x.s);
+  return lhdOrderBy(base, ord, (s) => s.id);
+}
+// listeyi kayıtlı sıraya göre diz: sırada olanlar o sırayla, olmayanlar kendi yerleri korunarak sona (anahtar: key(x))
+function lhdOrderBy(list, ord, key) {
+  key = key || ((x) => x.id);
+  if (!Array.isArray(ord) || !ord.length) return list.slice();
+  const pos = {}; ord.forEach((id, i) => { if (typeof id === 'string' && pos[id] === undefined) pos[id] = i; });
+  return list.map((x, i) => ({ x: x, i: i, p: pos[key(x)] })).sort((a, b) => {
+    if (a.p !== undefined && b.p !== undefined) return (a.p - b.p) || (a.i - b.i);
+    if (a.p !== undefined) return -1; if (b.p !== undefined) return 1; return a.i - b.i;
+  }).map((y) => y.x);
+}
+
 function lhdKinds(s) {
   const c = {};
   ((s && s.entities) || []).forEach((it) => { const k = lhdKind(it); if (k) c[k === 'ph' ? 'tile' : k] = (c[k === 'ph' ? 'tile' : k] || 0) + 1; });

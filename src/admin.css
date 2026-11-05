@@ -394,3 +394,59 @@ label.btn { cursor: pointer; }
   .akft { flex-wrap: wrap; row-gap: 10px; } .aksum { flex: 1 1 100%; } .akft .btn { flex: 1 1 0; min-width: 0; }
   .akhd .akht span { display: none; }
 }
+
+/* telefona özel ayarlar (v0.22) */
+.edm { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+.edm .lb { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); font-weight: 600; }
+.edm .seg button { display: inline-flex; align-items: center; gap: 6px; }
+.edm.ph .seg button.on { background: rgba(90, 169, 255, .22); color: #d6ebff; }
+.edm .phc { font-size: 12px; color: #7fb9ff; }
+.phban { display: flex; gap: 8px; align-items: flex-start; background: rgba(90, 169, 255, .12); color: #d6ebff; border-radius: 12px; padding: 9px 11px; font-size: 12.5px; line-height: 1.45; margin: 0 0 12px; }
+.phban ha-icon { flex: 0 0 auto; margin-top: 1px; }
+.sl.phl .si.phoff .nm, .sl.phl .si.phoff .ti { opacity: .45; }
+.sl.phl .si.phoff .nm b { text-decoration: line-through; }
+.phey { flex: 0 0 auto; white-space: nowrap; }
+.phey.off { color: #8b9098; }
+i.phb { font-style: normal; color: #7fb9ff; font-size: 11px; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.phed { border: 1px solid rgba(90, 169, 255, .35); }
+.phed .pht { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.phed .pht b { font-size: 14px; }
+.phed .pht span { font-size: 11px; color: #7fb9ff; text-transform: uppercase; letter-spacing: .06em; flex: 1 1 auto; }
+.phits { display: flex; flex-wrap: wrap; gap: 6px; }
+.phit { display: inline-flex; align-items: center; gap: 6px; background: var(--s4); color: inherit; border: 1.5px solid transparent; border-radius: 10px; padding: 6px 9px; font: inherit; font-size: 12.5px; cursor: pointer; max-width: 100%; }
+.phit span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phit.off { opacity: .55; border-color: rgba(90, 169, 255, .45); }
+.phit.off span { text-decoration: line-through; }
+.rooms.phl .rb.phoff { opacity: .45; text-decoration: line-through; }
+.rpanel.phr { border-color: rgba(90, 169, 255, .45); }
+details.phlook { background: var(--s2); border: 1px solid rgba(90, 169, 255, .35); border-radius: 16px; padding: 10px 12px; margin: 0 0 12px; }
+details.phlook > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; font-size: 13.5px; }
+details.phlook > summary::-webkit-details-marker { display: none; }
+details.phlook > summary::after { content: "▾"; margin-left: auto; color: var(--mu); }
+details.phlook[open] > summary { margin-bottom: 8px; }
+details.phlook[open] > summary::after { content: "▴"; }
+details.phlook .fld { margin-top: 10px; }
+details.phlook .seg { flex-wrap: wrap; }
+.phbgs { display: flex; flex-wrap: wrap; gap: 6px; }
+.phsw { width: 30px; height: 30px; border-radius: 9px; border: 2px solid transparent; cursor: pointer; padding: 0; }
+.phsw.on { border-color: #fff; }
+.phsw.same { width: auto; padding: 0 10px; background: var(--s4); color: var(--tx); font: inherit; font-size: 12px; }
+.phsw.same.on { border-color: var(--ac); }
+.phsame { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box; background: var(--s2); color: var(--tx); border: 1px solid var(--ln2); border-radius: 16px; padding: 12px 14px; margin: 0 0 10px; }
+.phsame > ha-icon { --mdc-icon-size: 26px; color: #7fb9ff; flex: 0 0 auto; align-self: flex-start; margin-top: 2px; }
+.phsame > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1 1 auto; }
+.phsame b { font-size: 14px; }
+.phsame i { font-style: normal; font-size: 12px; color: var(--mu); line-height: 1.4; }
+.phsame.none { opacity: .6; }
+.phsame .phgo { flex: 0 0 auto; align-self: center; border: 1px solid rgba(90, 169, 255, .55); color: #cfe6ff; }
+.phsame.ask { border-color: var(--red); background: var(--reds); }
+.phsame.ask > ha-icon, .phsame.ask b { color: var(--red); }
+.phsame .phsq { display: flex; flex-direction: row; gap: 8px; margin-top: 8px; }
+.phsame .phyes { background: var(--red); color: #fff; border-color: var(--red); font-weight: 600; }
+details.phlook > summary { padding: 4px 0; }
+details.phlook > summary .phli { width: 40px; height: 40px; border-radius: 12px; background: rgba(90, 169, 255, .16); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+details.phlook > summary .phli ha-icon { --mdc-icon-size: 24px; color: #9fcbff; }
+details.phlook > summary .phlt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+details.phlook > summary .phlt b { font-size: 15px; }
+details.phlook > summary .phlt i { font-style: normal; font-size: 12px; color: var(--mu); }
+details.phlook > summary::after { font-size: 16px; }

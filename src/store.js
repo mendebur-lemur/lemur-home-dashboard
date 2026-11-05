@@ -88,3 +88,12 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
 // Panonun ayarları. Otomatik kur önizlemesi (hayali ev) çizilirken kısa süre kendi seçimleriyle değiştirilir (LP_OVR.s)
 const LP_OVR = { s: null };
 function lpSettings() { return LP_OVR.s || (STORE.data && STORE.data.settings) || {}; }
+// Telefona özel görünüm (v0.22): settings.phone.style içindeki anahtarlar telefonda genel ayarların yerine geçer
+const LP_PH_STYLE = ['icon_style', 'icon_tint', 'icon_tint_light', 'climate_style', 'bg', 'background'];
+function lpPhoneMerge(s) {
+  const st = s && lhdIsObj(s.phone) && lhdIsObj(s.phone.style) ? s.phone.style : null;
+  if (!st || !Object.keys(st).length) return s;
+  const o = Object.assign({}, s);
+  LP_PH_STYLE.forEach((k) => { if (st[k] !== undefined && st[k] !== null) o[k] = st[k]; });
+  return o;
+}

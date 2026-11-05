@@ -308,6 +308,35 @@ function lpCatView(tabs, cur) {
   return { tab: { id: cur.id, name: cur.name, icon: cur.icon, area: one ? one.area || null : null, columns: [1], sections: secs }, cat: cat, cats: cats, rooms: rooms, room: room };
 }
 
+// Telefona özel ayarlar (v0.22). Sekmeler ve cihazlar tablet ile ortak; telefonda çizilirken sekmenin bir kopyası kurulur:
+//   settings.phone.secs[bölüm] = { hide: true, look: 'tiles' | 'rows', cols: 2-6, hide_items: [öğe anahtarı (lhdItemKey)], item_order: [öğe anahtarları] }
+//   settings.phone.tabs = { order: [sekme], hide: { sekme: true }, names: { sekme: ad }, icons: { sekme: simge } }   (oda düğmeleri)
+//   settings.phone.style = { icon_style, icon_tint, climate_style, bg, background }   (lpPhoneMerge)
+//   settings.phone.order[sekme] = [bölüm kimlikleri]   (telefondaki sıra; yoksa kolon kolon)
+// Kopyada bütün bölümler tek kolonda (telefon zaten alt alta dizer), gizli bölümler yok. Düzenleme önizlemesinde gizli öğeler
+// soluk görünür (sıra numaraları bozulmasın diye listede kalır), normal panoda hiç çizilmez. _ph işaretli kopya kaydedilmez.
+function lpPhoneOv() { const p = lpSettings().phone; return lhdIsObj(p) ? p : {}; }
+function lpPhoneTab(T, edit) {
+  if (!T) return T;
+  const P = lpPhoneOv(), SO = lhdIsObj(P.secs) ? P.secs : {}, OR = lhdIsObj(P.order) ? P.order : {};
+  const ord = Array.isArray(OR[T.id]) && OR[T.id].length ? OR[T.id] : null;
+  // normal panoda ayar yoksa sekmenin kendisi; telefon önizlemesinde (edit) hep kopya: orada yapılan sürükleme telefona yazılır
+  if (!edit && !ord && !(T.sections || []).some((s) => lhdIsObj(SO[s.id]))) return T;
+  const N = lhdNormTab(T), out = [];
+  lhdPhoneOrder(N, ord).forEach((s) => {
+    const o = lhdIsObj(SO[s.id]) ? SO[s.id] : {};
+    if (o.hide) return;
+    const c = Object.assign({}, s, { col: 0, sub: 0 });
+    if (Array.isArray(o.item_order) && o.item_order.length) c.entities = lhdOrderBy(s.entities || [], o.item_order, lhdItemKey);   // telefona özel öğe sırası
+    if (o.look === 'tiles' || o.look === 'rows') c._phLook = o.look;
+    const n = parseInt(o.cols, 10); if (n >= 2 && n <= 6) c._phCols = n;
+    const hi = Array.isArray(o.hide_items) ? o.hide_items.filter((x) => typeof x === 'string') : [];
+    if (hi.length) { if (edit) c._phHide = hi; else c.entities = (c.entities || []).filter((x) => hi.indexOf(lhdItemKey(x)) < 0); }
+    out.push(c);
+  });
+  return Object.assign({}, N, { v: 2, sections: out, _ph: true });
+}
+
 // Mevsim: ayarda yoksa aya göre (Mayıs-Eylül yaz). Kış'ta petek, Yaz'da klima kartları.
 function lpSeason() {
   const s = lpSettings().season;
@@ -500,14 +529,25 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._hass) return;
     // önizleme kartı kendi ayarlarıyla çizilir (bu kartın çizimi bitince panonun ayarlarına dönülür)
     if (this._config && this._config.demo) { LP_OVR.s = this._config.demo_settings || {}; try { this._render0(); } finally { LP_OVR.s = null; } return; }
+    // telefonda telefona özel görünüm (simge stili, iklim kartları, zemin) genel ayarların yerine geçer
+    if (lpIsPhone(this._config)) { const b = lpSettings(), m = lpPhoneMerge(b); if (m !== b) { LP_OVR.s = m; try { this._render0(); } finally { LP_OVR.s = null; } return; } }
     this._render0();
   }
   _render0() {
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
     const h = this._hass, S = h.states, lang = pickLang(h);
     if (this._nw) LHD_NEWER.lang = lang;
-    const tabs = this._tabs();
-    const tab = tabs.filter((x) => x.id === (this._config && this._config.tab))[0] || tabs[0];
+    let tabs = this._tabs(), allTabs = tabs;
+    // telefonda (ve telefon önizlemesinde) sekmeler telefona özel ayarlarla kurulur; oda düğmeleri telefona özel sırada,
+    // gizlenen sekmeler şeritte yok (doğrudan açılırsa yine çizilir), ad ve simge telefona özel olabilir
+    if (lpIsPhone(this._config)) {
+      const ed = !!(this._config && this._config.edit), PT = lhdIsObj(lpPhoneOv().tabs) ? lpPhoneOv().tabs : {};
+      const NM = lhdIsObj(PT.names) ? PT.names : {}, IC = lhdIsObj(PT.icons) ? PT.icons : {}, HD = lhdIsObj(PT.hide) ? PT.hide : {};
+      allTabs = tabs.map((T) => { let x = lpPhoneTab(T, ed); if ((typeof NM[T.id] === 'string' && NM[T.id]) || (typeof IC[T.id] === 'string' && IC[T.id])) x = Object.assign({}, x, NM[T.id] ? { name: NM[T.id] } : {}, IC[T.id] ? { icon: IC[T.id] } : {}); return x; });
+      const vis = lhdOrderBy(allTabs.filter((T) => !HD[T.id]), PT.order);
+      tabs = vis.length ? vis : allTabs;
+    }
+    const tab = allTabs.filter((x) => x.id === (this._config && this._config.tab))[0] || tabs[0];
     if (!tab) { this.shadowRoot.innerHTML = ''; this._sig = null; return; }
     const season = lpSeason();
     // telefonda altta kategoriler: sayfa bütün sekmelerden kurulur (düzenleme önizlemesinde değil)
@@ -587,7 +627,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
       // kaydırmalı çubuklar: bölüm ayarı look = 'bar' (her yerde) ya da 'phone' (telefonda otomatik)
       // telefon seçeneği Işıklar: Tek sıra (her öğe bir satır, kaydırarak parlaklık) ya da Karo; yoksa bölümün ayarı
-      const pl = phone ? lpPhoneCfg().lights : 'auto';
+      const pl = phone ? (s._phLook || lpPhoneCfg().lights) : 'auto';   // bölümün telefona özel görünümü önce gelir
       if (pl === 'rows' || (pl !== 'tiles' && (s.look === 'bar' || (s.look === 'phone' && phone)))) {
         const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = pl === 'rows' ? 1 : phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
         // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda ya da başka öğelerle birlikteyken sabit yükseklik
@@ -604,7 +644,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       }
       // 4 ve daha çok satırda satırlar kutuyu doldurur; daha azında karolar kare kalır, altı boş kalır.
       // Kare için padding yüzdesi kullanılıyor (genişliğe göre); aspect-ratio eski Safari'de yok.
-      const c = phone ? Math.max(Math.min(s.tile_columns || 5, 3), Math.min(8, Math.floor(lpPhoneW(this) / 120))) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = lpGridRows(items, c), fill = !phone && (r >= 4 || !!s.fill);
+      const c = phone ? (s._phCols || Math.max(Math.min(s.tile_columns || 5, 3), Math.min(8, Math.floor(lpPhoneW(this) / 120)))) : Math.max(1, Math.min(s.tile_columns || 5, Math.floor((inner + 8) / 78))), r = lpGridRows(items, c), fill = !phone && (r >= 4 || !!s.fill);
       // başka öğelerle aynı kutudaysa karolar kalan yeri doldurur, gerekirse kısalır (kartlar kendi yüksekliğinde kalır)
       const gs = 'grid-template-columns:repeat(' + c + ',minmax(0,1fr));grid-template-rows:repeat(' + r + ',' + (fill ? (only ? 'minmax(84px,1fr)' : 'minmax(56px,1fr)') : '1fr') + ')' + (items.some((x) => x.size) ? ';grid-auto-flow:row dense' : '');
       const G = typeof s.gap === 'number' ? s.gap : 8, gs2 = gs + (typeof s.gap === 'number' ? ';grid-gap:' + G + 'px' : '');   // bölüm ayarı Aralık
@@ -642,7 +682,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (it.visible && it.visible.entity && visW.indexOf(it.visible.entity) < 0) visW.push(it.visible.entity);
         const sce = it.state_colors && (it.state_colors.entity || it.entity);
         if (sce && visW.indexOf(sce) < 0) visW.push(sce);
-        const hid = !!it.visible && !lpVisible(it.visible, S);
+        // telefonda gizlenen öğe (yalnız telefon düzenleme önizlemesinde listede kalır) koşulu sağlanmayan öğe gibi soluk görünür
+        const hid = (!!s._phHide && s._phHide.indexOf(lhdItemKey(x)) >= 0) || (!!it.visible && !lpVisible(it.visible, S));
         if (hid && !edit) return null;                                              // koşul sağlanmıyor: çizilmez, boşluk kalmaz
         // görünüm (look): eylem öğesi karo/satır, varlık öğesi düğme/satır, değer öğesi Halo kartı. Verilmezse türünün bugünkü görünümü
         const lk = it.look, d0 = it.entity ? it.entity.split('.')[0] : '';
@@ -952,7 +993,8 @@ class LemurHomeDashboardCard extends HTMLElement {
   _editBind(R, tab, widths, used) {
     const wrap = R.querySelector('.wrap');
     const clone = () => JSON.parse(JSON.stringify(tab));
-    const emit = (nt) => lpFire(this, 'lhd-change', { tab: nt });
+    // telefona özel kopya (_ph) asla kaydedilmez: telefonda sürükleme yalnız telefon sırasını değiştirir ('lhd-phorder' bölümler, 'lhd-phitems' öğeler)
+    const emit = (nt) => { if (!tab._ph) lpFire(this, 'lhd-change', { tab: nt }); };
     const zoom = () => { const r = this.getBoundingClientRect(); return (r.width && this.offsetWidth) ? r.width / this.offsetWidth : 1; };
     const secById = (T, id) => (T.sections || []).filter((x) => x.id === id)[0];
     const listOf = (s) => (s.entities = s.entities || []);
@@ -1078,14 +1120,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       }
       if (D.kind === 'box') {
         if (D.gh) { const wr = wrap.getBoundingClientRect(); D.gh.style.left = ((e.clientX - wr.left) / D.z - D.gx) + 'px'; D.gh.style.top = ((e.clientY - wr.top) / D.z - D.gy) + 'px'; }
-        const c = colAt(e.clientX); if (!c) return;
+        const c = tab._ph ? R.querySelector('.pcol') : colAt(e.clientX); if (!c) return;   // telefonda tek sütun
         const bx = arr(c.children).filter((x) => x.hasAttribute('data-secs') && x !== D.el);
         let before = null;
         for (let i = 0; i < bx.length; i++) { const r = bx[i].getBoundingClientRect(); if (e.clientY < r.top + r.height / 2) { before = bx[i]; break; } }
         // kutu hemen oraya geçer (sütunun boş yer tutucusu varsa onun önüne)
         const ref = before || (bx.length ? bx[bx.length - 1].nextSibling : (c.firstChild || null));
         if (D.el.parentNode !== c || (ref !== D.el && D.el.nextSibling !== ref)) { try { c.insertBefore(D.el, ref); } catch (x) {} }
-        D.target = { col: +c.getAttribute('data-col'), sub: +c.getAttribute('data-sub'), before: before ? before.getAttribute('data-secs').split(',')[0] : null };
+        D.target = tab._ph ? { ph: true } : { col: +c.getAttribute('data-col'), sub: +c.getAttribute('data-sub'), before: before ? before.getAttribute('data-secs').split(',')[0] : null };
         return;
       }
       if (D.kind === 'item') {
@@ -1095,6 +1137,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         const srcType = typeOf(D.el.getAttribute('data-sec'));
         const it = under.closest ? under.closest('[data-idx]') : null;
         // aynı türden öğenin üstünde (karo karonun, çubuk çubuğun): öğe hemen oraya taşınır, ötekiler kayar
+        // telefonda öğe yalnız kendi bölümünde yer değiştirir (telefona özel öğe sırası)
+        if (tab._ph && it && it !== D.el && it.getAttribute('data-sec') !== D.el.getAttribute('data-sec')) return;
         if (it && it !== D.el && it.classList[0] === D.el.classList[0] && typeOf(it.getAttribute('data-sec')) === srcType) {
           const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile') || it.classList.contains('bar') || it.classList.contains('cam');
           const after = horiz ? e.clientX > r.left + r.width / 2 : e.clientY > r.top + r.height / 2;
@@ -1103,7 +1147,7 @@ class LemurHomeDashboardCard extends HTMLElement {
           D.live = true;
           return;
         }
-        if (it === D.el) return;
+        if (it === D.el || tab._ph) return;
         // başka türden öğe (ör. karo bölümünde satır): eski işaretle gösterilir
         if (it && it !== D.el && typeOf(it.getAttribute('data-sec')) === srcType) {
           const r = it.getBoundingClientRect(), horiz = it.classList.contains('tile') || it.classList.contains('bar');
@@ -1135,6 +1179,14 @@ class LemurHomeDashboardCard extends HTMLElement {
         const nx = sib(true), pv = sib(false);
         liveT = nx ? { sec: nx.getAttribute('data-sec'), idx: +nx.getAttribute('data-idx') } : pv ? { sec: pv.getAttribute('data-sec'), idx: +pv.getAttribute('data-idx') + 1 } : null;
       }
+      // telefonda bölüm sırası: kutuların son dizilişi (gizli bölümler zaten kopyada yok, yönetim paneli onları yerinde tutar)
+      const phOrd = d.kind === 'box' && tab._ph ? arr(R.querySelectorAll('.pcol > .box[data-secs]')).map((b) => b.getAttribute('data-secs').split(',')[0]) : null;
+      // telefonda öğe sırası: bölümdeki öğelerin son dizilişi, öğe anahtarlarıyla
+      let phItems = null;
+      if (d.kind === 'item' && tab._ph && d.live) {
+        const sid = d.el.getAttribute('data-sec'), S0 = secById(tab, sid), bxe = d.el.closest('.box[data-secs]');
+        if (S0 && bxe) phItems = { sec: sid, keys: arr(bxe.querySelectorAll('[data-idx][data-sec="' + sid + '"]')).map((x) => lhdItemKey((S0.entities || [])[+x.getAttribute('data-idx')])) };
+      }
       // değişiklik olmazsa (ya da kaydedilmezse) öğe/kutu eski yerine döner; kaydedilirse pano zaten yeniden çizilir
       if (d.home && d.home.p) { try { d.home.p.insertBefore(d.el, d.home.n && d.home.n.parentNode === d.home.p ? d.home.n : null); } catch (e) {} }
       if (liveT) d.target = liveT;
@@ -1148,6 +1200,9 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (ha) ha.grow = d.na; if (hb) hb.grow = d.nb;
         return emit(nt);
       }
+      if (phItems) { lpFire(this, 'lhd-phitems', phItems); return; }
+      if (tab._ph && d.kind === 'item') return;
+      if (phOrd) { if (d.target && phOrd.join() !== (tab.sections || []).map((x) => x.id).join()) lpFire(this, 'lhd-phorder', { tab: tab.id, order: phOrd }); return; }
       if (d.kind === 'box' && d.target) {
         const nt = clone(), group = d.el.getAttribute('data-secs').split(',');
         const moving = nt.sections.filter((s) => group.indexOf(s.id) >= 0), rest = nt.sections.filter((s) => group.indexOf(s.id) < 0);

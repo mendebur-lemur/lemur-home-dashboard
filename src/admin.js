@@ -12,7 +12,7 @@ const ADM = {
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda otomatik', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
-    t_values: 'Değerler', t_cards: 'Kartlar', t_subs: 'Alt başlık', t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', t_camera: 'Kameralar', camTab: 'Kameralar sekmesi', camTabT: 'Bütün kameralar tek sekmede, alt alta', camCols: 'Satırda kaç kamera', camAuto: 'Oto', camColsT: 'Oto: kutuya sığdığı kadar yan yana (her biri en az 240 piksel). Telefonda en fazla 2.', camRef: 'Görüntü yenileme', camRefT: 'Karodaki anlık görüntü bu aralıkla yenilenir; dokununca canlı görüntü açılır', camRefOff: 'Yavaş', camRefS: 'Görüntü yenileme', camRefST: 'Bu bölümdeki bütün kameralar için. Tek bir kamera kendi ⚙ ayarından ayrıca değiştirilebilir.', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
+    t_values: 'Değerler', t_cards: 'Kartlar', t_subs: 'Alt başlık', t_free: 'Boş bölüm', t_lights: 'Işıklar', t_scenes: 'Senaryolar', t_climate: 'İklim', t_vacuum: 'Süpürge', t_media: 'Medya', t_camera: 'Kameralar', camTab: 'Kameralar sekmesi', edMode: 'Düzenlenen', edTab: 'Tablet', edPh: 'Telefon', phBanner: 'Telefon düzenleniyor: buradaki değişiklikler yalnız telefonda geçerli, tablet aynı kalır.', phShown: 'Telefonda görünür', phHidden: 'Telefonda gizli', phOwn: 'telefona özel', phReset: 'Tablettekine dön', phOrderT: 'Sürükleyerek telefondaki sırayı değiştir; tabletteki yerleri aynı kalır.', phLook: 'Telefonda görünüm', phLookSame: 'Tabletteki gibi', phLookTiles: 'Karo', phLookRows: 'Tek sıra', phCols: 'Telefonda satırdaki karo', phColsAuto: 'Oto', phItems: 'Telefonda görünen öğeler', phItemsT: 'Dokun: telefonda gizle ya da göster. Tablette hepsi kalır.', phShared: 'Bölümün adı, kolonu ve içindeki cihazlar tabletle ortak; bunları değiştirmek için üstten Tablet\'e geç.', phHiddenSec: 'Bu bölüm telefonda gizli. Göstermek için listede "Telefonda gizli"ye dokun.', phResetAll: 'Telefona özel ayarları sıfırla', phResetAllT: 'Bütün bölümlerin telefon ayarları ve telefondaki sıraları silinir; telefon yeniden tabletin düzenini izler.', phSecsT: 'Bölümleri telefonda gizlemek, sıralamak ya da görünümlerini değiştirmek için yönetim panelinde üstteki Düzenlenen: Telefon\'u seç.', phNoItemDrag: 'Telefonda öğelerin sırası tabletle ortak; tuttuğun öğenin bölümü taşınır.', phCount: '{n} telefona özel ayar', phLookT: 'Telefon görünümü', phLookS: 'Gezinme, ışıklar, simge stili, iklim kartları, zemin', phSame: 'Telefonu tabletle aynı yap', phSameT: 'Telefona özel bütün ayarlar silinir: oda düğmeleri, bölümler, öğe sıraları, simge stili, iklim kartları, zemin. Işıklar Bölümdeki gibi olur. Geri al ile dönülebilir.', phSameAsk: 'Emin misin? Telefona özel her şey silinecek', phSameNone: 'Telefon şu an tabletle aynı', phSameGo: 'Aynı yap', phSameYes: 'Evet, sil', phSameNo: 'Vazgeç', phStSame: 'Tabletteki gibi', phBg: 'Zemin', phIcons: 'Simge stili', phClim: 'İklim ve süpürge kartları', phTabName: 'Telefonda adı', phTabIcon: 'Telefonda simgesi', phTabShow: 'Oda düğmesi telefonda', phTabHidden: 'Bu sekmenin düğmesi telefonda gizli; sekme telefonda yine doğrudan açılabilir.', phTabNote: 'Alan, kolonlar ve sekmeyi silmek tabletle ortak; bunlar için Tablet\'e geç. Oda düğmelerinin telefondaki sırası yukarıdaki şeritte sürüklenerek değişir.', phItemsDrag: 'Telefondaki sırayı değiştirmek için önizlemede öğeyi sürükle.', phDark: 'Koyu', phBlack: 'Siyah', camTabT: 'Bütün kameralar tek sekmede, alt alta', camCols: 'Satırda kaç kamera', camAuto: 'Oto', camColsT: 'Oto: kutuya sığdığı kadar yan yana (her biri en az 240 piksel). Telefonda en fazla 2.', camRef: 'Görüntü yenileme', camRefT: 'Karodaki anlık görüntü bu aralıkla yenilenir; dokununca canlı görüntü açılır', camRefOff: 'Yavaş', camRefS: 'Görüntü yenileme', camRefST: 'Bu bölümdeki bütün kameralar için. Tek bir kamera kendi ⚙ ayarından ayrıca değiştirilebilir.', d_free: 'Başlıksız boş kutu', secFree: 'Bölüm türü sadece başlangıç: her bölüme her şey eklenebilir, her öğe kendi türüne göre görünür.', pfAll: 'Tümü', pfTile: 'Işık ve anahtar', titleOpt: 'Başlık (isteğe bağlı)',
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Ekle', addPh: 'Boş karo', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
@@ -55,7 +55,7 @@ const ADM = {
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Auto on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
-    t_values: 'Values', t_cards: 'Cards', t_subs: 'Subtitle', t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', t_camera: 'Cameras', camTab: 'Cameras tab', camTabT: 'All cameras in one tab, one below the other', camCols: 'Cameras per row', camAuto: 'Auto', camColsT: 'Auto: as many side by side as fit the box (each at least 240 pixels). At most 2 on phones.', camRef: 'Picture refresh', camRefT: 'The snapshot on the tile refreshes at this interval; tap it for the live view', camRefOff: 'Slow', camRefS: 'Picture refresh', camRefST: 'For all cameras in this section. A single camera can be set separately in its ⚙.', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
+    t_values: 'Values', t_cards: 'Cards', t_subs: 'Subtitle', t_free: 'Empty section', t_lights: 'Lights', t_scenes: 'Scenes', t_climate: 'Climate', t_vacuum: 'Vacuum', t_media: 'Media', t_camera: 'Cameras', camTab: 'Cameras tab', edMode: 'Editing', edTab: 'Tablet', edPh: 'Phone', phBanner: 'Editing the phone: changes here apply to phones only, the tablet stays the same.', phShown: 'Shown on phones', phHidden: 'Hidden on phones', phOwn: 'phone only', phReset: 'Back to tablet', phOrderT: 'Drag to change the order on phones; the tablet layout stays the same.', phLook: 'Look on phones', phLookSame: 'Same as tablet', phLookTiles: 'Tiles', phLookRows: 'One per row', phCols: 'Tiles per row on phones', phColsAuto: 'Auto', phItems: 'Items shown on phones', phItemsT: 'Tap to hide or show on phones. The tablet keeps all of them.', phShared: 'The section name, column and its devices are shared with the tablet; switch to Tablet at the top to change them.', phHiddenSec: 'This section is hidden on phones. Tap "Hidden on phones" in the list to show it.', phResetAll: 'Reset phone-only settings', phResetAllT: 'Removes the phone settings and phone order of every section; phones follow the tablet layout again.', phSecsT: 'To hide, reorder or change the look of sections on phones, choose Editing: Phone at the top of the admin panel.', phNoItemDrag: 'Item order is shared with the tablet on phones; the section of the item you hold moves.', phCount: '{n} phone-only settings', phLookT: 'Phone look', phLookS: 'Navigation, lights, icon style, climate cards, background', phSame: 'Make the phone match the tablet', phSameT: 'Removes every phone-only setting: room buttons, sections, item order, icon style, climate cards, background. Lights go back to As in the section. Undo brings it back.', phSameAsk: 'Sure? Everything phone-only will be removed', phSameNone: 'The phone matches the tablet right now', phSameGo: 'Match', phSameYes: 'Yes, remove', phSameNo: 'Cancel', phStSame: 'Same as tablet', phBg: 'Background', phIcons: 'Icon style', phClim: 'Climate and vacuum cards', phTabName: 'Name on phones', phTabIcon: 'Icon on phones', phTabShow: 'Room button on phones', phTabHidden: 'This tab\'s button is hidden on phones; the tab can still be opened directly.', phTabNote: 'Area, columns and deleting the tab are shared with the tablet; switch to Tablet for those. Drag the room buttons in the strip above to change their order on phones.', phItemsDrag: 'Drag an item in the preview to change its order on phones.', phDark: 'Dark', phBlack: 'Black', camTabT: 'All cameras in one tab, one below the other', camCols: 'Cameras per row', camAuto: 'Auto', camColsT: 'Auto: as many side by side as fit the box (each at least 240 pixels). At most 2 on phones.', camRef: 'Picture refresh', camRefT: 'The snapshot on the tile refreshes at this interval; tap it for the live view', camRefOff: 'Slow', camRefS: 'Picture refresh', camRefST: 'For all cameras in this section. A single camera can be set separately in its ⚙.', d_free: 'An empty box without a title', secFree: 'The section type is only a start: anything can go into any section, and each item shows in its own way.', pfAll: 'All', pfTile: 'Lights and switches', titleOpt: 'Title (optional)',
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add', addPh: 'Empty tile', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
@@ -284,6 +284,38 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return s;
   }
   _settings() { return (STORE.data && STORE.data.settings) || {}; }
+  // telefona özel düzenleme: önizleme Telefon'dayken (ya da 'Bu ekran' bir telefonken) sağdaki düzenleyici telefona yazar
+  _phEd() { const k = this._screenKey(); return k === 'phone' || (k === 'here' && lpPhoneScreen()); }
+  _phOv() { const p = this._settings().phone; return lhdIsObj(p) ? p : {}; }
+  _phSec(id) { const S = this._phOv().secs; return lhdIsObj(S) && lhdIsObj(S[id]) ? S[id] : {}; }
+  _phTabs() { const T = this._phOv().tabs; return lhdIsObj(T) ? T : {}; }
+  _phStyle() { const T = this._phOv().style; return lhdIsObj(T) ? T : {}; }
+  _phOrd(tab) { const O = this._phOv().order; return lhdIsObj(O) && Array.isArray(O[tab.id]) && O[tab.id].length ? O[tab.id] : null; }
+  // fn(p) settings.phone'un kopyasını değiştirir; boş kalan kayıtlar silinir, geri al çalışır
+  _phEdit(fn) {
+    this._snap();
+    const s = lhdClone(this._settings());
+    const p = lhdIsObj(s.phone) ? s.phone : {};
+    if (!lhdIsObj(p.secs)) p.secs = {};
+    if (!lhdIsObj(p.order)) p.order = {};
+    if (!lhdIsObj(p.tabs)) p.tabs = {};
+    if (!lhdIsObj(p.style)) p.style = {};
+    ['order', 'hide', 'names', 'icons'].forEach((k) => { if (k === 'order' ? !Array.isArray(p.tabs.order) : !lhdIsObj(p.tabs[k])) p.tabs[k] = k === 'order' ? [] : {}; });
+    fn(p);
+    if (!p.tabs.order.length) delete p.tabs.order;
+    ['hide', 'names', 'icons'].forEach((k) => { Object.keys(p.tabs[k]).forEach((x) => { if (!p.tabs[k][x]) delete p.tabs[k][x]; }); if (!Object.keys(p.tabs[k]).length) delete p.tabs[k]; });
+    if (!Object.keys(p.tabs).length) delete p.tabs;
+    Object.keys(p.style).forEach((k) => { if (p.style[k] === undefined || p.style[k] === null || p.style[k] === '') delete p.style[k]; });
+    if (!Object.keys(p.style).length) delete p.style;
+    Object.keys(p.secs).forEach((k) => { const o = p.secs[k]; if (!lhdIsObj(o)) { delete p.secs[k]; return; } ['hide_items', 'item_order'].forEach((q) => { if (Array.isArray(o[q]) && !o[q].length) delete o[q]; }); if (!Object.keys(o).length) delete p.secs[k]; });
+    Object.keys(p.order).forEach((k) => { if (!Array.isArray(p.order[k]) || !p.order[k].length) delete p.order[k]; });
+    if (!Object.keys(p.secs).length) delete p.secs;
+    if (!Object.keys(p.order).length) delete p.order;
+    s.phone = p;
+    this._commit('settings', s);
+    this._render();
+    this._toast(this._t('saved'));
+  }
   _cw() { return (this._settings().canvas || {}).width || 1280; }
   _isAuto() { const d = STORE.data; return !(d && d.tabs && d.tabs.length); }
   _work() { const d = STORE.data; return lhdClone(d && d.tabs && d.tabs.length ? d.tabs : buildDefaultTabs(this._hass, this._lang)).map(lhdNormTab); }
@@ -612,7 +644,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return '<div class="sh">' + t('s_phone') + '</div>' +
       '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('phNav') + '</b><span>' + t('phNavT') + '</span></div>' + seg('phone.nav', pc.nav, [['cats', t('phCats')], ['rooms', t('phRooms')], ['top', t('phTop')]]) + '</div>' +
       '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('phLights') + '</b><span>' + t('phLightsT') + '</span></div>' + seg('phone.lights', pc.lights, [['auto', t('phLAuto')], ['tiles', t('phLTiles')], ['rows', t('phLRows')]]) + '</div>' +
-      '<div class="srow"><div class="t"><b>' + t('phSheet') + '</b><span>' + t('phSheetT') + '</span></div>' + tg('phone.sheet', pc.sheet) + '</div>';
+      '<div class="srow"><div class="t"><b>' + t('phSheet') + '</b><span>' + t('phSheetT') + '</span></div>' + tg('phone.sheet', pc.sheet) + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('sections') + '</b><span>' + t('phSecsT') + '</span></div></div>' +
+      ((lhdIsObj(this._phOv().secs) || lhdIsObj(this._phOv().order) || lhdIsObj(this._phOv().tabs) || lhdIsObj(this._phOv().style)) ? '<div class="srow"><div class="t"><b>' + t('phResetAll') + '</b><span>' + t('phResetAllT') + '</span></div><button class="btn sm dan" data-a="phresall">' + t('phResetAll') + '</button></div>' : '');
   }
   // Otomatik kur (mode 'kur') ve Stil seç (mode 'stil') aynı pencereyi kullanır: solda önizleme, sağda büyük seçenekler.
   // Kur: sekmeler senin alanlarından yeniden kurulur. Stil: sekmelerine dokunulmaz, yalnız görünüm ayarları topluca değişir.
@@ -782,11 +816,21 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
       '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
 
-    const rooms = '<div class="rooms" data-dl="tabs" data-dir="x">' + tabs.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle>' + lpIcon(x.icon || 'mdi:door') + esc(x.name) + '</div>').join('') +
-      '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div></div>';
+    const phE = this._phEd(), PTB = this._phTabs();
+    const PTN = lhdIsObj(PTB.names) ? PTB.names : {}, PTI = lhdIsObj(PTB.icons) ? PTB.icons : {}, PTH = lhdIsObj(PTB.hide) ? PTB.hide : {};
+    // telefonda oda düğmeleri telefondaki sırasıyla, telefona özel ad ve simgeyle; gizliler soluk
+    const tabsShown = phE ? lhdOrderBy(tabs, PTB.order) : tabs;
+    const rooms = '<div class="rooms' + (phE ? ' phl' : '') + '" data-dl="tabs" data-dir="x">' + tabsShown.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + (phE && PTH[x.id] ? ' phoff' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle>' + lpIcon((phE && PTI[x.id]) || x.icon || 'mdi:door') + esc((phE && PTN[x.id]) || x.name) + '</div>').join('') +
+      (phE ? '' : '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div>') + '</div>';
     const areaOpts = '<option value="">' + t('noArea') + '</option>' + Object.keys(this._hass.areas || {}).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
     const W = tab ? lpWeights(tab) : LP_DEFAULT_COLS, wsum = W.reduce((a, b) => a + b, 0), SP = lpSplits(tab, W.length);
-    const rpanel = tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
+    const rpanelPh = tab ? '<div class="rpanel phr' + (tabsShown[0] && tabsShown[0].id === tab.id ? ' first' : '') + '">' +
+      '<div class="fld" style="flex:1 1 180px"><label>' + t('phTabName') + (PTN[tab.id] ? ' <i class="phb">' + t('phOwn') + '</i>' : '') + '</label><input class="inp" data-phtn="' + esc(tab.id) + '" value="' + esc(PTN[tab.id] || '') + '" placeholder="' + esc(tab.name || '') + '"></div>' +
+      '<div class="fld" style="flex:1 1 200px"><label>' + t('phTabIcon') + (PTI[tab.id] ? ' <i class="phb">' + t('phOwn') + '</i>' : '') + '</label><div class="iconin"><div class="pv">' + lpIcon(PTI[tab.id] || tab.icon || 'mdi:door') + '</div><input class="inp" data-phti="' + esc(tab.id) + '" value="' + esc(PTI[tab.id] || '') + '" placeholder="' + esc(tab.icon || 'mdi:door') + '"><button class="btn sm ic" data-ip="phtab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
+      '<div class="fld"><label>' + t('phTabShow') + '</label><div class="seg"><button data-phtabh="0"' + (PTH[tab.id] ? '' : ' class="on"') + '>' + t('phShown') + '</button><button data-phtabh="1"' + (PTH[tab.id] ? ' class="on"' : '') + '>' + t('phHidden') + '</button></div></div>' +
+      ((PTN[tab.id] || PTI[tab.id] || PTH[tab.id]) ? '<button class="btn sm" data-a="phrestab">' + t('phReset') + '</button>' : '') +
+      '<div class="hint" style="flex:1 1 100%">' + (PTH[tab.id] ? t('phTabHidden') + ' ' : '') + t('phTabNote') + '</div></div>' : '';
+    const rpanel = phE ? rpanelPh : tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
       '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
       '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv">' + lpIcon(tab.icon || 'mdi:door') + '</div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
@@ -803,14 +847,23 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const colName = (s) => this._colName(Math.min(s.col || 0, ncols - 1), ncols) + (SP[Math.min(s.col || 0, ncols - 1)] > 1 ? ' · ' + (Math.min(s.sub || 0, SP[Math.min(s.col || 0, ncols - 1)] - 1) + 1) : '');
     // özet: içindeki öğe türleri ("Işıklar 7 · İklim 2"); boşsa "0 öğe"
     const summary = (s) => { const k = lhdKinds(s), ks = Object.keys(k); return ks.length ? ks.map((x) => this._t(LHD_KIND_KEY[x]) + ' ' + k[x]).join(' · ') : this._t('n_items', { n: 0 }); };
-    const secList = tab && (tab.sections || []).length ? '<div class="sl" data-dl="secs">' + tab.sections.map((s) => '<div class="si' + (s.id === this._sec ? ' on' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
-      '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
-      '<div class="nm"><b>' + esc(s.title || this._t('t_' + (LHD_TYPES[s.type] ? s.type : 'free'))) + '</b><span>' + esc(summary(s)) + '</span></div><span class="cb">' + colName(s) + '</span></div>').join('') + '</div>'
+    const secsShown = tab ? (phE ? lhdPhoneOrder(tab, this._phOrd(tab)) : (tab.sections || [])) : [];
+    const secList = tab && (tab.sections || []).length ? '<div class="sl' + (phE ? ' phl' : '') + '" data-dl="secs">' + secsShown.map((s) => {
+      const po = phE ? this._phSec(s.id) : {}, own = phE && Object.keys(po).length > 0;
+      return '<div class="si' + (s.id === this._sec ? ' on' : '') + (po.hide ? ' phoff' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
+        '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
+        '<div class="nm"><b>' + esc(s.title || this._t('t_' + (LHD_TYPES[s.type] ? s.type : 'free'))) + '</b><span>' + esc(summary(s)) + (own ? ' · <i class="phb">' + t('phOwn') + '</i>' : '') + '</span></div>' +
+        (phE ? '<button class="btn sm phey' + (po.hide ? ' off' : '') + '" data-phhide="' + esc(s.id) + '"><ha-icon class="s16" icon="' + (po.hide ? 'mdi:eye-off-outline' : 'mdi:eye-outline') + '"></ha-icon>' + t(po.hide ? 'phHidden' : 'phShown') + '</button>' : '<span class="cb">' + colName(s) + '</span>') + '</div>';
+    }).join('') + '</div>' + (phE ? '<div class="hint">' + t('phOrderT') + (this._phOrd(tab) ? ' <button class="btn sm" data-a="phresord">' + t('phReset') + '</button>' : '') + '</div>' : '')
       : '<div class="empty">' + t('noSec') + '</div>';
+    // Düzenlenen: Tablet / Telefon (önizleme ekranıyla aynı seçim)
+    const phCnt = (() => { const S0 = this._phOv().secs, O0 = this._phOv().order; let n = 0; if (lhdIsObj(S0)) Object.keys(S0).forEach((k) => { n += Object.keys(S0[k] || {}).length; }); if (lhdIsObj(O0)) n += Object.keys(O0).length; const TB = this._phTabs(); ['hide', 'names', 'icons'].forEach((k) => { if (lhdIsObj(TB[k])) n += Object.keys(TB[k]).length; }); if (Array.isArray(TB.order)) n++; n += Object.keys(this._phStyle()).filter((k) => k !== 'background').length; const L0 = this._phOv().lights; if (L0 === 'tiles' || L0 === 'rows') n++; return n; })();
+    const edMode = '<div class="edm' + (phE ? ' ph' : '') + '"><span class="lb">' + t('edMode') + '</span><div class="seg"><button data-edm="tab"' + (phE ? '' : ' class="on"') + '><ha-icon class="s16" icon="mdi:tablet"></ha-icon>' + t('edTab') + '</button><button data-edm="ph"' + (phE ? ' class="on"' : '') + '><ha-icon class="s16" icon="mdi:cellphone"></ha-icon>' + t('edPh') + '</button></div>' +
+      (phCnt ? '<span class="phc">' + t('phCount', { n: phCnt }) + '</span>' : '') + '</div>' + (phE ? '<div class="phban"><ha-icon class="s16" icon="mdi:cellphone"></ha-icon><span>' + t('phBanner') + '</span></div>' : '');
 
     const ins = '<div class="ins"><div class="sc">' +
-      '<h3>' + t('sections') + '<span class="grow"></span><button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button></h3>' + secList +
-      (sec ? this._secEditor(tab, sec, ncols) : '') +
+      edMode + (phE ? this._phLookHtml() : '') + '<h3>' + t('sections') + '<span class="grow"></span>' + (phE ? '' : '<button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button>') + '</h3>' + secList +
+      (sec ? (phE ? this._secEditorPh(tab, sec) : this._secEditor(tab, sec, ncols)) : '') +
       (this._isAuto() ? '<div class="hint">' + t('autoT') + ' <button class="btn sm" data-a="autokur"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('akT') + '</button></div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
 
     const scr = this._screenKey();
@@ -842,6 +895,59 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._ceMount();
     this._bind(tabs, tab, sec);
     if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
+  }
+
+  // telefon görünümü: Stil seç'in telefon adımı (gezinme, ışıklar, ışık penceresi) ve telefona özel zemin, simge stili, iklim kartları
+  _phLookHtml() {
+    const t = (k, v) => esc(this._t(k, v));
+    const pc = lpPhoneCfg(), st = this._phStyle();
+    const seg = (attr, cur, opts) => '<div class="seg">' + opts.map((o) => '<button ' + attr + ' data-v="' + esc(o[0]) + '"' + (String(cur) === String(o[0]) ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+    const own = (on) => (on ? ' <i class="phb">' + t('phOwn') + '</i>' : '');
+    const bgk = st.bg && st.bg.mode === 'fx' ? 'fx:' + st.bg.fx : st.bg && st.bg.mode ? st.bg.mode : '';
+    const sw = '<div class="phbgs"><button class="phsw same' + (bgk ? '' : ' on') + '" data-phbg="" title="' + t('phStSame') + '">' + t('phStSame') + '</button>' +
+      '<button class="phsw' + (bgk === 'dark' ? ' on' : '') + '" data-phbg="dark" style="background:#0b0e15" title="' + t('phDark') + '"></button>' +
+      '<button class="phsw' + (bgk === 'black' ? ' on' : '') + '" data-phbg="black" style="background:#000" title="' + t('phBlack') + '"></button>' +
+      LP_BG_FX.map((f) => '<button class="phsw' + (bgk === 'fx:' + f[0] ? ' on' : '') + '" data-phbg="fx:' + f[0] + '" style="background:' + lpFxSwatch(f[3]) + '" title="' + esc(this._lang === 'tr' ? f[1] : f[2]) + '"></button>').join('') + '</div>';
+    const P0 = this._phOv(), any = ['secs', 'order', 'tabs', 'style'].some((k) => lhdIsObj(P0[k]) && Object.keys(P0[k]).length) || P0.lights === 'tiles' || P0.lights === 'rows';
+    // normalde sağında "Aynı yap" düğmesi; basınca soru ve iki açık düğme: Evet, sil / Vazgeç
+    const same = this._ask === 'phresall'
+      ? '<div class="phsame ask"><ha-icon icon="mdi:alert-outline"></ha-icon><span><b>' + t('phSameAsk') + '</b><i>' + t('phSameT') + '</i>' +
+        '<span class="phsq"><button class="btn sm phyes" data-a="phresall"><ha-icon class="s16" icon="mdi:delete-outline"></ha-icon>' + t('phSameYes') + '</button><button class="btn sm" data-a="phresno">' + t('phSameNo') + '</button></span></span></div>'
+      : '<div class="phsame' + (any ? '' : ' none') + '"><ha-icon icon="mdi:tablet-cellphone"></ha-icon><span><b>' + t(any ? 'phSame' : 'phSameNone') + '</b>' + (any ? '<i>' + t('phSameT') + '</i>' : '') + '</span>' +
+        (any ? '<button class="btn sm phgo" data-a="phresall">' + t('phSameGo') + '</button>' : '') + '</div>';
+    return same + '<details class="phlook"' + (this._phLookOpen ? ' open' : '') + '><summary data-phlk><span class="phli"><ha-icon icon="mdi:cellphone-cog"></ha-icon></span><span class="phlt"><b>' + t('phLookT') + '</b><i>' + t('phLookS') + '</i></span></summary>' +
+      '<div class="fld"><label>' + t('phNav') + '</label>' + seg('data-phset="nav"', pc.nav, [['cats', this._t('phCats')], ['rooms', this._t('phRooms')], ['top', this._t('phTop')]]) + '</div>' +
+      '<div class="fld"><label>' + t('phLights') + '</label>' + seg('data-phset="lights"', pc.lights, [['auto', this._t('phLAuto')], ['tiles', this._t('phLTiles')], ['rows', this._t('phLRows')]]) + '</div>' +
+      '<div class="fld"><label>' + t('phSheet') + '</label>' + seg('data-phset="sheet"', pc.sheet ? '1' : '0', [['1', this._t('akSheetOn')], ['0', this._t('akSheetOff')]]) + '</div>' +
+      '<div class="fld"><label>' + t('phIcons') + own(!!st.icon_style) + '</label>' + seg('data-phst="icon_style"', st.icon_style || '', [['', this._t('phStSame')], ['auto', this._t('icAuto')], ['full', this._t('icColor')], ['mono', this._t('icFlat')], ['tint', this._t('icTint')]]) + '</div>' +
+      '<div class="fld"><label>' + t('phClim') + own(!!st.climate_style) + '</label>' + seg('data-phst="climate_style"', st.climate_style || '', [['', this._t('phStSame')], ['halo', this._t('clHalo')], ['rows', this._t('clRows')]]) + '</div>' +
+      '<div class="fld"><label>' + t('phBg') + own(!!st.bg) + '</label>' + sw + '</div></details>';
+  }
+
+  // telefona özel bölüm ayarları: görünüm, satırdaki karo, telefonda görünen öğeler; ortak ayarlar burada değişmez
+  _secEditorPh(tab, s) {
+    const t = (k, v) => esc(this._t(k, v));
+    const o = this._phSec(s.id), kinds = lhdKinds(s), list = s.entities || [];
+    const badge = (on) => (on ? ' <i class="phb">' + t('phOwn') + '</i>' : '');
+    let h = '<div class="ed phed"><div class="pht"><b>' + esc(s.title || this._t('t_' + (LHD_TYPES[s.type] ? s.type : 'free'))) + '</b><span>' + t('edPh') + '</span>' +
+      (Object.keys(o).length ? '<button class="btn sm" data-a="phressec">' + t('phReset') + '</button>' : '') + '</div>';
+    if (o.hide) return h + '<div class="hint">' + t('phHiddenSec') + '</div></div>';
+    if (kinds.tile) {
+      h += '<div class="fld"><label>' + t('phLook') + badge(!!o.look) + '</label><div class="seg">' + [['', 'phLookSame'], ['tiles', 'phLookTiles'], ['rows', 'phLookRows']].map((x) => '<button data-phlook="' + x[0] + '"' + ((o.look || '') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>';
+      if (o.look !== 'rows') h += '<div class="fld"><label>' + t('phCols') + badge(!!o.cols) + '</label><div class="seg">' + [0, 2, 3, 4, 5].map((n) => '<button data-phcols="' + n + '"' + ((+o.cols || 0) === n ? ' class="on"' : '') + '>' + (n ? n : t('phColsAuto')) + '</button>').join('') + '</div></div>';
+    }
+    if (list.length) {
+      const hid = Array.isArray(o.hide_items) ? o.hide_items : [];
+      const S = this._hass.states;
+      const nm = (raw) => { const it = typeof raw === 'string' ? { entity: raw } : raw || {}; if (it.name) return it.name; if (it.subtitle) return it.subtitle; if (it.entity) return this._ename(it.entity); if (it.pet) { const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}; return P.name || it.pet; } if (it.card) return String(it.card.title || it.card.type || '?'); return '?'; };
+      const ordered = lhdOrderBy(list.map((raw, i) => ({ raw: raw, i: i })), o.item_order, (x) => lhdItemKey(x.raw));
+      h += '<div class="fld"><label>' + t('phItems') + badge(hid.length > 0 || (Array.isArray(o.item_order) && o.item_order.length > 0)) + '</label><div class="phits">' + ordered.map((q) => { const raw = q.raw, i = q.i;
+        const k = lhdItemKey(raw), off = hid.indexOf(k) >= 0, it = typeof raw === 'string' ? { entity: raw } : raw || {};
+        const ico = it.entity && S[it.entity] ? lpIcon(lpEntIcon(S[it.entity], it.icon), 's16') : lpIcon(it.icon || (it.subtitle ? 'mdi:format-header-pound' : 'mdi:circle-small'), 's16');
+        return '<button class="phit' + (off ? ' off' : '') + '" data-phitem="' + i + '">' + ico + '<span>' + esc(nm(raw)) + '</span></button>';
+      }).join('') + '</div><div class="hint">' + t('phItemsT') + ' ' + t('phItemsDrag') + '</div></div>';
+    }
+    return h + '<div class="hint">' + t('phShared') + '</div></div>';
   }
 
   _secEditor(tab, s, ncols) {
@@ -1174,6 +1280,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (ip.kind === 'im' && this._im) { this._im.f[ip.key] = v; this._modal = 'item'; return this._render(); }
     const tabs = this._work(), tab = this._curTab(tabs), tabId = tab && tab.id;
     if (ip.kind === 'tab') return this._edit((T) => { const x = T.filter((y) => y.id === tabId)[0]; if (x) x.icon = v; });
+    if (ip.kind === 'phtab') return this._phEdit((p) => { if (tabId) p.tabs.icons[tabId] = v; });
     const sec = this._curSec(tab), secId = sec && sec.id, i = ip.idx;
     return this._edit((T) => {
       const x = T.filter((y) => y.id === tabId)[0], S = x && (x.sections || []).filter((z) => z.id === secId)[0]; if (!S) return;
@@ -1244,6 +1351,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         // tıklama olayı panele ulaştıktan sonra aç (yoksa "dışarı tıklandı" sayılıp hemen kapanır)
         const d = e.detail; setTimeout(() => { const rr = this.shadowRoot.querySelector('.app').getBoundingClientRect(); this._menu = { kind: 'addsec', x: Math.max(8, Math.min(d.x - rr.left, rr.width - 280)), y: Math.min(d.y - rr.top + 8, rr.height - 320), target: { col: d.col, sub: d.sub } }; this._render(); }, 0);
       });
+      this._pv.addEventListener('lhd-phitems', (e) => {
+        const d = e.detail || {}, tab0 = this._curTab(this._work()), S0 = tab0 && (tab0.sections || []).filter((x) => x.id === d.sec)[0]; if (!S0 || !Array.isArray(d.keys)) return;
+        const all = lhdOrderBy(S0.entities || [], this._phSec(d.sec).item_order, lhdItemKey).map(lhdItemKey);
+        const got = d.keys.filter((k) => all.indexOf(k) >= 0), rest = all.filter((k) => got.indexOf(k) < 0);
+        const ids = got.concat(rest);
+        if (ids.join('\n') === all.join('\n')) return;
+        const def = (S0.entities || []).map(lhdItemKey).join('\n');
+        this._phEdit((p) => { const o = p.secs[d.sec] = lhdIsObj(p.secs[d.sec]) ? p.secs[d.sec] : {}; if (ids.join('\n') === def) delete o.item_order; else o.item_order = ids; });
+      });
+      this._pv.addEventListener('lhd-phorder', (e) => {
+        const d = e.detail || {}, T0 = (this._work() || []).filter((x) => x.id === d.tab)[0]; if (!T0 || !Array.isArray(d.order)) return;
+        const full = lhdPhoneOrder(T0, this._phOrd(T0)).map((x) => x.id), vis = d.order.filter((id) => full.indexOf(id) >= 0);
+        let k = 0; const ids = full.map((id) => (vis.indexOf(id) >= 0 ? vis[k++] : id));
+        const def = lhdPhoneOrder(T0, null).map((x) => x.id).join();
+        this._phEdit((p) => { if (ids.join() === def) delete p.order[d.tab]; else p.order[d.tab] = ids; });
+      });
       this._pv.addEventListener('lhd-change', (e) => { const nt = e.detail.tab; this._edit((T) => { const i = T.map((x) => x.id).indexOf(nt.id); if (i >= 0) { lhdFitSplits(nt, this._cw()); T[i] = nt; } }); });
     }
     const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '', phone: this._screenKey() === 'phone' || (this._screenKey() === 'here' && lpPhoneScreen()) };
@@ -1251,7 +1374,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     box.appendChild(this._pv);
     this._pv.hass = this._hass;
     const s = this._settings();
-    box.style.background = lpBgOf(s);
+    box.style.background = lpBgOf(this._phEd() ? lpPhoneMerge(s) : s);
     if (this._ro) { this._ro.disconnect(); this._ro.observe(box.parentNode); }
     this._fit();
   }
@@ -1293,7 +1416,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const a = g('[data-a]'), act = a && !a.disabled ? a.getAttribute('data-a') : null;
       if (this._menu && !g('.menu') && act !== 'more' && act !== 'addtab' && act !== 'addsec') { this._menu = null; this._render(); return; }
       if (g('[data-ovl]') && e.target === g('[data-ovl]')) { if (this._modal === 'news') return this._newsClose(); if (this._modal === 'item' || this._modal === 'cardedit') return; if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); } this._modal = null; this._render(); return; }   // öğe ayarları dışarı tıklayınca kapanmaz (yazılan kaybolmasın)
-      if (act !== 'deltab' && act !== 'delsec' && this._ask) { this._ask = null; }
+      const hadAsk = !!this._ask;
+      if (act !== 'deltab' && act !== 'delsec' && act !== 'phresall' && act !== 'phresno' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
       if (act === 'settings') {
@@ -1388,9 +1512,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const v = ipb.getAttribute('data-ip'), tabs0 = this._work(), tab0 = this._curTab(tabs0), sec0 = this._curSec(tab0);
         let cur = '';
         if (v === 'tab') cur = tab0 && tab0.icon;
+        else if (v === 'phtab') cur = tab0 && (this._phTabs().icons || {})[tab0.id];
         else if (v.indexOf('im:') === 0) cur = this._im ? this._im.f[v.slice(3)] : '';
         else { const i = +v.split(':')[1], L = sec0 && sec0.entities; const it = L && L[i]; cur = it && typeof it === 'object' ? it.icon : ''; }
-        this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : v.indexOf('im:') === 0 ? { kind: 'im', key: v.slice(3), cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
+        this._ip = v === 'tab' ? { kind: 'tab', cur: cur } : v === 'phtab' ? { kind: 'phtab', cur: cur } : v.indexOf('im:') === 0 ? { kind: 'im', key: v.slice(3), cur: cur } : { kind: 'item', idx: +v.split(':')[1], cur: cur };
         this._iq = ''; this._modal = 'icon'; this._icSet = lpIsLecIcon(cur) ? 'lec' : 'col'; lpMdicLoad(); this._render();
         // dokunmatik ekranda klavye kendiliğinden açılmasın: odak sadece fareli cihazda
         const q = this.shadowRoot.querySelector('[data-iq]'); if (q && !('ontouchstart' in window)) q.focus();
@@ -1448,6 +1573,53 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       }
       const tb = g('[data-tab]');
       if (tb && !this._dragged) { this._tab = tb.getAttribute('data-tab'); this._sec = null; return this._render(); }
+      // --- telefona özel ayarlar ---
+      const edm = g('[data-edm]');
+      if (edm) {
+        const want = edm.getAttribute('data-edm') === 'ph';
+        if (want === this._phEd()) return;
+        try {
+          if (want) { const cur = this._screenKey(); if (cur !== 'phone' && cur !== 'here') localStorage.setItem('lhd-preview-tab', cur); localStorage.setItem('lhd-preview-screen', 'phone'); }
+          else { const back = localStorage.getItem('lhd-preview-tab'); localStorage.setItem('lhd-preview-screen', LHD_SCREENS.some((x) => x[0] === back && back !== 'phone' && back !== 'here') ? back : 'tab16'); }
+        } catch (x) {}
+        return this._render();
+      }
+      const phh = g('[data-phhide]');
+      if (phh) { const id = phh.getAttribute('data-phhide'); return this._phEdit((p) => { const o = p.secs[id] = lhdIsObj(p.secs[id]) ? p.secs[id] : {}; if (o.hide) delete o.hide; else o.hide = true; }); }
+      const phl = g('[data-phlook]');
+      if (phl && secId) { const v = phl.getAttribute('data-phlook'); return this._phEdit((p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; if (v) o.look = v; else delete o.look; if (v === 'rows') delete o.cols; }); }
+      const phc = g('[data-phcols]');
+      if (phc && secId) { const v = +phc.getAttribute('data-phcols'); return this._phEdit((p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; if (v) o.cols = v; else delete o.cols; }); }
+      const phi = g('[data-phitem]');
+      if (phi && sec) {
+        const raw = (sec.entities || [])[+phi.getAttribute('data-phitem')], k = lhdItemKey(raw); if (!k) return;
+        return this._phEdit((p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; const L = Array.isArray(o.hide_items) ? o.hide_items.slice() : []; const j = L.indexOf(k); if (j >= 0) L.splice(j, 1); else L.push(k); o.hide_items = L; });
+      }
+      if (act === 'phressec' && secId) return this._phEdit((p) => { delete p.secs[secId]; });
+      if (act === 'phresord' && tabId) return this._phEdit((p) => { delete p.order[tabId]; });
+      if (act === 'phresno') { this._ask = null; return this._render(); }
+      if (act === 'phresall') {
+        if (this._ask !== 'phresall') { this._ask = 'phresall'; return this._render(); }
+        this._ask = null;
+        return this._phEdit((p) => { p.secs = {}; p.order = {}; p.tabs = { order: [], hide: {}, names: {}, icons: {} }; p.style = {}; delete p.lights; });
+      }
+      if (act === 'phrestab' && tabId) return this._phEdit((p) => { delete p.tabs.hide[tabId]; delete p.tabs.names[tabId]; delete p.tabs.icons[tabId]; });
+      if (g('[data-phlk]')) { this._phLookOpen = !(g('details.phlook') && g('details.phlook').open); if (hadAsk && !this._ask) setTimeout(() => this._render(), 0); return; }   // açık/kapalı yeniden çizimde korunur; soru açıksa kapanır
+      const phs = g('[data-phset]');
+      if (phs) { const k = phs.getAttribute('data-phset'), val = phs.getAttribute('data-v'); return this._setting('phone.' + k, k === 'sheet' ? (val === '1' ? null : false) : val); }
+      const pst = g('[data-phst]');
+      if (pst) { const k = pst.getAttribute('data-phst'), val = pst.getAttribute('data-v'); return this._phEdit((p) => { if (val) p.style[k] = val; else delete p.style[k]; }); }
+      const pbg = g('[data-phbg]');
+      if (pbg) {
+        const v = pbg.getAttribute('data-phbg');
+        return this._phEdit((p) => {
+          if (!v) { delete p.style.bg; delete p.style.background; return; }
+          const b = v.indexOf('fx:') === 0 ? { mode: 'fx', fx: v.slice(3) } : { mode: v };
+          p.style.bg = b; p.style.background = b.mode === 'dark' ? LP_DARK_BG : lpBgCss(b);
+        });
+      }
+      const pth = g('[data-phtabh]');
+      if (pth && tabId) { const on = pth.getAttribute('data-phtabh') === '1'; return this._phEdit((p) => { if (on) p.tabs.hide[tabId] = true; else delete p.tabs.hide[tabId]; }); }
       const si = g('.si[data-sec]');
       if (si && !this._dragged && !g('[data-handle]')) { this._sec = si.getAttribute('data-sec'); return this._render(); }
       const sb = g('[data-scr]');
@@ -1570,6 +1742,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('change', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT' || (el.type === 'color' && /^(color|color_on|bg)$/.test(el.getAttribute('data-imf')))) this._render(); } return; }
+      if (el.hasAttribute && (el.hasAttribute('data-phtn') || el.hasAttribute('data-phti'))) {
+        const isN = el.hasAttribute('data-phtn'), id = el.getAttribute(isN ? 'data-phtn' : 'data-phti'), v = el.value.trim();
+        if (!isN && v && !/^[a-z]+:[a-z0-9-]+$/.test(v)) { el.value = ''; return; }
+        return this._phEdit((p) => { const m = isN ? p.tabs.names : p.tabs.icons; if (v) m[id] = isN ? v.slice(0, 40) : v; else delete m[id]; });
+      }
       if (el.hasAttribute && el.hasAttribute('data-wl')) { const p = el.getAttribute('data-wl').split(':'); this._wallSet(+p[0], p[1], el.value); return; }
       if (el.hasAttribute && el.hasAttribute('data-bkfile')) { const f = el.files && el.files[0]; el.value = ''; if (f) this._backupRead(f); return; }
       const soft = el.tagName === 'INPUT';
@@ -1681,7 +1858,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           try { list.insertBefore(item, home && home.parentNode === list ? home : null); } catch (x) {}   // kaydedilince liste yeniden çizilir
           if (dest < 0 || dest === from) return;
           const kind = list.getAttribute('data-dl');
+          if (kind === 'tabs' && this._phEd()) { const W0 = this._work(), ids = lhdOrderBy(W0, this._phTabs().order).map((x) => x.id); lhdMove(ids, from, dest); const def = W0.map((x) => x.id).join(); return this._phEdit((p) => { p.tabs.order = ids.join() === def ? [] : ids; }); }
           if (kind === 'tabs') this._edit((T) => lhdMove(T, from, dest));
+          if (kind === 'secs' && this._phEd() && tabId) {
+            const T0 = (this._work() || []).filter((x) => x.id === tabId)[0]; if (!T0) return;
+            const ids = lhdPhoneOrder(T0, this._phOrd(T0)).map((x) => x.id); lhdMove(ids, from, dest);
+            const def = lhdPhoneOrder(T0, null).map((x) => x.id).join();
+            return this._phEdit((p) => { if (ids.join() === def) delete p.order[tabId]; else p.order[tabId] = ids; });
+          }
           if (kind === 'secs') editTab((T) => lhdMove(T.sections, from, dest));
           if (kind === 'items') editSec((S) => lhdMove(S.entities, from, dest));
         };
