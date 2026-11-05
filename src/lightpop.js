@@ -1,4 +1,4 @@
-// Işık penceresi: ışık karosuna basılı tutunca açılır (Hakan'ın tablet panosundaki ışık penceresinin aynısı, yardımcı varlık gerekmeden).
+// Işık penceresi: ışık karosuna basılı tutunca açılır (yardımcı varlık gerekmeden).
 // Üstte ad + kapat, altında parlaklık kaydırıcısı + güç düğmesi, sonra sekmeler:
 //   Renk: kelvin düğmeleri (2200-6500 K), renk çemberi, 12 renk örneği
 //   Efekt: Lemur Light Effect Card kuruluysa ve ışık bir LEC odasındaysa efekt ekranını o odayla açar; değilse ışığın kendi efekt listesi

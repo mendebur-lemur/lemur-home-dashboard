@@ -5,7 +5,7 @@ root = pathlib.Path(__file__).parent
 src = root / "src"
 
 # ---- renkli simgeler ----
-# Lemur ailesinin bütün renkli simgelerinin ana kopyası ../lemur-icons klasöründe (Hakan'ın bilgisayarı, git'e girmez).
+# Lemur ailesinin bütün renkli simgelerinin ana kopyası ../lemur-icons klasöründe (geliştirici bilgisayarında, git'e girmez).
 # Klasör varsa oradaki dosyalar depodaki kopyaların yerine konur; yoksa depodaki son kopyalarla derlenir.
 #   mdi.json      → frontend/mdi-color.json  (panonun simge seti, "mdi:ad" ve "lhd:ad")
 #   efektler.json → frontend/lec-icons.json  ("lec:ad" efekt simgeleri; Light Effect Card kurulu olmasa da görünür)

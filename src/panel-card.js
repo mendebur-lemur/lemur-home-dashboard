@@ -730,11 +730,20 @@ class LemurHomeDashboardCard extends HTMLElement {
     const nc = lpNavCfg(), nst = (nc.w ? '--lp-nav-w:' + nc.w + 'px;' : '') + (nc.h ? '--lp-nav-h:' + nc.h + 'px;' : '');
     // kolona hizala: düğmeler ilk N kolonun üstünü eşit paylaşır, sağ kenarları N. kolonun kutusuyla aynı çizgide biter;
     // Efektler (içeride değilse) ve saat kalan kolonların üstünde. Telefonda ve kolon sayısı yetmezse normal şerit.
-    const navCols = !phone && nc.cols > 0 && nc.cols < used.length ? nc.cols : 0;
-    const nav = navCols
-      ? '<div class="nav navl" style="grid-area:1 / 1 / 2 / ' + (navCols + 1) + ';' + nst + '">' + navBtns + (nc.fx_in ? navFx : '') + '</div>' +
-        '<div class="nav navr" style="grid-area:1 / ' + (navCols + 1) + ' / 2 / -1;' + nst + '">' + (nc.fx_in ? '' : navFx) + clock + '</div>'
+    // Kolonu az olan sekmede (ör. tek sütunluk Kameralar sekmesi) şerit kaymasın: hizalama yeterli kolonu olan ilk sekmenin
+    // kolonlarına göre yapılır; şerit o kolon oranlarıyla ayrı bir ızgarada çizilir (aynı aralıkla, böylece düğmeler aynı yerde kalır).
+    let navCols = !phone && nc.cols > 0 && nc.cols < used.length ? nc.cols : 0, navRef = null;
+    if (!phone && nc.cols > 0 && !navCols) {
+      const refUsed = (T) => { const w = lpWeights(T), u = []; w.forEach((x, i) => { if ((T.sections || []).some((s) => Math.min(Math.max(0, +s.col || 0), w.length - 1) === i && (s.entities || []).length)) u.push(w[i]); }); return u; };
+      for (let k = 0; k < tabs.length && !navRef; k++) { if (tabs[k].id === tab.id) continue; const u = refUsed(tabs[k]); if (u.length > nc.cols) navRef = u; }
+      if (navRef) navCols = nc.cols;
+    }
+    const navPos = (a, b) => (navRef ? 'grid-column:' + a + ' / ' + b + ';grid-row:1;' : 'grid-area:1 / ' + a + ' / 2 / ' + b + ';');
+    const nav0 = navCols
+      ? '<div class="nav navl" style="' + navPos(1, navCols + 1) + nst + '">' + navBtns + (nc.fx_in ? navFx : '') + '</div>' +
+        '<div class="nav navr" style="' + navPos(navCols + 1, -1) + nst + '">' + (nc.fx_in ? '' : navFx) + clock + '</div>'
       : '<div class="nav"' + (nst ? ' style="' + nst + '"' : '') + '>' + navBtns + navFx + clock + '</div>';
+    const nav = navRef ? '<div class="navg" style="grid-area:h;display:grid;grid-column-gap:12px;min-width:0;grid-template-columns:' + navRef.map((w) => 'minmax(0,' + w + 'fr)').join(' ') + '">' + nav0 + '</div>' : nav0;
     // telefon: odalar ya da kategoriler altta (uygulama gibi); üstte yalnız sayfanın adı ve saat
     const pcf = lpPhoneCfg(), pbOn = phone && pcf.nav !== 'top';
     // önizlemede (düzenleme) kategori çubuğu görünür ama sayfa sekmenin kendisidir: üstte sekmenin adı

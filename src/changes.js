@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.21.2',
+    tr: ['Oda düğmeleri kolona hizalıyken, kolonu az olan sekmede (ör. Kameralar sekmesi) üstteki düğmeler kayıyordu; artık her sekmede aynı yerde duruyor.'],
+    en: ['With the room buttons aligned to a column, the buttons at the top moved on tabs with fewer columns (such as the Cameras tab); they now stay in the same place on every tab.'] },
   { v: '0.21.1',
     tr: ['Kameraya dokununca canlı görüntü küçük bir pencerede açılıyordu; artık ekrana sığan en büyük boyda açılıyor.', 'Kamera bölümünün ayarında "Görüntü yenileme" var (5 sn, 10 sn, 30 sn, 1 dk): bölümdeki bütün kameralar için. Tek bir kamera kendi ⚙ ayarından ayrıca değiştirilebilir.'],
     en: ['Tapping a camera opened the live view in a small window; it now opens as large as fits the screen.', 'Camera sections have a "Picture refresh" setting (5 s, 10 s, 30 s, 1 min) for all cameras in the section. A single camera can still be set separately in its ⚙.'] },
