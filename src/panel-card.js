@@ -1514,9 +1514,15 @@ class LemurHomeDashboardCard extends HTMLElement {
     el._busy = true; el._at = Date.now();
     const url = p + (p.indexOf('?') >= 0 ? '&' : '?') + '_=' + el._at;
     const im = new Image();
-    im.onload = () => { el._busy = false; const img = el.querySelector('img'); if (img) img.src = im.src; el.classList.add('ok'); el.classList.remove('nop'); };
-    // kamera açık görünüyor ama görüntü vermiyor (ör. tablet ekranı kapalı, kamera kapalı): "Görüntü alınamıyor"; denemeye devam edilir
-    im.onerror = () => { el._busy = false; el.classList.add('nop'); el.classList.remove('ok'); };
+    im.onload = () => { el._busy = false; el._fail = 0; const img = el.querySelector('img'); if (img) img.src = im.src; el.classList.add('ok'); el.classList.remove('nop'); };
+    // Bazı kameralar bir süre istenmeyince ilk görüntüde hata verir (ör. 3B yazıcı kamerası: önce 500, sonra hep 200).
+    // Tek hata görünmez: 2 ve 4 sn sonra yeniden denenir, eldeki son görüntü kalır. Üç kez üst üste alınamazsa
+    // "Görüntü alınamıyor" (ör. tablet ekranı kapalı, kamera kapalı); sonra da yenileme aralığında denemeye devam edilir.
+    im.onerror = () => {
+      el._busy = false; el._fail = (el._fail || 0) + 1;
+      if (el._fail >= 3) { el.classList.add('nop'); el.classList.remove('ok'); return; }
+      el._at = Date.now() - (el._rf || 10) * 1000 + el._fail * 2000;   // _camTick 2 sn, sonra 4 sn içinde yeniden dener
+    };
     im.src = this._hass && this._hass.hassUrl ? this._hass.hassUrl(url) : url;
   }
   _camTick() {
@@ -1525,6 +1531,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._cams || []).forEach((el) => {
       if (el.classList.contains('na') || !el._pic) return;
       const it = el._item || {}, r = Math.max(2, Math.min(600, parseFloat(it.refresh) || parseFloat(it._secRef) || 10));   // öğenin ayarı, yoksa bölümün (cam_refresh)
+      el._rf = r;
       if (now - el._at >= r * 1000) this._camLoad(el);
     });
   }
@@ -1581,10 +1588,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._cams || []).forEach((el) => {
       const id = el.getAttribute('data-cam'), st = S[id];
       if (!st || this._last[id] === st) return;
-      const it = el._item || {}, off = st.state === 'unavailable' || st.state === 'unknown' || !st.attributes.entity_picture;
+      // görüntü yalnız Home Assistant'ın kendi adresinden (/api/camera_proxy/...): başka bir siteye istek gitmez
+      const pic = typeof st.attributes.entity_picture === 'string' && /^\/[^\/\\]/.test(st.attributes.entity_picture) ? st.attributes.entity_picture : '';
+      const it = el._item || {}, off = st.state === 'unavailable' || st.state === 'unknown' || !pic;
       el.classList.toggle('na', off);
       el.querySelector('.cnm').textContent = this._tx(it.name) || st.attributes.friendly_name || id;
-      if (!off && (el._pic !== st.attributes.entity_picture)) { el._pic = st.attributes.entity_picture; el._at = 0; this._camLoad(el); }
+      if (!off && el._pic !== pic) { el._pic = pic; el._at = 0; el._fail = 0; this._camLoad(el); }
     });
     (this._txEls || []).forEach((el) => { el.textContent = this._tx(el.getAttribute('data-tx')); });
     (this._ssEls || []).forEach((el) => { const it = el._item || {}; el.textContent = this._sec2(it, it.entity ? S[it.entity] : null) || ''; });

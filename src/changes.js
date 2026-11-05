@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.21.3',
+    tr: ['Kameralar: sayfa açılınca bazı kameralar ilk görüntüde hata verdiği için bazen "Görüntü alınamıyor" çıkıyordu. Artık birkaç saniye içinde yeniden deneniyor; yazı ancak üç deneme üst üste başarısız olursa çıkıyor.'],
+    en: ['Cameras: some cameras fail on the first picture after the page opens, so "No picture" sometimes showed. The picture is now retried within a few seconds; the message only shows after three failed tries in a row.'] },
   { v: '0.21.2',
     tr: ['Oda düğmeleri kolona hizalıyken, kolonu az olan sekmede (ör. Kameralar sekmesi) üstteki düğmeler kayıyordu; artık her sekmede aynı yerde duruyor.'],
     en: ['With the room buttons aligned to a column, the buttons at the top moved on tabs with fewer columns (such as the Cameras tab); they now stay in the same place on every tab.'] },
