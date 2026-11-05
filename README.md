@@ -112,6 +112,7 @@ Hiçbir şeye dokunmadan da kullanabilirsin. Değiştirmek istersen sol menüden
 | **İklim** | Klima ve petek kartları; yazın klimalar, kışın petekler | Aç/kapat, sıcaklık |
 | **Süpürge** | Robot süpürge kartı | Başlat, durdur, istasyona gönder |
 | **Medya** | TV ve hoparlörler | Cihaz penceresi |
+| **Kameralar** | Kameraların anlık görüntüsü; birkaç saniyede bir yenilenir (öğe ayarından 5 sn - 1 dk), kamera kapalıysa "Kamera çevrimdışı" | Canlı görüntü penceresi |
 | **Değerler** | Sensör, ikili sensör, zamanlayıcı, sayaç, seçim: simge, değer + birim ve ad; çalışan zamanlayıcı geri sayar | Cihaz penceresi (değiştirilebilir) |
 | **Kartlar** | Kart seçiciden ya da YAML ile eklenen herhangi bir kart: Halo kartları, Home Assistant kartları, kurulu özel kartlar | Kartın kendisi |
 | **Evcil hayvan** | Besleme kartı: son besleme, sıradaki besleme ve renkle durum | "Besledim"; basılı tut: son beslemeler |

@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.20.0',
+    tr: ['Kameralar: Cihaz ekle\'den bir kamera seçince bölümde anlık görüntü karosu olarak görünür; görüntü birkaç saniyede bir yenilenir (öğe ayarından 5 sn - 1 dk). Dokununca panonun penceresinde canlı görüntü açılır. Kamera kapalıysa "Kamera çevrimdışı" yazar. Bölüm ekle\'de Kameralar bölümü de var.'],
+    en: ['Cameras: pick a camera in Add device and it shows as a snapshot tile; the picture refreshes every few seconds (5 s to 1 min in the item settings). Tap it for the live view in the dashboard\'s own window. An offline camera shows "Camera offline". Add section also has a Cameras section.'] },
   { v: '0.19.2',
     tr: ['Sürüm bölümü: yeni sürüm HACS\'tan indirilmiş ama Home Assistant henüz yeniden başlamamışsa "Denetlenemedi" hatası yerine "indirildi, yeniden başlayınca devreye girer" yazıyor ve Yeniden başlat düğmesi çıkıyor.', 'Yenilikler penceresi yeniden güncel: 0.18 ve 0.19 sürümlerinin notları eklendi.'],
     en: ['Version section: when a new version is already downloaded through HACS but Home Assistant has not restarted yet, it now says it is downloaded and takes effect after a restart, with a Restart button, instead of "Could not check".', 'The What\'s new window is up to date again: notes for 0.18 and 0.19 were added.'] },

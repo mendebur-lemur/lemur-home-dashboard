@@ -112,6 +112,7 @@ Room buttons and a clock at the top, columns below. Each column holds one or mor
 | **Climate** | Air conditioner and radiator cards; air conditioners in summer, radiators in winter | On/off, temperature |
 | **Vacuum** | Robot vacuum card | Start, stop, send to dock |
 | **Media** | TVs and speakers | Device dialog |
+| **Cameras** | Camera snapshots, refreshed every few seconds (5 s to 1 min in the item settings); "Camera offline" when the camera is off | Live view window |
 | **Values** | Sensors, binary sensors, timers, counters, selects: icon, value + unit and name; a running timer counts down | Device dialog (configurable) |
 | **Cards** | Any card added from the card picker or as YAML: Halo cards, Home Assistant cards, installed custom cards | The card itself |
 | **Pet** | Feeding card: last feeding, next feeding and a colour for the status | "Fed"; hold: recent feedings |

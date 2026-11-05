@@ -433,3 +433,14 @@
 .bbar .bbv { position: relative; margin-left: auto; font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; transition: opacity .35s; pointer-events: none; }
 .bbar.bbdrag .bbv, .bbar.bbal.bbon .bbv { opacity: 1; }
 .edit .bbar { cursor: default; }
+/* kameralar (2026-11-05): 16:9 anlık görüntü karosu, adı sol altta; çevrimdışıysa sade yüz */
+.cams { display: grid; grid-gap: 8px; flex: 0 0 auto; }
+.cam { position: relative; padding-top: 56.25%; border-radius: 18px; overflow: hidden; background: var(--lp-embed-bg); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cam img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+.cam.ok img { opacity: 1; }
+.cam .cnm { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 14px 10px; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cam .cof { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: none; flex-direction: column; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.55); font-size: 13px; padding-bottom: 20px; }
+.cam .cof .lic, .cam .cof ha-icon { width: 34px; height: 34px; --mdc-icon-size: 34px; opacity: 0.7; margin-bottom: 6px; }
+.cam.na img { display: none; }
+.cam.na .cof { display: flex; }
+.cam:active { transform: scale(0.985); }

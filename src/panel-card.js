@@ -471,6 +471,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
     clearInterval(this._clock); this._clock = null;
     clearInterval(this._tmr); this._tmr = null;
+    clearInterval(this._camT); this._camT = null;
     if (this._rsz) { window.removeEventListener('resize', this._rsz); this._rsz = null; }
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
@@ -529,7 +530,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     tab = lhdNormTab(tab);
     const h = this._hass, S = h.states;
     if (this.getAttribute('lang') !== lang) this.setAttribute('lang', lang);
-    const tiles = [], tileItems = [], rows = [], embeds = [], vals = [], cards = [], visW = [], ssItems = [], clrs = [];
+    const tiles = [], tileItems = [], rows = [], embeds = [], vals = [], cards = [], visW = [], ssItems = [], clrs = [], cams = [];
     // şablonlu (A6) sabit yazılar: yer tutucu span, _update'te doldurulur
     const txs = (s) => (lpIsTpl(s) ? '<span data-tx="' + esc(s) + '">…</span>' : esc(s));
     const lecRooms = {};   // bu sekmede LEC'ten oynayan efekti sorulacak odalar
@@ -659,11 +660,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       const items = items0.filter((x, i, arr) => !x._catSub || (arr[i + 1] && !arr[i + 1]._catSub));
       if (!items.length) return null;
       const groups = [];
-      items.forEach((x) => { const g = groups[groups.length - 1]; if (g && g.k === x._k && (x._k === 'tile' || x._k === 'vrow' || x._k === 'pet')) g.items.push(x); else groups.push({ k: x._k, items: [x] }); });
+      items.forEach((x) => { const g = groups[groups.length - 1]; if (g && g.k === x._k && (x._k === 'tile' || x._k === 'vrow' || x._k === 'pet' || x._k === 'camera')) g.items.push(x); else groups.push({ k: x._k, items: [x] }); });
       const hasTiles = groups.some((g) => g.k === 'tile'), onlyTiles = groups.length === 1 && hasTiles;
       const html = groups.map((g) => {
         if (g.k === 'tile') return tileGrid(s, g.items, onlyTiles);
         // besleme kartları: kutuya sığdığı kadar yan yana (en az 220 px)
+        // kameralar: anlık görüntü karosu (16:9); kutuya sığdığı kadar yan yana, her biri en az 240 px (telefonda tek sütun). Dokununca canlı görüntü penceresi
+        if (g.k === 'camera') return '<div class="cams" style="grid-template-columns:' + (phone ? '1fr' : 'repeat(auto-fit,minmax(240px,1fr))') + '">' +
+          g.items.map((x) => { cams.push(x); return '<div class="cam" data-cam="' + esc(x.entity) + '" data-cmi="' + (cams.length - 1) + '"' + hidA(x) + mark(x._i) + '><img alt="" draggable="false"><div class="cof">' + lpIcon('mdi:video-off') + '<span>' + esc(t(lang, 'cam_off')) + '</span></div><div class="cnm"></div></div>'; }).join('') + '</div>';
         if (g.k === 'pet') return '<div class="pets">' + g.items.map((x) => '<div class="petc" data-pet="' + esc(x.pet) + '"' + hidA(x) + mark(x._i) + '></div>').join('') + '</div>';
         // satırlar: ince yatay satırlar, kutuya sığdığı kadar yan yana (en az 170 px)
         if (g.k === 'vrow') return '<div class="vrows" style="grid-template-columns:repeat(' + (phone ? 1 : Math.max(1, Math.min(s.row_columns || 3, g.items.length))) + ',minmax(0,1fr))">' +
@@ -799,6 +803,9 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._txEls = Array.prototype.slice.call(R.querySelectorAll('[data-tx]'));
     this._ssEls = []; R.querySelectorAll('[data-ss]').forEach((el) => { el._item = ssItems[+el.getAttribute('data-ss')]; this._ssEls.push(el); });
     this._pets = []; R.querySelectorAll('[data-pet]').forEach((el) => this._pets.push(el));
+    // kameralar: görüntü birkaç saniyede bir yenilenir (öğe ayarı refresh, sn; varsayılan 10). Sekme görünmüyorsa yenilenmez.
+    this._cams = []; R.querySelectorAll('[data-cam]').forEach((el) => { el._item = cams[+el.getAttribute('data-cmi')]; el._at = 0; this._cams.push(el); });
+    clearInterval(this._camT); this._camT = this._cams.length ? setInterval(() => this._camTick(), 1000) : null;
     this._ents = []; R.querySelectorAll('[data-ent]').forEach((el) => { el._item = ents[+el.getAttribute('data-ei')]; this._ents.push(el); });
     this._vals = []; R.querySelectorAll('[data-val]').forEach((el) => { el._item = vals[+el.getAttribute('data-vi')]; el._bar = el.classList.contains('bar'); el._wide = el.hasAttribute('data-wide'); this._vals.push(el); });
     this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; el._bar = el.classList.contains('bar'); el._wide = el.hasAttribute('data-wide'); this._tiles.push(el); });
@@ -810,13 +817,14 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._lecRooms = Object.keys(lecRooms).filter((r) => LEC.hasRoom(r));
     const lecLights = [];
     this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
-    this._watched = tiles.concat(rows, clrW, lecLights, vals.concat(ents, ssItems).map((x) => x.entity).filter((x) => x && tiles.indexOf(x) < 0), visW);
+    this._watched = tiles.concat(rows, clrW, lecLights, cams.map((x) => x.entity), vals.concat(ents, ssItems).map((x) => x.entity).filter((x) => x && tiles.indexOf(x) < 0), visW);
     if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
     this._lang = lang;
 
     // düzenleme modu (yönetim panelindeki önizleme): cihazlara dokunulmaz; tıklama seçer, sürükleme taşır, çizgiler boyutlandırır
     if (edit) { this._editBind(R, tab, widths, used); return; }
+    (this._cams || []).forEach((el) => lpPress(el, () => this._camOpen(el)));
     const bbEl = R.querySelector('[data-bbar]');
     if (bbEl) this._bbBind(bbEl);
     // dokunuşlar
@@ -1485,6 +1493,33 @@ class LemurHomeDashboardCard extends HTMLElement {
     el.addEventListener('pointerup', () => finish(true));
     el.addEventListener('pointercancel', () => finish(false));
   }
+  // --- kameralar ---
+  // Görüntü HA'nın kamera vekilinden gelir (entity_picture, içinde HA'nın birkaç dakikada bir yenilediği erişim anahtarı).
+  // Yeni görüntü önce arkada yüklenir, hazır olunca değişir: karo yenilenirken kararıp parlamaz.
+  _camLoad(el) {
+    const p = el._pic; if (!p || el._busy) return;
+    el._busy = true; el._at = Date.now();
+    const url = p + (p.indexOf('?') >= 0 ? '&' : '?') + '_=' + el._at;
+    const im = new Image();
+    im.onload = () => { el._busy = false; const img = el.querySelector('img'); if (img) img.src = im.src; el.classList.add('ok'); };
+    im.onerror = () => { el._busy = false; };
+    im.src = this._hass && this._hass.hassUrl ? this._hass.hassUrl(url) : url;
+  }
+  _camTick() {
+    if (document.hidden || !this.isConnected) return;
+    const now = Date.now();
+    (this._cams || []).forEach((el) => {
+      if (el.classList.contains('na') || !el._pic) return;
+      const r = Math.max(2, Math.min(600, parseFloat((el._item || {}).refresh) || 10));
+      if (now - el._at >= r * 1000) this._camLoad(el);
+    });
+  }
+  _camOpen(el) {
+    const id = el.getAttribute('data-cam'), st = this._hass.states[id], it = el._item || {};
+    if (!st) return;
+    const name = this._tx(it.name) || st.attributes.friendly_name || id;
+    LemurCardPopup._open(this._hass, { title: name, card: { type: 'picture-entity', entity: id, camera_view: 'live', show_name: false, show_state: false } }, this._lang);
+  }
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
     // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor
@@ -1529,6 +1564,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._paintVal(el, st);
     });
     (this._pets || []).forEach((el) => lpPetPaint(el, lang, Date.now()));
+    (this._cams || []).forEach((el) => {
+      const id = el.getAttribute('data-cam'), st = S[id];
+      if (!st || this._last[id] === st) return;
+      const it = el._item || {}, off = st.state === 'unavailable' || st.state === 'unknown' || !st.attributes.entity_picture;
+      el.classList.toggle('na', off);
+      el.querySelector('.cnm').textContent = this._tx(it.name) || st.attributes.friendly_name || id;
+      if (!off && (el._pic !== st.attributes.entity_picture)) { el._pic = st.attributes.entity_picture; el._at = 0; this._camLoad(el); }
+    });
     (this._txEls || []).forEach((el) => { el.textContent = this._tx(el.getAttribute('data-tx')); });
     (this._ssEls || []).forEach((el) => { const it = el._item || {}; el.textContent = this._sec2(it, it.entity ? S[it.entity] : null) || ''; });
     (this._ents || []).forEach((el) => {

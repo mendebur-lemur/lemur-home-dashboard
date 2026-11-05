@@ -46,6 +46,7 @@ function lhdKind(it) {
   if (d === 'script' || d === 'scene' || d === 'automation' || d === 'button' || d === 'input_button') return 'scene';
   if (d === 'climate') return 'climate';
   if (d === 'vacuum') return 'vacuum';
+  if (d === 'camera') return 'camera';
   if (d === 'media_player') return 'media';
   if (LHD_VALUE_DOMAINS.indexOf(d) >= 0) return 'value';
   return 'tile';
