@@ -74,7 +74,13 @@ function lhdDemoHass(base, home, onChange) {
       [].concat((data && data.entity_id) || []).forEach((id) => {
         const o = S[id]; if (!o) return;
         const d = id.split('.')[0], on = o.state !== 'off' && o.state !== 'docked';
-        if (svc === 'toggle') set(id, d === 'light' || d === 'switch' ? (on ? 'off' : 'on') : o.state, on ? {} : { brightness: 204 });
+        if (d === 'cover') {   // perde: konum hemen yeni değere geçer
+          const cp = typeof o.attributes.current_position === 'number' ? o.attributes.current_position : (o.state === 'closed' ? 0 : 100);
+          const np = svc === 'open_cover' ? 100 : svc === 'close_cover' ? 0 : svc === 'set_cover_position' ? data.position : svc === 'toggle' ? (cp > 0 ? 0 : 100) : cp;
+          const tp = svc === 'open_cover_tilt' ? 100 : svc === 'close_cover_tilt' ? 0 : svc === 'set_cover_tilt_position' ? data.tilt_position : o.attributes.current_tilt_position;
+          set(id, np > 0 ? 'open' : 'closed', typeof tp === 'number' ? { current_position: np, current_tilt_position: tp } : { current_position: np });
+        }
+        else if (svc === 'toggle') set(id, d === 'light' || d === 'switch' ? (on ? 'off' : 'on') : o.state, on ? {} : { brightness: 204 });
         else if (svc === 'turn_on' && d === 'light') set(id, 'on', Object.assign({ brightness: (o.attributes.brightness || 204) }, data.brightness_pct ? { brightness: Math.round(data.brightness_pct * 2.55) } : {}, data.rgb_color ? { rgb_color: data.rgb_color, color_mode: 'hs' } : {}, data.effect ? { effect: data.effect } : {}));
         else if (svc === 'turn_off') set(id, 'off');
         else if (svc === 'turn_on' && d === 'climate') set(id, (o.attributes.hvac_modes || ['heat'])[1] || 'heat');

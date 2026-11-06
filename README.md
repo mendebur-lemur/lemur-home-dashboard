@@ -41,6 +41,7 @@ Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, 
 - [Yönetim paneli](#yönetim-paneli)
   - [Ayarlar](#ayarlar)
 - [Işık penceresi](#işık-penceresi)
+- [Perde penceresi](#perde-penceresi)
 - [Telefon](#telefon)
 - [Işık efektleri (isteğe bağlı)](#işık-efektleri-isteğe-bağlı)
 - [Güncelleme](#güncelleme)
@@ -194,6 +195,14 @@ Işık karosuna basılı tut. Üstte büyük parlaklık çubuğu (sürükle) ve 
 Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın kendi cihaz penceresine geçebilirsin.
 
 ![Işık penceresi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/light-window.png)
+
+## Perde penceresi
+
+Perde karosuna basılı tut. Üstte ad ve durum (açılıyor, kapanıyor, yüzde kaç açık), ortada perdenin gerçek konumunu gösteren bir pencere çizimi, altında **Aç**, **Durdur**, **Kapat**. Perde hareket ederken aynı düğmeye yeniden basınca durur. Cihaz konum destekliyorsa çizimi parmağınla sürükleyerek konumu ince ayarlarsın.
+
+Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında **Perde penceresi** satırından seçilir; Oto bırakılırsa cihazın türünden seçilir. Tek yönden açılan perde ve dikey storda toplanma yönü (sola, sağa, dikey storda iki yana) de seçilir. Jaluzi ve dikey storda, cihaz destekliyorsa, kanat açısı için ikinci bir Aç, Durdur, Kapat sırası çıkar.
+
+Otomatik düzende perdeler odasının sekmesinde ışıkların arkasında görünür.
 
 ## Telefon
 

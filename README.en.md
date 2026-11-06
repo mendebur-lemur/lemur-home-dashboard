@@ -41,6 +41,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Add the integration
 - [Admin panel](#admin-panel)
   - [Settings](#settings)
 - [Light window](#light-window)
+- [Cover window](#cover-window)
 - [Phone](#phone)
 - [Light effects (optional)](#light-effects-optional)
 - [Updating](#updating)
@@ -194,6 +195,14 @@ Hold a light tile. At the top a big brightness slider (drag it) and a power butt
 The window closes with the back button, Esc or ✕. You can switch to Home Assistant's own device dialog in the settings.
 
 ![Light window](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/light-window.png)
+
+## Cover window
+
+Long press a cover tile. At the top you see the name and state (opening, closing, how far open), in the middle a window drawing that shows the cover at its real position, and below **Open**, **Stop**, **Close**. While the cover moves, pressing the same button again stops it. If the device supports a position, drag the drawing to fine-tune it.
+
+There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one in the cover's ⚙ settings under **Cover window**; on Auto it follows the device type. One-side curtains and vertical blinds also let you choose which side they gather to (left, right, or both sides for vertical blinds). Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle when the device supports it.
+
+In the automatic layout, covers show in their room's tab after the lights.
 
 ## Phone
 

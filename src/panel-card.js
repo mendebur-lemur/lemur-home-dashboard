@@ -448,6 +448,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     const ph = lpIsPhone(c), ds = c.demo_settings || {}, pc = lhdIsObj(ds.phone) ? ds.phone : {};
     return LemurLightPopup.open(h, id, item, room, { mount: c.demo_mount, phone: ph, sheet: ph && pc.sheet !== false });
   }
+  _covOpen(h, id, item) {
+    const c = this._config;
+    if (!c.demo || !c.demo_mount) return LemurCoverPopup.open(h, id, item);
+    const ph = lpIsPhone(c), ds = c.demo_settings || {}, pc = lhdIsObj(ds.phone) ? ds.phone : {};
+    return LemurCoverPopup.open(h, id, item, { mount: c.demo_mount, phone: ph, sheet: ph && pc.sheet !== false });
+  }
   // önizlemede bir ışığın penceresini aç (yanan ışık öncelikli)
   lhdDemoPop() {
     const R = this.shadowRoot; if (!R || !this._hass) return;
@@ -898,6 +904,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       // basılı tut: varsayılan bizim ışık penceremiz; ayarda seçildiyse HA'nın penceresi ya da LEC'in efekt ekranı (lambanın odasıyla)
       const hold = () => {
         const mode = lpHoldMode(), h = this._hass, d = id.split('.')[0];
+        if (mode !== 'ha' && d === 'cover') { this._covOpen(h, id, b._item); return; }   // perde: bizim perde penceremiz
         if (mode === 'lec' && !this._config.demo && LEC.installed(h) && LEC.open(h, LEC.roomOf(id) || tab.area)) return;
         if (mode !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) { this._popOpen(h, id, b._item, LEC.roomOf(id) || tab.area); return; }
         more(id);
@@ -926,7 +933,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // düğme / satır görünümündeki varlık: değer öğesinde cihaz penceresi, diğerlerinde aç/kapat (öğenin tap/hold'u önce gelir)
     this._ents.forEach((b) => {
       const id = b.getAttribute('data-ent'), it = b._item || {}, d = id.split('.')[0];
-      const holdDef = () => { const hm = lpHoldMode(); if (!it._val && hm !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) this._popOpen(this._hass, id, it, LEC.roomOf(id) || tab.area); else more(id); };
+      const holdDef = () => { const hm = lpHoldMode(); if (!it._val && hm !== 'ha' && d === 'cover') { this._covOpen(this._hass, id, it); return; } if (!it._val && hm !== 'ha' && (d === 'light' || d === 'switch' || d === 'input_boolean')) this._popOpen(this._hass, id, it, LEC.roomOf(id) || tab.area); else more(id); };
       lpPress(b, () => this._confirm(it, () => this._act(it.tap, id, it._val ? 'more-info' : 'toggle')), it.hold ? () => this._act(it.hold, id) : holdDef);
     });
     // besleme kartı: dokun "Besledim" (10 sn içinde yeniden dokununca geri alınır), basılı tut son beslemeler

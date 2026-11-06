@@ -177,7 +177,7 @@ class LemurLightPopup {
     // alttan açılan pencere: başlıktan ya da tutamaktan aşağı çekince kapanır (kaydırıcılar ve renk çemberi kendi sürüklemesini kullanır)
     let sy = null;
     this._pan.addEventListener('touchstart', (e) => {
-      const t = e.target && e.target.closest ? e.target.closest('[data-sl], .wh, .fx, .segs') : null;
+      const t = e.target && e.target.closest ? e.target.closest('[data-sl], .wh, .fx, .segs, .win') : null;
       sy = this._sheet && !t && this._pan.scrollTop <= 0 ? e.touches[0].clientY : null;
     }, { passive: true });
     this._pan.addEventListener('touchmove', (e) => {

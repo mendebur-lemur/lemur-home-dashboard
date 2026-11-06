@@ -170,7 +170,7 @@ function buildDefaultTabs(hass, lang, opts) {
   };
 
   // tüm varlıkları bir kez gez, türüne göre ayır
-  const lights = [], controls = [], medias = [], scenes = [], vacuums = [];
+  const lights = [], controls = [], medias = [], scenes = [], vacuums = [], covers = [];
   Object.keys(S).forEach((id) => {
     if (!usable(id)) return;
     const d = dom(id);
@@ -181,6 +181,7 @@ function buildDefaultTabs(hass, lang, opts) {
     else if (d === 'scene') { if (TY.scenes) scenes.push(id); }
     else if (d === 'script' && !scriptNeedsInput(id)) { if (TY.scenes) scenes.push(id); }   // parametre isteyen yardımcı betikler düğme olamaz
     else if (d === 'vacuum') { if (TY.vacuum) vacuums.push(id); }
+    else if (d === 'cover') { if (TY.lights) covers.push(id); }   // perdeler oda sekmesinde ışıkların arkasına (Ev sekmesine girmez)
   });
   const devOf = (id) => (ents[id] && ents[id].device_id) || null;
   const climateItem = (id) => lpClimateItem(hass, id);
@@ -266,8 +267,8 @@ function buildDefaultTabs(hass, lang, opts) {
 
   const small = {};
   order.forEach((aid) => {
-    const L = lightsIn(aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid);
-    if (!pick && !C.length && !M.length && !V.length && L.length < 3) { small[aid] = true; return; }
+    const L = lightsIn(aid), C = inArea(controls, aid), M = inArea(medias, aid), V = inArea(vacuums, aid), CV = inArea(covers, aid);
+    if (!pick && !C.length && !M.length && !V.length && L.length + CV.length < 3) { small[aid] = true; return; }
     if (tabs.length >= (pick ? 12 : 7)) { small[aid] = true; return; }   // Ev + 6 oda dolu: kalan odalar "Diğer"e (elle seçilince 12)
     const sc = inArea(scenes, aid);
     const ar = areas[aid];
@@ -277,20 +278,20 @@ function buildDefaultTabs(hass, lang, opts) {
     const id = usedIds[aid] ? 'a-' + aid : aid; usedIds[id] = true;
     tabs.push(tab({
       id: id, name: aname, icon: icon, area: aid,
-      lights: L.slice(0, 25), scenes: (sc.length ? sc : globalScenes).slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
+      lights: L.slice(0, 25).concat(CV.slice(0, 6)), scenes: (sc.length ? sc : globalScenes).slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
       lightTitle: t(lang, 'room_lights', { area: upper(lang, aname) }), sceneTitle: t(lang, 'shortcuts'), controlTitle: upper(lang, aname)
     }));
   });
 
   if (opts.other !== false && tabs.length > (opts.home === false ? 0 : 1)) {
     const rest = (id) => { const a = areaOf(id); return !a || small[a] || !areas[a] || (pick && pick.indexOf(a) < 0); };
-    const L = lightList.filter(rest).sort(byArea);
+    const L = lightList.filter(rest).sort(byArea).slice(0, 25).concat(covers.filter(rest).sort(byArea).slice(0, 6));
     const C = controls.filter(rest).sort(byArea);
     const M = medias.filter(rest).sort(byArea);
     const V = vacuums.filter(rest).sort(byArea);
     if (L.length || C.length || M.length || V.length) tabs.push(tab({
       id: 'other', name: t(lang, 'other'), icon: 'mdi:dots-horizontal-circle-outline',
-      lights: L.slice(0, 25), scenes: globalScenes.slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
+      lights: L, scenes: globalScenes.slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
       lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'shortcuts'), controlTitle: t(lang, 'other_control')
     }));
   }
