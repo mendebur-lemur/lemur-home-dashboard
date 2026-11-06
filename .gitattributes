@@ -1,0 +1,11 @@
+# GitHub'ın sürüm arşivine (Marketplace ve HACS bunu indirir) yalnız kurulumda gerekenler girer:
+# entegrasyon klasörü, README, lisans ve hacs.json. Ekran görüntüleri README'de raw.githubusercontent'tan görünür.
+docs/ export-ignore
+src/ export-ignore
+tests/ export-ignore
+vendor/ export-ignore
+.github/ export-ignore
+build.py export-ignore
+pytest.ini export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
