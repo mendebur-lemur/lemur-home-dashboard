@@ -37,6 +37,16 @@ ha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px
 .btn.dash:hover { color: var(--tx); background: var(--s2); }
 .warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }
 
+/* "Yıldız ver": yalnız GitHub bağlantısı (sayım yok); dar ekranda ve HA'nın dar modunda yalnız simge */
+.stb { text-decoration: none; padding: 0 12px 0 10px; flex: none; }
+.stb ha-icon, .nstar > ha-icon, .nstar .btn ha-icon { color: #F5C542; }
+.hanarrow .stb .l { display: none; } .hanarrow .stb { width: 34px; padding: 0; }
+@media (max-width: 600px) { .stb .l { display: none; } .stb { width: 34px; padding: 0; } }
+.nstar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r2); padding: 12px 14px; margin: 14px 0 0; }
+.nstar > ha-icon { flex: none; width: 20px; height: 20px; }
+.nstar > span { flex: 1 1 200px; color: var(--tx2); font-size: 13.5px; line-height: 1.4; }
+.nstar .btn { text-decoration: none; }
+
 /* sekme şeridi + seçili sekmenin ayarları, klasör sekmesi gibi birleşik */
 .rblock { flex: none; background: var(--s1); border: 1px solid var(--ln); border-radius: var(--r1); padding: 10px; }
 .rooms { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 1px; margin-bottom: -1px; position: relative; z-index: 2; align-items: flex-start; scrollbar-width: none; }

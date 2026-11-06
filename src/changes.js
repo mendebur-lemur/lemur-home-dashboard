@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.23.1',
+    tr: ['Yönetim panelinin üst çubuğunda "Yıldız ver" düğmesi: panoyu beğendiysen GitHub sayfasını açar. Aynı bağlantı Yenilikler penceresinde de var. Hiçbir şey sayılmaz ya da gönderilmez.'],
+    en: ['A "Star" button in the admin panel\'s top bar: if you like the dashboard, it opens its GitHub page. The same link is in the What\'s new window. Nothing is counted or sent.'] },
   { v: '0.23.0',
     tr: ['Perde penceresi: perde karosuna basılı tutunca HA\'nın penceresi yerine panonun kendi penceresi açılıyor. Pencere çiziminde perde gerçek konumunda görünüyor; altında Aç, Durdur, Kapat. Çizim sürüklenerek konum ince ayarlanır.', 'Altı tasarım: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Öğenin ⚙ ayarından seçilir (Oto: cihazın türünden); tek yönden açılan perde ve dikey storda toplanma yönü de seçilir. Jaluzi ve dikey storda kanat açısı için ikinci bir Aç, Durdur, Kapat sırası var.', 'Otomatik düzende perdeler odasının sekmesinde ışıkların arkasında görünüyor.'],
     en: ['Cover window: long press a cover tile and the dashboard\'s own window opens instead of HA\'s. The drawing shows the cover at its real position, with Open, Stop and Close below. Drag the drawing to fine-tune the position.', 'Six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick it in the item\'s ⚙ settings (Auto: from the device type); one-side curtains and vertical blinds also let you pick which side they gather to. Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle.', 'In the automatic layout, covers show in their room\'s tab after the lights.'] },
