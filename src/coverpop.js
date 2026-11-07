@@ -3,6 +3,8 @@
 // jaluzi ve dikey storda (cihaz destekliyorsa) kanat açısı için ikinci bir Aç / Durdur / Kapat sırası.
 // Tasarım öğenin ayarından seçilir (cover: center | side | shutter | shade | blind | vert), seçilmediyse cihaz sınıfından tahmin edilir.
 // Tek yönden açılan perde ve dikey storda toplanma yönü: cover_dir l | r | c (c yalnız dikey storda).
+// Kanat açısı ayrı bir motordaysa (dikey stor, jaluzi): tilt_entity ikinci perde varlığı; kanat sırası onu sürer
+// (o varlığın kanat özelliği varsa kanat servisleri, yoksa aç/kapat/konum).
 // Çizim sürüklenerek konum ince ayarlanır (cihaz konum destekliyorsa). Eski Safari: ?. ?? yok.
 const LP_COV_STYLES = ['center', 'side', 'shutter', 'shade', 'blind', 'vert'];
 const LP_COV_N = 14;   // çizimdeki çıta / dikey kanat sayısı
@@ -40,6 +42,10 @@ const LP_COV_CSS = `
 .tri.sm > div { height: 52px; flex-direction: row; }
 .tri.sm > div ha-icon { --mdc-icon-size: 20px; margin: 0 6px 0 0; }
 .lbl { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8F96; font-weight: 600; padding: 12px 14px 0; }
+.tpre { display: flex; padding: 0 6px 6px; }
+.tpre div { flex: 1 1 0; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12.5px; color: #D3D3D3; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); box-sizing: border-box; cursor: pointer; font-family: ui-monospace, Consolas, monospace; }
+.tpre div + div { margin-left: 6px; }
+.tpre div.on { border: 2px solid rgb(255, 214, 10); color: #FFC107; font-weight: 700; }
 .lbl b { color: #ECEDEF; letter-spacing: 0; text-transform: none; font-size: 12.5px; }
 .hd .nm i { font-style: normal; color: #8A8F96; font-size: 13px; margin-left: auto; padding-left: 10px; white-space: nowrap; }
 .hd .nm i.mv { color: #FFC107; }
@@ -96,6 +102,23 @@ function lpCovFromPt(style, dir, x, y) {
   return c(y * 1.05);
 }
 
+// küçük çizim (öğe ayarındaki tasarım seçimi): yarı açık, kanatlar yarı açık
+function lpCovMini(style, dir) {
+  const g = lpCovGeom(style, dir, 45, 50), sl = (x) => 'position:absolute;' + x;
+  let h = '<div class="sun"></div>';
+  const wing = 'top:3px;bottom:0;background:repeating-linear-gradient(90deg,#5a4c40 0 4px,#4d4137 4px 8px);';
+  if (style === 'center' || style === 'side' || style === 'vert') h += '<div style="' + sl('left:0;right:0;top:0;height:3px;background:#23252a;z-index:2') + '"></div>';
+  if (g.wl !== undefined) h += '<div style="' + sl(wing + 'left:0;width:' + g.wl + '%') + '"></div>';
+  if (g.wr !== undefined) h += '<div style="' + sl(wing + 'right:0;width:' + g.wr + '%') + '"></div>';
+  if (style === 'shutter') h += '<div style="' + sl('left:0;right:0;top:0;height:' + g.h + '%;background:repeating-linear-gradient(180deg,#6b7078 0 3px,#50545b 3px 4px);border-top:5px solid #3a3d44;box-sizing:border-box') + '"></div>';
+  if (style === 'shade') h += '<div style="' + sl('left:0;right:0;top:0;height:' + g.h + '%;background:#d9d2c5;border-top:5px solid #3a3d44;border-bottom:2px solid #8d8576;box-sizing:border-box') + '"></div>';
+  if (g.slats) g.slats.forEach((x) => {
+    h += style === 'blind' ? '<div style="' + sl('left:2px;right:2px;height:3px;top:' + x.top + '%;background:#c9ccd1;border-radius:1px;transform:scaleY(' + x.sc.toFixed(2) + ')') + '"></div>'
+      : '<div style="' + sl('top:3px;bottom:2px;left:' + x.left + '%;width:' + x.w + '%;background:#d6d1c6;transform:scaleX(' + x.sc.toFixed(2) + ')') + '"></div>';
+  });
+  return '<div class="cvm">' + h + '</div>';
+}
+
 class LemurCoverPopup extends LemurLightPopup {
   static open(hass, id, item, opts) {
     if (LP_POP.cur) LP_POP.cur.close(true);
@@ -112,7 +135,11 @@ class LemurCoverPopup extends LemurLightPopup {
     if (typeof a.current_position === 'number') return a.current_position;
     return st.state === 'closed' ? 0 : 100;
   }
-  _tiltOk() { const f = this._ft(); return (this._style === 'blind' || this._style === 'vert') && !!(f & (LP_COV_F.topen | LP_COV_F.tclose | LP_COV_F.tpos)); }
+  // kanat açısını süren varlık: ayrı motor (tilt_entity) ya da perdenin kendisi
+  _tid() { const x = this._item && this._item.tilt_entity; return typeof x === 'string' && /^cover\./.test(x) && x !== this._id && this._h.states[x] ? x : null; }
+  _tFt() { const t = this._tid(), st = this._h.states[t || this._id]; return (st && st.attributes && st.attributes.supported_features) || 0; }
+  _tHasTilt() { return !!(this._tFt() & (LP_COV_F.topen | LP_COV_F.tclose | LP_COV_F.tpos)); }
+  _tiltOk() { return (this._style === 'blind' || this._style === 'vert') && (!!this._tid() || this._tHasTilt()); }
   _render() {
     const st = this._st(), it = this._item, F = this._ft();
     this._style = lpCovStyle(st, it); this._dir = lpCovDir(this._style, it);
@@ -134,9 +161,16 @@ class LemurCoverPopup extends LemurLightPopup {
     const btn = (k, i, txt, ok) => '<div data-cv="' + k + '"' + (ok ? '' : ' class="off"') + '><ha-icon icon="' + i + '"></ha-icon>' + esc(txt) + '</div>';
     let h = (this._sheet ? '<div class="grab"></div>' : '') + '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b><i data-sub></i></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
       '<div class="box" style="margin-top:14px"><div class="win' + (can ? ' dr ' + (xs ? 'x' : 'y') : '') + '" data-w>' + w + '<div class="frame"></div><div class="pct" data-pct></div></div></div>' +
-      '<div class="box tri" style="margin-top:14px">' + btn('open', ic[0], this._t('open'), F & LP_COV_F.open || F & LP_COV_F.pos) + btn('stop', 'mdi:stop', this._t('stop'), F & LP_COV_F.stop) + btn('close', ic[1], this._t('close'), F & LP_COV_F.close || F & LP_COV_F.pos) + '</div>';
-    if (this._tiltOk()) h += '<div class="box"><div class="lbl">' + esc(this._t('tilt')) + '<b data-tl></b></div><div class="tri sm">' +
-      btn('topen', 'mdi:arrow-top-right', this._t('open'), F & (LP_COV_F.topen | LP_COV_F.tpos)) + btn('tstop', 'mdi:stop', this._t('stop'), F & LP_COV_F.tstop) + btn('tclose', 'mdi:arrow-bottom-left', this._t('close'), F & (LP_COV_F.tclose | LP_COV_F.tpos)) + '</div></div>';
+      '<div class="box tri" style="margin-top:14px">' + btn('open', ic[0], this._t('open'), F & LP_COV_F.open || F & LP_COV_F.pos) + btn('stop', 'mdi:stop', this._t('stop'), F & (LP_COV_F.stop | LP_COV_F.pos)) + btn('close', ic[1], this._t('close'), F & LP_COV_F.close || F & LP_COV_F.pos) + '</div>';
+    if (this._tiltOk()) {
+      // ayrı motorda kanat özelliği yoksa onun aç / durdur / kapat'ı kullanılır
+      const TF = this._tFt(), tt = this._tHasTilt();
+      const okO = tt ? TF & (LP_COV_F.topen | LP_COV_F.tpos) : TF & (LP_COV_F.open | LP_COV_F.pos), okS = tt ? TF & (LP_COV_F.tstop | LP_COV_F.tpos) : TF & (LP_COV_F.stop | LP_COV_F.pos), okC = tt ? TF & (LP_COV_F.tclose | LP_COV_F.tpos) : TF & (LP_COV_F.close | LP_COV_F.pos);
+      h += '<div class="box"><div class="lbl">' + esc(this._t('tilt')) + '<b data-tl></b></div><div class="tri sm">' +
+        btn('topen', 'mdi:arrow-top-right', this._t('open'), okO) + btn('tstop', 'mdi:stop', this._t('stop'), okS) + btn('tclose', 'mdi:arrow-bottom-left', this._t('close'), okC) + '</div>' +
+        // konum destekleyen kanat motorunda hazır açılar (durdurması olmayan motorda ara açı ancak böyle verilir)
+        ((tt ? TF & LP_COV_F.tpos : TF & LP_COV_F.pos) ? '<div class="tpre">' + [0, 25, 50, 75, 100].map((v) => '<div data-ta="' + v + '">%' + v + '</div>').join('') + '</div>' : '') + '</div>';
+    }
     this._pan.innerHTML = h;
     this._bind();
     this._seen = null;
@@ -146,6 +180,7 @@ class LemurCoverPopup extends LemurLightPopup {
     const R = this._pan;
     R.querySelector('[data-x]').addEventListener('click', () => this.close());
     Array.prototype.forEach.call(R.querySelectorAll('[data-cv]'), (el) => el.addEventListener('click', () => this._cmd(el.getAttribute('data-cv'))));
+    Array.prototype.forEach.call(R.querySelectorAll('[data-ta]'), (el) => el.addEventListener('click', () => this._tiltTo(+el.getAttribute('data-ta'))));
     Array.prototype.forEach.call(R.querySelectorAll('ha-state-icon'), (el) => { el.hass = this._h; el.stateObj = this._st(); });
     const win = R.querySelector('[data-w]');
     if (win && win.classList.contains('dr')) {
@@ -163,18 +198,44 @@ class LemurCoverPopup extends LemurLightPopup {
       });
     }
   }
-  _tilt() { const st = this._st(), a = (st && st.attributes) || {}; return typeof a.current_tilt_position === 'number' ? a.current_tilt_position : null; }
+  _tilt() {
+    const t = this._tid(), st = this._h.states[t || this._id], a = (st && st.attributes) || {};
+    if (typeof a.current_tilt_position === 'number') return a.current_tilt_position;
+    if (!t) return null;
+    return typeof a.current_position === 'number' ? a.current_position : (st.state === 'closed' ? 0 : st.state === 'open' ? 100 : null);
+  }
+  // durdurma: cihazın durdurması yoksa ama konum biliyorsa o anki konuma gönderilir (hareket orada biter)
+  _stop(eid, tilt) {
+    const st = this._h.states[eid], a = (st && st.attributes) || {}, f = a.supported_features || 0, d = { entity_id: eid };
+    if (tilt) { if (f & LP_COV_F.tstop) this._h.callService('cover', 'stop_cover_tilt', d); else if (f & LP_COV_F.tpos && typeof a.current_tilt_position === 'number') this._h.callService('cover', 'set_cover_tilt_position', Object.assign({ tilt_position: a.current_tilt_position }, d)); return; }
+    if (f & LP_COV_F.stop) this._h.callService('cover', 'stop_cover', d); else if (f & LP_COV_F.pos && typeof a.current_position === 'number') this._h.callService('cover', 'set_cover_position', Object.assign({ position: a.current_position }, d));
+  }
+  _tiltTo(v) {
+    const T = this._tid(), eid = T || this._id;
+    if (this._tHasTilt()) this._h.callService('cover', 'set_cover_tilt_position', { entity_id: eid, tilt_position: v });
+    else this._h.callService('cover', 'set_cover_position', { entity_id: eid, position: v });
+  }
   _cmd(k) {
     const st = this._st(), F = this._ft(), id = { entity_id: this._id }, mv = st ? st.state : '';
     this._hold = null;
     // hareket ederken aynı yöne yeniden basınca durur
     if ((k === 'open' && mv === 'opening') || (k === 'close' && mv === 'closing')) k = 'stop';
+    const T = this._tid();
+    if (k.charAt(0) === 't' && T && !this._tHasTilt()) {   // kanat motoru ayrı ve kanat servisi yok: onun aç / kapat / durdur'u
+      const st2 = this._h.states[T], TF = this._tFt(), m2 = st2 ? st2.state : '', d2 = { entity_id: T };
+      if ((k === 'topen' && m2 === 'opening') || (k === 'tclose' && m2 === 'closing')) k = 'tstop';
+      if (k === 'topen') this._h.callService('cover', TF & LP_COV_F.open ? 'open_cover' : 'set_cover_position', TF & LP_COV_F.open ? d2 : Object.assign({ position: 100 }, d2));
+      else if (k === 'tclose') this._h.callService('cover', TF & LP_COV_F.close ? 'close_cover' : 'set_cover_position', TF & LP_COV_F.close ? d2 : Object.assign({ position: 0 }, d2));
+      else this._stop(T, false);
+      return;
+    }
+    const tid = { entity_id: T || this._id }, TF = this._tFt();
     if (k === 'open') { if (F & LP_COV_F.open) this._h.callService('cover', 'open_cover', id); else this._h.callService('cover', 'set_cover_position', Object.assign({ position: 100 }, id)); }
     else if (k === 'close') { if (F & LP_COV_F.close) this._h.callService('cover', 'close_cover', id); else this._h.callService('cover', 'set_cover_position', Object.assign({ position: 0 }, id)); }
-    else if (k === 'stop') this._h.callService('cover', 'stop_cover', id);
-    else if (k === 'topen') { if (F & LP_COV_F.topen) this._h.callService('cover', 'open_cover_tilt', id); else this._h.callService('cover', 'set_cover_tilt_position', Object.assign({ tilt_position: 100 }, id)); }
-    else if (k === 'tclose') { if (F & LP_COV_F.tclose) this._h.callService('cover', 'close_cover_tilt', id); else this._h.callService('cover', 'set_cover_tilt_position', Object.assign({ tilt_position: 0 }, id)); }
-    else if (k === 'tstop') this._h.callService('cover', 'stop_cover_tilt', id);
+    else if (k === 'stop') this._stop(this._id, false);
+    else if (k === 'topen') { if (TF & LP_COV_F.topen) this._h.callService('cover', 'open_cover_tilt', tid); else this._h.callService('cover', 'set_cover_tilt_position', Object.assign({ tilt_position: 100 }, tid)); }
+    else if (k === 'tclose') { if (TF & LP_COV_F.tclose) this._h.callService('cover', 'close_cover_tilt', tid); else this._h.callService('cover', 'set_cover_tilt_position', Object.assign({ tilt_position: 0 }, tid)); }
+    else if (k === 'tstop') this._stop(T || this._id, true);
   }
   // çizimi verilen konuma ve kanat açısına göre boya (öğeler yerinde kalır, geçişle kayar)
   _paint(p, t) {
@@ -194,8 +255,9 @@ class LemurCoverPopup extends LemurLightPopup {
   _sync(onlyIfChanged) {
     const R = this._pan; if (!R || !R.querySelector('[data-w]')) return;
     const st = this._st();
-    if (onlyIfChanged && this._seen === st) return;
-    this._seen = st;
+    const st2 = this._tid() ? this._h.states[this._tid()] : null;
+    if (onlyIfChanged && this._seen === st && this._seen2 === st2) return;
+    this._seen = st; this._seen2 = st2;
     if (this._style !== lpCovStyle(st, this._item)) { this._render(); return; }
     const p0 = this._pos(st), hd = this._hold && Date.now() < this._hold.until && Math.abs(p0 - this._hold.v) > 1 ? this._hold.v : null;
     const p = hd === null ? p0 : hd, t = this._tilt(), s = st ? st.state : '';
@@ -210,6 +272,10 @@ class LemurCoverPopup extends LemurLightPopup {
     if (o) o.classList.toggle('on', s === 'opening');
     if (c) c.classList.toggle('on', s === 'closing');
     const tl = R.querySelector('[data-tl]'); if (tl) tl.textContent = typeof t === 'number' ? '%' + t : '';
+    Array.prototype.forEach.call(R.querySelectorAll('[data-ta]'), (el) => el.classList.toggle('on', typeof t === 'number' && Math.abs(t - +el.getAttribute('data-ta')) <= 5));
+    const s2 = st2 ? st2.state : '', to = R.querySelector('[data-cv="topen"]'), tc = R.querySelector('[data-cv="tclose"]');   // ayrı kanat motoru hareket ederken
+    if (to) to.classList.toggle('on', s2 === 'opening');
+    if (tc) tc.classList.toggle('on', s2 === 'closing');
     Array.prototype.forEach.call(R.querySelectorAll('ha-state-icon'), (el) => { el.hass = this._h; el.stateObj = st; });
   }
 }

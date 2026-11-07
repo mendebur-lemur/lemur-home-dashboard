@@ -200,7 +200,7 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 
 Perde karosuna basılı tut. Üstte ad ve durum (açılıyor, kapanıyor, yüzde kaç açık), ortada perdenin gerçek konumunu gösteren bir pencere çizimi, altında **Aç**, **Durdur**, **Kapat**. Perde hareket ederken aynı düğmeye yeniden basınca durur. Cihaz konum destekliyorsa çizimi parmağınla sürükleyerek konumu ince ayarlarsın.
 
-Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında **Perde penceresi** satırından seçilir; Oto bırakılırsa cihazın türünden seçilir. Tek yönden açılan perde ve dikey storda toplanma yönü (sola, sağa, dikey storda iki yana) de seçilir. Jaluzi ve dikey storda, cihaz destekliyorsa, kanat açısı için ikinci bir Aç, Durdur, Kapat sırası çıkar.
+Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında **Perde penceresi** satırından seçilir; Oto bırakılırsa cihazın türünden seçilir. Tek yönden açılan perde ve dikey storda toplanma yönü (sola, sağa, dikey storda iki yana) de seçilir. Tasarımlar ayarda küçük pencere çizimleriyle gösterilir. Jaluzi ve dikey storda, cihaz destekliyorsa, kanat açısı için ikinci bir Aç, Durdur, Kapat sırası çıkar. Kanatları ayrı bir motor döndürüyorsa (Home Assistant'ta ikinci bir perde varlığı) ⚙ ayarında **Kanat açısı motoru** olarak seçilir; kanat sırası o motoru sürer, motor konum bildiriyorsa %0-100 hazır açılar da çıkar.
 
 Otomatik düzende perdeler odasının sekmesinde ışıkların arkasında görünür.
 

@@ -37,6 +37,14 @@ ha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px
 .btn.dash:hover { color: var(--tx); background: var(--s2); }
 .warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }
 
+/* perde tasarımı seçimi: küçük pencere çizimli kartlar */
+.cvps { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.cvp { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px 7px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2); font-size: 12px; line-height: 1.25; text-align: center; cursor: pointer; }
+.cvp:hover { background: var(--s3); }
+.cvp.on { border-color: var(--ac); background: var(--acs); color: var(--tx); font-weight: 600; }
+.cvm { position: relative; width: 72px; height: 50px; border-radius: 6px; overflow: hidden; border: 3px solid #2A2D33; box-sizing: border-box; background: linear-gradient(180deg, #2c4a6e 0%, #e6a35c 70%, #f4c27a 100%); flex: none; }
+.cvm .sun { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #ffe2a6; right: 20%; top: 40%; }
+
 /* "Yıldız ver": yalnız GitHub bağlantısı (sayım yok); dar ekranda ve HA'nın dar modunda yalnız simge */
 .stb { text-decoration: none; padding: 0 12px 0 10px; flex: none; }
 .stb ha-icon, .nstar > ha-icon, .nstar .btn ha-icon { color: #F5C542; }

@@ -9,7 +9,7 @@ const vm = require('vm');
 const src = fs.readFileSync(path.join(__dirname, '../src/coverpop.js'), 'utf8');
 const ctx = { LemurLightPopup: class {} };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.C = { lpCovStyle, lpCovDir, lpCovGeom, lpCovFromPt, LP_COV_STYLES, LP_COV_N };', ctx);
+vm.runInContext(src + '\nthis.C = { lpCovStyle, lpCovDir, lpCovGeom, lpCovFromPt, lpCovMini, LP_COV_STYLES, LP_COV_N };', ctx);
 const C = ctx.C;
 const st = (dc) => ({ state: 'open', attributes: dc ? { device_class: dc } : {} });
 
@@ -64,4 +64,13 @@ test('drag point to position', () => {
   assert.strictEqual(C.lpCovFromPt('vert', 'c', 100, 0), 100);
   assert.strictEqual(C.lpCovFromPt('shutter', 'l', 0, 50), 53);
   assert.strictEqual(C.lpCovFromPt('shade', 'l', 0, 100), 100);
+});
+
+test('mini drawing for every design', () => {
+  C.LP_COV_STYLES.forEach((x) => {
+    const h = C.lpCovMini(x, C.lpCovDir(x, {}));
+    assert.ok(h.indexOf('<div class="cvm">') === 0, x);
+    assert.ok(!/undefined|NaN/.test(h), x);
+  });
+  assert.strictEqual((C.lpCovMini('vert', 'c').match(/scaleX/g) || []).length, C.LP_COV_N);
 });

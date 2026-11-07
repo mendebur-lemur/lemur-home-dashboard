@@ -200,7 +200,7 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 
 Long press a cover tile. At the top you see the name and state (opening, closing, how far open), in the middle a window drawing that shows the cover at its real position, and below **Open**, **Stop**, **Close**. While the cover moves, pressing the same button again stops it. If the device supports a position, drag the drawing to fine-tune it.
 
-There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one in the cover's ⚙ settings under **Cover window**; on Auto it follows the device type. One-side curtains and vertical blinds also let you choose which side they gather to (left, right, or both sides for vertical blinds). Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle when the device supports it.
+There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one in the cover's ⚙ settings under **Cover window**; on Auto it follows the device type. One-side curtains and vertical blinds also let you choose which side they gather to (left, right, or both sides for vertical blinds). The settings show each design as a small window drawing. Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle when the device supports it. If a separate motor turns the slats (a second cover entity in Home Assistant), pick it as the **Slat angle motor** in the ⚙ settings; the slat row then drives that motor, with 0-100% presets if it reports a position.
 
 In the automatic layout, covers show in their room's tab after the lights.
 

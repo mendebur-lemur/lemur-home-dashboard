@@ -1,4 +1,4 @@
-/*! Lemur Home Dashboard yükleyici v0.23.1 */
+/*! Lemur Home Dashboard yükleyici v0.23.2 */
 // Her sayfaya yüklenen küçük dosya (2026-11-04, GitHub #3).
 // Ana dosya ~700 KB. Yavaş tabletlerde ve HA Android uygulamasında, HA'nın pano stratejisini
 // bekleme süresi dolmadan inip çalışamıyor, pano "Timeout waiting for strategy element" veriyordu.
@@ -6,7 +6,7 @@
 // ana dosyanın yüklenmesi beklenir ve iş asıl stratejiye devredilir.
 (function () {
   var NAME = 'll-strategy-dashboard-lemur-home-dashboard';
-  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.23.1';
+  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.23.2';
   var W = window;
   var loading = null;
 

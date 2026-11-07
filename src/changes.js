@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.23.2',
+    tr: ['Perde ayarında tasarım ve toplanma yönü artık küçük pencere çizimleriyle seçiliyor; Oto kartı ne seçtiğini de yazıyor.', 'Kanatları ayrı bir motorla dönen dikey stor ve jaluzi: perdenin ⚙ ayarında Kanat açısı motoru seçilince penceredeki kanat sırası o motoru sürüyor. Konum bildiren kanat motorunda %0-100 hazır açılar var.', 'Durdurma komutu olmayan ama konum bildiren perdelerde Durdur da çalışıyor.'],
+    en: ['Cover settings: the design and the gathering side are now picked from small window drawings; the Auto card says what it picked.', 'Vertical and venetian blinds whose slats turn with a separate motor: pick it as the Slat angle motor in the cover\'s ⚙ settings and the slat row in the window drives it. Slat motors that report a position get 0-100% presets.', 'Stop now also works on covers that have no stop command but report their position.'] },
   { v: '0.23.1',
     tr: ['Yönetim panelinin üst çubuğunda "Yıldız ver" düğmesi: panoyu beğendiysen GitHub sayfasını açar. Aynı bağlantı Yenilikler penceresinde de var. Hiçbir şey sayılmaz ya da gönderilmez.', 'Kurulum ve güncelleme dosyası küçüldü (yaklaşık 12 MB yerine 1,5 MB): yavaş bağlantıda Marketplace\'ten indirirken zaman aşımı olmaz.'],
     en: ['A "Star" button in the admin panel\'s top bar: if you like the dashboard, it opens its GitHub page. The same link is in the What\'s new window. Nothing is counted or sent.', 'The install and update download is much smaller (about 1.5 MB instead of 12 MB), so it no longer times out in the Marketplace on slow connections.'] },
