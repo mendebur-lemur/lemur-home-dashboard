@@ -273,7 +273,7 @@ def convert_entry(d: dict, power_now: float | None, src_state: Any) -> dict | No
         w = _num(fixed.get("power"))
         if w is None and not sp:
             w = power_now or 0.0
-        if not sp and dom not in ("media_player", "climate", "vacuum", "fan", "water_heater", "humidifier"):
+        if not sp and dom in ("switch", "light", "input_boolean"):
             out.update(kind="onoff", entity=ent, on=w, off=standby)
             return out
         rows = []
@@ -283,6 +283,14 @@ def convert_entry(d: dict, power_now: float | None, src_state: Any) -> dict | No
                 rows.append({"s": s[:40], "w": v})
         rows += [{"s": s, "w": standby} for s in ("off", "standby", "unavailable") if s not in sp]
         out.update(kind="states", entity=ent, states=rows[:24], other=w if w is not None else standby)
+        return out
+    if mode == "linear" and linear.get("calibrate") and linear.get("max_power") is None:   # "10 -> 1.02" list
+        vals = [v for v in (_num(str(x).split("->")[-1]) for x in linear.get("calibrate") or []) if v is not None]
+        if vals:
+            linear = {**linear, "min_power": min(vals), "max_power": max(vals)}
+    if mode == "linear" and d.get("only_playing"):   # counts only while playing (speakers): the middle of its range then
+        mn, mx = _num(linear.get("min_power")) or 0.0, _num(linear.get("max_power")) or 0.0
+        out.update(kind="states", entity=ent, states=[{"s": "playing", "w": round((mn + mx) / 2, 2)}], other=standby)
         return out
     if mode == "linear" and dom == "light":
         mn, mx = _num(linear.get("min_power")), _num(linear.get("max_power"))
@@ -304,5 +312,6 @@ def convert_entry(d: dict, power_now: float | None, src_state: Any) -> dict | No
             mx = round(standby + (power_now - standby) / f, 1)
         out.update(kind="light", entity=ent, idle=standby, max=max(mx, standby), check=True)
         return out
-    out.update(kind="onoff", entity=ent, on=power_now or 0.0, off=standby, check=True)
+    is_off = src_state is None or str(src_state.state) in OFF_STATES
+    out.update(kind="onoff", entity=ent, on=0.0 if is_off else (power_now or 0.0), off=(power_now or standby) if is_off else standby, check=True)
     return out

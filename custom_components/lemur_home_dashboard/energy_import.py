@@ -9,6 +9,10 @@ the user removes it afterwards.
 """
 from __future__ import annotations
 
+import csv
+import gzip
+import json
+from pathlib import Path
 from typing import Any
 
 from homeassistant.core import HomeAssistant
@@ -18,6 +22,147 @@ from homeassistant.util import slugify
 from . import estimates as EST
 
 SOURCE = "powercalc"
+
+
+# ---- the other integration's library profiles (downloaded to .storage/powercalc_profiles/<manufacturer>/<model>/) ----
+# Entries made from its library keep only manufacturer and model; the watts are in the profile. Read in an executor.
+_LUT_FILES = ("color_temp.csv", "hs.csv", "brightness.csv", "effect.csv")
+
+
+def _ci(parent: Path, name: str) -> Path | None:
+    """A child directory by name, ignoring case."""
+    if not name or not parent.is_dir():
+        return None
+    p = parent / name
+    if p.is_dir():
+        return p
+    low = name.casefold()
+    for c in parent.iterdir():
+        if c.is_dir() and c.name.casefold() == low:
+            return c
+    return None
+
+
+def _read_json(p: Path) -> dict:
+    try:
+        v = json.loads(p.read_text(encoding="utf-8"))
+        return v if isinstance(v, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _model_dir(root: Path, man: str, model: str) -> Path | None:
+    mdir = _ci(root, man)
+    if mdir is None:
+        return None
+    parts = [x for x in str(model).split("/") if x]
+    d = _ci(mdir, parts[0]) if parts else None
+    if d is None and parts:   # by an alias in the model files
+        want = parts[0].casefold()
+        for c in mdir.iterdir():
+            js = _read_json(c / "model.json") if c.is_dir() else {}
+            names = [str(x).casefold() for x in (js.get("aliases") or []) + (js.get("legacy_ids") or []) + [js.get("name") or ""]]
+            if want in names:
+                d = c
+                break
+    for sub in parts[1:]:
+        if d is not None:
+            d = _ci(d, sub) or d
+    return d
+
+
+def _lut(d: Path) -> tuple[float, float] | None:
+    """Lowest power at the lowest brightness and the highest power, from the measured table."""
+    for name in _LUT_FILES:
+        for fn, op in ((d / name, open), (d / (name + ".gz"), gzip.open)):
+            if not fn.is_file():
+                continue
+            try:
+                with op(fn, "rt", encoding="utf-8") as f:
+                    rows = csv.reader(f)
+                    next(rows, None)
+                    lo_b, lo_w, hi = None, None, 0.0
+                    for r in rows:
+                        try:
+                            b, w = float(r[0]), float(r[-1])
+                        except (ValueError, IndexError):
+                            continue
+                        hi = max(hi, w)
+                        if lo_b is None or b < lo_b:
+                            lo_b, lo_w = b, w
+                        elif b == lo_b:
+                            lo_w = min(lo_w, w)
+                    if lo_w is not None and hi > 0:
+                        return lo_w, hi
+            except (OSError, EOFError, ValueError):
+                continue
+    return None
+
+
+def _cal(cal: Any) -> tuple[float, float] | None:
+    """min and max power of a linear calibration list ("10 -> 1.02")."""
+    vals = []
+    for x in cal or []:
+        try:
+            vals.append(float(str(x).split("->")[1]))
+        except (IndexError, ValueError):
+            continue
+    return (min(vals), max(vals)) if vals else None
+
+
+def profile_data(root: Path, man: str, model: str) -> dict | None:
+    """The profile as entry data (mode, standby_power, fixed / linear), or None."""
+    d = _model_dir(root, man, model)
+    if d is None:
+        return None
+    js = _read_json(d / "model.json")
+    if not js.get("calculation_strategy"):
+        subs = [c for c in sorted(d.iterdir()) if c.is_dir() and (c / "model.json").is_file()]   # sub profiles: the first one
+        if subs:
+            js = {**js, **_read_json(subs[0] / "model.json")}
+            d = subs[0]
+    strat = str(js.get("calculation_strategy") or "").lower()
+    out: dict = {"standby_power": js.get("standby_power") or 0}
+    cond = str(js.get("calculation_enabled_condition") or "")
+    if "playing" in cond:
+        out["only_playing"] = True
+    if strat == "lut":
+        mm = _lut(d)
+        if mm is None:
+            return None
+        out.update(mode="linear", linear={"min_power": mm[0], "max_power": mm[1]})
+    elif strat == "linear":
+        lc = dict(js.get("linear_config") or {})
+        mm = _cal(lc.get("calibrate"))
+        if mm and lc.get("min_power") is None:
+            lc["min_power"], lc["max_power"] = mm
+        out.update(mode="linear", linear=lc)
+    elif strat == "fixed":
+        out.update(mode="fixed", fixed=dict(js.get("fixed_config") or {}))
+    else:
+        return None
+    return out
+
+
+def load_profiles(hass: HomeAssistant, entries: list) -> dict:
+    """entry id → profile data, for entries that name a manufacturer and model. Blocking: run in an executor."""
+    root = Path(hass.config.path(".storage", "powercalc_profiles"))
+    custom = [Path(hass.config.path("powercalc_profiles")), Path(hass.config.path("powercalc", "profiles"))]
+    out = {}
+    for e in entries:
+        d = {**(e.data or {}), **(e.options or {})}
+        man, model = str(d.get("manufacturer") or ""), str(d.get("model") or "")
+        if not man or not model or d.get("mode"):
+            continue
+        for r in [root] + custom:
+            try:
+                p = profile_data(r, man, model)
+            except OSError:
+                p = None
+            if p:
+                out[e.entry_id] = p
+                break
+    return out
 
 
 def _entities(reg, entry_id: str) -> list:
@@ -65,8 +210,8 @@ def _power_of_energy(hass: HomeAssistant, reg, stat: str, rate: str | None) -> s
     return None
 
 
-def plan(hass: HomeAssistant, prefs: dict, existing: dict, cats_now: list) -> dict:
-    """What an import would do. prefs: the current energy settings."""
+def plan(hass: HomeAssistant, prefs: dict, existing: dict, cats_now: list, profiles: dict | None = None) -> dict:
+    """What an import would do. prefs: the current energy settings; profiles: load_profiles() (library entries)."""
     reg = er.async_get(hass)
     entries = hass.config_entries.async_entries(SOURCE)
     dc = [d for d in (prefs or {}).get("device_consumption") or [] if isinstance(d, dict) and d.get("stat_consumption")]
@@ -76,6 +221,9 @@ def plan(hass: HomeAssistant, prefs: dict, existing: dict, cats_now: list) -> di
     stat_owner: dict[str, str] = {}  # energy / power entity → entry id
     for e in entries:
         d = {**(e.data or {}), **(e.options or {})}
+        prof = (profiles or {}).get(e.entry_id)
+        if prof:   # from the library: the profile's watts, the entry's own settings on top
+            d = {**prof, **{k: v for k, v in d.items() if v not in (None, "", {}) and not (k == "standby_power" and not v)}}
         ents = _entities(reg, e.entry_id)
         pw, en = _pick(ents, "power"), _pick(ents, "energy")
         for x in (pw, en):

@@ -187,3 +187,33 @@ async def test_import(hass: HomeAssistant, hass_ws_client, setup_lhd):
     await ws.send_json({"id": 3, "type": "lemur_home_dashboard/energy_import"})
     r = await ws.receive_json(); assert r["success"]
     assert r["result"]["devices"] == [] and len(r["result"]["skipped"]) == 3
+
+
+def test_library_profiles(tmp_path):
+    """Entries made from the other integration's library: watts come from the downloaded profile."""
+    import gzip
+    import json as _j
+    from custom_components.lemur_home_dashboard import energy_import as EI2
+    g = tmp_path / "govee" / "H6008"
+    g.mkdir(parents=True)
+    (g / "model.json").write_text(_j.dumps({"calculation_strategy": "lut", "standby_power": 0.28, "aliases": ["Bulb X"]}))
+    with gzip.open(g / "color_temp.csv.gz", "wt") as f:
+        f.write("bri,mired,watt\n1,153,0.9\n1,370,0.8\n128,153,4.1\n255,153,9.7\n255,370,9.2\n")
+    a = tmp_path / "apple" / "A2374"
+    a.mkdir(parents=True)
+    (a / "model.json").write_text(_j.dumps({"calculation_strategy": "linear", "standby_power": 0.65, "calculation_enabled_condition": "{{ is_state('[[entity]]', 'playing') }}",
+                                            "linear_config": {"calibrate": ["0 -> 0.99", "50 -> 1.06", "100 -> 4.22"]}}))
+    p = EI2.profile_data(tmp_path, "Govee", "H6008")
+    assert p["mode"] == "linear" and p["linear"] == {"min_power": 0.8, "max_power": 9.7} and p["standby_power"] == 0.28
+    assert EI2.profile_data(tmp_path, "govee", "Bulb X")["linear"]["max_power"] == 9.7   # by alias
+    assert EI2.profile_data(tmp_path, "govee", "nope") is None
+    hp = EI2.profile_data(tmp_path, "apple", "A2374")
+    r = EST.convert_entry({"entity_id": "media_player.hp", "name": "HomePod", **hp}, 0.65, None)
+    assert r["kind"] == "states" and r["states"] == [{"s": "playing", "w": 2.6}] and r["other"] == 0.65
+    lt = EST.convert_entry({"entity_id": "light.x", "name": "Lamba", **p}, 0, None)
+    assert lt["kind"] == "light" and lt["max"] == 9.7 and lt["min"] == 0.8 and lt["idle"] == 0.28 and "check" not in lt
+    # a fixed device that is on in a state the other integration counts as on (a printer "idle")
+    fx = EST.convert_entry({"entity_id": "sensor.yazici_durum", "name": "Yazıcı", "mode": "fixed", "fixed": {"power": 12}}, 12, None)
+    assert fx["kind"] == "fixed" and fx["w"] == 12
+    fx2 = EST.convert_entry({"entity_id": "select.yazici", "name": "Yazıcı", "mode": "fixed", "fixed": {"power": 12}}, 12, None)
+    assert fx2["kind"] == "states" and fx2["other"] == 12 and EST.power(fx2, type("S", (), {"state": "idle", "attributes": {}})()) == 12

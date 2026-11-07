@@ -542,7 +542,8 @@ async def ws_energy_import(hass, connection, msg):
         return
     prefs = await _energy_prefs(hass)
     try:
-        p = EI.plan(hass, prefs, data.estimates(), data.ecats())
+        profs = await hass.async_add_executor_job(EI.load_profiles, hass, hass.config_entries.async_entries(EI.SOURCE))
+        p = EI.plan(hass, prefs, data.estimates(), data.ecats(), profs)
     except Exception as err:  # noqa: BLE001 - an unexpected entry shape must not break the panel
         _LOGGER.warning("Energy import could not read the entries: %s", err)
         connection.send_error(msg["id"], "failed", str(err))
