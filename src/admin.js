@@ -3271,9 +3271,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const sgE = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + ((f[key] || '') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
       const tgE = (key, label, sub) => '<div class="srow"><div class="t"><b>' + label + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</div><button class="tg' + (f[key] ? ' on' : '') + '" data-imtg="' + key + '"></button></div>';
       const K = f.enK, M = LP_EN.m;
-      body += fld(t('enKind') + hb('energy'), sgE('enK', LP_EN_TYPES.map((x) => [x, lpEnT(this._lang, 'k_' + x)])));
+      // kart türü: simgeli kutucuklar ve ne gösterdiği; görünüm: her seçenek canlı küçük önizlemeyle
+      LP_EL_MINI.h = this._hass; LP_EL_MINI.lang = this._lang;
+      body += fld(t('enKind') + hb('energy'), '<div class="enkp">' + LP_EN_TYPES.map((x) => '<button data-imseg="enK:' + x + '"' + (K === x ? ' class="on"' : '') + '><ha-icon icon="' + esc(LP_EN_IC[x]) + '"></ha-icon><b>' + esc(lpEnT(this._lang, 'k_' + x)) + '</b><span>' + esc(lpEnT(this._lang, 'd_' + x)) + '</span></button>').join('') + '</div>');
       const LK = LP_EL_LOOKS[K] || [''], LN = lpElNames(K, this._lang), lkCur = LK.indexOf(f.enLook || '') >= 0 ? f.enLook || '' : '';
-      if (LK.length > 1) body += fld(t('enLook'), '<div class="lkg">' + LK.map((x, i) => '<button data-imseg="enLook:' + x + '"' + (lkCur === x ? ' class="on"' : '') + '><i>' + (i + 1) + '</i>' + esc(LN[i] || x) + '</button>').join('') + '</div>');
+      if (LK.length > 1) body += fld(t('enLook') + ' · ' + esc(LN[LK.indexOf(lkCur)] || ''), '<div class="lkg2">' + LK.map((x, i) => '<button data-imseg="enLook:' + x + '"' + (lkCur === x ? ' class="on"' : '') + '><div class="mk"><lhd-en-mini k="' + esc(K) + '" look="' + esc(x) + '"></lhd-en-mini></div><span><i>' + (i + 1) + '</i>' + esc(LN[i] || x) + '</span></button>').join('') + '</div>');
       if (K === 'halo') body += tgE('enChips', t('enChips'), t('enChipsT')) + tgE('enBars', t('enBars'), t('enBarsT'));
       if (K === 'cats') body += tgE('enLoose', t('enLoose'), t('enLooseT')) + fld(t('enSort'), sgE('enSort', [['', this._t('enSortFix')], ['w', this._t('enSortW')]])) + fld(t('enCols'), sgE('enCols', [['', this._t('phColsAuto')], ['2', '2'], ['3', '3'], ['4', '4']])) + fld(t('enChart'), sgE('enChart', [['', this._t('enC24')], ['7d', this._t('enC7')], ['none', this._t('enChNone')]]));
       if (K === 'top') {

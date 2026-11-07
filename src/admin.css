@@ -690,3 +690,17 @@ div.ensr:hover { background: var(--s1); }
 .encmv i:hover { background: rgba(255,255,255,.08); color: var(--tx); }
 .encmv i.off { opacity: .25; pointer-events: none; }
 .encmv ha-icon { --mdc-icon-size: 16px; width: 16px; height: 16px; }
+/* v0.28.1 kart seçimi: tür kutucukları ve canlı önizlemeli görünümler */
+.enkp { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.enkp button { display: grid; grid-template-columns: 22px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; align-items: center; text-align: left; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx); border-radius: 12px; padding: 8px 10px; font: inherit; cursor: pointer; min-width: 0; }
+.enkp ha-icon { grid-row: 1 / span 2; --mdc-icon-size: 20px; width: 20px; height: 20px; color: var(--tx2); }
+.enkp b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.enkp span { font-size: 11.5px; color: var(--tx2); line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.enkp button.on { border-color: var(--ac); background: var(--acs); } .enkp button.on ha-icon { color: var(--ac); }
+.lkg2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.lkg2 button { display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx); border-radius: 14px; padding: 6px; font: inherit; cursor: pointer; min-width: 0; text-align: left; }
+.lkg2 .mk { position: relative; width: 100%; padding-top: 76.5%; border-radius: 10px; overflow: hidden; background: #0d0f12; }
+.lkg2 .mk lhd-en-mini { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.lkg2 span { display: flex; align-items: center; gap: 7px; font-size: 12.5px; padding: 0 4px 2px; }
+.lkg2 span i { font-style: normal; width: 18px; height: 18px; border-radius: 5px; background: rgba(255,255,255,.07); display: inline-flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; color: var(--tx2); flex: 0 0 auto; }
+.lkg2 button.on { border-color: var(--ac); box-shadow: 0 0 0 2px var(--acs); } .lkg2 button.on span i { background: var(--ac); color: #1b1206; }

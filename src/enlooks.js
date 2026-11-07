@@ -402,3 +402,23 @@ function lpEnLook(h, M, it, lang, phone) {
   return out === null ? null : '<div class="enlk lk-' + k + (look ? ' lk-' + look : '') + '">' + out + '</div>';
 }
 function lpEnIsLook(it) { const L = LP_EL[it.energy]; return !!(L && L[it.look || '']); }
+// küçük canlı önizleme (kart seçiminde): kartı panelin kendi CSS'iyle, gerçek kutu boyunda çizip kutucuğa sığacak kadar küçültür.
+// Veri: yüklü enerji verisi, yoksa örnek veri. Görünüm seçimi ekranı her açıldığında yeniden çizilir.
+const LP_EL_MINI = { h: null, lang: 'tr' };
+if (typeof customElements !== 'undefined' && !customElements.get('lhd-en-mini')) {
+  customElements.define('lhd-en-mini', class extends HTMLElement {
+    connectedCallback() { this._draw(); }
+    _draw() {
+      const k = this.getAttribute('k') || 'halo', lk = this.getAttribute('look') || '', W = +this.getAttribute('w') || 420, H = +this.getAttribute('h') || 321, lang = LP_EL_MINI.lang;
+      const h = LP_EL_MINI.h || { states: {} }, real = LP_EN.m && !LP_EN.m.demo && LP_EN.m.cats && LP_EN.m.cats.length ? LP_EN.m : null;
+      const M = real || lpEnDemo(lang), hh = real ? h : Object.assign({}, h, { states: {}, lhdEnDemo: true }), it = { energy: k };
+      if (lk) it.look = lk;
+      let body = ''; try { body = lpEnCard(hh, M, it, lang, false); } catch (e) { body = ''; }
+      const sr = this.shadowRoot || this.attachShadow({ mode: 'open' });
+      sr.innerHTML = '<style>' + CSS + ':host{display:block;position:relative;overflow:hidden;pointer-events:none}.mini{position:absolute;left:0;top:0;width:' + W + 'px;height:' + H + 'px;transform-origin:0 0;display:flex}.mini>.box{flex:1 1 auto}</style>' +
+        '<div class="mini"><div class="box"><div class="title hd"><span>' + esc(lpEnT(lang, 'k_' + k)) + '</span></div><div class="enc en-' + esc(k) + (lpEnIsLook(it) ? ' enlook' : '') + '">' + body + '</div></div></div>';
+      const fit = () => { const m = sr.querySelector('.mini'); if (m && this.clientWidth) m.style.transform = 'scale(' + (this.clientWidth / W).toFixed(4) + ')'; };
+      fit(); if (typeof requestAnimationFrame !== 'undefined') requestAnimationFrame(fit);
+    }
+  });
+}
