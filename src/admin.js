@@ -53,12 +53,14 @@ const ADM = {
     enPrice: 'kWh fiyatı', enPriceT: 'Yazılırsa kartlarda para karşılığı da görünür (HA\'nın para birimiyle)', enTotal: 'Evin toplam gücü', enTotalT: 'Bir güç sensörü seçilirse Halo onu gösterir; seçilmezse kategorilerin toplamı',
     enAuto: 'Kategorilerin toplamı', enSb: 'Bekleme gücü', enSbT: 'Seçilmezse son 24 saatin en düşük toplam gücü', enSbAuto: 'Son 24 saatin en düşüğü', enLim: 'Halo renk sınırları (W)', enLimT: 'Yeşil, sarı, turuncu; üstü kırmızı',
     enBadge: 'Işık karosunda watt', enBadgeT: 'Güç ölçen ışık ve prizlerin karosunun köşesinde anlık watt', enB_off: 'Kapalı', enB_on: 'Açıkken', enB_always: 'Hep',
-    enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enCNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
+    enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enChNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
     enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
     enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Cihazlar, kategoriler, güneş, fiyat, faturalar ve ipuçları kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
-    enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Son 12 ay', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
+    enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Bu yıl', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
     enPrMode: 'Fiyat', enPrBill: 'Faturadan', enPrSingle: 'Tek fiyat', enPrTier: 'Kademeli', enPrBillT: 'Son fatura: {k} kWh, {t} → 1 kWh {u}. Yeni fatura girildikçe güncellenir.', enPrBillNo: 'Faturalar bölümüne bir fatura girince birim fiyat ondan hesaplanır (vergiler ve sabit bedeller dahil).',
     enLow: 'Düşük kademe', enHigh: 'Yüksek kademe', enDaily: 'Günlük sınır', enMonthLim: 'Bu ayın sınırı ({d} gün × {k} kWh)', enLowL: 'Düşük kademe: {k} kWh', enHighL: 'Yüksek kademe: {k} kWh', enMonthSo: 'Bu ay şimdiye kadar ({k} kWh)', enTierT: 'Günlük ortalama sınırın altı düşük, üstü yüksek fiyattan. Fiyatları faturadaki vergiler dahil birim fiyattan yaz.',
+    en_meter: 'Ev sayacı', enMeterT: 'Evin tamamını ölçen cihaz (Shelly Pro EM gibi, sigorta kutusuna takılır). Seçince panel evin gerçek tüketimini, ölçülmeyen payı ve yılın toplamını bundan bulur; Home Assistant\'ın Enerji ayarlarına şebeke kaynağı olarak da kendisi ekler.', enMeterFound: 'Bulunan sayaçlar ({n})', enMeterUse: 'Evin sayacı yap', enMeterNone: 'Evin tamamını ölçen bir cihaz bulunamadı. Cihazı önce Home Assistant\'a ekle; burada kendiliğinden görünür.', enMeterManual: 'Listede yok, kendim seçeyim', enMeterDel: 'Kaldır', enMPow: 'Anlık güç', enMPowT: 'Evin şu an çektiği (W)', enMIn: 'Şebekeden gelen enerji', enMInT: 'Toplam kWh sayacı; yılın toplamı bundan', enMOut: 'Şebekeye verilen enerji', enMOutT: 'Güneş fazlası varsa', enMVolt: 'Gerilim', enMVoltT: 'Kesintiyi anlamak için (V)', enMInvT: 'Eve gelen eksi görünüyorsa aç', enMNow: 'Ev şu an', enMPanel: 'Paneldeki cihazlar', enMUnt: 'Ölçülmeyen', enMToday: 'Bugün', enMYear: '{y} toplamı', enMYearEst: 'kayıt {d} tarihinden', enMNoE: 'Enerji (kWh) sensörü seçilmedi: yılın toplamı ve şebeke kaynağı için gerekli.', enMWhat: 'Ne değişti?', enMW1: 'Anlık güç artık sayaçtan: ev tahmin değil, ölçülen değer.', enMW2: 'Ölçülmeyen pay = sayaç − paneldeki cihazlar; fatura gerekmez.', enMW3: 'Yılın toplamı ve kademe hesabı sayacın kWh kaydından.', enMW4: 'Home Assistant\'ın Enerji ayarlarına şebeke kaynağı olarak eklendi; kaldırınca geri alınır.', enSolT2: 'Evinde hangisi varsa onu aç; yalnızca onun ayarları görünür.', enSunOn: 'Güneş enerjisi var', enSunOnT: 'Panel ya da inverter', enBatOn: 'Batarya var', enBatOnT: 'Güneşli ya da güneşsiz', enSolNone: 'İkisi de kapalı. Evinde güneş paneli ya da batarya varsa yukarıdan aç.', enBgCh: '{d} tarihinden beri şarj', enBgDis: 'Deşarj', enBgLoss: 'Kayıp', enBgGain: 'Bataryanın kazandırdığı', enBgCost: 'Bataryanın maliyeti', enBgNoTou: 'Kazanç üç zamanlı tarifede hesaplanır (1 kWh her saat aynı fiyatsa batarya para kazandırmaz)', enBgNone: 'Batarya kaydı henüz yok; Home Assistant birkaç saat sonra toplar.', enGridFromMeter: 'Şebeke ev sayacından geliyor: {n}.', enGridNoMeter: 'Ev sayacı yoksa', enFOut: 'Şebeke', enFOutT: 'Kesinti', enBatN: 'batarya {p}', enBatOnly: 'batarya', enChTou: 'Üç zamanlı', enChTouT: 'Gündüz, puant, gece ayrı fiyat.', enTouExp: 'Kademe yok; fiyat saate göre: gündüz 06-17, puant 17-22, gece 22-06. Resmi fiyatlar vergiler dahil; faturan farklıysa düzelt.', enTouD: 'Gündüz (06-17)', enTouP: 'Puant (17-22)', enTouN: 'Gece (22-06)', enFillTou: 'Resmi fiyatları doldur', enFillTouT: 'EPDK, mesken, vergiler dahil', enTouSum: 'Bu dönem tüketimin: gündüz %{d}, puant %{p}, gece %{n} · 1 kWh ortalama {u}', enTouSumEst: 'Saatlik kayıt yok; tipik bir ev gibi hesaplanıyor (gündüz %50, puant %25, gece %25).', enTouCmp: 'Kademeli tarifede bu dönem ~{a}, üç zamanlıda ~{b}.', enTarLead2: 'Kartlardaki TL hesapları buradan. Üç adım; fatura girmen gerekmiyor, yılın toplamı Home Assistant\'ın kayıtlarından gelir.', enTarQ1: 'Faturanda hangi tarife var?', enChTier: 'Kademeli', enChTierT: 'Çoğu ev. Günde 8 kWh\'e kadar ucuz.', enChSktt: 'Son kaynak', enChSkttT: 'Yıllık sınırı geçtiysen.', enChBill: 'Bilmiyorum', enChBillT: 'Faturadan hesaplansın.', enChSingle: 'Sabit fiyat', enChSingleT: 'Kademesiz ya da anlaşmalı.', enTarQ2: '1 kWh kaça geliyor?', enTierExp2: 'Fatura döneminde günde ortalama {k} kWh\'e kadar olan tüketim ucuz, üstü pahalı. Resmi fiyatlar vergiler dahil; faturan farklıysa düzelt.', enPerSum: 'Bu dönem ({a} – {b}): şimdiye kadar {k} kWh, dönemin sınırı {l} kWh · dönem sonunda ~{e} kWh, ~{t}', enSkttExp: 'Son kaynakta kademe yok: her kWh aynı fiyattan, ama fiyat her ay değişir. Faturandaki 1 kWh\'e düşen tutarı yaz (vergiler dahil).', enGoBills: 'Faturalara git', enTarQ3: 'Yılın nasıl gidiyor?', enYNoData3: 'Home Assistant\'ta bu yılın enerji kaydı bulunamadı. Enerji ayarlarına şebeke sayacını ekle ya da panele güç ölçen cihaz ekle; istersen aşağıya faturalarındaki toplamı yaz.', enV_ok: 'Bu hızla yılı ~{p} kWh ile bitirirsin, sınırın {d} kWh altında. Fiyat değişmez.', enV_cross: 'Bu hızla {c} civarında sınırı geçersin. <b>{s}</b> tarihinden itibaren elektrik son kaynak fiyatından gelir, {y} sonuna kadar sürer.', enV_now: 'Sınırı geçtin: <b>{s}</b> tarihinden beri son kaynak fiyatı geçerli. 1. adımda "Son kaynak"ı seç ki hesaplar doğru olsun.', enV_nowOn: 'Sınırı geçtin: <b>{s}</b> tarihinden beri son kaynak fiyatındasın. Hesaplar bu fiyatla yapılıyor.', enV_prev: 'Geçen yıl {p} kWh ile sınırın ({l}) üstündeydin: bu yıl son kaynak tarifesindesin. 1. adımda "Son kaynak"ı seç.', enV_prevOn: 'Geçen yıl {p} kWh ile sınırın ({l}) üstündeydin: bu yıl son kaynak tarifesindesin. Hesaplar bu fiyatla yapılıyor.', enRowTot: '{y} toplamı', enSrc_grid: 'Home Assistant\'taki şebeke sayacından · fatura gerekmiyor', enSrc_panel: 'Panelin ölçtüklerinden · ölçülmeyen cihazlar yok, gerçeği daha fazla', enSrc_bills: 'Girdiğin faturalardan', enSrc_manual: 'Yazdığın toplamdan', enSrc_none: '', enSrcTail: 'son faturadan sonrası Home Assistant\'tan', enSrcEst: 'kayıt {d} tarihinden başlıyor, öncesi ortalamayla tamamlandı', enRowAvg: 'Günlük ortalama', enRowAvgT: '1 Ocak\'tan bu yana', enRowProj: 'Bu hızla yıl sonu', enRowProjT: 'Sınır {l} kWh', enRowCross: 'Sınırı geçeceğin gün', enRowCrossT: 'Bu hız sürerse', enRowStart: 'Son kaynak fiyatı başlar', enRowStartT: 'Geçtiğin ayı izleyen 3. ayın 1\'i', enRowPrev: '{y} toplamı', enRowPrevT: 'Bu yılın sınırı {l} kWh', enRowSktt: 'Son kaynakta 1 kWh', enRowSkttT: 'Her ay değişir; geçince faturandakini yaz', enHow: 'Nasıl işliyor?', enMoreExact: 'Daha kesin olsun (isteğe bağlı)', enMoreExactT: 'Faturalarındaki kWh\'lerin toplamı. Boş bırakırsan Home Assistant\'ın kayıtları kullanılır.',
+    enTarLead: 'Kartlardaki TL hesapları buradan gelir. Faturandaki gibi doldur; emin değilsen "Faturadan" seç, birim fiyat girdiğin faturadan hesaplanır.', enTarQ: 'Elektriği hangi fiyattan alıyorsun?', enPrTier2: 'Kademeli (çoğu ev)', enTierExp: 'Evlerin normal tarifesi. Fatura döneminde günde ortalama {k} kWh\'e kadar olan tüketim ucuz, üstü pahalı fiyattan: 30 günlük dönemde ilk {m} kWh ucuz. Fiyatları vergiler dahil yaz (faturada 1 kWh\'ye düşen tutar).', enLow2: 'Günde {k} kWh\'e kadar', enHigh2: 'Üstü', enFill: 'Resmi fiyatları yaz', enFillT: 'EPDK 4 Nisan 2026 tarifesi: 3,24 ve 4,88 TL (enerji, dağıtım, %5 tüketim vergisi, %1 enerji fonu ve %10 KDV dahil). Tarife değişince güncellemen gerekir.', enTierMore: 'Günlük sınırı değiştir', enDailyT: 'Mesken için 8 kWh. Dönemin sınırı gün sayısı × bu değer.', enSingleExp: 'Kademe yoksa ya da ikili anlaşmayla sabit fiyattan alıyorsan: her kWh bu fiyattan.', enYTitle: 'Yıllık sınır: {n} kWh', enYR1: 'Bir takvim yılında (1 Ocak – 31 Aralık) evin tüketimi {n} kWh\'i geçerse elektrik kademeli fiyattan değil, her ay değişen ve daha pahalı "son kaynak" fiyatından gelir.', enYR2: 'Geçtiğin ay değil, ondan sonraki 3. ayın 1\'inde başlar: ekimde geçersen 1 Ocak\'tan, aralıkta geçersen 1 Mart\'tan.', enYR3: 'O yılın sonuna kadar sürer. Bir yılın toplamı sınırın altında kalırsa ertesi yıl normal fiyata dönersin.', enYR4: '2026 tüketimi de 3.000 kWh ile sayılıyor (EPDK 30 Ekim 2026 kararı; önce 4.000\'di). Tek bir ayın yüksek olması tek başına bir şey değiştirmez, önemli olan yılın toplamı.', enYThis: '{y} toplamı (sayaç)', enYAvg: 'Günlük ortalama', enYProj: 'Bu hızla yıl sonunda', enYVOk: 'Bu hızla yılı ~{p} kWh ile bitirirsin, sınırın {d} kWh altında. Fiyat değişmez.', enYVCross: 'Bu hızla sınırı {c} civarında geçersin. Son kaynak fiyatı {s} tarihinden itibaren başlar.', enYVPast: 'Bu yıl sınırı geçtin. Son kaynak fiyatı {s} tarihinden itibaren (ya da çoktan) geçerli; fiyatını aşağıya yaz ve "Şu an son kaynak tarifesindeyim"i aç.', enYVPrev: 'Geçen yıl {p} kWh ile sınırın üstündeydin: bu yıl son kaynak tarifesindesin. Fiyatını aşağıya yaz ve "Şu an son kaynak tarifesindeyim"i aç.', enYNoData2: 'Bu yılın tüketimini görmek için aşağıya 1 Ocak\'tan son faturaya kadarki toplamı yaz ya da Faturalar bölümüne bu yılın faturalarını gir. Son faturadan sonrasını panel kendisi ekler.', enYtd: '1 Ocak\'tan son faturanın sonuna kadar (kWh)', enYtdT: 'Bu yılın faturalarındaki kWh\'lerin toplamı. Boşsa girdiğin faturalardan toplanır; son faturadan sonrasını panel ekler.', enPrev: '{y} toplamı (kWh)', enSktt2: 'Son kaynak fiyatı', enSkttT2: 'Vergiler dahil, 1 kWh. Her ay değişir: (piyasa fiyatı + YEKDEM) × 1,05 + dağıtım + vergiler. Bu tarifedeysen faturandaki değeri yaz.', enFillS: 'Yaklaşık değer yaz', enFillST: '~7 TL: ekim 2026 piyasa fiyatlarıyla örnek hesap, kesin değil.', enSkttOn: 'Şu an son kaynak tarifesindeyim', enSkttOnT: 'Açıkken bütün hesaplar kademesiz, son kaynak fiyatıyla yapılır.', enYMore: 'Sınırı elle değiştir', enYLimT: 'Ticarethane ya da farklı bir sınır için.', enTarSrc: 'Kaynak: EPDK tarife tabloları (4 Nisan 2026) ve son kaynak tedarik tarifesi kararı (30 Ekim 2026). Kesin tutar için faturan esastır.',
     enYear: 'Yıllık sınır', enYearT: 'Bir yılda bu sınır aşılırsa daha yüksek tarifeye geçilir (aşıldığı ayı izleyen 3. ayın başında). 2026 için 4.000, 2027\'den itibaren 3.000 kWh.', enYAuto: 'Yıla göre ({n})', enYMan: 'Elle', enYLim: 'Sınır (kWh/yıl)', enSktt: 'Sınır aşılınca fiyat', enSkttT: 'Tahmin için; boş bırakılabilir', enYNow: 'Son 12 ay', enYEnd: 'Sınıra kalan', enYOver: 'Sınır aşıldı', enYNoData: 'Faturalar bölümüne son 12 ayın tüketimi ya da faturalar girilince hesaplanır.',
     enBillT: 'Fatura girmek üç şey sağlar: gerçek birim fiyat, panelin ölçmediği pay ve yıllık sınır için geriye dönük toplam.', enBFrom: 'Dönem başı', enBTo: 'Dönem sonu', enBKwh: 'Tüketim (kWh)', enBTl: 'Toplam tutar', enBAdd: 'Fatura ekle', enBPer: 'Dönem', enBPanel: 'Panel ölçtü', enBUnt: 'Ölçülmeyen', enBUnit: 'kWh başına', enBBad: 'Dönem tarihlerini, kWh\'yi ve tutarı yaz', enBAdding: 'Panelin o dönemdeki toplamı hesaplanıyor…', enBNone: 'Henüz fatura yok.',
     enL12: 'Son 12 ayın tüketimi (kWh)', enL12T: 'Faturanın arkasındaki grafikte yazar; yıllık sınır takibi bununla başlar.', enUntT: 'Son dönemde sayaç {a} kWh, panel {b} kWh. Aradaki {c} kWh (%{p}) hiçbir sensörde görünmüyor; kategori karolarında gri "Ölçülmeyen" karosu olarak çıkar. Buzdolabı, fırın, çamaşır makinesi için tahmini değer girersen bu pay küçülür.',
@@ -177,12 +179,14 @@ const ADM = {
     enPrice: 'Price per kWh', enPriceT: 'If set, the cards also show the cost (in Home Assistant\'s currency)', enTotal: 'Total home power', enTotalT: 'If a power sensor is picked, Halo shows it; otherwise the sum of the categories',
     enAuto: 'Sum of categories', enSb: 'Standby power', enSbT: 'If none is picked, the lowest total power of the last 24 hours', enSbAuto: 'Lowest of the last 24 hours', enLim: 'Halo colour limits (W)', enLimT: 'Green, yellow, orange; above is red',
     enBadge: 'Watts on light tiles', enBadgeT: 'Live watts in the corner of light and plug tiles that measure power', enB_off: 'Off', enB_on: 'When on', enB_always: 'Always',
-    enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enCNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
+    enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enChNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
     enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
     enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Devices, categories, solar, price, bills and tips on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
-    enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'Last 12 months', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
+    enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'This year', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
     enPrMode: 'Price', enPrBill: 'From the bill', enPrSingle: 'One price', enPrTier: 'Tiered', enPrBillT: 'Last bill: {k} kWh, {t} → {u} per kWh. Updated with every new bill.', enPrBillNo: 'Enter a bill under Bills and the unit price comes from it (taxes and fixed charges included).',
     enLow: 'Lower tier', enHigh: 'Upper tier', enDaily: 'Daily limit', enMonthLim: 'This month\'s limit ({d} days × {k} kWh)', enLowL: 'Lower tier: {k} kWh', enHighL: 'Upper tier: {k} kWh', enMonthSo: 'This month so far ({k} kWh)', enTierT: 'Usage under the daily average limit costs the lower price, the rest the upper price. Enter prices per kWh with taxes, as on the bill.',
+    en_meter: 'Home meter', enMeterT: 'A device that measures the whole home (like a Shelly Pro EM, fitted in the fuse box). Once picked, the dashboard takes the real usage, the untracked share and the year\'s total from it, and adds it to Home Assistant\'s Energy settings as the grid source itself.', enMeterFound: 'Meters found ({n})', enMeterUse: 'Use as home meter', enMeterNone: 'No device measuring the whole home was found. Add it to Home Assistant first; it shows up here by itself.', enMeterManual: 'Not listed, let me pick', enMeterDel: 'Remove', enMPow: 'Power now', enMPowT: 'What the home draws now (W)', enMIn: 'Energy from the grid', enMInT: 'Total kWh counter; the year\'s total comes from this', enMOut: 'Energy to the grid', enMOutT: 'If you export solar', enMVolt: 'Voltage', enMVoltT: 'To spot an outage (V)', enMInvT: 'Turn on if import shows negative', enMNow: 'Home now', enMPanel: 'Devices on the dashboard', enMUnt: 'Untracked', enMToday: 'Today', enMYear: '{y} total', enMYearEst: 'records from {d}', enMNoE: 'No energy (kWh) sensor picked: needed for the year\'s total and the grid source.', enMWhat: 'What changed?', enMW1: 'Power now comes from the meter: measured, not estimated.', enMW2: 'Untracked share = meter − dashboard devices; no bills needed.', enMW3: 'The year\'s total and the tier check use the meter\'s kWh records.', enMW4: 'Added to Home Assistant\'s Energy settings as the grid source; removing it undoes that.', enSolT2: 'Turn on what your home has; only its settings show.', enSunOn: 'I have solar', enSunOnT: 'Panels or an inverter', enBatOn: 'I have a battery', enBatOnT: 'With or without solar', enSolNone: 'Both are off. Turn one on above if your home has solar panels or a battery.', enBgCh: 'Charged since {d}', enBgDis: 'Discharged', enBgLoss: 'Lost', enBgGain: 'Battery saved you', enBgCost: 'Battery cost you', enBgNoTou: 'Savings are worked out on a time-of-use tariff (if 1 kWh costs the same at every hour, a battery saves no money)', enBgNone: 'No battery records yet; Home Assistant collects them over a few hours.', enGridFromMeter: 'The grid comes from the home meter: {n}.', enGridNoMeter: 'If there is no home meter', enFOut: 'Grid', enFOutT: 'Outage', enBatN: 'battery {p}', enBatOnly: 'battery', enChTou: 'Time of use', enChTouT: 'Day, peak and night prices.', enTouExp: 'No tiers; the price depends on the hour: day 06-17, peak 17-22, night 22-06. Official prices with taxes; correct them if your bill differs.', enTouD: 'Day (06-17)', enTouP: 'Peak (17-22)', enTouN: 'Night (22-06)', enFillTou: 'Fill in official prices', enFillTouT: 'EPDK, household, with taxes', enTouSum: 'Your use this period: day {d}%, peak {p}%, night {n}% · 1 kWh averages {u}', enTouSumEst: 'No hourly records; worked out like a typical home (day 50%, peak 25%, night 25%).', enTouCmp: 'On the tiered tariff this period ~{a}, on time of use ~{b}.', enTarLead2: 'The money figures on the cards come from here. Three steps; no bills needed, the year\'s total comes from Home Assistant\'s records.', enTarQ1: 'Which tariff is on your bill?', enChTier: 'Tiered', enChTierT: 'Most homes. Cheaper up to 8 kWh a day.', enChSktt: 'Last resort', enChSkttT: 'If you passed the yearly limit.', enChBill: 'Not sure', enChBillT: 'Work it out from a bill.', enChSingle: 'Fixed price', enChSingleT: 'No tiers or a contract.', enTarQ2: 'What does 1 kWh cost?', enTierExp2: 'Usage up to an average {k} kWh a day in the billing period is cheaper, the rest dearer. Official prices with taxes; correct them if your bill differs.', enPerSum: 'This period ({a} – {b}): {k} kWh so far, period limit {l} kWh · ~{e} kWh by the end, ~{t}', enSkttExp: 'No tiers on the last-resort tariff: every kWh costs the same, but the price changes monthly. Enter what 1 kWh costs on your bill (with taxes).', enGoBills: 'Go to bills', enTarQ3: 'How is the year going?', enYNoData3: 'No energy records for this year in Home Assistant. Add the grid meter in the Energy settings or add devices that measure power; you can also enter the total from your bills below.', enV_ok: 'At this rate you end the year at ~{p} kWh, {d} kWh under the limit. The price stays.', enV_cross: 'At this rate you cross the limit around {c}. From <b>{s}</b> electricity comes at the last-resort price until the end of {y}.', enV_now: 'You crossed the limit: the last-resort price applies since <b>{s}</b>. Pick "Last resort" in step 1 so the figures are right.', enV_nowOn: 'You crossed the limit: you are on the last-resort price since <b>{s}</b>. Figures use that price.', enV_prev: 'Last year you were over the limit ({l}) with {p} kWh: this year you are on the last-resort tariff. Pick "Last resort" in step 1.', enV_prevOn: 'Last year you were over the limit ({l}) with {p} kWh: this year you are on the last-resort tariff. Figures use that price.', enRowTot: '{y} total', enSrc_grid: 'From the grid meter in Home Assistant · no bills needed', enSrc_panel: 'From what the dashboard measures · devices it does not measure are missing, the real figure is higher', enSrc_bills: 'From the bills you entered', enSrc_manual: 'From the total you entered', enSrc_none: '', enSrcTail: 'after the last bill from Home Assistant', enSrcEst: 'records start on {d}, the part before is filled in with the average', enRowAvg: 'Daily average', enRowAvgT: 'Since 1 January', enRowProj: 'At this rate by year end', enRowProjT: 'Limit {l} kWh', enRowCross: 'Day you cross the limit', enRowCrossT: 'If this rate holds', enRowStart: 'Last-resort price starts', enRowStartT: 'The 1st of the third month after crossing', enRowPrev: '{y} total', enRowPrevT: 'This year\'s limit {l} kWh', enRowSktt: '1 kWh on the last-resort tariff', enRowSkttT: 'Changes monthly; enter your bill\'s value once there', enHow: 'How does it work?', enMoreExact: 'More exact (optional)', enMoreExactT: 'The sum of kWh on your bills. Leave empty to use Home Assistant\'s records.',
+    enTarLead: 'The money figures on the cards come from here. Fill it in as on your bill; if unsure, pick "From bill" and the unit price is worked out from the bill you enter.', enTarQ: 'Which price do you pay?', enPrTier2: 'Tiered (most homes)', enTierExp: 'The usual home tariff. Usage up to an average {k} kWh a day in the billing period is cheaper, the rest is dearer: in a 30-day period the first {m} kWh. Enter prices with taxes (what 1 kWh costs on the bill).', enLow2: 'Up to {k} kWh a day', enHigh2: 'Above', enFill: 'Fill in official prices', enFillT: 'EPDK tariff of 4 April 2026: 3.24 and 4.88 TL (energy, distribution, 5% consumption tax, 1% energy fund and 10% VAT included). Update them when the tariff changes.', enTierMore: 'Change the daily limit', enDailyT: '8 kWh for homes. The period limit is days × this value.', enSingleExp: 'Without tiers, or with a fixed price from a supplier contract: every kWh at this price.', enYTitle: 'Yearly limit: {n} kWh', enYR1: 'If the home uses more than {n} kWh in a calendar year (1 January – 31 December), electricity no longer comes at the tiered price but at the dearer "last resort" price that changes every month.', enYR2: 'It starts not in the month you cross but on the 1st of the third month after it: cross in October and it starts on 1 January, in December on 1 March.', enYR3: 'It lasts until the end of that year. If a year\'s total stays under the limit, the normal price comes back the next year.', enYR4: '2026 usage is also counted against 3,000 kWh (EPDK decision of 30 October 2026; it used to be 4,000). One high month alone changes nothing; the year\'s total is what counts.', enYThis: '{y} total (meter)', enYAvg: 'Daily average', enYProj: 'At this rate by year end', enYVOk: 'At this rate you end the year at ~{p} kWh, {d} kWh under the limit. The price stays.', enYVCross: 'At this rate you cross the limit around {c}. The last-resort price starts on {s}.', enYVPast: 'You crossed the limit this year. The last-resort price applies from {s} (or already does); enter it below and turn on "I am on the last-resort tariff".', enYVPrev: 'Last year you were over the limit with {p} kWh: this year you are on the last-resort tariff. Enter its price below and turn on "I am on the last-resort tariff".', enYNoData2: 'To see this year\'s usage, enter the total from 1 January to the end of your last bill below, or add this year\'s bills in Bills. The dashboard adds what came after the last bill.', enYtd: '1 January to the end of the last bill (kWh)', enYtdT: 'The sum of kWh on this year\'s bills. If empty, it is added up from the bills you entered; the dashboard adds what came after the last bill.', enPrev: '{y} total (kWh)', enSktt2: 'Last-resort price', enSkttT2: 'With taxes, per kWh. Changes monthly: (market price + YEKDEM) × 1.05 + distribution + taxes. If you are on it, enter the value from your bill.', enFillS: 'Fill in an estimate', enFillST: '~7 TL: an example with October 2026 market prices, not exact.', enSkttOn: 'I am on the last-resort tariff', enSkttOnT: 'When on, everything is worked out without tiers at the last-resort price.', enYMore: 'Change the limit by hand', enYLimT: 'For a business or a different limit.', enTarSrc: 'Source: EPDK tariff tables (4 April 2026) and the last-resort tariff decision (30 October 2026). Your bill is what counts.',
     enYear: 'Yearly limit', enYearT: 'Above this yearly usage a higher tariff applies (from the start of the third month after the one it was crossed in). 4,000 kWh for 2026, 3,000 kWh from 2027.', enYAuto: 'By year ({n})', enYMan: 'Manual', enYLim: 'Limit (kWh/year)', enSktt: 'Price above the limit', enSkttT: 'For estimates; optional', enYNow: 'Last 12 months', enYEnd: 'Left to the limit', enYOver: 'Limit crossed', enYNoData: 'Calculated once the last 12 months or bills are entered under Bills.',
     enBillT: 'Bills give three things: the real unit price, the share the dashboard does not measure and a past total for the yearly limit.', enBFrom: 'Period start', enBTo: 'Period end', enBKwh: 'Usage (kWh)', enBTl: 'Total amount', enBAdd: 'Add bill', enBPer: 'Period', enBPanel: 'Measured', enBUnt: 'Not measured', enBUnit: 'Per kWh', enBBad: 'Enter the period dates, kWh and amount', enBAdding: 'Adding up the dashboard\'s total for that period…', enBNone: 'No bills yet.',
     enL12: 'Usage of the last 12 months (kWh)', enL12T: 'Shown on the chart on the back of the bill; the yearly limit tracking starts from it.', enUntT: 'Last period: meter {a} kWh, dashboard {b} kWh. The {c} kWh between ({p}%) is not on any sensor; it shows as a grey "Not measured" category tile. Add estimates for the fridge, oven or washing machine to make it smaller.',
@@ -492,6 +496,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const d = STORE.data;
     this._lastJson = JSON.stringify(d);   // kendi değişikliğimiz: abonelikten gelince yeniden çizme
     STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
+    if (key === 'settings' && this._modal === 'energy' && this._hass) {   // sayaç, güneş/batarya ya da tarife değiştiyse veriyi hemen yenile
+      const k2 = JSON.stringify([lpEnMeter(), lpEnSolar(), lpEnCfg().price_mode || '']);
+      if (this._enKey !== k2) { const first = this._enKey === undefined; this._enKey = k2; if (!first) { LP_EN.at = 0; LP_EN.yr = null; LP_EN.tou = null; setTimeout(() => lpEnEnsure(this._hass), 50); } }
+    }
     return STORE.set(key, value).catch((e) => this._toast(this._t('err', { e: (e && e.message) || e }), false));
   }
   _snap() {
@@ -1255,6 +1263,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _enOpen(view) {
     this._modal = 'energy'; this._menu = null; this._env = view || this._env || 'sum';
     if (!this._enU) this._enU = lpEnSub(() => { if (this._modal === 'energy') this._render(); });
+    this._enKey = JSON.stringify([lpEnMeter(), lpEnSolar(), lpEnCfg().price_mode || '']);
     LP_EN.at = 0; lpEnEnsure(this._hass);
     this._lrnStartPoll();
     this._render();
@@ -1262,10 +1271,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _enEsts() { const E = STORE.data && STORE.data.estimates; return lhdIsObj(E) ? E : {}; }
   _enPage() {
     const t = (k, v) => esc(this._t(k, v)), V = this._env === 'est' ? 'dev' : this._env || 'sum', L = this._lang;
-    const nav = [['sum', 'mdi:view-dashboard-outline'], ['dev', 'mdi:power-plug-outline'], ['cat', 'mdi:shape-outline'], ['solar', 'mdi:solar-power-variant-outline'], ['tariff', 'mdi:cash'], ['bill', 'mdi:file-document-outline'], ['tips', 'mdi:lightbulb-on-outline'], ['imp', 'mdi:import'], ['look', 'mdi:eye-outline'], ['src', 'mdi:database-outline']];
+    const nav = [['sum', 'mdi:view-dashboard-outline'], ['dev', 'mdi:power-plug-outline'], ['cat', 'mdi:shape-outline'], ['meter', 'mdi:meter-electric-outline'], ['solar', 'mdi:solar-power-variant-outline'], ['tariff', 'mdi:cash'], ['bill', 'mdi:file-document-outline'], ['tips', 'mdi:lightbulb-on-outline'], ['imp', 'mdi:import'], ['look', 'mdi:eye-outline'], ['src', 'mdi:database-outline']];
     const cnt = { bill: lpEnBills().length, dev: Object.keys(this._enEsts()).length, cat: this._enCats().length };
     const list = nav.map((n) => '<button class="gli' + (V === n[0] ? ' on' : '') + '" data-env="' + n[0] + '"><ha-icon class="s16" icon="' + n[1] + '"></ha-icon><span style="flex:1">' + t('en_' + n[0]) + '</span>' + (cnt[n[0]] ? '<span class="gno">' + cnt[n[0]] + '</span>' : '') + '</button>').join('');
-    const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'dev' ? this._enDev() : V === 'cat' ? this._enCat() : V === 'solar' ? this._enSolarV() : V === 'tips' ? this._enTipsV() : V === 'imp' ? this._enImpV() : V === 'look' ? this._enLook() : this._enSum();
+    const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'dev' ? this._enDev() : V === 'cat' ? this._enCat() : V === 'meter' ? this._enMeterV() : V === 'solar' ? this._enSolarV() : V === 'tips' ? this._enTipsV() : V === 'imp' ? this._enImpV() : V === 'look' ? this._enLook() : this._enSum();
     return '<div class="ov" data-ovl><div class="dlg guide enpg"><div class="dh"><div class="di"><ha-icon icon="mdi:lightning-bolt"></ha-icon></div><h2>' + t('enPage') + '</h2>' +
       '<button class="btn ic" data-a="close" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
       '<div class="gbody"><div class="glist enl">' + list + '</div><div class="gmain enm"><div class="ennav">' + nav.map((n) => '<button class="' + (V === n[0] ? 'on' : '') + '" data-env="' + n[0] + '">' + t('en_' + n[0]) + '</button>').join('') + '</div>' + body + '</div></div></div></div>' + this._lrnHtml();
@@ -1283,12 +1292,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const ew = ek.reduce((a, k) => a + (this._enDevW(k, E[k]) || 0), 0), C = this._enCats(), sol = lpEnSolar(), F = lpEnFlowNow(S), tips = lpEnTips(this._hass, M, this._lang), nf = this._enFound().length;
     return '<h3 class="enh">' + t('en_sum') + '</h3><p class="enlead">' + t('enSumT') + '</p><div class="ensl">' +
       row('tariff', this._t('enSMonth'), M.days ? this._enNum(mk) + ' kWh' + (u ? ' · ' + this._enTl(mc.tl) : '') : '–',
-        mode === 'tier' && mc ? pill(this._t(mc.hi > 0 ? 'enHigh' : 'enLow'), mc.hi > 0 ? 'w' : 'ok') : pill(u ? (mode === 'bill' ? this._t('enPrBill') : this._t('enPrSingle')) + ' · ' + this._enNum(u, 2) + ' ' + this._enCur() + '/kWh' : this._t('enPriceNone'))) +
+        mode === 'tou' ? pill(this._t('enChTou')) : mode === 'tier' && mc ? pill(this._t(mc.hi > 0 ? 'enHigh' : 'enLow'), mc.hi > 0 ? 'w' : 'ok') : pill(u ? (mode === 'bill' ? this._t('enPrBill') : this._t('enPrSingle')) + ' · ' + this._enNum(u, 2) + ' ' + this._enCur() + '/kWh' : this._t('enPriceNone'))) +
       row('tariff', this._t('enSYear'), yk ? this._enNum(yk) + ' / ' + this._enNum(yl) + ' kWh' : this._t('enNone'), yk ? pill('%' + Math.round(yk / yl * 100), yk / yl > 0.85 ? 'w' : 'ok') : '') +
       row('bill', this._t('enSBill'), b ? this._enNum(b.kwh) + ' kWh · ' + this._enTl(b.tl) : this._t('enNoBill'), b && lpEnUntracked() ? pill(this._t('enUnt', { p: Math.round(lpEnUntracked() * 100) }), 'w') : '') +
       row('dev', this._t('en_dev'), ek.length ? this._t('enDevN', { n: ek.length, m: nm, v: ek.length - nm, w: lpEnWs(ew, this._lang) }) : this._t('enNone'), nf ? pill(this._t('enFoundP', { n: nf }), 'w') : '') +
       row('cat', this._t('en_cat'), C.length ? this._t('enCatN', { n: C.length, u: ek.filter((k) => !E[k].cat).length }) : this._t('enNone'), '') +
-      row('solar', this._t('en_solar'), sol.on ? (F && F.prod !== null ? this._t('enSolN', { w: lpEnWs(F.prod, this._lang) }) : this._t('enSolNoS')) : this._t('enOff'), '') +
+      row('meter', this._t('en_meter'), lpEnMeter() && lpEnMeter().power ? this._ename(lpEnMeter().power) + ' · ' + lpEnWs(lpEnW(S, lpEnMeter().power), this._lang) : this._t('enNone'), '') +
+      row('solar', this._t('en_solar'), lpEnSunOn(sol) || lpEnBatOn(sol) ? [lpEnSunOn(sol) ? (F && F.prod !== null ? this._t('enSolN', { w: lpEnWs(F.prod, this._lang) }) : this._t('enSolNoS')) : '', lpEnBatOn(sol) ? (F && F.soc !== null ? this._t('enBatN', { p: lpEnPct(F.soc, this._lang) }) : this._t('enBatOnly')) : ''].filter((x) => x).join(' · ') : this._t('enOff'), '') +
       row('tips', this._t('en_tips'), lpEnTipCfg().on === false ? this._t('enOff') : this._t('enTNow', { n: tips.length }), tips.length ? pill(String(tips.length), 'w') : '') +
       row('src', this._t('en_src'), lpEnLemur() ? this._t(lpEnCfg().sync === false ? 'enSyncOff' : 'enSyncOn') : M.cats.length ? this._t('enCats', { n: M.cats.length, d: M.devs.length }) : this._t('enNoData'), '') + '</div>';
   }
@@ -1307,36 +1317,78 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="srow"><div class="t"><b>' + t('enTotal') + '</b><span>' + t('enTotalT') + '</span></div>' + this._enPowSel('energy.total', en.total, this._t('enAuto')) + '</div>' +
       '<div class="srow"><div class="t"><b>' + t('enSb') + '</b><span>' + t('enSbT') + '</span></div>' + this._enPowSel('energy.standby', en.standby, this._t('enSbAuto')) + '</div>';
   }
-  _enTariff() {
-    const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), M = LP_EN.m, mode = en.price_mode || (lpEnLastBill() ? 'bill' : 'single');
-    const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
-    const num = (path, v, step, unit) => '<span class="ennum"><input class="inp" type="number" min="0" step="' + step + '" data-dec data-sf="' + path + '" value="' + esc(v === undefined || v === null ? '' : v) + '">' + (unit ? '<i>' + esc(unit) + '</i>' : '') + '</span>';
-    const cur = this._enCur() + '/kWh';
-    let h = '<h3 class="enh">' + t('en_tariff') + '</h3><p class="enlead">' + t('enPriceT') + '</p>' +
-      '<div class="srow"><div class="t"><b>' + t('enPrMode') + '</b></div>' + seg('energy.price_mode', mode, [['bill', this._t('enPrBill')], ['single', this._t('enPrSingle')], ['tier', this._t('enPrTier')]]) + '</div>';
-    const b = lpEnLastBill();
-    if (mode === 'bill') h += '<div class="hint">' + (b ? t('enPrBillT', { k: this._enNum(b.kwh), t: this._enTl(b.tl), u: this._enTl(b.tl / b.kwh) }) : t('enPrBillNo')) + '</div>';
-    if (mode === 'single') h += '<div class="srow"><div class="t"><b>' + t('enPrice') + '</b><span>' + t('enPriceT') + '</span></div>' + num('energy.price', en.price, '0.01', cur) + '</div>';
-    if (mode === 'tier') {
-      h += '<div class="hint">' + t('enTierT') + '</div><div class="engrid">' +
-        '<div class="fld"><label>' + t('enLow') + '</label>' + num('energy.low', en.low, '0.01', cur) + '</div>' +
-        '<div class="fld"><label>' + t('enHigh') + '</label>' + num('energy.high', en.high, '0.01', cur) + '</div>' +
-        '<div class="fld"><label>' + t('enDaily') + '</label>' + num('energy.daily', en.daily || 8, '0.5', 'kWh') + '</div></div>';
+  _enTariff() {   // üç adım: tarife, 1 kWh'in fiyatı, yılın gidişi (fatura girmeden de çalışır)
+    const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), M = LP_EN.m, L = this._lang === 'tr' ? 'tr-TR' : 'en-GB';
+    const num = (path, v, step, unit, ph) => '<span class="ennum"><input class="inp" type="number" min="0" step="' + step + '" data-dec data-sf="' + path + '" value="' + esc(v === undefined || v === null ? '' : v) + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + (unit ? '<i>' + esc(unit) + '</i>' : '') + '</span>';
+    const cur = this._enCur() + '/kWh', fd = (d, y) => d.toLocaleDateString(L, y ? { day: 'numeric', month: 'long', year: 'numeric' } : { day: 'numeric', month: 'long' });
+    const pm = en.price_mode || (lpEnLastBill() ? 'bill' : 'tier'), ch = en.sktt_on ? 'sktt' : pm === 'bill' || pm === 'single' || pm === 'tou' ? pm : 'tier';
+    const step = (n, title, body) => '<div class="tfs"><div class="tfn">' + n + '</div><div class="tfc"><div class="tft">' + title + '</div>' + body + '</div></div>';
+    const li = (k, sub, v, cls) => '<div class="tfli"><div class="k"><b>' + k + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</div><div class="v' + (cls ? ' ' + cls : '') + '">' + v + '</div></div>';
+    let h = '<h3 class="enh">' + t('en_tariff') + '</h3><p class="enlead">' + t('enTarLead2') + '</p>';
+    // 1) tarife
+    h += step(1, t('enTarQ1'), '<div class="tfch">' + [['tier', 'enChTier'], ['tou', 'enChTou'], ['sktt', 'enChSktt'], ['bill', 'enChBill'], ['single', 'enChSingle']].map((o) => '<button data-tfmode="' + o[0] + '"' + (ch === o[0] ? ' class="on"' : '') + '><b>' + t(o[1]) + '</b><span>' + t(o[1] + 'T') + '</span></button>').join('') + '</div>');
+    // 2) fiyat
+    let b2 = '';
+    if (ch === 'tier') {
+      b2 = '<p class="enexp">' + t('enTierExp2', { k: this._enNum(lpEnDaily(), lpEnDaily() % 1 ? 1 : 0) }) + '</p><div class="engrid g2">' +
+        '<div class="fld"><label>' + t('enLow2', { k: this._enNum(lpEnDaily(), lpEnDaily() % 1 ? 1 : 0) }) + '</label>' + num('energy.low', en.low, '0.01', cur) + '</div>' +
+        '<div class="fld"><label>' + t('enHigh2') + '</label>' + num('energy.high', en.high, '0.01', cur) + '</div></div>' +
+        '<div class="enfill"><button class="btn sm" data-a="entarfill"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('enFill') + '</button><span>' + t('enFillT') + '</span></div>';
       if (M && M.days && lpEnMode() === 'tier') {
-        const mk = lpEnMonthKwh(M), md = lpEnMonthDays(), c = lpEnMonthCost(mk, md, M);
-        h += '<div class="encalc"><div><span>' + t('enMonthLim', { d: md, k: this._enNum(lpEnDaily(), lpEnDaily() % 1 ? 1 : 0) }) + '</span><b>' + this._enNum(c.lim) + ' kWh</b></div>' +
-          '<div><span>' + t('enLowL', { k: this._enNum(c.lo, 1) }) + '</span><b>' + this._enTl(c.lo * lpEnNumOf(en.low)) + '</b></div>' +
-          '<div><span>' + t('enHighL', { k: this._enNum(c.hi, 1) }) + '</span><b>' + this._enTl(c.hi * lpEnNumOf(en.high)) + '</b></div>' +
-          '<div class="tot"><span>' + t('enMonthSo', { k: this._enNum(mk, 1) }) + '</span><b>' + this._enTl(c.tl) + '</b></div></div>';
+        const P = lpEnPeriod(), mk = lpEnMonthKwh(M), md = lpEnMonthDays(), D = 86400000;
+        const from = P ? new Date(P.from) : (() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })(), to = new Date(from.getTime() + (md - 1) * D);
+        const el = Math.max(1, (Date.now() - from.getTime()) / D), endK = mk / el * md, c = lpEnMonthCost(endK, md, M);
+        b2 += '<div class="tfsum">' + t('enPerSum', { a: fd(from), b: fd(to), k: this._enNum(mk), l: this._enNum(lpEnDaily() * md), e: this._enNum(endK), t: this._enTl(c.tl) }) + '</div>';
       }
+    } else if (ch === 'tou') {
+      b2 = '<p class="enexp">' + t('enTouExp') + '</p><div class="engrid g3">' + [['t_day', 'enTouD'], ['t_peak', 'enTouP'], ['t_night', 'enTouN']].map((o) => '<div class="fld"><label>' + t(o[1]) + '</label>' + num('energy.' + o[0], en[o[0]], '0.01', cur) + '</div>').join('') + '</div>' +
+        '<div class="enfill"><button class="btn sm" data-a="entoufill"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('enFillTou') + '</button><span>' + t('enFillTouT') + '</span></div>';
+      if (lpEnMode() === 'tou') {
+        const f = lpEnTouShare(), pc = (x) => Math.round(x * 100);
+        b2 += '<div class="tfsum">' + (f.known ? t('enTouSum', { d: pc(f.day), p: pc(f.peak), n: pc(f.night), u: this._enNum(lpEnUnit(M), 2) + ' ' + cur }) : t('enTouSumEst')) + '</div>';
+        if (M && M.days && f.known && lpEnNumOf(en.low) && lpEnNumOf(en.high)) {
+          const mk = lpEnMonthKwh(M), md = lpEnMonthDays(), lim = lpEnDaily() * md, tierTl = Math.min(mk, lim) * lpEnNumOf(en.low) + Math.max(0, mk - lim) * lpEnNumOf(en.high);
+          b2 += '<div class="hint">' + t('enTouCmp', { a: this._enTl(tierTl), b: this._enTl(mk * lpEnUnit(M)) }) + '</div>';
+        }
+      }
+    } else if (ch === 'sktt') {
+      b2 = '<p class="enexp">' + t('enSkttExp') + '</p><div class="engrid g2"><div class="fld"><label>' + t('enSktt2') + '</label>' + num('energy.sktt_price', en.sktt_price, '0.01', cur) + '</div></div>' +
+        '<div class="enfill"><button class="btn sm" data-a="enskttfill"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('enFillS') + '</button><span>' + t('enFillST') + '</span></div>';
+    } else if (ch === 'bill') {
+      const b = lpEnLastBill();
+      b2 = '<p class="enexp">' + (b ? t('enPrBillT', { k: this._enNum(b.kwh), t: this._enTl(b.tl), u: this._enTl(b.tl / b.kwh) }) : t('enPrBillNo')) + '</p><div><button class="btn sm" data-env="bill"><ha-icon class="s16" icon="mdi:file-document-outline"></ha-icon>' + t('enGoBills') + '</button></div>';
+    } else b2 = '<p class="enexp">' + t('enSingleExp') + '</p><div class="engrid g2"><div class="fld"><label>' + t('enPrice') + '</label>' + num('energy.price', en.price, '0.01', cur) + '</div></div>';
+    h += step(2, t('enTarQ2'), b2);
+    // 3) yılın gidişi
+    const P = M ? lpEnYearPlan(M) : null, y = new Date().getFullYear(), Y = LP_EN.yr;
+    let b3 = '';
+    if (!P) b3 = '<div class="hint">' + t('enYNoData3') + '</div>';
+    else {
+      const ok = !P.prevOver && !P.cross && !P.past, col = P.prevOver || P.nowIn ? 'var(--red)' : ok ? '#3DDC84' : 'var(--ac)', yE = P.start ? P.start.getFullYear() : y;
+      const verdict = P.prevOver ? this._t(en.sktt_on ? 'enV_prevOn' : 'enV_prev', { p: this._enNum(P.prev), l: this._enNum(lpEnLimitOf(y)) })
+        : P.nowIn ? this._t(en.sktt_on ? 'enV_nowOn' : 'enV_now', { s: fd(P.start, true) })
+        : P.cross ? this._t('enV_cross', { c: fd(P.cross), s: fd(P.start, true), y: yE })
+        : this._t('enV_ok', { p: this._enNum(P.proj), d: this._enNum(Math.max(0, P.lim - P.proj)) });
+      const src = t('enSrc_' + (P.src || 'none')) + (P.src === 'bills' || P.src === 'manual' ? ' · ' + t('enSrcTail') : '') + (P.est && Y && Y.first ? ' · ' + t('enSrcEst', { d: fd(new Date(Y.first), true) }) : '');
+      b3 = '<div class="tfbar"><div class="enbar"><i style="width:' + (Math.min(1, P.k / P.lim) * 100).toFixed(1) + '%;background:' + col + '"></i></div><span><b>' + (P.low ? '≥ ' : '') + this._enNum(P.k) + '</b> / ' + this._enNum(P.lim) + ' kWh</span></div>' +
+        '<div class="enverd" style="border-color:' + col + '">' + verdict + '</div><div class="tfl">' +
+        li(t('enRowTot', { y: y }), src, (P.est ? '~' : P.low ? '≥ ' : '') + this._enNum(P.k) + ' kWh') +
+        li(t('enRowAvg'), t('enRowAvgT'), this._enNum(P.avg, 1) + ' kWh') +
+        li(t('enRowProj'), t('enRowProjT', { l: this._enNum(P.lim) }), '~' + this._enNum(P.proj) + ' kWh', ok ? 'okc' : 'acc') +
+        (P.cross && !P.past ? li(t('enRowCross'), t('enRowCrossT'), '~' + esc(fd(P.cross))) : '') +
+        (P.start ? li(t('enRowStart'), t('enRowStartT'), '<em class="enp w">' + esc(fd(P.start, true)) + '</em>') : '') +
+        (P.prev ? li(t('enRowPrev', { y: y - 1 }), t('enRowPrevT', { l: this._enNum(lpEnLimitOf(y)) }), this._enNum(P.prev) + ' kWh', P.prevOver ? 'redc' : '') : '') +
+        '<div class="tfli"><div class="k"><b>' + t('enRowSktt') + '</b><span>' + t('enRowSkttT') + '</span></div><div class="v">' + num('energy.sktt_price', en.sktt_price, '0.01', cur, '~7') + '</div></div></div>';
     }
-    const yl = lpEnYearLimit(), yk = M ? lpEnYear(M) : 0, ym = en.year_mode === 'manual' ? 'manual' : 'auto';
-    h += '<div class="sh">' + t('enYear') + '</div>' +
-      '<div class="srow"><div class="t"><b>' + t('enYear') + '</b><span>' + t('enYearT') + '</span></div>' + seg('energy.year_mode', ym, [['auto', this._t('enYAuto', { n: this._enNum(new Date().getFullYear() >= 2027 ? 3000 : 4000) })], ['manual', this._t('enYMan')]]) + '</div>' +
-      (ym === 'manual' ? '<div class="srow"><div class="t"><b>' + t('enYLim') + '</b></div>' + num('energy.year_limit', en.year_limit || 4000, '100', 'kWh') + '</div>' : '') +
-      '<div class="srow"><div class="t"><b>' + t('enSktt') + '</b><span>' + t('enSkttT') + '</span></div>' + num('energy.sktt_price', en.sktt_price, '0.01', cur) + '</div>' +
-      (yk ? '<div class="encalc"><div><span>' + t('enYNow') + '</span><b>' + this._enNum(yk) + ' / ' + this._enNum(yl) + ' kWh</b></div><div class="tot"><span>' + t(yk >= yl ? 'enYOver' : 'enYEnd') + '</span><b style="color:' + (yk >= yl ? 'var(--red)' : yk / yl > 0.85 ? 'var(--ac)' : '#3DDC84') + '">' + this._enNum(Math.abs(yl - yk)) + ' kWh</b></div></div>' : '<div class="hint">' + t('enYNoData') + '</div>');
+    b3 += '<details class="enmore tfd"><summary>' + t('enHow') + '</summary><ul class="enrules"><li>' + t('enYR1', { n: '3.000' }) + '</li><li>' + t('enYR2') + '</li><li>' + t('enYR3') + '</li><li>' + t('enYR4') + '</li></ul></details>' +
+      '<details class="enmore tfd"><summary>' + t('enMoreExact') + '</summary><div class="engrid g2"><div class="fld"><label>' + t('enYtd') + '</label>' + num('energy.ytd', en.ytd, '1', 'kWh') + '</div><div class="fld"><label>' + t('enPrev', { y: y - 1 }) + '</label>' + num('energy.prev_year', en.prev_year, '1', 'kWh') + '</div></div><div class="hint">' + t('enMoreExactT') + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('enYLim') + '</b><span>' + t('enYLimT') + '</span></div><div class="seg">' + [['auto', this._t('enYAuto', { n: this._enNum(y === 2026 ? 3000 : lpEnLimitOf(y)) })], ['manual', this._t('enYMan')]].map((o) => '<button data-set="energy.year_mode" data-val="' + o[0] + '"' + ((en.year_mode === 'manual' ? 'manual' : 'auto') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div></div>' +
+      (en.year_mode === 'manual' ? '<div class="srow"><div class="t"><b>' + t('enYLim') + '</b></div>' + num('energy.year_limit', en.year_limit || 3000, '100', 'kWh') + '</div>' : '') + '</details>';
+    h += step(3, t('enTarQ3'), b3) + '<p class="ensrc">' + t('enTarSrc') + '</p>';
     return h;
+  }
+  _enSetMany(o) {   // birden çok enerji ayarını tek kayıtta
+    this._snap(); const s = lhdClone(this._settings()); s.energy = Object.assign({}, s.energy || {}, o); this._commit('settings', s); this._render(); this._toast(this._t('saved'));
   }
   _enBill() {
     const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), raw = Array.isArray(en.bills) ? en.bills : [];
@@ -1356,7 +1408,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="fld"><label>' + t('enBTl') + '</label><input class="inp" type="number" min="0" step="0.01" id="enbl"></div></div>' +
       (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
       '<div class="acts"><button class="btn pri" data-a="enbadd"' + (this._enBusy ? ' disabled' : '') + '>' + (this._enBusy ? t('enBAdding') : t('enBAdd')) + '</button></div></div>';
-    h += '<div class="srow"><div class="t"><b>' + t('enL12') + '</b><span>' + t('enL12T') + '</span></div><span class="ennum"><input class="inp" type="number" min="0" step="1" data-dec data-sf="energy.last12" value="' + esc(en.last12 || '') + '"><i>kWh</i></span></div>';
+    h += '<div class="srow"><div class="t"><b>' + t('enYtd') + '</b><span>' + t('enYtdT') + '</span></div><span class="ennum"><input class="inp" type="number" min="0" step="1" data-dec data-sf="energy.ytd" value="' + esc(en.ytd || '') + '"><i>kWh</i></span></div>';
     if (lb && lb.panel > 0 && lb.panel < lb.kwh) h += '<div class="hint">' + t('enUntT', { a: this._enNum(lb.kwh), b: this._enNum(lb.panel), c: this._enNum(Math.max(0, lb.kwh - lb.panel)), p: Math.round(lpEnUntracked() * 100) }) + '</div>';
     return h;
   }
@@ -1727,6 +1779,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const S = this._hass.states, E = this._enEsts(), R = this._hass.entities || {}, sol = lpEnSolar(), c = lpEnCfg(), used = {};
     Object.keys(E).forEach((k) => { if (E[k] && E[k].sensor) used[E[k].sensor] = 1; });
     [sol.prod, sol.grid, sol.grid_in, sol.grid_out, sol.bat_power, c.total, c.standby].forEach((x) => { if (x) used[x] = 1; });
+    const mt = lpEnMeter(); if (mt) [mt.power].forEach((x) => { if (x) used[x] = 1; });
+    if (mt && mt.power && this._hass.entities && this._hass.entities[mt.power]) { const dv = this._hass.entities[mt.power].device_id; Object.keys(this._hass.entities).forEach((k) => { if (dv && this._hass.entities[k].device_id === dv) used[k] = 1; }); }   // sayacın öteki kanalları da evin parçası değil
     // Enerji ayarlarında başka girişleri içeren (grup toplamı) girişlerin güç sensörü: eklenirse içindekiler iki kez sayılır
     const dc = ((LP_EN.prefs && LP_EN.prefs.device_consumption) || []).filter((d) => d && d.stat_consumption);
     const par = {}; dc.forEach((d) => { if (d.included_in_stat) par[d.included_in_stat] = 1; });
@@ -2016,35 +2070,104 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return '<select class="inp w" data-sf="' + path + '" style="max-width:300px"><option value="">' + esc(none) + '</option>' + L.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
   }
   _enFlag(path, def) { const v = this._enGet(path), on = def ? v !== false : v === true; return '<button class="tg' + (on ? ' on' : '') + '" data-enflag="' + path + '|' + (def ? 1 : 0) + '"></button>'; }
-  _enSolarV() {
-    const t = (k, v) => esc(this._t(k, v)), s = lpEnSolar(), S = this._hass.states, gm = lpEnGridMode(s);
+  _enSolarV() {   // iki anahtar: güneş, batarya; kimse kendini ilgilendirmeyen ayarı görmez
+    const t = (k, v) => esc(this._t(k, v)), s = lpEnSolar(), S = this._hass.states, gm = lpEnGridMode(s), sun = lpEnSunOn(s), bat = lpEnBatOn(s), mt = lpEnMeter();
     const pw = (st) => lpEnIsPow(st), en = (st) => !!st.attributes.state_class && (st.attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(st.attributes.unit_of_measurement || '')));
     const pc = (st, id) => st.attributes.device_class === 'battery' || (String(st.attributes.unit_of_measurement || '') === '%' && !st.attributes.device_class && /bat|soc|akü|aku|charge|şarj|sarj/i.test(id + ' ' + (st.attributes.friendly_name || '')));
     const row = (b, sp, ctl) => '<div class="srow"><div class="t"><b>' + b + '</b>' + (sp ? '<span>' + sp + '</span>' : '') + '</div>' + ctl + '</div>';
-    let h = '<h3 class="enh">' + t('en_solar') + '</h3><p class="enlead">' + t('enSolT') + '</p>' + row(t('enSolOn'), t('enSolOnT'), this._enFlag('energy.solar.on', false));
-    if (!s.on) return h;
-    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolProd') + '</b></div>' +
+    const tg = (k, on) => '<button class="tg' + (on ? ' on' : '') + '" data-solt="' + k + '"></button>';
+    let h = '<h3 class="enh">' + t('en_solar') + '</h3><p class="enlead">' + t('enSolT2') + '</p>' +
+      '<div class="ensec">' + row(t('enSunOn'), t('enSunOnT'), tg('sun', sun)) + row(t('enBatOn'), t('enBatOnT'), tg('bat', bat)) + '</div>';
+    if (!sun && !bat) return h + '<div class="hint">' + t('enSolNone') + '</div>';
+    if (sun) h += '<div class="ensec"><div class="ensh"><b>' + t('enSolProd') + '</b></div>' +
       row(t('enSolP'), t('enSolPT'), this._enSensSel('energy.solar.prod', s.prod, this._t('enNone'), pw)) +
-      row(t('enSolPE'), t('enSolPET'), this._enSensSel('energy.solar.prod_energy', s.prod_energy, this._t('enMCalc'), en)) + '</div>';
-    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolGrid') + '</b></div>' +
+      row(t('enSolPE'), t('enSolPET'), this._enSensSel('energy.solar.prod_energy', s.prod_energy, this._t('enMCalc'), en)) +
+      row(t('enExp'), t('enExpT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.01" data-dec data-sf="energy.solar.export_price" value="' + esc(s.export_price || '') + '"><i>' + esc(this._enCur()) + '</i></span>') + '</div>';
+    if (bat) {
+      h += '<div class="ensec"><div class="ensh"><b>' + t('enSolBat') + '</b></div>' +
+        row(t('enBP'), t('enBPT'), this._enSensSel('energy.solar.bat_power', s.bat_power, this._t('enNone'), pw)) +
+        (s.bat_power ? row(t('enBInv'), t('enBInvT'), this._enFlag('energy.solar.bat_inv', false)) : '') +
+        row(t('enBSoc'), '', this._enSensSel('energy.solar.soc', s.soc, this._t('enNone'), pc)) +
+        row(t('enBCap'), t('enBCapT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-dec data-sf="energy.solar.cap" value="' + esc(s.cap || '') + '"><i>kWh</i></span>') + '</div>';
+      const G = lpEnBatGain();
+      if (G) h += '<div class="encalc"><div><span>' + t('enBgCh', { d: new Date(G.from).toLocaleDateString(this._lang === 'tr' ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'long' }) }) + '</span><b>' + this._enNum(G.ch, 1) + ' kWh</b></div><div><span>' + t('enBgDis') + '</span><b>' + this._enNum(G.dis, 1) + ' kWh</b></div>' +
+        '<div><span>' + t('enBgLoss') + '</span><b>' + this._enNum(G.loss, 1) + ' kWh' + (G.ch > 0.5 ? ' · %' + Math.round(G.loss / G.ch * 100) : '') + '</b></div>' +
+        (G.gain !== null ? '<div class="tot"><span>' + t(G.gain >= 0 ? 'enBgGain' : 'enBgCost') + '</span><b style="color:' + (G.gain >= 0 ? '#3DDC84' : 'var(--ac)') + '">' + this._enTl(Math.abs(G.gain)) + '</b></div>' : '<div class="tot"><span>' + t('enBgNoTou') + '</span><b></b></div>') + '</div>';
+      else if (s.bat_power) h += '<div class="hint">' + t('enBgNone') + '</div>';
+    }
+    // şebeke: ev sayacı seçiliyse oradan, değilse burada
+    if (mt && mt.power) h += '<div class="ensec"><div class="ensh"><b>' + t('enSolGrid') + '</b></div><div class="hint">' + t('enGridFromMeter', { n: esc(this._ename(mt.power)) }) + ' <button class="btn sm" data-env="meter">' + t('en_meter') + '</button></div></div>';
+    else h += '<div class="ensec"><div class="ensh"><b>' + t('enSolGrid') + '</b><span>' + t('enGridNoMeter') + '</span></div>' +
       row(t('enSolGM'), '', '<div class="seg">' + [['net', this._t('enGNet')], ['two', this._t('enGTwo')], ['none', this._t('enGNone')]].map((o) => '<button data-set="energy.solar.grid_mode" data-val="' + o[0] + '"' + (gm === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>') +
       (gm === 'net' ? row(t('enGNetS'), t('enGNetST'), this._enSensSel('energy.solar.grid', s.grid, this._t('enNone'), pw)) : '') +
       (gm === 'net' && s.grid ? row(t('enGInv'), t('enGInvT'), this._enFlag('energy.solar.grid_inv', false)) : '') +
-      (gm === 'two' ? row(t('enGIn'), '', this._enSensSel('energy.solar.grid_in', s.grid_in, this._t('enNone'), pw)) + row(t('enGOut'), '', this._enSensSel('energy.solar.grid_out', s.grid_out, this._t('enNone'), pw)) : '') +
-      row(t('enExp'), t('enExpT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.01" data-dec data-sf="energy.solar.export_price" value="' + esc(s.export_price || '') + '"><i>' + esc(this._enCur()) + '</i></span>') + '</div>';
-    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolBat') + '</b><span>' + t('enSolBatT') + '</span></div>' +
-      row(t('enBP'), t('enBPT'), this._enSensSel('energy.solar.bat_power', s.bat_power, this._t('enNone'), pw)) +
-      (s.bat_power ? row(t('enBInv'), t('enBInvT'), this._enFlag('energy.solar.bat_inv', false)) : '') +
-      row(t('enBSoc'), '', this._enSensSel('energy.solar.soc', s.soc, this._t('enNone'), pc)) +
-      row(t('enBCap'), t('enBCapT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-dec data-sf="energy.solar.cap" value="' + esc(s.cap || '') + '"><i>kWh</i></span>') + '</div>';
+      (gm === 'two' ? row(t('enGIn'), '', this._enSensSel('energy.solar.grid_in', s.grid_in, this._t('enNone'), pw)) + row(t('enGOut'), '', this._enSensSel('energy.solar.grid_out', s.grid_out, this._t('enNone'), pw)) : '') + '</div>';
     const F = lpEnFlowNow(S);
     if (F && F.has) {
       const v = (x) => (x === null ? '–' : esc(lpEnWs(x, this._lang)));
-      h += '<div class="encalc"><div><span>' + t('enFProd') + '</span><b>' + v(F.prod) + '</b></div>' + (gm === 'none' ? '' : '<div><span>' + t(F.grid !== null && F.grid < 0 ? 'enFExp' : 'enFImp') + '</span><b>' + v(F.grid === null ? null : Math.abs(F.grid)) + '</b></div>') +
+      h += '<div class="encalc">' + (sun ? '<div><span>' + t('enFProd') + '</span><b>' + v(F.prod) + '</b></div>' : '') +
+        (F.outage ? '<div><span>' + t('enFOut') + '</span><b style="color:var(--red)">' + t('enFOutT') + '</b></div>' : gm === 'none' && !mt ? '' : '<div><span>' + t(F.grid !== null && F.grid < 0 ? 'enFExp' : 'enFImp') + '</span><b>' + v(F.grid === null ? null : Math.abs(F.grid)) + '</b></div>') +
         (F.bat !== null ? '<div><span>' + t(F.bat >= 0 ? 'enFCh' : 'enFDis') + '</span><b>' + v(Math.abs(F.bat)) + '</b></div>' : '') + (F.soc !== null ? '<div><span>' + t('enBSoc') + '</span><b>' + esc(lpEnPct(F.soc, this._lang)) + '</b></div>' : '') +
         (F.gridKnown ? '<div class="tot"><span>' + t('enFHome') + '</span><b>' + v(F.home) + '</b></div>' : '') + '</div>';
     }
     h += '<div class="acts"><button class="btn" data-a="ensolcard"><ha-icon class="s16" icon="mdi:transmission-tower-export"></ha-icon>' + t('enSolCard') + '</button></div>';
+    return h;
+  }
+  // ev sayacı: evin tamamını ölçen cihaz (Shelly Pro EM gibi). Bulunur, tek dokunuşla seçilir; HA'nın Enerji ayarlarına şebeke kaynağı olarak panel yazar
+  _enMeterCands() {
+    const S = this._hass.states, R = this._hass.entities || {}, D = this._hass.devices || {}, E = this._enEsts(), used = {};
+    Object.keys(E).forEach((k) => { if (E[k] && E[k].sensor) used[E[k].sensor] = 1; });
+    const sol = lpEnSolar(); [sol.prod, sol.bat_power].forEach((x) => { if (x) used[x] = 1; });
+    const re = /\bp?em\b|3em|pro ?em|em1|energy ?meter|power ?meter|smart ?meter|sayaç|sayac|\bp1\b|grid|şebeke|sebeke|ana ?hat|main|mains|whole|house|home ?total|ev ?toplam|tüm ?ev/i;
+    return Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && id.indexOf('sensor.lhd_') !== 0 && lpEnIsPow(S[id]) && !used[id] && S[id].state !== 'unavailable').map((id) => {
+      const e = R[id], d = e && e.device_id ? D[e.device_id] : null, txt = [id, this._ename(id), d ? d.name : '', d ? d.model : '', d ? d.manufacturer : ''].join(' ');
+      return { id: id, dev: d, txt: txt, w: Math.abs(lpEnW(S, id) || 0) };
+    }).filter((x) => re.test(x.txt) && !/solar|güneş|gunes|\bpv\b|inverter|batter|batarya|returned|export|verilen/i.test(x.id + ' ' + this._ename(x.id))).sort((a, b) => b.w - a.w).slice(0, 6);
+  }
+  _enMeterAuto(pid) {   // güç sensörünün cihazından: enerji (alınan), verilen, gerilim
+    const S = this._hass.states, R = this._hass.entities || {}, dv = R[pid] ? R[pid].device_id : null;
+    const same = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && (dv ? R[id] && R[id].device_id === dv : id.indexOf(pid.replace(/_power$|_active_power$/, '')) === 0));
+    const isE = (id) => !!S[id].attributes.state_class && (S[id].attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(S[id].attributes.unit_of_measurement || '')));
+    const out = (id) => /return|export|out|verilen|üretim|produc/i.test(id + ' ' + this._ename(id));
+    // aynı cihazda birden çok kanal olabilir (Pro EM: 2 kanal): güç sensörünün adına en çok benzeyen
+    const base = pid.replace(/_(active_)?power$/, ''), score = (id) => (id.indexOf(base) === 0 ? 2 : 0) + (/total/i.test(id) ? 1 : 0);
+    const en = same.filter((id) => isE(id) && !out(id)).sort((a, b) => score(b) - score(a))[0] || '';
+    const ex = same.filter((id) => isE(id) && out(id)).sort((a, b) => score(b) - score(a))[0] || '';
+    const vo = same.filter((id) => S[id].attributes.device_class === 'voltage' || String(S[id].attributes.unit_of_measurement || '') === 'V').sort((a, b) => score(b) - score(a))[0] || '';
+    return { power: pid, energy: en, out: ex, volt: vo };
+  }
+  _enMeterV() {
+    const t = (k, v) => esc(this._t(k, v)), S = this._hass.states, m = lpEnMeter(), M = LP_EN.m, Y = LP_EN.yr, L = this._lang === 'tr' ? 'tr-TR' : 'en-GB';
+    const row = (b, sp, ctl) => '<div class="srow"><div class="t"><b>' + b + '</b>' + (sp ? '<span>' + sp + '</span>' : '') + '</div>' + ctl + '</div>';
+    const pw = (st) => lpEnIsPow(st), en = (st) => !!st.attributes.state_class && (st.attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(st.attributes.unit_of_measurement || '')));
+    const vo = (st) => st.attributes.device_class === 'voltage' || String(st.attributes.unit_of_measurement || '') === 'V';
+    let h = '<h3 class="enh">' + t('en_meter') + '</h3><p class="enlead">' + t('enMeterT') + '</p>';
+    if (!m) {
+      const C = this._enMeterCands(), R = this._hass.entities || {}, D = this._hass.devices || {};
+      h += C.length ? '<div class="ensec"><div class="ensh"><b>' + t('enMeterFound', { n: C.length }) + '</b></div><div class="ensl">' + C.map((x) => '<div class="ensr"><ha-icon class="s16" icon="mdi:meter-electric-outline"></ha-icon><span><b>' + esc(this._ename(x.id)) + '</b><i>' + esc([x.dev ? [x.dev.manufacturer, x.dev.model].filter((y) => y).join(' ') : '', x.id].filter((y) => y).join(' · ')) + '</i></span><em class="enp ok">' + esc(lpEnWs(lpEnW(S, x.id), this._lang)) + '</em><button class="btn sm pri" data-enmeter="' + esc(x.id) + '">' + t('enMeterUse') + '</button></div>').join('') + '</div></div>'
+        : '<div class="hint">' + t('enMeterNone') + '</div>';
+      h += '<details class="enmore tfd"><summary>' + t('enMeterManual') + '</summary>' + row(t('enMPow'), t('enMPowT'), this._enSensSel('energy.meter.power', '', this._t('enPick'), pw)) + '</details>';
+      return h;
+    }
+    // seçili sayaç
+    const w = lpEnW(S, m.power), ws = w === null ? null : m.inv ? -w : w;
+    let pan = null; if (M && !M.demo) M.cats.forEach((c) => { const v = lpEnCatW(S, c); if (v !== null) pan = (pan || 0) + v; });
+    const F = lpEnFlowNow(S), home = F && F.gridKnown ? F.home : ws, unt = home !== null && pan !== null ? Math.max(0, home - pan) : null;
+    const d0 = new Date(); d0.setHours(0, 0, 0, 0); let today = null; if (Y && Y.src === 'grid') { today = 0; Object.keys(Y.days).forEach((k) => { if (+k >= d0.getTime() - 43200000 && +k < d0.getTime() + 43200000) today += Y.days[k]; }); }
+    const I = M ? lpEnYtdInfo(M) : null;
+    h += '<div class="ensec"><div class="ensh"><b>' + esc(this._ename(m.power)) + '</b><button class="btn sm" data-a="enmeterdel" style="margin-left:auto">' + t('enMeterDel') + '</button></div>' +
+      row(t('enMPow'), t('enMPowT'), this._enSensSel('energy.meter.power', m.power, this._t('enPick'), pw)) +
+      row(t('enMIn'), t('enMInT'), this._enSensSel('energy.meter.energy', m.energy, this._t('enNone'), en)) +
+      row(t('enMOut'), t('enMOutT'), this._enSensSel('energy.meter.out', m.out, this._t('enNone'), en)) +
+      row(t('enMVolt'), t('enMVoltT'), this._enSensSel('energy.meter.volt', m.volt, this._t('enNone'), vo)) +
+      row(t('enGInv'), t('enMInvT'), this._enFlag('energy.meter.inv', false)) + '</div>';
+    h += '<div class="encalc"><div><span>' + t('enMNow') + '</span><b>' + (ws === null ? '–' : esc(lpEnWs(ws, this._lang))) + '</b></div>' +
+      (pan !== null ? '<div><span>' + t('enMPanel') + '</span><b>' + esc(lpEnWs(pan, this._lang)) + '</b></div>' : '') +
+      (unt !== null && home > 0 ? '<div><span>' + t('enMUnt') + '</span><b>' + esc(lpEnWs(unt, this._lang)) + ' · %' + Math.round(unt / home * 100) + '</b></div>' : '') +
+      (today ? '<div><span>' + t('enMToday') + '</span><b>' + this._enNum(today, 1) + ' kWh</b></div>' : '') +
+      (I && I.k && I.src === 'grid' ? '<div class="tot"><span>' + t('enMYear', { y: new Date().getFullYear() }) + (I.est && Y && Y.first ? ' · ' + t('enMYearEst', { d: new Date(Y.first).toLocaleDateString(L, { day: 'numeric', month: 'long' }) }) : '') + '</span><b>' + this._enNum(I.k) + ' kWh</b></div>' : '') + '</div>';
+    if (!m.energy) h += '<div class="hint enwarn">' + t('enMNoE') + '</div>';
+    h += '<div class="ensec"><div class="ensh"><b>' + t('enMWhat') + '</b></div><ul class="enrules"><li>' + t('enMW1') + '</li><li>' + t('enMW2') + '</li><li>' + t('enMW3') + '</li><li>' + t('enMW4') + '</li></ul></div>';
     return h;
   }
   // akış (ve batarya) kartını enerji sekmesine ekle: enerji kartı olan ilk sekmenin ilk kolonuna
@@ -2501,6 +2624,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       // Enerji sayfası
       if (act === 'energy') return this._enOpen();
       if (act === 'enbadd') return this._enBillAdd();
+      if (act === 'entarfill') return this._enSetMany({ price_mode: 'tier', low: 3.24, high: 4.88, daily: 8 });   // EPDK 4 Nisan 2026 mesken tek zamanlı: enerji + dağıtım, aktif enerjiye %5 tüketim vergisi ve %1 enerji fonu, hepsine %10 KDV
+      if (act === 'enskttfill') return this._enSetMany({ sktt_price: 7 });
+      if (act === 'entoufill') return this._enSetMany({ price_mode: 'tou', t_day: 4.95, t_peak: 7.03, t_night: 3.27 });   // EPDK 4 Nisan 2026 mesken çok zamanlı, vergiler dahil
       if (act === 'enenew') { this._enDraft(null); this._enErr = ''; this._render(); return this._enTop(); }
       if (act === 'lropen' && this._enE && this._enE.id) return this._lrnOpen(this._enE.id);
       if (act === 'lropen' && this._enE && !this._enE.id) return this._enSave().then(() => { if (this._enE && this._enE.id && !this._enErr) this._lrnOpen(this._enE.id); });
@@ -2859,6 +2985,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (bgc) return this._bgSet({ mode: 'color', color: bgc.getAttribute('data-bgcolor') });
       const bgf = g('[data-bgfx]');
       if (bgf) return this._bgSet({ mode: 'fx', fx: bgf.getAttribute('data-bgfx') });
+      const sot = g('[data-solt]');
+      if (sot) { const k = sot.getAttribute('data-solt'), s0 = lpEnSolar(), n = Object.assign({}, s0, { sun: lpEnSunOn(s0), bat: lpEnBatOn(s0) }); n[k] = !n[k]; n.on = n.sun || n.bat; return this._enSetMany({ solar: n }); }
+      const emt = g('[data-enmeter]');
+      if (emt) return this._enSetMany({ meter: this._enMeterAuto(emt.getAttribute('data-enmeter')) });
+      if (act === 'enmeterdel') return this._enSetMany({ meter: null });
+      const tfm = g('[data-tfmode]');
+      if (tfm) { const m = tfm.getAttribute('data-tfmode'); return this._enSetMany(m === 'sktt' ? { sktt_on: true } : { sktt_on: false, price_mode: m }); }
       const st = g('[data-set]');
       if (st) {
         const path = st.getAttribute('data-set'), v = st.getAttribute('data-val');
@@ -2936,6 +3069,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akurl')) { this._ak.bg = 'img'; this._ak.bgUrl = el.value.trim(); return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');
+      if (sf === 'energy.meter.power' && el.value && !(lpEnMeter() && lpEnMeter().energy)) return this._enSetMany({ meter: this._enMeterAuto(el.value) });
       if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); const en = sf.indexOf('energy.') === 0, sel = el.tagName === 'SELECT'; this._setting(sf, v, !en || !sel); if (en && !sel) this._enLater(); return; }   // enerji sayfasında hesaplar yenilensin (yazı alanında biraz sonra: basılan düğme kaybolmasın)   // enerji sayfasında hesaplar yenilensin
       // yazı ve sayı alanı: yalnız taslağa yazılır, hesap yerinde yenilenir (tam çizim, alandan çıkarken basılan düğmenin tıklamasını yutuyordu)
       if (el.hasAttribute && el.hasAttribute('data-enpick') && this._enE) { this._enErr = ''; if (el.value) this._enAuto(el.value); return this._render(); }
@@ -3130,7 +3264,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const K = f.enK, M = LP_EN.m;
       body += fld(t('enKind') + hb('energy'), sgE('enK', LP_EN_TYPES.map((x) => [x, lpEnT(this._lang, 'k_' + x)])));
       if (K === 'halo') body += tgE('enChips', t('enChips'), t('enChipsT')) + tgE('enBars', t('enBars'), t('enBarsT'));
-      if (K === 'cats') body += fld(t('enCols'), sgE('enCols', [['2', '2'], ['', '3'], ['4', '4']])) + fld(t('enChart'), sgE('enChart', [['', this._t('enC24')], ['7d', this._t('enC7')], ['none', this._t('enCNone')]]));
+      if (K === 'cats') body += fld(t('enCols'), sgE('enCols', [['', this._t('phColsAuto')], ['2', '2'], ['3', '3'], ['4', '4']])) + fld(t('enChart'), sgE('enChart', [['', this._t('enC24')], ['7d', this._t('enC7')], ['none', this._t('enChNone')]]));
       if (K === 'top') {
         const cats = (M && M.cats) || [];
         body += fld(t('enCount'), sgE('enCount', [['3', '3'], ['5', '5'], ['', '6'], ['8', '8'], ['10', '10']])) +

@@ -197,12 +197,20 @@ def solar_cfg(settings: dict) -> dict:
 
 def solar_energy_entity(settings: dict) -> str | None:
     s = solar_cfg(settings)
-    if not s.get("on") or not s.get("prod"):
+    sun = s.get("sun") if "sun" in s else bool(s.get("prod"))   # güneş ve batarya ayrı açılır; eski kayıtta yalnız "on"
+    if not s.get("on") or not sun or not s.get("prod"):
         return None
     return s.get("prod_energy") or "sensor.lhd_solar_energy"
 
 
-def build_prefs(prefs: dict, ests: dict, cats: list, settings: dict, owned: str | None = None) -> dict:
+def meter_cfg(settings: dict) -> dict:
+    """The whole-home meter picked in the dashboard: energy (kWh from the grid), out (kWh to the grid)."""
+    e = settings.get("energy") if isinstance(settings, dict) else None
+    m = e.get("meter") if isinstance(e, dict) else None
+    return m if isinstance(m, dict) else {}
+
+
+def build_prefs(prefs: dict, ests: dict, cats: list, settings: dict, owned: str | None = None, owned_grid: str | None = None) -> dict:
     """Energy settings with the dashboard's categories, devices and solar source; other entries kept.
     owned: the solar statistic the dashboard wrote last time (taken out if it changed)."""
     dc_old = [d for d in (prefs or {}).get("device_consumption") or [] if isinstance(d, dict)]
@@ -249,7 +257,38 @@ def build_prefs(prefs: dict, ests: dict, cats: list, settings: dict, owned: str 
         if solar_cfg(settings).get("prod"):
             row["stat_rate"] = solar_cfg(settings)["prod"]
         srcs.append(row)
+    # şebeke: panelde seçilen ev sayacı. HA'da tek şebeke kaynağı olur; kullanıcının kendi kurduğu başka bir sayaç varsa ona dokunulmaz
+    m = meter_cfg(settings)
+    grid = next((x for x in srcs if x.get("type") == "grid"), None)
+    mine_grid = bool(grid) and owned_grid and any(f.get("stat_energy_from") == owned_grid for f in grid.get("flow_from") or [])
+    if grid is not None and mine_grid and m.get("energy") != owned_grid:   # sayaç değişti ya da kaldırıldı: bizim yazdığımız çıkar
+        grid = dict(grid)
+        grid["flow_from"] = [f for f in grid.get("flow_from") or [] if f.get("stat_energy_from") != owned_grid]
+        srcs = [grid if x.get("type") == "grid" else x for x in srcs]
+        if not grid["flow_from"]:   # bizim kurduğumuz kaynak: verilen sayacıyla birlikte kalkar
+            srcs = [x for x in srcs if x.get("type") != "grid"]
+        grid = next((x for x in srcs if x.get("type") == "grid"), None)
+    if m.get("energy"):
+        flow = {"stat_energy_from": m["energy"], "stat_cost": None, "entity_energy_price": None, "number_energy_price": None}
+        if grid is None:
+            row = {"type": "grid", "flow_from": [flow], "flow_to": [], "cost_adjustment_day": 0.0}
+            if m.get("out"):
+                row["flow_to"] = [{"stat_energy_to": m["out"], "stat_compensation": None, "entity_energy_price": None, "number_energy_price": None}]
+            srcs.append(row)
+        elif not grid.get("flow_from"):
+            g2 = dict(grid)
+            g2["flow_from"] = [flow]
+            srcs = [g2 if x.get("type") == "grid" else x for x in srcs]
     return {"energy_sources": srcs, "device_consumption": rows + keep}
+
+
+def meter_written(prefs: dict, settings: dict) -> str:
+    """The statistic the dashboard owns in the grid source after build_prefs (empty if the user's own meter is there)."""
+    m = meter_cfg(settings).get("energy") or ""
+    for x in (prefs or {}).get("energy_sources") or []:
+        if isinstance(x, dict) and x.get("type") == "grid" and any(f.get("stat_energy_from") == m for f in x.get("flow_from") or []):
+            return m
+    return ""
 
 
 # ---- import from another power-estimating integration (its config entries) ----

@@ -6,8 +6,11 @@
 // Genel ayarlar settings.energy (yönetim panelinde Enerji sayfası):
 //   total, standby: evin toplam güç ve bekleme gücü sensörü; limits: Halo'nun 3 sınırı (W); badge: karoda watt 'on' | 'always'
 //   price_mode: 'bill' (son faturadan) | 'single' (price) | 'tier' (low, high, daily: günlük kWh sınırı, ay = daily × gün sayısı)
-//   year_mode: 'auto' (2026: 4000, 2027'den itibaren 3000 kWh) | 'manual' (year_limit); sktt_price: sınır aşılınca fiyat
-//   bills: [{ from, to, kwh, tl, panel }] faturalar (panel: o dönemde panelin ölçtüğü kWh); last12: son faturadaki 12 aylık toplam
+//   year_mode: 'auto' (EPDK: 30.10.2026'dan itibaren 3000; önce 2026 4000, 2025 5000 kWh) | 'manual' (year_limit)
+//   sktt_price: son kaynak fiyatı (vergiler dahil, aylık değişir); sktt_on: şu an son kaynak tarifesinde (hesaplar bu fiyatla)
+//   ytd: 1 Ocak'tan son faturanın sonuna kadar tüketim (kWh, isteğe bağlı); prev_year: geçen yılın toplamı (isteğe bağlı)
+//   Fatura girilmeden de çalışır: yılın toplamı Home Assistant'ın kayıtlarından (şebeke sayacı ya da panel), kademe takvim ayıyla
+//   bills: [{ from, to, kwh, tl, panel }] faturalar (panel: o dönemde panelin ölçtüğü kWh)
 //   tilde: tahmini değerler "~" ile (varsayılan açık); untracked: ölçülmeyen pay kategori karolarında (varsayılan açık)
 // Tahmini cihazlar ayrı kayıtta (data.estimates); entegrasyon her biri için sensor.lhd_<id>_power ve _energy kurar.
 // Eski Safari için ?. ve ?? yok.
@@ -36,11 +39,11 @@ const LP_EN_TXT = {
     none: 'Enerji verisi yok', noneT: 'Home Assistant\'ta Ayarlar → Panolar → Enerji → "Cihaz tüketimi"ne cihaz ya da grup ekle; kartlar oradan dolar.', loading: 'Yükleniyor…',
     sbT: 'Hiçbir şey kullanılmıyorken evin çektiği güç', sbMin: 'Son 24 saatin en düşüğü', year: 'Yılda ~{k} kWh', yearC: 'Yılda ~{k} kWh · ~{c}',
     wd: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'], todayD: 'Bugün', noHist: 'Geçmiş kaydı yok', noDev: 'Güç sensörü olan cihaz yok', devs: '{n} cihaz', close: 'Kapat', total: 'Toplam',
-    costMonth: 'bu ay', tierLo: 'Bu ay düşük kademe', tierHi: 'Bu ay yüksek kademede', yearL: 'Son 12 ay · yıllık sınır', untracked: 'Ölçülmeyen', untrackedT: 'Son faturaya göre',
+    costMonth: 'bu ay', tierLo: 'Bu ay düşük kademe', tierHi: 'Bu ay yüksek kademede', yearL: 'Bu yıl · yıllık sınır', untracked: 'Ölçülmeyen', untrackedM: 'Ev sayacına göre', untrackedT: 'Son faturaya göre',
     k_halo: 'Evin anlık gücü', k_cats: 'Kategori karoları', k_top: 'Şu an en çok çekenler', k_week: 'Günlük tüketim', k_day: 'Son 24 saat', k_standby: 'Bekleme tüketimi',
     s_halo: 'Evin anlık gücü', s_standby: 'Bekleme', s_cats: 'Kategoriler', s_week: 'Son 7 gün · kWh', s_top: 'Şu an en çok çekenler', s_day: 'Son 24 saat', s_energy: 'Enerji',
     loose: 'Kategorisiz', k_flow: 'Güneş ve şebeke akışı', k_battery: 'Batarya', s_flow: 'Enerji akışı', s_battery: 'Batarya',
-    noSol: 'Güneş ayarı yok', noSolT: 'Enerji sayfasında "Güneş ve batarya" bölümünden üretim ve şebeke sensörlerini seç.', noBat: 'Batarya sensörü seçilmedi',
+    noSol: 'Güneş ya da batarya açık değil', noSolT: 'Enerji sayfasında "Güneş ve batarya" bölümünden "Güneş enerjisi var" ya da "Batarya var"ı aç.', nGridOff: 'Şebeke yok', nGridOffT: 'kesinti',  noBat: 'Batarya sensörü seçilmedi',
     nSun: 'Güneş', nGrid: 'Şebeke', nGridO: 'Şebekeye', nGridI: 'Şebekeden', nHome: 'Ev', nBat: 'Batarya', prodT: 'kWh üretim bugün', selfU: 'kendi kullanımı', expN: 'şebekeye', impN: 'şebekeden',
     bCh: 'Şarj oluyor', bDis: 'Evi besliyor', bIdle: 'Beklemede', bFull: '~{t} sonra dolu', bLeft: '~{t} yeter', bKwh: '{k} / {c} kWh',
     tLeft: '{n} {h} saattir açık · {w}', tSb: 'Gece bekleme tüketimi yüksek: ~{w}', tDay: 'Bugün {k} kWh, günlük hedef {d} kWh', tYear: 'Yıllık sınırın %{p}\'ine gelindi',
@@ -49,11 +52,11 @@ const LP_EN_TXT = {
     none: 'No energy data', noneT: 'In Home Assistant go to Settings → Dashboards → Energy → "Individual devices" and add devices or groups; the cards fill from there.', loading: 'Loading…',
     sbT: 'What the home draws when nothing is in use', sbMin: 'Lowest of the last 24 hours', year: '~{k} kWh a year', yearC: '~{k} kWh a year · ~{c}',
     wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], todayD: 'Today', noHist: 'No history yet', noDev: 'No device with a power sensor', devs: '{n} devices', close: 'Close', total: 'Total',
-    costMonth: 'this month', tierLo: 'This month, lower tier', tierHi: 'This month, upper tier', yearL: 'Last 12 months · yearly limit', untracked: 'Not measured', untrackedT: 'From the last bill',
+    costMonth: 'this month', tierLo: 'This month, lower tier', tierHi: 'This month, upper tier', yearL: 'This year · yearly limit', untracked: 'Not measured', untrackedM: 'From the home meter', untrackedT: 'From the last bill',
     k_halo: 'Home power now', k_cats: 'Category tiles', k_top: 'Top consumers now', k_week: 'Daily usage', k_day: 'Last 24 hours', k_standby: 'Standby usage',
     s_halo: 'Home power now', s_standby: 'Standby', s_cats: 'Categories', s_week: 'Last 7 days · kWh', s_top: 'Top consumers now', s_day: 'Last 24 hours', s_energy: 'Energy',
     loose: 'Uncategorized', k_flow: 'Solar and grid flow', k_battery: 'Battery', s_flow: 'Energy flow', s_battery: 'Battery',
-    noSol: 'No solar set up', noSolT: 'On the Energy page, pick the production and grid sensors under "Solar and battery".', noBat: 'No battery sensor picked',
+    noSol: 'Solar or battery is not on', noSolT: 'On the Energy page, turn on "I have solar" or "I have a battery" under "Solar and battery".', nGridOff: 'No grid', nGridOffT: 'outage',  noBat: 'No battery sensor picked',
     nSun: 'Solar', nGrid: 'Grid', nGridO: 'To grid', nGridI: 'From grid', nHome: 'Home', nBat: 'Battery', prodT: 'kWh produced today', selfU: 'used at home', expN: 'to grid', impN: 'from grid',
     bCh: 'Charging', bDis: 'Powering the home', bIdle: 'Idle', bFull: 'full in ~{t}', bLeft: 'lasts ~{t}', bKwh: '{k} / {c} kWh',
     tLeft: '{n} on for {h} hours · {w}', tSb: 'Night standby is high: ~{w}', tDay: '{k} kWh today, daily goal {d} kWh', tYear: '{p}% of the yearly limit used',
@@ -78,15 +81,21 @@ function lpEnLastBill() { const L = lpEnBills(); return L.length ? L[L.length - 
 // fiyat düzeni: seçilmediyse fatura varsa faturadan, yoksa tek fiyat
 function lpEnMode() {
   const m = lpEnCfg().price_mode;
+  if (lpEnCfg().sktt_on && lpEnNumOf(lpEnCfg().sktt_price)) return 'sktt';   // son kaynak tarifesinde: kademe yok, her kWh bu fiyattan
   if (m === 'bill' && lpEnLastBill()) return 'bill';
   if (m === 'tier' && lpEnNumOf(lpEnCfg().low) && lpEnNumOf(lpEnCfg().high)) return 'tier';
+  if (m === 'tou' && lpEnTouP('day') && lpEnTouP('peak') && lpEnTouP('night')) return 'tou';
   if (m === 'single') return 'single';
   return lpEnLastBill() ? 'bill' : 'single';
 }
+// üç zamanlı (çok zamanlı) tarife: gündüz 06-17, puant 17-22, gece 22-06; kademe yok
+function lpEnBand(t) { const h = new Date(t).getHours(); return h >= 6 && h < 17 ? 'day' : h >= 17 && h < 22 ? 'peak' : 'night'; }
+function lpEnTouP(b) { const c = lpEnCfg(); return lpEnNumOf(b === 'day' ? c.t_day : b === 'peak' ? c.t_peak : c.t_night); }
 function lpEnDaily() { return lpEnNumOf(lpEnCfg().daily) || 8; }
 // bir ayın tutarı: kademede günlük sınır × ayın gün sayısı düşük fiyattan, üstü yüksek fiyattan
 function lpEnMonthCost(kwh, days, M) {
   const c = lpEnCfg(), mode = lpEnMode();
+  if (mode === 'tou') { const f = lpEnTouShare(); const tl = kwh * (f.day * lpEnTouP('day') + f.peak * lpEnTouP('peak') + f.night * lpEnTouP('night')); return { tl: tl, lim: 0, lo: kwh, hi: 0, f: f }; }
   if (mode === 'tier') { const lim = lpEnDaily() * days, lo = Math.min(kwh, lim); return { tl: lo * lpEnNumOf(c.low) + Math.max(0, kwh - lim) * lpEnNumOf(c.high), lim: lim, lo: lo, hi: Math.max(0, kwh - lim) }; }
   const u = lpEnUnit(M);
   return { tl: kwh * u, lim: 0, lo: kwh, hi: 0 };
@@ -94,32 +103,111 @@ function lpEnMonthCost(kwh, days, M) {
 // ortalama birim fiyat (0: fiyat yok). Kademede bu ayın ortalaması
 function lpEnUnit(M) {
   const c = lpEnCfg(), mode = lpEnMode();
+  if (mode === 'sktt') return lpEnNumOf(c.sktt_price);
+  if (mode === 'tou') { const f = lpEnTouShare(); return f.day * lpEnTouP('day') + f.peak * lpEnTouP('peak') + f.night * lpEnTouP('night'); }
   if (mode === 'bill') { const b = lpEnLastBill(); return lpEnNumOf(b.tl) / lpEnNumOf(b.kwh); }
   if (mode === 'tier') { const mk = M && M.days ? lpEnMonthKwh(M) : 0; if (!mk) return lpEnNumOf(c.low); return lpEnMonthCost(mk, lpEnMonthDays(), M).tl / mk; }
   return lpEnPrice() || (M && M.price) || 0;
 }
-function lpEnMonthDays() { const d = new Date(); return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); }
+function lpEnMonthDays() { const P = lpEnPeriod(); if (P) return P.len; const d = new Date(); return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(); }
+// fatura dönemi: son faturanın bittiği günden başlar, son faturanın uzunluğunda sürer (kademe dönemin gün sayısı × günlük sınır). Fatura yoksa takvim ayı
+function lpEnPeriod() {
+  const b = lpEnLastBill(); if (!b) return null;
+  const D = 86400000, f = Date.parse(b.from + 'T00:00:00'), t = Date.parse(b.to + 'T00:00:00') + D, len = Math.max(25, Math.min(35, Math.round((t - f) / D)));
+  let a = t; while (a + len * D <= Date.now()) a += len * D;   // fatura girilmeden geçen dönemler atlanır
+  return { from: a, len: len };
+}
 const lpEnDayTot = (M, i) => M.cats.reduce((a, c) => a + ((M.days.cats[c.id] || [])[i] || 0), 0);
 // bu ay şimdiye kadar (sayaç tahmini: takip edilenler + ölçülmeyen pay)
 function lpEnMonthKwh(M) {
   if (!M || !M.days) return 0;
-  const m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+  const P = lpEnPeriod(), m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0); if (P) m0.setTime(P.from);
+  const hs = lpEnSince(m0.getTime()); if (hs !== null && LP_EN.yr.src === 'grid') return hs;   // şebeke sayacı varsa dönem onunla
   let s = 0; M.days.t.forEach((t, i) => { if (t >= m0.getTime()) s += lpEnDayTot(M, i); });
   return s / (1 - lpEnUntracked());   // faturadan bulunan ölçülmeyen payla sayaca yaklaştırılır
 }
 // son faturada panelin ölçmediği pay (0-0,95)
-function lpEnUntracked() { const b = lpEnLastBill(); if (!b || !lpEnNumOf(b.panel)) return 0; return Math.max(0, Math.min(0.95, (b.kwh - b.panel) / b.kwh)); }
-// yıllık sınır: elle ya da yıla göre (2026: 4000, 2027'den itibaren 3000 kWh)
-function lpEnYearLimit() { const c = lpEnCfg(); if (c.year_mode === 'manual' && lpEnNumOf(c.year_limit)) return lpEnNumOf(c.year_limit); return new Date().getFullYear() >= 2027 ? 3000 : 4000; }
-// son 12 ay (sayaç): faturadaki 12 aylık toplam + son faturadan bu yana panelin ölçtüğü (ölçülmeyen payla büyütülür)
-function lpEnYear(M) {
-  const c = lpEnCfg(), b = lpEnLastBill();
-  let base = lpEnNumOf(c.last12);
-  if (!base) { const y0 = Date.now() - 365 * 86400000; lpEnBills().forEach((x) => { if (Date.parse(x.to) >= y0) base += lpEnNumOf(x.kwh); }); }
-  if (!base) return 0;
-  let since = 0;
-  if (b && M && M.days) { const t0 = Date.parse(b.to) + 86400000; M.days.t.forEach((t, i) => { if (t >= t0) since += lpEnDayTot(M, i); }); }
-  return base + since / (1 - lpEnUntracked());
+function lpEnUntracked() {
+  const b = lpEnLastBill(); if (b && lpEnNumOf(b.panel)) return Math.max(0, Math.min(0.95, (b.kwh - b.panel) / b.kwh));
+  return lpEnMeterUnt();
+}
+// ev sayacı varsa faturasız: son 7 tam günde sayacın saydığı ile panelin cihazlarının toplamı arasındaki fark
+function lpEnMeterUnt() {
+  const Y = LP_EN.yr, M = LP_EN.m; if (!lpEnMeter() || !Y || Y.src !== 'grid' || !M || !M.days || M.demo) return 0;
+  let a = 0, p = 0; const n = M.days.t.length;
+  for (let i = Math.max(0, n - 8); i < n - 1; i++) { const t = M.days.t[i]; let g = 0; Object.keys(Y.days).forEach((k) => { if (Math.abs(+k - t) < 43200000) g += Y.days[k]; }); if (!g) continue; a += g; p += lpEnDayTot(M, i); }
+  return a > 0.5 ? Math.max(0, Math.min(0.95, (a - p) / a)) : 0;
+}
+// yıllık sınır (son kaynak tedarik tarifesi, mesken, ikili anlaşması olmayan). Y yılında geçerli sınır: 2025 5.000, 2026 4.000,
+// 2027'den itibaren 3.000 kWh (EPDK 30.10.2026, karar 15005). Ölçü takvim yılının toplamı (sayaç okumalarıyla), "geçerli yıl ya da bir önceki yıl":
+//  - önceki yılın toplamı o yılın sınırını geçtiyse bütün yıl son kaynak (Y başından itibaren)
+//  - yıl içinde geçilirse geçildiği ayı izleyen 3. ayın 1'inden itibaren, yıl sonuna kadar
+//  - 2026 geçişi: 2026 toplamı da 3.000 ile sayılır ama yeni sınır 1.1.2027'de yürürlükte; en erken 1 Ocak 2027
+function lpEnLimitOf(y) { return y >= 2027 ? 3000 : y === 2026 ? 4000 : 5000; }
+function lpEnYearLimit() { const c = lpEnCfg(); if (c.year_mode === 'manual' && lpEnNumOf(c.year_limit)) return lpEnNumOf(c.year_limit); const y = new Date().getFullYear(); return y === 2026 ? 3000 : lpEnLimitOf(y); }
+// Home Assistant'ın kayıtlarından bu yıl (günlük) ve geçen yıl (aylık): şebekeden çekilen sayaç (Enerji ayarlarındaki şebeke kaynağı) varsa o,
+// yoksa panelin kategorileri. Fatura girilmeden de çalışır; 30 dakikada bir tazelenir
+function lpEnYearIds(M) {
+  const mt = lpEnMeter(); if (mt && mt.energy) return { src: 'grid', ids: [mt.energy] };
+  const P = LP_EN.prefs, g = [];
+  ((P && P.energy_sources) || []).forEach((src) => { if (src && src.type === 'grid') (src.flow_from || []).forEach((f) => { if (f && f.stat_energy_from && g.indexOf(f.stat_energy_from) < 0) g.push(f.stat_energy_from); }); });
+  if (g.length) return { src: 'grid', ids: g };
+  const ids = []; (M ? M.cats : []).forEach((c) => (c.e ? [c.e] : (c.es || [])).forEach((x) => { if (x && ids.indexOf(x) < 0) ids.push(x); }));
+  return { src: 'panel', ids: ids };
+}
+function lpEnYearFetch(conn, M) {
+  const Y = LP_EN.yr, q = lpEnYearIds(M), key = q.src + q.ids.join(',');
+  if (!q.ids.length || (Y && Y.key === key && Date.now() - Y.at < 1800000)) return Promise.resolve();
+  const y = new Date().getFullYear(), a = new Date(y, 0, 1), p0 = new Date(y - 1, 0, 1), sum = (L) => { let t = 0; (L || []).forEach((x) => { if (isFinite(x.change)) t += Math.max(0, x.change); }); return t; };
+  const st = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
+  const ask = (from, to, period) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), end_time: to ? to.toISOString() : undefined, period: period, statistic_ids: q.ids, types: ['change'], units: { energy: 'kWh' } });
+  return Promise.all([ask(a, null, 'day'), ask(p0, a, 'month')]).then((r) => {
+    const days = {}; let first = 0;
+    q.ids.forEach((id) => ((r[0] && r[0][id]) || []).forEach((x) => { const t = st(x); if (!isFinite(x.change)) return; days[t] = (days[t] || 0) + Math.max(0, x.change); if (!first || t < first) first = t; }));
+    let prev = 0, pfirst = 0; q.ids.forEach((id) => { const L = (r[1] && r[1][id]) || []; prev += sum(L); L.forEach((x) => { const t = st(x); if (!pfirst || t < pfirst) pfirst = t; }); });
+    LP_EN.yr = { key: key, at: Date.now(), y: y, src: q.src, days: days, first: first, prev: prev, pfull: !!pfirst && pfirst <= p0.getTime() + 2 * 86400000 };
+  }).catch(() => {});
+}
+// bir tarihten bu yana Home Assistant'ın saydığı (şebeke sayacı ya da panel; panelse ölçülmeyen payla büyütülür)
+function lpEnSince(t0) {
+  const Y = LP_EN.yr; if (!Y || Y.y !== new Date().getFullYear()) return null;
+  let s = 0; Object.keys(Y.days).forEach((k) => { if (+k >= t0 - 43200000) s += Y.days[k]; });
+  return Y.src === 'grid' ? s : s / (1 - lpEnUntracked());
+}
+// bu takvim yılı (1 Ocak'tan bu yana): { k, src: manual | bills | grid | panel, est: kayıt yılın başını tutmuyor (ortalamayla tamamlandı), low: panel ölçmeyeni görmüyor (en az) }
+function lpEnYtdInfo(M) {
+  const c = lpEnCfg(), D = 86400000, now = Date.now(), y0 = new Date(new Date().getFullYear(), 0, 1).getTime(), b = lpEnLastBill(), Y = LP_EN.yr;
+  const end = (x) => Date.parse(x.to + 'T00:00:00') + D;
+  const tail = (t0) => { const v = lpEnSince(t0); if (v !== null) return v; let s = 0; if (M && M.days) M.days.t.forEach((t, i) => { if (t >= t0) s += lpEnDayTot(M, i); }); return s / (1 - lpEnUntracked()); };
+  if (lpEnNumOf(c.ytd) && b && end(b) > y0) return { k: lpEnNumOf(c.ytd) + tail(end(b)), src: 'manual' };
+  let base = 0, upto = 0;
+  lpEnBills().forEach((x) => { const f = Date.parse(x.from + 'T00:00:00'), t = end(x); if (t <= y0 || !(f < t)) return; base += lpEnNumOf(x.kwh) * (f >= y0 ? 1 : (t - y0) / (t - f)); if (t > upto) upto = t; });
+  // faturalar yılın başından mı başlıyor? değilse aradaki dönem Home Assistant'tan
+  if (base) { const f0 = Math.min.apply(null, lpEnBills().map((x) => Date.parse(x.from + 'T00:00:00')).filter((f) => f + 40 * D > y0)); if (f0 <= y0 + 3 * D) return { k: base + tail(upto), src: 'bills' }; }
+  if (Y && Y.y === new Date().getFullYear() && Y.first) {
+    let s = 0; Object.keys(Y.days).forEach((k) => { s += Y.days[k]; });
+    const covered = Math.max(1, (now - Y.first) / D), elapsed = Math.max(1, (now - y0) / D), est = Y.first > y0 + 2 * D;
+    let k = est ? s / covered * elapsed : s;
+    if (Y.src === 'panel') k = k / (1 - lpEnUntracked());
+    return { k: k, src: Y.src, est: est, low: Y.src === 'panel' && !lpEnLastBill() };
+  }
+  if (base) return { k: base + tail(upto), src: 'bills' };
+  return { k: 0, src: '' };
+}
+function lpEnYtd(M) { return lpEnYtdInfo(M).k; }
+const lpEnYear = lpEnYtd;
+// geçen yılın toplamı: elle yazılan, yoksa Home Assistant'ın kaydı (yılın tamamını tutuyorsa)
+function lpEnPrev() { const c = lpEnCfg(), Y = LP_EN.yr; if (lpEnNumOf(c.prev_year)) return lpEnNumOf(c.prev_year); if (Y && Y.pfull && Y.prev) return Y.src === 'grid' ? Y.prev : Y.prev / (1 - lpEnUntracked()); return 0; }
+// yılın gidişi: şimdiki hızla yıl sonu, sınırın geçileceği gün, son kaynak fiyatının başlayacağı gün
+function lpEnYearPlan(M) {
+  const I = lpEnYtdInfo(M), k = I.k, y = new Date().getFullYear(), prev = lpEnPrev(), prevOver = prev > 0 && prev >= lpEnLimitOf(y);
+  if (!k && !prevOver) return null;
+  const now = new Date(), y0 = new Date(y, 0, 1), D = 86400000;
+  const days = Math.max(1, (now - y0) / D), avg = k / days, lim = lpEnYearLimit(), proj = k + avg * (new Date(y + 1, 0, 1) - now) / D;
+  const cross = k && proj >= lim ? new Date(y0.getTime() + Math.min(lim / avg, 366) * D) : null;
+  let start = cross ? new Date(cross.getFullYear(), cross.getMonth() + 3, 1) : null;
+  if (start && y === 2026 && lpEnCfg().year_mode !== 'manual' && start < new Date(2027, 0, 1)) start = new Date(2027, 0, 1);   // yeni sınır 1.1.2027'de yürürlükte
+  return { k: k, src: I.src, est: !!I.est, low: !!I.low, lim: lim, avg: avg, proj: proj, cross: cross, start: start, past: k >= lim, prev: prev, prevOver: prevOver, nowIn: prevOver || (!!start && start <= now) };
 }
 // tahmini cihaz (entegrasyonun kurduğu sensör): kartlarda "~" ile
 const lpEnIsEst = (x) => !!x && (x.est !== undefined ? !!x.est : typeof x.e === 'string' && /^sensor\.lhd_[a-z0-9_]+_energy$/.test(x.e));
@@ -177,19 +265,29 @@ function lpEnEstW(e, st) {
 // Güneş, şebeke ve batarya (settings.energy.solar): on, prod (W), prod_energy (kWh, yoksa entegrasyon sensor.lhd_solar_energy kurar),
 // grid_mode 'net' (grid: + alınan, - verilen) | 'two' (grid_in, grid_out) | 'none'; bat_power (+ şarj), bat_inv (işaret ters), soc (%), cap (kWh)
 function lpEnSolar() { const s = lpEnCfg().solar; return s && typeof s === 'object' && !Array.isArray(s) ? s : {}; }
-function lpEnSunE() { const s = lpEnSolar(); return s.on && s.prod ? (s.prod_energy || 'sensor.lhd_solar_energy') : null; }
+// güneş ve batarya ayrı ayrı açılır (sun, bat); eski kayıtta yalnız "on" vardı: üretim sensörü varsa güneş, batarya sensörü varsa batarya
+function lpEnSunOn(s0) { const s = s0 || lpEnSolar(); return s.sun !== undefined ? !!s.sun && s.on !== false : !!(s.on && s.prod); }
+function lpEnBatOn(s0) { const s = s0 || lpEnSolar(); return s.bat !== undefined ? !!s.bat && s.on !== false : !!(s.on && (s.bat_power || s.soc)); }
+function lpEnSunE() { const s = lpEnSolar(); return lpEnSunOn(s) && s.prod ? (s.prod_energy || 'sensor.lhd_solar_energy') : null; }
+// ev sayacı (settings.energy.meter): power (W, şebekeden alınan +), energy (kWh, şebekeden alınan), out (kWh, şebekeye verilen), inv (gücün işareti ters), volt (V)
+function lpEnMeter() { const m = lpEnCfg().meter; return m && typeof m === 'object' && !Array.isArray(m) && (m.power || m.energy) ? m : null; }
 function lpEnGridMode(s) { return s.grid_mode === 'two' || s.grid_mode === 'none' ? s.grid_mode : 'net'; }
 // anlık akış: ev = şebeke + üretim - batarya şarjı
 function lpEnFlowNow(S) {
-  const s = lpEnSolar(); if (!s.on) return null;
-  const w = (id) => (id ? lpEnW(S, id) : null), gm = lpEnGridMode(s);
-  const prod = w(s.prod);
+  const s = lpEnSolar(), sun = lpEnSunOn(s), bt = lpEnBatOn(s), m = lpEnMeter(); if (!sun && !bt) return null;
+  const w = (id) => (id ? lpEnW(S, id) : null), gm = m && m.power ? 'meter' : lpEnGridMode(s);
+  const prod = sun ? w(s.prod) : null;
   let grid = null;
-  if (gm === 'two') { const a = w(s.grid_in), b = w(s.grid_out); if (a !== null || b !== null) grid = (a || 0) - (b || 0); } else if (gm === 'net') { grid = w(s.grid); if (grid !== null && s.grid_inv) grid = -grid; }
-  let bat = w(s.bat_power); if (bat !== null && s.bat_inv) bat = -bat;
-  const so = s.soc && S[s.soc] ? parseFloat(S[s.soc].state) : NaN;
-  return { prod: prod, grid: grid, bat: bat, soc: isFinite(so) ? Math.max(0, Math.min(100, so)) : null, cap: lpEnNumOf(s.cap), home: Math.max(0, (grid || 0) + (prod || 0) - (bat || 0)),
-    gridKnown: grid !== null && (prod !== null || !s.prod) && (bat !== null || !(s.bat_power || s.soc)), has: prod !== null || grid !== null || bat !== null, hasBat: !!(s.bat_power || s.soc) };
+  if (gm === 'meter') { grid = w(m.power); if (grid !== null && m.inv) grid = -grid; }
+  else if (gm === 'two') { const a = w(s.grid_in), b = w(s.grid_out); if (a !== null || b !== null) grid = (a || 0) - (b || 0); } else if (gm === 'net') { grid = w(s.grid); if (grid !== null && s.grid_inv) grid = -grid; }
+  let bat = bt ? w(s.bat_power) : null; if (bat !== null && s.bat_inv) bat = -bat;
+  const so = bt && s.soc && S[s.soc] ? parseFloat(S[s.soc].state) : NaN;
+  // şebeke kesintisi: sayacın gerilimi düştüyse ya da şebeke ölçümü yokken ev bataryadan besleniyorsa
+  const vs = m && m.volt && S[m.volt] ? parseFloat(S[m.volt].state) : NaN, gEnt = gm === 'meter' ? m.power : s.grid || s.grid_in;
+  const gUn = !!gEnt && (!S[gEnt] || ['unavailable', 'unknown'].indexOf(String(S[gEnt].state)) >= 0);
+  const outage = bt && bat !== null && bat < -20 && ((isFinite(vs) && vs < 100) || (gUn && !sun));
+  return { prod: prod, grid: outage ? 0 : grid, bat: bat, soc: isFinite(so) ? Math.max(0, Math.min(100, so)) : null, cap: bt ? lpEnNumOf(s.cap) : 0, home: Math.max(0, (outage ? 0 : grid || 0) + (prod || 0) - (bat || 0)),
+    gridKnown: (grid !== null || outage) && (prod !== null || !sun || !s.prod) && (bat !== null || !bt || !(s.bat_power || s.soc)), has: prod !== null || grid !== null || bat !== null, hasBat: bt && !!(s.bat_power || s.soc), sun: sun, outage: outage };
 }
 function lpEnBadge() { const b = lpEnCfg().badge; return b === 'on' || b === 'always' ? b : ''; }
 const lpEnIsPow = (st) => !!st && (st.attributes.device_class === 'power' || /^(W|kW)$/.test(String(st.attributes.unit_of_measurement || '')));
@@ -289,7 +387,8 @@ function lpEnHist(conn, S, M) {
   const tot = lpEnCfg().total; if (tot) add(tot);
   M.devs.slice(0, 120).forEach((d) => add(d.p));   // ipuçları için (uzun süre açık kalan cihaz)
   const sol = lpEnSolar(), gm = lpEnGridMode(sol);
-  if (sol.on) [sol.prod, gm === 'net' ? sol.grid : null, gm === 'two' ? sol.grid_in : null, gm === 'two' ? sol.grid_out : null, sol.bat_power].forEach(add);
+  const mt = lpEnMeter(); if (mt && mt.power) add(mt.power);
+  if (lpEnSunOn(sol) || lpEnBatOn(sol)) [lpEnSunOn(sol) ? sol.prod : null, mt && mt.power ? null : gm === 'net' ? sol.grid : null, mt && mt.power ? null : gm === 'two' ? sol.grid_in : null, mt && mt.power ? null : gm === 'two' ? sol.grid_out : null, lpEnBatOn(sol) ? sol.bat_power : null].forEach(add);
   if (!ids.length) return Promise.resolve();
   return conn.sendMessagePromise({ type: 'history/history_during_period', start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(), entity_ids: ids, minimal_response: true, no_attributes: true, significant_changes_only: false })
     .then((r) => {
@@ -300,10 +399,10 @@ function lpEnHist(conn, S, M) {
       const devs = {}; M.devs.forEach((d) => { if (ser[d.p]) devs[d.id] = ser[d.p]; });
       let total = tot && ser[tot] ? ser[tot] : lpEnSum(M.cats.map((c) => cats[c.id]), LP_EN_BINS);
       // güneşli evde sayaçtan: ev = şebeke + üretim - batarya şarjı (anlık akıştaki hesap)
-      const g = gm === 'net' && ser[sol.grid] ? ser[sol.grid].map((v) => (v === null ? null : sol.grid_inv ? -v : v))
+      const g = mt && mt.power && ser[mt.power] ? ser[mt.power].map((v) => (v === null ? null : mt.inv ? -v : v)) : gm === 'net' && ser[sol.grid] ? ser[sol.grid].map((v) => (v === null ? null : sol.grid_inv ? -v : v))
         : gm === 'two' && ser[sol.grid_in] ? ser[sol.grid_in].map((v, i) => (v === null ? null : v - ((ser[sol.grid_out] || [])[i] || 0))) : null;
-      if (!tot && sol.on && g && (!sol.prod || ser[sol.prod]) && (!sol.soc || sol.bat_power)) {
-        const pr = sol.prod ? ser[sol.prod] : null, bt = sol.bat_power ? ser[sol.bat_power] : null;
+      if (!tot && g && (!lpEnSunOn(sol) && !lpEnBatOn(sol) ? !!mt : (!lpEnSunOn(sol) || !sol.prod || ser[sol.prod]) && (!lpEnBatOn(sol) || !sol.soc || sol.bat_power))) {
+        const pr = lpEnSunOn(sol) && sol.prod ? ser[sol.prod] : null, bt = lpEnBatOn(sol) && sol.bat_power ? ser[sol.bat_power] : null;
         total = g.map((v, i) => { const p0 = pr ? pr[i] : 0; if (v === null || p0 === null || p0 === undefined) return total[i]; const b = bt && bt[i] !== null && bt[i] !== undefined ? (sol.bat_inv ? -bt[i] : bt[i]) : 0; return Math.max(0, v + p0 - b); });
       }
       M.hist = { t0: t0, step: step, cats: cats, total: total, devs: devs, ser: ser };
@@ -332,20 +431,47 @@ function lpEnDays(conn, M) {
       M.days = { t: days, cats: per, sun: sun ? cats[sun] : null };
     }).catch(() => {});
 }
+// dönemin saatlik tüketimi (üç zamanlının payları) ve bataryanın saatlik şarj/deşarjı: Home Assistant'ın saatlik istatistiklerinden
+function lpEnTouShare() {
+  const T = LP_EN.tou; if (T && T.k) { const a = T.k.day + T.k.peak + T.k.night; if (a > 0.5) return { day: T.k.day / a, peak: T.k.peak / a, night: T.k.night / a, known: true }; }
+  return { day: 0.5, peak: 0.25, night: 0.25, known: false };   // kayıt yoksa tipik ev
+}
+function lpEnHourFetch(conn, M) {
+  const c = lpEnCfg(), s = lpEnSolar(), mt = lpEnMeter(), need = c.price_mode === 'tou' || (lpEnBatOn(s) && s.bat_power);
+  const q = lpEnYearIds(M), ids = q.ids.slice(), bp = lpEnBatOn(s) ? s.bat_power : null, sig = ids.join(',') + '|' + (bp || '') + '|' + (s.bat_inv ? 1 : 0);
+  if (!need || (LP_EN.tou && LP_EN.tou.sig === sig && Date.now() - LP_EN.tou.at < 1800000)) return Promise.resolve();
+  const P = lpEnPeriod(), from = P ? new Date(P.from) : (() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })();
+  const st = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
+  const a = ids.length ? conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), period: 'hour', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } }) : Promise.resolve({});
+  const b = bp ? conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), period: 'hour', statistic_ids: [bp], types: ['mean'], units: { power: 'W' } }) : Promise.resolve({});
+  return Promise.all([a, b]).then((r) => {
+    const k = { day: 0, peak: 0, night: 0 }, ch = { day: 0, peak: 0, night: 0 }, dis = { day: 0, peak: 0, night: 0 };
+    ids.forEach((id) => ((r[0] && r[0][id]) || []).forEach((x) => { if (isFinite(x.change)) k[lpEnBand(st(x))] += Math.max(0, x.change); }));
+    ((r[1] && bp && r[1][bp]) || []).forEach((x) => { if (!isFinite(x.mean)) return; const v = (s.bat_inv ? -x.mean : x.mean) / 1000, bd = lpEnBand(st(x)); if (v > 0) ch[bd] += v; else dis[bd] -= v; });
+    LP_EN.tou = { at: Date.now(), sig: sig, from: from.getTime(), k: k, ch: ch, dis: dis, bat: !!bp && !!(r[1] && r[1][bp] && r[1][bp].length) };
+  }).catch(() => {});
+}
+// bataryanın dönemdeki dökümü: şarj, deşarj, kayıp; üç zamanlıda kazanç (deşarjın çıktığı dilimin fiyatı − şarjın girdiği dilimin fiyatı)
+function lpEnBatGain() {
+  const T = LP_EN.tou; if (!T || !T.bat) return null;
+  const sum = (o) => o.day + o.peak + o.night, chg = sum(T.ch), dis = sum(T.dis);
+  const tou = lpEnMode() === 'tou', val = (o) => o.day * lpEnTouP('day') + o.peak * lpEnTouP('peak') + o.night * lpEnTouP('night');
+  return { from: T.from, ch: chg, dis: dis, loss: Math.max(0, chg - dis), gain: tou ? val(T.dis) - val(T.ch) : null, chN: T.ch.night, disP: T.dis.peak + T.dis.day };
+}
 function lpEnSub(fn) { LP_EN.subs.push(fn); return () => { const i = LP_EN.subs.indexOf(fn); if (i >= 0) LP_EN.subs.splice(i, 1); }; }
 function lpEnFire() { LP_EN.subs.slice().forEach((f) => { try { f(); } catch (e) {} }); }
 // veriyi yükle (ilk kez, 5 dakikada bir ya da enerji ayarı değişince)
 function lpEnEnsure(h) {
   if (!h || LP_EN.busy) return;
   const LM = lpEnLemur();
-  const key = JSON.stringify([lpEnCfg().total || '', lpEnCfg().standby || '', lpEnSolar(), LM ? [LM.C, Object.keys(LM.E).map((k) => [k, LM.E[k].cat, LM.E[k].kind, LM.E[k].sensor, LM.E[k].energy, LM.E[k].name])] : 0]);
+  const key = JSON.stringify([lpEnCfg().total || '', lpEnCfg().standby || '', lpEnSolar(), lpEnMeter(), lpEnCfg().price_mode || '', LM ? [LM.C, Object.keys(LM.E).map((k) => [k, LM.E[k].cat, LM.E[k].kind, LM.E[k].sensor, LM.E[k].energy, LM.E[k].name])] : 0]);
   if (LP_EN.m && LP_EN.key === key && Date.now() - LP_EN.at < 300000) return;
   const conn = h.connection; if (!conn || !conn.sendMessagePromise) return;
   LP_EN.busy = true; LP_EN.key = key;
   conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => null).then((prefs) => {
     const M = lpEnModel(h, prefs);
     LP_EN.prefs = prefs || null;   // yönetim panelinde bulunan cihazlar için (grup toplamları hariç tutulur)
-    return M.cats.length || lpEnSunE() ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M)]).then(() => M) : M;
+    return M.cats.length || lpEnSunE() || lpEnYearIds(M).ids.length ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M), lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => M) : M;
   }).then((M) => { LP_EN.m = M; LP_EN.at = Date.now(); LP_EN.busy = false; lpEnFire(); },
     () => { LP_EN.busy = false; LP_EN.at = Date.now(); if (!LP_EN.m) LP_EN.m = { cats: [], devs: [], price: 0 }; lpEnFire(); });
 }
@@ -387,7 +513,8 @@ function lpEnIds(M) {
   const o = [], add = (x) => { if (x && o.indexOf(x) < 0) o.push(x); };
   M.cats.forEach((c) => add(c.p)); M.devs.forEach((d) => add(d.p));
   const c = lpEnCfg(); add(c.total); add(c.standby);
-  const s = lpEnSolar(); if (s.on) ['prod', 'grid', 'grid_in', 'grid_out', 'bat_power', 'soc'].forEach((k) => add(s[k]));
+  const s = lpEnSolar(); if (lpEnSunOn(s) || lpEnBatOn(s)) ['prod', 'grid', 'grid_in', 'grid_out', 'bat_power', 'soc'].forEach((k) => add(s[k]));
+  const m = lpEnMeter(); if (m) { add(m.power); add(m.volt); }
   return o;
 }
 const lpEnWOf = (S, x) => (x.w !== undefined ? x.w : (x.p ? lpEnW(S, x.p) : null));
@@ -396,7 +523,15 @@ function lpEnCatW(S, c) {
   let s = null; c.kids.forEach((k) => { const v = lpEnWOf(S, k); if (v !== null) s = (s || 0) + v; });
   return s;
 }
+// ev sayacından evin şu anki gücü (yoksa null): güneş/batarya varsa akıştan, yoksa sayaçtan
+function lpEnHomeMeter(S, M) {
+  const m = lpEnMeter(); if (!m || !m.power || (M && M.demo)) return null;
+  const F = lpEnFlowNow(S); if (F && F.gridKnown) return F.home;
+  const v = lpEnW(S, m.power); return v === null ? null : Math.max(0, m.inv ? -v : v);
+}
 function lpEnTotal(S, M) {
+  const m = !M.demo && lpEnMeter();
+  if (m && m.power && !lpEnSunOn() && !lpEnBatOn()) { const v = lpEnW(S, m.power); if (v !== null) return Math.max(0, m.inv ? -v : v); }   // ev sayacı: evin gücü doğrudan
   const tot = !M.demo && lpEnCfg().total;
   if (tot) { const v = lpEnW(S, tot); if (v !== null) return v; }
   const F = !M.demo && lpEnFlowNow(S, null);
@@ -421,16 +556,16 @@ function lpEnMoney(h, v, lang) {
   return lpEnNum(v, d, lang);
 }
 // küçük grafikler (SVG): çizgi, alan, yığılmış çubuk
-function lpEnSpark(arr, color, H) {
+function lpEnSpark(arr, color, H, top) {   // top: ortak ölçek (kategoriler aynı ölçekte çizilir, küçük olan küçük görünür)
   const v = (arr || []).filter((x) => x !== null && x !== undefined);
   if (v.length < 2) return '<svg class="esp" viewBox="0 0 100 ' + H + '" preserveAspectRatio="none"></svg>';
-  const mx = Math.max.apply(null, v) || 1, n = arr.length, pts = [];
+  const mx = top > 0 ? top : Math.max.apply(null, v) || 1, n = arr.length, pts = [];
   arr.forEach((x, i) => { if (x === null || x === undefined) return; pts.push((i / (n - 1) * 100).toFixed(1) + ',' + (H - 1 - x / mx * (H - 3)).toFixed(1)); });
   return '<svg class="esp" viewBox="0 0 100 ' + H + '" preserveAspectRatio="none"><polygon points="0,' + H + ' ' + pts.join(' ') + ' 100,' + H + '" fill="' + color + '" opacity=".16"/>' +
     '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>';
 }
-function lpEnMini(arr, color, H) {   // 7 günlük küçük çubuklar
-  const v = (arr || []).slice(-7), mx = Math.max.apply(null, v.concat([0.001]));
+function lpEnMini(arr, color, H, top) {   // 7 günlük küçük çubuklar
+  const v = (arr || []).slice(-7), mx = top > 0 ? top : Math.max.apply(null, v.concat([0.001]));
   return '<svg class="esp" viewBox="0 0 70 ' + H + '" preserveAspectRatio="none">' + v.map((x, i) => { const hh = Math.max(1, x / mx * (H - 2)); return '<rect x="' + (i * 10 + 1.5) + '" y="' + (H - hh).toFixed(1) + '" width="7" height="' + hh.toFixed(1) + '" rx="1.5" fill="' + color + '" opacity="' + (i === v.length - 1 ? 1 : 0.55) + '"/>'; }).join('') + '</svg>';
 }
 // kartın gövdesi (data yoksa ipucu)
@@ -474,17 +609,29 @@ function lpEnCard(h, M, it, lang, phone) {
     const sum = M.cats.reduce((a, c) => a + (lpEnCatW(S, c) || 0), 0) || 1;
     let L = M.cats.map((c) => ({ c: c, w: lpEnCatW(S, c) }));
     if (L.length > 12) L = L.slice().sort((a, b) => (b.w || 0) - (a.w || 0)).slice(0, 12);
-    const cols = phone ? 2 : Math.max(2, Math.min(4, +it.cols || 3)), ch = it.chart === '7d' || it.chart === 'none' ? it.chart : '24h';
+    // sütun: seçilmediyse kategori sayısına göre (2 → yan yana, 4 → 2×2, 6 → 3×2, fazlası 5'li); boş hücre kalmaz
+    const hm0 = lpEnCfg().untracked === false ? null : lpEnHomeMeter(S, M), nT = L.length + (lpEnCfg().untracked === false ? 0 : hm0 !== null ? (hm0 - sum >= 5 ? 1 : 0) : lpEnUntracked() ? 1 : 0);
+    const cols = phone ? Math.min(2, Math.max(1, nT)) : +it.cols >= 2 ? Math.min(5, +it.cols) : nT <= 3 ? Math.max(1, nT) : nT === 4 ? 2 : nT <= 6 ? 3 : nT <= 8 ? 4 : 5;
+    const ch = it.chart === '7d' || it.chart === 'none' ? it.chart : '24h', rows = Math.ceil(nT / cols);
+    // grafikler ortak ölçekte: hepsinin en yükseği
+    let top = 0; L.forEach((x) => { const a = ch === '7d' ? (M.days ? (M.days.cats[x.c.id] || []).slice(-7) : []) : (M.hist ? M.hist.cats[x.c.id] || [] : []); a.forEach((y) => { if (y > top) top = y; }); });
     // ölçülmeyen pay (son faturadan): gri karo, anlık gücü toplamın o payı kadar varsayılır
-    const un = lpEnCfg().untracked === false ? 0 : lpEnUntracked();
-    const unT = un ? '<div class="encat unt"><div class="ect"><span class="eci"><ha-icon icon="mdi:help-circle-outline"></ha-icon></span><span class="ecn">' + esc(lpEnT(lang, 'untracked')) + '</span></div>' +
-      '<div class="ecv">~' + esc(lpEnWs(sum * un / (1 - un), lang)) + '<small>' + ' · ' + (lang === 'tr' ? '%' + Math.round(un * 100) : Math.round(un * 100) + '%') + '</small></div><div class="ecu">' + esc(lpEnT(lang, 'untrackedT')) + '</div></div>' : '';
-    return '<div class="encats" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">' + L.map((x) => {
-      const c = x.c, pct = x.w === null ? null : Math.round(x.w / sum * 100), wp = lpEnWp(x.w, lang);
-      const gr = ch === 'none' ? '' : ch === '7d' ? lpEnMini(M.days ? M.days.cats[c.id] : null, c.color, 26) : lpEnSpark(M.hist ? M.hist.cats[c.id] : null, c.color, 26);
-      return '<div class="encat' + (pct !== null && pct >= 40 ? ' hot' : '') + '" data-encat="' + esc(c.id) + '" style="--c:' + c.color + '"><div class="ect"><span class="eci"><ha-icon icon="' + esc(c.icon) + '"></ha-icon></span><span class="ecn">' + esc(c.name) + '</span></div>' +
-        '<div class="ecv">' + esc(wp[0]) + '<small>' + wp[1] + (pct !== null ? ' · ' + (lang === 'tr' ? '%' + pct : pct + '%') : '') + '</small></div>' + gr + '</div>';
-    }).join('') + unT + '</div>';
+    // ev sayacı varsa anlık: evin gücü − kategoriler; yoksa son faturadaki payla
+    const uOff = lpEnCfg().untracked === false, hm = uOff ? null : lpEnHomeMeter(S, M), un = uOff || hm !== null ? 0 : lpEnUntracked();
+    const uW = hm !== null ? Math.max(0, hm - sum) : un ? sum * un / (1 - un) : 0, all = sum + uW, showU = hm !== null ? uW >= 5 : !!un;
+    const unT = showU ? '<div class="encat unt"><div class="ect"><span class="eci"><ha-icon icon="mdi:help-circle-outline"></ha-icon></span><span class="ecn">' + esc(lpEnT(lang, 'untracked')) + '</span></div>' +
+      '<div class="ecv">' + (hm !== null ? '' : '~') + esc(lpEnWs(uW, lang)) + '<small>' + ' · ' + (lang === 'tr' ? '%' + Math.round(uW / all * 100) : Math.round(uW / all * 100) + '%') + '</small></div><div class="ecu">' + esc(lpEnT(lang, hm !== null ? 'untrackedM' : 'untrackedT')) + '</div></div>' : '';
+    const tiles = L.map((x) => {
+      const c = x.c, pct = x.w === null ? null : Math.round(x.w / all * 100), wp = lpEnWp(x.w, lang);
+      const gr = ch === 'none' ? '' : ch === '7d' ? lpEnMini(M.days ? M.days.cats[c.id] : null, c.color, 26, top) : lpEnSpark(M.hist ? M.hist.cats[c.id] : null, c.color, 26, top);
+      return '<div class="encat' + (gr ? ' bgc' : '') + (nT > 6 ? ' sm' : '') + (pct !== null && pct >= 40 ? ' hot' : '') + '" data-encat="' + esc(c.id) + '" style="--c:' + c.color + '"><div class="ect"><span class="eci"><ha-icon icon="' + esc(c.icon) + '"></ha-icon></span><span class="ecn">' + esc(c.name) + '</span></div>' +
+        '<div class="ecv">' + esc(wp[0]) + '<small>' + wp[1] + (pct !== null ? '<span class="ecp"> · ' + (lang === 'tr' ? '%' + pct : pct + '%') + '</span>' : '') + '</small></div>' + gr + '</div>';
+    });
+    if (unT) tiles.push(unT);
+    // son satır eksikse son karo kalan hücreleri de kaplar (boş hücre kalmaz)
+    const rem = phone ? 0 : tiles.length % cols;
+    if (rem && tiles.length) tiles[tiles.length - 1] = tiles[tiles.length - 1].replace('<div class="encat', '<div style="grid-column:span ' + (cols - rem + 1) + '" class="encat');
+    return '<div class="encats" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr));' + (phone ? '' : 'grid-template-rows:repeat(' + rows + ',minmax(0,1fr))') + '">' + tiles.join('') + '</div>';
   }
   if (k === 'top') {
     let L = M.devs.filter((d) => !it.cat || d.cat === it.cat).map((d) => ({ d: d, w: lpEnWOf(S, d) })).filter((x) => x.w !== null && (!it.hide_idle || x.w >= 2));
@@ -552,19 +699,20 @@ function lpEnFlowCard(h, M, it, lang) {
   const P = Math.max(0, F.prod || 0), G = F.grid || 0, B = F.bat || 0, exp = Math.max(0, -G), chg = Math.max(0, B), gk = F.gridKnown;
   const sg = Math.min(P, exp), sb = Math.min(P - sg, chg), sh = Math.max(0, P - sg - sb), bh0 = Math.max(0, -B), gb = Math.max(0, chg - sb);
   const bg = Math.min(bh0, Math.max(0, exp - sg)), bh = bh0 - bg, gh = Math.max(0, Math.max(0, G) - gb);   // batarya şebekeye veriyor / şebeke bataryayı dolduruyor
-  const noGrid = lpEnGridMode(lpEnSolar()) === 'none' && !M.demo;
-  const bat = F.hasBat || F.bat !== null, sun = F.prod !== null;
+  const noGrid = lpEnGridMode(lpEnSolar()) === 'none' && !lpEnMeter() && !M.demo;
+  const bat = F.hasBat || F.bat !== null, sun = M.demo ? F.prod !== null : !!F.sun;
   const N = { s: [150, 30], g: [40, 104], o: [260, 104], b: [150, 172] };
   const ln = (a, b2, v, col) => { const A = N[a], Bp = N[b2], on = v >= 5; return '<line x1="' + A[0] + '" y1="' + A[1] + '" x2="' + Bp[0] + '" y2="' + Bp[1] + '" class="efl' + (on ? ' on' : '') + '" style="stroke:' + col + (on ? ';animation-duration:' + Math.max(0.6, 3 - Math.log(v) / 3).toFixed(2) + 's' : '') + '"/>'; };
   let svg = '';
   if (sun) { svg += ln('s', 'o', sh, '#FFC94A') + (noGrid ? '' : ln('s', 'g', sg, '#FFC94A')); if (bat) svg += ln('s', 'b', sb, '#FFC94A'); }
-  if (!noGrid) svg += ln('g', 'o', gh, '#7C9CFF');
+  if (!noGrid) svg += F.outage ? '<line x1="' + N.g[0] + '" y1="' + N.g[1] + '" x2="' + N.o[0] + '" y2="' + N.o[1] + '" class="efl" style="stroke:#FF5A5A;opacity:.4;stroke-dasharray:3 5"/>' : ln('g', 'o', gh, '#7C9CFF');   // kesintide kopuk çizgi
   if (bat) { svg += ln('b', 'o', bh, '#3DDC84'); if (gb >= 5) svg += ln('g', 'b', gb, '#7C9CFF'); if (bg >= 5) svg += ln('b', 'g', bg, '#3DDC84'); }
   const node = (k, ic, col, lab, w, sub, ent) => '<div class="efn efn-' + k + '"' + (ent && !M.demo ? ' data-enmore="' + esc(ent) + '"' : '') + ' style="left:' + (N[k][0] / 3).toFixed(2) + '%;top:' + (N[k][1] / 2.16).toFixed(2) + '%;--c:' + col + '"><span class="efi"><ha-icon icon="' + ic + '"></ha-icon></span><span class="eft"><b>' + esc(w) + '</b><i>' + esc(lab) + (sub ? ' · ' + esc(sub) : '') + '</i></span></div>';
   const s = lpEnSolar();
   let nodes = '';
   if (sun) nodes += node('s', 'mdi:solar-power-variant', '#FFC94A', lpEnT(lang, 'nSun'), lpEnWs(P, lang), '', s.prod);
-  if (!noGrid) nodes += node('g', 'mdi:transmission-tower', '#7C9CFF', lpEnT(lang, F.grid === null || Math.abs(G) < 5 ? 'nGrid' : G < 0 ? 'nGridO' : 'nGridI'), F.grid === null ? '–' : lpEnWs(Math.abs(G), lang), '', s.grid || s.grid_in);
+  const mt = lpEnMeter();
+  if (!noGrid) nodes += F.outage ? node('g', 'mdi:transmission-tower-off', '#FF5A5A', lpEnT(lang, 'nGridOff'), lpEnT(lang, 'nGridOffT'), '', mt ? mt.volt || mt.power : s.grid || s.grid_in) : node('g', 'mdi:transmission-tower', '#7C9CFF', lpEnT(lang, F.grid === null || Math.abs(G) < 5 ? 'nGrid' : G < 0 ? 'nGridO' : 'nGridI'), F.grid === null ? '–' : lpEnWs(Math.abs(G), lang), '', mt && mt.power ? mt.power : s.grid || s.grid_in);
   nodes += node('o', 'mdi:home-lightning-bolt-outline', '#ECEDEF', lpEnT(lang, 'nHome'), gk || M.demo ? lpEnWs(F.home, lang) : '–', '', lpEnCfg().total);
   if (bat) nodes += node('b', 'mdi:home-battery-outline', '#3DDC84', lpEnT(lang, 'nBat'), F.soc === null ? lpEnWs(Math.abs(B), lang) : lpEnPct(F.soc, lang), F.bat === null || Math.abs(B) < 5 ? '' : lpEnWs(Math.abs(B), lang), s.soc || s.bat_power);
   const N2 = M.days && M.days.sun ? M.days.sun.length : 0, today = N2 ? M.days.sun[N2 - 1] : null;
@@ -659,6 +807,6 @@ function lhdEnergyTab(lang, id) {
     { id: id + '-d', type: 'energy', title: T('day'), col: 2, grow: 2, entities: [{ energy: 'day' }] }
   ] };
   // güneşli evde akış kartı soldaki kolonda, bekleme yerine (batarya doluluğu akışta da görünür; ayrı kart + Enerji kartı'ndan)
-  if (sol.on && sol.prod) t.sections[1] = { id: id + '-f', type: 'energy', title: T('flow'), col: 0, grow: 2, entities: [{ energy: 'flow' }] };
+  if (lpEnSunOn(sol) || lpEnBatOn(sol)) t.sections[1] = { id: id + '-f', type: 'energy', title: T('flow'), col: 0, grow: 2, entities: [{ energy: 'flow' }] };
   return t;
 }

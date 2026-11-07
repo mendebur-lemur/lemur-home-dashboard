@@ -143,7 +143,7 @@ Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji 
 
 - **Kart** (Evin anlık gücü · Kategori karoları · Şu an en çok çekenler · Günlük tüketim · Son 24 saat · Bekleme tüketimi · Güneş ve şebeke akışı · Batarya): Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.
 - **Altındaki bilgiler**: Halo'nun altında bugünkü kWh, para ve bu ayın tutarı (fiyat yoksa bu hızla aylık tüketim).
-- **Kademe ve yıllık sınır çubukları**: Halo'nun altında bu ayın kademe çubuğu ve son 12 ayın yıllık sınıra göre durumu.
+- **Kademe ve yıllık sınır çubukları**: Halo'nun altında bu ayın kademe çubuğu ve bu yılın yıllık sınıra göre durumu.
 - **Sütun** (2 · 3 · 4): Kategori karolarında satırdaki karo (telefonda 2).
 - **Küçük grafik** (24 saat · 7 gün · Henüz kategori yok. Kategorisiz cihazlar kartlarda "Kategorisiz" karosunda toplanır.): Kategori karosundaki küçük grafik.
 - **Kaç cihaz** (3 · 5 · 6 · 8 · 10): En çok çekenler listesinde kaç cihaz.
@@ -295,7 +295,7 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 
 ![Enerji sayfası](guide/tr/energy-settings.webp)
 
-Üst çubuktaki **Enerji** düğmesi cihazları, kategorileri, güneşi, fiyatı, faturaları ve ipuçlarını kendi sayfasında açar. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.
+Üst çubuktaki **Enerji** düğmesi cihazları, kategorileri, ev sayacını, güneşi, fiyatı, faturaları ve ipuçlarını kendi sayfasında açar. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.
 
 **Cihazlar:** güç ölçen cihazlar bulunur ve **Ekle** ile doğrudan gelir. Ölçmeyenler **Panelden seç** ile eklenir: ad paneldekinden, tür ve kategori kendiliğinden, ölçülmüş ışıkların değerleri kütüphaneden gelir. Sanal ölçüm türleri: ışık (bekleme, en düşük ve en çok W, parlaklıkla), duruma göre (her durum için ayrı W; ör. TV oynatırken 95, duraklatınca 70 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim. Her biri için Home Assistant'ta güç ve enerji sensörü oluşur; kartlarda "~" ile görünür.
 
@@ -303,7 +303,7 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 
 **Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için toplam güç ve kWh sensörü oluşur; cihazlar ve kategoriler Home Assistant Enerji ayarlarına kendiliğinden eklenir (Veri kaynağı → Enerji ayarlarıyla eşle).
 
-**Güneş ve batarya:** üretim, şebeke (tek sensör ya da alınan ve verilen ayrı) ve batarya sensörleri; akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.
+**Ev sayacı:** evin tamamını ölçen cihaz kendiliğinden bulunur, **Evin sayacı yap** ile seçilir; ev ölçülen değerle, ölçülmeyen pay faturasız, yılın toplamı sayaçtan. **Güneş ve batarya:** **Güneş enerjisi var** ve **Batarya var** anahtarları; yalnızca açtığının ayarları görünür, akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.
 
 **Fiyat ve tarife**, **Faturalar** (gerçek birim fiyat, ölçülmeyen pay, yıllık sınır) ve **İpuçları** (eşikler, sekmede nokta, gizlenenleri geri getir) aynı sayfada.
 

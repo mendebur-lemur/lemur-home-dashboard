@@ -643,3 +643,39 @@ div.ensr:hover { background: var(--s1); }
   .engrid.g2, .engrid.g3 { grid-template-columns: minmax(0, 1fr); }
 }
 .lrneed { flex: 1 1 220px; min-width: 0; }
+/* fiyat ve tarife: herkesin anlayacağı bölümler */
+.ensec2 { margin: 14px 0; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--ln); background: var(--s1); display: flex; flex-direction: column; gap: 10px; }
+.ensec2 .ensh b { font-size: 15px; }
+.enexp { margin: 0; color: var(--tx2); font-size: 13px; line-height: 1.5; max-width: 72ch; }
+.enfill { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; } .enfill span { flex: 1 1 260px; min-width: 0; color: var(--mu); font-size: 12px; }
+.enrules { margin: 0; padding-left: 18px; color: var(--tx2); font-size: 13px; line-height: 1.5; display: flex; flex-direction: column; gap: 4px; max-width: 76ch; }
+.enyr { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: var(--s2); }
+.enyrh { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--tx2); } .enyrh b { color: var(--tx); font-variant-numeric: tabular-nums; }
+.enyr .enbar { height: 10px; border-radius: 6px; background: var(--s3); overflow: hidden; } .enyr .enbar i { display: block; height: 100%; border-radius: 6px; }
+.enyr .encalc { margin: 0; }
+.enverd { border-left: 3px solid; padding: 6px 10px; font-size: 13px; line-height: 1.45; color: var(--tx); background: var(--s1); border-radius: 0 8px 8px 0; }
+.enmore summary { cursor: pointer; color: var(--mu); font-size: 12.5px; }
+.enmore[open] summary { margin-bottom: 6px; }
+.ensrc { margin: 4px 0 0; font-size: 11.5px; color: var(--mu); }
+/* fiyat ve tarife: üç adım */
+.tfs { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; margin: 12px 0; }
+.tfn { width: 34px; height: 34px; border-radius: 50%; background: var(--acs); color: var(--ac); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.tfc { background: var(--s1); border: 1px solid var(--ln); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.tft { font-size: 15px; font-weight: 600; }
+.tfch { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1100px) { .tfch { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tfch button { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx); border-radius: 12px; padding: 10px 12px; font: inherit; cursor: pointer; min-width: 0; }
+.tfch button.on { border-color: var(--ac); background: var(--acs); }
+.tfch b { font-size: 13.5px; } .tfch span { font-size: 12px; color: var(--tx2); line-height: 1.35; }
+.tfsum { font-size: 12.5px; color: var(--tx2); }
+.tfbar { display: flex; align-items: center; gap: 12px; } .tfbar .enbar { flex: 1; height: 10px; border-radius: 6px; background: var(--s3); overflow: hidden; } .tfbar .enbar i { display: block; height: 100%; border-radius: 6px; }
+.tfbar span { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--tx2); } .tfbar span b { color: var(--tx); }
+.tfl { border: 1px solid var(--ln); border-radius: 12px; overflow: hidden; background: var(--s2); }
+.tfli { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-top: 1px solid var(--ln); }
+.tfli:first-child { border-top: 0; }
+.tfli .k { flex: 1; min-width: 0; } .tfli .k b { display: block; font-weight: 600; font-size: 13.5px; } .tfli .k span { display: block; color: var(--mu); font-size: 12px; }
+.tfli .v { flex: 0 0 auto; color: var(--tx2); font-variant-numeric: tabular-nums; text-align: right; }
+.tfli .v.acc { color: var(--ac); } .tfli .v.okc { color: #3DDC84; } .tfli .v.redc { color: var(--red); }
+.tfli .ennum .inp { width: 90px; }
+.tfd { padding: 10px 12px; border-radius: 12px; background: var(--s2); }
+@media (max-width: 760px) { .tfch { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tfch button:last-child:nth-child(odd) { grid-column: span 2; } .tfs { grid-template-columns: minmax(0, 1fr); } .tfn { display: none; } }

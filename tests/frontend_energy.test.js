@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount };', ctx);
+vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -97,7 +97,8 @@ test('cards render with data, show a hint without it, and escape names', () => {
   E.LP_EN_TYPES.forEach((k) => { const html = E.lpEnCard(h, M, { energy: k }, 'tr', false); assert.ok(typeof html === 'string' && html.length > 10, k); });
   const cats = E.lpEnCard(h, M, { energy: 'cats' }, 'tr', false);
   assert.ok(cats.indexOf('&lt;b&gt;x&lt;/b&gt;') >= 0 && cats.indexOf('<b>x</b>') < 0);
-  assert.ok(cats.indexOf('encat hot') >= 0);                                         // Klimalar %95
+  assert.ok(/class="encat[^"]* hot"/.test(cats));
+  assert.ok(/grid-template-columns:repeat\(\d,/.test(cats));                                         // Klimalar %95
   const top = E.lpEnCard(h, M, { energy: 'top', count: 3 }, 'tr', false);
   assert.strictEqual((top.match(/class="enrk"/g) || []).length, 3);
   assert.ok(top.indexOf('1,2 kW') >= 0);
@@ -143,9 +144,37 @@ test('tariff: bill, single and tiered prices, untracked share, yearly limit', ()
   assert.strictEqual(E.lpEnMode(), 'bill');                         // fatura varsa kendiliğinden faturadan
   assert.strictEqual(E.lpEnUnit(null), 3.75);
   assert.strictEqual(Math.round(E.lpEnUntracked() * 100), 30);
-  SET.s.energy.last12 = 3120;
-  assert.ok(Math.abs(E.lpEnYear(null) - 3120) < 1e-9);
-  assert.ok([3000, 4000].indexOf(E.lpEnYearLimit()) >= 0);
+  const y = new Date().getFullYear();
+  SET.s.energy.bills = [{ from: y + '-01-01', to: y + '-01-30', kwh: 300, tl: 1000 }, { from: (y - 1) + '-12-02', to: y + '-01-01', kwh: 310, tl: 1000 }];
+  assert.ok(Math.abs(E.lpEnYtd(null) - 310) < 1e-6);               // geçen yıldan taşan faturanın yalnız 1 günü bu yıla
+  SET.s.energy.ytd = 2500;
+  assert.strictEqual(E.lpEnYear(null), 2500);                         // elle yazılan yıl başından son faturaya
+  assert.strictEqual(E.lpEnYearLimit(), y >= 2026 ? 3000 : 5000);
+  assert.strictEqual(E.lpEnLimitOf(2025), 5000); assert.strictEqual(E.lpEnLimitOf(2026), 4000); assert.strictEqual(E.lpEnLimitOf(2027), 3000);
+  const P = E.lpEnYearPlan(null);
+  assert.ok(P && P.k === 2500 && P.lim === E.lpEnYearLimit() && P.avg > 0);
+  if (P.cross) assert.strictEqual(P.start.getDate(), 1);            // aşılan ayı izleyen 3. ayın 1'i
+  SET.s.energy.ytd = 2990; const P2 = E.lpEnYearPlan(null);
+  assert.ok(P2.cross && P2.start.getMonth() === (P2.cross.getMonth() + 3) % 12);
+  SET.s.energy.sktt_on = true; SET.s.energy.sktt_price = 6.97;
+  assert.strictEqual(E.lpEnMode(), 'sktt'); assert.strictEqual(E.lpEnUnit(null), 6.97);
+  delete SET.s.energy.sktt_on;
+  // faturasız: Home Assistant'ın kaydı (şebeke sayacı) yılın başından
+  SET.s.energy = {}; const d = {}, y0 = new Date(y, 0, 1).getTime(), D = 86400000; let tot = 0;
+  for (let t = y0; t < Date.now() - D; t += D) { d[t] = 9; tot += 9; }
+  E.LP_EN.yr = { key: 'x', at: Date.now(), y: y, src: 'grid', days: d, first: y0, prev: 3400, pfull: true };
+  const I = E.lpEnYtdInfo(null); assert.strictEqual(I.src, 'grid'); assert.ok(Math.abs(I.k - tot) < 1e-6); assert.ok(!I.est);
+  assert.strictEqual(E.lpEnPrev(), 3400);
+  const P3 = E.lpEnYearPlan(null); assert.strictEqual(P3.prevOver, 3400 >= E.lpEnLimitOf(y));
+  // kayıt yılın ortasından başlıyorsa ortalamayla tamamlanır
+  const half = {}, h0 = Date.now() - 30 * D; for (let t = h0; t < Date.now() - D; t += D) half[t] = 10;
+  E.LP_EN.yr = { key: 'x', at: Date.now(), y: y, src: 'panel', days: half, first: h0, prev: 0, pfull: false };
+  const I2 = E.lpEnYtdInfo(null); assert.ok(I2.est && I2.low && I2.k > 290 * 10 * 0.5);
+  if (y === 2026) { E.LP_EN.yr = { key: 'x', at: Date.now(), y: y, src: 'grid', days: { [y0]: 3200 }, first: y0, prev: 0, pfull: false }; const P4 = E.lpEnYearPlan(null); assert.ok(P4.start >= new Date(2027, 0, 1)); }   // 2026 geçişi en erken 1 Ocak 2027
+  E.LP_EN.yr = null;
+  // fatura dönemi: kademe son faturanın bittiği günden
+  SET.s.energy = { bills: [{ from: '2026-09-06', to: '2026-10-05', kwh: 268, tl: 1004.7 }] };
+  assert.strictEqual(E.lpEnMonthDays(), 30);
   SET.s.energy.year_mode = 'manual'; SET.s.energy.year_limit = 5000;
   assert.strictEqual(E.lpEnYearLimit(), 5000);
   SET.s = {};
@@ -222,12 +251,36 @@ test('solar flow: net grid, two meters, battery sign, home balance, cards', () =
   assert.ok(/<small>%<\/small>50/.test(bt) && /Evi besliyor/.test(bt) && /~8 sa 20 dk yeter/.test(bt), bt);
   SET.s = {};
   assert.strictEqual(E.lpEnFlowNow(h.states), null);
-  assert.ok(/Güneş ayarı yok/.test(E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false)));
+  assert.ok(/Güneş ya da batarya açık değil/.test(E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false)));
   const tab = E.lhdEnergyTab('tr', 'enerji');
   assert.ok(!tab.sections.some((s) => s.entities[0].energy === 'flow'));
   SET.s = { energy: { solar: { on: true, prod: 'sensor.pv' } } };
   assert.ok(E.lhdEnergyTab('tr', 'enerji').sections.some((s) => s.entities[0].energy === 'flow'));
   SET.s = {};
+  // yalnız batarya (güneş yok), şebeke ev sayacından; kesinti: sayacın gerilimi düştü
+  Object.assign(h.states, { 'sensor.em_power': pw(300), 'sensor.em_volt': { state: '229', attributes: { unit_of_measurement: 'V' } } });
+  SET.s = { energy: { meter: { power: 'sensor.em_power', energy: 'sensor.em_energy', volt: 'sensor.em_volt' }, solar: { on: true, sun: false, bat: true, prod: 'sensor.pv', bat_power: 'sensor.bat', soc: 'sensor.soc', cap: 10 } } };
+  F = E.lpEnFlowNow(h.states);
+  assert.strictEqual(F.sun, false); assert.strictEqual(F.prod, null); assert.strictEqual(F.grid, 300); assert.strictEqual(F.bat, -600); assert.strictEqual(F.home, 900); assert.ok(!F.outage);
+  const fl2 = E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false);
+  assert.ok(!/efn-s/.test(fl2) && /efn-b/.test(fl2) && !/kWh üretim/.test(fl2));
+  h.states['sensor.em_volt'] = { state: '0', attributes: { unit_of_measurement: 'V' } }; h.states['sensor.em_power'] = pw(0);
+  F = E.lpEnFlowNow(h.states); assert.ok(F.outage); assert.strictEqual(F.home, 600);
+  assert.ok(/Şebeke yok/.test(E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false)));
+  assert.strictEqual(E.lpEnSunE(), null);                                  // güneş kapalı: üretim kaynağı yok
+  // yalnız ev sayacı: evin gücü sayaçtan
+  SET.s = { energy: { meter: { power: 'sensor.em_power', energy: 'sensor.em_energy' } } }; h.states['sensor.em_power'] = pw(1240);
+  assert.strictEqual(E.lpEnTotal(h.states, M), 1240); assert.strictEqual(E.lpEnFlowNow(h.states), null);
+  // üç zamanlı: payı saatlik kayıttan, kazanç: puantta deşarj, gecede şarj
+  SET.s = { energy: { price_mode: 'tou', t_day: 4.95, t_peak: 7.03, t_night: 3.27, solar: { on: true, bat: true, bat_power: 'sensor.bat' } } };
+  assert.strictEqual(E.lpEnMode(), 'tou');
+  E.LP_EN.tou = { at: Date.now(), from: 0, k: { day: 50, peak: 25, night: 25 }, ch: { day: 0, peak: 0, night: 10 }, dis: { day: 2, peak: 7, night: 0 }, bat: true };
+  assert.ok(Math.abs(E.lpEnUnit(null) - (0.5 * 4.95 + 0.25 * 7.03 + 0.25 * 3.27)) < 1e-9);
+  assert.ok(Math.abs(E.lpEnMonthCost(100, 30, null).tl - 100 * (0.5 * 4.95 + 0.25 * 7.03 + 0.25 * 3.27)) < 1e-9);
+  const G = E.lpEnBatGain(); assert.strictEqual(G.ch, 10); assert.strictEqual(G.dis, 9); assert.strictEqual(G.loss, 1);
+  assert.ok(Math.abs(G.gain - (2 * 4.95 + 7 * 7.03 - 10 * 3.27)) < 1e-9);
+  assert.strictEqual(E.lpEnBand(new Date(2026, 0, 1, 18).getTime()), 'peak'); assert.strictEqual(E.lpEnBand(new Date(2026, 0, 1, 23).getTime()), 'night'); assert.strictEqual(E.lpEnBand(new Date(2026, 0, 1, 6).getTime()), 'day');
+  E.LP_EN.tou = null; SET.s = {};
   assert.strictEqual(E.lpEnDur(95, 'tr'), '1 sa 35 dk'); assert.strictEqual(E.lpEnDur(12 * 60, 'en'), '12 h');
 });
 

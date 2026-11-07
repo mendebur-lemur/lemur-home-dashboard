@@ -143,7 +143,7 @@ Light and plug tiles can also show live watts in their corner (Energy → Look �
 
 - **Card** (Home power now · Category tiles · Top consumers now · Daily usage · Last 24 hours · Standby usage · Solar and grid flow · Battery): Added to a section as an Energy card; change its kind with the item ⚙.
 - **Details below**: Under the Halo: today's kWh, cost and this month's cost (without a price, monthly usage at this rate).
-- **Tier and yearly limit bars**: Under the Halo: this month's tier bar and the last 12 months against the yearly limit.
+- **Tier and yearly limit bars**: Under the Halo: this month's tier bar and this year against the yearly limit.
 - **Columns** (2 · 3 · 4): Category tiles per row (2 on phones).
 - **Small chart** (24 hours · 7 days · No categories yet. Devices without one are grouped in an "Uncategorized" tile.): The small chart on a category tile.
 - **How many devices** (3 · 5 · 6 · 8 · 10): How many devices the top consumers list shows.
@@ -295,7 +295,7 @@ Type-specific settings live here too, such as the cover design or how often a ca
 
 ![Energy page](guide/en/energy-settings.webp)
 
-The **Energy** button in the top bar opens devices, categories, solar, price, bills and tips on their own page. **Summary** shows where each part stands today; tap a row to open that part.
+The **Energy** button in the top bar opens devices, categories, the home meter, solar, price, bills and tips on their own page. **Summary** shows where each part stands today; tap a row to open that part.
 
 **Devices:** devices that measure power are found and come in with **Add**. The others are added with **Pick from the dashboard**: the name comes from the dashboard, the kind and category are filled in, and measured lights get their values from the library. Virtual measurement kinds: light (standby, lowest and highest W, by brightness), by state (a W value per state; e.g. a TV at 95 W playing, 70 W paused), on/off, fixed, yearly usage (the label's kWh/year) or cycles. Each gets a power and an energy sensor in Home Assistant; cards show them with "~".
 
@@ -303,7 +303,7 @@ The **Energy** button in the top bar opens devices, categories, solar, price, bi
 
 **Categories:** name, color and the devices in it. Each category gets a total power and kWh sensor; devices and categories are added to Home Assistant's Energy settings by themselves (Data source → Sync with the Energy settings).
 
-**Solar and battery:** production, grid (one sensor, or import and export apart) and battery sensors; the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.
+**Home meter:** a device measuring the whole home is found by itself and picked with **Use as home meter**; the home is measured, the untracked share needs no bills, the year's total comes from the meter. **Solar and battery:** the **I have solar** and **I have a battery** switches; only what you turn on shows its settings, and the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.
 
 **Price and tariff**, **Bills** (real unit price, the share not measured, yearly limit) and **Tips** (thresholds, dot on the tab, bring back hidden tips) are on the same page.
 

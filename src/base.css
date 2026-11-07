@@ -569,3 +569,14 @@
 .navb.endot .ni::after { right: 50%; margin-right: -22px; }
 .pbi.endot { position: relative; }
 .pbi.endot::after { content: ''; position: absolute; left: 50%; margin-left: 10px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: #FF9142; }
+/* v0.27.3 kategori karoları: grafik karonun zemininde (alt yarı), yazı önde; çok kategoride küçük karo */
+.encat.bgc > .esp { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; margin: 0; padding: 0; z-index: 0; }
+.encat.bgc > .esp polygon { opacity: .3; }
+.encat.bgc > .ect, .encat.bgc > .ecv { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
+.encat.sm { padding: 8px 9px; }
+.encat.sm .eci { flex-basis: 24px; height: 24px; border-radius: 7px; }
+.encat.sm .eci ha-icon { width: 15px; height: 15px; --mdc-icon-size: 15px; }
+.encat.sm .ecn { font-size: 12px; line-height: 14px; margin-left: 6px; -webkit-line-clamp: 1; }
+.encat.sm .ecv { font-size: 17px; line-height: 21px; margin-top: 6px; }
+.encat.sm .ecp { display: none; }
+.phone .box > .enc.en-cats > .encats { grid-template-rows: none !important; grid-auto-rows: 96px; }

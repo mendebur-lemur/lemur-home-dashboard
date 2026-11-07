@@ -55,7 +55,7 @@ _LOGGER = logging.getLogger(__name__)
 # twins / walls: backup control and wall switches (twins.py)
 # estimates / ecats: energy devices (measured and virtual) and categories (estimates.py, sensor.py)
 # energy_solar_src: the solar statistic the dashboard put into the energy settings; learn_avg: long averages running (learn.py)
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "learn_avg": {}}
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "energy_grid_src": "", "learn_avg": {}}
 PLATFORMS = ["sensor", "button"]
 
 
@@ -135,11 +135,20 @@ class PanelData:
             owned = self.data.get("energy_solar_src")
             ours = owned or any(str(x.get("stat_consumption", "")).startswith("sensor.lhd_") for x in prefs.get("device_consumption") or [] if isinstance(x, dict)) \
                 or any(str(x.get("stat_energy_from", "")).startswith("sensor.lhd_") for x in prefs.get("energy_sources") or [] if isinstance(x, dict))
-            if not (self.estimates() or self.ecats() or EST.solar_energy_entity(st) or drop or ours):
+            ours = ours or bool(self.data.get("energy_grid_src"))
+            if not (self.estimates() or self.ecats() or EST.solar_energy_entity(st) or EST.meter_cfg(st).get("energy") or drop or ours):
                 return False
             if drop:
                 prefs["device_consumption"] = [d for d in prefs.get("device_consumption") or [] if d.get("stat_consumption") not in drop]
-            new = EST.build_prefs(prefs, self.estimates(), self.ecats(), st, owned)
+            owned_grid = self.data.get("energy_grid_src") or None
+            had = {f.get("stat_energy_from") for x in prefs.get("energy_sources") or [] if isinstance(x, dict) and x.get("type") == "grid" for f in x.get("flow_from") or []}
+            new = EST.build_prefs(prefs, self.estimates(), self.ecats(), st, owned, owned_grid)
+            # şebeke kaynağına bizim yazdığımız sayaç (önceden kullanıcının kendi yazdığı değilse)
+            mw = EST.meter_written(new, st)
+            grid_src = mw if mw and (mw not in had or mw == owned_grid) else ("" if not mw else (owned_grid or ""))
+            if (self.data.get("energy_grid_src") or "") != grid_src:
+                self.data["energy_grid_src"] = grid_src
+                self.store.async_delay_save(lambda: self.data, 1)
             sol = EST.solar_energy_entity(st)
             if (self.data.get("energy_solar_src") or None) != sol:   # which solar statistic is the dashboard's (taken out when it changes)
                 self.data["energy_solar_src"] = sol or ""

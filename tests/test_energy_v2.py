@@ -264,3 +264,22 @@ async def test_learn_ws(hass: HomeAssistant, hass_ws_client, setup_lhd):
     await ws.send_json({"id": 4, "type": "lemur_home_dashboard/learn_ctl", "device": "oda_klima", "action": "cancel"})
     r = await ws.receive_json()
     assert r["success"], r
+
+
+def test_meter_grid_source():
+    """The whole-home meter picked in the dashboard becomes the grid source; the user's own grid meter is left alone."""
+    st = {"energy": {"meter": {"energy": "sensor.em_in", "out": "sensor.em_out"}, "solar": {"on": True, "sun": False, "bat": True, "prod": "sensor.pv"}}}
+    new = EST.build_prefs({"energy_sources": [], "device_consumption": []}, {}, [], st)
+    g = [x for x in new["energy_sources"] if x["type"] == "grid"]
+    assert len(g) == 1 and g[0]["flow_from"][0]["stat_energy_from"] == "sensor.em_in" and g[0]["flow_to"][0]["stat_energy_to"] == "sensor.em_out"
+    assert not [x for x in new["energy_sources"] if x["type"] == "solar"]   # güneş kapalı (yalnız batarya): üretim kaynağı yazılmaz
+    assert EST.meter_written(new, st) == "sensor.em_in"
+    # the user already has a grid meter: kept as it is
+    theirs = {"energy_sources": [{"type": "grid", "flow_from": [{"stat_energy_from": "sensor.mine"}], "flow_to": [], "cost_adjustment_day": 0}], "device_consumption": []}
+    new2 = EST.build_prefs(theirs, {}, [], st)
+    assert [f["stat_energy_from"] for f in new2["energy_sources"][0]["flow_from"]] == ["sensor.mine"] and EST.meter_written(new2, st) == ""
+    # meter removed in the dashboard: ours goes away
+    new3 = EST.build_prefs(new, {}, [], {"energy": {}}, None, "sensor.em_in")
+    assert not [x for x in new3["energy_sources"] if x["type"] == "grid"]
+    # old record with only "on": solar if a production sensor is set
+    assert EST.solar_energy_entity({"energy": {"solar": {"on": True, "prod": "sensor.pv"}}}) == "sensor.lhd_solar_energy"
