@@ -23,6 +23,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 from datetime import timedelta
 
+from . import estimates as EST
 from . import pets as P
 from . import safety as SF
 from . import twins as TW
@@ -34,6 +35,7 @@ from .const import (
     MAX_CONFIG_BYTES,
     PANEL_ELEMENT,
     PANEL_URL,
+    SIGNAL_EST,
     SIGNAL_PETS,
     SIGNAL_TICK,
     SIGNAL_UPDATE,
@@ -48,7 +50,8 @@ _LOGGER = logging.getLogger(__name__)
 # Empty config means "build the default layout from the home's areas" (done in the browser, src/defaults.js).
 # pets / feed: feeding reminders (pets.py); older stored data simply has none
 # twins / walls: backup control and wall switches (twins.py)
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": []}
+# estimates: estimated power of devices that do not measure it (estimates.py, sensor.py)
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}}
 PLATFORMS = ["sensor", "button"]
 
 
@@ -87,6 +90,12 @@ class PanelData:
         if not isinstance(pets, dict):
             return {}
         return {pid: pet for pid, pet in pets.items() if isinstance(pid, str) and isinstance(pet, dict)}
+
+    def estimates(self) -> dict:
+        est = self.data.get("estimates")
+        if not isinstance(est, dict):
+            return {}
+        return {k: v for k, v in est.items() if isinstance(k, str) and isinstance(v, dict)}
 
     def rec(self, pid: str) -> dict:
         feed = self.data.get("feed")
@@ -316,7 +325,7 @@ def _for_user(connection, payload: dict) -> dict:
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/set",
-        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls"]),
+        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls", "estimates"]),
         vol.Required("value"): vol.Any(list, dict),
     }
 )
@@ -339,6 +348,12 @@ def ws_set(hass, connection, msg):
         except vol.Invalid as err:
             connection.send_error(msg["id"], "invalid", f"pets: {err}")
             return
+    elif key == "estimates":
+        try:
+            value = EST.ESTIMATES_SCHEMA(value)
+        except vol.Invalid as err:
+            connection.send_error(msg["id"], "invalid", f"estimates: {err}")
+            return
     elif key == "tabs":
         value = SF.clean_tabs(value)
     elif key in ("twins", "walls"):
@@ -353,6 +368,8 @@ def ws_set(hass, connection, msg):
     if key == "pets":
         data.refresh_all()
         async_dispatcher_send(hass, SIGNAL_PETS)
+    if key == "estimates":
+        async_dispatcher_send(hass, SIGNAL_EST)
     data.changed()
     connection.send_result(msg["id"], data.data)
 

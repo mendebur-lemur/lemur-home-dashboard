@@ -103,6 +103,17 @@ const LHD_HELP = {
     en: ['Template text and second line', "The name or the second line can be a Home Assistant template: {{ ... }} and {% ... %}. Home Assistant renders it and the text updates by itself.",
       '**Second line**: State (with unit), Last changed ("5 min ago"), Attribute (e.g. brightness, battery) or Template.',
       "Examples: {{ states('sensor.esp_wifi') }} dBm  ·  {% if is_state('binary_sensor.left_link', 'on') %}Connected{% else %}No connection{% endif %}  ·  Online · {{ states('sensor.esp_wifi') }} dBm"] },
+  energy: {
+    tr: ['Enerji kartları', 'Kartlar Home Assistant\'ın Enerji ayarlarındaki "Cihaz tüketimi" listesinden dolar. Listede başka bir girişin içinde olmayanlar kategori (ör. Işıklar, Klimalar), içindekiler cihaz olur.',
+      'Anlık güç her girişin güç sensöründen okunur (enerji sensörüyle aynı cihazdaki ya da adı ..._power olan sensör). Grafikler HA\'nın kendi kayıtlarından gelir; pano ayrıca kayıt tutmaz.',
+      '**Tahmini cihazlar**: güç ölçmeyen cihazlar (buzdolabı, TV, modem…) için Enerji sayfasında tahmini değer girilir; entegrasyon her biri için güç ve enerji sensörü kurar, kartlarda "~" ile görünür.',
+      '**Kartlar**: Evin anlık gücü (Halo halkası, tüketime göre yeşilden kırmızıya), Kategori karoları (dokununca o kategorinin cihazları), Şu an en çok çekenler, Günlük tüketim (7 ya da 30 gün), Son 24 saat, Bekleme tüketimi.',
+      'Örnek: güç hesaplayan bir entegrasyonla Işıklar, Klimalar gibi gruplar kur, grupları ve içindeki cihazları "Cihaz tüketimi"ne ekle; cihazın "Şunun içinde" alanında grubunu seç. Fiyat, faturalar ve tahmini cihazlar üst çubuktaki Enerji sayfasında.'],
+    en: ['Energy cards', 'The cards fill from "Individual devices" in Home Assistant\'s Energy settings. Entries that are not inside another one become categories (e.g. Lights, Air conditioners), the ones inside become devices.',
+      'Live power is read from each entry\'s power sensor (on the same device as the energy sensor, or named ..._power). Charts come from Home Assistant\'s own history; the dashboard keeps no records of its own.',
+      '**Estimated devices**: enter estimates for devices that do not measure power (fridge, TV, router…) on the Energy page; the integration makes a power and an energy sensor for each and the cards show them with "~".',
+      '**Cards**: Home power now (Halo ring, green to red by usage), Category tiles (tap for that category\'s devices), Top consumers now, Daily usage (7 or 30 days), Last 24 hours, Standby usage.',
+      'Example: make groups like Lights and Air conditioners with a power-estimating integration, add the groups and their devices to "Individual devices" and pick each device\'s group under "Included in". Price, bills and estimated devices are on the Energy page in the top bar.'] },
   splits: {
     tr: ['Kolon içi sütun', 'Bir kolonu eşit genişlikte 2 ya da 3 sütuna böler; her bölüm hangi sütunda duracağını kendi ayarından seçer.', 'Örnek: orta kolonda yan yana iki senaryo bölümü. Kolon çok darsa bölünmez, önce kolon sayısını azalt.'],
     en: ['Sub-columns', 'Splits a column into 2 or 3 equal sub-columns; each section picks its sub-column in its own settings.', 'Example: two scene sections side by side in the middle column. A column that is too narrow can\'t be split; reduce the number of columns first.'] }

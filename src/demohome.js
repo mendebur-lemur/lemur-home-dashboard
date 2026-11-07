@@ -65,6 +65,7 @@ function lhdDemoHass(base, home, onChange) {
   const set = (id, st, a) => { const o = S[id]; if (!o) return; S[id] = Object.assign({}, o, { state: st, attributes: Object.assign({}, o.attributes, a || {}), last_updated: new Date().toISOString() }); };
   const h = {
     states: S, entities: home.entities, devices: {}, areas: home.areas, floors: {}, services: {},
+    lhdEnDemo: true,   // enerji kartları örnek veriyle (src/energy.js lpEnDemo)
     language: base.language, locale: base.locale, themes: base.themes, selectedLanguage: base.selectedLanguage, user: base.user,
     config: Object.assign({}, base.config, { components: [] }),
     callWS: () => Promise.resolve(null),

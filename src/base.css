@@ -448,3 +448,80 @@
 .cam .cof .c1, .cam.nop:not(.na) .cof .c0 { display: none; }
 .cam.nop:not(.na) .cof .c1 { display: inline; }
 .cam:active { transform: scale(0.985); }
+/* v0.25 enerji kartları (src/energy.js): Halo halkası, kategori karoları, en çok çekenler, grafikler, bekleme; ışık karosunda watt rozeti */
+.enc { position: relative; min-width: 0; color: var(--lp-text); }
+.box > .enc { flex: 0 0 auto; }
+.box > .enc.en-halo, .box > .enc.en-top, .box > .enc.en-cats { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.enmsg { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 18px 10px; color: var(--lp-text2); font-size: 14px; line-height: 19px; }
+.enmsg ha-icon { display: block; width: 34px; height: 34px; --mdc-icon-size: 34px; color: #FFC94A; margin-bottom: 8px; }
+.enmsg b { color: var(--lp-text); font-size: 16px; line-height: 20px; }
+.enmsg span { margin-top: 6px; max-width: 360px; }
+.enhalo { position: relative; flex: 1 1 auto; min-height: 160px; }
+.enhalo svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+.enin { position: absolute; left: 0; right: 0; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); text-align: center; }
+.enw { font-size: 46px; line-height: 50px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.enw small { font-size: 20px; font-weight: 600; color: var(--lp-text2); margin-left: 4px; letter-spacing: 0; }
+.enlv { font-size: 14px; line-height: 18px; font-weight: 600; margin-top: 4px; }
+.enchs { display: flex; flex: 0 0 auto; margin-top: 12px; }
+.ench { flex: 1 1 0px; min-width: 0; background: var(--lp-card); border-radius: 14px; padding: 9px 6px; text-align: center; }
+.ench + .ench { margin-left: 8px; }
+.ench b { display: block; font-size: 17px; line-height: 21px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.ench span { display: block; font-size: 12px; line-height: 15px; color: var(--lp-text2); margin-top: 2px; }
+.encats { display: grid; grid-gap: 8px; }
+.box > .enc.en-cats > .encats { flex: 1 1 auto; grid-auto-rows: minmax(96px, 1fr); }
+.encat { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 96px; box-sizing: border-box; overflow: hidden; cursor: pointer;
+  background: var(--lp-card); border: 1px solid transparent; border-radius: 16px; padding: 10px 12px 8px; }
+.encat.hot { border-color: var(--c); }
+.ect { display: flex; align-items: center; min-width: 0; }
+.eci { flex: 0 0 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.06); color: var(--c, #5B8DEF); }
+.eci ha-icon { display: block; width: 18px; height: 18px; --mdc-icon-size: 18px; }
+.ecn { margin-left: 8px; min-width: 0; font-size: 13px; line-height: 16px; color: var(--lp-text2); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.ecv { font-size: 22px; line-height: 26px; font-weight: 700; margin-top: 8px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ecv small { font-size: 12px; font-weight: 500; color: var(--lp-text2); margin-left: 4px; }
+.esp { display: block; width: 100%; height: 26px; margin-top: auto; padding-top: 6px; }
+.entop { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.enrk { display: flex; align-items: center; flex: 0 0 auto; background: var(--lp-card); border-radius: 14px; padding: 9px 12px; cursor: pointer; }
+.enrk + .enrk { margin-top: 6px; }
+.enrk .eci { margin-right: 10px; }
+.erb { flex: 1 1 auto; min-width: 0; }
+.ern { display: block; font-size: 14px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.erl { display: block; height: 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.07); margin-top: 5px; overflow: hidden; }
+.erl i { display: block; height: 100%; border-radius: 3px; background: var(--c, #5B8DEF); }
+.erw { flex: 0 0 auto; margin-left: 12px; font-size: 14px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ench2 { display: block; width: 100%; height: auto; }
+.ench2 text { fill: #8A8F96; font-size: 11px; font-family: inherit; }
+.ench2 text.now { fill: var(--lp-text); font-weight: 700; }
+.enhd { text-align: right; font-size: 13px; line-height: 16px; color: var(--lp-text2); margin-bottom: 4px; }
+.enlg { display: flex; flex-wrap: wrap; font-size: 12px; line-height: 16px; color: var(--lp-text2); margin-top: 6px; }
+.enlg span { margin: 0 12px 4px 0; white-space: nowrap; }
+.enlg i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; }
+.ensb { display: flex; align-items: center; background: var(--lp-card); border-radius: 16px; padding: 12px 14px; }
+.ensb .eci { --c: #8E7CFF; flex: 0 0 42px; height: 42px; border-radius: 12px; margin-right: 12px; }
+.ensb .eci ha-icon { width: 24px; height: 24px; --mdc-icon-size: 24px; }
+.ensb b { display: block; font-size: 22px; line-height: 26px; }
+.ensb span { display: block; font-size: 13px; line-height: 17px; color: var(--lp-text2); margin-top: 2px; }
+.enpop { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 50; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+.enpd { width: 100%; max-width: 440px; max-height: 80vh; overflow: auto; box-sizing: border-box; background: #16181D; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 22px; padding: 16px; }
+.enph { display: flex; align-items: center; margin-bottom: 12px; }
+.enph b { flex: 1 1 auto; min-width: 0; margin-left: 10px; font-size: 17px; }
+.enx { background: transparent; border: 0 none; color: var(--lp-text2); padding: 4px; margin-left: 8px; cursor: pointer; }
+.enx ha-icon { display: block; --mdc-icon-size: 20px; }
+.enpf { font-size: 12px; color: var(--lp-text2); margin-top: 10px; text-align: center; }
+.tile { position: relative; }
+.enb { position: absolute; top: 8px; right: 10px; z-index: 1; font-size: 12px; line-height: 15px; font-weight: 700; color: #FFC94A; font-variant-numeric: tabular-nums; pointer-events: none; }
+.bar .enb { top: 50%; margin-top: -8px; right: 12px; }
+.enb.off { color: #7E848C; font-weight: 600; }
+.phone .box.spread > .enc { flex: 0 0 100%; margin-bottom: 8px; }
+.phone .enhalo { flex: 0 0 auto; height: 210px; }
+.phone .enw { font-size: 38px; line-height: 42px; }
+.phone .box > .enc.en-cats > .encats { grid-auto-rows: auto; }
+.phone .ecv { font-size: 19px; line-height: 23px; }
+/* v0.25 enerji: kademe ve yıllık sınır çubukları, ölçülmeyen karo, tahmini değer */
+.enbars { flex: 0 0 auto; margin-top: 10px; }
+.enbl { display: flex; justify-content: space-between; font-size: 12px; line-height: 16px; color: var(--lp-text2); margin: 6px 0 4px; }
+.enbl b { color: var(--lp-text); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; margin-left: 8px; }
+.enbar { display: flex; height: 7px; border-radius: 5px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+.enbar i { display: block; height: 100%; }
+.encat.unt { cursor: default; border: 1px dashed rgba(255, 255, 255, 0.16); --c: #8A8F96; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 6px, transparent 6px 12px), var(--lp-card); }
+.ecu { margin-top: auto; padding-top: 6px; font-size: 11px; color: var(--lp-text2); }
+.erw.est { color: #C3A6FF; }

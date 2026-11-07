@@ -352,6 +352,123 @@
    ]
   },
   {
+   "id": "energy",
+   "group": "use",
+   "tr": [
+    "Enerji",
+    "Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede. Veriler Home Assistant'ın Enerji ayarlarındaki \"Cihaz tüketimi\" listesinden ve kendi kayıtlarından gelir; pano ayrıca kayıt tutmaz.",
+    "Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna dokununca o kategorinin cihazları, cihaz satırına dokununca cihaz penceresi açılır. Bekleme kartı hiçbir şey kullanılmıyorken evin çektiği gücü ve yıllık karşılığını gösterir.",
+    "**+ Sekme → Enerji sekmesi** hazır bir sekme kurar; kartlar tek tek de bölüme **Enerji kartı** olarak eklenir. Fiyat, faturalar ve tahmini cihazlar üst çubuktaki **Enerji** sayfasında (sonraki adım).",
+    "Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt)."
+   ],
+   "en": [
+    "Energy",
+    "Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab. The data comes from \"Individual devices\" in Home Assistant's Energy settings and from its own history; the dashboard keeps no records of its own.",
+    "The Halo ring turns from green to red with usage. Tap a category tile for that category's devices, tap a device row for its more-info window. The standby card shows what the home draws when nothing is in use, and what that adds up to in a year.",
+    "**+ Tab → Energy tab** sets up a ready tab; cards can also be added one by one to a section as an **Energy card**. Price, bills and estimated devices are on the **Energy** page in the top bar (next step).",
+    "Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles)."
+   ],
+   "opts": [
+    {
+     "k": "enKind",
+     "v": [
+      "=Evin anlık gücü|Home power now",
+      "=Kategori karoları|Category tiles",
+      "=Şu an en çok çekenler|Top consumers now",
+      "=Günlük tüketim|Daily usage",
+      "=Son 24 saat|Last 24 hours",
+      "=Bekleme tüketimi|Standby usage"
+     ],
+     "tr": "Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.",
+     "en": "Added to a section as an Energy card; change its kind with the item ⚙."
+    },
+    {
+     "k": "enChips",
+     "tr": "Halo'nun altında bugünkü kWh, para ve bu ayın tutarı (fiyat yoksa bu hızla aylık tüketim).",
+     "en": "Under the Halo: today's kWh, cost and this month's cost (without a price, monthly usage at this rate)."
+    },
+    {
+     "k": "enBars",
+     "tr": "Halo'nun altında bu ayın kademe çubuğu ve son 12 ayın yıllık sınıra göre durumu.",
+     "en": "Under the Halo: this month's tier bar and the last 12 months against the yearly limit."
+    },
+    {
+     "k": "enCols",
+     "v": [
+      "=2",
+      "=3",
+      "=4"
+     ],
+     "tr": "Kategori karolarında satırdaki karo (telefonda 2).",
+     "en": "Category tiles per row (2 on phones)."
+    },
+    {
+     "k": "enChart",
+     "v": [
+      "enC24",
+      "enC7",
+      "enCNone"
+     ],
+     "tr": "Kategori karosundaki küçük grafik.",
+     "en": "The small chart on a category tile."
+    },
+    {
+     "k": "enCount",
+     "v": [
+      "=3",
+      "=5",
+      "=6",
+      "=8",
+      "=10"
+     ],
+     "tr": "En çok çekenler listesinde kaç cihaz.",
+     "en": "How many devices the top consumers list shows."
+    },
+    {
+     "k": "enCat",
+     "tr": "Listeyi tek bir kategoriyle sınırlar.",
+     "en": "Limits the list to one category."
+    },
+    {
+     "k": "enIdle",
+     "tr": "2 W altındaki cihazlar listede görünmez.",
+     "en": "Devices under 2 W are not listed."
+    },
+    {
+     "k": "enDays",
+     "v": [
+      "=7",
+      "=30"
+     ],
+     "tr": "Günlük tüketim grafiğinde kaç gün.",
+     "en": "How many days the daily usage chart shows."
+    },
+    {
+     "k": "enUnit",
+     "v": [
+      "enKwh",
+      "enCost"
+     ],
+     "tr": "Günlük tüketim kWh ya da para olarak.",
+     "en": "Daily usage in kWh or money."
+    },
+    {
+     "k": "enMode",
+     "v": [
+      "enModeCats",
+      "enModeTot"
+     ],
+     "tr": "Son 24 saatte kategori çizgileri ya da tek toplam.",
+     "en": "Last 24 hours as category lines or one total."
+    },
+    {
+     "k": "enTab",
+     "tr": "+ Sekme menüsünde: hazır Enerji sekmesi.",
+     "en": "In the + Tab menu: a ready Energy tab."
+    }
+   ]
+  },
+  {
    "id": "effects",
    "group": "use",
    "tr": [
@@ -794,6 +911,118 @@
      "k": "cfmL",
      "tr": "Önce \"çalıştırılsın mı?\" diye sorar; soru yazılabilir.",
      "en": "Asks \"run it?\" first; the question can be written."
+    }
+   ]
+  },
+  {
+   "id": "energy-settings",
+   "group": "edit",
+   "tr": [
+    "Enerji sayfası",
+    "Üst çubuktaki **Enerji** düğmesi fiyatı, faturaları, tahmini cihazları ve kartların görünümünü kendi sayfasında açar. **Özet** bu ayın tüketimini ve tutarını, yıllık sınırı, son faturayı ve tahmini cihazları gösterir.",
+    "**Fiyat ve tarife:** fiyat son faturadan, tek fiyat ya da kademeli (düşük ve yüksek fiyat, günlük sınır; ayın sınırı günlük sınır × gün sayısı). Yıllık sınır yıla göre kendiliğinden seçilir (2026'da 4.000, 2027'den itibaren 3.000 kWh) ya da elle yazılır.",
+    "**Faturalar:** dönem, kWh ve tutar girilir. Panel o dönemde kendi ölçtüğünü toplar; aradaki fark kategori karolarında gri **Ölçülmeyen** karosu olur. Son 12 ayın tüketimi yıllık sınır takibini başlatır.",
+    "**Tahmini cihazlar:** güç ölçmeyen cihazlar için ışık (bekleme ve en çok W, parlaklıkla), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim (kWh/100 çevrim). Her biri için Home Assistant'ta bir güç ve bir enerji sensörü oluşur ve Enerji ayarlarına seçilen kategorinin içine eklenir. Kartlarda \"~\" ile görünür."
+   ],
+   "en": [
+    "Energy page",
+    "The **Energy** button in the top bar opens price, bills, estimated devices and the look of the cards on their own page. **Summary** shows this month's usage and cost, the yearly limit, the last bill and the estimated devices.",
+    "**Price and tariff:** price from the last bill, one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is entered by hand.",
+    "**Bills:** enter the period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.",
+    "**Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness), on/off, fixed, yearly usage (the label's kWh/year) or cycles (kWh/100 cycles). Each gets a power and an energy sensor in Home Assistant and is added to the Energy settings inside the chosen category. Cards show them with \"~\"."
+   ],
+   "opts": [
+    {
+     "k": "enPrMode",
+     "v": [
+      "enPrBill",
+      "enPrSingle",
+      "enPrTier"
+     ],
+     "tr": "Kartlardaki para nereden hesaplansın. Faturadan: son faturanın tutarı ÷ kWh.",
+     "en": "Where the cost on the cards comes from. From the bill: the last bill's amount ÷ kWh."
+    },
+    {
+     "k": "enDaily",
+     "tr": "Kademede günlük ortalama sınır (varsayılan 8 kWh); bu ayın sınırı bununla hesaplanır.",
+     "en": "The daily average limit for tiers (default 8 kWh); this month's limit is worked out from it."
+    },
+    {
+     "k": "enYear",
+     "v": [
+      "=Yıla göre|By year",
+      "enYMan"
+     ],
+     "tr": "Sınırın yüzde 85'ini geçince Halo'daki çubuk sarıya döner.",
+     "en": "Past 85% of the limit the bar under the Halo turns yellow."
+    },
+    {
+     "k": "enBAdd",
+     "tr": "Dönem başı ve sonu, kWh ve toplam tutar.",
+     "en": "Period start and end, kWh and the total amount."
+    },
+    {
+     "k": "enL12",
+     "tr": "Faturanın arkasındaki grafikten.",
+     "en": "From the chart on the back of the bill."
+    },
+    {
+     "k": "enEKind",
+     "v": [
+      "ek_light",
+      "ek_onoff",
+      "ek_fixed",
+      "ek_year",
+      "ek_cycle"
+     ],
+     "tr": "Tahmini cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.",
+     "en": "How the estimate is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W."
+    },
+    {
+     "k": "enECat",
+     "tr": "Enerji ayarlarında hangi kategorinin içine eklensin.",
+     "en": "Which category it goes into in the Energy settings."
+    },
+    {
+     "k": "enTotal",
+     "v": [
+      "enAuto"
+     ],
+     "tr": "Veri kaynağı: Halo'nun gösterdiği toplam güç.",
+     "en": "Data source: the total power Halo shows."
+    },
+    {
+     "k": "enSb",
+     "v": [
+      "enSbAuto"
+     ],
+     "tr": "Veri kaynağı: bekleme kartının gücü.",
+     "en": "Data source: the standby card's power."
+    },
+    {
+     "k": "enLim",
+     "tr": "Görünüm: Halo'nun yeşil, sarı ve turuncu sınırları (varsayılan 300 / 800 / 1800 W).",
+     "en": "Look: Halo's green, yellow and orange limits (default 300 / 800 / 1800 W)."
+    },
+    {
+     "k": "enBadge",
+     "v": [
+      "enB_off",
+      "enB_on",
+      "enB_always"
+     ],
+     "tr": "Görünüm: güç ölçen ya da tahmini değeri olan ışık ve prizlerin karosunda anlık watt.",
+     "en": "Look: live watts on tiles of lights and plugs that measure power or have an estimate."
+    },
+    {
+     "k": "enTilde",
+     "tr": "Görünüm: tahmini watt \"~\" ile ve morla.",
+     "en": "Look: estimated watts with \"~\" in purple."
+    },
+    {
+     "k": "enUntL",
+     "tr": "Görünüm: ölçülmeyen pay kategori karolarında.",
+     "en": "Look: the share not measured as a category tile."
     }
    ]
   },

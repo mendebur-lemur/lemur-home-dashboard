@@ -125,7 +125,34 @@ Home Assistant'ta her hayvan için "<ad> besleme" durumu ve "<ad> besledim" dü�
 - **Gecikince bildirim**: Gecikince Home Assistant bildirimi gönderir.
 - **Otomatik yemlik (isteğe bağlı)**: "Besledim"e basınca bir servis de çalışır (ör. yemlik düğmesi).
 
-### 8. Işık efektleri (isteğe bağlı)
+### 8. Enerji
+
+![Enerji](guide/tr/energy.webp)
+
+Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede. Veriler Home Assistant'ın Enerji ayarlarındaki "Cihaz tüketimi" listesinden ve kendi kayıtlarından gelir; pano ayrıca kayıt tutmaz.
+
+Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna dokununca o kategorinin cihazları, cihaz satırına dokununca cihaz penceresi açılır. Bekleme kartı hiçbir şey kullanılmıyorken evin çektiği gücü ve yıllık karşılığını gösterir.
+
+**+ Sekme → Enerji sekmesi** hazır bir sekme kurar; kartlar tek tek de bölüme **Enerji kartı** olarak eklenir. Fiyat, faturalar ve tahmini cihazlar üst çubuktaki **Enerji** sayfasında (sonraki adım).
+
+Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt).
+
+**Seçenekler**
+
+- **Kart** (Evin anlık gücü · Kategori karoları · Şu an en çok çekenler · Günlük tüketim · Son 24 saat · Bekleme tüketimi): Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.
+- **Altındaki bilgiler**: Halo'nun altında bugünkü kWh, para ve bu ayın tutarı (fiyat yoksa bu hızla aylık tüketim).
+- **Kademe ve yıllık sınır çubukları**: Halo'nun altında bu ayın kademe çubuğu ve son 12 ayın yıllık sınıra göre durumu.
+- **Sütun** (2 · 3 · 4): Kategori karolarında satırdaki karo (telefonda 2).
+- **Küçük grafik** (24 saat · 7 gün · Yok): Kategori karosundaki küçük grafik.
+- **Kaç cihaz** (3 · 5 · 6 · 8 · 10): En çok çekenler listesinde kaç cihaz.
+- **Kategori**: Listeyi tek bir kategoriyle sınırlar.
+- **Beklemedekileri gizle**: 2 W altındaki cihazlar listede görünmez.
+- **Gün** (7 · 30): Günlük tüketim grafiğinde kaç gün.
+- **Birim** (kWh · Para): Günlük tüketim kWh ya da para olarak.
+- **Çizgiler** (Kategoriler · Toplam): Son 24 saatte kategori çizgileri ya da tek toplam.
+- **Enerji sekmesi**: + Sekme menüsünde: hazır Enerji sekmesi.
+
+### 9. Işık efektleri (isteğe bağlı)
 
 ![Işık efektleri (isteğe bağlı)](guide/tr/effects.webp)
 
@@ -143,7 +170,7 @@ Kurulu değilse bu düğmeler görünmez, başka hiçbir şey değişmez.
 - **Efekti durdur**: Odadaki efekti durduran düğme.
 - **Efekt ekranı**: Işığa basılı tutunca doğrudan efekt ekranı (Ayarlar → Işığa basılı tutunca).
 
-### 9. Telefonda
+### 10. Telefonda
 
 ![Telefonda](guide/tr/phone.webp)
 
@@ -163,7 +190,7 @@ Hepsi **Stil seç → Telefon**'dan seçilir; tablet hiçbirinden etkilenmez.
 
 ## Düzenlemek
 
-### 10. Yönetim paneli
+### 11. Yönetim paneli
 
 ![Yönetim paneli](guide/tr/admin.webp)
 
@@ -181,7 +208,7 @@ Sol menüdeki **Lemur Home Dashboard** (yalnız yöneticiler görür). Üstte se
 - **Düzenlenen** (Tablet · Telefon): Değişikliklerin tablete mi yalnız telefona mı yazılacağı.
 - **Geri al**: Her değişiklik geri alınır (Ctrl+Z).
 
-### 11. Sekmeler
+### 12. Sekmeler
 
 ![Sekmeler](guide/tr/tabs.webp)
 
@@ -201,7 +228,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Sekme** (Boş sekme · Alandan sekme · Kameralar sekmesi): Yeni sekme.
 - **Sekmeyi sil**: Sekmeyi siler (önce sorar, geri alınabilir).
 
-### 12. Otomatik kur
+### 13. Otomatik kur
 
 ![Otomatik kur](guide/tr/autosetup.webp)
 
@@ -223,7 +250,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Işık efektleri** (Efektler açık · Efektler gizli): Efektler düğmesi (Light Effect Card kuruluysa).
 - **Uygula**: Mevcut sekmelerin yerine geçer; ayarlar kalır, geri al ile dönülür.
 
-### 13. Cihaz eklemek
+### 14. Cihaz eklemek
 
 ![Cihaz eklemek](guide/tr/add.webp)
 
@@ -242,7 +269,7 @@ Birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli dü�
 - **Alt başlık**: Bölümün içinde küçük bir ara başlık.
 - **Boş karo** (Boş karo · Boş düğme): Yer tutan boş karo ya da düğme (sonra ⚙ ile eylem verilir).
 
-### 14. Öğe ayarları
+### 15. Öğe ayarları
 
 ![Öğe ayarları](guide/tr/item.webp)
 
@@ -262,7 +289,35 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 - **Basılı tutunca**: Basılı tutunca ne olsun; seçenekler aynı.
 - **Dokununca onay iste**: Önce "çalıştırılsın mı?" diye sorar; soru yazılabilir.
 
-### 15. Kartlar ve değerler
+### 16. Enerji sayfası
+
+![Enerji sayfası](guide/tr/energy-settings.webp)
+
+Üst çubuktaki **Enerji** düğmesi fiyatı, faturaları, tahmini cihazları ve kartların görünümünü kendi sayfasında açar. **Özet** bu ayın tüketimini ve tutarını, yıllık sınırı, son faturayı ve tahmini cihazları gösterir.
+
+**Fiyat ve tarife:** fiyat son faturadan, tek fiyat ya da kademeli (düşük ve yüksek fiyat, günlük sınır; ayın sınırı günlük sınır × gün sayısı). Yıllık sınır yıla göre kendiliğinden seçilir (2026'da 4.000, 2027'den itibaren 3.000 kWh) ya da elle yazılır.
+
+**Faturalar:** dönem, kWh ve tutar girilir. Panel o dönemde kendi ölçtüğünü toplar; aradaki fark kategori karolarında gri **Ölçülmeyen** karosu olur. Son 12 ayın tüketimi yıllık sınır takibini başlatır.
+
+**Tahmini cihazlar:** güç ölçmeyen cihazlar için ışık (bekleme ve en çok W, parlaklıkla), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim (kWh/100 çevrim). Her biri için Home Assistant'ta bir güç ve bir enerji sensörü oluşur ve Enerji ayarlarına seçilen kategorinin içine eklenir. Kartlarda "~" ile görünür.
+
+**Seçenekler**
+
+- **Fiyat** (Faturadan · Tek fiyat · Kademeli): Kartlardaki para nereden hesaplansın. Faturadan: son faturanın tutarı ÷ kWh.
+- **Günlük sınır**: Kademede günlük ortalama sınır (varsayılan 8 kWh); bu ayın sınırı bununla hesaplanır.
+- **Yıllık sınır** (Yıla göre · Elle): Sınırın yüzde 85'ini geçince Halo'daki çubuk sarıya döner.
+- **Fatura ekle**: Dönem başı ve sonu, kWh ve toplam tutar.
+- **Son 12 ayın tüketimi (kWh)**: Faturanın arkasındaki grafikten.
+- **Tür** (Işık · Aç / kapa · Sabit · Yıllık tüketim · Çevrim): Tahmini cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.
+- **Kategori**: Enerji ayarlarında hangi kategorinin içine eklensin.
+- **Evin toplam gücü** (Kategorilerin toplamı): Veri kaynağı: Halo'nun gösterdiği toplam güç.
+- **Bekleme gücü** (Son 24 saatin en düşüğü): Veri kaynağı: bekleme kartının gücü.
+- **Halo renk sınırları (W)**: Görünüm: Halo'nun yeşil, sarı ve turuncu sınırları (varsayılan 300 / 800 / 1800 W).
+- **Işık karosunda watt** (Kapalı · Açıkken · Hep): Görünüm: güç ölçen ya da tahmini değeri olan ışık ve prizlerin karosunda anlık watt.
+- **Tahmini değerleri ayır**: Görünüm: tahmini watt "~" ile ve morla.
+- **Ölçülmeyen karo**: Görünüm: ölçülmeyen pay kategori karolarında.
+
+### 17. Kartlar ve değerler
 
 ![Kartlar ve değerler](guide/tr/cards.webp)
 
@@ -282,7 +337,7 @@ Değer karoları simge, değer ve ad gösterir; çalışan zamanlayıcı geri sa
 - **Değere göre renk**: 4 sınır, 5 renk: değere göre çerçeve, değer ve simge rengi.
 - **Duruma göre renk**: Bir varlığın durumunu renge eşler; metin değerlerde de çalışır.
 
-### 16. Bölümler ve kolonlar
+### 18. Bölümler ve kolonlar
 
 ![Bölümler ve kolonlar](guide/tr/sections.webp)
 
@@ -301,7 +356,7 @@ Bölüm ayarında başlık, kolon, görünüm (karo, kaydırmalı), satırdaki k
 - **Aralık** (Otomatik · 0 · 6 · 12 · 18 · 24): Öğeler arası boşluk (piksel).
 - **Bölümü sil**: Bölümü siler (önce sorar, geri alınabilir).
 
-### 17. Simge seçici
+### 19. Simge seçici
 
 ![Simge seçici](guide/tr/icons.webp)
 
@@ -317,7 +372,7 @@ Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; 
 - **Tüm simgeler**: Bütün set; arama Türkçe kelimeleri de tanır.
 - **Efekt simgeleri**: Light Effect Card kuruluysa onun efekt simgeleri.
 
-### 18. Stil seç
+### 20. Stil seç
 
 ![Stil seç](guide/tr/style.webp)
 
@@ -338,7 +393,7 @@ Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; 
 - **Resim**: HA'nın www klasöründeki bir resim (/local/zemin.jpg) ya da bir internet adresi.
 - **Işık efektleri**: Efektler düğmesini açar ya da gizler; kurulu değilse kartı anlatır.
 
-### 19. Telefona özel düzen
+### 21. Telefona özel düzen
 
 ![Telefona özel düzen](guide/tr/phone-layout.webp)
 
@@ -361,7 +416,7 @@ Değişen her yerde "telefona özel" yazar. **Telefonu tabletle aynı yap** tele
 
 ## Daha fazlası
 
-### 20. Ayarlar
+### 22. Ayarlar
 
 ![Ayarlar](guide/tr/settings.webp)
 
@@ -388,7 +443,7 @@ En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her ş
 - **Sorun bildir**: Sürüm ve cihaz bilgisiyle GitHub'da kayıt açar; oda, cihaz ya da kişi adı eklenmez.
 - **Yedeği indir** (Yedeği indir · Yedekten geri yükle): Sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada; geri yüklemeden önce sorar.
 
-### 21. Gelişmiş ayarlar
+### 23. Gelişmiş ayarlar
 
 ![Gelişmiş ayarlar](guide/tr/advanced.webp)
 
@@ -408,7 +463,7 @@ En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her ş
 - **Yedek kontrol**: İki kez görünen lambanın ikinci kopyası; cevap gelmezse komut oradan gider, karoda turuncu nokta çıkar.
 - **Duvar anahtarları** (Parlaklık % · Kelvin): Yalnız sinyal veren röle bir lambaya bağlanır; açarken parlaklık ve kelvin verilebilir (Ayarlar, gelişmiş).
 
-### 22. İpuçları
+### 24. İpuçları
 
 ![İpuçları](guide/tr/tips.webp)
 

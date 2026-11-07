@@ -40,6 +40,7 @@ function lhdKind(it) {
   if (typeof it === 'string') it = { entity: it };
   if (it.card && typeof it.card === 'object') return 'card';   // gömülü HA kartı
   if (typeof it.pet === 'string') return 'pet';
+  if (typeof it.energy === 'string') return 'energy';       // enerji kartı (src/energy.js)
   if (typeof it.subtitle === 'string') return 'sub';           // bölüm içinde alt başlık (yalnız yazı, tam satır)       // besleme kartı (evcil hayvan)
   if (!it.entity) return Object.prototype.hasOwnProperty.call(it, 'action') ? 'scene' : 'ph';
   const d = it.entity.split('.')[0];
@@ -92,6 +93,7 @@ function lhdItemKey(x) {
   if (!x || typeof x !== 'object') return '';
   if (x.entity) return String(x.entity);
   if (x.pet) return 'pet:' + x.pet;
+  if (x.energy) return 'energy:' + x.energy;
   if (x.card && typeof x.card === 'object') return 'card:' + (x.card.type || '') + ':' + (x.card.title || x.card.entity || '');
   if (x.subtitle) return 'sub:' + x.subtitle;
   return 'n:' + (x.name || '') + '|' + (x.icon || '');
@@ -125,8 +127,8 @@ function lhdKinds(s) {
 // opts (Otomatik kur penceresi; verilmezse bugünkü otomatik düzen):
 //   areas: sekme olacak alanlar, bu sırayla (verilirse küçük oda ve 7 sekme sınırı yok)
 //   home: bütün evin özeti "Ev" sekmesi (varsayılan var), other: kalan cihazlar için "Diğer" sekmesi (varsayılan var)
-//   types: { lights, climate, vacuum, media, scenes, camera } hangi cihaz türleri girsin (varsayılan hepsi, kamera hariç;
-//          camera açıksa bütün kameralar en sonda ayrı "Kameralar" sekmesinde)
+//   types: { lights, climate, vacuum, media, scenes, camera, energy } hangi cihaz türleri girsin (varsayılan hepsi, kamera ve enerji hariç;
+//          camera açıksa bütün kameralar en sonda ayrı "Kameralar" sekmesinde, energy açıksa en sonda "Enerji" sekmesi)
 //   look: ışık bölümünün görünümü: 'tiles' (karo, varsayılan) | 'bar' (kaydırmalı çubuk) | 'phone' (telefonda çubuk)
 function buildDefaultTabs(hass, lang, opts) {
   opts = opts || {};
@@ -297,6 +299,7 @@ function buildDefaultTabs(hass, lang, opts) {
   }
   const out = tabs.slice(0, pick ? 14 : 8);
   if (TY.camera) { const ct = lhdCameraTab(hass, lang, usedIds.cameras ? 'lhd-cameras' : 'cameras', usable, byArea); if (ct) out.push(ct); }
+  if (TY.energy) { const eid = lang === 'tr' ? 'enerji' : 'energy'; out.push(lhdEnergyTab(lang, out.some((x) => x.id === eid) ? 'lhd-' + eid : eid)); }
   return out;
 }
 

@@ -44,6 +44,7 @@ A ready-made, full-screen home dashboard for Home Assistant. Add the integration
   - [Settings](#settings)
 - [Light window](#light-window)
 - [Cover window](#cover-window)
+- [Energy](#energy)
 - [Phone](#phone)
 - [Light effects (optional)](#light-effects-optional)
 - [Updating](#updating)
@@ -205,6 +206,24 @@ Long press a cover tile. At the top you see the name and state (opening, closing
 There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one in the cover's ⚙ settings under **Cover window**; on Auto it follows the device type. One-side curtains and vertical blinds also let you choose which side they gather to (left, right, or both sides for vertical blinds). The settings show each design as a small window drawing. Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle when the device supports it. If a separate motor turns the slats (a second cover entity in Home Assistant), pick it as the **Slat angle motor** in the ⚙ settings; the slat row then drives that motor, with 0-100% presets if it reports a position.
 
 In the automatic layout, covers show in their room's tab after the lights.
+
+## Energy
+
+Home power now, categories, the devices drawing the most right now, daily usage, the last 24 hours and standby usage. **+ Tab → Energy tab** sets it all up in a ready tab; single cards can also be added to a section as an **Energy card**. Pick **Energy** in Auto setup to get an Energy tab at the end.
+
+The data comes from **Individual devices** in Home Assistant's **Energy** settings: entries that are not inside another one become categories (e.g. Lights, Air conditioners), the ones inside become devices. Live power is read from each entry's power sensor and the charts from Home Assistant's own history; the dashboard keeps no records of its own.
+
+- **Home power now:** the Halo ring turns from green to red with usage. Below it: today's kWh, the cost and monthly usage at this rate.
+- **Category tiles:** each category's live power, its share of the total and a small chart (24 hours or 7 days). Tap for that category's devices.
+- **Top consumers now:** devices sorted by live power (3-10 devices, can be limited to one category, idle ones can be hidden).
+- **Daily usage** (7 or 30 days, kWh or money), **Last 24 hours** (category lines or the total) and **Standby usage** (what the home draws when nothing is in use, and its yearly total).
+
+**Energy page** (**Energy** in the admin panel's top bar):
+
+- **Price and tariff:** price from the last bill (amount ÷ kWh, taxes included), one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is set by hand. Under the Halo: this month's tier bar and the last 12 months against the limit.
+- **Bills:** period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.
+- **Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness; e.g. a 2-60 W light at 30% is 19.4 W), on/off, fixed, yearly usage (the label's kWh/year; 250 kWh/year ≈ 28.5 W) or cycles (kWh/100 cycles, cycles per week). The integration makes `sensor.lhd_<name>_power` and `sensor.lhd_<name>_energy` for each and adds them to the Energy settings inside the chosen category. Cards show them with "~".
+- **Data source and Look:** a total power sensor, a standby power sensor, the Halo colour limits, live watts in the corner of light and plug tiles (Off, When on, Always), marking estimated values and the not measured tile.
 
 ## Phone
 

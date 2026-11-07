@@ -44,6 +44,7 @@ Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, 
   - [Ayarlar](#ayarlar)
 - [Işık penceresi](#işık-penceresi)
 - [Perde penceresi](#perde-penceresi)
+- [Enerji](#enerji)
 - [Telefon](#telefon)
 - [Işık efektleri (isteğe bağlı)](#işık-efektleri-isteğe-bağlı)
 - [Güncelleme](#güncelleme)
@@ -205,6 +206,24 @@ Perde karosuna basılı tut. Üstte ad ve durum (açılıyor, kapanıyor, yüzde
 Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında **Perde penceresi** satırından seçilir; Oto bırakılırsa cihazın türünden seçilir. Tek yönden açılan perde ve dikey storda toplanma yönü (sola, sağa, dikey storda iki yana) de seçilir. Tasarımlar ayarda küçük pencere çizimleriyle gösterilir. Jaluzi ve dikey storda, cihaz destekliyorsa, kanat açısı için ikinci bir Aç, Durdur, Kapat sırası çıkar. Kanatları ayrı bir motor döndürüyorsa (Home Assistant'ta ikinci bir perde varlığı) ⚙ ayarında **Kanat açısı motoru** olarak seçilir; kanat sırası o motoru sürer, motor konum bildiriyorsa %0-100 hazır açılar da çıkar.
 
 Otomatik düzende perdeler odasının sekmesinde ışıkların arkasında görünür.
+
+## Enerji
+
+Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim, son 24 saat ve bekleme tüketimi. **+ Sekme → Enerji sekmesi** hepsini hazır bir sekmede kurar; tek tek kartlar bir bölüme **Enerji kartı** olarak da eklenir. Otomatik kur'da **Enerji** seçilirse sonda bir Enerji sekmesi açılır.
+
+Veriler Home Assistant'ın **Enerji** ayarlarındaki **Cihaz tüketimi** listesinden gelir: başka bir girişin içinde olmayanlar kategori (ör. Işıklar, Klimalar), içindekiler cihaz olur. Anlık güç her girişin güç sensöründen, grafikler Home Assistant'ın kendi kayıtlarından okunur; pano ayrıca kayıt tutmaz.
+
+- **Evin anlık gücü:** Halo halkası tüketime göre yeşilden kırmızıya döner. Altında bugünkü kWh, para karşılığı ve bu hızla aylık tüketim.
+- **Kategori karoları:** her kategorinin anlık gücü, toplamdaki payı ve küçük grafiği (24 saat ya da 7 gün). Dokununca o kategorinin cihazları açılır.
+- **Şu an en çok çekenler:** cihazlar anlık güce göre sıralanır (3-10 cihaz, kategoriyle süzülebilir, beklemedekiler gizlenebilir).
+- **Günlük tüketim** (7 ya da 30 gün, kWh ya da para), **Son 24 saat** (kategori çizgileri ya da toplam) ve **Bekleme tüketimi** (hiçbir şey kullanılmıyorken evin çektiği güç ve yıllık karşılığı).
+
+**Enerji sayfası** (yönetim panelinin üst çubuğunda **Enerji**):
+
+- **Fiyat ve tarife:** fiyat son faturadan (tutar ÷ kWh, vergiler dahil), tek fiyat ya da kademeli (düşük ve yüksek fiyat, günlük sınır; ayın sınırı günlük sınır × gün sayısı). Yıllık sınır yıla göre kendiliğinden (2026'da 4.000, 2027'den itibaren 3.000 kWh) ya da elle. Halo'nun altında bu ayın kademe çubuğu ve son 12 ayın sınıra göre durumu.
+- **Faturalar:** dönem, kWh ve tutar. Panel o dönemde ölçtüğünü kendisi toplar; aradaki fark kategori karolarında gri **Ölçülmeyen** karosu olur. Son 12 ayın tüketimi yıllık sınır takibini başlatır.
+- **Tahmini cihazlar:** güç ölçmeyen cihazlar için ışık (bekleme ve en çok W, parlaklıkla; ör. 2-60 W ışık %30'da 19,4 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl; 250 kWh/yıl ≈ 28,5 W) ya da çevrim (kWh/100 çevrim, haftada kaç kez). Entegrasyon her biri için `sensor.lhd_<ad>_power` ve `sensor.lhd_<ad>_energy` kurar ve Enerji ayarlarına seçilen kategorinin içine ekler. Kartlarda "~" ile görünür.
+- **Veri kaynağı ve Görünüm:** evin toplam güç sensörü, bekleme gücü sensörü, Halo renk sınırları, ışık/priz karolarının köşesinde anlık watt (Kapalı, Açıkken, Hep), tahmini değerleri ayırma ve ölçülmeyen karo.
 
 ## Telefon
 

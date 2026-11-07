@@ -125,7 +125,34 @@ For every pet Home Assistant gets a "<name> feeding" state and a "<name> fed" bu
 - **Notify when late**: Sends a Home Assistant notification when late.
 - **Automatic feeder (optional)**: Runs a service when you log a feeding (e.g. a feeder button).
 
-### 8. Light effects (optional)
+### 8. Energy
+
+![Energy](guide/en/energy.webp)
+
+Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab. The data comes from "Individual devices" in Home Assistant's Energy settings and from its own history; the dashboard keeps no records of its own.
+
+The Halo ring turns from green to red with usage. Tap a category tile for that category's devices, tap a device row for its more-info window. The standby card shows what the home draws when nothing is in use, and what that adds up to in a year.
+
+**+ Tab → Energy tab** sets up a ready tab; cards can also be added one by one to a section as an **Energy card**. Price, bills and estimated devices are on the **Energy** page in the top bar (next step).
+
+Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles).
+
+**Options**
+
+- **Card** (Home power now · Category tiles · Top consumers now · Daily usage · Last 24 hours · Standby usage): Added to a section as an Energy card; change its kind with the item ⚙.
+- **Details below**: Under the Halo: today's kWh, cost and this month's cost (without a price, monthly usage at this rate).
+- **Tier and yearly limit bars**: Under the Halo: this month's tier bar and the last 12 months against the yearly limit.
+- **Columns** (2 · 3 · 4): Category tiles per row (2 on phones).
+- **Small chart** (24 hours · 7 days · None): The small chart on a category tile.
+- **How many devices** (3 · 5 · 6 · 8 · 10): How many devices the top consumers list shows.
+- **Category**: Limits the list to one category.
+- **Hide idle devices**: Devices under 2 W are not listed.
+- **Days** (7 · 30): How many days the daily usage chart shows.
+- **Unit** (kWh · Money): Daily usage in kWh or money.
+- **Lines** (Categories · Total): Last 24 hours as category lines or one total.
+- **Energy tab**: In the + Tab menu: a ready Energy tab.
+
+### 9. Light effects (optional)
 
 ![Light effects (optional)](guide/en/effects.webp)
 
@@ -143,7 +170,7 @@ If it is not installed these buttons do not show and nothing else changes.
 - **Stop effect**: A button that stops the room's effect.
 - **Effect screen**: A long press on a light opens the effect screen directly (Settings → Holding a light).
 
-### 9. On phones
+### 10. On phones
 
 ![On phones](guide/en/phone.webp)
 
@@ -163,7 +190,7 @@ All of it is in **Choose a style → Phone**; the tablet is not affected.
 
 ## Editing
 
-### 10. Admin panel
+### 11. Admin panel
 
 ![Admin panel](guide/en/admin.webp)
 
@@ -181,7 +208,7 @@ Your first change saves the automatic layout; from then on everything is edited 
 - **Editing** (Tablet · Phone): Whether changes go to the tablet or only to phones.
 - **Undo**: Every change can be undone (Ctrl+Z).
 
-### 11. Tabs
+### 12. Tabs
 
 ![Tabs](guide/en/tabs.webp)
 
@@ -201,7 +228,7 @@ Drag tabs to reorder them. A tab tied to an area uses that room for the effect s
 - **Tab** (Empty tab · Tab from area · Cameras tab): A new tab.
 - **Delete tab**: Deletes the tab (asks first, can be undone).
 
-### 12. Auto setup
+### 13. Auto setup
 
 ![Auto setup](guide/en/autosetup.webp)
 
@@ -223,7 +250,7 @@ The preview uses an imaginary home; applying builds the dashboard with your own 
 - **Light effects** (Effects on · Effects hidden): The Effects button (when Light Effect Card is installed).
 - **Apply**: Replaces the current tabs; settings stay and undo brings them back.
 
-### 13. Adding devices
+### 14. Adding devices
 
 ![Adding devices](guide/en/add.webp)
 
@@ -242,7 +269,7 @@ The **Card** button lists Halo cards, Home Assistant cards and installed custom 
 - **Subtitle**: A small heading inside the section.
 - **Empty tile** (Empty tile · Empty button): A placeholder tile or button (give it an action in ⚙).
 
-### 14. Item settings
+### 15. Item settings
 
 ![Item settings](guide/en/item.webp)
 
@@ -262,7 +289,35 @@ Type-specific settings live here too, such as the cover design or how often a ca
 - **On hold**: What a long press does; same choices.
 - **Ask before running**: Asks "run it?" first; the question can be written.
 
-### 15. Cards and values
+### 16. Energy page
+
+![Energy page](guide/en/energy-settings.webp)
+
+The **Energy** button in the top bar opens price, bills, estimated devices and the look of the cards on their own page. **Summary** shows this month's usage and cost, the yearly limit, the last bill and the estimated devices.
+
+**Price and tariff:** price from the last bill, one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is entered by hand.
+
+**Bills:** enter the period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.
+
+**Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness), on/off, fixed, yearly usage (the label's kWh/year) or cycles (kWh/100 cycles). Each gets a power and an energy sensor in Home Assistant and is added to the Energy settings inside the chosen category. Cards show them with "~".
+
+**Options**
+
+- **Price** (From the bill · One price · Tiered): Where the cost on the cards comes from. From the bill: the last bill's amount ÷ kWh.
+- **Daily limit**: The daily average limit for tiers (default 8 kWh); this month's limit is worked out from it.
+- **Yearly limit** (By year · Manual): Past 85% of the limit the bar under the Halo turns yellow.
+- **Add bill**: Period start and end, kWh and the total amount.
+- **Usage of the last 12 months (kWh)**: From the chart on the back of the bill.
+- **Kind** (Light · On / off · Fixed · Yearly usage · Cycles): How the estimate is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W.
+- **Category**: Which category it goes into in the Energy settings.
+- **Total home power** (Sum of categories): Data source: the total power Halo shows.
+- **Standby power** (Lowest of the last 24 hours): Data source: the standby card's power.
+- **Halo colour limits (W)**: Look: Halo's green, yellow and orange limits (default 300 / 800 / 1800 W).
+- **Watts on light tiles** (Off · When on · Always): Look: live watts on tiles of lights and plugs that measure power or have an estimate.
+- **Mark estimated values**: Look: estimated watts with "~" in purple.
+- **Not measured tile**: Look: the share not measured as a category tile.
+
+### 17. Cards and values
 
 ![Cards and values](guide/en/cards.webp)
 
@@ -282,7 +337,7 @@ Value tiles show an icon, value and name; a running timer counts down. Cards com
 - **Colour by value**: 4 limits, 5 colours: frame, value and icon colour by value.
 - **Colour by state**: Maps an entity's state to a colour; works with text values too.
 
-### 16. Sections and columns
+### 18. Sections and columns
 
 ![Sections and columns](guide/en/sections.webp)
 
@@ -301,7 +356,7 @@ The section settings hold its title, column, look (tiles, sliders), tiles per ro
 - **Spacing** (Auto · 0 · 6 · 12 · 18 · 24): Space between items (pixels).
 - **Delete section**: Deletes the section (asks first, can be undone).
 
-### 17. Icon picker
+### 19. Icon picker
 
 ![Icon picker](guide/en/icons.webp)
 
@@ -317,7 +372,7 @@ You can also type an `mdi:...` name directly.
 - **All icons**: The whole set; search understands Turkish words too.
 - **Effect icons**: Light Effect Card's effect icons when it is installed.
 
-### 18. Choose a style
+### 20. Choose a style
 
 ![Choose a style](guide/en/style.webp)
 
@@ -338,7 +393,7 @@ You can also type an `mdi:...` name directly.
 - **Image**: A picture in HA's www folder (/local/background.jpg) or a web address.
 - **Light effects**: Shows or hides the Effects button; explains the card if it is not installed.
 
-### 19. Phone-only layout
+### 21. Phone-only layout
 
 ![Phone-only layout](guide/en/phone-layout.webp)
 
@@ -361,7 +416,7 @@ Everything you change says "phone only". **Make the phone match the tablet** rem
 
 ## More
 
-### 20. Settings
+### 22. Settings
 
 ![Settings](guide/en/settings.webp)
 
@@ -388,7 +443,7 @@ Version and updates at the top: install a new version from here. **Backup** down
 - **Report a problem**: Opens a GitHub issue with version and device details; no room, device or person names are added.
 - **Download backup** (Download backup · Restore a backup): Tabs, sections, settings and pets in one file; restoring asks first.
 
-### 21. Advanced settings
+### 23. Advanced settings
 
 ![Advanced settings](guide/en/advanced.webp)
 
@@ -408,7 +463,7 @@ Version and updates at the top: install a new version from here. **Backup** down
 - **Backup control**: The second copy of a lamp that shows up twice; if it does not answer the command goes there and an orange dot appears.
 - **Wall switches** (Brightness % · Kelvin): A signal-only relay is bound to a lamp; brightness and kelvin can be set for turning on (Settings, advanced).
 
-### 22. Tips
+### 24. Tips
 
 ![Tips](guide/en/tips.webp)
 

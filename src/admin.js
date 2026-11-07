@@ -46,7 +46,28 @@ const ADM = {
     a_svc: 'Servis çalıştır', a_pop: 'Pencerede kart aç', a_yaml: 'Gelişmiş (YAML)', svc: 'Servis', tgt: 'Hedef varlık', svcData: 'Veri (YAML, isteğe bağlı)', popTitle: 'Pencere başlığı', cardY: 'Kart (YAML)', actY: 'Eylem (YAML)',
     visL: 'Sadece şu durumda göster', visT: 'Koşul sağlanmazsa öğe panoda hiç çizilmez, yerinde boşluk kalmaz. Önizlemede soluk görünür.', visE: 'Varlık', v_eq: 'şuna eşitse', v_in: 'şunlardan biriyse', v_not: 'şunlar değilse', visV: 'Durum (birden çoksa virgülle)', visNow: 'Şu an: {s}',
     yamlErr: 'YAML okunamadı: {e}', yamlErrL: 'YAML okunamadı: {n}. satırda girinti ya da yazım hatası var', cardNoType: 'Kartta "type:" satırı yok', addCard: 'Kart', addCardT: 'Halo kartı, Home Assistant kartı ya da kurulu bir özel kart ekle; listeden seç, görsel ayarla', cond: 'koşullu', cardItem: 'Kart', svcNeed: 'Servis "alan.servis" biçiminde olmalı (ör. timer.start)',
-    close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.'
+    close: 'Kapat', notLoaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.', editNote: 'Not: Bu panoda HA\'nın kendi düzenleyicisinde "kontrolü al" dersen pano bu panelden kopar.',
+    t_energy: 'Enerji', d_energy: 'Evin gücü, kategoriler, grafikler', addEn: 'Enerji kartı', addEnT: 'Evin anlık gücü, kategoriler, en çok çekenler, günlük tüketim, son 24 saat ya da bekleme', enItem: 'Enerji kartı',
+    enTab: 'Enerji sekmesi', enTabT: 'Evin gücü, kategoriler, en çok çekenler ve grafikler hazır bir sekmede', akE: 'Enerji', akET: 'Sonda bir Enerji sekmesi',
+    sEnergy: 'Enerji', enSrc: 'Veri nereden gelir', enSrcT: 'Home Assistant\'ın Enerji ayarlarındaki "Cihaz tüketimi" listesinden. Bir gruba bağlı olmayanlar kategori, altındakiler cihaz olur.', enSrcGo: 'Enerji ayarlarını aç',
+    enPrice: 'kWh fiyatı', enPriceT: 'Yazılırsa kartlarda para karşılığı da görünür (HA\'nın para birimiyle)', enTotal: 'Evin toplam gücü', enTotalT: 'Bir güç sensörü seçilirse Halo onu gösterir; seçilmezse kategorilerin toplamı',
+    enAuto: 'Kategorilerin toplamı', enSb: 'Bekleme gücü', enSbT: 'Seçilmezse son 24 saatin en düşük toplam gücü', enSbAuto: 'Son 24 saatin en düşüğü', enLim: 'Halo renk sınırları (W)', enLimT: 'Yeşil, sarı, turuncu; üstü kırmızı',
+    enBadge: 'Işık karosunda watt', enBadgeT: 'Güç ölçen ışık ve prizlerin karosunun köşesinde anlık watt', enB_off: 'Kapalı', enB_on: 'Açıkken', enB_always: 'Hep',
+    enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enCNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
+    enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
+    enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Fiyat ve tarife, faturalar, tahmini cihazlar ve kartların görünümü kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
+    enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Son 12 ay', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
+    enPrMode: 'Fiyat', enPrBill: 'Faturadan', enPrSingle: 'Tek fiyat', enPrTier: 'Kademeli', enPrBillT: 'Son fatura: {k} kWh, {t} → 1 kWh {u}. Yeni fatura girildikçe güncellenir.', enPrBillNo: 'Faturalar bölümüne bir fatura girince birim fiyat ondan hesaplanır (vergiler ve sabit bedeller dahil).',
+    enLow: 'Düşük kademe', enHigh: 'Yüksek kademe', enDaily: 'Günlük sınır', enMonthLim: 'Bu ayın sınırı ({d} gün × {k} kWh)', enLowL: 'Düşük kademe: {k} kWh', enHighL: 'Yüksek kademe: {k} kWh', enMonthSo: 'Bu ay şimdiye kadar ({k} kWh)', enTierT: 'Günlük ortalama sınırın altı düşük, üstü yüksek fiyattan. Fiyatları faturadaki vergiler dahil birim fiyattan yaz.',
+    enYear: 'Yıllık sınır', enYearT: 'Bir yılda bu sınır aşılırsa daha yüksek tarifeye geçilir (aşıldığı ayı izleyen 3. ayın başında). 2026 için 4.000, 2027\'den itibaren 3.000 kWh.', enYAuto: 'Yıla göre ({n})', enYMan: 'Elle', enYLim: 'Sınır (kWh/yıl)', enSktt: 'Sınır aşılınca fiyat', enSkttT: 'Tahmin için; boş bırakılabilir', enYNow: 'Son 12 ay', enYEnd: 'Sınıra kalan', enYOver: 'Sınır aşıldı', enYNoData: 'Faturalar bölümüne son 12 ayın tüketimi ya da faturalar girilince hesaplanır.',
+    enBillT: 'Fatura girmek üç şey sağlar: gerçek birim fiyat, panelin ölçmediği pay ve yıllık sınır için geriye dönük toplam.', enBFrom: 'Dönem başı', enBTo: 'Dönem sonu', enBKwh: 'Tüketim (kWh)', enBTl: 'Toplam tutar', enBAdd: 'Fatura ekle', enBPer: 'Dönem', enBPanel: 'Panel ölçtü', enBUnt: 'Ölçülmeyen', enBUnit: 'kWh başına', enBBad: 'Dönem tarihlerini, kWh\'yi ve tutarı yaz', enBAdding: 'Panelin o dönemdeki toplamı hesaplanıyor…', enBNone: 'Henüz fatura yok.',
+    enL12: 'Son 12 ayın tüketimi (kWh)', enL12T: 'Faturanın arkasındaki grafikte yazar; yıllık sınır takibi bununla başlar.', enUntT: 'Son dönemde sayaç {a} kWh, panel {b} kWh. Aradaki {c} kWh (%{p}) hiçbir sensörde görünmüyor; kategori karolarında gri "Ölçülmeyen" karosu olarak çıkar. Buzdolabı, fırın, çamaşır makinesi için tahmini değer girersen bu pay küçülür.',
+    enEstT: 'Güç ölçmeyen cihazlar için tahmini değer. Her biri için Home Assistant\'ta bir güç ve bir enerji sensörü oluşur ve Enerji ayarlarına seçtiğin kategorinin içine eklenir. Kartlarda "~" ile görünür.', enEAdd: 'Cihaz ekle', enENew: 'Yeni cihaz', enEName: 'Ad', enEKind: 'Tür', enENone: 'Henüz tahmini cihaz yok.',
+    ek_light: 'Işık', ek_lightT: 'Bekleme ve en çok W, parlaklıkla', ek_onoff: 'Aç / kapa', ek_onoffT: 'Kapalıyken ve açıkken W', ek_fixed: 'Sabit', ek_fixedT: 'Hep aynı W', ek_year: 'Yıllık tüketim', ek_yearT: 'Etiketteki kWh/yıl', ek_cycle: 'Çevrim', ek_cycleT: 'kWh/100 çevrim, haftada kaç kez',
+    enEIdle: 'Kapalıyken (bekleme) W', enEMax: '%100 parlaklıkta W', enEOff: 'Kapalıyken W', enEOn: 'Açıkken W', enEW: 'Güç (W)', enEYear: 'Etiketteki yıllık tüketim (kWh)', enEK100: 'Etiketteki tüketim (kWh/100 çevrim)', enEWeek: 'Haftada kaç çevrim', enEEnt: 'Durumunu okuyan cihaz', enECat: 'Kategori', enECatNone: 'Kendi kategorisi',
+    enENow: 'Şu an', enEAvg: 'Ortalama', enEDay: 'günde {k} kWh, yılda {y} kWh', enEBri: '%{p} parlaklıkta', enEYearT: 'Kompresörlü cihazlar anlık 0 ile 120 W arasında gider gelir; ortalama yıllık toplamda doğru çıkar.', enEEnts: 'Home Assistant\'ta oluşur: {p} ve {e}', enESave: 'Kaydet', enEDel: 'Sil',
+    enESaved: 'Kaydedildi, Enerji ayarlarına eklendi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
+    enTilde: 'Tahmini değerleri ayır', enTildeT: 'Tahmini watt kartlarda "~" ile ve morla yazılır', enUntL: 'Ölçülmeyen karo', enUntLT: 'Son faturaya göre ölçülmeyen pay kategori karolarında', enBars: 'Kademe ve yıllık sınır çubukları', enBarsT: 'Halo\'nun altında, ayarlandıysa'
   },
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
@@ -89,7 +110,28 @@ const ADM = {
     a_svc: 'Call a service', a_pop: 'Open a card in a window', a_yaml: 'Advanced (YAML)', svc: 'Service', tgt: 'Target entity', svcData: 'Data (YAML, optional)', popTitle: 'Window title', cardY: 'Card (YAML)', actY: 'Action (YAML)',
     visL: 'Only show when', visT: 'If the condition is not met the item is not drawn at all and leaves no gap. It shows faded in the preview.', visE: 'Entity', v_eq: 'equals', v_in: 'is one of', v_not: 'is none of', visV: 'State (comma for several)', visNow: 'Now: {s}',
     yamlErr: 'Could not read the YAML: {e}', yamlErrL: 'Could not read the YAML: indentation or syntax error on line {n}', cardNoType: 'The card has no "type:" line', addCard: 'Card', addCardT: 'Add a Halo card, a Home Assistant card or an installed custom card; pick from the list, set it up visually', cond: 'conditional', cardItem: 'Card', svcNeed: 'The service must look like "domain.service" (e.g. timer.start)',
-    close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.'
+    close: 'Close', notLoaded: 'The Lemur Home Dashboard integration is not loaded.', editNote: 'Note: if you "take control" of this dashboard in Home Assistant\'s own editor, it disconnects from this panel.',
+    t_energy: 'Energy', d_energy: 'Home power, categories, charts', addEn: 'Energy card', addEnT: 'Home power now, categories, top consumers, daily usage, last 24 hours or standby', enItem: 'Energy card',
+    enTab: 'Energy tab', enTabT: 'Home power, categories, top consumers and charts in a ready tab', akE: 'Energy', akET: 'An Energy tab at the end',
+    sEnergy: 'Energy', enSrc: 'Where the data comes from', enSrcT: 'From "Individual devices" in Home Assistant\'s Energy settings. Entries not inside another one become categories, the ones inside become devices.', enSrcGo: 'Open energy settings',
+    enPrice: 'Price per kWh', enPriceT: 'If set, the cards also show the cost (in Home Assistant\'s currency)', enTotal: 'Total home power', enTotalT: 'If a power sensor is picked, Halo shows it; otherwise the sum of the categories',
+    enAuto: 'Sum of categories', enSb: 'Standby power', enSbT: 'If none is picked, the lowest total power of the last 24 hours', enSbAuto: 'Lowest of the last 24 hours', enLim: 'Halo colour limits (W)', enLimT: 'Green, yellow, orange; above is red',
+    enBadge: 'Watts on light tiles', enBadgeT: 'Live watts in the corner of light and plug tiles that measure power', enB_off: 'Off', enB_on: 'When on', enB_always: 'Always',
+    enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enCNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
+    enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
+    enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Price and tariff, bills, estimated devices and the look of the cards on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
+    enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'Last 12 months', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
+    enPrMode: 'Price', enPrBill: 'From the bill', enPrSingle: 'One price', enPrTier: 'Tiered', enPrBillT: 'Last bill: {k} kWh, {t} → {u} per kWh. Updated with every new bill.', enPrBillNo: 'Enter a bill under Bills and the unit price comes from it (taxes and fixed charges included).',
+    enLow: 'Lower tier', enHigh: 'Upper tier', enDaily: 'Daily limit', enMonthLim: 'This month\'s limit ({d} days × {k} kWh)', enLowL: 'Lower tier: {k} kWh', enHighL: 'Upper tier: {k} kWh', enMonthSo: 'This month so far ({k} kWh)', enTierT: 'Usage under the daily average limit costs the lower price, the rest the upper price. Enter prices per kWh with taxes, as on the bill.',
+    enYear: 'Yearly limit', enYearT: 'Above this yearly usage a higher tariff applies (from the start of the third month after the one it was crossed in). 4,000 kWh for 2026, 3,000 kWh from 2027.', enYAuto: 'By year ({n})', enYMan: 'Manual', enYLim: 'Limit (kWh/year)', enSktt: 'Price above the limit', enSkttT: 'For estimates; optional', enYNow: 'Last 12 months', enYEnd: 'Left to the limit', enYOver: 'Limit crossed', enYNoData: 'Calculated once the last 12 months or bills are entered under Bills.',
+    enBillT: 'Bills give three things: the real unit price, the share the dashboard does not measure and a past total for the yearly limit.', enBFrom: 'Period start', enBTo: 'Period end', enBKwh: 'Usage (kWh)', enBTl: 'Total amount', enBAdd: 'Add bill', enBPer: 'Period', enBPanel: 'Measured', enBUnt: 'Not measured', enBUnit: 'Per kWh', enBBad: 'Enter the period dates, kWh and amount', enBAdding: 'Adding up the dashboard\'s total for that period…', enBNone: 'No bills yet.',
+    enL12: 'Usage of the last 12 months (kWh)', enL12T: 'Shown on the chart on the back of the bill; the yearly limit tracking starts from it.', enUntT: 'Last period: meter {a} kWh, dashboard {b} kWh. The {c} kWh between ({p}%) is not on any sensor; it shows as a grey "Not measured" category tile. Add estimates for the fridge, oven or washing machine to make it smaller.',
+    enEstT: 'Estimated values for devices that do not measure power. Each gets a power and an energy sensor in Home Assistant and is added to the Energy settings inside the chosen category. Cards show them with "~".', enEAdd: 'Add device', enENew: 'New device', enEName: 'Name', enEKind: 'Kind', enENone: 'No estimated devices yet.',
+    ek_light: 'Light', ek_lightT: 'Standby and max W, by brightness', ek_onoff: 'On / off', ek_onoffT: 'W when off and when on', ek_fixed: 'Fixed', ek_fixedT: 'Always the same W', ek_year: 'Yearly usage', ek_yearT: 'The label\'s kWh/year', ek_cycle: 'Cycles', ek_cycleT: 'kWh/100 cycles, cycles per week',
+    enEIdle: 'Off (standby) W', enEMax: 'At 100% brightness W', enEOff: 'Off W', enEOn: 'On W', enEW: 'Power (W)', enEYear: 'Yearly usage on the label (kWh)', enEK100: 'Usage on the label (kWh/100 cycles)', enEWeek: 'Cycles per week', enEEnt: 'Device that gives the state', enECat: 'Category', enECatNone: 'Its own category',
+    enENow: 'Now', enEAvg: 'Average', enEDay: '{k} kWh a day, {y} kWh a year', enEBri: 'at {p}% brightness', enEYearT: 'Appliances with a compressor swing between 0 and 120 W; the average adds up right over a year.', enEEnts: 'Home Assistant gets: {p} and {e}', enESave: 'Save', enEDel: 'Delete',
+    enESaved: 'Saved and added to the Energy settings', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
+    enTilde: 'Mark estimated values', enTildeT: 'Estimated watts show with "~" in purple on the cards', enUntL: 'Not measured tile', enUntLT: 'The share not measured, from the last bill, as a category tile', enBars: 'Tier and yearly limit bars', enBarsT: 'Under the Halo, when set up'
   }
 };
 // Bölüm türleri sadece başlangıç (başlık ve simge); her bölüme her şey eklenebilir. domains: seçicideki süzgeç
@@ -100,7 +142,8 @@ const LHD_TYPES = {
   climate: { icon: 'mdi:thermostat', domains: ['climate'], col: 2 },
   vacuum: { icon: 'mdi:robot-vacuum', domains: ['vacuum'], col: 2 },
   media: { icon: 'mdi:television', domains: ['media_player'], col: 2 },
-  camera: { icon: 'mdi:cctv', domains: ['camera'], col: 0 }
+  camera: { icon: 'mdi:cctv', domains: ['camera'], col: 0 },
+  energy: { icon: 'mdi:lightning-bolt', domains: ['sensor'], col: 0 }
 };
 // Renk zemini için hazır koyu tonlar (açık renkler de seçilebilir ama yazılar beyaz)
 const LHD_TINT_COLORS = ['#FFC24A', '#E6ECF5', '#5B8DEF', '#4FD1C5', '#7BD83A', '#FF7AB0', '#B07CFF', '#FF8A4A'];
@@ -128,7 +171,7 @@ const LHD_HA_CARDS = [
 ];
 const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
-const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', camera: 't_camera', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs' };
+const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', camera: 't_camera', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs', energy: 't_energy' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
 const LHD_MAXCOLS = 6;
@@ -424,7 +467,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   // ---- yedekle / içe aktar: bütün pano düzeni (sekmeler, bölümler, ayarlar) tek JSON dosyasında ----
   _backupDown() {
     const d = STORE.data || {};
-    const out = { format: 'lemur-home-dashboard-backup', version: PANEL_VERSION, date: new Date().toISOString(), data: { tabs: d.tabs || [], settings: d.settings || {}, profiles: d.profiles || {}, pets: d.pets || {} } };
+    const out = { format: 'lemur-home-dashboard-backup', version: PANEL_VERSION, date: new Date().toISOString(), data: { tabs: d.tabs || [], settings: d.settings || {}, profiles: d.profiles || {}, pets: d.pets || {}, estimates: d.estimates || {} } };
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
     a.download = 'lemur-pano-yedek-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
@@ -440,6 +483,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       b.data = { tabs: lhdCleanTabs(D.tabs), settings: lhdIsObj(D.settings) ? D.settings : {} };
       if (lhdIsObj(D.profiles)) b.data.profiles = D.profiles;
       if (lhdIsObj(D.pets)) b.data.pets = lhdCleanPets(D.pets);
+      if (lhdIsObj(D.estimates)) b.data.estimates = D.estimates;
       this._bk = b; this._modal = 'restore'; this._render();
     };
     rd.readAsText(f);
@@ -462,6 +506,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._commit('settings', lhdIsObj(D.settings) ? D.settings : {});
     if (lhdIsObj(D.profiles)) this._commit('profiles', D.profiles);
     if (lhdIsObj(D.pets)) this._commit('pets', lhdCleanPets(D.pets));
+    if (lhdIsObj(D.estimates)) this._commit('estimates', D.estimates);   // entegrasyon doğrular (estimates.py)
     this._bk = null; this._modal = null; this._tab = null; this._render(); this._toast(this._t('bkOk'));
   }
   // ---- yenilikler: güncellemeden sonra bir kez, ve Ayarlar → Sürüm'den ----
@@ -695,7 +740,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // stilde ışık görünümü: sekmelerdeki ışık bölümlerinin çoğu çubuksa çubuk
     let nb = 0, nt = 0; if (stil) this._work().forEach((T) => (T.sections || []).forEach((x) => { if (x.type === 'lights') { if (x.look === 'bar') nb++; else nt++; } }));
     this._ak = { mode: stil ? 'stil' : 'kur', src: stil ? 'mine' : 'demo', order: order, areas: areas, home: true, other: true,
-      types: { lights: true, scenes: true, climate: true, vacuum: true, media: true, camera: false }, look: nb > nt ? 'bar' : 'tiles', clim: stil && lpClimStyle() === 'rows' ? 'rows' : 'halo',
+      types: { lights: true, scenes: true, climate: true, vacuum: true, media: true, camera: false, energy: Object.keys(this._hass.states || {}).some((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(this._hass.states[id])) }, look: nb > nt ? 'bar' : 'tiles', clim: stil && lpClimStyle() === 'rows' ? 'rows' : 'halo',
       bg: bg, bgColor: (m === 'color' && st.bg.color) || LHD_BG_COLORS[1], bgUrl: (m === 'img' && st.bg.url) || url, nav: pc.nav, plights: pc.lights, sheet: pc.sheet, lec: st.lec_nav !== false, pv: 'tablet' };
     this._ak.look0 = this._ak.look;
     // önizlemenin hayali evi (dokunulunca durumu değişir; pencere açık kaldıkça aynı ev)
@@ -846,6 +891,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="seg modeseg" title="' + t('modeT') + '"><button data-mode="simple"' + (this._adv() ? '' : ' class="on"') + '>' + t('modeSimple') + '</button><button data-mode="adv"' + (this._adv() ? ' class="on"' : '') + '>' + t('modeAdv') + '</button></div>' + this._hb('mode') +
       '<button class="btn ic" data-a="undo" title="' + t('undoK') + '"' + (this._undo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:undo"></ha-icon></button>' +
       '<button class="btn stl" data-a="stilsec" title="' + t('akSHint') + '"><ha-icon class="s16" icon="mdi:palette-outline"></ha-icon>' + t('akST') + '</button>' +   // stil seç göze çarpsın: ayarların yanında
+      '<button class="btn enb" data-a="energy" title="' + t('enOpenT') + '"><ha-icon class="s16" icon="mdi:lightning-bolt"></ha-icon><span class="l">' + t('enBtn') + '</span></button>' +
       '<button class="btn" data-a="settings"><ha-icon class="s16" icon="mdi:cog-outline"></ha-icon>' + t('settings') + '</button>' +
       '<button class="btn ic" data-a="more" title="' + t('more') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button></div>';
 
@@ -904,7 +950,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
-    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
     const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     // LEC kuruluysa bir kez: efektlerin nerede olduğunu anlatan bilgi kutusu ("Tamam" deyince kaybolur)
     const st0 = this._settings();
@@ -972,7 +1018,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (list.length) {
       const hid = Array.isArray(o.hide_items) ? o.hide_items : [];
       const S = this._hass.states;
-      const nm = (raw) => { const it = typeof raw === 'string' ? { entity: raw } : raw || {}; if (it.name) return it.name; if (it.subtitle) return it.subtitle; if (it.entity) return this._ename(it.entity); if (it.pet) { const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}; return P.name || it.pet; } if (it.card) return String(it.card.title || it.card.type || '?'); return '?'; };
+      const nm = (raw) => { const it = typeof raw === 'string' ? { entity: raw } : raw || {}; if (it.name) return it.name; if (it.subtitle) return it.subtitle; if (it.entity) return this._ename(it.entity); if (it.pet) { const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}; return P.name || it.pet; } if (it.energy) return lpEnT(this._lang, 'k_' + it.energy); if (it.card) return String(it.card.title || it.card.type || '?'); return '?'; };
       const ordered = lhdOrderBy(list.map((raw, i) => ({ raw: raw, i: i })), o.item_order, (x) => lhdItemKey(x.raw));
       h += '<div class="fld"><label>' + t('phItems') + badge(hid.length > 0 || (Array.isArray(o.item_order) && o.item_order.length > 0)) + '</label><div class="phits">' + ordered.map((q) => { const raw = q.raw, i = q.i;
         const k = lhdItemKey(raw), off = hid.indexOf(k) >= 0, it = typeof raw === 'string' ? { entity: raw } : raw || {};
@@ -1013,6 +1059,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon(P.icon || LP_PET_KINDS[P.kind] || 'mdi:paw') + '</div><div class="col"><b class="cty">' + esc(P.name || it.pet) + '</b>' +
           '<span class="eid">' + t('petItem') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
       }
+      if (k === 'energy') {
+        return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon(LP_EN_IC[it.energy] || 'mdi:lightning-bolt') + '</div><div class="col"><b class="cty">' + esc(lpEnT(this._lang, 'k_' + it.energy)) + '</b>' +
+          '<span class="eid">' + t('enItem') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
+      }
       if (k === 'card') {
         return '<div class="it" data-di>' + handle + '<div class="ico">' + lpIcon('mdi:card-text-outline') + '</div><div class="col"><b class="cty">' + t('cardItem') + ': ' + esc(String(it.card.type || '?')) + '</b>' +
           '<span class="eid">' + esc(it.card.title || it.card.entity || '') + cond(it) + '</span></div>' + xBtn(i) + '</div>';
@@ -1045,6 +1095,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn sm dash" data-a="addscph"><ha-icon class="s16" icon="mdi:gesture-tap"></ha-icon>' + t('addScPh') + '</button>') +
       (!this._adv() ? '' : '<button class="btn sm dash" data-a="addsub" title="' + t('addSubT') + '"><ha-icon class="s16" icon="mdi:format-header-pound"></ha-icon>' + t('addSub') + '</button>') +
       '<button class="btn sm dash" data-a="addpet" title="' + t('addPetT') + '"><ha-icon class="s16" icon="mdi:paw"></ha-icon>' + t('addPet') + '</button>' +
+      '<button class="btn sm dash" data-a="addenergy" title="' + t('addEnT') + '"><ha-icon class="s16" icon="mdi:lightning-bolt"></ha-icon>' + t('addEn') + '</button>' +
       ('<button class="btn sm dash" data-a="addcard" title="' + t('addCardT') + '"><ha-icon class="s16" icon="mdi:card-text-outline"></ha-icon>' + t('addCard') + '</button>') +
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
@@ -1079,6 +1130,225 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="fld" style="flex:0 0 auto"><label>' + t('gapL') + '</label>' + seg('data-sgap', typeof s.gap === 'number' ? String(s.gap) : '', [['', this._t('gapAuto')], ['0', '0'], ['6', '6'], ['12', '12'], ['18', '18'], ['24', '24']]) + '</div></div>';
   }
 
+  // ---- Enerji sayfası (üst çubukta Enerji): özet, veri kaynağı, fiyat ve tarife, faturalar, tahmini cihazlar, görünüm ----
+  // Ayarlar settings.energy'de (src/energy.js başındaki açıklama), tahmini cihazlar data.estimates'te (entegrasyon sensörlerini kurar).
+  _enOpen(view) {
+    this._modal = 'energy'; this._menu = null; this._env = view || this._env || 'sum';
+    if (!this._enU) this._enU = lpEnSub(() => { if (this._modal === 'energy') this._render(); });
+    LP_EN.at = 0; lpEnEnsure(this._hass);
+    this._render();
+  }
+  _enEsts() { const E = STORE.data && STORE.data.estimates; return lhdIsObj(E) ? E : {}; }
+  _enPage() {
+    const t = (k, v) => esc(this._t(k, v)), V = this._env || 'sum', L = this._lang;
+    const nav = [['sum', 'mdi:view-dashboard-outline'], ['src', 'mdi:database-outline'], ['tariff', 'mdi:cash'], ['bill', 'mdi:file-document-outline'], ['est', 'mdi:lightbulb-on-outline'], ['look', 'mdi:eye-outline']];
+    const cnt = { bill: lpEnBills().length, est: Object.keys(this._enEsts()).length };
+    const list = nav.map((n) => '<button class="gli' + (V === n[0] ? ' on' : '') + '" data-env="' + n[0] + '"><ha-icon class="s16" icon="' + n[1] + '"></ha-icon><span style="flex:1">' + t('en_' + n[0]) + '</span>' + (cnt[n[0]] ? '<span class="gno">' + cnt[n[0]] + '</span>' : '') + '</button>').join('');
+    const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'est' ? this._enEst() : V === 'look' ? this._enLook() : this._enSum();
+    return '<div class="ov" data-ovl><div class="dlg guide enpg"><div class="dh"><div class="di"><ha-icon icon="mdi:lightning-bolt"></ha-icon></div><h2>' + t('enPage') + '</h2>' +
+      '<button class="btn ic" data-a="close" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="gbody"><div class="glist enl">' + list + '</div><div class="gmain enm"><div class="ennav">' + nav.map((n) => '<button class="' + (V === n[0] ? 'on' : '') + '" data-env="' + n[0] + '">' + t('en_' + n[0]) + '</button>').join('') + '</div>' + body + '</div></div></div></div>';
+  }
+  _enNum(v, d) { return lpEnNum(v, d || 0, this._lang); }
+  _enCur() { return lpEnMoney(this._hass, 1, this._lang).replace(/[\d.,\s\u00a0]/g, '') || ''; }
+  _enTl(v) { return lpEnMoney(this._hass, v, this._lang); }
+  _enSum() {
+    const t = (k, v) => esc(this._t(k, v)), M = LP_EN.m, S = this._hass.states;
+    const row = (v, title, val, pill) => '<button class="ensr" data-env="' + v + '"><span><b>' + esc(title) + '</b><i>' + esc(val) + '</i></span>' + (pill || '') + '<ha-icon class="s16" icon="mdi:chevron-right"></ha-icon></button>';
+    const pill = (x, c) => '<em class="enp' + (c ? ' ' + c : '') + '">' + esc(x) + '</em>';
+    if (!M) return '<h3 class="enh">' + t('en_sum') + '</h3><div class="hint">' + t('enLoading') + '</div>';
+    const mk = lpEnMonthKwh(M), u = lpEnUnit(M), mc = M.days ? lpEnMonthCost(mk, lpEnMonthDays(), M) : null, mode = lpEnMode();
+    const yk = lpEnYear(M), yl = lpEnYearLimit(), b = lpEnLastBill(), E = this._enEsts(), ek = Object.keys(E);
+    const ew = ek.reduce((a, k) => a + (lpEnW(S, 'sensor.lhd_' + k + '_power') || 0), 0);
+    return '<h3 class="enh">' + t('en_sum') + '</h3><p class="enlead">' + t('enSumT') + '</p><div class="ensl">' +
+      row('tariff', this._t('enSMonth'), M.days ? this._enNum(mk) + ' kWh' + (u ? ' · ' + this._enTl(mc.tl) : '') : '–',
+        mode === 'tier' && mc ? pill(this._t(mc.hi > 0 ? 'enHigh' : 'enLow'), mc.hi > 0 ? 'w' : 'ok') : pill(u ? (mode === 'bill' ? this._t('enPrBill') : this._t('enPrSingle')) + ' · ' + this._enNum(u, 2) + ' ' + this._enCur() + '/kWh' : this._t('enPriceNone'))) +
+      row('tariff', this._t('enSYear'), yk ? this._enNum(yk) + ' / ' + this._enNum(yl) + ' kWh' : this._t('enNone'), yk ? pill('%' + Math.round(yk / yl * 100), yk / yl > 0.85 ? 'w' : 'ok') : '') +
+      row('bill', this._t('enSBill'), b ? this._enNum(b.kwh) + ' kWh · ' + this._enTl(b.tl) : this._t('enNoBill'), b && lpEnUntracked() ? pill(this._t('enUnt', { p: Math.round(lpEnUntracked() * 100) }), 'w') : '') +
+      row('est', this._t('enSEst'), ek.length ? this._t('enEstN', { n: ek.length, w: lpEnWs(ew, this._lang) }) : this._t('enNone'), ek.length ? pill('~', 'est') : '') +
+      row('src', this._t('en_src'), M.cats.length ? this._t('enCats', { n: M.cats.length, d: M.devs.length }) : this._t('enNoData'), '') + '</div>';
+  }
+  _enPowSel(path, cur, none) {
+    const S = this._hass.states;
+    const pows = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(S[id])).sort((a, b) => this._ename(a).localeCompare(this._ename(b), this._lang));
+    return '<select class="inp w" data-sf="' + path + '" style="max-width:300px"><option value="">' + esc(none) + '</option>' +
+      pows.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
+  }
+  _enSrc() {
+    const t = (k, v) => esc(this._t(k, v)), M = LP_EN.m, en = lpEnCfg();
+    return '<h3 class="enh">' + t('en_src') + '</h3><p class="enlead">' + t('enSrcT') + '</p>' +
+      '<div class="srow"><div class="t"><b>' + t('enSrc') + '</b><span>' + (M ? (M.cats.length ? t('enCats', { n: M.cats.length, d: M.devs.length }) : t('enNoData')) : t('enLoading')) + '</span></div><a class="btn" href="/config/energy">' + t('enSrcGo') + '</a></div>' +
+      '<div class="srow"><div class="t"><b>' + t('enTotal') + '</b><span>' + t('enTotalT') + '</span></div>' + this._enPowSel('energy.total', en.total, this._t('enAuto')) + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('enSb') + '</b><span>' + t('enSbT') + '</span></div>' + this._enPowSel('energy.standby', en.standby, this._t('enSbAuto')) + '</div>';
+  }
+  _enTariff() {
+    const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), M = LP_EN.m, mode = en.price_mode || (lpEnLastBill() ? 'bill' : 'single');
+    const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+    const num = (path, v, step, unit) => '<span class="ennum"><input class="inp" type="number" min="0" step="' + step + '" data-dec data-sf="' + path + '" value="' + esc(v === undefined || v === null ? '' : v) + '">' + (unit ? '<i>' + esc(unit) + '</i>' : '') + '</span>';
+    const cur = this._enCur() + '/kWh';
+    let h = '<h3 class="enh">' + t('en_tariff') + '</h3><p class="enlead">' + t('enPriceT') + '</p>' +
+      '<div class="srow"><div class="t"><b>' + t('enPrMode') + '</b></div>' + seg('energy.price_mode', mode, [['bill', this._t('enPrBill')], ['single', this._t('enPrSingle')], ['tier', this._t('enPrTier')]]) + '</div>';
+    const b = lpEnLastBill();
+    if (mode === 'bill') h += '<div class="hint">' + (b ? t('enPrBillT', { k: this._enNum(b.kwh), t: this._enTl(b.tl), u: this._enTl(b.tl / b.kwh) }) : t('enPrBillNo')) + '</div>';
+    if (mode === 'single') h += '<div class="srow"><div class="t"><b>' + t('enPrice') + '</b><span>' + t('enPriceT') + '</span></div>' + num('energy.price', en.price, '0.01', cur) + '</div>';
+    if (mode === 'tier') {
+      h += '<div class="hint">' + t('enTierT') + '</div><div class="engrid">' +
+        '<div class="fld"><label>' + t('enLow') + '</label>' + num('energy.low', en.low, '0.01', cur) + '</div>' +
+        '<div class="fld"><label>' + t('enHigh') + '</label>' + num('energy.high', en.high, '0.01', cur) + '</div>' +
+        '<div class="fld"><label>' + t('enDaily') + '</label>' + num('energy.daily', en.daily || 8, '0.5', 'kWh') + '</div></div>';
+      if (M && M.days && lpEnMode() === 'tier') {
+        const mk = lpEnMonthKwh(M), md = lpEnMonthDays(), c = lpEnMonthCost(mk, md, M);
+        h += '<div class="encalc"><div><span>' + t('enMonthLim', { d: md, k: this._enNum(lpEnDaily(), lpEnDaily() % 1 ? 1 : 0) }) + '</span><b>' + this._enNum(c.lim) + ' kWh</b></div>' +
+          '<div><span>' + t('enLowL', { k: this._enNum(c.lo, 1) }) + '</span><b>' + this._enTl(c.lo * lpEnNumOf(en.low)) + '</b></div>' +
+          '<div><span>' + t('enHighL', { k: this._enNum(c.hi, 1) }) + '</span><b>' + this._enTl(c.hi * lpEnNumOf(en.high)) + '</b></div>' +
+          '<div class="tot"><span>' + t('enMonthSo', { k: this._enNum(mk, 1) }) + '</span><b>' + this._enTl(c.tl) + '</b></div></div>';
+      }
+    }
+    const yl = lpEnYearLimit(), yk = M ? lpEnYear(M) : 0, ym = en.year_mode === 'manual' ? 'manual' : 'auto';
+    h += '<div class="sh">' + t('enYear') + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('enYear') + '</b><span>' + t('enYearT') + '</span></div>' + seg('energy.year_mode', ym, [['auto', this._t('enYAuto', { n: this._enNum(new Date().getFullYear() >= 2027 ? 3000 : 4000) })], ['manual', this._t('enYMan')]]) + '</div>' +
+      (ym === 'manual' ? '<div class="srow"><div class="t"><b>' + t('enYLim') + '</b></div>' + num('energy.year_limit', en.year_limit || 4000, '100', 'kWh') + '</div>' : '') +
+      '<div class="srow"><div class="t"><b>' + t('enSktt') + '</b><span>' + t('enSkttT') + '</span></div>' + num('energy.sktt_price', en.sktt_price, '0.01', cur) + '</div>' +
+      (yk ? '<div class="encalc"><div><span>' + t('enYNow') + '</span><b>' + this._enNum(yk) + ' / ' + this._enNum(yl) + ' kWh</b></div><div class="tot"><span>' + t(yk >= yl ? 'enYOver' : 'enYEnd') + '</span><b style="color:' + (yk >= yl ? 'var(--red)' : yk / yl > 0.85 ? 'var(--ac)' : '#3DDC84') + '">' + this._enNum(Math.abs(yl - yk)) + ' kWh</b></div></div>' : '<div class="hint">' + t('enYNoData') + '</div>');
+    return h;
+  }
+  _enBill() {
+    const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), raw = Array.isArray(en.bills) ? en.bills : [];
+    const rows = raw.map((x, i) => ({ x: x, i: i })).filter((r) => r.x && r.x.kwh > 0 && r.x.tl > 0).sort((a, b) => (a.x.to < b.x.to ? 1 : -1));
+    const fd = (s) => { const p = String(s || '').split('-'); return p.length === 3 ? p[2] + '.' + p[1] + '.' + p[0].slice(2) : s; };
+    const today = new Date(), iso = (d) => d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    const lb = lpEnLastBill(), m1 = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate()), nx = lb ? new Date(Date.parse(lb.to + 'T00:00:00') + 86400000) : null, f0 = nx && nx < today ? nx : m1;
+    let h = '<h3 class="enh">' + t('en_bill') + '</h3><p class="enlead">' + t('enBillT') + '</p>';
+    h += rows.length ? '<div class="entbl"><table><thead><tr><th>' + t('enBPer') + '</th><th class="r">kWh</th><th class="r">' + t('enBTl') + '</th><th class="r">' + t('enBUnit') + '</th><th class="r">' + t('enBPanel') + '</th><th class="r">' + t('enBUnt') + '</th><th></th></tr></thead><tbody>' +
+      rows.map((r) => { const x = r.x, un = x.panel > 0 ? Math.max(0, (x.kwh - x.panel) / x.kwh) : null;
+        return '<tr><td>' + esc(fd(x.from)) + ' – ' + esc(fd(x.to)) + '</td><td class="r">' + this._enNum(x.kwh) + '</td><td class="r">' + esc(this._enTl(x.tl)) + '</td><td class="r">' + esc(this._enTl(x.tl / x.kwh)) + '</td><td class="r">' + (x.panel > 0 ? this._enNum(x.panel) : '–') + '</td><td class="r">' + (un === null ? '–' : '<em class="enp w">%' + Math.round(un * 100) + '</em>') + '</td>' +
+          '<td class="r"><button class="btn ic sm" data-enbdel="' + r.i + '" title="×"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></td></tr>'; }).join('') + '</tbody></table></div>' : '<div class="hint">' + t('enBNone') + '</div>';
+    h += '<div class="encalc enadd"><b>' + t('enBAdd') + '</b><div class="engrid">' +
+      '<div class="fld"><label>' + t('enBFrom') + '</label><input class="inp" type="date" id="enbf" value="' + iso(f0) + '"></div>' +
+      '<div class="fld"><label>' + t('enBTo') + '</label><input class="inp" type="date" id="enbt" value="' + iso(today) + '"></div>' +
+      '<div class="fld"><label>' + t('enBKwh') + '</label><input class="inp" type="number" min="1" step="1" id="enbk"></div>' +
+      '<div class="fld"><label>' + t('enBTl') + '</label><input class="inp" type="number" min="0" step="0.01" id="enbl"></div></div>' +
+      (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
+      '<div class="acts"><button class="btn pri" data-a="enbadd"' + (this._enBusy ? ' disabled' : '') + '>' + (this._enBusy ? t('enBAdding') : t('enBAdd')) + '</button></div></div>';
+    h += '<div class="srow"><div class="t"><b>' + t('enL12') + '</b><span>' + t('enL12T') + '</span></div><span class="ennum"><input class="inp" type="number" min="0" step="1" data-dec data-sf="energy.last12" value="' + esc(en.last12 || '') + '"><i>kWh</i></span></div>';
+    if (lb && lb.panel > 0 && lb.panel < lb.kwh) h += '<div class="hint">' + t('enUntT', { a: this._enNum(lb.kwh), b: this._enNum(lb.panel), c: this._enNum(Math.max(0, lb.kwh - lb.panel)), p: Math.round(lpEnUntracked() * 100) }) + '</div>';
+    return h;
+  }
+  async _enBillAdd() {
+    const R = this.shadowRoot, v = (id) => { const el = R.getElementById(id); return el ? String(el.value).trim() : ''; };
+    const from = v('enbf'), to = v('enbt'), kwh = parseFloat(v('enbk').replace(',', '.')), tl = parseFloat(v('enbl').replace(',', '.'));
+    this._enErr = '';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to) || from > to || !(kwh > 0) || !(tl > 0)) { this._enErr = this._t('enBBad'); return this._render(); }
+    this._enBusy = true; this._render();
+    const panel = await lpEnPeriodKwh(this._hass, from, to);
+    this._enBusy = false;
+    const L = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).filter((x) => !(x && x.from === from && x.to === to)).concat([{ from: from, to: to, kwh: kwh, tl: tl, panel: panel }]);
+    this._setting('energy.bills', L.slice(-36));
+  }
+  // tahmini cihazlar: liste ve düzenleyici (taslak this._enE = { id, f }, kaydedilmeden saklanmaz)
+  _enDraft(id) {
+    const E = this._enEsts(), e = id && E[id] ? E[id] : null;
+    const f = e ? Object.assign({}, e) : { name: '', kind: 'light', idle: 0.5, max: 9, off: 0.5, on: 60, w: 5, year: 250, k100: 50, week: 3, entity: '', cat: '' };
+    ['idle', 'max', 'off', 'on', 'w', 'year', 'k100', 'week'].forEach((k) => { if (f[k] === undefined) f[k] = { idle: 0.5, max: 9, off: 0.5, on: 60, w: 5, year: 250, k100: 50, week: 3 }[k]; f[k] = String(f[k]); });
+    this._enE = { id: e ? id : null, f: f, ask: false };
+  }
+  _enEst() {
+    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), S = this._hass.states, M = LP_EN.m;
+    const kinds = ['light', 'onoff', 'fixed', 'year', 'cycle'];
+    const ic = { light: 'mdi:lightbulb-outline', onoff: 'mdi:power-plug-outline', fixed: 'mdi:router-wireless', year: 'mdi:fridge-outline', cycle: 'mdi:washing-machine' };
+    const sub = (e) => this._t('ek_' + e.kind) + (e.cat && M ? ' · ' + ((M.cats.filter((c) => c.id === e.cat)[0] || {}).name || '') : '');
+    let h = '<h3 class="enh">' + t('en_est') + '</h3><p class="enlead">' + t('enEstT') + '</p>';
+    const ids = Object.keys(E);
+    h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = lpEnW(S, 'sensor.lhd_' + id + '_power');
+      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || ic[e.kind] || 'mdi:flash') + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e)) + '</i></span><em class="enp est">' + (w === null ? '…' : '~' + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t('enENone') + '</div>';
+    h += '<div class="acts"><button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
+    const D = this._enE; if (!D) return h;
+    const f = D.f, n = (k) => lpEnNumOf(f[k]);
+    const fld = (key, label, step, dl) => '<div class="fld"><label>' + label + '</label><input class="inp" ' + (step ? 'type="number" min="0" step="' + step + '"' : 'spellcheck="false"' + (dl ? ' list="' + dl + '"' : '')) + ' data-enf="' + key + '" value="' + esc(f[key] || '') + '"></div>';
+    h += '<div class="ened"><div class="engrid">' + fld('name', t('enEName')) + '</div>' +
+      '<div class="fld"><label>' + t('enEKind') + '</label><div class="enkinds">' + kinds.map((k) => '<button class="' + (f.kind === k ? 'on' : '') + '" data-enk="' + k + '"><ha-icon class="s16" icon="' + ic[k] + '"></ha-icon><b>' + t('ek_' + k) + '</b><span>' + t('ek_' + k + 'T') + '</span></button>').join('') + '</div></div><div class="engrid">';
+    if (f.kind === 'light') h += fld('idle', t('enEIdle'), '0.1') + fld('max', t('enEMax'), '1') + fld('entity', t('enEEnt'), '', 'enlights');
+    if (f.kind === 'onoff') h += fld('off', t('enEOff'), '0.1') + fld('on', t('enEOn'), '1') + fld('entity', t('enEEnt'), '', 'enents');
+    if (f.kind === 'fixed') h += fld('w', t('enEW'), '0.1');
+    if (f.kind === 'year') h += fld('year', t('enEYear'), '1');
+    if (f.kind === 'cycle') h += fld('k100', t('enEK100'), '1') + fld('week', t('enEWeek'), '1');
+    const cats = (M && M.cats) || [];
+    h += '<div class="fld"><label>' + t('enECat') + '</label><select class="inp" data-enf="cat"><option value="">' + t('enECatNone') + '</option>' + cats.filter((c) => !lpEnIsEst(c)).map((c) => '<option value="' + esc(c.id) + '"' + (f.cat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') + '</select></div></div>';
+    // hesap: şu anki ve ortalama güç
+    const e = { kind: f.kind, idle: n('idle'), max: n('max'), off: n('off'), on: n('on'), w: n('w'), year: n('year'), k100: n('k100'), week: n('week') };
+    const st = f.entity ? S[f.entity] : null, now = lpEnEstW(e, st);
+    let calc = '';
+    if (f.kind === 'light') calc = [10, 30, 50, 100].map((p) => '<div><span>' + t('enEBri', { p: p }) + '</span><b>' + esc(lpEnNum(e.idle + (Math.max(e.max, e.idle) - e.idle) * p / 100, 1, this._lang)) + ' W</b></div>').join('') + (st ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '');
+    else if (f.kind === 'onoff') calc = st ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '';
+    else calc = '<div><span>' + t('enEAvg') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div><div class="tot"><span>' + t('enEDay', { k: lpEnNum(now * 24 / 1000, 2, this._lang), y: lpEnNum(now * 8.76, 0, this._lang) }) + '</span><b></b></div>';
+    if (calc) h += '<div class="encalc">' + calc + '</div>';
+    if (f.kind === 'year') h += '<div class="hint">' + t('enEYearT') + '</div>';
+    const sid = D.id || this._enSlug(f.name);
+    h += '<div class="hint">' + t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' }) + '</div>' +
+      (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
+      '<div class="acts">' + (D.id ? '<button class="btn dan' + (D.ask ? ' ask' : '') + '" data-a="enedel"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (D.ask ? t('enEDelQ') : t('enEDel')) + '</button>' : '') + '<span class="grow"></span>' +
+      '<button class="btn pri" data-a="enesave"' + (this._enBusy ? ' disabled' : '') + '>' + t('enESave') + '</button></div></div>';
+    const ents = Object.keys(S).sort();
+    h += '<datalist id="enlights">' + ents.filter((x) => x.indexOf('light.') === 0).map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist>' +
+      '<datalist id="enents">' + ents.filter((x) => /^(light|switch|media_player|fan|climate|input_boolean|binary_sensor|vacuum|humidifier|water_heater)\./.test(x)).map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist>';
+    return h;
+  }
+  _enSlug(name) {
+    const base = String(name || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30) || 'cihaz';
+    const E = this._enEsts(), S = this._hass.states;
+    let id = base, k = 2; while (E[id] || S['sensor.lhd_' + id + '_power']) id = base + '_' + (k++);
+    return id;
+  }
+  // Home Assistant enerji ayarlarında "Cihaz tüketimi" listesine ekle / çıkar (kategori seçildiyse onun içine)
+  _enPrefs(id, name, cat, remove) {
+    const conn = this._hass.connection, stat = 'sensor.lhd_' + id + '_energy';
+    return conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => ({})).then((p) => {
+      const dc = ((p && p.device_consumption) || []).filter((d) => d && d.stat_consumption !== stat);
+      if (!remove) { const o = { stat_consumption: stat, name: name }; if (cat && dc.some((d) => d.stat_consumption === cat)) o.included_in_stat = cat; dc.push(o); }
+      return conn.sendMessagePromise({ type: 'energy/save_prefs', device_consumption: dc });
+    }).then(() => { LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass); });
+  }
+  async _enSave() {
+    const D = this._enE; if (!D) return;
+    const f = D.f, name = String(f.name || '').trim();
+    this._enErr = '';
+    if (!name) { this._enErr = this._t('enENeed'); return this._render(); }
+    const ent = String(f.entity || '').trim();
+    if ((f.kind === 'light' || f.kind === 'onoff') && !/^[a-z0-9_]+\.[a-z0-9_]+$/.test(ent)) { this._enErr = this._t('enENeedEnt'); return this._render(); }
+    const id = D.id || this._enSlug(name), n = (k) => Math.min(50000, lpEnNumOf(f[k]));
+    const e = { name: name.slice(0, 60), kind: f.kind };
+    if (f.kind === 'light') Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent });
+    if (f.kind === 'onoff') Object.assign(e, { off: n('off'), on: n('on'), entity: ent });
+    if (f.kind === 'fixed') e.w = n('w');
+    if (f.kind === 'year') e.year = n('year');
+    if (f.kind === 'cycle') Object.assign(e, { k100: n('k100'), week: Math.min(100, n('week')) });
+    if (f.cat) e.cat = String(f.cat);
+    const E = lhdClone(this._enEsts()); E[id] = e;
+    this._enBusy = true; this._render();
+    try {
+      await this._commit('estimates', E);
+      await this._enPrefs(id, e.name, e.cat, false);
+      this._toast(this._t('enESaved'));
+    } catch (err) { this._toast(this._t('enEPrefErr', { e: (err && err.message) || err }), false); }
+    this._enBusy = false; this._enE = { id: id, f: D.f, ask: false }; this._render();
+  }
+  async _enDel() {
+    const D = this._enE; if (!D || !D.id) return;
+    if (!D.ask) { D.ask = true; return this._render(); }
+    const E = lhdClone(this._enEsts()); delete E[D.id];
+    try { await this._commit('estimates', E); await this._enPrefs(D.id, '', '', true); this._toast(this._t('enEDeleted')); } catch (err) { this._toast(this._t('enEPrefErr', { e: (err && err.message) || err }), false); }
+    this._enE = null; this._render();
+  }
+  _enLook() {
+    const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), L = lpEnLim();
+    const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+    const tg = (key, on) => '<button class="tg' + (on ? ' on' : '') + '" data-entg="' + key + '"></button>';
+    return '<h3 class="enh">' + t('en_look') + '</h3>' +
+      '<div class="srow"><div class="t"><b>' + t('enLim') + '</b><span>' + t('enLimT') + '</span></div><div style="display:flex;flex:0 0 auto">' + L.map((v, i) => '<input class="inp" type="number" min="1" step="50" data-enlim="' + i + '" value="' + esc(v) + '" style="width:80px' + (i ? ';margin-left:6px' : '') + '">').join('') + '</div></div>' +
+      '<div class="srow"><div class="t"><b>' + t('enBadge') + '</b><span>' + t('enBadgeT') + '</span></div>' + seg('energy.badge', lpEnBadge() || 'auto', [['auto', this._t('enB_off')], ['on', this._t('enB_on')], ['always', this._t('enB_always')]]) + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('enTilde') + '</b><span>' + t('enTildeT') + '</span></div>' + tg('tilde', en.tilde !== false) + '</div>' +
+      '<div class="srow"><div class="t"><b>' + t('enUntL') + '</b><span>' + t('enUntLT') + '</span></div>' + tg('untracked', en.untracked !== false) + '</div>';
+  }
   _menuHtml() {
     const m = this._menu; if (!m) return '';
     const t = (k) => esc(this._t(k));
@@ -1090,8 +1360,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const hasCam = Object.keys(this._hass.states || {}).some((e) => e.indexOf('camera.') === 0);
       inner = '<button data-newtab=""><ha-icon class="s16" icon="mdi:tab-plus"></ha-icon>' + t('emptyTab') + '</button>' +
         (hasCam ? '<button data-a="addcamtab" title="' + t('camTabT') + '"><ha-icon class="s16" icon="mdi:cctv"></ha-icon>' + t('camTab') + '</button>' : '') +
+        '<button data-a="addentab" title="' + t('enTabT') + '"><ha-icon class="s16" icon="mdi:lightning-bolt"></ha-icon>' + t('enTab') + '</button>' +
         (areas.length ? '<hr><div class="mh">' + t('fromArea') + '</div>' + areas.map((a) => '<button data-newtab="' + esc(a) + '">' + lpIcon((this._hass.areas[a].icon) || 'mdi:door', 's16') + esc(this._area(a)) + '</button>').join('') : '');
     }
+    if (m.kind === 'addenergy') inner = LP_EN_TYPES.map((x) => '<button data-adden="' + x + '"><ha-icon class="s16" icon="' + LP_EN_IC[x] + '"></ha-icon>' + esc(lpEnT(this._lang, 'k_' + x)) + '</button>').join('');
     if (m.kind === 'addsec') inner = '<div class="mh" style="white-space:normal;max-width:290px;line-height:1.45;text-transform:none;letter-spacing:0;font-weight:500;font-size:12.5px">' + t('secFree') + '</div>' + Object.keys(LHD_TYPES).map((k) => '<button data-newsec="' + k + '"><ha-icon class="s16" icon="' + LHD_TYPES[k].icon + '"></ha-icon><span><b>' + t('t_' + k) + '</b><br><span class="mu" style="font-size:12px">' + t('d_' + k) + '</span></span></button>').join('');
     return '<div class="menu" style="left:' + m.x + 'px;top:' + m.y + 'px;max-height:' + Math.max(200, window.innerHeight - m.y - 20) + 'px;overflow:auto">' + inner + '</div>';
   }
@@ -1121,6 +1393,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (md === 'cardedit') return this._ceHtml();
     if (md === 'report') return this._reportHtml();
     if (md === 'restore') return this._restoreHtml();
+    if (md === 'energy') return this._enPage();
     if (md === 'settings') {
       const s = this._settings();
       const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
@@ -1149,6 +1422,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         '<div class="srow"><div class="t"><b>' + t('hold') + '</b><span>' + t('holdT') + '</span></div>' + seg('hold', lpHoldMode() === 'lec' && !lec ? 'popup' : lpHoldMode(), [['popup', this._t('hPop')], ['ha', this._t('hHa')]].concat(lec ? [['lec', this._t('hLec')]] : [])) + '</div>' +
         (this._adv() ? this._wallsHtml() : '') +
+        '<div class="sh">' + t('sEnergy') + '</div><div class="srow"><div class="t"><b>' + t('enPage') + '</b><span>' + t('enOpenT') + '</span></div><button class="btn" data-a="energy"><ha-icon class="s16" icon="mdi:lightning-bolt"></ha-icon>' + t('enPage') + '</button></div>' +
         '<div class="sh">' + t('sHelp') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('guideT') + '</b><span>' + t('guideS') + '</span></div><button class="btn" data-a="guide"><ha-icon class="s16" icon="mdi:book-open-page-variant-outline"></ha-icon>' + t('guideT') + '</button></div>' +
         '<div class="srow"><div class="t"><b>' + t('repT') + '</b><span>' + t('repS') + '</span></div><button class="btn" data-a="report">' + t('repT') + '</button></div>' +
@@ -1184,7 +1458,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         (stil ? '' :
           step(t('akRooms'), t('akRoomsT'), rooms) +
           step(t('akTabs'), '', '<div class="akgrid">' + opt('home', K.home, 'lhd:room-whole-home', t('akHome'), t('akHomeT')) + opt('other', K.other, 'mdi:dots-horizontal-circle-outline', t('akOther'), t('akOtherT')) + '</div>') +
-          step(t('akWhat'), '', '<div class="akgrid">' + [['lights', 'akL', 'mdi:lightbulb-group'], ['scenes', 'akS', 'lhd:scene-switch'], ['climate', 'akC', 'mdi:thermostat'], ['vacuum', 'akV', 'mdi:robot-vacuum'], ['media', 'akM', 'mdi:speaker'], ['camera', 'akK', 'mdi:cctv']].map((x) => opt('type:' + x[0], K.types[x[0]], x[2], t(x[1]))).join('') + '</div>')) +
+          step(t('akWhat'), '', '<div class="akgrid">' + [['lights', 'akL', 'mdi:lightbulb-group'], ['scenes', 'akS', 'lhd:scene-switch'], ['climate', 'akC', 'mdi:thermostat'], ['vacuum', 'akV', 'mdi:robot-vacuum'], ['media', 'akM', 'mdi:speaker'], ['camera', 'akK', 'mdi:cctv'], ['energy', 'akE', 'mdi:lightning-bolt']].map((x) => opt('type:' + x[0], K.types[x[0]], x[2], t(x[1]))).join('') + '</div>')) +
         step(t('akTablet'), t('akTabletT'),
           sub(t('akLights')) + '<div class="akgrid">' + opt('look:tiles', K.look === 'tiles', 'mdi:view-grid-outline', t('akTiles'), t('akTilesT')) + opt('look:bar', K.look === 'bar', 'mdi:view-sequential-outline', t('akBars'), t('akBarsT')) + '</div>' +
           sub(t('clSt')) + '<div class="akgrid">' + opt('clim:halo', K.clim === 'halo', 'mdi:circle-slice-8', t('clHalo'), t('akHaloT')) + opt('clim:rows', K.clim === 'rows', 'mdi:format-list-bulleted', t('clRows'), t('akRowsT')) + '</div>') +
@@ -1455,6 +1729,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act !== 'deltab' && act !== 'delsec' && act !== 'phresall' && act !== 'phresno' && this._ask) { this._ask = null; }
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
+      // Enerji sayfası
+      if (act === 'energy') return this._enOpen();
+      if (act === 'enbadd') return this._enBillAdd();
+      if (act === 'enenew') { this._enDraft(null); this._enErr = ''; return this._render(); }
+      if (act === 'enesave') return this._enSave();
+      if (act === 'enedel') return this._enDel();
+      const env = g('[data-env]');
+      if (env) { this._env = env.getAttribute('data-env'); this._enErr = ''; const m = this.shadowRoot.querySelector('.enm'); this._render(); const m2 = this.shadowRoot.querySelector('.enm'); if (m2 && m) m2.scrollTop = 0; return; }
+      const ene = g('[data-enest]');
+      if (ene) { this._enDraft(ene.getAttribute('data-enest')); this._enErr = ''; return this._render(); }
+      const enk = g('[data-enk]');
+      if (enk && this._enE) { this._enE.f.kind = enk.getAttribute('data-enk'); return this._render(); }
+      const ebd = g('[data-enbdel]');
+      if (ebd) { const i = +ebd.getAttribute('data-enbdel'), L = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).filter((x, k) => k !== i); return this._setting('energy.bills', L.length ? L : null); }
+      const etg = g('[data-entg]');
+      if (etg) { const k = etg.getAttribute('data-entg'); return this._setting('energy.' + k, lpEnCfg()[k] !== false ? false : null); }
       if (act === 'guide') { this._guideFrom = this._modal === 'settings' ? 'settings' : null; this._gi = this._gi || 0; this._modal = 'guide'; this._menu = null; return this._render(); }
       if (act === 'settings') {
         this._modal = 'settings'; this._menu = null; this._render();
@@ -1462,7 +1752,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (this._narrowNow) { const d = this.shadowRoot.querySelector('.dlg.dock'); if (d && d.scrollIntoView) d.scrollIntoView({ block: 'start' }); }
         return;
       }
-      if (act === 'more' || act === 'addtab' || act === 'addsec') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
+      if (act === 'more' || act === 'addtab' || act === 'addsec' || act === 'addenergy') { const p = at(a); this._menu = this._menu && this._menu.kind === act ? null : { kind: act, x: p.x, y: p.y }; return this._render(); }
       if (act === 'close') {
         if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); }   // simge seçiciden öğe ayarlarına dön
         if (this._modal === 'cardedit' && this._ce && this._ce.im) { this._im = this._ce.im; this._ce = null; this._modal = 'item'; return this._render(); }
@@ -1564,6 +1854,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'lecok') return this._setting('lec_seen', true);
       if (act === 'addlec') return editSec((S) => { S.entities = S.entities || []; S.entities.push({ name: this._t('lecOpen'), icon: 'mdi:creation', color: '#FF6FAE', action: { service: LP_LEC_DOMAIN + '.open' } }); });
       if (act === 'addscph') return editSec((S) => { S.entities = S.entities || []; S.entities.push({ name: this._t('addScPh'), icon: 'mdi:gesture-tap', color: LHD_COLORS[S.entities.filter((x) => lhdKind(x) === 'scene').length % LHD_COLORS.length], action: null }); });
+      if (act === 'addentab') {
+        this._menu = null;
+        const taken = {}; this._work().forEach((x) => { taken[x.id] = 1; });
+        const base = this._lang === 'tr' ? 'enerji' : 'energy';
+        let id = base, k = 2; while (taken[id]) id = base + '-' + (k++);
+        const nw = lhdEnergyTab(this._lang, id);
+        this._tab = id; this._sec = null;
+        return this._edit((T) => { T.push(nw); });
+      }
+      const aen = g('[data-adden]');
+      if (aen) { this._menu = null; const ty = aen.getAttribute('data-adden'); return editSec((S) => { S.entities = (S.entities || []).concat([{ energy: ty }]); }); }
       if (act === 'addcamtab') {
         this._menu = null;
         const taken = {}; this._work().forEach((x) => { taken[x.id] = 1; });
@@ -1596,11 +1897,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const ns = g('[data-newsec]');
       if (ns) {
         const type = ns.getAttribute('data-newsec'), id = lhdId('s'), tgt = this._menu && this._menu.target; this._menu = null;
-        const L = this._lang, titles = { free: '', lights: t(L, 'lights'), scenes: t(L, 'scenes'), climate: tab.area ? upper(L, this._area(tab.area)) : t(L, 'control'), vacuum: upper(L, this._t('t_vacuum')), media: t(L, 'media'), camera: upper(L, this._t('t_camera')) };
+        const L = this._lang, titles = { free: '', lights: t(L, 'lights'), scenes: t(L, 'scenes'), climate: tab.area ? upper(L, this._area(tab.area)) : t(L, 'control'), vacuum: upper(L, this._t('t_vacuum')), media: t(L, 'media'), camera: upper(L, this._t('t_camera')), energy: upper(L, lpEnT(L, 's_energy')) };
         const ncol = lpWeights(tab).length;
         const s = { id: id, type: type, title: titles[type], col: tgt ? tgt.col : Math.min(LHD_TYPES[type].col, ncol - 1) };
         if (tgt && tgt.sub) s.sub = tgt.sub;
-        s.entities = [];
+        s.entities = type === 'energy' ? [{ energy: 'halo' }] : [];
         // karo sayısı yerin genişliğine göre: geniş kolonda 5, dar sütunda daha az (tablet panosunda 56'lık kolonda 5 karo)
         if (type === 'lights' || type === 'free') { const w = lpWeights(tab), sum = w.reduce((a, b) => a + b, 0), sp = lpSplits(tab, w.length)[s.col] || 1;
           s.tile_columns = Math.max(2, Math.min(5, Math.round(w[s.col] / sum / sp * 9))); }
@@ -1829,7 +2130,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akurl')) { this._ak.bg = 'img'; this._ak.bgUrl = el.value.trim(); return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');
-      if (sf) { const v = el.type === 'number' ? (parseInt(el.value, 10) || null) : el.value.trim(); return this._setting(sf, v, true); }
+      if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); return this._setting(sf, v, sf.indexOf('energy.') !== 0); }   // enerji sayfasında hesaplar yenilensin
+      if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { this._enE.f[el.getAttribute('data-enf')] = el.value; return this._render(); }
+      if (el.hasAttribute && el.hasAttribute('data-enlim')) { const L = lpEnLim().slice(), v = parseFloat(String(el.value).replace(',', '.')); if (v > 0) L[+el.getAttribute('data-enlim')] = v; L.sort((x, y) => x - y); return this._setting('energy.limits', L[0] < L[1] && L[1] < L[2] ? L : null, true); }
       if (el.hasAttribute && el.hasAttribute('data-bgurl')) {
         const u = el.value.trim();
         // resim gerçekten açılıyor mu: açılmazsa uyarı (zemin yine kaydedilir, dosya sonradan konabilir)
@@ -1954,6 +2257,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     ai('tap', it.tap); ai('hold', it.hold);
     if (!it.entity && Object.prototype.hasOwnProperty.call(it, 'action')) ai('act', it.action, true);
     if (it.card) f.card = lhdYamlDump(it.card);
+    if (typeof it.energy === 'string') Object.assign(f, { enK: it.energy, enCols: it.cols ? String(it.cols) : '', enChart: it.chart || '', enCount: it.count ? String(it.count) : '', enCat: it.cat || '',
+      enIdle: !!it.hide_idle, enDays: +it.days === 30 ? '30' : '', enUnit: it.unit === 'cost' ? 'cost' : '', enMode: it.mode === 'total' ? 'total' : '', enChips: it.chips !== false, enBars: it.bars !== false });
     if (Object.prototype.hasOwnProperty.call(it, 'pet')) {
       const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}, fd = P.feeder || {};
       Object.assign(f, { pName: P.name || '', pKind: P.kind || 'cat', pIcon: P.icon || '', pMode: P.mode === 'times' ? 'times' : 'interval', pEvery: String(P.every_h || 12),
@@ -2005,6 +2310,24 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       fld(t('heightL'), '<div class="seg">' + [['', this._t('sz_auto')], ['1', this._t('h_rows', { n: 1 })], ['1.5', this._t('h_rows', { n: '1,5' })], ['2', this._t('h_rows', { n: 2 })]].map((o) => '<button data-imseg="height:' + o[0] + '"' + (f.height === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>') +
       actF('tap', t('tapL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']) + actF('hold', t('holdL'), this._t('a_defCard'), ['def', 'more-info', 'toggle', 'service', 'popup', 'none', 'yaml']));
     else if (k === 'sub') body += fld(t('subText'), inp('subtitle', 'BAĞLANTI'));
+    else if (k === 'energy') {
+      const sgE = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + ((f[key] || '') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const tgE = (key, label, sub) => '<div class="srow"><div class="t"><b>' + label + '</b>' + (sub ? '<span>' + sub + '</span>' : '') + '</div><button class="tg' + (f[key] ? ' on' : '') + '" data-imtg="' + key + '"></button></div>';
+      const K = f.enK, M = LP_EN.m;
+      body += fld(t('enKind') + hb('energy'), sgE('enK', LP_EN_TYPES.map((x) => [x, lpEnT(this._lang, 'k_' + x)])));
+      if (K === 'halo') body += tgE('enChips', t('enChips'), t('enChipsT')) + tgE('enBars', t('enBars'), t('enBarsT'));
+      if (K === 'cats') body += fld(t('enCols'), sgE('enCols', [['2', '2'], ['', '3'], ['4', '4']])) + fld(t('enChart'), sgE('enChart', [['', this._t('enC24')], ['7d', this._t('enC7')], ['none', this._t('enCNone')]]));
+      if (K === 'top') {
+        const cats = (M && M.cats) || [];
+        body += fld(t('enCount'), sgE('enCount', [['3', '3'], ['5', '5'], ['', '6'], ['8', '8'], ['10', '10']])) +
+          (cats.length || f.enCat ? fld(t('enCat'), '<select class="inp" data-imf="enCat"><option value="">' + t('enAll') + '</option>' + cats.map((c) => '<option value="' + esc(c.id) + '"' + (f.enCat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') + '</select>') : '') +
+          tgE('enIdle', t('enIdle'), t('enIdleT'));
+      }
+      if (K === 'week') body += fld(t('enDays'), sgE('enDays', [['', '7'], ['30', '30']])) + fld(t('enUnit'), sgE('enUnit', [['', this._t('enKwh')], ['cost', this._t('enCost')]])) + (f.enUnit === 'cost' && !lpEnPrice() ? '<div class="hint">' + t('enCostT') + '</div>' : '');
+      if (K === 'day') body += fld(t('enMode'), sgE('enMode', [['', this._t('enModeCats')], ['total', this._t('enModeTot')]]));
+      if (K === 'standby') body += '<div class="hint">' + t('enSbT') + '</div>';
+      body += '<div class="hint">' + t('enSrcT') + '</div>';
+    }
     else if (k !== 'pet') {
       body += '<div class="row2">' + fld(t('name') + (adv ? hb('tpl') : ''), inp('name', it.entity ? this._ename(it.entity) : this._t('name'))) + '</div>';
       if (k !== 'climate' && k !== 'vacuum' && k !== 'media' && k !== 'camera') body += icf('icon', t('icon'), it.entity ? lpEntIcon(st) : 'mdi:lightbulb-outline');
@@ -2142,13 +2465,23 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         this._commit('pets', pets);
       }
       if (k === 'sub') { it.subtitle = String(f.subtitle || '').trim(); }
+      if (k === 'energy') {
+        const ty = LP_EN_TYPES.indexOf(f.enK) >= 0 ? f.enK : 'halo';
+        it = it.visible ? { energy: ty, visible: it.visible } : { energy: ty };
+        if (ty === 'halo' && !f.enChips) it.chips = false;
+        if (ty === 'halo' && !f.enBars) it.bars = false;
+        if (ty === 'cats') { if (f.enCols) it.cols = +f.enCols; if (f.enChart) it.chart = f.enChart; }
+        if (ty === 'top') { if (f.enCount) it.count = +f.enCount; if (f.enCat) it.cat = f.enCat; if (f.enIdle) it.hide_idle = true; }
+        if (ty === 'week') { if (f.enDays === '30') it.days = 30; if (f.enUnit === 'cost') it.unit = 'cost'; }
+        if (ty === 'day' && f.enMode === 'total') it.mode = 'total';
+      }
       if (k === 'card') {
         setS('height', f.height);
         ['tap', 'hold'].forEach((pre) => { const v = this._imAct(pre); if (v === undefined) delete it[pre]; else it[pre] = v; });
         let c; try { c = lhdYamlParse(f.card || ''); } catch (e) { throw new Error(e.line ? this._t('yamlErrL', { n: e.line }) : this._t('yamlErr', { e: e.message })); }
         if (!c || typeof c !== 'object' || !c.type) throw new Error(this._t('cardNoType'));
         it.card = c;
-      } else if (k !== 'pet' && k !== 'sub') {
+      } else if (k !== 'pet' && k !== 'sub' && k !== 'energy') {
         setS('name', f.name);
         if (k !== 'climate' && k !== 'vacuum' && k !== 'media' && k !== 'camera') setS('icon', f.icon);
         if (k === 'camera') setS('refresh', f.refresh ? parseFloat(f.refresh) : '');
