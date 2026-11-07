@@ -788,11 +788,15 @@ class LemurHomeDashboardCard extends HTMLElement {
     // Efektler (içeride değilse) ve saat kalan kolonların üstünde. Telefonda ve kolon sayısı yetmezse normal şerit.
     // Kolonu az olan sekmede (ör. tek sütunluk Kameralar sekmesi) şerit kaymasın: hizalama yeterli kolonu olan ilk sekmenin
     // kolonlarına göre yapılır; şerit o kolon oranlarıyla ayrı bir ızgarada çizilir (aynı aralıkla, böylece düğmeler aynı yerde kalır).
-    let navCols = !phone && nc.cols > 0 && nc.cols < used.length ? nc.cols : 0, navRef = null;
-    if (!phone && nc.cols > 0 && !navCols) {
+    // Kolonları farklı olan sekmede de (ör. 30/40/30 Enerji, tek sütunluk Kameralar) şerit kaymasın: hizalama her sekmede aynı
+    // referans sekmeye göre yapılır (yeterli kolonu olan ilk sekme). Referans sekmenin kendisi normal ızgarada çizilir.
+    let navCols = 0, navRef = null;
+    if (!phone && nc.cols > 0) {
       const refUsed = (T) => { const w = lpWeights(T), u = []; w.forEach((x, i) => { if ((T.sections || []).some((s) => Math.min(Math.max(0, +s.col || 0), w.length - 1) === i && (s.entities || []).length)) u.push(w[i]); }); return u; };
-      for (let k = 0; k < tabs.length && !navRef; k++) { if (tabs[k].id === tab.id) continue; const u = refUsed(tabs[k]); if (u.length > nc.cols) navRef = u; }
-      if (navRef) navCols = nc.cols;
+      let ref = null;
+      for (let k = 0; k < tabs.length && !ref; k++) { const u = refUsed(tabs[k]); if (u.length > nc.cols) { ref = tabs[k]; navRef = u; } }
+      const same = ref && (ref.id === tab.id || JSON.stringify(navRef) === JSON.stringify(used.map((i) => widths[i])));
+      if (same || !ref) { navRef = null; navCols = nc.cols < used.length ? nc.cols : 0; } else navCols = nc.cols;
     }
     const navPos = (a, b) => (navRef ? 'grid-column:' + a + ' / ' + b + ';grid-row:1;' : 'grid-area:1 / ' + a + ' / 2 / ' + b + ';');
     const nav0 = navCols

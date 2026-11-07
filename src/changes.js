@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.25.1',
+    tr: ['Oda düğmeleri kolona hizalıyken kolonları farklı olan sekmede (ör. Enerji) üst şerit kaymıyor: hizalama her sekmede aynı.'],
+    en: ['With the room buttons aligned to a column, the top bar no longer shifts on tabs with different columns (e.g. Energy).'] },
   { v: '0.25.0',
     tr: ['Enerji sekmesi ve enerji kartları: evin anlık gücü (Halo), kategoriler, şu an en çok çekenler, günlük tüketim, son 24 saat ve bekleme. Veriler Home Assistant\'ın Enerji ayarlarındaki "Cihaz tüketimi"nden gelir. + Sekme → Enerji sekmesi ya da bölümde Enerji kartı.', 'Üst çubukta Enerji sayfası: fiyat son faturadan, tek fiyat ya da kademeli (günlük sınır) ve yıllık sınır takibi; faturalar (gerçek birim fiyat ve panelin ölçmediği pay); güç ölçmeyen cihazlar için tahmini değer (ışık, aç/kapa, sabit, yıllık kWh, çevrim), entegrasyon her biri için güç ve enerji sensörü kurar.', 'Telefonda altta Enerji kategorisi; rehbere Enerji ve Enerji sayfası adımları eklendi.'],
     en: ['Energy tab and energy cards: home power now (Halo), categories, top consumers now, daily usage, last 24 hours and standby. The data comes from "Individual devices" in Home Assistant\'s Energy settings. + Tab → Energy tab, or an Energy card in a section.', 'An Energy page in the top bar: price from the last bill, one price or tiered (daily limit) and yearly limit tracking; bills (the real unit price and the share the dashboard does not measure); estimates for devices that do not measure power (light, on/off, fixed, yearly kWh, cycles), with a power and an energy sensor made by the integration.', 'An Energy category at the bottom on phones; the guide has new Energy and Energy page steps.'] },
