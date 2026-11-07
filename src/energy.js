@@ -813,3 +813,47 @@ function lhdEnergyTab(lang, id) {
   if (lpEnSunOn(sol) || lpEnBatOn(sol)) t.sections[1] = { id: id + '-f', type: 'energy', title: T('flow'), col: 0, grow: 2, entities: [{ energy: 'flow' }] };
   return t;
 }
+// ---- enerji değerleri başka bölümlerde (v0.28.2): ışık karosu, senaryo düğmesi ya da değer satırı gibi durur ----
+// Panelin hesapladığı değerler sanal sensör olarak hass.states'e eklenir (sensor.lhdx_*); Home Assistant'ta yoktur.
+// Değerler öğesi gibi eklenir (Cihaz ekle → Değerler), bütün görünümleri (karo, düğme, satır, halo) ve boyutları kullanır.
+const LP_EN_VIRT = [
+  ['ev', 'mdi:home-lightning-bolt-outline', 'power', 'W'], ['bugun', 'mdi:calendar-today', 'energy', 'kWh'], ['bugun_tl', 'mdi:cash', 'monetary', '$'],
+  ['ay_tl', 'mdi:cash-multiple', 'monetary', '$'], ['ay_kwh', 'mdi:counter', 'energy', 'kWh'], ['donem_sonu', 'mdi:calendar-end', 'monetary', '$'],
+  ['yil', 'mdi:gauge', null, '%'], ['olcmeyen', 'mdi:help-circle-outline', 'power', 'W']
+];
+const LP_EN_VN = {
+  tr: { ev: 'Ev şu an', bugun: 'Bugün', bugun_tl: 'Bugünkü tutar', ay_tl: 'Bu ayın tutarı', ay_kwh: 'Bu dönem', donem_sonu: 'Dönem sonu tahmini', yil: 'Yıllık sınır', olcmeyen: 'Ölçülmeyen' },
+  en: { ev: 'Home now', bugun: 'Today', bugun_tl: 'Today\'s cost', ay_tl: 'This month\'s cost', ay_kwh: 'This period', donem_sonu: 'Period end estimate', yil: 'Yearly limit', olcmeyen: 'Not measured' }
+};
+const lpEnIsVirt = (id) => typeof id === 'string' && id.indexOf('sensor.lhdx_') === 0;
+// değerler (yüklü enerji verisinden); veri yoksa boş
+function lpEnVirtVals(h) {
+  const M = LP_EN.m; if (!M || M.demo || !M.cats) return null;
+  const S = (h && h.states) || {}, out = {}, N = M.days ? M.days.t.length : 0, price = lpEnUnit(M);
+  const tot = lpEnTotal(S, M); if (tot !== null && tot !== undefined) out.ev = Math.round(tot);
+  const tk = N ? lpEnDayTot(M, N - 1) : null; if (tk !== null) out.bugun = Math.round(tk * 100) / 100;
+  if (M.days && price) {
+    const mk = lpEnMonthKwh(M), md = lpEnMonthDays(), mc = lpEnMonthCost(mk, md, M), P = lpEnPeriod(), D = 86400000;
+    const from = P ? P.from : (() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d.getTime(); })(), el = Math.max(1, (Date.now() - from) / D);
+    out.ay_tl = Math.round(mc.tl); out.ay_kwh = Math.round(mk);
+    out.donem_sonu = Math.round(lpEnMonthCost(mk / el * md, md, M).tl);
+    if (tk !== null) out.bugun_tl = Math.round((lpEnMode() === 'tier' ? mc.tl - lpEnMonthCost(Math.max(0, mk - tk), md, M).tl : tk * price) * 100) / 100;
+  }
+  const yk = lpEnYear(M); if (yk) out.yil = Math.round(yk / lpEnYearLimit() * 100);
+  try { const C = lpElCtx(h, M, pickLang(h)); if (C.unt > 0) out.olcmeyen = Math.round(C.unt); } catch (e) {}
+  return out;
+}
+// hass'ın kopyası, sanal sensörlerle (aynı değer aynı nesne: panel boşuna yeniden çizmesin)
+function lpEnVirt(h) {
+  if (!h || !h.states) return h;
+  const V = lpEnVirtVals(h), lang = pickLang(h), cur = lpEnMoney(h, 1, lang).replace(/[\d.,\s\u00a0]/g, '') || (h.config && h.config.currency) || 'TRY', add = {}, C = LP_EN.vs || (LP_EN.vs = {});
+  LP_EN_VIRT.forEach((x) => {
+    const id = 'sensor.lhdx_' + x[0], v = V && V[x[0]] !== undefined ? String(V[x[0]]) : 'unavailable', o = C[id];
+    if (o && o.state === v && o._l === lang) { add[id] = o; return; }
+    const a = { friendly_name: (LP_EN_VN[lang === 'tr' ? 'tr' : 'en'] || LP_EN_VN.en)[x[0]], icon: x[1], unit_of_measurement: x[3] === '$' ? cur : x[3], lhd_energy: true };
+    if (x[2]) a.device_class = x[2];
+    const now = new Date().toISOString();
+    C[id] = add[id] = { entity_id: id, state: v, attributes: a, last_changed: now, last_updated: now, context: { id: '' }, _l: lang };
+  });
+  return Object.assign({}, h, { states: Object.assign({}, h.states, add) });
+}

@@ -267,3 +267,30 @@ async def test_plug_and_bridge_busy_and_average(hass: HomeAssistant, fast, monke
     with pytest.raises(ValueError, match="bridge_busy"):
         L.start("lb", "light", "light.b", "sensor.s", 1)
     await L.async_stop()
+
+
+async def test_light_learn_goes_on_after_restart(hass: HomeAssistant, fast):
+    """A light run is saved after every step; after a restart it goes on from the next step (no standby or probe again)."""
+    def w(a):
+        return round(1 + 19 * a.get("brightness", 255) / 255, 2)
+    calls = await _fake_light(hass, ["color_temp"], w)
+    saved = {}
+    L = LRN.Learning(hass, None, lambda runs: saved.update(runs=runs))
+    r = L.start("x", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.i >= 5), r.status()
+    await L.async_stop()                      # Home Assistant stops: the run is cut
+    await asyncio.sleep(0.05)                 # the cut task puts the light back
+    snap = saved["runs"]["x"]
+    assert snap["kind"] == "light" and snap["i"] >= 5 and snap["steps"] and snap["standby"] == 0.3
+    n0 = len(calls)
+    L2 = LRN.Learning(hass, saved["runs"], lambda runs: saved.update(runs=runs))   # after the restart
+    r2 = L2.runs["x"]
+    assert r2.i == snap["i"] and r2.resumed
+    L2.resume_saved()
+    assert await _until(lambda: r2.phase in ("done", "error")), r2.status()
+    assert r2.phase == "done" and r2.result["n"] == len(snap["plan"]["k"]) * 8
+    after = calls[n0:]
+    assert after[0][0] == "on" and after[0][1] == {"entity_id": "light.x", "brightness_pct": snap["steps"][snap["i"]]["b"], "color_temp_kelvin": snap["steps"][snap["i"]]["k"]}   # straight to the next step: no standby, no probe
+    assert "x" not in saved["runs"]            # finished: no longer kept
+    st = r2.status()
+    assert st["eta"] == 0 and "eta_col" in st and "eta_fx" in st

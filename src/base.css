@@ -777,3 +777,7 @@
 .grz { position: absolute; right: 2px; bottom: 2px; width: 26px; height: 26px; border-radius: 8px; cursor: nwse-resize; touch-action: none; z-index: 3; }
 .grz::after { content: ""; position: absolute; right: 7px; bottom: 7px; width: 10px; height: 10px; border-right: 2px solid #F2A93B; border-bottom: 2px solid #F2A93B; }
 .gcell > .box, .gcell > .box.spread, .gcell > .box.mix, .gcell > .box.fit { overflow: hidden; min-height: 0; }
+/* telefonda görünümlü enerji kartlarının yüksekliği karta göre */
+.phone .box > .enc.enlook.en-battery, .phone .box > .enc.enlook.en-tips { height: 180px; }
+.phone .box > .enc.enlook.en-meter, .phone .box > .enc.enlook.en-tariff, .phone .box > .enc.enlook.en-week, .phone .box > .enc.enlook.en-day { height: 230px; }
+.phone .box > .enc.enlook.en-top, .phone .box > .enc.enlook.en-cats { height: 300px; }

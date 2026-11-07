@@ -411,8 +411,9 @@ if (typeof customElements !== 'undefined' && !customElements.get('lhd-en-mini'))
     _draw() {
       const k = this.getAttribute('k') || 'halo', lk = this.getAttribute('look') || '', W = +this.getAttribute('w') || 420, H = +this.getAttribute('h') || 321, lang = LP_EL_MINI.lang;
       const h = LP_EL_MINI.h || { states: {} }, real = LP_EN.m && !LP_EN.m.demo && LP_EN.m.cats && LP_EN.m.cats.length ? LP_EN.m : null;
-      const M = real || lpEnDemo(lang), hh = real ? h : Object.assign({}, h, { states: {}, lhdEnDemo: true }), it = { energy: k };
-      if (lk) it.look = lk;
+      const M = real || lpEnDemo(lang), hh = real ? h : Object.assign({}, h, { states: {}, lhdEnDemo: true });
+      let it = { energy: k }; try { const x = JSON.parse(this.getAttribute('it') || 'null'); if (x && x.energy === k) it = x; } catch (e) {}   // kartın şimdiki ayarlarıyla
+      if (lk) it.look = lk; else delete it.look;
       let body = ''; try { body = lpEnCard(hh, M, it, lang, false); } catch (e) { body = ''; }
       const sr = this.shadowRoot || this.attachShadow({ mode: 'open' });
       sr.innerHTML = '<style>' + CSS + ':host{display:block;position:relative;overflow:hidden;pointer-events:none}.mini{position:absolute;left:0;top:0;width:' + W + 'px;height:' + H + 'px;transform-origin:0 0;display:flex}.mini>.box{flex:1 1 auto}</style>' +

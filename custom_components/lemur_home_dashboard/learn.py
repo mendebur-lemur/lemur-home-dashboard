@@ -8,6 +8,8 @@ LightLearn  runs inside Home Assistant (the tablet may be closed): standby, a sh
 StateLearn  listens: the plug's watts and the device's state together, a time-weighted average per state.
 AvgLearn    an always-on device (fridge, router): only the start is kept (across restarts); the average comes from
             Home Assistant's own records of the plug.
+A light run is saved after every step (the plan, what was measured, the next step) and goes on after a restart
+from where it was: standby and the probe are not repeated.
 None writes the device record: the admin page saves the result. A plug serves one run at a time, and two lights
 on the same bridge are not measured at once (their commands would queue up).
 """
@@ -78,6 +80,10 @@ class LightLearn(_Base):
         self.fx_names: list[str] = []
         self.skip_fx = False
         self.bridge: str | None = None
+        self.on_step = None   # called after every step (the run is saved)
+        self.resumed = False
+        self.started_steps = 0
+        self.t_steps = 0.0   # seconds spent on measured steps since start/resume (for the time left)
 
     # ---- control ----
     def start(self) -> None:
@@ -110,9 +116,41 @@ class LightLearn(_Base):
         left = n - self.i
         fxw = self._fxw()
         eta = sum((fxw + 3) if q["t"] in ("fx", "fxb") else (self.interval * 3 + 2) for q in self.steps[self.i:]) + (n - len(self.steps)) * (fxw + 3)
+        # kalan süre: ölçülen adımların gerçek ortalamasıyla (yeterince adım varsa), renkler ve efektler ayrı
+        rest = self.steps[self.i:]
+        n_col = sum(1 for q in rest if q["t"] not in ("fx", "fxb"))
+        n_fx = sum(1 for q in rest if q["t"] in ("fx", "fxb")) + (n - len(self.steps))
+        done = self.i - self.started_steps
+        per = self.t_steps / done if done >= 5 and self.t_steps > 0 else None
+        eta_col = n_col * (per if per and self.phase != "fx" else self.interval * 3 + 2)
+        eta_fx = n_fx * (fxw + 3)
         st.update(i=self.i, n=n, cur=self.cur, w=self.last_w, standby=self.standby, probe=self.probe, plan=self.plan, res=self.res,
-                  repeats=self.repeats, eta=round(eta if left > 0 else 0), result=self.result, fx_n=len(self.fx_names), skip_fx=self.skip_fx)
+                  repeats=self.repeats, eta=round(eta_col + eta_fx if left > 0 else 0), eta_col=round(eta_col), eta_fx=round(eta_fx), n_col=n_col, n_fx=n_fx,
+                  every=self._interval_seen(), resumed=self.resumed, result=self.result, fx_n=len(self.fx_names), skip_fx=self.skip_fx)
         return st
+
+    # ---- saved form (goes on after a restart) ----
+    KEEP = ("interval", "prev", "steps", "i", "standby", "probe", "plan", "res", "repeats", "settle_s", "fx_names", "skip_fx", "bridge", "started")
+
+    def to_dict(self) -> dict:
+        d = {k: getattr(self, k) for k in self.KEEP}
+        d.update(kind="light", entity=self.entity, plug=self.plug)
+        return d
+
+    @classmethod
+    def from_dict(cls, hass: HomeAssistant, rid: str, d: dict) -> "LightLearn":
+        r = cls(hass, rid, str(d.get("entity") or ""), str(d.get("plug") or ""), float(d.get("interval") or 2.0))
+        for k in cls.KEEP:
+            if k in d and k != "interval":
+                setattr(r, k, d[k])
+        r.res = r.res or {}
+        r.resumed = bool(r.steps)
+        return r
+
+    def _interval_seen(self) -> float | None:
+        """How often the plug sends a new reading (from the settle times), shown on the page."""
+        v = [x for x in self.settle_s[-20:] if x > 0]
+        return round(sorted(v)[len(v) // 2] / 3, 1) if v else None
 
     # ---- light and plug ----
     def _attrs(self) -> dict:
@@ -279,12 +317,26 @@ class LightLearn(_Base):
             raise RuntimeError("external")
         return w
 
+    async def _wait_ready(self) -> bool:
+        """After a restart the light and the plug come up a little later."""
+        for _ in range(180):
+            if self.hass.states.get(self.entity) is not None and EST.watts_of(self.hass.states.get(self.plug)) is not None:
+                return True
+            await asyncio.sleep(1)
+        return False
+
     async def _run(self) -> None:
+        if self.resumed and not await self._wait_ready():
+            self.phase, self.msg = "error", "no_light"
+            return
         st = self.hass.states.get(self.entity)
         if st is None:
             self.phase, self.msg = "error", "no_light"
             return
         a = dict(st.attributes)
+        if self.resumed:
+            await self._loop()
+            return
         self.prev = {"state": st.state, "brightness": a.get("brightness"), "color_mode": a.get("color_mode"), "color_temp_kelvin": a.get("color_temp_kelvin"),
                      "hs_color": list(a.get("hs_color")) if a.get("hs_color") else None, "effect": a.get("effect")}
         try:
@@ -307,6 +359,24 @@ class LightLearn(_Base):
             diff = (max(ws) - min(ws)) / max(ws) if ws and max(ws) > 0 else 0.0
             self._make_plan(diff)
             self.plan["diff"] = round(diff, 3)
+        except asyncio.CancelledError:
+            self.phase = "stopped"
+            await self._restore()
+            raise
+        except Exception as err:  # noqa: BLE001 - shown on the page; the light goes back
+            self.phase = "error"
+            self.msg = self.msg or str(err)[:80]
+            _LOGGER.info("Learning %s stopped: %s", self.entity, err)
+            await self._restore()
+            return
+        if self.on_step:
+            self.on_step()
+        await self._loop()
+
+    async def _loop(self) -> None:
+        """Every step of the plan from self.i on (also after a restart)."""
+        self.started_steps = self.i
+        try:
             self.phase = "run"
             while self.i < len(self.steps):
                 q = self.steps[self.i]
@@ -315,10 +385,15 @@ class LightLearn(_Base):
                         break
                     self.phase = "fx"
                 self.cur = q
+                t0 = time.monotonic()
                 w = await self._step(q)
+                if q["t"] not in ("fx", "fxb"):
+                    self.t_steps += time.monotonic() - t0
                 self.last_w = w
                 self._put(q, w)
                 self.i += 1
+                if self.on_step:
+                    self.on_step()
                 if self.i == len(self.steps) and self.res.get("fxl") and not any(x["t"] == "fxb" for x in self.steps) and not self.skip_fx:
                     # brightness curve of effects: the strongest, the weakest and the middle one at 75 / 50 / 25 / 10%
                     order = sorted(self.res["fxl"], key=lambda e: self.res["fxl"][e])
@@ -344,6 +419,8 @@ class LightLearn(_Base):
         finally:
             if self.phase != "paused":
                 await self._restore()
+            if self.on_step and self.phase in ("done", "error"):
+                self.on_step()   # bitti: kayıttan düşer
 
 
     def _fx_table(self) -> dict | None:
@@ -527,13 +604,33 @@ class Learning:
         self.hass = hass
         self.runs: dict[str, _Base] = {}
         self._save = save
+        self._resume: list[LightLearn] = []
         for rid, v in (saved or {}).items():
-            if isinstance(v, dict) and v.get("plug"):
+            if not isinstance(v, dict) or not v.get("plug"):
+                continue
+            if v.get("kind") == "light":   # a light run cut by a restart goes on (started once Home Assistant is up)
+                try:
+                    r = LightLearn.from_dict(hass, rid, v)
+                except (TypeError, ValueError):
+                    continue
+                r.on_step = self._persist
+                r.phase = "start"
+                self.runs[rid] = r
+                self._resume.append(r)
+            else:
                 self.runs[rid] = AvgLearn(hass, rid, str(v.get("entity") or ""), str(v["plug"]), float(v.get("started") or time.time()))
+
+    def resume_saved(self) -> None:
+        """Start the light runs that were cut by a restart."""
+        for r in self._resume:
+            r.start()
+        self._resume = []
 
     def _persist(self) -> None:
         if self._save:
-            self._save({k: {"plug": r.plug, "entity": r.entity, "started": r.started} for k, r in self.runs.items() if isinstance(r, AvgLearn) and r.phase == "listen"})
+            out = {k: {"plug": r.plug, "entity": r.entity, "started": r.started} for k, r in self.runs.items() if isinstance(r, AvgLearn) and r.phase == "listen"}
+            out.update({k: r.to_dict() for k, r in self.runs.items() if isinstance(r, LightLearn) and r.phase in ACTIVE and r.steps})
+            self._save(out)
 
     def _bridge(self, entity: str) -> str | None:
         e = er.async_get(self.hass).async_get(entity)
@@ -561,6 +658,7 @@ class Learning:
                 raise ValueError("bridge_busy")
             run: _Base = LightLearn(self.hass, rid, entity, plug, interval)
             run.bridge = br
+            run.on_step = self._persist
         elif kind == "avg":
             run = AvgLearn(self.hass, rid, entity, plug)
         else:

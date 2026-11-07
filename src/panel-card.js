@@ -88,7 +88,21 @@ function lpBarSet(h, id, v) {
   if (d === 'fan') return v > 0 ? h.callService('fan', 'set_percentage', { entity_id: id, percentage: v }) : h.callService('fan', 'turn_off', { entity_id: id });
 }
 const LP_BAR_COLOR = '#F0A93B';
+// panoda sanal enerji değeri kullanılan bir öğe var mı (sekmeler değişince yeniden bakılır)
+function lpEnVirtUsed() {
+  const T = STORE.data && STORE.data.tabs; if (!T) return false;
+  if (LP_EN.vu && LP_EN.vu.t === T) return LP_EN.vu.v;
+  const v = JSON.stringify(T).indexOf('sensor.lhdx_') >= 0; LP_EN.vu = { t: T, v: v }; return v;
+}
+// enerji kartı olan ilk sekmeye git
+function lpEnGoTab() {
+  const T = (STORE.data && STORE.data.tabs) || [], tab = T.filter((x) => (x.sections || []).some((s) => s.type === 'energy'))[0]; if (!tab) return;
+  const seg = location.pathname.split('/').filter((x) => x), base = '/' + (seg[0] || 'lemur-home-dashboard');
+  history.pushState(null, '', base + '/' + tab.id);
+  const ev = new Event('location-changed', { bubbles: true, composed: true }); ev.detail = { replace: false }; window.dispatchEvent(ev);
+}
 function lpFire(node, type, detail) {
+  if (type === 'hass-more-info' && detail && lpEnIsVirt(detail.entityId)) { lpEnGoTab(); return; }   // sanal enerji değeri: Enerji sekmesine git
   const ev = new Event(type, { bubbles: true, composed: true });
   ev.detail = detail;
   node.dispatchEvent(ev);
@@ -142,7 +156,8 @@ function lpGFill(L, C, rows) {
 // bölümlerin yerleri: { id: {x, y, w, h} }
 function lpGridPos(T, C, ids) {
   const S = (T.sections || []).filter((s) => !ids || ids.indexOf(s.id) >= 0), out = {};
-  const wide = S.map((s) => { const g = s.g || {}; return { id: s.id, s: s, x: +g.x || 0, y: +g.y || 0, w: +g.w || 4, h: +g.h || 4 }; });
+  // yeri olmayan (yeni eklenen) bölüm en alta, kartın en küçüğünden küçük olmayan 4×4 ile girer
+  const wide = S.map((s) => { const g = s.g || {}, m = lpGMin(s, 12); return { id: s.id, s: s, x: +g.x || 0, y: g.y === undefined ? 999 : +g.y || 0, w: +g.w || Math.max(4, m[0]), h: +g.h || Math.max(4, m[1]) }; });
   if (C === 12) { lpGSettle(wide, null, 12); wide.forEach((o) => { out[o.id] = { x: o.x, y: o.y, w: o.w, h: o.h }; }); return out; }
   if (T.gm_own && S.every((s) => s.gm)) { const L = S.map((s) => ({ id: s.id, x: +s.gm.x || 0, y: +s.gm.y || 0, w: +s.gm.w || 3, h: +s.gm.h || 4 })); lpGSettle(L, null, C); L.forEach((o) => { out[o.id] = o; }); return out; }
   // dikey: geniş düzenin okuma sırasıyla, genişlik yarıya (en az kartın en küçüğü), boş ilk yere
@@ -516,6 +531,7 @@ class LemurHomeDashboardCard extends HTMLElement {
 
   set hass(h) {
     const first = !this._hass;
+    if (h && !(this._config && this._config.demo) && lpEnVirtUsed()) { lpEnEnsure(h); h = lpEnVirt(h); }   // enerji değerleri (sanal sensörler) panoda kullanılıyorsa
     this._hass = h;
     // Otomatik kur önizlemesi (hayali ev): sahte hass ile çizilir, panonun kayıtlı verisine ve LEC'e dokunulmaz
     if (first && this._config && this._config.demo) { this._render(); return; }

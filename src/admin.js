@@ -8,7 +8,7 @@ const ADM = {
   tr: {
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
     undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}',
-    layout: 'Düzen', layCols: 'Sütunlar', layGrid: 'Serbest ızgara', layGridT: 'Kutuyu ⠿ ile taşı, sağ alt köşesinden büyüt; ötekiler yer açar. Dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur.', gFit: 'Ekrana sığdır', gScr: 'Kaydırılabilir', gmAuto: 'Dikey düzeni otomatiğe döndür', gmAutoT: 'Dikey ekrandaki elle yapılan düzen silinir, geniş düzenden yeniden türetilir', tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
+    layout: 'Düzen', layCols: 'Sütunlar', layGrid: 'Serbest ızgara', layGridT: 'Kutuyu ⠿ ile taşı, sağ alt köşesinden büyüt; ötekiler yer açar. Dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur.', gFit: 'Ekrana sığdır', gScr: 'Kaydırılabilir', gmAuto: 'Dikey düzeni otomatiğe döndür', gPos: '{w}×{h}', gFill: 'Boşlukları doldur', gFillT: 'Kutular sağa ve aşağı uzayıp boş hücreleri kapatır', gRowsT: 'Ekranın kaç satıra bölüneceği: çok kutu varsa artır', gmAutoT: 'Dikey ekrandaki elle yapılan düzen silinir, geniş düzenden yeniden türetilir', tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda otomatik', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
@@ -16,7 +16,7 @@ const ADM = {
     d_lights: 'Işık, priz, perde karoları', d_scenes: 'Script, sahne ve otomasyon düğmeleri', d_climate: 'Klima ve petek kartları (Yaz/Kış)', d_vacuum: 'Robot süpürge kartları', d_media: 'TV ve hoparlörler',
     n_items: '{n} öğe', addDev: 'Ekle', addPh: 'Boş karo', addScene: 'Düğme ekle', name: 'Ad', target: 'Çalıştırılacak', noItems: 'Henüz öğe yok.',
     tSensor: 'Sıcaklık sensörü', hSensor: 'Nem sensörü', fromDevice: 'Cihazdan', noOutdoor: 'Dış sıcaklık yok', noLink: 'Birlikte kontrol yok', linkT: 'Birlikte kontrol edilen cihaz (ör. aynı odadaki ikinci petek)', outdoorT: 'Dış sıcaklık sensörü (petek kartı ısıtma ihtiyacını gösterir)', addScPh: 'Boş düğme', kind: 'Tür', k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek',
-    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_phone: 'Telefon', scr_here: 'Bu ekran',
+    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Geniş 16:9', scr_tabp: 'Büyük dikey', scr_phone: 'Telefon', scr_here: 'Bu ekran',
     pickT: 'Ekle', search: 'Ara: ad, alan ya da varlık kimliği', cancel: 'Vazgeç', addN: 'Ekle ({n})', added: 'Ekli', noArea2: 'Alanı olmayanlar', nothing: 'Eşleşen cihaz yok.',
     sHelp: 'Yardım', repT: 'Sorun bildir', repS: 'Sürüm ve cihaz bilgisiyle GitHub\'da kayıt açar; ne olduğunu yazman yeter', repQ: 'Ne oldu?', repPh: 'Ne yaptın, ne bekliyordun, ne oldu? Örnek: Salon sekmesinde ışık çubuğunu kaydırınca parlaklık değişmiyor.', repInfo: 'Kayda eklenecek bilgiler', repInfoS: 'Kişisel bilgi yok: oda, cihaz ve kişi adları, adresin ya da hesabın eklenmez.', repNoGh: 'GitHub hesabın yoksa metni kopyalayıp geliştiriciye ilet.', repCopy: 'Metni kopyala', repCopied: 'Kopyalandı', repGh: 'GitHub\'da aç', rWhat: 'Ne oldu?', rInfoH: 'Bilgiler', rPanel: 'Pano', rInt: 'entegrasyon', rHa: 'Home Assistant', rBrowser: 'Tarayıcı', rApp: 'HA uygulaması', rScreen: 'Ekran', rTouch: 'dokunmatik', rNoTouch: 'dokunmatik değil', rCanvas: 'kanvas', rLang: 'Dil', rLayout: 'Düzen', rAuto: 'otomatik', rTabs: 'sekme', rSecs: 'bölüm', rItems: 'öğe', rKinds: 'Öğe türleri', rLook: 'Görünüm', rLec: 'Light Effect Card', rErr: 'Son hatalar', rNoErr: 'yok', sBackup: 'Yedek', bkDown: 'Yedeği indir', bkDownS: 'Sekmeler, bölümler ve ayarlar tek dosyada', bkUp: 'Yedekten geri yükle', bkUpS: 'Bir yedek dosyası seç; önce onay sorulur, şu anki düzenin yerine geçer', bkQ: 'Yedek geri yüklensin mi?', bkW: '{d} tarihli yedek (v{v}): {n} sekme, {s} bölüm. Şu anki sekmeler, bölümler ve ayarlar bu yedekle değiştirilir. Geri al ile dönebilirsin.', bkVer: 'Yedek v{v} ile alınmış; yine de yüklenebilir.', bkSvc: 'Bu yedekteki hayvanlar şu servisleri kendiliğinden çalıştırır:', twinL: 'Yedek kontrol', twinNone: 'Yok', twinT: 'Lamba cevap vermezse komut buradan da gönderilir', sWalls: 'Duvar anahtarları', wallsT: 'Röle yalnız sinyal veriyorsa elle basınca seçilen lamba açılır/kapanır', wallSw: 'Anahtar', wallLight: 'Lamba', wallBr: 'Parlaklık %', wallK: 'Kelvin', wallAdd: 'Anahtar ekle', wallDel: 'Kaldır', wallPick: 'Seç…', wallNone: 'Henüz duvar anahtarı yok.', wallAuto: 'Bu anahtar için HA\'da ayrıca bir otomasyon varsa kapat: {n}', bkYes: 'Geri yükle', bkSaved: 'Yedek indirildi', bkOk: 'Yedek geri yüklendi', bkErr: 'Bu dosya bir pano yedeği değil', newsT: 'Yenilikler', newsV: 'v{v} ile gelenler', newsOld: 'Önceki sürümler', newsAll: 'Bütün notlar GitHub\'da', newsOk: 'Tamam', newsLink: 'Yenilikler', sVer: 'Sürüm ve güncelleme', updT: 'Sürüm', updInst: 'Yüklü: v{v}', updCheck: 'Güncellemeleri denetle', updChecking: 'Denetleniyor…', updOk: 'güncel', updAt: 'son kontrol {t}', updNew: 'v{v} hazır', updNotes: 'Yenilikler', updNoHacs: 'HACS ya da Marketplace ile kurulmadığı için buradan yüklenemiyor', updGo: 'Güncelle', updGh: 'GitHub’da aç', updIng: 'v{v} indiriliyor…', updDone: 'v{v} indirildi. Home Assistant yeniden başlayınca devreye girer.', updRestart: 'Yeniden başlat', updAsk: 'Home Assistant yeniden başlasın mı? Bir iki dakika ışık kontrolü ve otomasyonlar durur.', updYes: 'Evet, yeniden başlat', updRest: 'Yeniden başlatılıyor… Açılınca sayfa kendiliğinden yenilenir.', updErr: 'Denetlenemedi: {e}', updAgain: 'Tekrar denetle', s_board: 'Pano', s_look: 'Görünüm', s_screen: 'Ekran', s_info: 'Bilgi',
     lang: 'Dil', lAuto: 'Otomatik', season: 'Mevsim', seasonT: 'İklim bölümünde Yaz klimaları, Kış petekleri gösterir. Otomatik: Mayıs-Eylül yaz.', sAuto: 'Otomatik', sSum: 'Yaz', sWin: 'Kış',
@@ -54,7 +54,7 @@ const ADM = {
     enAuto: 'Kategorilerin toplamı', enSb: 'Bekleme gücü', enSbT: 'Seçilmezse son 24 saatin en düşük toplam gücü', enSbAuto: 'Son 24 saatin en düşüğü', enLim: 'Halo renk sınırları (W)', enLimT: 'Yeşil, sarı, turuncu; üstü kırmızı',
     enBadge: 'Işık karosunda watt', enBadgeT: 'Güç ölçen ışık ve prizlerin karosunun köşesinde anlık watt', enB_off: 'Kapalı', enB_on: 'Açıkken', enB_always: 'Hep',
     enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enChNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
-    enLook: 'Görünüm', enSort: 'Sıra', enSortFix: 'Kategoriler\'deki sıra', enSortW: 'Çok çekene göre', enLoose: 'Kategorisiz karosu', enLooseT: 'Kategoriye konmamış cihazların toplamı', enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
+    pfEnergy: 'Enerji', addEnPick: 'Eklenecek kartı seç; görünümünü sonra kartın ayarından değiştirirsin', lrLeftCol: 'Renkler ve beyaz tonlar ({n} adım)', lrLeftFx: 'Efektler ({n} adım)', lrEvery: 'Prizin yeni değer gönderme sıklığı', lrEveryV: '~{s} sn', lrResumed: 'Yeniden başlatmadan sonra kaldığı yerden sürüyor', enLook: 'Görünüm', enSort: 'Sıra', enSortFix: 'Kategoriler\'deki sıra', enSortW: 'Çok çekene göre', enLoose: 'Kategorisiz karosu', enLooseT: 'Kategoriye konmamış cihazların toplamı', enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
     enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Cihazlar, kategoriler, güneş, fiyat, faturalar ve ipuçları kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
     enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Bu yıl', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
     enPrMode: 'Fiyat', enPrBill: 'Faturadan', enPrSingle: 'Tek fiyat', enPrTier: 'Kademeli', enPrBillT: 'Son fatura: {k} kWh, {t} → 1 kWh {u}. Yeni fatura girildikçe güncellenir.', enPrBillNo: 'Faturalar bölümüne bir fatura girince birim fiyat ondan hesaplanır (vergiler ve sabit bedeller dahil).',
@@ -134,7 +134,7 @@ const ADM = {
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
     undo: 'Undo', undoK: 'Undo (Ctrl+Z)', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}',
-    layout: 'Layout', layCols: 'Columns', layGrid: 'Free grid', layGridT: 'Move a box by its ⠿ handle, resize it from its lower right corner; the others make room. In portrait the layout drops to 6 columns by itself; change it there and that screen gets its own layout.', gFit: 'Fit the screen', gScr: 'Scrollable', gmAuto: 'Reset portrait layout', gmAutoT: 'Drops the hand-made portrait layout and derives it from the wide one again', tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
+    layout: 'Layout', layCols: 'Columns', layGrid: 'Free grid', layGridT: 'Move a box by its ⠿ handle, resize it from its lower right corner; the others make room. In portrait the layout drops to 6 columns by itself; change it there and that screen gets its own layout.', gFit: 'Fit the screen', gScr: 'Scrollable', gmAuto: 'Reset portrait layout', gPos: '{w}×{h}', gFill: 'Fill gaps', gFillT: 'Boxes grow right and down to close empty cells', gRowsT: 'How many rows the screen is split into: raise it for many boxes', gmAutoT: 'Drops the hand-made portrait layout and derives it from the wide one again', tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Auto on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
@@ -142,7 +142,7 @@ const ADM = {
     d_lights: 'Light, plug and cover tiles', d_scenes: 'Script, scene and automation buttons', d_climate: 'Air conditioner and radiator cards (summer/winter)', d_vacuum: 'Robot vacuum cards', d_media: 'TVs and speakers',
     n_items: '{n} items', addDev: 'Add', addPh: 'Empty tile', addScene: 'Add button', name: 'Name', target: 'Runs', noItems: 'No items yet.',
     tSensor: 'Temperature sensor', hSensor: 'Humidity sensor', fromDevice: 'From device', noOutdoor: 'No outdoor temperature', noLink: 'No linked device', linkT: 'Device controlled together (e.g. a second radiator in the same room)', outdoorT: 'Outdoor temperature sensor (radiator card shows heating demand)', addScPh: 'Empty button', kind: 'Type', k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator',
-    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_phone: 'Phone', scr_here: 'This screen',
+    scr_tab16: 'Tablet 16:10', scr_tab43: 'Tablet 4:3', scr_wide: 'Wide 16:9', scr_tabp: 'Large portrait', scr_phone: 'Phone', scr_here: 'This screen',
     pickT: 'Add', search: 'Search: name, area or entity id', cancel: 'Cancel', addN: 'Add ({n})', added: 'Added', noArea2: 'No area', nothing: 'No matching device.',
     sHelp: 'Help', repT: 'Report a problem', repS: 'Opens a GitHub issue with the version and device details; you only write what happened', repQ: 'What happened?', repPh: 'What did you do, what did you expect, what happened? Example: swiping a light bar on the Living room tab does not change the brightness.', repInfo: 'Details added to the issue', repInfoS: 'Nothing personal: no room, device or person names, address or account.', repNoGh: 'No GitHub account? Copy the text and send it to the developer.', repCopy: 'Copy text', repCopied: 'Copied', repGh: 'Open on GitHub', rWhat: 'What happened?', rInfoH: 'Details', rPanel: 'Dashboard', rInt: 'integration', rHa: 'Home Assistant', rBrowser: 'Browser', rApp: 'HA app', rScreen: 'Screen', rTouch: 'touch', rNoTouch: 'no touch', rCanvas: 'canvas', rLang: 'Language', rLayout: 'Layout', rAuto: 'automatic', rTabs: 'tabs', rSecs: 'sections', rItems: 'items', rKinds: 'Item kinds', rLook: 'Look', rLec: 'Light Effect Card', rErr: 'Recent errors', rNoErr: 'none', sBackup: 'Backup', bkDown: 'Download backup', bkDownS: 'Tabs, sections and settings in one file', bkUp: 'Restore a backup', bkUpS: 'Pick a backup file; you are asked first, then it replaces the current layout', bkQ: 'Restore this backup?', bkW: 'Backup from {d} (v{v}): {n} tabs, {s} sections. The current tabs, sections and settings are replaced by it. Undo brings them back.', bkVer: 'The backup was made with v{v}; it can still be restored.', bkSvc: 'The pets in this backup run these services on their own:', twinL: 'Backup control', twinNone: 'None', twinT: 'If the lamp does not answer, the command is also sent through this', sWalls: 'Wall switches', wallsT: 'If the relay only gives a signal, pressing it by hand toggles the chosen lamp', wallSw: 'Switch', wallLight: 'Lamp', wallBr: 'Brightness %', wallK: 'Kelvin', wallAdd: 'Add switch', wallDel: 'Remove', wallPick: 'Pick…', wallNone: 'No wall switches yet.', wallAuto: 'If HA also has an automation for this switch, turn it off: {n}', bkYes: 'Restore', bkSaved: 'Backup downloaded', bkOk: 'Backup restored', bkErr: 'This file is not a dashboard backup', newsT: 'What\'s new', newsV: 'New in v{v}', newsOld: 'Earlier versions', newsAll: 'All notes on GitHub', newsOk: 'OK', newsLink: 'What\'s new', sVer: 'Version and updates', updT: 'Version', updInst: 'Installed: v{v}', updCheck: 'Check for updates', updChecking: 'Checking…', updOk: 'up to date', updAt: 'checked {t}', updNew: 'v{v} is ready', updNotes: 'What’s new', updNoHacs: 'Not installed with HACS or Marketplace, so it cannot be installed from here', updGo: 'Update', updGh: 'Open on GitHub', updIng: 'Downloading v{v}…', updDone: 'v{v} is downloaded. It takes effect when Home Assistant restarts.', updRestart: 'Restart', updAsk: 'Restart Home Assistant? Light control and automations stop for a minute or two.', updYes: 'Yes, restart', updRest: 'Restarting… The page reloads by itself when it is back.', updErr: 'Could not check: {e}', updAgain: 'Check again', s_board: 'Dashboard', s_look: 'Appearance', s_screen: 'Screen', s_info: 'About',
     lang: 'Language', lAuto: 'Automatic', season: 'Season', seasonT: 'The climate section shows air conditioners in summer, radiators in winter. Automatic: May-September is summer.', sAuto: 'Automatic', sSum: 'Summer', sWin: 'Winter',
@@ -180,7 +180,7 @@ const ADM = {
     enAuto: 'Sum of categories', enSb: 'Standby power', enSbT: 'If none is picked, the lowest total power of the last 24 hours', enSbAuto: 'Lowest of the last 24 hours', enLim: 'Halo colour limits (W)', enLimT: 'Green, yellow, orange; above is red',
     enBadge: 'Watts on light tiles', enBadgeT: 'Live watts in the corner of light and plug tiles that measure power', enB_off: 'Off', enB_on: 'When on', enB_always: 'Always',
     enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enChNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
-    enLook: 'Look', enSort: 'Order', enSortFix: 'Order in Categories', enSortW: 'Highest first', enLoose: 'Uncategorized tile', enLooseT: 'The total of devices without a category', enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
+    pfEnergy: 'Energy', addEnPick: 'Pick the card to add; change its look later in the card settings', lrLeftCol: 'Colors and white tones ({n} steps)', lrLeftFx: 'Effects ({n} steps)', lrEvery: 'How often the plug sends a reading', lrEveryV: '~{s} s', lrResumed: 'Going on from where it was after a restart', enLook: 'Look', enSort: 'Order', enSortFix: 'Order in Categories', enSortW: 'Highest first', enLoose: 'Uncategorized tile', enLooseT: 'The total of devices without a category', enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
     enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Devices, categories, solar, price, bills and tips on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
     enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'This year', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
     enPrMode: 'Price', enPrBill: 'From the bill', enPrSingle: 'One price', enPrTier: 'Tiered', enPrBillT: 'Last bill: {k} kWh, {t} → {u} per kWh. Updated with every new bill.', enPrBillNo: 'Enter a bill under Bills and the unit price comes from it (taxes and fixed charges included).',
@@ -297,7 +297,7 @@ const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', camera: 't_camera', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs', energy: 't_energy' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
-const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['phone', 390, 844], ['here', 0, 0]];
+const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['tabp', 1200, 1920], ['phone', 390, 844], ['here', 0, 0]];
 const LHD_MAXCOLS = 6;
 const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
 const lhdClone = (x) => JSON.parse(JSON.stringify(x));
@@ -395,6 +395,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   set hass(h) {
     const first = !this._hass;
+    if (h && STORE.data && STORE.data.tabs) { lpEnEnsure(h); h = lpEnVirt(h); }   // enerji değerleri Cihaz ekle'de seçilebilsin
     this._hass = h;
     if (first) {
       LEC.load(h);
@@ -827,7 +828,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const b = lhdIsObj(this._settings().bright) ? this._settings().bright : {}, on = b.on === true;
     return '<div class="srow"><div class="t"><b>' + t('bb') + '</b><span>' + t('bbT') + '</span></div>' + tg('bright.on', on) + '</div>' +
       (!on ? '' :
-        '<div class="srow"><div class="t"><b>' + t('bbLook') + '</b><span>' + t('bbLookT') + '</span></div>' + seg('bright.look', b.look === 'box' ? 'box' : 'auto', [['auto', this._t('bbHidden')], ['box', this._t('bbBox')]]) + '</div>' +
+        '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('bbLook') + '</b><span>' + t('bbLookT') + '</span></div>' + seg('bright.look', b.look === 'box' ? 'box' : 'auto', [['auto', this._t('bbHidden')], ['box', this._t('bbBox')]]) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('bbIcon') + '</b><span>' + t('bbIconT') + '</span></div>' + tg('bright.icon', b.icon === true) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('bbVal') + '</b><span>' + t('bbValT') + '</span></div>' + seg('bright.value', b.value === 'always' ? 'always' : 'auto', [['auto', this._t('bbDrag')], ['always', this._t('bbAlways')]]) + '</div>');
   }
@@ -1042,7 +1043,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv">' + lpIcon(tab.icon || 'mdi:door') + '</div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label>' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
       '<div class="fld"><label>' + t('layout') + '</label><div class="acts"><div class="seg"><button data-a="laycols"' + (tab.layout === 'grid' ? '' : ' class="on"') + '>' + t('layCols') + '</button><button data-a="laygrid"' + (tab.layout === 'grid' ? ' class="on"' : '') + '>' + t('layGrid') + '</button></div>' +
-        (tab.layout === 'grid' ? '<div class="seg"><button data-a="gfit"' + (tab.gfit === false ? '' : ' class="on"') + '>' + t('gFit') + '</button><button data-a="gscr"' + (tab.gfit === false ? ' class="on"' : '') + '>' + t('gScr') + '</button></div>' + (tab.gm_own ? '<button class="btn sm" data-a="gmauto" title="' + t('gmAutoT') + '">' + t('gmAuto') + '</button>' : '') : '') + '</div>' + (tab.layout === 'grid' ? '<div class="hint">' + t('layGridT') + '</div>' : '') + '</div>' +
+        (tab.layout === 'grid' ? '<div class="seg"><button data-a="gfit"' + (tab.gfit === false ? '' : ' class="on"') + '>' + t('gFit') + '</button><button data-a="gscr"' + (tab.gfit === false ? ' class="on"' : '') + '>' + t('gScr') + '</button></div>' + (tab.gfit === false ? '' : '<div class="seg" title="' + t('gRowsT') + '">' + [8, 10, 12, 16, 20].map((n) => '<button data-grows="' + n + '"' + ((+tab.grows || 12) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div>') + '<button class="btn sm" data-a="gfill" title="' + t('gFillT') + '"><ha-icon class="s16" icon="mdi:arrow-expand-all"></ha-icon>' + t('gFill') + '</button>' + (tab.gm_own ? '<button class="btn sm" data-a="gmauto" title="' + t('gmAutoT') + '">' + t('gmAuto') + '</button>' : '') : '') + '</div>' + (tab.layout === 'grid' ? '<div class="hint">' + t('layGridT') + '</div>' : '') + '</div>' +
       (tab.layout === 'grid' ? '' : '<div class="fld"><label title="' + t('colHint') + '">' + t('cols') + ' · ' + W.map((x) => Math.round(x / wsum * 100)).join(' / ') + '</label><div class="acts">' +
         '<button class="btn sm ic" data-a="coldel" title="' + t('colDel') + '"' + (W.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:minus"></ha-icon></button>' +
         '<span class="btn sm" style="pointer-events:none;min-width:38px">' + W.length + '</span>' +
@@ -1053,7 +1054,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn sm dan' + (this._ask === 'deltab' ? ' ask' : '') + '" data-a="deltab"' + (tabs.length < 2 ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'deltab' ? t('sure') : t('delTab')) + '</button></div>' : '';
 
     const ncols = W.length;
-    const colName = (s) => this._colName(Math.min(s.col || 0, ncols - 1), ncols) + (SP[Math.min(s.col || 0, ncols - 1)] > 1 ? ' · ' + (Math.min(s.sub || 0, SP[Math.min(s.col || 0, ncols - 1)] - 1) + 1) : '');
+    const colName = (s) => tab.layout === 'grid' ? this._t('gPos', { w: (s.g && s.g.w) || '?', h: (s.g && s.g.h) || '?' }) : this._colName(Math.min(s.col || 0, ncols - 1), ncols) + (SP[Math.min(s.col || 0, ncols - 1)] > 1 ? ' · ' + (Math.min(s.sub || 0, SP[Math.min(s.col || 0, ncols - 1)] - 1) + 1) : '');
     // özet: içindeki öğe türleri ("Işıklar 7 · İklim 2"); boşsa "0 öğe"
     const summary = (s) => { const k = lhdKinds(s), ks = Object.keys(k); return ks.length ? ks.map((x) => this._t(LHD_KIND_KEY[x]) + ' ' + k[x]).join(' · ') : this._t('n_items', { n: 0 }); };
     const secsShown = tab ? (phE ? lhdPhoneOrder(tab, this._phOrd(tab)) : (tab.sections || [])) : [];
@@ -1110,7 +1111,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _phLookHtml() {
     const t = (k, v) => esc(this._t(k, v));
     const pc = lpPhoneCfg(), st = this._phStyle();
-    const seg = (attr, cur, opts) => '<div class="seg">' + opts.map((o) => '<button ' + attr + ' data-v="' + esc(o[0]) + '"' + (String(cur) === String(o[0]) ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+    const PHK = { 'data-phst="icon_style"': 'icon_style', 'data-phst="climate_style"': 'clim', 'data-phset="nav"': 'phone.nav', 'data-phset="lights"': 'phone.lights' };
+    const seg = (attr, cur, opts) => lhdSegX((v) => attr + ' data-v="' + esc(v) + '"', cur, opts.map((o) => (o[0] === '' && attr.indexOf('data-phst') === 0 ? [o[0], o[1], o[2], lhdThSame()] : o)), PHK[attr]);
     const own = (on) => (on ? ' <i class="phb">' + t('phOwn') + '</i>' : '');
     const bgk = st.bg && st.bg.mode === 'fx' ? 'fx:' + st.bg.fx : st.bg && st.bg.mode ? st.bg.mode : '';
     const sw = '<div class="phbgs"><button class="phsw same' + (bgk ? '' : ' on') + '" data-phbg="" title="' + t('phStSame') + '">' + t('phStSame') + '</button>' +
@@ -1142,8 +1144,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       (Object.keys(o).length ? '<button class="btn sm" data-a="phressec">' + t('phReset') + '</button>' : '') + '</div>';
     if (o.hide) return h + '<div class="hint">' + t('phHiddenSec') + '</div></div>';
     if (kinds.tile) {
-      h += '<div class="fld"><label>' + t('phLook') + badge(!!o.look) + '</label><div class="seg">' + [['', 'phLookSame'], ['tiles', 'phLookTiles'], ['rows', 'phLookRows']].map((x) => '<button data-phlook="' + x[0] + '"' + ((o.look || '') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>';
-      if (o.look !== 'rows') h += '<div class="fld"><label>' + t('phCols') + badge(!!o.cols) + '</label><div class="seg">' + [0, 2, 3, 4, 5].map((n) => '<button data-phcols="' + n + '"' + ((+o.cols || 0) === n ? ' class="on"' : '') + '>' + (n ? n : t('phColsAuto')) + '</button>').join('') + '</div></div>';
+      h += '<div class="fld"><label>' + t('phLook') + badge(!!o.look) + '</label>' + lhdSegX((v) => 'data-phlook="' + v + '"', o.look || '', [['', this._t('phLookSame'), '', lhdThSame()], ['tiles', this._t('phLookTiles')], ['rows', this._t('phLookRows')]], 'phlook') + '</div>';
+      if (o.look !== 'rows') h += '<div class="fld"><label>' + t('phCols') + badge(!!o.cols) + '</label>' + lhdSegX((v) => 'data-phcols="' + v + '"', +o.cols || 0, [0, 2, 3, 4, 5].map((n) => [n, n ? String(n) : this._t('phColsAuto'), '', n ? lhdTh('cols:' + n) : lhdThSame()]), 'cols') + '</div>';
     }
     if (list.length) {
       const hid = Array.isArray(o.hide_items) ? o.hide_items : [];
@@ -1230,13 +1232,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       (LEC.installed(this._hass) ? '<button class="btn sm" data-a="addlec"><ha-icon class="s16" icon="mdi:creation"></ha-icon>' + t('lecOpen') + '</button>' : '') + '</div>';
     // karo görünümü: bölümde karo varsa (ya da bölüm boşsa) gösterilir
     const kinds = lhdKinds(s), tilesHere = !!kinds.tile || !list.length;
-    const lookHtml = tilesHere ? '<div class="fld"><label>' + t('look') + '</label><div class="seg">' + [['tile', 'lookTile'], ['bar', 'lookBar'], ['phone', 'lookPhone']].map((x) => '<button data-look="' + x[0] + '" title="' + t(x[1] + 'T') + '"' + ((s.look || 'tile') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
+    const thIts = this._thItems(list);
+    const lookHtml = tilesHere ? '<div class="fld"><label>' + t('look') + '</label>' + lhdSegX((v) => 'data-look="' + v + '"', s.look || 'tile', [['tile', 'lookTile'], ['bar', 'lookBar'], ['phone', 'lookPhone']].map((x) => [x[0], this._t(x[1]), this._t(x[1] + 'T'), lhdThLook(x[0], thIts)])) + '</div>' +
       '<div class="row2">' + (s.look !== 'bar' ? '<div class="fld" style="flex:0 0 auto"><label>' + t('tileCols') + '</label><div class="seg">' + [2, 3, 4, 5, 6].map((n) => '<button data-tc="' + n + '"' + ((s.tile_columns || 5) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') +
       (s.look === 'bar' || s.look === 'phone' ? '<div class="fld" style="flex:0 0 auto"><label>' + t('barCols') + '</label><div class="seg">' + [1, 2, 3].map((n) => '<button data-bc="' + n + '"' + ((s.bar_columns || ((kinds.tile || 0) > 12 ? 3 : 2)) === n ? ' class="on"' : '') + '>' + n + '</button>').join('') + '</div></div>' : '') + '</div>' : '';
     const camHtml = kinds.camera ? '<div class="fld"><label title="' + t('camColsT') + '">' + t('camCols') + '</label><div class="seg">' + [0, 1, 2, 3, 4].map((n) => '<button data-cc="' + n + '"' + ((+s.cam_columns || 0) === n ? ' class="on"' : '') + '>' + (n ? n : t('camAuto')) + '</button>').join('') + '</div></div>' +
       '<div class="fld"><label>' + t('camRefS') + '</label><div class="seg">' + [[5, '5 sn'], [0, '10 sn'], [30, '30 sn'], [60, '1 dk']].map((o) => '<button data-cr="' + o[0] + '"' + ((+s.cam_refresh || 0) === o[0] ? ' class="on"' : '') + '>' + esc(this._lang === 'tr' ? o[1] : o[1].replace('sn', 's').replace('dk', 'min')) + '</button>').join('') + '</div><div class="hint">' + t('camRefST') + '</div></div>' : '';
     return '<div class="ed"><div class="row2"><div class="fld"><label>' + t('secTitle') + '</label><input class="inp" data-f="sec.title" value="' + esc(s.title || '') + '" placeholder="' + t('titleOpt') + '"></div>' +
-      '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div>' + subSeg + '</div>' +
+      (tab.layout === 'grid' ? '' : '<div class="fld" style="flex:0 0 auto"><label>' + t('column') + '</label>' + colSeg + '</div>' + subSeg) + '</div>' +
       lookHtml + camHtml + (this._adv() ? this._secBoxHtml(s) : '') + body + '<div class="acts"><span class="grow"></span><button class="btn sm dan' + (this._ask === 'delsec' ? ' ask' : '') + '" data-a="delsec"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (this._ask === 'delsec' ? t('sure') : t('delSec')) + '</button></div></div>';
   }
 
@@ -1254,10 +1257,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   // bölümün kutu ayarları: doldurma (içeriğe göre / kutuyu doldur) ve hizalama (üst / orta / eşit dağıt)
   _secBoxHtml(s) {
     const t = (k) => esc(this._t(k));
-    const seg = (attr, cur, opts) => '<div class="seg">' + opts.map((o) => '<button ' + attr + '="' + o[0] + '"' + (cur === o[0] ? ' class="on"' : '') + (o[2] ? ' title="' + esc(o[2]) + '"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
-    return '<div class="row2"><div class="fld" style="flex:0 0 auto"><label>' + t('fillL') + this._hb('fill') + '</label>' + seg('data-sfill', s.fill ? '1' : '', [['', this._t('fillC')], ['1', this._t('fillF'), this._t('fillT')]]) + '</div>' +
-      (s.fill ? '' : '<div class="fld" style="flex:0 0 auto"><label>' + t('alignL') + '</label>' + seg('data-salign', s.align === 'center' || s.align === 'spread' ? s.align : '', [['', this._t('alTop')], ['center', this._t('alCenter')], ['spread', this._t('alSpread')]]) + '</div>') +
-      '<div class="fld" style="flex:0 0 auto"><label>' + t('gapL') + '</label>' + seg('data-sgap', typeof s.gap === 'number' ? String(s.gap) : '', [['', this._t('gapAuto')], ['0', '0'], ['6', '6'], ['12', '12'], ['18', '18'], ['24', '24']]) + '</div></div>';
+    const seg = (attr, cur, opts) => lhdSegX((v) => attr + '="' + v + '"', cur, opts, { 'data-sfill': 'fill', 'data-salign': 'align', 'data-sgap': 'gap' }[attr]);
+    return '<div class="row2"><div class="fld" style="flex:1 1 100%"><label>' + t('fillL') + this._hb('fill') + '</label>' + seg('data-sfill', s.fill ? '1' : '', [['', this._t('fillC')], ['1', this._t('fillF'), this._t('fillT')]]) + '</div>' +
+      (s.fill ? '' : '<div class="fld" style="flex:1 1 100%"><label>' + t('alignL') + '</label>' + seg('data-salign', s.align === 'center' || s.align === 'spread' ? s.align : '', [['', this._t('alTop')], ['center', this._t('alCenter')], ['spread', this._t('alSpread')]]) + '</div>') +
+      '<div class="fld" style="flex:1 1 100%"><label>' + t('gapL') + '</label>' + seg('data-sgap', typeof s.gap === 'number' ? String(s.gap) : '', [['', this._t('gapAuto')], ['0', '0'], ['6', '6'], ['12', '12'], ['18', '18'], ['24', '24']]) + '</div></div>';
   }
 
   // ---- Enerji sayfası (üst çubukta Enerji): özet, veri kaynağı, fiyat ve tarife, faturalar, tahmini cihazlar, görünüm ----
@@ -1687,6 +1690,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (run.plan && run.plan.b) h += '<div class="hint">' + t('lrPlan', { d: Math.round((run.plan.diff || 0) * 100), n: run.n }) + '</div>';
     h += this._lrnGrid(run.res, cur) + this._lrnFx(run.res && run.res.fxl, run.fx_n, fxCur ? cur.e : null) + '</div><div class="lrside"><div class="lrbig"><b>' + (run.w === null || run.w === undefined ? '–' : esc(lpEnNum(run.w, 1, this._lang)) + '<small>W</small>') + '</b></div><div class="hint lrnow">' + esc(ph === 'paused' ? this._t('lrPaused') : now) + '</div>' +
       '<div class="lrbar"><i style="width:' + (run.n ? run.i / run.n * 100 : 0).toFixed(1) + '%"></i></div><div class="encalc"><div><span>' + t('lrDone') + '</span><b>' + run.i + ' / ' + (run.n || '…') + '</b></div><div><span>' + t('lrLeft') + '</span><b>~' + esc(this._lrnEta(run.eta || 0)) + '</b></div>' +
+      (run.eta_fx > 0 && run.eta_col > 0 ? '<div class="sub2"><span>' + t('lrLeftCol', { n: run.n_col }) + '</span><b>~' + esc(this._lrnEta(run.eta_col)) + '</b></div><div class="sub2"><span>' + t('lrLeftFx', { n: run.n_fx }) + '</span><b>~' + esc(this._lrnEta(run.eta_fx)) + '</b></div>' : '') +
+      (run.every ? '<div class="sub2"><span>' + t('lrEvery') + '</span><b>' + t('lrEveryV', { s: this._enNum(run.every, run.every < 10 ? 1 : 0) }) + '</b></div>' : '') +
+      (run.resumed ? '<div class="sub2"><span>' + t('lrResumed') + '</span><b></b></div>' : '') +
       (run.standby !== null && run.standby !== undefined ? '<div><span>' + t('lrStandby') + '</span><b>' + esc(lpEnNum(run.standby, 1, this._lang)) + ' W</b></div>' : '') + (run.repeats ? '<div><span>' + t('lrRepeats') + '</span><b>' + run.repeats + '</b></div>' : '') + '</div>' +
       '<div class="hint">' + t('lrBgNote') + '</div></div></div>' +
       '<div class="acts"><button class="btn" data-a="lrcancel">' + t('lrCancel') + '</button><span class="grow"></span>' + (run.fx_n && !run.skip_fx ? '<button class="btn" data-a="lrskipfx" title="' + t('lrSkipFxT') + '">' + t('lrSkipFx') + '</button>' : '') + '<button class="btn" data-a="' + (ph === 'paused' ? 'lrresume' : 'lrpause') + '">' + t(ph === 'paused' ? 'lrResume' : 'lrPause') + '</button><button class="btn" data-a="lrclose">' + t('lrBg') + '</button></div>';
@@ -2235,7 +2241,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _enLook() {
     const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), L = lpEnLim();
-    const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+    const seg = (path, cur, opts) => lhdSegX((v) => 'data-set="' + path + '" data-val="' + esc(v) + '"', cur, opts, path === 'nav.cols' ? 'nav' : path);
     const tg = (key, on) => '<button class="tg' + (on ? ' on' : '') + '" data-entg="' + key + '"></button>';
     return '<h3 class="enh">' + t('en_look') + '</h3>' +
       '<div class="srow"><div class="t"><b>' + t('enLim') + '</b><span>' + t('enLimT') + '</span></div><div style="display:flex;flex:0 0 auto">' + L.map((v, i) => '<input class="inp" type="number" min="1" step="50" data-enlim="' + i + '" value="' + esc(v) + '" style="width:80px' + (i ? ';margin-left:6px' : '') + '">').join('') + '</div></div>' +
@@ -2257,7 +2263,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<button data-a="addentab" title="' + t('enTabT') + '"><ha-icon class="s16" icon="mdi:lightning-bolt"></ha-icon>' + t('enTab') + '</button>' +
         (areas.length ? '<hr><div class="mh">' + t('fromArea') + '</div>' + areas.map((a) => '<button data-newtab="' + esc(a) + '">' + lpIcon((this._hass.areas[a].icon) || 'mdi:door', 's16') + esc(this._area(a)) + '</button>').join('') : '');
     }
-    if (m.kind === 'addenergy') inner = LP_EN_TYPES.map((x) => '<button data-adden="' + x + '"><ha-icon class="s16" icon="' + LP_EN_IC[x] + '"></ha-icon>' + esc(lpEnT(this._lang, 'k_' + x)) + '</button>').join('');
+    if (m.kind === 'addenergy') {   // kart türleri canlı küçük önizlemeyle
+      LP_EL_MINI.h = this._hass; LP_EL_MINI.lang = this._lang;
+      const W = Math.min(600, window.innerWidth - 24);
+      return '<div class="menu enmenu" style="left:' + Math.max(12, Math.min(m.x, window.innerWidth - W - 12)) + 'px;top:' + m.y + 'px;width:' + W + 'px;max-height:' + Math.max(240, window.innerHeight - m.y - 20) + 'px;overflow:auto"><div class="mh">' + t('addEnPick') + '</div><div class="enmg">' +
+        LP_EN_TYPES.map((x) => '<button data-adden="' + x + '"><div class="mk"><lhd-en-mini k="' + x + '"></lhd-en-mini></div><b><ha-icon class="s16" icon="' + LP_EN_IC[x] + '"></ha-icon>' + esc(lpEnT(this._lang, 'k_' + x)) + '</b><span>' + esc(lpEnT(this._lang, 'd_' + x)) + '</span></button>').join('') + '</div></div>';
+    }
     if (m.kind === 'addsec') inner = '<div class="mh" style="white-space:normal;max-width:290px;line-height:1.45;text-transform:none;letter-spacing:0;font-weight:500;font-size:12.5px">' + t('secFree') + '</div>' + Object.keys(LHD_TYPES).map((k) => '<button data-newsec="' + k + '"><ha-icon class="s16" icon="' + LHD_TYPES[k].icon + '"></ha-icon><span><b>' + t('t_' + k) + '</b><br><span class="mu" style="font-size:12px">' + t('d_' + k) + '</span></span></button>').join('');
     return '<div class="menu" style="left:' + m.x + 'px;top:' + m.y + 'px;max-height:' + Math.max(200, window.innerHeight - m.y - 20) + 'px;overflow:auto">' + inner + '</div>';
   }
@@ -2269,7 +2280,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="' + (LHD_TYPES[sec.type] || LHD_TYPES.free).icon + '"></ha-icon></div><h2>' + t('pickT') + ' → ' + esc(sec.title || this._t('t_' + (LHD_TYPES[sec.type] ? sec.type : 'free'))) + '</h2>' +
         '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
         '<div class="db" style="padding-bottom:4px;flex:none;overflow:visible"><input class="inp" data-q placeholder="' + t('search') + '" value="' + esc(this._q) + '">' +
-        '<div class="seg pf" style="margin-top:8px">' + [['all', 'pfAll'], ['lights', 'pfTile'], ['scenes', 't_scenes'], ['values', 't_values'], ['climate', 't_climate'], ['vacuum', 't_vacuum'], ['media', 't_media'], ['camera', 't_camera']].map((x) => '<button data-pf="' + x[0] + '"' + ((this._pf || 'all') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
+        '<div class="seg pf" style="margin-top:8px">' + [['all', 'pfAll'], ['lights', 'pfTile'], ['scenes', 't_scenes'], ['values', 't_values'], ['energy', 'pfEnergy'], ['climate', 't_climate'], ['vacuum', 't_vacuum'], ['media', 't_media'], ['camera', 't_camera']].map((x) => '<button data-pf="' + x[0] + '"' + ((this._pf || 'all') === x[0] ? ' class="on"' : '') + '>' + t(x[1]) + '</button>').join('') + '</div></div>' +
         '<div class="db"><div class="plist">' + this._pickList(sec) + '</div></div>' +
         '<div class="df"><button class="btn" data-a="close">' + t('cancel') + '</button><button class="btn pri" data-a="pickadd"' + (this._picked.length ? '' : ' disabled') + '>' + t('addN', { n: this._picked.length }) + '</button></div></div></div>';
     }
@@ -2290,7 +2301,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (md === 'energy') return this._enPage();
     if (md === 'settings') {
       const s = this._settings();
-      const seg = (path, cur, opts) => '<div class="seg">' + opts.map((o) => '<button data-set="' + path + '" data-val="' + esc(o[0]) + '"' + (cur === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const seg = (path, cur, opts) => lhdSegX((v) => 'data-set="' + path + '" data-val="' + esc(v) + '"', cur, opts, path === 'nav.cols' ? 'nav' : path);
       const tg = (path, on) => '<button class="tg' + (on ? ' on' : '') + '" data-tg="' + path + '"></button>';
       const k = s.kiosk || {}, cv = s.canvas || {};
       const lec = !!(this._hass.config && (this._hass.config.components || []).indexOf('lemur_light_effects') >= 0);
@@ -2298,7 +2309,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="sh">' + t('sVer') + '</div>' + this._updRow() +   // en üstte (Light Effect Card ile aynı)
         '<div class="sh">' + t('s_board') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('lang') + '</b></div>' + seg('language', s.language || 'auto', [['auto', this._t('lAuto')], ['tr', 'Türkçe'], ['en', 'English']]) + '</div>' +
-        '<div class="srow"><div class="t"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
+        '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><b>' + t('season') + '</b><span>' + t('seasonT') + '</span></div>' + seg('season', s.season || 'auto', [['auto', this._t('sAuto')], ['summer', this._t('sSum')], ['winter', this._t('sWin')]]) + '</div>' +
         '<div class="sh">' + t('s_look') + '</div>' +
         // arka plan, ışık ve iklim görünümü, telefon ve efekt düğmesi Stil seç'te (önizlemeyle); burada yalnız oraya giden kart
         '<div class="srow stl"><div class="stli"><ha-icon icon="mdi:palette-outline"></ha-icon></div><div class="t"><b>' + t('akST') + '</b><span>' + t('stlT') + '</span></div><button class="btn pri" data-a="stilsec">' + t('stlGo') + '</button></div>' +
@@ -2382,7 +2393,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _pickList(sec) {
     const S = this._hass.states, ents = this._hass.entities || {}, devs = this._hass.devices || {};
     // bölüm serbest: her tür cihaz eklenebilir; üstteki süzgeç sadece listeyi daraltır
-    const pf = this._pf || 'all', doms = pf === 'all' ? LHD_ALL_DOMAINS : pf === 'values' ? LHD_VALUE_DOMAINS : (pf === 'lights' ? LHD_TYPES.lights.domains.concat(['lock']) : LHD_TYPES[pf].domains.concat(pf === 'scenes' ? ['button', 'input_button'] : []));
+    const pf = this._pf || 'all', doms = pf === 'all' ? LHD_ALL_DOMAINS : pf === 'values' || pf === 'energy' ? LHD_VALUE_DOMAINS : (pf === 'lights' ? LHD_TYPES.lights.domains.concat(['lock']) : LHD_TYPES[pf].domains.concat(pf === 'scenes' ? ['button', 'input_button'] : []));
     const have = {};
     (sec.entities || []).forEach((x) => {
       if (typeof x === 'string') { have[x] = 1; return; }
@@ -2394,7 +2405,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     });
     const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
     const q = this._q.toLowerCase().trim();
-    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)))
+    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)) && (pf !== 'energy' || lpEnIsVirt(id) || /^sensor\.lhd_kat_.*_power$/.test(id)))
       .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
     const lecHtml = pf === 'all' || pf === 'scenes' ? this._lecGroups(sec, have, q) : '';
     if (!ids.length) return lecHtml || '<div class="empty">' + esc(this._t('nothing')) + '</div>';
@@ -2902,6 +2913,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'coldel') return editTab((T) => { const w = lpWeights(T), n = w.length; if (n < 2) return; const sum = w.reduce((a, b) => a + b, 0), keep = w.slice(0, -1), ks = keep.reduce((a, b) => a + b, 0);
         T.columns = keep.map((x) => Math.round(x * sum / ks * 100) / 100); T.sections.forEach((s) => { if ((s.col || 0) > n - 2) { s.col = n - 2; delete s.sub; } });
         if (T.splits) T.splits = lpSplits(T, n - 1); lhdFitCols(T, this._cw()); lhdFitSplits(T, this._cw()); });
+      const grb = g('[data-grows]');
+      if (grb) { const n = +grb.getAttribute('data-grows'); return editTab((T) => { if (n === 12) delete T.grows; else T.grows = n; }); }
       const spb = g('[data-split]');
       if (spb) { const p = spb.getAttribute('data-split').split(':'), i = +p[0], v = +p[1];
         return editTab((T) => { const sp = lpSplits(T, lpWeights(T).length); sp[i] = v; T.splits = sp; T.sections.forEach((s) => { if ((s.col || 0) === i && (s.sub || 0) > v - 1) { if (v > 1) s.sub = v - 1; else delete s.sub; } }); lhdFitCols(T, this._cw()); lhdFitSplits(T, this._cw()); }); }
@@ -2911,6 +2924,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'laycols') return editTab((T) => { delete T.layout; });   // sütun ayarları duruyor, geri dönülür
       if (act === 'gfit') return editTab((T) => { delete T.gfit; });
       if (act === 'gscr') return editTab((T) => { T.gfit = false; });
+      if (act === 'gfill') return editTab((T) => {   // boşlukları kapat: geniş düzende (dikey önizlemedeyse dikeyde)
+        const pv = this._screenKey() === 'tabp', C = pv ? 6 : 12, P = lpGridPos(T, C), L = Object.keys(P).map((k) => Object.assign({ id: k }, P[k]));
+        let rows = T.gfit === false ? 0 : (+T.grows || 12); L.forEach((o) => { rows = Math.max(rows, o.y + o.h); });
+        lpGFill(L, C, rows);
+        L.forEach((o) => { const x = (T.sections || []).filter((q) => q.id === o.id)[0]; if (x) x[pv ? 'gm' : 'g'] = { x: o.x, y: o.y, w: o.w, h: o.h }; });
+        if (pv) T.gm_own = true;
+      });
       if (act === 'gmauto') return editTab((T) => { delete T.gm_own; (T.sections || []).forEach((x) => { delete x.gm; }); });
       if (act === 'coltab') return editTab((T) => { T.columns = LP_DEFAULT_COLS.slice();  lhdFitCols(T, this._cw()); lhdFitSplits(T, this._cw()); });
       if (act === 'coleq') return editTab((T) => { const w = lpWeights(T), sum = w.reduce((a, b) => a + b, 0); T.columns = w.map(() => Math.round(sum / w.length * 100) / 100);  lhdFitCols(T, this._cw()); lhdFitSplits(T, this._cw()); });
@@ -3174,6 +3194,30 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
   // --- öğe ayarları penceresi: ad, simge, açık/kapalı simgeleri, dokununca / basılı tutunca, düğmenin eylemi, gömülü kart, koşullu görünürlük ---
   // Alanlar taslakta (this._im.f) tutulur; "Kaydet"e basınca öğeye yazılır (YAML hatalıysa pencere açık kalır, hata gösterilir).
+  // öğe ayarlarındaki enerji kartı (önizleme için): kayıttaki gibi, görünüm hariç
+  // küçük resimler için öğelerin simge ve adları (en çok 3)
+  _thItems(list) {
+    const S = (this._hass && this._hass.states) || {}, out = [];
+    (list || []).forEach((raw) => {
+      if (out.length >= 3) return;
+      const it = typeof raw === 'string' ? { entity: raw } : raw || {};
+      if (it.subtitle || it.card) return;
+      const st = it.entity && S[it.entity];
+      const nm = it.name || (it.entity ? this._ename(it.entity) : it.energy ? lpEnT(this._lang, 'k_' + it.energy) : '');
+      out.push({ ic: st ? lpIcon(lpEntIcon(st, it.icon), 's16') : lpIcon(it.icon || 'mdi:lightbulb-outline', 's16'), nm: nm });
+    });
+    if (!out.length) out.push({ ic: lpIcon('mdi:lightbulb-outline', 's16'), nm: this._t('lookTile') });
+    return out;
+  }
+  _enFormIt(f) {
+    const ty = f.enK, it = { energy: ty };
+    if (ty === 'halo') { if (!f.enChips) it.chips = false; if (!f.enBars) it.bars = false; }
+    if (ty === 'cats') { if (f.enLoose === false) it.loose = false; if (f.enSort === 'w') it.sort = 'w'; if (f.enCols) it.cols = +f.enCols; if (f.enChart) it.chart = f.enChart; }
+    if (ty === 'top') { if (f.enCount) it.count = +f.enCount; if (f.enCat) it.cat = f.enCat; if (f.enIdle) it.hide_idle = true; }
+    if (ty === 'week') { if (f.enDays === '30') it.days = 30; if (f.enUnit === 'cost') it.unit = 'cost'; }
+    if (ty === 'day' && f.enMode === 'total') it.mode = 'total';
+    return it;
+  }
   _imOpen(idx, raw, isNew) {
     const tab = this._curTab(this._work()), sec = this._curSec(tab);
     if (!tab || !sec) return;
@@ -3275,7 +3319,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       LP_EL_MINI.h = this._hass; LP_EL_MINI.lang = this._lang;
       body += fld(t('enKind') + hb('energy'), '<div class="enkp">' + LP_EN_TYPES.map((x) => '<button data-imseg="enK:' + x + '"' + (K === x ? ' class="on"' : '') + '><ha-icon icon="' + esc(LP_EN_IC[x]) + '"></ha-icon><b>' + esc(lpEnT(this._lang, 'k_' + x)) + '</b><span>' + esc(lpEnT(this._lang, 'd_' + x)) + '</span></button>').join('') + '</div>');
       const LK = LP_EL_LOOKS[K] || [''], LN = lpElNames(K, this._lang), lkCur = LK.indexOf(f.enLook || '') >= 0 ? f.enLook || '' : '';
-      if (LK.length > 1) body += fld(t('enLook') + ' · ' + esc(LN[LK.indexOf(lkCur)] || ''), '<div class="lkg2">' + LK.map((x, i) => '<button data-imseg="enLook:' + x + '"' + (lkCur === x ? ' class="on"' : '') + '><div class="mk"><lhd-en-mini k="' + esc(K) + '" look="' + esc(x) + '"></lhd-en-mini></div><span><i>' + (i + 1) + '</i>' + esc(LN[i] || x) + '</span></button>').join('') + '</div>');
+      if (LK.length > 1) body += fld(t('enLook') + ' · ' + esc(LN[LK.indexOf(lkCur)] || ''), '<div class="lkg2">' + LK.map((x, i) => '<button data-imseg="enLook:' + x + '"' + (lkCur === x ? ' class="on"' : '') + '><div class="mk"><lhd-en-mini k="' + esc(K) + '" look="' + esc(x) + '" it="' + esc(JSON.stringify(this._enFormIt(f))) + '"></lhd-en-mini></div><span><i>' + (i + 1) + '</i>' + esc(LN[i] || x) + '</span></button>').join('') + '</div>');
       if (K === 'halo') body += tgE('enChips', t('enChips'), t('enChipsT')) + tgE('enBars', t('enBars'), t('enBarsT'));
       if (K === 'cats') body += tgE('enLoose', t('enLoose'), t('enLooseT')) + fld(t('enSort'), sgE('enSort', [['', this._t('enSortFix')], ['w', this._t('enSortW')]])) + fld(t('enCols'), sgE('enCols', [['', this._t('phColsAuto')], ['2', '2'], ['3', '3'], ['4', '4']])) + fld(t('enChart'), sgE('enChart', [['', this._t('enC24')], ['7d', this._t('enC7')], ['none', this._t('enChNone')]]));
       if (K === 'top') {
@@ -3306,12 +3350,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (k === 'camera') body += fld(t('camRef'), '<div class="seg">' + [['5', '5 sn'], ['', '10 sn'], ['30', '30 sn'], ['60', '1 dk']].map((o) => '<button data-imseg="refresh:' + o[0] + '"' + ((f.refresh || '') === o[0] ? ' class="on"' : '') + '>' + esc(this._lang === 'tr' ? o[1] : o[1].replace('sn', 's').replace('dk', 'min')) + '</button>').join('') + '</div><div class="hint">' + t('camRefT') + '</div>');
       if (adv && k === 'value' && LP_VAL_ONOFF.indexOf(d) >= 0) body += '<div class="row2">' + icf('icon_on', t('iconOn'), 'mdi:bluetooth-connect') + icf('icon_off', t('iconOff'), 'mdi:bluetooth-off') + '</div>';
       // görünüm: eylem düğmesi karo/satır, varlık düğme/satır, sayısal değer Halo kartı
-      const sg = (key, opts) => '<div class="seg">' + opts.map((o) => '<button data-imseg="' + key + ':' + o[0] + '"' + ((f[key] || '') === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>';
+      const sg = (key, opts) => lhdSegX((v) => 'data-imseg="' + key + ':' + v + '"', f[key] || '', opts, key);
+      const thMe = this._thItems([it]);
       const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
         : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
           : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
       const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo') : lks;
-      if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2 .map((x) => [x[0], this._t(x[1])])));
+      if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2.map((x) => [x[0], this._t(x[1]), '', lhdThLook('i' + x[1].slice(3), thMe)])));
       const L0 = f.look || '';
       const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');
       if (adv && inGrid) body += fld(t('sizeL') + hb('size'), sg('size', [['', '1×1'], ['2x1', '2×1'], ['1x2', '1×2'], ['2x2', '2×2'], ['row', this._t('sz_row')]]));

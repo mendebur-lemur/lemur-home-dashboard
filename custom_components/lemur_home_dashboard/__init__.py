@@ -68,7 +68,7 @@ class PanelData:
         self.data: dict[str, Any] = json.loads(json.dumps(DEFAULT_DATA))
         self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
-        self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (a restart ends a light run; long averages go on)
+        self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (light runs and long averages go on after a restart)
         self._prefs_unsub = None
 
     @callback
@@ -84,6 +84,7 @@ class PanelData:
                 if isinstance(val, type(default)):
                     self.data[key] = val
         self.learning = LRN.Learning(self.hass, self.data.get("learn_avg"), self._save_learn)
+        self.learning.resume_saved()   # yeniden başlatmayla kesilen ışık ölçümü kaldığı yerden sürer
 
     def _save_learn(self, runs: dict) -> None:
         if runs != self.data.get("learn_avg"):
