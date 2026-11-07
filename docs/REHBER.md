@@ -129,7 +129,7 @@ Home Assistant'ta her hayvan için "<ad> besleme" durumu ve "<ad> besledim" dü�
 
 ![Enerji](guide/tr/energy.webp)
 
-Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede. Veriler Home Assistant'ın Enerji ayarlarındaki "Cihaz tüketimi" listesinden ve kendi kayıtlarından gelir; pano ayrıca kayıt tutmaz.
+Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede; güneş enerjisi olan evde enerji akışı ve batarya. Cihazlar ve kategoriler panelin Enerji sayfasından gelir (yoksa Home Assistant'ın Enerji ayarlarındaki "Cihaz tüketimi" listesinden); grafikler Home Assistant'ın kendi kayıtlarından.
 
 Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna dokununca o kategorinin cihazları, cihaz satırına dokununca cihaz penceresi açılır. Bekleme kartı hiçbir şey kullanılmıyorken evin çektiği gücü ve yıllık karşılığını gösterir.
 
@@ -137,13 +137,15 @@ Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna d
 
 Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt).
 
+**İpuçları** bildirim göndermez: Halo'nun altında tek satırda sırayla döner (ör. "Klima 3 saattir açık"), ilgili cihazın satırının kenarı turuncu olur. Dokununca cihaz açılır, basılı tutunca o ipucu o ekranda bir daha görünmez.
+
 **Seçenekler**
 
-- **Kart** (Evin anlık gücü · Kategori karoları · Şu an en çok çekenler · Günlük tüketim · Son 24 saat · Bekleme tüketimi): Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.
+- **Kart** (Evin anlık gücü · Kategori karoları · Şu an en çok çekenler · Günlük tüketim · Son 24 saat · Bekleme tüketimi · Güneş ve şebeke akışı · Batarya): Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.
 - **Altındaki bilgiler**: Halo'nun altında bugünkü kWh, para ve bu ayın tutarı (fiyat yoksa bu hızla aylık tüketim).
 - **Kademe ve yıllık sınır çubukları**: Halo'nun altında bu ayın kademe çubuğu ve son 12 ayın yıllık sınıra göre durumu.
 - **Sütun** (2 · 3 · 4): Kategori karolarında satırdaki karo (telefonda 2).
-- **Küçük grafik** (24 saat · 7 gün · Yok): Kategori karosundaki küçük grafik.
+- **Küçük grafik** (24 saat · 7 gün · Henüz kategori yok. Kategorisiz cihazlar kartlarda "Kategorisiz" karosunda toplanır.): Kategori karosundaki küçük grafik.
 - **Kaç cihaz** (3 · 5 · 6 · 8 · 10): En çok çekenler listesinde kaç cihaz.
 - **Kategori**: Listeyi tek bir kategoriyle sınırlar.
 - **Beklemedekileri gizle**: 2 W altındaki cihazlar listede görünmez.
@@ -293,13 +295,15 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 
 ![Enerji sayfası](guide/tr/energy-settings.webp)
 
-Üst çubuktaki **Enerji** düğmesi fiyatı, faturaları, tahmini cihazları ve kartların görünümünü kendi sayfasında açar. **Özet** bu ayın tüketimini ve tutarını, yıllık sınırı, son faturayı ve tahmini cihazları gösterir.
+Üst çubuktaki **Enerji** düğmesi cihazları, kategorileri, güneşi, fiyatı, faturaları ve ipuçlarını kendi sayfasında açar. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.
 
-**Fiyat ve tarife:** fiyat son faturadan, tek fiyat ya da kademeli (düşük ve yüksek fiyat, günlük sınır; ayın sınırı günlük sınır × gün sayısı). Yıllık sınır yıla göre kendiliğinden seçilir (2026'da 4.000, 2027'den itibaren 3.000 kWh) ya da elle yazılır.
+**Cihazlar:** güç ölçen cihazlar bulunur ve **Ekle** ile doğrudan gelir. Ölçmeyenler için sanal ölçüm: ışık (bekleme, en düşük ve en çok W, parlaklıkla), duruma göre (her durum için ayrı W; ör. TV oynatırken 95, duraklatınca 70 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim. Her biri için Home Assistant'ta güç ve enerji sensörü oluşur; kartlarda "~" ile görünür.
 
-**Faturalar:** dönem, kWh ve tutar girilir. Panel o dönemde kendi ölçtüğünü toplar; aradaki fark kategori karolarında gri **Ölçülmeyen** karosu olur. Son 12 ayın tüketimi yıllık sınır takibini başlatır.
+**Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için toplam güç ve kWh sensörü oluşur; cihazlar ve kategoriler Home Assistant Enerji ayarlarına kendiliğinden eklenir (Veri kaynağı → Enerji ayarlarıyla eşle).
 
-**Tahmini cihazlar:** güç ölçmeyen cihazlar için ışık (bekleme ve en çok W, parlaklıkla), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim (kWh/100 çevrim). Her biri için Home Assistant'ta bir güç ve bir enerji sensörü oluşur ve Enerji ayarlarına seçilen kategorinin içine eklenir. Kartlarda "~" ile görünür.
+**Güneş ve batarya:** üretim, şebeke (tek sensör ya da alınan ve verilen ayrı) ve batarya sensörleri; akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.
+
+**Fiyat ve tarife**, **Faturalar** (gerçek birim fiyat, ölçülmeyen pay, yıllık sınır) ve **İpuçları** (eşikler, sekmede nokta, gizlenenleri geri getir) aynı sayfada.
 
 **Seçenekler**
 
@@ -308,8 +312,13 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 - **Yıllık sınır** (Yıla göre · Elle): Sınırın yüzde 85'ini geçince Halo'daki çubuk sarıya döner.
 - **Fatura ekle**: Dönem başı ve sonu, kWh ve toplam tutar.
 - **Son 12 ayın tüketimi (kWh)**: Faturanın arkasındaki grafikten.
-- **Tür** (Işık · Aç / kapa · Sabit · Yıllık tüketim · Çevrim): Tahmini cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.
-- **Kategori**: Enerji ayarlarında hangi kategorinin içine eklensin.
+- **Tür** (Ölçen · Işık · Duruma göre · Aç / kapa · Sabit · Yıllık tüketim · Çevrim): Cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.
+- **Kategori**: Cihazın kategorisi; buradan yeni kategori de açılır.
+- **Tek sensör** (Tek sensör · Alınan ve verilen ayrı · Yok): Şebeke ölçümü: artı/eksi tek sensör ya da alınan ve verilen ayrı.
+- **İşaret ters**: Batarya sensörü şarjı eksi gösteriyorsa.
+- **Uzun süre açık kalan**: İpucu: bu güçten fazlasını bu süreden uzun çeken cihaz (varsayılan 300 W, 3 saat).
+- **Sekmede nokta**: İpucu varken Enerji sekmesinin düğmesinde küçük nokta (varsayılan kapalı).
+- **Enerji ayarlarıyla eşle**: Veri kaynağı: cihazlar, kategoriler ve güneş Home Assistant'ın Enerji panosunda da görünsün.
 - **Evin toplam gücü** (Kategorilerin toplamı): Veri kaynağı: Halo'nun gösterdiği toplam güç.
 - **Bekleme gücü** (Son 24 saatin en düşüğü): Veri kaynağı: bekleme kartının gücü.
 - **Halo renk sınırları (W)**: Görünüm: Halo'nun yeşil, sarı ve turuncu sınırları (varsayılan 300 / 800 / 1800 W).

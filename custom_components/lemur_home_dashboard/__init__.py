@@ -23,6 +23,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 from datetime import timedelta
 
+from . import energy_import as EI
 from . import estimates as EST
 from . import pets as P
 from . import safety as SF
@@ -50,8 +51,8 @@ _LOGGER = logging.getLogger(__name__)
 # Empty config means "build the default layout from the home's areas" (done in the browser, src/defaults.js).
 # pets / feed: feeding reminders (pets.py); older stored data simply has none
 # twins / walls: backup control and wall switches (twins.py)
-# estimates: estimated power of devices that do not measure it (estimates.py, sensor.py)
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}}
+# estimates / ecats: energy devices (measured and virtual) and categories (estimates.py, sensor.py)
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": []}
 PLATFORMS = ["sensor", "button"]
 
 
@@ -64,6 +65,7 @@ class PanelData:
         self.data: dict[str, Any] = json.loads(json.dumps(DEFAULT_DATA))
         self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
+        self._prefs_unsub = None
 
     @callback
     def _fallback_used(self, eid: str, when: str) -> None:
@@ -90,6 +92,55 @@ class PanelData:
         if not isinstance(pets, dict):
             return {}
         return {pid: pet for pid, pet in pets.items() if isinstance(pid, str) and isinstance(pet, dict)}
+
+    def ecats(self) -> list:
+        c = self.data.get("ecats")
+        return [x for x in c if isinstance(x, dict) and isinstance(x.get("id"), str)] if isinstance(c, list) else []
+
+    # ---- Home Assistant energy settings: kept in step with the dashboard's devices and categories ----
+    @callback
+    def schedule_prefs(self) -> None:
+        """Debounced: several quick saves (category, then its devices) end in one update."""
+        if self._prefs_unsub:
+            self._prefs_unsub()
+        from homeassistant.helpers.event import async_call_later
+
+        async def _run(_now) -> None:
+            self._prefs_unsub = None
+            await self.async_sync_prefs()
+
+        self._prefs_unsub = async_call_later(self.hass, 2, _run)
+
+    async def async_sync_prefs(self, drop: set | None = None) -> bool:
+        """Write the dashboard's categories, devices and solar source into the energy settings.
+        drop: other statistics to take out (entries replaced by an import). Off when settings.energy.sync is false."""
+        st = self.data.get("settings") or {}
+        en = st.get("energy") if isinstance(st.get("energy"), dict) else {}
+        if en.get("sync") is False:
+            return False
+        try:
+            from homeassistant.components.energy.data import async_get_manager
+            mgr = await async_get_manager(self.hass)
+            prefs = dict(mgr.data or {})
+            owned = self.data.get("energy_solar_src")
+            ours = owned or any(str(x.get("stat_consumption", "")).startswith("sensor.lhd_") for x in prefs.get("device_consumption") or [] if isinstance(x, dict)) \
+                or any(str(x.get("stat_energy_from", "")).startswith("sensor.lhd_") for x in prefs.get("energy_sources") or [] if isinstance(x, dict))
+            if not (self.estimates() or self.ecats() or EST.solar_energy_entity(st) or drop or ours):
+                return False
+            if drop:
+                prefs["device_consumption"] = [d for d in prefs.get("device_consumption") or [] if d.get("stat_consumption") not in drop]
+            new = EST.build_prefs(prefs, self.estimates(), self.ecats(), st, owned)
+            sol = EST.solar_energy_entity(st)
+            if self.data.get("energy_solar_src") != sol:   # which solar statistic is the dashboard's (taken out when it changes)
+                self.data["energy_solar_src"] = sol
+                self.store.async_delay_save(lambda: self.data, 1)
+            if new["device_consumption"] == (mgr.data or {}).get("device_consumption") and new["energy_sources"] == (mgr.data or {}).get("energy_sources"):
+                return True
+            await mgr.async_update(new)
+            return True
+        except Exception as err:  # noqa: BLE001 - the energy integration may be missing; the dashboard works without it
+            _LOGGER.warning("Energy settings could not be updated: %s", err)
+            return False
 
     def estimates(self) -> dict:
         est = self.data.get("estimates")
@@ -240,7 +291,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim):
+        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
 
@@ -293,6 +344,10 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     d = _data(hass)
     if d is not None:
         d.twins.stop()
+        if d._prefs_unsub:
+            d._prefs_unsub()
+            d._prefs_unsub = None
+        await d.store.async_save(d.data)   # a change saved less than a second ago is not lost on reload
     hass.data.pop(DOMAIN, None)
     async_remove_panel(hass, PANEL_URL)
     return True
@@ -325,7 +380,7 @@ def _for_user(connection, payload: dict) -> dict:
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/set",
-        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls", "estimates"]),
+        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls", "estimates", "ecats"]),
         vol.Required("value"): vol.Any(list, dict),
     }
 )
@@ -348,11 +403,11 @@ def ws_set(hass, connection, msg):
         except vol.Invalid as err:
             connection.send_error(msg["id"], "invalid", f"pets: {err}")
             return
-    elif key == "estimates":
+    elif key in ("estimates", "ecats"):
         try:
-            value = EST.ESTIMATES_SCHEMA(value)
+            value = (EST.ESTIMATES_SCHEMA if key == "estimates" else EST.ECATS_SCHEMA)(value)
         except vol.Invalid as err:
-            connection.send_error(msg["id"], "invalid", f"estimates: {err}")
+            connection.send_error(msg["id"], "invalid", f"{key}: {err}")
             return
     elif key == "tabs":
         value = SF.clean_tabs(value)
@@ -362,14 +417,20 @@ def ws_set(hass, connection, msg):
         except vol.Invalid as err:
             connection.send_error(msg["id"], "invalid", f"{key}: {err}")
             return
+    # solar production or the sync switch changed: sensors and energy settings follow
+    def _en(st: dict) -> tuple:
+        e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
+        return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"))
+    energy_changed = key == "settings" and _en(data.data.get("settings") or {}) != _en(value)
     data.data[key] = value
     if key == "walls":
         data.twins.listen()
     if key == "pets":
         data.refresh_all()
         async_dispatcher_send(hass, SIGNAL_PETS)
-    if key == "estimates":
+    if key in ("estimates", "ecats") or (key == "settings" and energy_changed):
         async_dispatcher_send(hass, SIGNAL_EST)
+        data.schedule_prefs()
     data.changed()
     connection.send_result(msg["id"], data.data)
 
@@ -454,3 +515,51 @@ def ws_dashboard_claim(hass, connection, msg):
     if ok:
         hass.config_entries.async_update_entry(entry, data={**entry.data, "dashboard_done": True})
     connection.send_result(msg["id"], {"ok": ok, "title": (entry.data.get("dashboard_title") if entry else None) or "Lemur Home Dashboard"})
+
+
+async def _energy_prefs(hass: HomeAssistant) -> dict:
+    try:
+        from homeassistant.components.energy.data import async_get_manager
+        return dict((await async_get_manager(hass)).data or {})
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/energy_import",
+        vol.Optional("apply", default=False): bool,
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_energy_import(hass, connection, msg):
+    """Enerji → Aktar: what an import from the other power-estimating integration would do (apply=false),
+    or do it: devices and categories are added (existing ones are kept), the old entries leave the energy settings."""
+    data = _data(hass)
+    if data is None:
+        connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
+        return
+    prefs = await _energy_prefs(hass)
+    try:
+        p = EI.plan(hass, prefs, data.estimates(), data.ecats())
+    except Exception as err:  # noqa: BLE001 - an unexpected entry shape must not break the panel
+        _LOGGER.warning("Energy import could not read the entries: %s", err)
+        connection.send_error(msg["id"], "failed", str(err))
+        return
+    recs, cats = p.pop("_records"), p.pop("_cats")
+    if not msg["apply"]:
+        connection.send_result(msg["id"], p)
+        return
+    try:
+        ests = EST.ESTIMATES_SCHEMA({**data.estimates(), **recs})
+        ecats = EST.ECATS_SCHEMA(data.ecats() + [c for c in cats if c["id"] not in {x["id"] for x in data.ecats()}])
+    except vol.Invalid as err:
+        connection.send_error(msg["id"], "invalid", str(err))
+        return
+    data.data["estimates"] = ests
+    data.data["ecats"] = ecats
+    data.changed()
+    async_dispatcher_send(hass, SIGNAL_EST)
+    synced = await data.async_sync_prefs(set(p["drop"]))
+    connection.send_result(msg["id"], dict(p, applied=True, synced=synced))

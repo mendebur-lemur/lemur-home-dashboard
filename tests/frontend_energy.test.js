@@ -13,10 +13,12 @@ const ctx = {
   window: {}, SET: SET, STORE: { data: {} },
   lpSettings: () => SET.s,
   esc: (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]),
-  upper: (lang, s) => String(s).toUpperCase()
+  upper: (lang, s) => String(s).toUpperCase(),
+  pickLang: () => 'tr',
+  localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE };', ctx);
+vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -164,5 +166,99 @@ test('estimates: same formulas as the integration, marked with ~ on cards', () =
   assert.ok(top.indexOf('erw est') >= 0 && top.indexOf('~29 W') >= 0);
   SET.s = { energy: { tilde: false } };
   assert.ok(E.lpEnCard(h, M, { energy: 'top' }, 'tr', false).indexOf('~') < 0);
+  SET.s = {};
+});
+
+
+test('own devices and categories: model, uncategorized tile, estimate marks', () => {
+  E.STORE.data = { estimates: {
+    klima: { name: 'Klima', kind: 'meas', sensor: 'sensor.klima_watt', energy: 'sensor.klima_kwh', cat: 'iklim' },
+    tavan: { name: 'Tavan', kind: 'meas', sensor: 'sensor.tavan_power', cat: 'isik' },
+    tv: { name: 'TV', kind: 'states', entity: 'media_player.tv', states: [{ s: 'playing', w: 95 }], other: 1, cat: 'medya' },
+    modem: { name: 'Modem', kind: 'fixed', w: 9 }
+  }, ecats: [{ id: 'iklim', name: 'Klimalar' }, { id: 'isik', name: 'Işıklar' }, { id: 'medya', name: 'Medya', color: '#B388FF' }] };
+  const h = hass();
+  h.states['sensor.lhd_tv_power'] = pw(95); h.states['sensor.lhd_modem_power'] = pw(9);
+  const M = E.lpEnModel(h, prefs);
+  assert.strictEqual(M.lemur, true);
+  assert.strictEqual(M.cats.map((c) => c.name).join(','), 'Klimalar,Işıklar,Medya,Kategorisiz');
+  assert.strictEqual(M.cats[0].p, 'sensor.lhd_kat_iklim_power');
+  const kl = M.devs.filter((d) => d.lid === 'klima')[0];
+  assert.strictEqual(kl.p, 'sensor.klima_watt'); assert.strictEqual(kl.e, 'sensor.klima_kwh'); assert.strictEqual(kl.est, false);
+  const tv = M.devs.filter((d) => d.lid === 'tv')[0];
+  assert.strictEqual(tv.p, 'sensor.lhd_tv_power'); assert.strictEqual(tv.est, true);
+  assert.strictEqual(M.devs.filter((d) => d.lid === 'tavan')[0].e, 'sensor.lhd_tavan_energy');   // ölçen ama kWh yok: panel sayar
+  const loose = M.cats[3];
+  assert.strictEqual(loose.e, null); assert.strictEqual(JSON.stringify(loose.es), '["sensor.lhd_modem_energy"]');
+  // kategori sensörü henüz yoksa cihazların toplamı
+  assert.strictEqual(E.lpEnCatW(h.states, M.cats[0]), 1200);
+  const top = E.lpEnCard(h, M, { energy: 'top' }, 'tr', false);
+  assert.ok(/~95 W/.test(top) && /1,2 kW/.test(top));
+  // durum kaydı: aynı formül
+  assert.strictEqual(E.lpEnEstW({ kind: 'states', states: [{ s: 'playing', w: 95 }], other: 1 }, { state: 'playing', attributes: {} }), 95);
+  assert.strictEqual(E.lpEnEstW({ kind: 'states', states: [{ s: 'playing', w: 95 }], other: 1 }, { state: 'idle', attributes: {} }), 1);
+  assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 2, min: 5, max: 60 }, { state: 'on', attributes: { brightness: 0 } }), 5);
+  assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 2, max: 60 }, { state: 'off', attributes: {} }), 2);
+  E.STORE.data = {};
+});
+
+test('solar flow: net grid, two meters, battery sign, home balance, cards', () => {
+  const h = hass();
+  Object.assign(h.states, { 'sensor.pv': pw(2.4, 'kW'), 'sensor.grid': pw(-400), 'sensor.gin': pw(0), 'sensor.gout': pw(400), 'sensor.bat': pw(-600), 'sensor.soc': { state: '50', attributes: { unit_of_measurement: '%' } } });
+  SET.s = { energy: { solar: { on: true, prod: 'sensor.pv', grid: 'sensor.grid', bat_power: 'sensor.bat', bat_inv: true, soc: 'sensor.soc', cap: 10 } } };
+  let F = E.lpEnFlowNow(h.states);
+  assert.strictEqual(F.prod, 2400); assert.strictEqual(F.grid, -400); assert.strictEqual(F.bat, 600); assert.strictEqual(F.home, 1400); assert.strictEqual(F.soc, 50);
+  SET.s.energy.solar = { on: true, prod: 'sensor.pv', grid_mode: 'two', grid_in: 'sensor.gin', grid_out: 'sensor.gout' };
+  F = E.lpEnFlowNow(h.states);
+  assert.strictEqual(F.grid, -400); assert.strictEqual(F.home, 2000); assert.strictEqual(F.hasBat, false);
+  assert.strictEqual(E.lpEnSunE(), 'sensor.lhd_solar_energy');
+  const M = E.lpEnModel(h, prefs);
+  assert.strictEqual(E.lpEnTotal(h.states, M), 2000);   // ayarlı toplam yoksa sayaçtan: şebeke + üretim
+  const fl = E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false);
+  assert.ok(/enflow nobat/.test(fl) && /2,4 kW/.test(fl) && /Şebekeye/.test(fl) && /efl on/.test(fl));
+  assert.ok(/noBat|Batarya sensörü seçilmedi/.test(E.lpEnCard(h, M, { energy: 'battery' }, 'tr', false)));
+  SET.s.energy.solar = { on: true, prod: 'sensor.pv', grid: 'sensor.grid', bat_power: 'sensor.bat', soc: 'sensor.soc', cap: 10 };   // -600: boşalıyor
+  const bt = E.lpEnCard(h, M, { energy: 'battery' }, 'tr', false);
+  assert.ok(/<small>%<\/small>50/.test(bt) && /Evi besliyor/.test(bt) && /~8 sa 20 dk yeter/.test(bt), bt);
+  SET.s = {};
+  assert.strictEqual(E.lpEnFlowNow(h.states), null);
+  assert.ok(/Güneş ayarı yok/.test(E.lpEnCard(h, M, { energy: 'flow' }, 'tr', false)));
+  const tab = E.lhdEnergyTab('tr', 'enerji');
+  assert.ok(!tab.sections.some((s) => s.entities[0].energy === 'flow'));
+  SET.s = { energy: { solar: { on: true, prod: 'sensor.pv' } } };
+  assert.ok(E.lhdEnergyTab('tr', 'enerji').sections.some((s) => s.entities[0].energy === 'flow'));
+  SET.s = {};
+  assert.strictEqual(E.lpEnDur(95, 'tr'), '1 sa 35 dk'); assert.strictEqual(E.lpEnDur(12 * 60, 'en'), '12 h');
+});
+
+test('tips: left on, night standby, yearly limit, hidden ones, off switch', () => {
+  const h = hass(), M = E.lpEnModel(h, prefs);
+  const n = 48, step = 1800000, t0 = Date.now() - 86400000;
+  const kl = M.devs.filter((d) => d.p === 'sensor.klima_watt')[0] || M.devs[0];
+  M.hist = { t0: t0, step: step, cats: {}, devs: {}, total: [] };
+  M.devs.forEach((d) => { M.hist.devs[d.id] = new Array(n).fill(10); });
+  M.hist.devs[kl.id] = new Array(n).fill(0).map((x, i) => (i >= n - 8 ? 1100 : 0));
+  M.hist.total = new Array(n).fill(0).map((x, i) => { const hr = new Date(t0 + i * step).getHours(); return hr >= 2 && hr < 5 ? 220 : 600; });
+  h.states[kl.p] = pw(1200);
+  let L = E.lpEnTips(h, M, 'tr');
+  const ks = L.map((x) => x.k.split(':')[0]);
+  assert.ok(ks.indexOf('left') >= 0 && ks.indexOf('standby') >= 0, JSON.stringify(L));
+  const left = L.filter((x) => x.k.indexOf('left') === 0)[0];
+  assert.strictEqual(left.dev, kl.id); assert.ok(/3 saattir açık/.test(left.t));
+  // üst listede turuncu kenar, Halo'nun altında satır
+  assert.ok(/enrk warn/.test(E.lpEnCard(h, M, { energy: 'top' }, 'tr', false)));
+  M.days = null;
+  assert.ok(/entips/.test(E.lpEnCard(h, M, { energy: 'halo' }, 'tr', false)));
+  assert.ok(!/entips/.test(E.lpEnCard(h, M, { energy: 'halo', tips: false }, 'tr', false)));
+  // gizlenen (bu cihazda) ve ayarda gizlenen
+  E.lpEnTipHide(left.k);
+  SET.s = { energy: { tips_off: ['standby'] } };
+  assert.strictEqual(E.lpEnTips(h, M, 'tr').length, 0);
+  SET.s = { energy: { tips: { on: false } } };
+  ctx.localStorage._d = {};
+  assert.strictEqual(E.lpEnTips(h, M, 'tr').length, 0);
+  // eşik yüksekse yok
+  SET.s = { energy: { tips: { left_w: 2000, standby_w: 300 } } };
+  assert.strictEqual(E.lpEnTips(h, M, 'tr').length, 0);
   SET.s = {};
 });

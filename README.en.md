@@ -209,21 +209,26 @@ In the automatic layout, covers show in their room's tab after the lights.
 
 ## Energy
 
-Home power now, categories, the devices drawing the most right now, daily usage, the last 24 hours and standby usage. **+ Tab → Energy tab** sets it all up in a ready tab; single cards can also be added to a section as an **Energy card**. Pick **Energy** in Auto setup to get an Energy tab at the end.
+Home power now, categories, the devices drawing the most right now, daily usage, the last 24 hours and standby usage; with solar, the energy flow and the battery. **+ Tab → Energy tab** sets them all up in a ready tab; single cards can also be added to a section as an **Energy card**. If **Energy** is picked in Auto setup, an Energy tab is added at the end. No other add-on is needed.
 
-The data comes from **Individual devices** in Home Assistant's **Energy** settings: entries that are not inside another one become categories (e.g. Lights, Air conditioners), the ones inside become devices. Live power is read from each entry's power sensor and the charts from Home Assistant's own history; the dashboard keeps no records of its own.
+Devices and categories come from the **Energy** page in the admin panel. If it has no devices yet, the cards use **Individual devices** in Home Assistant's **Energy** settings (entries not inside another one become categories, the ones inside become devices). Charts are read from Home Assistant's own history; the dashboard keeps no records of its own.
 
-- **Home power now:** the Halo ring turns from green to red with usage. Below it: today's kWh, the cost and monthly usage at this rate.
-- **Category tiles:** each category's live power, its share of the total and a small chart (24 hours or 7 days). Tap for that category's devices.
-- **Top consumers now:** devices sorted by live power (3-10 devices, can be limited to one category, idle ones can be hidden).
-- **Daily usage** (7 or 30 days, kWh or money), **Last 24 hours** (category lines or the total) and **Standby usage** (what the home draws when nothing is in use, and its yearly total).
+- **Home power now:** the Halo ring turns from green to red with usage. Below it a tips line, today's kWh, its cost and monthly usage at this rate.
+- **Category tiles:** each category's power now, its share of the total and a small chart (24 hours or 7 days). Tap one for its devices. Devices without a category are in an **Uncategorized** tile.
+- **Top consumers now:** devices sorted by power now (3-10 devices, can be limited to one category, idle ones can be hidden). A device left on for long gets an orange edge.
+- **Daily usage** (7 or 30 days, kWh or money), **Last 24 hours** (category lines or total) and **Standby usage**.
+- **Energy flow:** the power flowing between solar, grid, home and battery right now; below it today's production, the share used at home and what goes to the grid. **Battery:** charge, kWh, charging or discharging and time left.
 
 **Energy page** (**Energy** in the admin panel's top bar):
 
-- **Price and tariff:** price from the last bill (amount ÷ kWh, taxes included), one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is set by hand. Under the Halo: this month's tier bar and the last 12 months against the limit.
-- **Bills:** period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.
-- **Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness; e.g. a 2-60 W light at 30% is 19.4 W), on/off, fixed, yearly usage (the label's kWh/year; 250 kWh/year ≈ 28.5 W) or cycles (kWh/100 cycles, cycles per week). The integration makes `sensor.lhd_<name>_power` and `sensor.lhd_<name>_energy` for each and adds them to the Energy settings inside the chosen category. Cards show them with "~".
-- **Data source and Look:** a total power sensor, a standby power sensor, the Halo colour limits, live watts in the corner of light and plug tiles (Off, When on, Always), marking estimated values and the not measured tile.
+- **Devices:** devices in Home Assistant that measure power but are not on the dashboard are listed and come in with **Add** (their kWh sensor is found too; without one the dashboard counts kWh from the power). For devices that do not measure, a virtual measurement: light (standby, lowest and highest W, by brightness; e.g. a 2-60 W light at 30% is 19.4 W), **by state** (a W value per state: a TV at 95 W playing, 70 W paused, 28 W idle; an AC cooling, heating, fan), on/off, fixed, yearly usage (the label's kWh/year; 250 kWh/year ≈ 28.5 W) or cycles (kWh/100 cycles, cycles per week). The integration sets up `sensor.lhd_<name>_power` and `sensor.lhd_<name>_energy` for each. Cards show them with "~".
+- **Categories:** name, color and the devices in it. Each category gets `sensor.lhd_kat_<name>_power` and `_energy` (the sum of its devices).
+- **Solar and battery:** production power (and its kWh sensor if there is one), grid (one plus/minus sensor, or import and export apart), battery power, charge and capacity. The flow card is added to the Energy tab with one tap.
+- **Price and tariff:** price from the last bill (amount ÷ kWh, taxes included), one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is set by hand.
+- **Bills:** period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The last 12 months' usage starts the yearly limit tracking.
+- **Tips:** no notifications. A device left on for long (default above 300 W for 3 hours), night standby, a daily goal (optional), nearing the yearly limit and solar surplus rotate in one line under the Halo. Tap to open the device; hold to hide that tip on that screen. A small dot on the Energy tab button is optional (off by default).
+- **Import:** virtual power devices and groups set up with another add-on are scanned; what will happen (categories, devices, their kinds, old and new total) is shown first, and on confirming they come in and the dashboard's sensors replace the old entries in the Energy settings. Nothing in that add-on changes; once the figures match it can be removed.
+- **Data source and Look:** sync with the Energy settings (the dashboard manages its own device, category and solar entries and leaves the others alone), the home's total and standby power sensors, Halo color limits, live watts on light/plug tiles, marking estimated values and the not measured tile.
 
 ## Phone
 

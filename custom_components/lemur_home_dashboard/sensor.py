@@ -1,6 +1,8 @@
 """Feeding status sensor per pet (ok, soon, due, late or never; last and next feeding as attributes),
-and the power / energy sensors of estimated devices (estimates.py)."""
+and the sensors of the energy devices, categories and solar production (estimates.py)."""
 from __future__ import annotations
+
+import math
 
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.const import UnitOfEnergy, UnitOfPower
@@ -18,57 +20,102 @@ from .const import DOMAIN, SIGNAL_EST, SIGNAL_TICK
 
 async def async_setup_entry(hass, entry, async_add_entities):
     setup_pet_entities(hass, entry, async_add_entities, "sensor", PetFeedingSensor, "feeding")
-    _setup_estimates(hass, entry, async_add_entities)
+    _setup_energy(hass, entry, async_add_entities)
 
 
-def _setup_estimates(hass, entry, async_add_entities) -> None:
-    """One power and one energy sensor per estimate; added and removed as the estimates change."""
+def _setup_energy(hass, entry, async_add_entities) -> None:
+    """Sensors of the energy devices, categories and solar production; added and removed as they change."""
     known: dict[str, list] = {}
+
+    def wanted(data) -> dict:
+        out = {}
+        for eid, est in data.estimates().items():
+            keys = []
+            if EST.needs_power_sensor(est):
+                keys.append(("power", lambda d=data, i=eid: EstimatePowerSensor(d, i)))
+            if EST.needs_energy_sensor(est):
+                keys.append(("energy", lambda d=data, i=eid: EstimateEnergySensor(d, i)))
+            for suffix, make in keys:
+                out[f"est_{eid}_{suffix}"] = make
+        for c in data.ecats():
+            cid = c["id"]
+            out[f"kat_{cid}_power"] = lambda d=data, i=cid: CategoryPowerSensor(d, i)
+            out[f"kat_{cid}_energy"] = lambda d=data, i=cid: CategoryEnergySensor(d, i)
+        st = EST.solar_cfg(data.data.get("settings") or {})
+        if st.get("on") and st.get("prod") and not st.get("prod_energy"):
+            out["solar_energy"] = lambda d=data: SolarEnergySensor(d)
+        return out
 
     @callback
     def sync() -> None:
         data = hass.data.get(DOMAIN)
         if data is None:
             return
-        ests = data.estimates()
+        want = wanted(data)
         new = []
-        for eid in ests:
-            if eid not in known:
-                pair = [EstimatePowerSensor(data, eid), EstimateEnergySensor(data, eid)]
-                known[eid] = pair
-                new.extend(pair)
+        for key, make in want.items():
+            if key not in known:
+                ent = make()
+                known[key] = ent
+                new.append(ent)
         if new:
             async_add_entities(new)
         reg = er.async_get(hass)
-        for eid in list(known):
-            if eid not in ests:
-                known.pop(eid)
-                for suffix in ("power", "energy"):
-                    ent = reg.async_get_entity_id("sensor", DOMAIN, f"{DOMAIN}_est_{eid}_{suffix}")
-                    if ent:
-                        reg.async_remove(ent)
+        for key in list(known):
+            if key not in want:
+                ent = known.pop(key)
+                rid = reg.async_get_entity_id("sensor", DOMAIN, ent.unique_id)
+                if rid:
+                    reg.async_remove(rid)
             else:
-                for ent in known[eid]:
-                    ent.async_est_changed()
+                known[key].async_est_changed()
 
     sync()
     entry.async_on_unload(async_dispatcher_connect(hass, SIGNAL_EST, sync))
 
 
-class _EstimateBase:
-    """Shared: the estimate's record, its name and the linked entity it follows."""
+class _Base:
+    """Shared: name, icon and the entities the sensor follows."""
 
     _attr_should_poll = False
     _attr_has_entity_name = False
 
-    def _init_est(self, data, eid: str, suffix: str) -> None:
+    def _init(self, data, uid: str, entity_id: str) -> None:
         self._d = data
-        self.est_id = eid
         self._unsub_link = None
-        self._attr_unique_id = f"{DOMAIN}_est_{eid}_{suffix}"
-        self.entity_id = f"sensor.lhd_{eid}_{suffix}"
-        self._suffix = suffix
+        self._attr_unique_id = f"{DOMAIN}_{uid}"
+        self.entity_id = entity_id
         self._sync_name()
+
+    def _word(self, power: bool) -> str:
+        tr = is_tr(self._d.hass)
+        return ("güç" if power else "enerji") if tr else ("power" if power else "energy")
+
+    def _sync_name(self) -> None:  # overridden
+        pass
+
+    def _follow(self) -> list[str]:  # entities whose changes matter
+        return []
+
+    def _relink(self, handler) -> None:
+        if self._unsub_link:
+            self._unsub_link()
+            self._unsub_link = None
+        ids = [x for x in self._follow() if x]
+        if ids and self.hass:
+            self._unsub_link = async_track_state_change_event(self.hass, ids, handler)
+
+    def _unlink(self) -> None:
+        if self._unsub_link:
+            self._unsub_link()
+            self._unsub_link = None
+
+
+class _Device(_Base):
+    def _init_dev(self, data, eid: str, suffix: str) -> None:
+        self.est_id = eid
+        self._suffix = suffix
+        self._init(data, f"est_{eid}_{suffix}", f"sensor.lhd_{eid}_{suffix}")
 
     def est(self) -> dict:
         return self._d.estimates().get(self.est_id) or {}
@@ -77,45 +124,39 @@ class _EstimateBase:
         e = self.est()
         name = e.get("name") or self.est_id
         tr = is_tr(self._d.hass)
-        word = {"power": ("tahmini güç", "estimated power"), "energy": ("tahmini enerji", "estimated energy")}[self._suffix]
-        self._attr_name = f"{name} {word[0] if tr else word[1]}"
+        est = e.get("kind") != "meas"
+        if est:
+            word = ("tahmini " if tr else "estimated ") + self._word(self._suffix == "power")
+        else:
+            word = self._word(self._suffix == "power")
+        self._attr_name = f"{name} {word}"
         self._attr_icon = e.get("icon") or ("mdi:flash-outline" if self._suffix == "power" else "mdi:lightning-bolt-outline")
 
-    def _link(self) -> str | None:
-        e = self.est()
-        ent = e.get("entity")
-        return ent if ent and e.get("kind") in ("light", "onoff") else None
+    def _follow(self) -> list[str]:
+        return [EST.linked(self.est())]
 
     def _watts(self) -> float:
-        link = self._link()
+        link = EST.linked(self.est())
         return EST.power(self.est(), self.hass.states.get(link) if link and self.hass else None)
-
-    def _relink(self, handler) -> None:
-        if self._unsub_link:
-            self._unsub_link()
-            self._unsub_link = None
-        link = self._link()
-        if link and self.hass:
-            self._unsub_link = async_track_state_change_event(self.hass, [link], handler)
 
     @property
     def extra_state_attributes(self):
         e = self.est()
-        return {"estimated": True, "kind": e.get("kind"), "linked_entity": e.get("entity") or None}
+        return {"estimated": e.get("kind") != "meas", "kind": e.get("kind"), "linked_entity": EST.linked(e), "category": e.get("cat") or None}
 
 
-class EstimatePowerSensor(_EstimateBase, SensorEntity):
+class EstimatePowerSensor(_Device, SensorEntity):
     _attr_device_class = SensorDeviceClass.POWER
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = UnitOfPower.WATT
     _attr_suggested_display_precision = 1
 
     def __init__(self, data, eid: str) -> None:
-        self._init_est(data, eid, "power")
+        self._init_dev(data, eid, "power")
 
     async def async_added_to_hass(self) -> None:
         self._relink(self._linked_changed)
-        self.async_on_remove(lambda: self._unsub_link() if self._unsub_link else None)
+        self.async_on_remove(self._unlink)
 
     @callback
     def _linked_changed(self, _event) -> None:
@@ -133,16 +174,15 @@ class EstimatePowerSensor(_EstimateBase, SensorEntity):
         return round(self._watts(), 2)
 
 
-class EstimateEnergySensor(_EstimateBase, RestoreSensor):
-    """Adds up the estimated power over time (kept across restarts)."""
+class _Integrating(RestoreSensor):
+    """Adds up a power over time (kept across restarts): steps when the followed entities change and every minute."""
 
     _attr_device_class = SensorDeviceClass.ENERGY
     _attr_state_class = SensorStateClass.TOTAL_INCREASING
     _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
     _attr_suggested_display_precision = 3
 
-    def __init__(self, data, eid: str) -> None:
-        self._init_est(data, eid, "energy")
+    def _init_int(self) -> None:
         self._kwh = 0.0
         self._t = None
         self._w = 0.0
@@ -152,21 +192,21 @@ class EstimateEnergySensor(_EstimateBase, RestoreSensor):
         if last is not None:
             try:
                 v = float(last.native_value)
-                if v == v and v >= 0:
+                if math.isfinite(v) and v >= 0:
                     self._kwh = v
             except (TypeError, ValueError):
                 pass
         self._t = dt_util.utcnow()
         self._w = self._watts()
         self._relink(self._linked_changed)
-        self.async_on_remove(lambda: self._unsub_link() if self._unsub_link else None)
+        self.async_on_remove(self._unlink)
         self.async_on_remove(async_dispatcher_connect(self.hass, SIGNAL_TICK, self._tick))
 
     @callback
     def _step(self) -> None:
         """Count the time since the last step at the power that held until now, then take the new power."""
         now = dt_util.utcnow()
-        if self._t is not None:
+        if self._t is not None and self._w <= EST.MAX_W:   # more than this is a wrong reading, not usage
             self._kwh += EST.kwh(self._w, (now - self._t).total_seconds())
         self._t = now
         self._w = self._watts()
@@ -190,6 +230,189 @@ class EstimateEnergySensor(_EstimateBase, RestoreSensor):
             self.async_write_ha_state()
         else:
             self._sync_name()
+
+    @property
+    def native_value(self):
+        return round(self._kwh, 4)
+
+
+class EstimateEnergySensor(_Device, _Integrating):
+    def __init__(self, data, eid: str) -> None:
+        self._init_int()
+        self._init_dev(data, eid, "energy")
+
+
+class SolarEnergySensor(_Base, _Integrating):
+    """Solar production in kWh when the inverter gives only power."""
+
+    def __init__(self, data) -> None:
+        self._init_int()
+        self._init(data, "solar_energy", "sensor.lhd_solar_energy")
+
+    def _cfg(self) -> dict:
+        return EST.solar_cfg(self._d.data.get("settings") or {})
+
+    def _sync_name(self) -> None:
+        self._attr_name = "Güneş üretimi" if is_tr(self._d.hass) else "Solar production"
+        self._attr_icon = "mdi:solar-power"
+
+    def _follow(self) -> list[str]:
+        return [self._cfg().get("prod")]
+
+    def _watts(self) -> float:
+        p = self._cfg().get("prod")
+        w = EST.watts_of(self.hass.states.get(p)) if p and self.hass else None
+        return max(0.0, w) if w is not None else 0.0
+
+
+class _Cat(_Base):
+    def _init_cat(self, data, cid: str, suffix: str) -> None:
+        self.cat_id = cid
+        self._suffix = suffix
+        self._init(data, f"kat_{cid}_{suffix}", f"sensor.lhd_kat_{cid}_{suffix}")
+
+    def cat(self) -> dict:
+        return next((c for c in self._d.ecats() if c.get("id") == self.cat_id), {})
+
+    def members(self) -> list[tuple[str, dict]]:
+        return [(eid, e) for eid, e in self._d.estimates().items() if e.get("cat") == self.cat_id]
+
+    def _sync_name(self) -> None:
+        c = self.cat()
+        self._attr_name = f"{c.get('name') or self.cat_id} {self._word(self._suffix == 'power')}"
+        self._attr_icon = c.get("icon") or ("mdi:flash" if self._suffix == "power" else "mdi:lightning-bolt")
+
+    @property
+    def extra_state_attributes(self):
+        return {"category": self.cat_id, "devices": len(self.members())}
+
+
+class CategoryPowerSensor(_Cat, SensorEntity):
+    """The category's devices' power together."""
+
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.WATT
+    _attr_suggested_display_precision = 1
+
+    def __init__(self, data, cid: str) -> None:
+        self._init_cat(data, cid, "power")
+
+    def _follow(self) -> list[str]:
+        return [EST.power_entity(eid, e) for eid, e in self.members()]
+
+    async def async_added_to_hass(self) -> None:
+        self._relink(self._changed)
+        self.async_on_remove(self._unlink)
+
+    @callback
+    def _changed(self, _event) -> None:
+        self.async_write_ha_state()
+
+    @callback
+    def async_est_changed(self) -> None:
+        self._sync_name()
+        if self.hass:
+            self._relink(self._changed)
+            self.async_write_ha_state()
+
+    @property
+    def native_value(self):
+        if not self.hass:
+            return None
+        s = 0.0
+        for eid, e in self.members():
+            w = EST.watts_of(self.hass.states.get(EST.power_entity(eid, e)))
+            if w is not None and w > 0:
+                s += w
+        return round(s, 2)
+
+
+class CategoryEnergySensor(_Cat, RestoreSensor):
+    """The category's kWh: what its devices' kWh sensors added since the sensor started (kept across restarts).
+    A device's counter going back (a reset) only counts what it gained after the reset."""
+
+    _attr_device_class = SensorDeviceClass.ENERGY
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
+    _attr_suggested_display_precision = 3
+    MAX_STEP = 50.0   # kWh in one update: more than this is a wrong reading, not usage
+
+    def __init__(self, data, cid: str) -> None:
+        self._kwh = 0.0
+        self._last: dict[str, float] = {}
+        self._held: dict[str, float] = {}   # a counter that went back: decided on its next reading
+        self._init_cat(data, cid, "energy")
+
+    def _follow(self) -> list[str]:
+        return [EST.energy_entity(eid, e) for eid, e in self.members()]
+
+    def _val(self, ent: str) -> float | None:
+        st = self.hass.states.get(ent) if self.hass else None
+        if st is None:
+            return None
+        try:
+            v = float(st.state)
+        except (TypeError, ValueError):
+            return None
+        if v != v:
+            return None
+        unit = str((st.attributes or {}).get("unit_of_measurement") or "")
+        return v / 1000 if unit == "Wh" else v * 1000 if unit == "MWh" else v
+
+    def _baseline(self) -> None:
+        self._last = {}
+        for ent in self._follow():
+            v = self._val(ent)
+            if v is not None:
+                self._last[ent] = v
+
+    async def async_added_to_hass(self) -> None:
+        last = await self.async_get_last_sensor_data()
+        if last is not None:
+            try:
+                v = float(last.native_value)
+                if math.isfinite(v) and v >= 0:
+                    self._kwh = v
+            except (TypeError, ValueError):
+                pass
+        self._baseline()
+        self._relink(self._changed)
+        self.async_on_remove(self._unlink)
+
+    @callback
+    def _changed(self, event) -> None:
+        ent = event.data.get("entity_id")
+        v = self._val(ent)
+        if v is None:
+            return
+        prev = self._last.get(ent)
+        held = self._held.pop(ent, None)
+        self._last[ent] = v
+        if prev is None:
+            return
+        if v < prev:   # a reset or a glitch (a plug reporting 0 once): decided on the next reading
+            self._held[ent] = prev if held is None else max(prev, held)
+            return
+        if held is not None:
+            d = v - held if v >= held else v   # back to the old counter: a glitch; otherwise a real reset
+        else:
+            d = v - prev
+        if 0 < d <= self.MAX_STEP:
+            self._kwh += d
+            self.async_write_ha_state()
+
+    @callback
+    def async_est_changed(self) -> None:
+        self._sync_name()
+        if self.hass:
+            old = dict(self._last)
+            self._baseline()
+            for k, v in old.items():   # keep the counters of devices that stay
+                if k in self._last:
+                    self._last[k] = v
+            self._relink(self._changed)
+            self.async_write_ha_state()
 
     @property
     def native_value(self):

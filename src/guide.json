@@ -356,17 +356,19 @@
    "group": "use",
    "tr": [
     "Enerji",
-    "Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede. Veriler Home Assistant'ın Enerji ayarlarındaki \"Cihaz tüketimi\" listesinden ve kendi kayıtlarından gelir; pano ayrıca kayıt tutmaz.",
+    "Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede; güneş enerjisi olan evde enerji akışı ve batarya. Cihazlar ve kategoriler panelin Enerji sayfasından gelir (yoksa Home Assistant'ın Enerji ayarlarındaki \"Cihaz tüketimi\" listesinden); grafikler Home Assistant'ın kendi kayıtlarından.",
     "Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna dokununca o kategorinin cihazları, cihaz satırına dokununca cihaz penceresi açılır. Bekleme kartı hiçbir şey kullanılmıyorken evin çektiği gücü ve yıllık karşılığını gösterir.",
     "**+ Sekme → Enerji sekmesi** hazır bir sekme kurar; kartlar tek tek de bölüme **Enerji kartı** olarak eklenir. Fiyat, faturalar ve tahmini cihazlar üst çubuktaki **Enerji** sayfasında (sonraki adım).",
-    "Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt)."
+    "Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt).",
+    "**İpuçları** bildirim göndermez: Halo'nun altında tek satırda sırayla döner (ör. \"Klima 3 saattir açık\"), ilgili cihazın satırının kenarı turuncu olur. Dokununca cihaz açılır, basılı tutunca o ipucu o ekranda bir daha görünmez."
    ],
    "en": [
     "Energy",
-    "Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab. The data comes from \"Individual devices\" in Home Assistant's Energy settings and from its own history; the dashboard keeps no records of its own.",
+    "Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab; with solar, the energy flow and the battery. Devices and categories come from the dashboard's Energy page (or, without them, from \"Individual devices\" in Home Assistant's Energy settings); the charts from Home Assistant's own history.",
     "The Halo ring turns from green to red with usage. Tap a category tile for that category's devices, tap a device row for its more-info window. The standby card shows what the home draws when nothing is in use, and what that adds up to in a year.",
     "**+ Tab → Energy tab** sets up a ready tab; cards can also be added one by one to a section as an **Energy card**. Price, bills and estimated devices are on the **Energy** page in the top bar (next step).",
-    "Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles)."
+    "Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles).",
+    "**Tips** send no notifications: they rotate in one line under the Halo (e.g. \"AC on for 3 hours\") and the related device's row gets an orange edge. Tap to open the device; hold and that tip won't show again on that screen."
    ],
    "opts": [
     {
@@ -377,7 +379,9 @@
       "=Şu an en çok çekenler|Top consumers now",
       "=Günlük tüketim|Daily usage",
       "=Son 24 saat|Last 24 hours",
-      "=Bekleme tüketimi|Standby usage"
+      "=Bekleme tüketimi|Standby usage",
+      "=Güneş ve şebeke akışı|Solar and grid flow",
+      "=Batarya|Battery"
      ],
      "tr": "Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.",
      "en": "Added to a section as an Energy card; change its kind with the item ⚙."
@@ -919,17 +923,19 @@
    "group": "edit",
    "tr": [
     "Enerji sayfası",
-    "Üst çubuktaki **Enerji** düğmesi fiyatı, faturaları, tahmini cihazları ve kartların görünümünü kendi sayfasında açar. **Özet** bu ayın tüketimini ve tutarını, yıllık sınırı, son faturayı ve tahmini cihazları gösterir.",
-    "**Fiyat ve tarife:** fiyat son faturadan, tek fiyat ya da kademeli (düşük ve yüksek fiyat, günlük sınır; ayın sınırı günlük sınır × gün sayısı). Yıllık sınır yıla göre kendiliğinden seçilir (2026'da 4.000, 2027'den itibaren 3.000 kWh) ya da elle yazılır.",
-    "**Faturalar:** dönem, kWh ve tutar girilir. Panel o dönemde kendi ölçtüğünü toplar; aradaki fark kategori karolarında gri **Ölçülmeyen** karosu olur. Son 12 ayın tüketimi yıllık sınır takibini başlatır.",
-    "**Tahmini cihazlar:** güç ölçmeyen cihazlar için ışık (bekleme ve en çok W, parlaklıkla), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim (kWh/100 çevrim). Her biri için Home Assistant'ta bir güç ve bir enerji sensörü oluşur ve Enerji ayarlarına seçilen kategorinin içine eklenir. Kartlarda \"~\" ile görünür."
+    "Üst çubuktaki **Enerji** düğmesi cihazları, kategorileri, güneşi, fiyatı, faturaları ve ipuçlarını kendi sayfasında açar. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.",
+    "**Cihazlar:** güç ölçen cihazlar bulunur ve **Ekle** ile doğrudan gelir. Ölçmeyenler için sanal ölçüm: ışık (bekleme, en düşük ve en çok W, parlaklıkla), duruma göre (her durum için ayrı W; ör. TV oynatırken 95, duraklatınca 70 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim. Her biri için Home Assistant'ta güç ve enerji sensörü oluşur; kartlarda \"~\" ile görünür.",
+    "**Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için toplam güç ve kWh sensörü oluşur; cihazlar ve kategoriler Home Assistant Enerji ayarlarına kendiliğinden eklenir (Veri kaynağı → Enerji ayarlarıyla eşle).",
+    "**Güneş ve batarya:** üretim, şebeke (tek sensör ya da alınan ve verilen ayrı) ve batarya sensörleri; akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.",
+    "**Fiyat ve tarife**, **Faturalar** (gerçek birim fiyat, ölçülmeyen pay, yıllık sınır) ve **İpuçları** (eşikler, sekmede nokta, gizlenenleri geri getir) aynı sayfada."
    ],
    "en": [
     "Energy page",
-    "The **Energy** button in the top bar opens price, bills, estimated devices and the look of the cards on their own page. **Summary** shows this month's usage and cost, the yearly limit, the last bill and the estimated devices.",
-    "**Price and tariff:** price from the last bill, one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is entered by hand.",
-    "**Bills:** enter the period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.",
-    "**Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness), on/off, fixed, yearly usage (the label's kWh/year) or cycles (kWh/100 cycles). Each gets a power and an energy sensor in Home Assistant and is added to the Energy settings inside the chosen category. Cards show them with \"~\"."
+    "The **Energy** button in the top bar opens devices, categories, solar, price, bills and tips on their own page. **Summary** shows where each part stands today; tap a row to open that part.",
+    "**Devices:** devices that measure power are found and come in with **Add**. For the others, a virtual measurement: light (standby, lowest and highest W, by brightness), by state (a W value per state; e.g. a TV at 95 W playing, 70 W paused), on/off, fixed, yearly usage (the label's kWh/year) or cycles. Each gets a power and an energy sensor in Home Assistant; cards show them with \"~\".",
+    "**Categories:** name, color and the devices in it. Each category gets a total power and kWh sensor; devices and categories are added to Home Assistant's Energy settings by themselves (Data source → Sync with the Energy settings).",
+    "**Solar and battery:** production, grid (one sensor, or import and export apart) and battery sensors; the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.",
+    "**Price and tariff**, **Bills** (real unit price, the share not measured, yearly limit) and **Tips** (thresholds, dot on the tab, bring back hidden tips) are on the same page."
    ],
    "opts": [
     {
@@ -969,19 +975,51 @@
     {
      "k": "enEKind",
      "v": [
+      "ek_meas",
       "ek_light",
+      "ek_states",
       "ek_onoff",
       "ek_fixed",
       "ek_year",
       "ek_cycle"
      ],
-     "tr": "Tahmini cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.",
-     "en": "How the estimate is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W."
+     "tr": "Cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.",
+     "en": "How the device is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W."
     },
     {
      "k": "enECat",
-     "tr": "Enerji ayarlarında hangi kategorinin içine eklensin.",
-     "en": "Which category it goes into in the Energy settings."
+     "tr": "Cihazın kategorisi; buradan yeni kategori de açılır.",
+     "en": "The device's category; a new one can be made from here."
+    },
+    {
+     "k": "enGNet",
+     "v": [
+      "enGNet",
+      "enGTwo",
+      "enGNone"
+     ],
+     "tr": "Şebeke ölçümü: artı/eksi tek sensör ya da alınan ve verilen ayrı.",
+     "en": "Grid metering: one plus/minus sensor, or import and export apart."
+    },
+    {
+     "k": "enBInv",
+     "tr": "Batarya sensörü şarjı eksi gösteriyorsa.",
+     "en": "If the battery sensor shows charging as minus."
+    },
+    {
+     "k": "enTLeft",
+     "tr": "İpucu: bu güçten fazlasını bu süreden uzun çeken cihaz (varsayılan 300 W, 3 saat).",
+     "en": "Tip: a device drawing more than this for longer than this (default 300 W, 3 hours)."
+    },
+    {
+     "k": "enTDot",
+     "tr": "İpucu varken Enerji sekmesinin düğmesinde küçük nokta (varsayılan kapalı).",
+     "en": "A small dot on the Energy tab button while there are tips (off by default)."
+    },
+    {
+     "k": "enSync",
+     "tr": "Veri kaynağı: cihazlar, kategoriler ve güneş Home Assistant'ın Enerji panosunda da görünsün.",
+     "en": "Data source: devices, categories and solar also show on Home Assistant's Energy dashboard."
     },
     {
      "k": "enTotal",

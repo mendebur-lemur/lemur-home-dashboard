@@ -549,3 +549,26 @@ details.phlook > summary::after { font-size: 16px; }
 }
 @media (max-width: 600px) { .enb .l { display: none; } .enb { width: 34px; padding: 0; } }
 .enm .srow { flex-wrap: wrap; } .enm .srow .t { flex: 1 1 240px; }
+/* v0.26 Enerji sayfası: cihazlar, kategoriler, güneş, ipuçları, aktar */
+.enbar2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin: 4px 0 12px; }
+.ensec { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--ln); }
+.ensh { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.ensh b { font-size: 14.5px; } .ensh span { font-size: 12.5px; color: var(--tx2); flex: 1 1 200px; }
+div.ensr { cursor: default; }
+div.ensr:hover { background: var(--s1); }
+.encdot { flex: 0 0 30px; height: 30px; border-radius: 9px; display: flex !important; align-items: center; justify-content: center; color: #0B1020; }
+.encdot ha-icon { --mdc-icon-size: 17px; }
+.encols { display: flex; flex-wrap: wrap; gap: 8px; }
+.encols button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; }
+.encols button.on { border-color: var(--tx); box-shadow: 0 0 0 2px var(--bg, #000) inset; }
+.enmem { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; max-height: 320px; overflow: auto; padding: 2px; }
+.enmi { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--ln); background: var(--s2); cursor: pointer; min-width: 0; }
+.enmi span { display: flex; flex-direction: column; min-width: 0; } .enmi b { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.enmi i { font-style: normal; font-size: 11.5px; color: var(--mu); }
+.enst { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: var(--s2); border: 1px solid var(--ln); }
+.enstr { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 13.5px; }
+.enstr + .enstr { border-top: 1px solid var(--ln); }
+.enstr.on > span:first-child { color: var(--ac); font-weight: 600; }
+.enstr .ennum .inp { width: 90px; }
+.ensr > .encdot { flex: 0 0 30px; width: 30px; flex-direction: row; }
+.encols { margin-bottom: 10px; }

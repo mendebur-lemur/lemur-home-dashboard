@@ -55,7 +55,7 @@ const ADM = {
     enBadge: 'Işık karosunda watt', enBadgeT: 'Güç ölçen ışık ve prizlerin karosunun köşesinde anlık watt', enB_off: 'Kapalı', enB_on: 'Açıkken', enB_always: 'Hep',
     enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enCNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
     enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
-    enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Fiyat ve tarife, faturalar, tahmini cihazlar ve kartların görünümü kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
+    enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Cihazlar, kategoriler, güneş, fiyat, faturalar ve ipuçları kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
     enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Son 12 ay', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
     enPrMode: 'Fiyat', enPrBill: 'Faturadan', enPrSingle: 'Tek fiyat', enPrTier: 'Kademeli', enPrBillT: 'Son fatura: {k} kWh, {t} → 1 kWh {u}. Yeni fatura girildikçe güncellenir.', enPrBillNo: 'Faturalar bölümüne bir fatura girince birim fiyat ondan hesaplanır (vergiler ve sabit bedeller dahil).',
     enLow: 'Düşük kademe', enHigh: 'Yüksek kademe', enDaily: 'Günlük sınır', enMonthLim: 'Bu ayın sınırı ({d} gün × {k} kWh)', enLowL: 'Düşük kademe: {k} kWh', enHighL: 'Yüksek kademe: {k} kWh', enMonthSo: 'Bu ay şimdiye kadar ({k} kWh)', enTierT: 'Günlük ortalama sınırın altı düşük, üstü yüksek fiyattan. Fiyatları faturadaki vergiler dahil birim fiyattan yaz.',
@@ -66,8 +66,33 @@ const ADM = {
     ek_light: 'Işık', ek_lightT: 'Bekleme ve en çok W, parlaklıkla', ek_onoff: 'Aç / kapa', ek_onoffT: 'Kapalıyken ve açıkken W', ek_fixed: 'Sabit', ek_fixedT: 'Hep aynı W', ek_year: 'Yıllık tüketim', ek_yearT: 'Etiketteki kWh/yıl', ek_cycle: 'Çevrim', ek_cycleT: 'kWh/100 çevrim, haftada kaç kez',
     enEIdle: 'Kapalıyken (bekleme) W', enEMax: '%100 parlaklıkta W', enEOff: 'Kapalıyken W', enEOn: 'Açıkken W', enEW: 'Güç (W)', enEYear: 'Etiketteki yıllık tüketim (kWh)', enEK100: 'Etiketteki tüketim (kWh/100 çevrim)', enEWeek: 'Haftada kaç çevrim', enEEnt: 'Durumunu okuyan cihaz', enECat: 'Kategori', enECatNone: 'Kendi kategorisi',
     enENow: 'Şu an', enEAvg: 'Ortalama', enEDay: 'günde {k} kWh, yılda {y} kWh', enEBri: '%{p} parlaklıkta', enEYearT: 'Kompresörlü cihazlar anlık 0 ile 120 W arasında gider gelir; ortalama yıllık toplamda doğru çıkar.', enEEnts: 'Home Assistant\'ta oluşur: {p} ve {e}', enESave: 'Kaydet', enEDel: 'Sil',
-    enESaved: 'Kaydedildi, Enerji ayarlarına eklendi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
-    enTilde: 'Tahmini değerleri ayır', enTildeT: 'Tahmini watt kartlarda "~" ile ve morla yazılır', enUntL: 'Ölçülmeyen karo', enUntLT: 'Son faturaya göre ölçülmeyen pay kategori karolarında', enBars: 'Kademe ve yıllık sınır çubukları', enBarsT: 'Halo\'nun altında, ayarlandıysa'
+    enESaved: 'Kaydedildi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
+    enTilde: 'Tahmini değerleri ayır', enTildeT: 'Tahmini watt kartlarda "~" ile ve morla yazılır', enUntL: 'Ölçülmeyen karo', enUntLT: 'Son faturaya göre ölçülmeyen pay kategori karolarında', enBars: 'Kademe ve yıllık sınır çubukları', enBarsT: 'Halo\'nun altında, ayarlandıysa',
+    en_dev: 'Cihazlar', en_cat: 'Kategoriler', en_solar: 'Güneş ve batarya', en_tips: 'İpuçları', en_imp: 'Aktar',
+    enDevT: 'Panelin takip ettiği cihazlar. Güç ölçen cihazlar doğrudan eklenir; ölçmeyenler için sanal ölçüm kurulur ve Home Assistant\'ta güç ve enerji sensörü oluşur. Hepsi Enerji ayarlarına seçtiğin kategorinin içinde eklenir.',
+    enFMeas: 'Ölçen', enFVirt: 'Sanal', enNoCat: 'Kategorisiz', enDNoF: 'Bu filtrede cihaz yok.', enFound: 'Güç ölçen {n} cihaz bulundu', enFoundT: 'Home Assistant\'ta güç sensörü olan ama panelde olmayan cihazlar', enAddAll: 'Hepsini ekle ({n})', enAdd1: 'Ekle', enShowAll: 'Hepsini göster ({n})', enDAdded: '{n} cihaz eklendi',
+    enEEdit: 'Cihazı düzenle', ek_meas: 'Ölçen', ek_measT: 'Kendi güç sensörü var', ek_states: 'Duruma göre', ek_statesT: 'Her durum için ayrı W',
+    enMSensor: 'Güç sensörü (W)', enMEnergy: 'Enerji sensörü (kWh)', enPick: 'Seç', enMCalc: 'Panel hesaplasın', enMCalcT: 'Enerji sensörü seçilmezse panel güçten kWh hesaplar: {e}', enEMin: 'En düşük parlaklıkta W (boş: bekleme)',
+    enNewCat: '+ Yeni kategori', enNewCatN: 'Yeni kategorinin adı', enStT: 'Durumlara göre güç', enStH: 'Boş bırakılan durum "Diğer durumlar" değerini alır', enStOther: 'Diğer durumlar', enStPick: 'Önce durumunu okuyan cihazı seç; alabileceği durumlar burada listelenir.',
+    enMNeed: 'Güç sensörünü seç', enCNeed: 'Kategoriye ad yaz',
+    enCatT: 'Kategoriler kartlardaki karolardır. Her biri için Home Assistant\'ta toplam güç ve kWh sensörü oluşur ve Enerji ayarlarına eklenir; içindeki cihazlar onun altında görünür.', enCDevs: '{n} cihaz', enCNone: 'Henüz kategori yok. Kategorisiz cihazlar kartlarda "Kategorisiz" karosunda toplanır.', enCAdd: 'Kategori ekle', enCEdit: 'Kategoriyi düzenle', enCColor: 'Renk', enCMem: 'İçindeki cihazlar ({n})',
+    enSolT: 'Güneş paneli, şebeke ve batarya sensörlerini seç. Akış ve batarya kartları bunlarla dolar; üretim Home Assistant Enerji ayarlarına güneş kaynağı olarak eklenir.', enSolOn: 'Güneş enerjisi var', enSolOnT: 'Açınca üretim, şebeke ve batarya ayarları görünür',
+    enSolProd: 'Üretim', enSolP: 'Üretim gücü (W)', enSolPT: 'İnverterin anlık üretimi', enSolPE: 'Üretim enerjisi (kWh)', enSolPET: 'Seçilmezse panel güçten hesaplar',
+    enSolGrid: 'Şebeke', enSolGM: 'Şebeke ölçümü', enGNet: 'Tek sensör', enGTwo: 'Alınan ve verilen ayrı', enGNone: 'Yok', enGNetS: 'Şebeke gücü (W)', enGNetST: 'Artı: şebekeden alınan, eksi: şebekeye verilen', enGIn: 'Şebekeden alınan (W)', enGOut: 'Şebekeye verilen (W)', enExp: 'Satış fiyatı', enExpT: 'Şebekeye verilen 1 kWh için; boş bırakılabilir',
+    enSolBat: 'Batarya', enSolBatT: 'Varsa', enBP: 'Batarya gücü (W)', enBPT: 'Artı: şarj, eksi: boşalma', enBInv: 'İşaret ters', enBInvT: 'Sensör şarjı eksi gösteriyorsa aç', enBSoc: 'Doluluk (%)', enBCap: 'Kapasite', enBCapT: 'Kalan süre ve kWh için',
+    enFProd: 'Üretim şu an', enFExp: 'Şebekeye veriliyor', enFImp: 'Şebekeden alınıyor', enFCh: 'Batarya şarj oluyor', enFDis: 'Batarya boşalıyor', enFHome: 'Evin tüketimi',
+    enSolCard: 'Akış kartını Enerji sekmesine ekle', enSolNoTab: 'Önce Enerji sekmesi ekle (+ Sekme → Enerji)', enSolHas: 'Akış kartı zaten var', enSolAdded: 'Akış kartı "{t}" sekmesine eklendi',
+    enTipsT: 'Bildirim yok. İpuçları Halo\'nun altında tek satırda sırayla döner, ilgili cihazın satırının kenarı turuncu olur. Satıra dokununca cihaz açılır, basılı tutunca o ipucu o cihazda bir daha görünmez.', enTOn: 'İpuçları', enTOnT: 'Kapatınca hiçbiri görünmez',
+    enTNow: 'Şu an {n} ipucu', enTHide: 'Gösterme', enTNone: 'Şu an ipucu yok.', enTLeft: 'Uzun süre açık kalan', enTLeftT: 'Bu güçten fazlasını bu süreden uzun çeken cihaz', enHrs: 'sa', enTSb: 'Gece bekleme', enTSbT: 'Gece 02-05 arası evin en düşük gücü bunu aşarsa',
+    enTDay: 'Günlük hedef', enTDayT: 'Bugünkü tüketim hedefi geçerse', enTYear: 'Yıllık sınıra yaklaşma', enTYearT: 'Son 12 ay sınırın %85\'ine gelince', enTSun: 'Güneş fazlası', enTSunT: 'Şebekeye 500 W\'tan fazla verilirken', enTDot: 'Sekmede nokta', enTDotT: 'İpucu varken Enerji sekmesinin düğmesinde küçük turuncu nokta', enTReset: 'Gizlenenleri geri getir ({n})',
+    enImpT: 'Daha önce başka bir eklentiyle kurduğun sanal güç cihazlarını ve gruplarını panele aktarır: cihazlar adlarıyla gelir, gruplar kategori olur. Önce ne olacağı gösterilir; o eklentide hiçbir şey değişmez, kontrol ettikten sonra onu kendin kaldırabilirsin.',
+    enImpScan: 'Tara', enImpDone: '{n} cihaz ve {c} kategori aktarıldı', enImpOld: 'Eski toplam şu an', enImpNew: 'Panelin hesabı', enImpAfter: 'Birkaç dakika iki tarafın değerlerini karşılaştır. Uyuşuyorsa eski eklentiyi Home Assistant\'tan kaldırabilirsin.', enImpNone: 'Aktarılacak bir tanım bulunamadı.',
+    enImpCats: 'Kategori', enImpDevs: 'Cihaz', enImpSkip: 'Zaten panelde olan', enImpChk: '{n} cihazın değeri ölçüm tablosundan şu anki güce göre çıkarıldı; aktardıktan sonra Cihazlar\'dan kontrol et.', enImpChkP: 'kontrol et',
+    enImpWhat: 'Aktarınca Enerji ayarlarındaki {n} eski giriş çıkarılır, panelin sensörleri eklenir.', enImpAgain: 'Yeniden tara', enImpGo: '{n} cihazı aktar', enImpGoQ: 'Emin misin? Aktar',
+    enDevN: '{n} cihaz ({m} ölçen, {v} sanal) · şu an ~{w}', enFoundP: '+{n} bulundu', enCatN: '{n} kategori · {u} kategorisiz', enSolN: 'Üretim şu an {w}', enSolNoS: 'Sensör seçilmedi', enOff: 'Kapalı',
+    enSyncOn: 'Enerji ayarlarıyla eşleniyor', enSyncOff: 'Eşleme kapalı', enSrcT2: 'Kartlar panelin cihaz ve kategorilerinden dolar. Panel bunları Home Assistant Enerji ayarlarına da ekler; senin eklediğin diğer girişlere dokunmaz.', enSync: 'Enerji ayarlarıyla eşle', enSyncT: 'Cihazlar, kategoriler ve güneş üretimi Home Assistant\'ın Enerji panosunda da görünsün',
+    enWNoEnt: 'Bu cihaz Home Assistant\'ta bulunamadı; adını kontrol et.', enWZero: 'Hiçbir duruma W yazılmadı; cihaz 0 W sayılır.', enCSame: 'Bu adla bir kategori zaten var', enMUsed: 'Bu güç sensörü başka bir cihazda kullanılıyor', enAddAllQ: 'Emin misin? {n} cihaz eklenecek',
+    enImpToDev: 'Cihazlara git', enGInv: 'İşaret ters', enGInvT: 'Sayaç şebekeye vermeyi artı gösteriyorsa aç'
   },
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
@@ -119,7 +144,7 @@ const ADM = {
     enBadge: 'Watts on light tiles', enBadgeT: 'Live watts in the corner of light and plug tiles that measure power', enB_off: 'Off', enB_on: 'When on', enB_always: 'Always',
     enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enCNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
     enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
-    enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Price and tariff, bills, estimated devices and the look of the cards on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
+    enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Devices, categories, solar, price, bills and tips on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
     enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'Last 12 months', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
     enPrMode: 'Price', enPrBill: 'From the bill', enPrSingle: 'One price', enPrTier: 'Tiered', enPrBillT: 'Last bill: {k} kWh, {t} → {u} per kWh. Updated with every new bill.', enPrBillNo: 'Enter a bill under Bills and the unit price comes from it (taxes and fixed charges included).',
     enLow: 'Lower tier', enHigh: 'Upper tier', enDaily: 'Daily limit', enMonthLim: 'This month\'s limit ({d} days × {k} kWh)', enLowL: 'Lower tier: {k} kWh', enHighL: 'Upper tier: {k} kWh', enMonthSo: 'This month so far ({k} kWh)', enTierT: 'Usage under the daily average limit costs the lower price, the rest the upper price. Enter prices per kWh with taxes, as on the bill.',
@@ -130,8 +155,33 @@ const ADM = {
     ek_light: 'Light', ek_lightT: 'Standby and max W, by brightness', ek_onoff: 'On / off', ek_onoffT: 'W when off and when on', ek_fixed: 'Fixed', ek_fixedT: 'Always the same W', ek_year: 'Yearly usage', ek_yearT: 'The label\'s kWh/year', ek_cycle: 'Cycles', ek_cycleT: 'kWh/100 cycles, cycles per week',
     enEIdle: 'Off (standby) W', enEMax: 'At 100% brightness W', enEOff: 'Off W', enEOn: 'On W', enEW: 'Power (W)', enEYear: 'Yearly usage on the label (kWh)', enEK100: 'Usage on the label (kWh/100 cycles)', enEWeek: 'Cycles per week', enEEnt: 'Device that gives the state', enECat: 'Category', enECatNone: 'Its own category',
     enENow: 'Now', enEAvg: 'Average', enEDay: '{k} kWh a day, {y} kWh a year', enEBri: 'at {p}% brightness', enEYearT: 'Appliances with a compressor swing between 0 and 120 W; the average adds up right over a year.', enEEnts: 'Home Assistant gets: {p} and {e}', enESave: 'Save', enEDel: 'Delete',
-    enESaved: 'Saved and added to the Energy settings', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
-    enTilde: 'Mark estimated values', enTildeT: 'Estimated watts show with "~" in purple on the cards', enUntL: 'Not measured tile', enUntLT: 'The share not measured, from the last bill, as a category tile', enBars: 'Tier and yearly limit bars', enBarsT: 'Under the Halo, when set up'
+    enESaved: 'Saved', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
+    enTilde: 'Mark estimated values', enTildeT: 'Estimated watts show with "~" in purple on the cards', enUntL: 'Not measured tile', enUntLT: 'The share not measured, from the last bill, as a category tile', enBars: 'Tier and yearly limit bars', enBarsT: 'Under the Halo, when set up',
+    en_dev: 'Devices', en_cat: 'Categories', en_solar: 'Solar and battery', en_tips: 'Tips', en_imp: 'Import',
+    enDevT: 'The devices the dashboard tracks. Devices that measure power are added as they are; for the others a virtual measurement is set up and Home Assistant gets a power and an energy sensor. All are added to the Energy settings inside the category you pick.',
+    enFMeas: 'Measured', enFVirt: 'Virtual', enNoCat: 'Uncategorized', enDNoF: 'No devices in this filter.', enFound: '{n} devices that measure power found', enFoundT: 'Devices with a power sensor in Home Assistant that are not on the dashboard yet', enAddAll: 'Add all ({n})', enAdd1: 'Add', enShowAll: 'Show all ({n})', enDAdded: '{n} devices added',
+    enEEdit: 'Edit device', ek_meas: 'Measured', ek_measT: 'Has its own power sensor', ek_states: 'By state', ek_statesT: 'A W value for each state',
+    enMSensor: 'Power sensor (W)', enMEnergy: 'Energy sensor (kWh)', enPick: 'Pick', enMCalc: 'Let the dashboard count', enMCalcT: 'Without an energy sensor the dashboard counts kWh from the power: {e}', enEMin: 'W at lowest brightness (empty: standby)',
+    enNewCat: '+ New category', enNewCatN: 'Name of the new category', enStT: 'Power by state', enStH: 'An empty state takes the "Other states" value', enStOther: 'Other states', enStPick: 'Pick the device that gives the state first; its states are listed here.',
+    enMNeed: 'Pick the power sensor', enCNeed: 'Enter a category name',
+    enCatT: 'Categories are the tiles on the cards. Each gets a total power and kWh sensor in Home Assistant and is added to the Energy settings, with its devices under it.', enCDevs: '{n} devices', enCNone: 'No categories yet. Devices without one are grouped in an "Uncategorized" tile.', enCAdd: 'Add category', enCEdit: 'Edit category', enCColor: 'Color', enCMem: 'Devices in it ({n})',
+    enSolT: 'Pick the solar, grid and battery sensors. The flow and battery cards fill from them; production is added to Home Assistant\'s Energy settings as a solar source.', enSolOn: 'Home has solar', enSolOnT: 'Shows the production, grid and battery settings',
+    enSolProd: 'Production', enSolP: 'Production power (W)', enSolPT: 'The inverter\'s live output', enSolPE: 'Production energy (kWh)', enSolPET: 'If none, the dashboard counts it from the power',
+    enSolGrid: 'Grid', enSolGM: 'Grid metering', enGNet: 'One sensor', enGTwo: 'Import and export apart', enGNone: 'None', enGNetS: 'Grid power (W)', enGNetST: 'Plus: taken from the grid, minus: sent to it', enGIn: 'From the grid (W)', enGOut: 'To the grid (W)', enExp: 'Export price', enExpT: 'Per kWh sent to the grid; optional',
+    enSolBat: 'Battery', enSolBatT: 'If there is one', enBP: 'Battery power (W)', enBPT: 'Plus: charging, minus: discharging', enBInv: 'Reversed sign', enBInvT: 'Turn on if the sensor shows charging as minus', enBSoc: 'Charge (%)', enBCap: 'Capacity', enBCapT: 'For time left and kWh',
+    enFProd: 'Production now', enFExp: 'Sending to the grid', enFImp: 'Taking from the grid', enFCh: 'Battery charging', enFDis: 'Battery discharging', enFHome: 'Home usage',
+    enSolCard: 'Add the flow card to the Energy tab', enSolNoTab: 'Add an Energy tab first (+ Tab → Energy)', enSolHas: 'The flow card is already there', enSolAdded: 'Flow card added to "{t}"',
+    enTipsT: 'No notifications. Tips rotate in one line under the Halo and the related device\'s row gets an orange edge. Tap a tip to open the device; hold it and it won\'t show again on that screen.', enTOn: 'Tips', enTOnT: 'Off: none are shown',
+    enTNow: '{n} tips now', enTHide: 'Hide', enTNone: 'No tips right now.', enTLeft: 'Left on for long', enTLeftT: 'A device drawing more than this for longer than this', enHrs: 'h', enTSb: 'Night standby', enTSbT: 'When the home\'s lowest power between 02 and 05 is above this',
+    enTDay: 'Daily goal', enTDayT: 'When today\'s usage passes the goal', enTYear: 'Near the yearly limit', enTYearT: 'When the last 12 months reach 85% of the limit', enTSun: 'Solar surplus', enTSunT: 'While more than 500 W goes to the grid', enTDot: 'Dot on the tab', enTDotT: 'A small orange dot on the Energy tab button while there are tips', enTReset: 'Bring back hidden tips ({n})',
+    enImpT: 'Brings the virtual power devices and groups you set up with another add-on into the dashboard: devices keep their names, groups become categories. You see what will happen first; nothing in that add-on changes, and you can remove it yourself after checking.',
+    enImpScan: 'Scan', enImpDone: '{n} devices and {c} categories imported', enImpOld: 'Old total now', enImpNew: 'Dashboard\'s figure', enImpAfter: 'Compare both sides for a few minutes. If they match, you can remove the old add-on from Home Assistant.', enImpNone: 'Nothing to import was found.',
+    enImpCats: 'Categories', enImpDevs: 'Devices', enImpSkip: 'Already on the dashboard', enImpChk: 'For {n} devices the value was taken from a lookup table at today\'s power; check them under Devices after importing.', enImpChkP: 'check',
+    enImpWhat: 'Importing takes {n} old entries out of the Energy settings and adds the dashboard\'s sensors.', enImpAgain: 'Scan again', enImpGo: 'Import {n} devices', enImpGoQ: 'Sure? Import',
+    enDevN: '{n} devices ({m} measured, {v} virtual) · ~{w} now', enFoundP: '+{n} found', enCatN: '{n} categories · {u} uncategorized', enSolN: 'Producing {w} now', enSolNoS: 'No sensor picked', enOff: 'Off',
+    enSyncOn: 'Kept in step with the Energy settings', enSyncOff: 'Sync off', enSrcT2: 'The cards fill from the dashboard\'s devices and categories. The dashboard also adds them to Home Assistant\'s Energy settings and leaves your other entries alone.', enSync: 'Sync with the Energy settings', enSyncT: 'Devices, categories and solar production also show on Home Assistant\'s Energy dashboard',
+    enWNoEnt: 'This device was not found in Home Assistant; check its id.', enWZero: 'No state has a W value; the device counts as 0 W.', enCSame: 'A category with this name already exists', enMUsed: 'This power sensor is already used by another device', enAddAllQ: 'Sure? {n} devices will be added',
+    enImpToDev: 'Go to devices', enGInv: 'Reversed sign', enGInvT: 'Turn on if the meter shows sending to the grid as plus'
   }
 };
 // Bölüm türleri sadece başlangıç (başlık ve simge); her bölüme her şey eklenebilir. domains: seçicideki süzgeç
@@ -950,14 +1000,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
-    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf', 'data-enst', 'data-encf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
     const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     // LEC kuruluysa bir kez: efektlerin nerede olduğunu anlatan bilgi kutusu ("Tamam" deyince kaybolur)
     const st0 = this._settings();
     const lecInfo = LEC.installed(this._hass) && !st0.lec_seen ? '<div class="lecinfo" data-lecinfo><ha-icon icon="mdi:creation"></ha-icon><div class="t"><b>' + t('lecInfoT') + '</b><span>' + t('lecInfo') + '</span></div>' +
       '<button class="btn sm" data-a="settings">' + t('settings') + '</button><button class="btn sm pri" data-a="lecok">' + t('ok') + '</button></div>' : '';
     // yeniden çizimde kaydırma yerleri korunsun (ayarlarda bir şey değişince pencere başa atlamasın)
-    const SCR = ['.akr2', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
+    const SCR = ['.akr2', '.enm', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
     SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
     // Ayarlar önizlemenin üstünü kapatmaz: sağdaki panelin yerinde açılır, önizleme değişiklikleri canlı gösterir
     let modal = this._modalHtml(tabs, tab, sec), dock = '';
@@ -1140,11 +1190,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _enEsts() { const E = STORE.data && STORE.data.estimates; return lhdIsObj(E) ? E : {}; }
   _enPage() {
-    const t = (k, v) => esc(this._t(k, v)), V = this._env || 'sum', L = this._lang;
-    const nav = [['sum', 'mdi:view-dashboard-outline'], ['src', 'mdi:database-outline'], ['tariff', 'mdi:cash'], ['bill', 'mdi:file-document-outline'], ['est', 'mdi:lightbulb-on-outline'], ['look', 'mdi:eye-outline']];
-    const cnt = { bill: lpEnBills().length, est: Object.keys(this._enEsts()).length };
+    const t = (k, v) => esc(this._t(k, v)), V = this._env === 'est' ? 'dev' : this._env || 'sum', L = this._lang;
+    const nav = [['sum', 'mdi:view-dashboard-outline'], ['dev', 'mdi:power-plug-outline'], ['cat', 'mdi:shape-outline'], ['solar', 'mdi:solar-power-variant-outline'], ['tariff', 'mdi:cash'], ['bill', 'mdi:file-document-outline'], ['tips', 'mdi:lightbulb-on-outline'], ['imp', 'mdi:import'], ['look', 'mdi:eye-outline'], ['src', 'mdi:database-outline']];
+    const cnt = { bill: lpEnBills().length, dev: Object.keys(this._enEsts()).length, cat: this._enCats().length };
     const list = nav.map((n) => '<button class="gli' + (V === n[0] ? ' on' : '') + '" data-env="' + n[0] + '"><ha-icon class="s16" icon="' + n[1] + '"></ha-icon><span style="flex:1">' + t('en_' + n[0]) + '</span>' + (cnt[n[0]] ? '<span class="gno">' + cnt[n[0]] + '</span>' : '') + '</button>').join('');
-    const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'est' ? this._enEst() : V === 'look' ? this._enLook() : this._enSum();
+    const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'dev' ? this._enDev() : V === 'cat' ? this._enCat() : V === 'solar' ? this._enSolarV() : V === 'tips' ? this._enTipsV() : V === 'imp' ? this._enImpV() : V === 'look' ? this._enLook() : this._enSum();
     return '<div class="ov" data-ovl><div class="dlg guide enpg"><div class="dh"><div class="di"><ha-icon icon="mdi:lightning-bolt"></ha-icon></div><h2>' + t('enPage') + '</h2>' +
       '<button class="btn ic" data-a="close" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
       '<div class="gbody"><div class="glist enl">' + list + '</div><div class="gmain enm"><div class="ennav">' + nav.map((n) => '<button class="' + (V === n[0] ? 'on' : '') + '" data-env="' + n[0] + '">' + t('en_' + n[0]) + '</button>').join('') + '</div>' + body + '</div></div></div></div>';
@@ -1158,15 +1208,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const pill = (x, c) => '<em class="enp' + (c ? ' ' + c : '') + '">' + esc(x) + '</em>';
     if (!M) return '<h3 class="enh">' + t('en_sum') + '</h3><div class="hint">' + t('enLoading') + '</div>';
     const mk = lpEnMonthKwh(M), u = lpEnUnit(M), mc = M.days ? lpEnMonthCost(mk, lpEnMonthDays(), M) : null, mode = lpEnMode();
-    const yk = lpEnYear(M), yl = lpEnYearLimit(), b = lpEnLastBill(), E = this._enEsts(), ek = Object.keys(E);
-    const ew = ek.reduce((a, k) => a + (lpEnW(S, 'sensor.lhd_' + k + '_power') || 0), 0);
+    const yk = lpEnYear(M), yl = lpEnYearLimit(), b = lpEnLastBill(), E = this._enEsts(), ek = Object.keys(E), nm = ek.filter((k) => E[k].kind === 'meas').length;
+    const ew = ek.reduce((a, k) => a + (this._enDevW(k, E[k]) || 0), 0), C = this._enCats(), sol = lpEnSolar(), F = lpEnFlowNow(S), tips = lpEnTips(this._hass, M, this._lang), nf = this._enFound().length;
     return '<h3 class="enh">' + t('en_sum') + '</h3><p class="enlead">' + t('enSumT') + '</p><div class="ensl">' +
       row('tariff', this._t('enSMonth'), M.days ? this._enNum(mk) + ' kWh' + (u ? ' · ' + this._enTl(mc.tl) : '') : '–',
         mode === 'tier' && mc ? pill(this._t(mc.hi > 0 ? 'enHigh' : 'enLow'), mc.hi > 0 ? 'w' : 'ok') : pill(u ? (mode === 'bill' ? this._t('enPrBill') : this._t('enPrSingle')) + ' · ' + this._enNum(u, 2) + ' ' + this._enCur() + '/kWh' : this._t('enPriceNone'))) +
       row('tariff', this._t('enSYear'), yk ? this._enNum(yk) + ' / ' + this._enNum(yl) + ' kWh' : this._t('enNone'), yk ? pill('%' + Math.round(yk / yl * 100), yk / yl > 0.85 ? 'w' : 'ok') : '') +
       row('bill', this._t('enSBill'), b ? this._enNum(b.kwh) + ' kWh · ' + this._enTl(b.tl) : this._t('enNoBill'), b && lpEnUntracked() ? pill(this._t('enUnt', { p: Math.round(lpEnUntracked() * 100) }), 'w') : '') +
-      row('est', this._t('enSEst'), ek.length ? this._t('enEstN', { n: ek.length, w: lpEnWs(ew, this._lang) }) : this._t('enNone'), ek.length ? pill('~', 'est') : '') +
-      row('src', this._t('en_src'), M.cats.length ? this._t('enCats', { n: M.cats.length, d: M.devs.length }) : this._t('enNoData'), '') + '</div>';
+      row('dev', this._t('en_dev'), ek.length ? this._t('enDevN', { n: ek.length, m: nm, v: ek.length - nm, w: lpEnWs(ew, this._lang) }) : this._t('enNone'), nf ? pill(this._t('enFoundP', { n: nf }), 'w') : '') +
+      row('cat', this._t('en_cat'), C.length ? this._t('enCatN', { n: C.length, u: ek.filter((k) => !E[k].cat).length }) : this._t('enNone'), '') +
+      row('solar', this._t('en_solar'), sol.on ? (F && F.prod !== null ? this._t('enSolN', { w: lpEnWs(F.prod, this._lang) }) : this._t('enSolNoS')) : this._t('enOff'), '') +
+      row('tips', this._t('en_tips'), lpEnTipCfg().on === false ? this._t('enOff') : this._t('enTNow', { n: tips.length }), tips.length ? pill(String(tips.length), 'w') : '') +
+      row('src', this._t('en_src'), lpEnLemur() ? this._t(lpEnCfg().sync === false ? 'enSyncOff' : 'enSyncOn') : M.cats.length ? this._t('enCats', { n: M.cats.length, d: M.devs.length }) : this._t('enNoData'), '') + '</div>';
   }
   _enPowSel(path, cur, none) {
     const S = this._hass.states;
@@ -1176,7 +1229,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _enSrc() {
     const t = (k, v) => esc(this._t(k, v)), M = LP_EN.m, en = lpEnCfg();
-    return '<h3 class="enh">' + t('en_src') + '</h3><p class="enlead">' + t('enSrcT') + '</p>' +
+    const own = !!lpEnLemur();
+    return '<h3 class="enh">' + t('en_src') + '</h3><p class="enlead">' + t(own ? 'enSrcT2' : 'enSrcT') + '</p>' +
+      (own ? '<div class="srow"><div class="t"><b>' + t('enSync') + '</b><span>' + t('enSyncT') + '</span></div>' + this._enFlag('energy.sync', true) + '</div>' : '') +
       '<div class="srow"><div class="t"><b>' + t('enSrc') + '</b><span>' + (M ? (M.cats.length ? t('enCats', { n: M.cats.length, d: M.devs.length }) : t('enNoData')) : t('enLoading')) + '</span></div><a class="btn" href="/config/energy">' + t('enSrcGo') + '</a></div>' +
       '<div class="srow"><div class="t"><b>' + t('enTotal') + '</b><span>' + t('enTotalT') + '</span></div>' + this._enPowSel('energy.total', en.total, this._t('enAuto')) + '</div>' +
       '<div class="srow"><div class="t"><b>' + t('enSb') + '</b><span>' + t('enSbT') + '</span></div>' + this._enPowSel('energy.standby', en.standby, this._t('enSbAuto')) + '</div>';
@@ -1245,99 +1300,367 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const L = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).filter((x) => !(x && x.from === from && x.to === to)).concat([{ from: from, to: to, kwh: kwh, tl: tl, panel: panel }]);
     this._setting('energy.bills', L.slice(-36));
   }
-  // tahmini cihazlar: liste ve düzenleyici (taslak this._enE = { id, f }, kaydedilmeden saklanmaz)
+  // ---- cihazlar (data.estimates): ölçen (kendi güç sensörü) ve sanal (tahmini). Taslak this._enE = { id, f }, kaydedilmeden saklanmaz ----
+  // cihaz düzenleyicide hesap ve uyarılar yerinde yenilenir
+  _enCalc() {
+    const R = this.shadowRoot, ed = R && R.querySelector('.enm .ened'); if (!ed) return;
+    const box = document.createElement('div'); box.innerHTML = this._enEditor();
+    ['.encalc', '.enwarn'].forEach((sel) => { const a = ed.querySelectorAll(sel), b = box.querySelectorAll(sel); if (a.length === b.length) for (let i = 0; i < a.length; i++) a[i].innerHTML = b[i].innerHTML; else this._enLater(); });
+    const er = ed.querySelector('.imerr'); if (er && !this._enErr) er.parentNode.removeChild(er);
+  }
+  // tam çizim biraz sonra (alandan çıkarken basılan düğmenin tıklaması bitsin)
+  _enLater() { clearTimeout(this._enLT); this._enLT = setTimeout(() => { if (this._modal === 'energy') this._render(); }, 350); }
+  // düzenleyici açılınca görünsün (listenin üstünde)
+  _enTop() { const ed = this.shadowRoot && this.shadowRoot.querySelector('.enm .ened'); if (ed && ed.scrollIntoView) ed.scrollIntoView({ block: 'nearest' }); }
+  _enCats() { const C = STORE.data && STORE.data.ecats; return Array.isArray(C) ? C : []; }
+  _enGet(path) { let o = this._settings(); const p = path.split('.'); for (let i = 0; i < p.length; i++) { if (!o || typeof o !== 'object') return undefined; o = o[p[i]]; } return o; }
+  _enKindIc(k) { return { meas: 'mdi:gauge', light: 'mdi:lightbulb-outline', states: 'mdi:format-list-bulleted-type', onoff: 'mdi:power-plug-outline', fixed: 'mdi:router-wireless', year: 'mdi:fridge-outline', cycle: 'mdi:washing-machine' }[k] || 'mdi:flash'; }
+  // cihazın şu anki gücü: ölçende sensörü, sanalda entegrasyonun sensörü (yoksa burada hesaplanır)
+  _enDevW(id, e) {
+    const S = this._hass.states;
+    if (e.kind === 'meas') return lpEnW(S, e.sensor);
+    const w = lpEnW(S, 'sensor.lhd_' + id + '_power');
+    return w !== null ? w : lpEnEstW(e, e.entity ? S[e.entity] : null);
+  }
+  // Home Assistant'ta güç ölçen ama panele eklenmemiş sensörler (şebeke, güneş, batarya, toplam ve bekleme sensörleri hariç)
+  _enFound() {
+    const S = this._hass.states, E = this._enEsts(), R = this._hass.entities || {}, sol = lpEnSolar(), c = lpEnCfg(), used = {};
+    Object.keys(E).forEach((k) => { if (E[k] && E[k].sensor) used[E[k].sensor] = 1; });
+    [sol.prod, sol.grid, sol.grid_in, sol.grid_out, sol.bat_power, c.total, c.standby].forEach((x) => { if (x) used[x] = 1; });
+    // Enerji ayarlarında başka girişleri içeren (grup toplamı) girişlerin güç sensörü: eklenirse içindekiler iki kez sayılır
+    const dc = ((LP_EN.prefs && LP_EN.prefs.device_consumption) || []).filter((d) => d && d.stat_consumption);
+    const par = {}; dc.forEach((d) => { if (d.included_in_stat) par[d.included_in_stat] = 1; });
+    dc.forEach((d) => { if (par[d.stat_consumption]) { const pw = lpEnPowOf(this._hass, d.stat_consumption, d.stat_rate); if (pw) used[pw] = 1; } });
+    const names = {}; Object.keys(E).forEach((k) => { names[String(E[k].name || '').toLocaleLowerCase('tr')] = 1; });
+    const skip = /grid|şebeke|sebeke|solar|güneş|gunes|\bpv\b|inverter|invertör|invertor|battery|batarya|\bak[uü]\b|total|toplam|standby|bekleme|import|export|_kat_/i;
+    return Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(S[id]) && !used[id] && id.indexOf('sensor.lhd_') !== 0 && S[id].state !== 'unavailable' &&
+      !(R[id] && /^(lemur_home_dashboard|powercalc)$/.test(String(R[id].platform || ''))) && !skip.test(id + ' ' + this._ename(id)) && !names[this._enMeasName(id).toLocaleLowerCase('tr')])
+      .sort((a, b) => (lpEnW(S, b) || 0) - (lpEnW(S, a) || 0));
+  }
+  // güç sensörünün kWh karşılığı: ad benzerliği ya da aynı cihazın enerji sensörü
+  _enGuessE(pid) {
+    const S = this._hass.states, R = this._hass.entities || {};
+    const isE = (id) => !!S[id] && !!S[id].attributes.state_class && (S[id].attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(S[id].attributes.unit_of_measurement || '')));
+    const c = [pid.replace(/_power$/, '_energy'), pid.replace(/power/g, 'energy'), pid.replace(/_(power|guc|watt|w)$/, '_energy'), pid.replace(/_power$/, '_total_energy')];
+    for (let i = 0; i < c.length; i++) if (c[i] !== pid && isE(c[i])) return c[i];
+    const dv = R[pid] && R[pid].device_id;
+    if (dv) { const L = Object.keys(R).filter((x) => R[x].device_id === dv && x.indexOf('sensor.') === 0 && isE(x) && !/today|bugun|daily|month|ay_/.test(x)); if (L.length) return L.sort((a, b) => a.length - b.length)[0]; }
+    return '';
+  }
+  _enMeasName(pid) { return String(this._ename(pid)).replace(/[\s_-]*(power|güç|guc|watt|anlık güç|anlik guc)\s*$/i, '').trim() || pid.split('.')[1]; }
+  // ölçen cihaz ekle (tek ya da hepsi); kategori sonra seçilir
+  _enAddMeas(ids) {
+    const E = lhdClone(this._enEsts());
+    ids.forEach((pid) => {
+      const name = this._enMeasName(pid).slice(0, 60), id = this._enSlug(name, E), en = this._enGuessE(pid);
+      E[id] = en ? { name: name, kind: 'meas', sensor: pid, energy: en } : { name: name, kind: 'meas', sensor: pid };
+    });
+    this._commit('estimates', E); LP_EN.at = 0; lpEnEnsure(this._hass);
+    this._toast(this._t('enDAdded', { n: ids.length }));
+    this._render();
+  }
+  // durum listesi: varlığın alabileceği durumlar (alana göre) ve kayıtlı olanlar
+  _enStatesOf(ent) {
+    const st = this._hass.states[ent], d = String(ent || '').split('.')[0], a = (st && st.attributes) || {}, L = [];
+    const add = (x) => { x = String(x); if (x && L.indexOf(x) < 0 && x !== 'unavailable' && x !== 'unknown') L.push(x); };
+    if (d === 'climate') (a.hvac_modes || ['off', 'heat', 'cool', 'auto']).forEach(add);
+    else if (d === 'media_player') ['off', 'standby', 'idle', 'paused', 'playing', 'on'].forEach(add);
+    else if (d === 'vacuum') ['docked', 'cleaning', 'returning', 'idle', 'paused', 'error'].forEach(add);
+    else if (d === 'water_heater') ['off'].concat(a.operation_list || []).forEach(add);
+    else if (d === 'select' || d === 'input_select') (a.options || []).forEach(add);
+    else ['off', 'on'].forEach(add);
+    if (st) add(st.state);
+    return L;
+  }
+  // durumun HA'daki adı (Oynatılıyor, Soğutma ...); bulunamazsa kendisi
+  _enStLab(st, x) { const h = this._hass; if (st && typeof h.formatEntityState === 'function') { try { const v = h.formatEntityState(st, x); if (v) return v; } catch (e) {} } return x; }
   _enDraft(id) {
     const E = this._enEsts(), e = id && E[id] ? E[id] : null;
-    const f = e ? Object.assign({}, e) : { name: '', kind: 'light', idle: 0.5, max: 9, off: 0.5, on: 60, w: 5, year: 250, k100: 50, week: 3, entity: '', cat: '' };
-    ['idle', 'max', 'off', 'on', 'w', 'year', 'k100', 'week'].forEach((k) => { if (f[k] === undefined) f[k] = { idle: 0.5, max: 9, off: 0.5, on: 60, w: 5, year: 250, k100: 50, week: 3 }[k]; f[k] = String(f[k]); });
+    const D0 = { idle: 0.5, min: '', max: 9, off: 0.5, on: 60, w: 5, year: 250, k100: 50, week: 3, other: 0 };
+    const f = e ? Object.assign({}, e) : { name: '', kind: 'light', entity: '', cat: '' };
+    Object.keys(D0).forEach((k) => { f[k] = String(f[k] === undefined ? D0[k] : f[k]); });
+    f.st = {}; (Array.isArray(f.states) ? f.states : []).forEach((x) => { if (x && x.s) f.st[x.s] = String(x.w); });
     this._enE = { id: e ? id : null, f: f, ask: false };
   }
-  _enEst() {
-    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), S = this._hass.states, M = LP_EN.m;
-    const kinds = ['light', 'onoff', 'fixed', 'year', 'cycle'];
-    const ic = { light: 'mdi:lightbulb-outline', onoff: 'mdi:power-plug-outline', fixed: 'mdi:router-wireless', year: 'mdi:fridge-outline', cycle: 'mdi:washing-machine' };
-    const sub = (e) => this._t('ek_' + e.kind) + (e.cat && M ? ' · ' + ((M.cats.filter((c) => c.id === e.cat)[0] || {}).name || '') : '');
-    let h = '<h3 class="enh">' + t('en_est') + '</h3><p class="enlead">' + t('enEstT') + '</p>';
-    const ids = Object.keys(E);
-    h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = lpEnW(S, 'sensor.lhd_' + id + '_power');
-      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || ic[e.kind] || 'mdi:flash') + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e)) + '</i></span><em class="enp est">' + (w === null ? '…' : '~' + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t('enENone') + '</div>';
-    h += '<div class="acts"><button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
-    const D = this._enE; if (!D) return h;
-    const f = D.f, n = (k) => lpEnNumOf(f[k]);
+  _enDev() {
+    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), C = this._enCats(), S = this._hass.states, F = this._enF || 'all';
+    const catN = (id) => (C.filter((c) => c.id === id)[0] || {}).name || '';
+    const sub = (e) => this._t('ek_' + e.kind) + (e.cat && catN(e.cat) ? ' · ' + catN(e.cat) : ' · ' + this._t('enNoCat'));
+    let h = '<h3 class="enh">' + t('en_dev') + '</h3><p class="enlead">' + t('enDevT') + '</p>';
+    const ids = Object.keys(E).filter((id) => F === 'all' || (F === 'meas' ? E[id].kind === 'meas' : E[id].kind !== 'meas'));
+    const nAll = Object.keys(E).length, nM = Object.keys(E).filter((id) => E[id].kind === 'meas').length;
+    h += '<div class="enbar2"><div class="seg">' + [['all', this._t('enAll') + ' ' + nAll], ['meas', this._t('enFMeas') + ' ' + nM], ['virt', this._t('enFVirt') + ' ' + (nAll - nM)]].map((o) => '<button data-enfil="' + o[0] + '"' + (F === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>' +
+      '<button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
+    h += this._enEditor();
+    h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = this._enDevW(id, e), est = e.kind !== 'meas';
+      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e)) + '</i></span><em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
+    // bulunan ölçen cihazlar
+    const fd = this._enFound();
+    if (fd.length) {
+      const more = this._enAllF ? fd : fd.slice(0, 8);
+      h += '<div class="ensec"><div class="ensh"><b>' + t('enFound', { n: fd.length }) + '</b><span>' + t('enFoundT') + '</span><button class="btn sm' + (this._enAskAll ? ' ask' : '') + '" data-a="enaddall">' + (this._enAskAll ? t('enAddAllQ', { n: fd.length }) : t('enAddAll', { n: fd.length })) + '</button></div><div class="ensl">' +
+        more.map((id) => '<div class="ensr"><ha-icon class="s16" icon="mdi:gauge"></ha-icon><span><b>' + esc(this._enMeasName(id)) + '</b><i>' + esc(id) + '</i></span><em class="enp ok">' + esc(lpEnWs(lpEnW(S, id), this._lang)) + '</em><button class="btn sm" data-enadd="' + esc(id) + '">' + t('enAdd1') + '</button></div>').join('') + '</div>' +
+        (fd.length > more.length ? '<div class="acts"><button class="btn sm" data-a="enfoundall">' + t('enShowAll', { n: fd.length }) + '</button></div>' : '') + '</div>';
+    }
+    return h;
+  }
+  _enEditor() {
+    const t = (k, v) => esc(this._t(k, v)), D = this._enE; if (!D) return '';
+    const S = this._hass.states, f = D.f, n = (k) => lpEnNumOf(f[k]), C = this._enCats();
+    const kinds = ['meas', 'light', 'states', 'onoff', 'fixed', 'year', 'cycle'];
     const fld = (key, label, step, dl) => '<div class="fld"><label>' + label + '</label><input class="inp" ' + (step ? 'type="number" min="0" step="' + step + '"' : 'spellcheck="false"' + (dl ? ' list="' + dl + '"' : '')) + ' data-enf="' + key + '" value="' + esc(f[key] || '') + '"></div>';
-    h += '<div class="ened"><div class="engrid">' + fld('name', t('enEName')) + '</div>' +
-      '<div class="fld"><label>' + t('enEKind') + '</label><div class="enkinds">' + kinds.map((k) => '<button class="' + (f.kind === k ? 'on' : '') + '" data-enk="' + k + '"><ha-icon class="s16" icon="' + ic[k] + '"></ha-icon><b>' + t('ek_' + k) + '</b><span>' + t('ek_' + k + 'T') + '</span></button>').join('') + '</div></div><div class="engrid">';
-    if (f.kind === 'light') h += fld('idle', t('enEIdle'), '0.1') + fld('max', t('enEMax'), '1') + fld('entity', t('enEEnt'), '', 'enlights');
-    if (f.kind === 'onoff') h += fld('off', t('enEOff'), '0.1') + fld('on', t('enEOn'), '1') + fld('entity', t('enEEnt'), '', 'enents');
+    const sel = (key, label, list, none) => '<div class="fld"><label>' + label + '</label><select class="inp" data-enf="' + key + '">' + (none ? '<option value="">' + esc(none) + '</option>' : '') +
+      list.map((id) => '<option value="' + esc(id) + '"' + (f[key] === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + (f[key] && list.indexOf(f[key]) < 0 ? '<option value="' + esc(f[key]) + '" selected>' + esc(f[key]) + '</option>' : '') + '</select></div>';
+    let h = '<div class="ened"><div class="ensh"><b>' + t(D.id ? 'enEEdit' : 'enENew') + '</b><button class="btn ic sm" data-a="eneclose" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="engrid">' + fld('name', t('enEName')) + '</div>' +
+      '<div class="fld"><label>' + t('enEKind') + '</label><div class="enkinds">' + kinds.map((k) => '<button class="' + (f.kind === k ? 'on' : '') + '" data-enk="' + k + '"><ha-icon class="s16" icon="' + this._enKindIc(k) + '"></ha-icon><b>' + t('ek_' + k) + '</b><span>' + t('ek_' + k + 'T') + '</span></button>').join('') + '</div></div><div class="engrid">';
+    const ids = Object.keys(S).sort();
+    if (f.kind === 'meas') {
+      const E0 = this._enEsts(), sol = lpEnSolar(), taken = {};
+      Object.keys(E0).forEach((k) => { if (k !== D.id && E0[k].sensor) taken[E0[k].sensor] = 1; });
+      [sol.prod, sol.grid, sol.grid_in, sol.grid_out, sol.bat_power].forEach((x) => { if (x) taken[x] = 1; });
+      const pw = ids.filter((x) => x.indexOf('sensor.') === 0 && lpEnIsPow(S[x]) && x.indexOf('sensor.lhd_') !== 0 && !taken[x]);
+      const en = ids.filter((x) => x.indexOf('sensor.') === 0 && x.indexOf('sensor.lhd_') !== 0 && S[x].attributes.state_class && (S[x].attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(S[x].attributes.unit_of_measurement || ''))));
+      h += sel('sensor', t('enMSensor'), pw, this._t('enPick')) + sel('energy', t('enMEnergy'), en, this._t('enMCalc'));
+    }
+    if (f.kind === 'light') h += fld('entity', t('enEEnt'), '', 'enlights') + fld('idle', t('enEIdle'), '0.1') + fld('min', t('enEMin'), '0.1') + fld('max', t('enEMax'), '1');
+    if (f.kind === 'onoff') h += fld('entity', t('enEEnt'), '', 'enents') + fld('off', t('enEOff'), '0.1') + fld('on', t('enEOn'), '1');
+    if (f.kind === 'states') h += fld('entity', t('enEEnt'), '', 'enents');
     if (f.kind === 'fixed') h += fld('w', t('enEW'), '0.1');
     if (f.kind === 'year') h += fld('year', t('enEYear'), '1');
     if (f.kind === 'cycle') h += fld('k100', t('enEK100'), '1') + fld('week', t('enEWeek'), '1');
-    const cats = (M && M.cats) || [];
-    h += '<div class="fld"><label>' + t('enECat') + '</label><select class="inp" data-enf="cat"><option value="">' + t('enECatNone') + '</option>' + cats.filter((c) => !lpEnIsEst(c)).map((c) => '<option value="' + esc(c.id) + '"' + (f.cat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') + '</select></div></div>';
-    // hesap: şu anki ve ortalama güç
-    const e = { kind: f.kind, idle: n('idle'), max: n('max'), off: n('off'), on: n('on'), w: n('w'), year: n('year'), k100: n('k100'), week: n('week') };
-    const st = f.entity ? S[f.entity] : null, now = lpEnEstW(e, st);
+    h += '<div class="fld"><label>' + t('enECat') + '</label><select class="inp" data-enf="cat"><option value="">' + t('enNoCat') + '</option>' + C.map((c) => '<option value="' + esc(c.id) + '"' + (f.cat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') +
+      '<option value="__new"' + (f.cat === '__new' ? ' selected' : '') + '>' + t('enNewCat') + '</option></select></div>' + (f.cat === '__new' ? fld('newcat', t('enNewCatN')) : '') + '</div>';
+    // duruma göre güç: her durum için W
+    const st = f.entity ? S[f.entity] : null;
+    if (f.kind === 'states') {
+      const L = this._enStatesOf(f.entity); Object.keys(f.st).forEach((x) => { if (L.indexOf(x) < 0) L.push(x); });
+      h += f.entity ? '<div class="enst"><div class="ensh"><b>' + t('enStT') + '</b><span>' + t('enStH') + '</span></div>' + L.map((x) => '<div class="enstr' + (st && st.state === x ? ' on' : '') + '"><span>' + esc(this._enStLab(st, x)) + (st && st.state === x ? ' <em class="enp ok">' + t('enENow') + '</em>' : '') + '</span><span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-enst="' + esc(x) + '" value="' + esc(f.st[x] !== undefined ? f.st[x] : '') + '" placeholder="' + esc(f.other || '0') + '"><i>W</i></span></div>').join('') +
+        '<div class="enstr"><span>' + t('enStOther') + '</span><span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-enf="other" value="' + esc(f.other || '') + '"><i>W</i></span></div></div>' : '<div class="hint">' + t('enStPick') + '</div>';
+    }
+    // hesap
+    const e = this._enRec(f);
+    const now = f.kind === 'meas' ? lpEnW(S, f.sensor) : lpEnEstW(e, st);
     let calc = '';
-    if (f.kind === 'light') calc = [10, 30, 50, 100].map((p) => '<div><span>' + t('enEBri', { p: p }) + '</span><b>' + esc(lpEnNum(e.idle + (Math.max(e.max, e.idle) - e.idle) * p / 100, 1, this._lang)) + ' W</b></div>').join('') + (st ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '');
-    else if (f.kind === 'onoff') calc = st ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '';
+    if (f.kind === 'light') calc = [10, 30, 50, 100].map((p) => '<div><span>' + t('enEBri', { p: p }) + '</span><b>' + esc(lpEnNum(lpEnEstW(e, { state: 'on', attributes: { brightness: p * 2.55 } }), 1, this._lang)) + ' W</b></div>').join('') + (st ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '');
+    else if (f.kind === 'onoff' || f.kind === 'states' || f.kind === 'meas') calc = now !== null && (st || f.kind === 'meas') ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '';
     else calc = '<div><span>' + t('enEAvg') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div><div class="tot"><span>' + t('enEDay', { k: lpEnNum(now * 24 / 1000, 2, this._lang), y: lpEnNum(now * 8.76, 0, this._lang) }) + '</span><b></b></div>';
     if (calc) h += '<div class="encalc">' + calc + '</div>';
+    const warn = (f.kind === 'light' || f.kind === 'onoff' || f.kind === 'states') && f.entity && !st ? t('enWNoEnt') : f.kind === 'states' && f.entity && !e.states.length && !e.other ? t('enWZero') : '';
+    h += '<div class="hint enwarn">' + warn + '</div>';
     if (f.kind === 'year') h += '<div class="hint">' + t('enEYearT') + '</div>';
     const sid = D.id || this._enSlug(f.name);
-    h += '<div class="hint">' + t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' }) + '</div>' +
+    h += (f.kind === 'meas' ? (f.energy ? '' : '<div class="hint">' + t('enMCalcT', { e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') : '<div class="hint">' + t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') +
       (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
       '<div class="acts">' + (D.id ? '<button class="btn dan' + (D.ask ? ' ask' : '') + '" data-a="enedel"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (D.ask ? t('enEDelQ') : t('enEDel')) + '</button>' : '') + '<span class="grow"></span>' +
       '<button class="btn pri" data-a="enesave"' + (this._enBusy ? ' disabled' : '') + '>' + t('enESave') + '</button></div></div>';
-    const ents = Object.keys(S).sort();
-    h += '<datalist id="enlights">' + ents.filter((x) => x.indexOf('light.') === 0).map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist>' +
-      '<datalist id="enents">' + ents.filter((x) => /^(light|switch|media_player|fan|climate|input_boolean|binary_sensor|vacuum|humidifier|water_heater)\./.test(x)).map((x) => '<option value="' + esc(x) + '">').join('') + '</datalist>';
+    h += '<datalist id="enlights">' + ids.filter((x) => x.indexOf('light.') === 0).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>' +
+      '<datalist id="enents">' + ids.filter((x) => /^(light|switch|media_player|fan|climate|input_boolean|binary_sensor|vacuum|humidifier|water_heater|select|input_select|remote|lock|cover)\./.test(x)).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>';
     return h;
   }
-  _enSlug(name) {
-    const base = String(name || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30) || 'cihaz';
-    const E = this._enEsts(), S = this._hass.states;
-    let id = base, k = 2; while (E[id] || S['sensor.lhd_' + id + '_power']) id = base + '_' + (k++);
-    return id;
-  }
-  // Home Assistant enerji ayarlarında "Cihaz tüketimi" listesine ekle / çıkar (kategori seçildiyse onun içine)
-  _enPrefs(id, name, cat, remove) {
-    const conn = this._hass.connection, stat = 'sensor.lhd_' + id + '_energy';
-    return conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => ({})).then((p) => {
-      const dc = ((p && p.device_consumption) || []).filter((d) => d && d.stat_consumption !== stat);
-      if (!remove) { const o = { stat_consumption: stat, name: name }; if (cat && dc.some((d) => d.stat_consumption === cat)) o.included_in_stat = cat; dc.push(o); }
-      return conn.sendMessagePromise({ type: 'energy/save_prefs', device_consumption: dc });
-    }).then(() => { LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass); });
-  }
-  async _enSave() {
-    const D = this._enE; if (!D) return;
-    const f = D.f, name = String(f.name || '').trim();
-    this._enErr = '';
-    if (!name) { this._enErr = this._t('enENeed'); return this._render(); }
-    const ent = String(f.entity || '').trim();
-    if ((f.kind === 'light' || f.kind === 'onoff') && !/^[a-z0-9_]+\.[a-z0-9_]+$/.test(ent)) { this._enErr = this._t('enENeedEnt'); return this._render(); }
-    const id = D.id || this._enSlug(name), n = (k) => Math.min(50000, lpEnNumOf(f[k]));
-    const e = { name: name.slice(0, 60), kind: f.kind };
-    if (f.kind === 'light') Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent });
+  // taslaktan kayıt (sayılar 0-50000)
+  _enRec(f) {
+    const n = (k) => Math.min(50000, lpEnNumOf(f[k])), ent = String(f.entity || '').trim(), e = { name: String(f.name || '').trim().slice(0, 60), kind: f.kind };
+    if (f.kind === 'meas') { e.sensor = f.sensor || ''; if (f.energy) e.energy = f.energy; }
+    if (f.kind === 'light') { Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent }); if (String(f.min).trim() !== '') e.min = n('min'); }
     if (f.kind === 'onoff') Object.assign(e, { off: n('off'), on: n('on'), entity: ent });
+    if (f.kind === 'states') { e.entity = ent; e.other = n('other'); e.states = Object.keys(f.st || {}).filter((x) => String(f.st[x]).trim() !== '').slice(0, 24).map((x) => ({ s: x.slice(0, 40), w: Math.min(50000, lpEnNumOf(f.st[x])) })); }
     if (f.kind === 'fixed') e.w = n('w');
     if (f.kind === 'year') e.year = n('year');
     if (f.kind === 'cycle') Object.assign(e, { k100: n('k100'), week: Math.min(100, n('week')) });
-    if (f.cat) e.cat = String(f.cat);
-    const E = lhdClone(this._enEsts()); E[id] = e;
+    if (f.icon && /^[a-z]+:[a-z0-9-]+$/.test(f.icon)) e.icon = f.icon;
+    return e;
+  }
+  _enSlug(name, E0, pre) {
+    const base = (pre || '') + (String(name || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30) || 'cihaz');
+    const E = E0 || this._enEsts(), S = this._hass.states, C = this._enCats();
+    const cat = pre !== undefined;   // kategori kimliği: kategoriler arasında benzersiz
+    let b2 = base; if (!cat && (b2.indexOf('kat_') === 0 || b2 === 'solar')) b2 = 'c_' + b2;
+    let id = b2, k = 2; while (cat ? C.some((c) => c.id === id) : (E[id] || S['sensor.lhd_' + id + '_power'] || S['sensor.lhd_' + id + '_energy'])) id = b2 + '_' + (k++);
+    return id;
+  }
+  _enColor(i) { const P = ['#5B8DEF', '#FFC94A', '#4DD0E1', '#FF7AA2', '#3DDC84', '#B388FF', '#FF9142', '#90A4AE', '#7BD83A', '#E5484D']; return P[i % P.length]; }
+  async _enSave() {
+    const D = this._enE; if (!D) return;
+    const f = D.f, e = this._enRec(f);
+    this._enErr = '';
+    if (!e.name) { this._enErr = this._t('enENeed'); return this._render(); }
+    if (e.kind === 'meas' && !e.sensor) { this._enErr = this._t('enMNeed'); return this._render(); }
+    if (e.kind === 'meas' && Object.keys(this._enEsts()).some((k) => k !== D.id && this._enEsts()[k].sensor === e.sensor)) { this._enErr = this._t('enMUsed'); return this._render(); }
+    if ((e.kind === 'light' || e.kind === 'onoff' || e.kind === 'states') && !/^[a-z0-9_]+\.[a-z0-9_]+$/.test(e.entity)) { this._enErr = this._t('enENeedEnt'); return this._render(); }
+    let C = this._enCats();
+    if (f.cat === '__new') {
+      const nm = String(f.newcat || '').trim(); if (!nm) { this._enErr = this._t('enCNeed'); return this._render(); }
+      const same = C.filter((c) => String(c.name).toLocaleLowerCase('tr') === nm.toLocaleLowerCase('tr'))[0];   // aynı adda kategori varsa o
+      if (same) e.cat = same.id;
+      else { const cid = this._enSlug(nm, null, ''); C = C.concat([{ id: cid, name: nm.slice(0, 60), color: this._enColor(C.length) }]); e.cat = cid; }
+    } else if (f.cat) e.cat = f.cat;
+    const E = lhdClone(this._enEsts()), id = D.id || this._enSlug(e.name);
+    E[id] = e;
     this._enBusy = true; this._render();
     try {
+      if (C !== this._enCats()) await this._commit('ecats', C);
       await this._commit('estimates', E);
-      await this._enPrefs(id, e.name, e.cat, false);
       this._toast(this._t('enESaved'));
-    } catch (err) { this._toast(this._t('enEPrefErr', { e: (err && err.message) || err }), false); }
-    this._enBusy = false; this._enE = { id: id, f: D.f, ask: false }; this._render();
+    } catch (err) { this._toast(this._t('err', { e: (err && err.message) || err }), false); }
+    LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass);
+    this._enBusy = false; this._enDraft(id); this._render();
   }
   async _enDel() {
     const D = this._enE; if (!D || !D.id) return;
     if (!D.ask) { D.ask = true; return this._render(); }
     const E = lhdClone(this._enEsts()); delete E[D.id];
-    try { await this._commit('estimates', E); await this._enPrefs(D.id, '', '', true); this._toast(this._t('enEDeleted')); } catch (err) { this._toast(this._t('enEPrefErr', { e: (err && err.message) || err }), false); }
+    await this._commit('estimates', E); this._toast(this._t('enEDeleted'));
+    LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass);
     this._enE = null; this._render();
+  }
+  // ---- kategoriler (data.ecats): her biri için Home Assistant'ta toplam güç ve kWh sensörü ----
+  _enCat() {
+    const t = (k, v) => esc(this._t(k, v)), C = this._enCats(), E = this._enEsts(), S = this._hass.states;
+    let h = '<h3 class="enh">' + t('en_cat') + '</h3><p class="enlead">' + t('enCatT') + '</p>';
+    const ed = this._enCEd(), lst = C.length ? '<div class="ensl">' + C.map((c, i) => { const n = Object.keys(E).filter((k) => E[k].cat === c.id).length, w = lpEnW(S, 'sensor.lhd_kat_' + c.id + '_power'), lk = lpEnLookOf(c.name, i);
+      return '<button class="ensr' + (this._enC && this._enC.id === c.id ? ' on' : '') + '" data-encid="' + esc(c.id) + '"><span class="encdot" style="background:' + esc(c.color || lk[1]) + '"><ha-icon icon="' + esc(c.icon || lk[0]) + '"></ha-icon></span><span><b>' + esc(c.name) + '</b><i>' + t('enCDevs', { n: n }) + '</i></span><em class="enp">' + (w === null ? '…' : esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t('enCNone') + '</div>';
+    return h + '<div class="acts"><button class="btn" data-a="encnew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enCAdd') + '</button></div>' + ed + lst;
+  }
+  _enCEd() {
+    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), D = this._enC; if (!D) return '';
+    let h = '';
+    const ids = Object.keys(E).sort((a, b) => String(E[a].name).localeCompare(String(E[b].name), this._lang));
+    const cols = ['#5B8DEF', '#FFC94A', '#4DD0E1', '#FF7AA2', '#3DDC84', '#B388FF', '#FF9142', '#90A4AE', '#7BD83A', '#E5484D'];
+    h += '<div class="ened"><div class="ensh"><b>' + t(D.id ? 'enCEdit' : 'enCAdd') + '</b><button class="btn ic sm" data-a="encclose" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="engrid"><div class="fld"><label>' + t('enEName') + '</label><input class="inp" spellcheck="false" data-encf="name" value="' + esc(D.name) + '"></div></div>' +
+      '<div class="fld"><label>' + t('enCColor') + '</label><div class="encols">' + cols.map((c) => '<button data-encol="' + c + '" class="' + (D.color === c ? 'on' : '') + '" style="background:' + c + '"></button>').join('') + '</div></div>' +
+      '<div class="fld"><label>' + t('enCMem', { n: Object.keys(D.m).filter((k) => D.m[k]).length }) + '</label>' + (ids.length ? '<div class="enmem">' + ids.map((k) => { const oc = E[k].cat && E[k].cat !== D.id ? (this._enCats().filter((c) => c.id === E[k].cat)[0] || {}).name : '';
+        return '<label class="enmi"><input type="checkbox" data-encm="' + esc(k) + '"' + (D.m[k] ? ' checked' : '') + '><span><b>' + esc(E[k].name) + '</b>' + (oc ? '<i>' + esc(oc) + '</i>' : '') + '</span></label>'; }).join('') + '</div>' : '<div class="hint">' + t('enENone') + '</div>') + '</div>' +
+      (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
+      '<div class="acts">' + (D.id ? '<button class="btn dan' + (D.ask ? ' ask' : '') + '" data-a="encdel"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (D.ask ? t('enEDelQ') : t('enEDel')) + '</button>' : '') + '<span class="grow"></span><button class="btn pri" data-a="encsave">' + t('enESave') + '</button></div></div>';
+    return h;
+  }
+  _enCDraft(id) {
+    const c = id ? this._enCats().filter((x) => x.id === id)[0] : null, E = this._enEsts(), m = {};
+    if (c) Object.keys(E).forEach((k) => { if (E[k].cat === c.id) m[k] = true; });
+    this._enC = { id: c ? c.id : null, name: c ? c.name : '', color: c ? c.color || '' : this._enColor(this._enCats().length), m: m, ask: false };
+  }
+  async _enCSave() {
+    const D = this._enC; if (!D) return;
+    const nm = String(D.name || '').trim(); this._enErr = '';
+    if (!nm) { this._enErr = this._t('enCNeed'); return this._render(); }
+    if (this._enCats().some((c) => c.id !== D.id && String(c.name).toLocaleLowerCase('tr') === nm.toLocaleLowerCase('tr'))) { this._enErr = this._t('enCSame'); return this._render(); }
+    const id = D.id || this._enSlug(nm, null, '');
+    const C = this._enCats().map((c) => (c.id === id ? Object.assign({}, c, { name: nm.slice(0, 60), color: D.color || c.color }) : c));
+    if (!D.id) { const o = { id: id, name: nm.slice(0, 60) }; if (D.color) o.color = D.color; C.push(o); }
+    const E = lhdClone(this._enEsts());
+    Object.keys(E).forEach((k) => { if (D.m[k]) E[k].cat = id; else if (E[k].cat === id) delete E[k].cat; });
+    await this._commit('ecats', C); await this._commit('estimates', E);
+    this._toast(this._t('enESaved')); LP_EN.at = 0; lpEnEnsure(this._hass);
+    this._enCDraft(id); this._render();
+  }
+  async _enCDel() {
+    const D = this._enC; if (!D || !D.id) return;
+    if (!D.ask) { D.ask = true; return this._render(); }
+    const E = lhdClone(this._enEsts()); Object.keys(E).forEach((k) => { if (E[k].cat === D.id) delete E[k].cat; });
+    await this._commit('estimates', E); await this._commit('ecats', this._enCats().filter((c) => c.id !== D.id));
+    this._toast(this._t('enEDeleted')); LP_EN.at = 0; lpEnEnsure(this._hass);
+    this._enC = null; this._render();
+  }
+  // ---- güneş, şebeke ve batarya (settings.energy.solar) ----
+  _enSensSel(path, cur, none, test) {
+    const S = this._hass.states;
+    const L = Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && id.indexOf('sensor.lhd_') !== 0 && test(S[id], id)).sort((a, b) => this._ename(a).localeCompare(this._ename(b), this._lang));
+    if (cur && L.indexOf(cur) < 0) L.unshift(cur);
+    return '<select class="inp w" data-sf="' + path + '" style="max-width:300px"><option value="">' + esc(none) + '</option>' + L.map((id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + '</select>';
+  }
+  _enFlag(path, def) { const v = this._enGet(path), on = def ? v !== false : v === true; return '<button class="tg' + (on ? ' on' : '') + '" data-enflag="' + path + '|' + (def ? 1 : 0) + '"></button>'; }
+  _enSolarV() {
+    const t = (k, v) => esc(this._t(k, v)), s = lpEnSolar(), S = this._hass.states, gm = lpEnGridMode(s);
+    const pw = (st) => lpEnIsPow(st), en = (st) => !!st.attributes.state_class && (st.attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(st.attributes.unit_of_measurement || '')));
+    const pc = (st, id) => st.attributes.device_class === 'battery' || (String(st.attributes.unit_of_measurement || '') === '%' && !st.attributes.device_class && /bat|soc|akü|aku|charge|şarj|sarj/i.test(id + ' ' + (st.attributes.friendly_name || '')));
+    const row = (b, sp, ctl) => '<div class="srow"><div class="t"><b>' + b + '</b>' + (sp ? '<span>' + sp + '</span>' : '') + '</div>' + ctl + '</div>';
+    let h = '<h3 class="enh">' + t('en_solar') + '</h3><p class="enlead">' + t('enSolT') + '</p>' + row(t('enSolOn'), t('enSolOnT'), this._enFlag('energy.solar.on', false));
+    if (!s.on) return h;
+    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolProd') + '</b></div>' +
+      row(t('enSolP'), t('enSolPT'), this._enSensSel('energy.solar.prod', s.prod, this._t('enNone'), pw)) +
+      row(t('enSolPE'), t('enSolPET'), this._enSensSel('energy.solar.prod_energy', s.prod_energy, this._t('enMCalc'), en)) + '</div>';
+    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolGrid') + '</b></div>' +
+      row(t('enSolGM'), '', '<div class="seg">' + [['net', this._t('enGNet')], ['two', this._t('enGTwo')], ['none', this._t('enGNone')]].map((o) => '<button data-set="energy.solar.grid_mode" data-val="' + o[0] + '"' + (gm === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>') +
+      (gm === 'net' ? row(t('enGNetS'), t('enGNetST'), this._enSensSel('energy.solar.grid', s.grid, this._t('enNone'), pw)) : '') +
+      (gm === 'net' && s.grid ? row(t('enGInv'), t('enGInvT'), this._enFlag('energy.solar.grid_inv', false)) : '') +
+      (gm === 'two' ? row(t('enGIn'), '', this._enSensSel('energy.solar.grid_in', s.grid_in, this._t('enNone'), pw)) + row(t('enGOut'), '', this._enSensSel('energy.solar.grid_out', s.grid_out, this._t('enNone'), pw)) : '') +
+      row(t('enExp'), t('enExpT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.01" data-dec data-sf="energy.solar.export_price" value="' + esc(s.export_price || '') + '"><i>' + esc(this._enCur()) + '</i></span>') + '</div>';
+    h += '<div class="ensec"><div class="ensh"><b>' + t('enSolBat') + '</b><span>' + t('enSolBatT') + '</span></div>' +
+      row(t('enBP'), t('enBPT'), this._enSensSel('energy.solar.bat_power', s.bat_power, this._t('enNone'), pw)) +
+      (s.bat_power ? row(t('enBInv'), t('enBInvT'), this._enFlag('energy.solar.bat_inv', false)) : '') +
+      row(t('enBSoc'), '', this._enSensSel('energy.solar.soc', s.soc, this._t('enNone'), pc)) +
+      row(t('enBCap'), t('enBCapT'), '<span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-dec data-sf="energy.solar.cap" value="' + esc(s.cap || '') + '"><i>kWh</i></span>') + '</div>';
+    const F = lpEnFlowNow(S);
+    if (F && F.has) {
+      const v = (x) => (x === null ? '–' : esc(lpEnWs(x, this._lang)));
+      h += '<div class="encalc"><div><span>' + t('enFProd') + '</span><b>' + v(F.prod) + '</b></div>' + (gm === 'none' ? '' : '<div><span>' + t(F.grid !== null && F.grid < 0 ? 'enFExp' : 'enFImp') + '</span><b>' + v(F.grid === null ? null : Math.abs(F.grid)) + '</b></div>') +
+        (F.bat !== null ? '<div><span>' + t(F.bat >= 0 ? 'enFCh' : 'enFDis') + '</span><b>' + v(Math.abs(F.bat)) + '</b></div>' : '') + (F.soc !== null ? '<div><span>' + t('enBSoc') + '</span><b>' + esc(lpEnPct(F.soc, this._lang)) + '</b></div>' : '') +
+        (F.gridKnown ? '<div class="tot"><span>' + t('enFHome') + '</span><b>' + v(F.home) + '</b></div>' : '') + '</div>';
+    }
+    h += '<div class="acts"><button class="btn" data-a="ensolcard"><ha-icon class="s16" icon="mdi:transmission-tower-export"></ha-icon>' + t('enSolCard') + '</button></div>';
+    return h;
+  }
+  // akış (ve batarya) kartını enerji sekmesine ekle: enerji kartı olan ilk sekmenin ilk kolonuna
+  _enSolCard() {
+    const tabs = this._work(), T = tabs.filter((x) => (x.sections || []).some((s) => s.type === 'energy' || lpEnOnly(s)))[0];
+    if (!T) { this._toast(this._t('enSolNoTab'), false); return; }
+    const has = (k) => (T.sections || []).some((s) => (s.entities || []).some((x) => x && x.energy === k));
+    const L = this._lang, add = [];
+    if (!has('flow')) add.push({ id: T.id + '-f' + Date.now().toString(36), type: 'energy', title: upper(L, lpEnT(L, 's_flow')), col: 0, grow: 2, entities: [{ energy: 'flow' }] });
+    if (!add.length) { this._toast(this._t('enSolHas'), false); return; }
+    this._snap();
+    T.sections = add.concat(T.sections || []);
+    this._commit('tabs', tabs); this._toast(this._t('enSolAdded', { t: T.name }));
+  }
+  // ---- ipuçları ----
+  _enTipsV() {
+    const t = (k, v) => esc(this._t(k, v)), c = lpEnTipCfg(), M = LP_EN.m;
+    const row = (b, sp, ctl) => '<div class="srow"><div class="t"><b>' + b + '</b>' + (sp ? '<span>' + sp + '</span>' : '') + '</div>' + ctl + '</div>';
+    const num = (k, d, step, u) => '<span class="ennum"><input class="inp" type="number" min="0" step="' + step + '" data-dec data-sf="energy.tips.' + k + '" value="' + esc(c[k] || '') + '" placeholder="' + d + '"><i>' + u + '</i></span>';
+    let h = '<h3 class="enh">' + t('en_tips') + '</h3><p class="enlead">' + t('enTipsT') + '</p>' + row(t('enTOn'), t('enTOnT'), this._enFlag('energy.tips.on', true));
+    if (c.on === false) return h;
+    const L = M ? lpEnTips(this._hass, M, this._lang) : [];
+    h += '<div class="ensec"><div class="ensh"><b>' + t('enTNow', { n: L.length }) + '</b></div>' + (L.length ? '<div class="ensl">' + L.map((x) => '<div class="ensr"><ha-icon class="s16" icon="' + esc(x.ic) + '" style="color:#FF9142"></ha-icon><span><b>' + esc(x.t) + '</b></span><button class="btn sm" data-entipoff="' + esc(x.k) + '">' + t('enTHide') + '</button></div>').join('') + '</div>' : '<div class="hint">' + t('enTNone') + '</div>') + '</div>';
+    h += '<div class="ensec">' + row(t('enTLeft'), t('enTLeftT'), '<div style="display:flex;gap:6px;flex:0 0 auto">' + num('left_w', 300, 10, 'W') + num('left_h', 3, 0.5, this._t('enHrs')) + '</div>') +
+      row(t('enTSb'), t('enTSbT'), num('standby_w', 150, 10, 'W')) +
+      row(t('enTDay'), t('enTDayT'), '<div style="display:flex;gap:8px;align-items:center;flex:0 0 auto">' + (c.daily === true ? num('daily_kwh', 12, 0.5, 'kWh') : '') + this._enFlag('energy.tips.daily', false) + '</div>') +
+      row(t('enTYear'), t('enTYearT'), this._enFlag('energy.tips.year', true)) +
+      row(t('enTSun'), t('enTSunT'), this._enFlag('energy.tips.sun', true)) +
+      row(t('enTDot'), t('enTDotT'), this._enFlag('energy.tips.dot', false)) + '</div>';
+    const off = (Array.isArray(lpEnCfg().tips_off) ? lpEnCfg().tips_off.length : 0) + (() => { try { return JSON.parse(localStorage.getItem('lhd-en-tips-off') || '[]').length; } catch (e) { return 0; } })();
+    if (off) h += '<div class="acts"><button class="btn" data-a="entipsreset"><ha-icon class="s16" icon="mdi:eye-refresh-outline"></ha-icon>' + t('enTReset', { n: off }) + '</button></div>';
+    return h;
+  }
+  // ---- aktar: başka bir güç tahmini eklentisinin tanımları ----
+  _enImpV() {
+    const t = (k, v) => esc(this._t(k, v)), P = this._enImp;
+    let h = '<h3 class="enh">' + t('en_imp') + '</h3><p class="enlead">' + t('enImpT') + '</p>';
+    if (!P) return h + '<div class="acts"><button class="btn pri" data-a="enimpscan"' + (this._enBusy ? ' disabled' : '') + '><ha-icon class="s16" icon="mdi:magnify"></ha-icon>' + t('enImpScan') + '</button></div>';
+    if (P.err) return h + '<div class="imerr">' + esc(P.err) + '</div><div class="acts"><button class="btn" data-a="enimpscan">' + t('enImpScan') + '</button></div>';
+    if (P.done) return h + '<div class="encalc"><div><span>' + t('enImpDone', { n: P.done.n, c: P.done.c }) + '</span><b></b></div><div><span>' + t('enImpOld') + '</span><b>' + esc(lpEnWs(P.old_w, this._lang)) + '</b></div>' +
+      '<div class="tot"><span>' + t('enImpNew') + '</span><b>' + esc(lpEnWs(P.devices.reduce((a, d) => a + (d.w || 0), 0), this._lang)) + '</b></div></div><div class="hint">' + t('enImpAfter') + '</div>' +
+      '<div class="acts"><button class="btn" data-a="enimpscan">' + t('enImpAgain') + '</button><span class="grow"></span><button class="btn pri" data-env="dev">' + t('enImpToDev') + '</button></div>';
+    if (!P.found) return h + '<div class="hint">' + t('enImpNone') + '</div>';
+    const C = {}; P.cats.forEach((c) => { C[c.id] = c.name; });
+    const nw = P.devices.reduce((a, d) => a + (d.w || 0), 0), nchk = P.devices.filter((d) => d.check).length;
+    h += '<div class="encalc"><div><span>' + t('enImpCats') + '</span><b>' + P.cats.length + '</b></div><div><span>' + t('enImpDevs') + '</span><b>' + P.devices.length + '</b></div>' +
+      (P.skipped.length ? '<div><span>' + t('enImpSkip') + '</span><b>' + P.skipped.length + '</b></div>' : '') +
+      '<div><span>' + t('enImpOld') + '</span><b>' + esc(lpEnWs(P.old_w, this._lang)) + '</b></div><div class="tot"><span>' + t('enImpNew') + '</span><b>' + esc(lpEnWs(nw, this._lang)) + '</b></div></div>';
+    if (nchk) h += '<div class="hint">' + t('enImpChk', { n: nchk }) + '</div>';
+    h += '<div class="ensl">' + P.devices.map((d) => '<div class="ensr"><ha-icon class="s16" icon="' + this._enKindIc(d.kind) + '"></ha-icon><span><b>' + esc(d.name) + '</b><i>' + esc(this._t('ek_' + d.kind) + ' · ' + (C[d.cat] || this._t('enNoCat'))) + '</i></span>' + (d.check ? '<em class="enp w">' + t('enImpChkP') + '</em>' : '') + '<em class="enp' + (d.kind === 'meas' ? ' ok' : ' est') + '">' + esc(lpEnWs(d.w, this._lang)) + '</em></div>').join('') + '</div>';
+    h += '<div class="hint">' + t('enImpWhat', { n: P.drop.length }) + '</div><div class="acts"><button class="btn" data-a="enimpscan">' + t('enImpAgain') + '</button><span class="grow"></span>' +
+      (P.devices.length || P.cats.length ? '<button class="btn pri' + (P.ask ? ' ask' : '') + '" data-a="enimpgo"' + (this._enBusy ? ' disabled' : '') + '>' + (P.ask ? t('enImpGoQ') : t('enImpGo', { n: P.devices.length })) + '</button>' : '') + '</div>';
+    return h;
+  }
+  async _enImpRun(apply) {
+    if (apply && this._enImp && !this._enImp.ask) { this._enImp.ask = true; return this._render(); }
+    this._enBusy = true; this._render();
+    try {
+      const r = await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/energy_import', apply: !!apply });
+      if (apply) { this._enImp = Object.assign({}, this._enImp, { done: { n: (r && r.devices ? r.devices.length : 0), c: (r && r.cats ? r.cats.length : 0) }, ask: false }); LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass); this._toast(this._t('enESaved')); } else this._enImp = r || { found: 0 };
+    } catch (err) { this._enImp = { err: this._t('err', { e: (err && err.message) || err }) }; }
+    this._enBusy = false; this._render();
   }
   _enLook() {
     const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), L = lpEnLim();
@@ -1732,15 +2055,38 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       // Enerji sayfası
       if (act === 'energy') return this._enOpen();
       if (act === 'enbadd') return this._enBillAdd();
-      if (act === 'enenew') { this._enDraft(null); this._enErr = ''; return this._render(); }
+      if (act === 'enenew') { this._enDraft(null); this._enErr = ''; this._render(); return this._enTop(); }
+      if (act === 'eneclose') { this._enE = null; this._enErr = ''; return this._render(); }
+      if (act === 'enaddall') { if (!this._enAskAll) { this._enAskAll = true; return this._render(); } this._enAskAll = false; return this._enAddMeas(this._enFound()); }
+      if (act === 'enfoundall') { this._enAllF = true; return this._render(); }
+      if (act === 'encnew') { this._enCDraft(null); this._enErr = ''; this._render(); return this._enTop(); }
+      if (act === 'encclose') { this._enC = null; this._enErr = ''; return this._render(); }
+      if (act === 'encsave') return this._enCSave();
+      if (act === 'encdel') return this._enCDel();
+      if (act === 'ensolcard') return this._enSolCard();
+      if (act === 'enimpscan') { this._enImp = null; return this._enImpRun(false); }
+      if (act === 'enimpgo') return this._enImpRun(true);
+      if (act === 'entipsreset') { try { localStorage.removeItem('lhd-en-tips-off'); } catch (e2) {} return this._setting('energy.tips_off', null); }
+      const enad = g('[data-enadd]');
+      if (enad) return this._enAddMeas([enad.getAttribute('data-enadd')]);
+      const enfil = g('[data-enfil]');
+      if (enfil) { this._enF = enfil.getAttribute('data-enfil'); return this._render(); }
+      const encid = g('[data-encid]');
+      if (encid) { this._enCDraft(encid.getAttribute('data-encid')); this._enErr = ''; this._render(); return this._enTop(); }
+      const encol = g('[data-encol]');
+      if (encol && this._enC) { this._enC.color = encol.getAttribute('data-encol'); return this._render(); }
+      const eflag = g('[data-enflag]');
+      if (eflag) { const q = eflag.getAttribute('data-enflag').split('|'), v = this._enGet(q[0]), def = q[1] === '1', on = def ? v !== false : v === true; return this._setting(q[0], on ? (def ? false : null) : (def ? null : true)); }
+      const etoff = g('[data-entipoff]');
+      if (etoff) { const L = (Array.isArray(lpEnCfg().tips_off) ? lpEnCfg().tips_off : []).concat([etoff.getAttribute('data-entipoff')]); return this._setting('energy.tips_off', L.slice(-100)); }
       if (act === 'enesave') return this._enSave();
       if (act === 'enedel') return this._enDel();
       const env = g('[data-env]');
-      if (env) { this._env = env.getAttribute('data-env'); this._enErr = ''; const m = this.shadowRoot.querySelector('.enm'); this._render(); const m2 = this.shadowRoot.querySelector('.enm'); if (m2 && m) m2.scrollTop = 0; return; }
+      if (env) { this._env = env.getAttribute('data-env'); this._enErr = ''; this._enAskAll = false; if (this._enImp) { this._enImp.ask = false; if (this._enImp.done) this._enImp = null; } const m = this.shadowRoot.querySelector('.enm'); this._render(); const m2 = this.shadowRoot.querySelector('.enm'); if (m2 && m) m2.scrollTop = 0; return; }
       const ene = g('[data-enest]');
-      if (ene) { this._enDraft(ene.getAttribute('data-enest')); this._enErr = ''; return this._render(); }
+      if (ene) { this._enDraft(ene.getAttribute('data-enest')); this._enErr = ''; this._render(); return this._enTop(); }
       const enk = g('[data-enk]');
-      if (enk && this._enE) { this._enE.f.kind = enk.getAttribute('data-enk'); return this._render(); }
+      if (enk && this._enE) { this._enE.f.kind = enk.getAttribute('data-enk'); this._enErr = ''; return this._render(); }
       const ebd = g('[data-enbdel]');
       if (ebd) { const i = +ebd.getAttribute('data-enbdel'), L = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).filter((x, k) => k !== i); return this._setting('energy.bills', L.length ? L : null); }
       const etg = g('[data-entg]');
@@ -2130,8 +2476,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akurl')) { this._ak.bg = 'img'; this._ak.bgUrl = el.value.trim(); return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');
-      if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); return this._setting(sf, v, sf.indexOf('energy.') !== 0); }   // enerji sayfasında hesaplar yenilensin
-      if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { this._enE.f[el.getAttribute('data-enf')] = el.value; return this._render(); }
+      if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); const en = sf.indexOf('energy.') === 0, sel = el.tagName === 'SELECT'; this._setting(sf, v, !en || !sel); if (en && !sel) this._enLater(); return; }   // enerji sayfasında hesaplar yenilensin (yazı alanında biraz sonra: basılan düğme kaybolmasın)   // enerji sayfasında hesaplar yenilensin
+      // yazı ve sayı alanı: yalnız taslağa yazılır, hesap yerinde yenilenir (tam çizim, alandan çıkarken basılan düğmenin tıklamasını yutuyordu)
+      if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { const k = el.getAttribute('data-enf'); this._enE.f[k] = el.value; this._enErr = ''; if (el.tagName === 'SELECT') return this._render(); if (k === 'entity') return this._enLater(); return this._enCalc(); }
+      if (el.hasAttribute && el.hasAttribute('data-enst') && this._enE) { this._enE.f.st[el.getAttribute('data-enst')] = el.value; this._enErr = ''; return this._enCalc(); }
+      if (el.hasAttribute && el.hasAttribute('data-encf') && this._enC) { this._enC[el.getAttribute('data-encf')] = el.value; return; }
+      if (el.hasAttribute && el.hasAttribute('data-encm') && this._enC) { this._enC.m[el.getAttribute('data-encm')] = el.checked; return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-enlim')) { const L = lpEnLim().slice(), v = parseFloat(String(el.value).replace(',', '.')); if (v > 0) L[+el.getAttribute('data-enlim')] = v; L.sort((x, y) => x - y); return this._setting('energy.limits', L[0] < L[1] && L[1] < L[2] ? L : null, true); }
       if (el.hasAttribute && el.hasAttribute('data-bgurl')) {
         const u = el.value.trim();

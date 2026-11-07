@@ -4,11 +4,12 @@
   "codeowners": ["@mendebur-lemur"],
   "config_flow": true,
   "dependencies": ["http", "frontend", "panel_custom", "websocket_api"],
+  "after_dependencies": ["energy", "recorder"],
   "documentation": "https://github.com/mendebur-lemur/lemur-home-dashboard",
   "integration_type": "service",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/mendebur-lemur/lemur-home-dashboard/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "0.25.1"
+  "version": "0.26.0"
 }

@@ -129,7 +129,7 @@ For every pet Home Assistant gets a "<name> feeding" state and a "<name> fed" bu
 
 ![Energy](guide/en/energy.webp)
 
-Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab. The data comes from "Individual devices" in Home Assistant's Energy settings and from its own history; the dashboard keeps no records of its own.
+Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab; with solar, the energy flow and the battery. Devices and categories come from the dashboard's Energy page (or, without them, from "Individual devices" in Home Assistant's Energy settings); the charts from Home Assistant's own history.
 
 The Halo ring turns from green to red with usage. Tap a category tile for that category's devices, tap a device row for its more-info window. The standby card shows what the home draws when nothing is in use, and what that adds up to in a year.
 
@@ -137,13 +137,15 @@ The Halo ring turns from green to red with usage. Tap a category tile for that c
 
 Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles).
 
+**Tips** send no notifications: they rotate in one line under the Halo (e.g. "AC on for 3 hours") and the related device's row gets an orange edge. Tap to open the device; hold and that tip won't show again on that screen.
+
 **Options**
 
-- **Card** (Home power now · Category tiles · Top consumers now · Daily usage · Last 24 hours · Standby usage): Added to a section as an Energy card; change its kind with the item ⚙.
+- **Card** (Home power now · Category tiles · Top consumers now · Daily usage · Last 24 hours · Standby usage · Solar and grid flow · Battery): Added to a section as an Energy card; change its kind with the item ⚙.
 - **Details below**: Under the Halo: today's kWh, cost and this month's cost (without a price, monthly usage at this rate).
 - **Tier and yearly limit bars**: Under the Halo: this month's tier bar and the last 12 months against the yearly limit.
 - **Columns** (2 · 3 · 4): Category tiles per row (2 on phones).
-- **Small chart** (24 hours · 7 days · None): The small chart on a category tile.
+- **Small chart** (24 hours · 7 days · No categories yet. Devices without one are grouped in an "Uncategorized" tile.): The small chart on a category tile.
 - **How many devices** (3 · 5 · 6 · 8 · 10): How many devices the top consumers list shows.
 - **Category**: Limits the list to one category.
 - **Hide idle devices**: Devices under 2 W are not listed.
@@ -293,13 +295,15 @@ Type-specific settings live here too, such as the cover design or how often a ca
 
 ![Energy page](guide/en/energy-settings.webp)
 
-The **Energy** button in the top bar opens price, bills, estimated devices and the look of the cards on their own page. **Summary** shows this month's usage and cost, the yearly limit, the last bill and the estimated devices.
+The **Energy** button in the top bar opens devices, categories, solar, price, bills and tips on their own page. **Summary** shows where each part stands today; tap a row to open that part.
 
-**Price and tariff:** price from the last bill, one price or tiered (lower and upper price and a daily limit; the month's limit is the daily limit × days). The yearly limit follows the year (4,000 kWh in 2026, 3,000 kWh from 2027) or is entered by hand.
+**Devices:** devices that measure power are found and come in with **Add**. For the others, a virtual measurement: light (standby, lowest and highest W, by brightness), by state (a W value per state; e.g. a TV at 95 W playing, 70 W paused), on/off, fixed, yearly usage (the label's kWh/year) or cycles. Each gets a power and an energy sensor in Home Assistant; cards show them with "~".
 
-**Bills:** enter the period, kWh and amount. The dashboard adds up what it measured in that period; the difference becomes a grey **Not measured** category tile. The usage of the last 12 months starts the yearly limit tracking.
+**Categories:** name, color and the devices in it. Each category gets a total power and kWh sensor; devices and categories are added to Home Assistant's Energy settings by themselves (Data source → Sync with the Energy settings).
 
-**Estimated devices:** for devices that do not measure power: light (standby and max W, by brightness), on/off, fixed, yearly usage (the label's kWh/year) or cycles (kWh/100 cycles). Each gets a power and an energy sensor in Home Assistant and is added to the Energy settings inside the chosen category. Cards show them with "~".
+**Solar and battery:** production, grid (one sensor, or import and export apart) and battery sensors; the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.
+
+**Price and tariff**, **Bills** (real unit price, the share not measured, yearly limit) and **Tips** (thresholds, dot on the tab, bring back hidden tips) are on the same page.
 
 **Options**
 
@@ -308,8 +312,13 @@ The **Energy** button in the top bar opens price, bills, estimated devices and t
 - **Yearly limit** (By year · Manual): Past 85% of the limit the bar under the Halo turns yellow.
 - **Add bill**: Period start and end, kWh and the total amount.
 - **Usage of the last 12 months (kWh)**: From the chart on the back of the bill.
-- **Kind** (Light · On / off · Fixed · Yearly usage · Cycles): How the estimate is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W.
-- **Category**: Which category it goes into in the Energy settings.
+- **Kind** (Measured · Light · By state · On / off · Fixed · Yearly usage · Cycles): How the device is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W.
+- **Category**: The device's category; a new one can be made from here.
+- **One sensor** (One sensor · Import and export apart · None): Grid metering: one plus/minus sensor, or import and export apart.
+- **Reversed sign**: If the battery sensor shows charging as minus.
+- **Left on for long**: Tip: a device drawing more than this for longer than this (default 300 W, 3 hours).
+- **Dot on the tab**: A small dot on the Energy tab button while there are tips (off by default).
+- **Sync with the Energy settings**: Data source: devices, categories and solar also show on Home Assistant's Energy dashboard.
 - **Total home power** (Sum of categories): Data source: the total power Halo shows.
 - **Standby power** (Lowest of the last 24 hours): Data source: the standby card's power.
 - **Halo colour limits (W)**: Look: Halo's green, yellow and orange limits (default 300 / 800 / 1800 W).

@@ -13,8 +13,8 @@
 // Eski Safari için ?. ve ?? yok.
 
 const LP_EN = window.__LEMUR_HD_EN || (window.__LEMUR_HD_EN = { m: null, key: '', at: 0, busy: false, subs: [], dm: null, dmL: '', tp: {} });
-const LP_EN_TYPES = ['halo', 'cats', 'top', 'week', 'day', 'standby'];
-const LP_EN_IC = { halo: 'mdi:lightning-bolt-circle', cats: 'mdi:view-grid-outline', top: 'mdi:format-list-numbered', week: 'mdi:chart-bar', day: 'mdi:chart-line', standby: 'mdi:power-sleep' };
+const LP_EN_TYPES = ['halo', 'cats', 'top', 'week', 'day', 'standby', 'flow', 'battery'];
+const LP_EN_IC = { halo: 'mdi:lightning-bolt-circle', cats: 'mdi:view-grid-outline', top: 'mdi:format-list-numbered', week: 'mdi:chart-bar', day: 'mdi:chart-line', standby: 'mdi:power-sleep', flow: 'mdi:transmission-tower-export', battery: 'mdi:home-battery-outline' };
 const LP_EN_LVL = ['#3DDC84', '#FFC94A', '#FF9142', '#FF5A5A'];
 const LP_EN_BINS = 48;   // son 24 saat yarım saatlik dilimler
 const LP_EN_DAYS = 35;   // günlük kWh: son 30 gün grafiği ve bu ayın başı
@@ -38,14 +38,26 @@ const LP_EN_TXT = {
     wd: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'], todayD: 'Bugün', noHist: 'Geçmiş kaydı yok', noDev: 'Güç sensörü olan cihaz yok', devs: '{n} cihaz', close: 'Kapat', total: 'Toplam',
     costMonth: 'bu ay', tierLo: 'Bu ay düşük kademe', tierHi: 'Bu ay yüksek kademede', yearL: 'Son 12 ay · yıllık sınır', untracked: 'Ölçülmeyen', untrackedT: 'Son faturaya göre',
     k_halo: 'Evin anlık gücü', k_cats: 'Kategori karoları', k_top: 'Şu an en çok çekenler', k_week: 'Günlük tüketim', k_day: 'Son 24 saat', k_standby: 'Bekleme tüketimi',
-    s_halo: 'Evin anlık gücü', s_standby: 'Bekleme', s_cats: 'Kategoriler', s_week: 'Son 7 gün · kWh', s_top: 'Şu an en çok çekenler', s_day: 'Son 24 saat', s_energy: 'Enerji' },
+    s_halo: 'Evin anlık gücü', s_standby: 'Bekleme', s_cats: 'Kategoriler', s_week: 'Son 7 gün · kWh', s_top: 'Şu an en çok çekenler', s_day: 'Son 24 saat', s_energy: 'Enerji',
+    loose: 'Kategorisiz', k_flow: 'Güneş ve şebeke akışı', k_battery: 'Batarya', s_flow: 'Enerji akışı', s_battery: 'Batarya',
+    noSol: 'Güneş ayarı yok', noSolT: 'Enerji sayfasında "Güneş ve batarya" bölümünden üretim ve şebeke sensörlerini seç.', noBat: 'Batarya sensörü seçilmedi',
+    nSun: 'Güneş', nGrid: 'Şebeke', nGridO: 'Şebekeye', nGridI: 'Şebekeden', nHome: 'Ev', nBat: 'Batarya', prodT: 'kWh üretim bugün', selfU: 'kendi kullanımı', expN: 'şebekeye', impN: 'şebekeden',
+    bCh: 'Şarj oluyor', bDis: 'Evi besliyor', bIdle: 'Beklemede', bFull: '~{t} sonra dolu', bLeft: '~{t} yeter', bKwh: '{k} / {c} kWh',
+    tLeft: '{n} {h} saattir açık · {w}', tSb: 'Gece bekleme tüketimi yüksek: ~{w}', tDay: 'Bugün {k} kWh, günlük hedef {d} kWh', tYear: 'Yıllık sınırın %{p}\'ine gelindi',
+    tSun: 'Güneş fazlası {w}: çamaşır için iyi an', tHide: 'Basılı tut: bunu gösterme', h: 'sa', m: 'dk' },
   en: { lvl0: 'Low usage', lvl1: 'Medium usage', lvl2: 'High usage', lvl3: 'Very high usage', today: 'kWh today', costToday: 'today', month: 'kWh/mo at this rate',
     none: 'No energy data', noneT: 'In Home Assistant go to Settings → Dashboards → Energy → "Individual devices" and add devices or groups; the cards fill from there.', loading: 'Loading…',
     sbT: 'What the home draws when nothing is in use', sbMin: 'Lowest of the last 24 hours', year: '~{k} kWh a year', yearC: '~{k} kWh a year · ~{c}',
     wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], todayD: 'Today', noHist: 'No history yet', noDev: 'No device with a power sensor', devs: '{n} devices', close: 'Close', total: 'Total',
     costMonth: 'this month', tierLo: 'This month, lower tier', tierHi: 'This month, upper tier', yearL: 'Last 12 months · yearly limit', untracked: 'Not measured', untrackedT: 'From the last bill',
     k_halo: 'Home power now', k_cats: 'Category tiles', k_top: 'Top consumers now', k_week: 'Daily usage', k_day: 'Last 24 hours', k_standby: 'Standby usage',
-    s_halo: 'Home power now', s_standby: 'Standby', s_cats: 'Categories', s_week: 'Last 7 days · kWh', s_top: 'Top consumers now', s_day: 'Last 24 hours', s_energy: 'Energy' }
+    s_halo: 'Home power now', s_standby: 'Standby', s_cats: 'Categories', s_week: 'Last 7 days · kWh', s_top: 'Top consumers now', s_day: 'Last 24 hours', s_energy: 'Energy',
+    loose: 'Uncategorized', k_flow: 'Solar and grid flow', k_battery: 'Battery', s_flow: 'Energy flow', s_battery: 'Battery',
+    noSol: 'No solar set up', noSolT: 'On the Energy page, pick the production and grid sensors under "Solar and battery".', noBat: 'No battery sensor picked',
+    nSun: 'Solar', nGrid: 'Grid', nGridO: 'To grid', nGridI: 'From grid', nHome: 'Home', nBat: 'Battery', prodT: 'kWh produced today', selfU: 'used at home', expN: 'to grid', impN: 'from grid',
+    bCh: 'Charging', bDis: 'Powering the home', bIdle: 'Idle', bFull: 'full in ~{t}', bLeft: 'lasts ~{t}', bKwh: '{k} / {c} kWh',
+    tLeft: '{n} on for {h} hours · {w}', tSb: 'Night standby is high: ~{w}', tDay: '{k} kWh today, daily goal {d} kWh', tYear: '{p}% of the yearly limit used',
+    tSun: '{w} solar surplus: good time for laundry', tHide: 'Hold: don\'t show this', h: 'h', m: 'min' }
 };
 function lpEnT(lang, k, v) {
   const d = LP_EN_TXT[lang] || LP_EN_TXT.en;
@@ -110,14 +122,14 @@ function lpEnYear(M) {
   return base + since / (1 - lpEnUntracked());
 }
 // tahmini cihaz (entegrasyonun kurduğu sensör): kartlarda "~" ile
-const lpEnIsEst = (x) => !!x && typeof x.e === 'string' && /^sensor\.lhd_[a-z0-9_]+_energy$/.test(x.e);
+const lpEnIsEst = (x) => !!x && (x.est !== undefined ? !!x.est : typeof x.e === 'string' && /^sensor\.lhd_[a-z0-9_]+_energy$/.test(x.e));
 const lpEnTil = (x) => (lpEnIsEst(x) && lpEnCfg().tilde !== false ? '~' : '');
 // bir dönemde takip edilenlerin toplamı (fatura eklenince "panelin ölçtüğü" için)
 function lpEnPeriodKwh(h, from, to) {
   const M = LP_EN.m, conn = h && h.connection;
   if (!M || !M.cats.length || !conn) return Promise.resolve(0);
   const a = new Date(from + 'T00:00:00'), b = new Date(to + 'T00:00:00'); b.setDate(b.getDate() + 1);
-  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: a.toISOString(), end_time: b.toISOString(), period: 'day', statistic_ids: M.cats.map((c) => c.e), types: ['change'], units: { energy: 'kWh' } })
+  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: a.toISOString(), end_time: b.toISOString(), period: 'day', statistic_ids: M.cats.reduce((a, c) => a.concat(c.e ? [c.e] : c.es || []), []).filter((x) => !!x), types: ['change'], units: { energy: 'kWh' } })
     .then((r) => { let s = 0; Object.keys(r || {}).forEach((k) => (r[k] || []).forEach((p) => { if (isFinite(p.change)) s += Math.max(0, p.change); })); return Math.round(s * 10) / 10; }).catch(() => 0);
 }
 // tahmini cihazın gücü (yönetim panelindeki hesap; entegrasyondaki estimates.power ile aynı)
@@ -126,10 +138,34 @@ function lpEnEstW(e, st) {
   if (e.kind === 'fixed') return n('w');
   if (e.kind === 'year') return n('year') * 1000 / 8760;
   if (e.kind === 'cycle') return n('k100') / 100 * n('week') * 52 * 1000 / 8760;
+  if (e.kind === 'meas') return st ? Math.max(0, lpEnW({ x: st }, 'x') || 0) : 0;
+  if (e.kind === 'states') { const sv = st ? String(st.state) : 'unavailable', r = (Array.isArray(e.states) ? e.states : []).filter((x) => x && String(x.s) === sv)[0]; return r ? lpEnNumOf(r.w) : n('other'); }
   const on = !!st && ['off', 'unavailable', 'unknown', 'standby', 'idle', 'closed', 'docked', 'none', ''].indexOf(String(st.state)) < 0;
-  if (e.kind === 'light') { if (!on) return n('idle'); const b = st.attributes.brightness; const f = b === undefined || b === null ? 1 : Math.max(0, Math.min(1, b / 255)); return n('idle') + (Math.max(n('max'), n('idle')) - n('idle')) * f; }
+  if (e.kind === 'light') {
+    if (!on) return n('idle');
+    const lo = e.min !== undefined && e.min !== null && e.min !== '' ? n('min') : n('idle'), b = st.attributes.brightness;
+    const f = b === undefined || b === null ? 1 : Math.max(0, Math.min(1, b / 255));
+    return lo + (Math.max(n('max'), lo) - lo) * f;
+  }
   if (e.kind === 'onoff') return on ? n('on') : n('off');
   return 0;
+}
+// Güneş, şebeke ve batarya (settings.energy.solar): on, prod (W), prod_energy (kWh, yoksa entegrasyon sensor.lhd_solar_energy kurar),
+// grid_mode 'net' (grid: + alınan, - verilen) | 'two' (grid_in, grid_out) | 'none'; bat_power (+ şarj), bat_inv (işaret ters), soc (%), cap (kWh)
+function lpEnSolar() { const s = lpEnCfg().solar; return s && typeof s === 'object' && !Array.isArray(s) ? s : {}; }
+function lpEnSunE() { const s = lpEnSolar(); return s.on && s.prod ? (s.prod_energy || 'sensor.lhd_solar_energy') : null; }
+function lpEnGridMode(s) { return s.grid_mode === 'two' || s.grid_mode === 'none' ? s.grid_mode : 'net'; }
+// anlık akış: ev = şebeke + üretim - batarya şarjı
+function lpEnFlowNow(S) {
+  const s = lpEnSolar(); if (!s.on) return null;
+  const w = (id) => (id ? lpEnW(S, id) : null), gm = lpEnGridMode(s);
+  const prod = w(s.prod);
+  let grid = null;
+  if (gm === 'two') { const a = w(s.grid_in), b = w(s.grid_out); if (a !== null || b !== null) grid = (a || 0) - (b || 0); } else if (gm === 'net') { grid = w(s.grid); if (grid !== null && s.grid_inv) grid = -grid; }
+  let bat = w(s.bat_power); if (bat !== null && s.bat_inv) bat = -bat;
+  const so = s.soc && S[s.soc] ? parseFloat(S[s.soc].state) : NaN;
+  return { prod: prod, grid: grid, bat: bat, soc: isFinite(so) ? Math.max(0, Math.min(100, so)) : null, cap: lpEnNumOf(s.cap), home: Math.max(0, (grid || 0) + (prod || 0) - (bat || 0)),
+    gridKnown: grid !== null && (prod !== null || !s.prod) && (bat !== null || !(s.bat_power || s.soc)), has: prod !== null || grid !== null || bat !== null, hasBat: !!(s.bat_power || s.soc) };
 }
 function lpEnBadge() { const b = lpEnCfg().badge; return b === 'on' || b === 'always' ? b : ''; }
 const lpEnIsPow = (st) => !!st && (st.attributes.device_class === 'power' || /^(W|kW)$/.test(String(st.attributes.unit_of_measurement || '')));
@@ -162,8 +198,32 @@ function lpEnLookOf(name, i) {
   for (let k = 0; k < LP_EN_LOOK.length; k++) if (LP_EN_LOOK[k][0].test(name)) return [LP_EN_LOOK[k][1], LP_EN_LOOK[k][2]];
   return ['mdi:flash', LP_EN_PAL[i % LP_EN_PAL.length]];
 }
+// Panelin kendi cihaz ve kategori kaydı (Enerji sayfası): varsa kartlar ondan, yoksa HA enerji ayarlarından dolar
+function lpEnLemur() {
+  const d = STORE.data || {}, E = d.estimates && typeof d.estimates === 'object' && !Array.isArray(d.estimates) ? d.estimates : {}, C = Array.isArray(d.ecats) ? d.ecats : [];
+  return Object.keys(E).length || C.length ? { E: E, C: C } : null;
+}
+// cihazın güç ve kWh sensörü (entegrasyonun kurdukları ya da ölçen cihazın kendi sensörleri)
+const lpEnDevP = (id, x) => (x.kind === 'meas' ? x.sensor || '' : 'sensor.lhd_' + id + '_power');
+const lpEnDevE = (id, x) => (x.kind === 'meas' && x.energy ? x.energy : 'sensor.lhd_' + id + '_energy');
+function lpEnModelLemur(h, L, prefs) {
+  const cats = L.C.map((c, i) => { const lk = lpEnLookOf(c.name, i); return { id: 'sensor.lhd_kat_' + c.id + '_energy', cid: c.id, name: c.name, icon: c.icon || lk[0], color: c.color || lk[1], e: 'sensor.lhd_kat_' + c.id + '_energy', p: 'sensor.lhd_kat_' + c.id + '_power', kids: [] }; });
+  const by = {}; cats.forEach((c) => { by[c.cid] = c; });
+  const devs = Object.keys(L.E).map((id) => {
+    const x = L.E[id] || {}, c = by[x.cat];
+    return { id: lpEnDevE(id, x), lid: id, name: String(x.name || id), e: lpEnDevE(id, x), p: lpEnDevP(id, x), cat: c ? c.id : null, icon: x.icon || (c ? c.icon : 'mdi:flash'), color: c ? c.color : '#8A8F96', est: x.kind !== 'meas', kind: x.kind, link: x.entity || x.sensor || null };
+  });
+  devs.forEach((d) => { if (d.cat) by[d.cat.replace(/^sensor\.lhd_kat_|_energy$/g, '')].kids.push(d); });
+  const loose = devs.filter((d) => !d.cat);
+  if (loose.length) cats.push({ id: '__loose', name: lpEnT(pickLang(h), 'loose'), icon: 'mdi:dots-horizontal-circle-outline', color: '#8A8F96', e: null, es: loose.map((d) => d.e), p: null, kids: loose });
+  let price = 0;
+  ((prefs && prefs.energy_sources) || []).forEach((s) => { if (s && s.type === 'grid') (s.flow_from || []).forEach((f) => { if (!price && f && f.number_energy_price > 0) price = f.number_energy_price; }); });
+  return { cats: cats, devs: devs, price: price, hist: null, days: null, lemur: true };
+}
 // HA enerji ayarlarından kategori ve cihaz listesi
 function lpEnModel(h, prefs) {
+  const LM = lpEnLemur();
+  if (LM) return lpEnModelLemur(h, LM, prefs);
   const dc = ((prefs && prefs.device_consumption) || []).filter((d) => d && typeof d.stat_consumption === 'string');
   const ids = {}; dc.forEach((d) => { ids[d.stat_consumption] = d; });
   const par = {}; dc.forEach((d) => { if (d.included_in_stat && ids[d.included_in_stat]) par[d.included_in_stat] = 1; });
@@ -203,6 +263,9 @@ function lpEnHist(conn, S, M) {
   const add = (x) => { if (x && ids.indexOf(x) < 0) ids.push(x); };
   M.cats.forEach((c) => { if (c.p) add(c.p); else c.kids.forEach((k) => add(k.p)); });
   const tot = lpEnCfg().total; if (tot) add(tot);
+  M.devs.slice(0, 120).forEach((d) => add(d.p));   // ipuçları için (uzun süre açık kalan cihaz)
+  const sol = lpEnSolar(), gm = lpEnGridMode(sol);
+  if (sol.on) [sol.prod, gm === 'net' ? sol.grid : null, gm === 'two' ? sol.grid_in : null, gm === 'two' ? sol.grid_out : null, sol.bat_power].forEach(add);
   if (!ids.length) return Promise.resolve();
   return conn.sendMessagePromise({ type: 'history/history_during_period', start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(), entity_ids: ids, minimal_response: true, no_attributes: true, significant_changes_only: false })
     .then((r) => {
@@ -210,11 +273,22 @@ function lpEnHist(conn, S, M) {
       ids.forEach((id) => { const u = S[id] ? String(S[id].attributes.unit_of_measurement || '') : ''; ser[id] = lpEnBin((r && r[id]) || [], t0, step, LP_EN_BINS, u === 'kW' ? 1000 : 1); });
       const cats = {};
       M.cats.forEach((c) => { cats[c.id] = c.p ? ser[c.p] : lpEnSum(c.kids.map((k) => ser[k.p]), LP_EN_BINS); });
-      M.hist = { t0: t0, step: step, cats: cats, total: tot && ser[tot] ? ser[tot] : lpEnSum(M.cats.map((c) => cats[c.id]), LP_EN_BINS) };
+      const devs = {}; M.devs.forEach((d) => { if (ser[d.p]) devs[d.id] = ser[d.p]; });
+      let total = tot && ser[tot] ? ser[tot] : lpEnSum(M.cats.map((c) => cats[c.id]), LP_EN_BINS);
+      // güneşli evde sayaçtan: ev = şebeke + üretim - batarya şarjı (anlık akıştaki hesap)
+      const g = gm === 'net' && ser[sol.grid] ? ser[sol.grid].map((v) => (v === null ? null : sol.grid_inv ? -v : v))
+        : gm === 'two' && ser[sol.grid_in] ? ser[sol.grid_in].map((v, i) => (v === null ? null : v - ((ser[sol.grid_out] || [])[i] || 0))) : null;
+      if (!tot && sol.on && g && (!sol.prod || ser[sol.prod]) && (!sol.soc || sol.bat_power)) {
+        const pr = sol.prod ? ser[sol.prod] : null, bt = sol.bat_power ? ser[sol.bat_power] : null;
+        total = g.map((v, i) => { const p0 = pr ? pr[i] : 0; if (v === null || p0 === null || p0 === undefined) return total[i]; const b = bt && bt[i] !== null && bt[i] !== undefined ? (sol.bat_inv ? -bt[i] : bt[i]) : 0; return Math.max(0, v + p0 - b); });
+      }
+      M.hist = { t0: t0, step: step, cats: cats, total: total, devs: devs, ser: ser };
     }).catch(() => {});
 }
 function lpEnDays(conn, M) {
-  const ids = M.cats.map((c) => c.e);
+  const of = (c) => (c.e ? [c.e] : (c.es || [])), ids = [];
+  M.cats.forEach((c) => of(c).forEach((x) => { if (x && ids.indexOf(x) < 0) ids.push(x); }));
+  const sun = lpEnSunE(); if (sun && ids.indexOf(sun) < 0) ids.push(sun);
   if (!ids.length) return Promise.resolve();
   const d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const days = []; for (let i = LP_EN_DAYS - 1; i >= 0; i--) { const d = new Date(d0.getTime()); d.setDate(d.getDate() - i); days.push(d.getTime()); }
@@ -230,7 +304,8 @@ function lpEnDays(conn, M) {
         });
         cats[id] = a;
       });
-      M.days = { t: days, cats: cats };
+      const per = {}; M.cats.forEach((c) => { per[c.id] = days.map((x, i) => of(c).reduce((s0, id) => s0 + ((cats[id] || [])[i] || 0), 0)); });
+      M.days = { t: days, cats: per, sun: sun ? cats[sun] : null };
     }).catch(() => {});
 }
 function lpEnSub(fn) { LP_EN.subs.push(fn); return () => { const i = LP_EN.subs.indexOf(fn); if (i >= 0) LP_EN.subs.splice(i, 1); }; }
@@ -238,13 +313,15 @@ function lpEnFire() { LP_EN.subs.slice().forEach((f) => { try { f(); } catch (e)
 // veriyi yükle (ilk kez, 5 dakikada bir ya da enerji ayarı değişince)
 function lpEnEnsure(h) {
   if (!h || LP_EN.busy) return;
-  const key = JSON.stringify([lpEnCfg().total || '', lpEnCfg().standby || '']);
+  const LM = lpEnLemur();
+  const key = JSON.stringify([lpEnCfg().total || '', lpEnCfg().standby || '', lpEnSolar(), LM ? [LM.C, Object.keys(LM.E).map((k) => [k, LM.E[k].cat, LM.E[k].kind, LM.E[k].sensor, LM.E[k].energy, LM.E[k].name])] : 0]);
   if (LP_EN.m && LP_EN.key === key && Date.now() - LP_EN.at < 300000) return;
   const conn = h.connection; if (!conn || !conn.sendMessagePromise) return;
   LP_EN.busy = true; LP_EN.key = key;
   conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => null).then((prefs) => {
     const M = lpEnModel(h, prefs);
-    return M.cats.length ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M)]).then(() => M) : M;
+    LP_EN.prefs = prefs || null;   // yönetim panelinde bulunan cihazlar için (grup toplamları hariç tutulur)
+    return M.cats.length || lpEnSunE() ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M)]).then(() => M) : M;
   }).then((M) => { LP_EN.m = M; LP_EN.at = Date.now(); LP_EN.busy = false; lpEnFire(); },
     () => { LP_EN.busy = false; LP_EN.at = Date.now(); if (!LP_EN.m) LP_EN.m = { cats: [], devs: [], price: 0 }; lpEnFire(); });
 }
@@ -272,7 +349,8 @@ function lpEnDemo(lang) {
   const days = []; for (let i = LP_EN_DAYS - 1; i >= 0; i--) { const d = new Date(d0.getTime()); d.setDate(d.getDate() - i); days.push(d.getTime()); }
   const base = [1.6, 6.2, 3.1, 0.9, 0.53, 0.12], dc = {};
   cats.forEach((c, k) => { dc[c.id] = days.map((x, j) => Math.round(base[k] * (k === 1 ? (0.55 + ((j * 7) % 10) / 10) : (0.8 + ((j * 3) % 5) / 10)) * (j === LP_EN_DAYS - 1 ? 0.6 : 1) * 100) / 100); });
-  return { demo: true, cats: cats, devs: devs, price: tr ? 3.15 : 0.3, hist: { t0: t0, step: step, cats: hc, total: lpEnSum(cats.map((c) => hc[c.id]), LP_EN_BINS) }, days: { t: days, cats: dc } };
+  const sun = days.map((x, j) => Math.round((9 + ((j * 5) % 7)) * (j === LP_EN_DAYS - 1 ? 0.7 : 1) * 10) / 10);
+  return { demo: true, flow: { prod: 2380, grid: -754, bat: 640, soc: 72, cap: 10, home: 986, gridKnown: true, has: true, hasBat: true }, cats: cats, devs: devs, price: tr ? 3.15 : 0.3, hist: { t0: t0, step: step, cats: hc, total: lpEnSum(cats.map((c) => hc[c.id]), LP_EN_BINS) }, days: { t: days, cats: dc, sun: sun } };
 }
 function lpEnGet(h, lang) {
   if (h && h.lhdEnDemo) { if (!LP_EN.dm || LP_EN.dmL !== lang) { LP_EN.dm = lpEnDemo(lang); LP_EN.dmL = lang; } return LP_EN.dm; }
@@ -285,6 +363,7 @@ function lpEnIds(M) {
   const o = [], add = (x) => { if (x && o.indexOf(x) < 0) o.push(x); };
   M.cats.forEach((c) => add(c.p)); M.devs.forEach((d) => add(d.p));
   const c = lpEnCfg(); add(c.total); add(c.standby);
+  const s = lpEnSolar(); if (s.on) ['prod', 'grid', 'grid_in', 'grid_out', 'bat_power', 'soc'].forEach((k) => add(s[k]));
   return o;
 }
 const lpEnWOf = (S, x) => (x.w !== undefined ? x.w : (x.p ? lpEnW(S, x.p) : null));
@@ -296,6 +375,8 @@ function lpEnCatW(S, c) {
 function lpEnTotal(S, M) {
   const tot = !M.demo && lpEnCfg().total;
   if (tot) { const v = lpEnW(S, tot); if (v !== null) return v; }
+  const F = !M.demo && lpEnFlowNow(S, null);
+  if (F && F.gridKnown) return F.home;
   let s = null; M.cats.forEach((c) => { const v = lpEnCatW(S, c); if (v !== null) s = (s || 0) + v; });
   return s;
 }
@@ -304,8 +385,10 @@ function lpEnNum(v, d, lang) { return Number(v).toLocaleString(lang === 'tr' ? '
 function lpEnWp(w, lang) {   // [sayı, birim]
   if (w === null || w === undefined) return ['–', 'W'];
   if (Math.abs(w) >= 1000) return [lpEnNum(w / 1000, Math.abs(w) >= 10000 ? 0 : 1, lang), 'kW'];
+  if (w !== 0 && Math.abs(w) < 1) return [lpEnNum(w, 1, lang), 'W'];
   return [lpEnNum(Math.round(w), 0, lang), 'W'];
 }
+const lpEnPct = (v, lang) => (lang === 'tr' ? '%' + Math.round(v) : Math.round(v) + '%');
 const lpEnWs = (w, lang) => { const p = lpEnWp(w, lang); return p[0] + ' ' + p[1]; };
 function lpEnMoney(h, v, lang) {
   const cur = (h && h.config && h.config.currency) || (lang === 'tr' ? 'TRY' : h && h.lhdEnDemo ? 'EUR' : '');
@@ -333,7 +416,10 @@ function lpEnEmpty(M, lang, big) {
 }
 function lpEnCard(h, M, it, lang, phone) {
   const S = (h && h.states) || {}, k = it.energy;
-  if (!M || !M.cats.length) return lpEnEmpty(M, lang, k === 'halo' || k === 'cats');
+  if (M && k === 'flow') return lpEnFlowCard(h, M, it, lang);
+  if (M && k === 'battery') return lpEnBatCard(h, M, it, lang);
+  const F0 = M && !M.cats.length && k === 'halo' ? lpEnFlowNow(S) : null;   // cihaz yok ama güneş/şebeke sayacı var: Halo yine evin gücünü gösterir
+  if (!M || (!M.cats.length && !(F0 && F0.gridKnown))) return lpEnEmpty(M, lang, k === 'halo' || k === 'cats');
   const price = lpEnUnit(M), N = M.days ? M.days.t.length : 0;
   const total = lpEnTotal(S, M);
   const todayKwh = M.days ? lpEnDayTot(M, N - 1) : null;
@@ -358,7 +444,7 @@ function lpEnCard(h, M, it, lang, phone) {
     return '<div class="enhalo"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="15"/>' +
       '<circle cx="100" cy="100" r="86" fill="none" stroke="' + col + '" stroke-width="15" stroke-linecap="round" stroke-dasharray="' + len + ' 600" transform="rotate(-90 100 100)" style="filter:drop-shadow(0 0 6px ' + col + ')"/>' +
       '<circle cx="100" cy="100" r="72" fill="#121419"/></svg><div class="enin">' +
-      '<div class="enw">' + esc(wp[0]) + '<small>' + wp[1] + '</small></div><div class="enlv" style="color:' + col + '">' + esc(lpEnT(lang, 'lvl' + lvl)) + '</div></div></div>' + chips2;
+      '<div class="enw">' + esc(wp[0]) + '<small>' + wp[1] + '</small></div><div class="enlv" style="color:' + col + '">' + esc(lpEnT(lang, 'lvl' + lvl)) + '</div></div></div>' + (it.tips === false ? '' : lpEnTipsHtml(h, M, lang)) + chips2;
   }
   if (k === 'cats') {
     const sum = M.cats.reduce((a, c) => a + (lpEnCatW(S, c) || 0), 0) || 1;
@@ -381,8 +467,9 @@ function lpEnCard(h, M, it, lang, phone) {
     L.sort((a, b) => b.w - a.w);
     L = L.slice(0, Math.max(3, Math.min(10, +it.count || 6)));
     if (!L.length) return '<div class="enmsg"><span>' + esc(lpEnT(lang, 'noDev')) + '</span></div>';
-    const mx = L[0].w || 1;
-    return '<div class="entop">' + L.map((x) => '<div class="enrk" data-enmore="' + esc(x.d.p || '') + '" style="--c:' + x.d.color + '"><span class="eci"><ha-icon icon="' + esc(x.d.icon) + '"></ha-icon></span><div class="erb"><span class="ern">' + esc(x.d.name) + '</span>' +
+    const mx = L[0].w || 1, warn = {};
+    lpEnTips(h, M, lang).forEach((x) => { if (x.dev) warn[x.dev] = 1; });
+    return '<div class="entop">' + L.map((x) => '<div class="enrk' + (warn[x.d.id] ? ' warn' : '') + '" data-enmore="' + esc(x.d.p || '') + '" style="--c:' + x.d.color + '"><span class="eci"><ha-icon icon="' + esc(x.d.icon) + '"></ha-icon></span><div class="erb"><span class="ern">' + esc(x.d.name) + '</span>' +
       '<i class="erl"><i style="width:' + Math.max(2, x.w / mx * 100).toFixed(1) + '%"></i></i></div><b class="erw' + (lpEnTil(x.d) ? ' est' : '') + '">' + lpEnTil(x.d) + esc(lpEnWs(x.w, lang)) + '</b></div>').join('') + '</div>';
   }
   if (k === 'week') {
@@ -432,7 +519,88 @@ function lpEnCard(h, M, it, lang, phone) {
   }
   return '';
 }
-function lpEnLegend(M) { return '<div class="enlg">' + M.cats.map((c) => '<span><i style="background:' + c.color + '"></i>' + esc(c.name) + '</span>').join('') + '</div>'; }
+// süre: 95 → "1 sa 35 dk"
+function lpEnDur(min, lang) { const m = Math.max(1, Math.round(min)), hh = Math.floor(m / 60), mm = m % 60; return (hh ? hh + ' ' + lpEnT(lang, 'h') + (mm && hh < 10 ? ' ' : '') : '') + (mm && hh < 10 ? mm + ' ' + lpEnT(lang, 'm') : ''); }
+// akış kartı: güneş üstte, şebeke solda, ev sağda, batarya altta; çizgiler o yönde güç akıyorsa hareketli
+function lpEnFlowCard(h, M, it, lang) {
+  const S = (h && h.states) || {}, F = M.demo ? M.flow : lpEnFlowNow(S);
+  if (!F || !F.has) return '<div class="enmsg"><ha-icon icon="mdi:solar-power-variant-outline"></ha-icon><b>' + esc(lpEnT(lang, 'noSol')) + '</b><span>' + esc(lpEnT(lang, 'noSolT')) + '</span></div>';
+  const P = Math.max(0, F.prod || 0), G = F.grid || 0, B = F.bat || 0, exp = Math.max(0, -G), chg = Math.max(0, B), gk = F.gridKnown;
+  const sg = Math.min(P, exp), sb = Math.min(P - sg, chg), sh = Math.max(0, P - sg - sb), bh0 = Math.max(0, -B), gb = Math.max(0, chg - sb);
+  const bg = Math.min(bh0, Math.max(0, exp - sg)), bh = bh0 - bg, gh = Math.max(0, Math.max(0, G) - gb);   // batarya şebekeye veriyor / şebeke bataryayı dolduruyor
+  const noGrid = lpEnGridMode(lpEnSolar()) === 'none' && !M.demo;
+  const bat = F.hasBat || F.bat !== null, sun = F.prod !== null;
+  const N = { s: [150, 30], g: [40, 104], o: [260, 104], b: [150, 172] };
+  const ln = (a, b2, v, col) => { const A = N[a], Bp = N[b2], on = v >= 5; return '<line x1="' + A[0] + '" y1="' + A[1] + '" x2="' + Bp[0] + '" y2="' + Bp[1] + '" class="efl' + (on ? ' on' : '') + '" style="stroke:' + col + (on ? ';animation-duration:' + Math.max(0.6, 3 - Math.log(v) / 3).toFixed(2) + 's' : '') + '"/>'; };
+  let svg = '';
+  if (sun) { svg += ln('s', 'o', sh, '#FFC94A') + (noGrid ? '' : ln('s', 'g', sg, '#FFC94A')); if (bat) svg += ln('s', 'b', sb, '#FFC94A'); }
+  if (!noGrid) svg += ln('g', 'o', gh, '#7C9CFF');
+  if (bat) { svg += ln('b', 'o', bh, '#3DDC84'); if (gb >= 5) svg += ln('g', 'b', gb, '#7C9CFF'); if (bg >= 5) svg += ln('b', 'g', bg, '#3DDC84'); }
+  const node = (k, ic, col, lab, w, sub, ent) => '<div class="efn efn-' + k + '"' + (ent && !M.demo ? ' data-enmore="' + esc(ent) + '"' : '') + ' style="left:' + (N[k][0] / 3).toFixed(2) + '%;top:' + (N[k][1] / 2.16).toFixed(2) + '%;--c:' + col + '"><span class="efi"><ha-icon icon="' + ic + '"></ha-icon></span><span class="eft"><b>' + esc(w) + '</b><i>' + esc(lab) + (sub ? ' · ' + esc(sub) : '') + '</i></span></div>';
+  const s = lpEnSolar();
+  let nodes = '';
+  if (sun) nodes += node('s', 'mdi:solar-power-variant', '#FFC94A', lpEnT(lang, 'nSun'), lpEnWs(P, lang), '', s.prod);
+  if (!noGrid) nodes += node('g', 'mdi:transmission-tower', '#7C9CFF', lpEnT(lang, F.grid === null || Math.abs(G) < 5 ? 'nGrid' : G < 0 ? 'nGridO' : 'nGridI'), F.grid === null ? '–' : lpEnWs(Math.abs(G), lang), '', s.grid || s.grid_in);
+  nodes += node('o', 'mdi:home-lightning-bolt-outline', '#ECEDEF', lpEnT(lang, 'nHome'), gk || M.demo ? lpEnWs(F.home, lang) : '–', '', lpEnCfg().total);
+  if (bat) nodes += node('b', 'mdi:home-battery-outline', '#3DDC84', lpEnT(lang, 'nBat'), F.soc === null ? lpEnWs(Math.abs(B), lang) : lpEnPct(F.soc, lang), F.bat === null || Math.abs(B) < 5 ? '' : lpEnWs(Math.abs(B), lang), s.soc || s.bat_power);
+  const N2 = M.days && M.days.sun ? M.days.sun.length : 0, today = N2 ? M.days.sun[N2 - 1] : null;
+  const chip = (b, t2) => '<div class="ench"><b>' + esc(b) + '</b><span>' + esc(t2) + '</span></div>';
+  const chips = it.chips === false || !sun ? '' : '<div class="enchs">' + chip(today === null ? '–' : lpEnNum(today, today < 10 ? 1 : 0, lang), lpEnT(lang, 'prodT')) +
+    (gk || M.demo ? chip(P > 0 ? lpEnPct((sh + sb) / P * 100, lang) : '–', lpEnT(lang, 'selfU')) + chip(lpEnWs(G < 0 ? exp : Math.max(0, G), lang), lpEnT(lang, G < 0 ? 'expN' : 'impN')) : '') + '</div>';
+  return '<div class="enflow' + (bat ? '' : ' nobat') + '"><svg viewBox="0 0 300 216" preserveAspectRatio="none">' + svg + '</svg>' + nodes + '</div>' + chips;
+}
+function lpEnBatCard(h, M, it, lang) {
+  const S = (h && h.states) || {}, F = M.demo ? M.flow : lpEnFlowNow(S);
+  if (!F || !(F.hasBat || F.bat !== null)) return '<div class="enmsg"><ha-icon icon="mdi:home-battery-outline"></ha-icon><b>' + esc(lpEnT(lang, F ? 'noBat' : 'noSol')) + '</b>' + (F ? '' : '<span>' + esc(lpEnT(lang, 'noSolT')) + '</span>') + '</div>';
+  const soc = F.soc, cap = F.cap, B = F.bat || 0, kwh = soc !== null && cap ? soc / 100 * cap : null;
+  const st = Math.abs(B) < 5 ? 'bIdle' : B > 0 ? 'bCh' : 'bDis', col = soc === null ? '#3DDC84' : soc < 15 ? '#FF5A5A' : soc < 35 ? '#FFC94A' : '#3DDC84';
+  let eta = '';
+  const hrs = kwh === null || Math.abs(B) < 5 ? 0 : B > 0 ? (cap - kwh) / (B / 1000) : kwh / (-B / 1000);
+  if (hrs > 0.02 && hrs <= 48 && !(B > 0 && soc >= 99.5) && !(B < 0 && soc <= 0.5)) eta = B > 0 ? lpEnT(lang, 'bFull', { t: lpEnDur((cap - kwh) / (B / 1000) * 60, lang) }) : lpEnT(lang, 'bLeft', { t: lpEnDur(kwh / (-B / 1000) * 60, lang) });
+  const s = lpEnSolar();
+  return '<div class="enbat"' + (s.soc && !M.demo ? ' data-enmore="' + esc(s.soc) + '"' : '') + '><div class="ebv"><b>' + (soc === null ? '–' : lang === 'tr' ? '<small>%</small>' + Math.round(soc) : Math.round(soc) + '<small>%</small>') + '</b><span style="color:' + col + '">' + esc(lpEnT(lang, st)) + (Math.abs(B) >= 5 ? ' · ' + esc(lpEnWs(Math.abs(B), lang)) : '') + '</span></div>' +
+    '<div class="ebar"><i style="width:' + (soc === null ? 0 : soc).toFixed(1) + '%;background:' + col + '"></i>' + (B > 5 ? '<em></em>' : '') + '</div>' +
+    '<div class="ebl"><span>' + (kwh !== null ? esc(lpEnT(lang, 'bKwh', { k: lpEnNum(kwh, 1, lang), c: lpEnNum(cap, cap % 1 ? 1 : 0, lang) })) : '') + '</span><span>' + esc(eta) + '</span></div></div>';
+}
+// İpuçları: bildirim yok; Halo'nun altında tek satır döner, ilgili satırın kenarı turuncu olur. Basılı tutunca o ipucu gizlenir.
+// settings.energy.tips: { on, left_w (300 W), left_h (3 sa), standby_w (150 W), daily (false), daily_kwh (12), year (true), sun (true), dot (false) }
+// gizlenenler: settings.energy.tips_off (yönetim paneli) ve bu cihazda localStorage
+function lpEnTipCfg() { const t = lpEnCfg().tips; return t && typeof t === 'object' && !Array.isArray(t) ? t : {}; }
+function lpEnTipsOff() {
+  const o = {}, a = lpEnCfg().tips_off; (Array.isArray(a) ? a : []).forEach((k) => { o[k] = 1; });
+  try { JSON.parse(localStorage.getItem('lhd-en-tips-off') || '[]').forEach((k) => { o[k] = 1; }); } catch (e) {}
+  return o;
+}
+function lpEnTipHide(k) { try { const a = JSON.parse(localStorage.getItem('lhd-en-tips-off') || '[]'); if (a.indexOf(k) < 0) a.push(k); localStorage.setItem('lhd-en-tips-off', JSON.stringify(a.slice(-100))); } catch (e) {} }
+function lpEnTips(h, M, lang) {
+  const c = lpEnTipCfg(); if (c.on === false || !M || !M.cats || M.demo) return M && M.demo && c.on !== false ? lpEnDemoTips(M, lang) : [];
+  const S = (h && h.states) || {}, off = lpEnTipsOff(), out = [], num = (k, d) => { const v = parseFloat(c[k]); return v > 0 ? v : d; };
+  const add = (x) => { if (!off[x.k]) out.push(x); };
+  // uzun süredir açık: son left_h saatin bütün dilimleri ve şimdiki güç left_w üstünde
+  const lw = num('left_w', 300), lh = num('left_h', 3), nb = Math.max(1, Math.round(lh * 3600000 / ((M.hist && M.hist.step) || 1800000)));
+  if (M.hist && M.hist.devs) M.devs.forEach((d) => {
+    const a = M.hist.devs[d.id], w = lpEnWOf(S, d); if (!a || w === null || w < lw || a.length < nb) return;
+    for (let i = a.length - nb; i < a.length; i++) if (a[i] === null || a[i] < lw * 0.9) return;
+    add({ k: 'left:' + (d.lid || d.id), ic: 'mdi:timer-alert-outline', t: lpEnT(lang, 'tLeft', { n: d.name, h: lpEnNum(lh, lh % 1 ? 1 : 0, lang), w: lpEnWs(w, lang) }), ent: d.link || d.p, dev: d.id, pr: 1 });
+  });
+  // gece bekleme: 02-05 arası en düşük
+  if (M.hist && M.hist.total) {
+    let mn = null; M.hist.total.forEach((v, i) => { const x = new Date(M.hist.t0 + i * M.hist.step).getHours(); if (v !== null && x >= 2 && x < 5) mn = mn === null ? v : Math.min(mn, v); });
+    if (mn !== null && mn > num('standby_w', 150)) add({ k: 'standby', ic: 'mdi:power-sleep', t: lpEnT(lang, 'tSb', { w: lpEnWs(mn, lang) }), ent: lpEnCfg().standby || null, pr: 3 });
+  }
+  const N = M.days ? M.days.t.length : 0;
+  if (c.daily === true && N) { const k = lpEnDayTot(M, N - 1), d = num('daily_kwh', 12); if (k > d) add({ k: 'daily:' + new Date().toDateString(), ic: 'mdi:calendar-today', t: lpEnT(lang, 'tDay', { k: lpEnNum(k, 1, lang), d: lpEnNum(d, d % 1 ? 1 : 0, lang) }), pr: 4 }); }
+  if (c.year !== false) { const yk = lpEnYear(M), yl = lpEnYearLimit(); if (yk && yk / yl >= 0.85) add({ k: 'year:' + new Date().getFullYear() + ':' + (yk >= yl ? 2 : 1), ic: 'mdi:gauge', t: lpEnT(lang, 'tYear', { p: Math.round(yk / yl * 100) }), pr: 2 }); }
+  if (c.sun !== false) { const F = lpEnFlowNow(S); if (F && F.grid !== null && -F.grid >= 500) add({ k: 'sun:' + new Date().toDateString(), ic: 'mdi:solar-power-variant', t: lpEnT(lang, 'tSun', { w: lpEnWs(-F.grid, lang) }), ent: lpEnSolar().prod, pr: 5 }); }
+  return out.sort((a, b) => a.pr - b.pr);
+}
+function lpEnDemoTips(M, lang) { const d = M.devs[0]; return [{ k: 'demo', ic: 'mdi:timer-alert-outline', t: lpEnT(lang, 'tLeft', { n: d.name, h: '3', w: lpEnWs(d.w, lang) }), dev: d.id, pr: 1 }]; }
+// Halo'nun altındaki satır: hepsi üst üste, biri görünür (panel 6 sn'de bir sıradakine geçer)
+function lpEnTipsHtml(h, M, lang) {
+  const L = lpEnTips(h, M, lang); if (!L.length) return '';
+  return '<div class="entips" title="' + esc(lpEnT(lang, 'tHide')) + '">' + L.map((x, i) => '<div class="entip' + (i ? '' : ' on') + '" data-entip="' + esc(x.k) + '"' + (x.ent ? ' data-tipent="' + esc(x.ent) + '"' : '') + '><ha-icon icon="' + esc(x.ic) + '"></ha-icon><span>' + esc(x.t) + '</span>' + (L.length > 1 ? '<i>' + (i + 1) + '/' + L.length + '</i>' : '') + '</div>').join('') + '</div>';
+}
+function lpEnLegend(M) { const L = M.cats.slice(0, 10); return '<div class="enlg">' + L.map((c) => '<span><i style="background:' + c.color + '"></i>' + esc(c.name) + '</span>').join('') + (M.cats.length > L.length ? '<span>+' + (M.cats.length - L.length) + '</span>' : '') + '</div>'; }
 // kategoriye dokununca: o kategorinin cihazları (anlık güce göre)
 function lpEnPopHtml(h, M, catId, lang) {
   const S = (h && h.states) || {}, c = M.cats.filter((x) => x.id === catId)[0]; if (!c) return '';
@@ -457,8 +625,8 @@ function lpEnTileP(h, id) {
 }
 // Enerji sekmesi: "+ Sekme" menüsü ve Otomatik kur. Solda Halo ve bekleme, ortada kategoriler ve günlük tüketim, sağda en çok çekenler ve son 24 saat.
 function lhdEnergyTab(lang, id) {
-  const T = (k) => upper(lang, lpEnT(lang, 's_' + k));
-  return { id: id, name: lang === 'tr' ? 'Enerji' : 'Energy', icon: 'mdi:lightning-bolt', area: null, v: 2, columns: [30, 40, 30], sections: [
+  const T = (k) => upper(lang, lpEnT(lang, 's_' + k)), sol = lpEnSolar();
+  const t = { id: id, name: lang === 'tr' ? 'Enerji' : 'Energy', icon: 'mdi:lightning-bolt', area: null, v: 2, columns: [30, 40, 30], sections: [
     { id: id + '-h', type: 'energy', title: T('halo'), col: 0, grow: 3, entities: [{ energy: 'halo' }] },
     { id: id + '-b', type: 'energy', title: T('standby'), col: 0, entities: [{ energy: 'standby' }] },
     { id: id + '-c', type: 'energy', title: T('cats'), col: 1, grow: 3, entities: [{ energy: 'cats' }] },
@@ -466,4 +634,7 @@ function lhdEnergyTab(lang, id) {
     { id: id + '-t', type: 'energy', title: T('top'), col: 2, grow: 3, entities: [{ energy: 'top' }] },
     { id: id + '-d', type: 'energy', title: T('day'), col: 2, grow: 2, entities: [{ energy: 'day' }] }
   ] };
+  // güneşli evde akış kartı soldaki kolonda, bekleme yerine (batarya doluluğu akışta da görünür; ayrı kart + Enerji kartı'ndan)
+  if (sol.on && sol.prod) t.sections[1] = { id: id + '-f', type: 'energy', title: T('flow'), col: 0, grow: 2, entities: [{ energy: 'flow' }] };
+  return t;
 }

@@ -1,0 +1,189 @@
+"""Enerji sayfası v0.26: measured devices, state-based power, categories, energy settings sync, solar, import."""
+from datetime import timedelta
+from types import SimpleNamespace
+
+import pytest
+
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
+from homeassistant.setup import async_setup_component
+from homeassistant.util import dt as dt_util
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+from custom_components.lemur_home_dashboard import estimates as EST
+
+DOMAIN = "lemur_home_dashboard"
+
+
+@pytest.fixture(autouse=True)
+def auto_enable_custom_integrations(recorder_mock, enable_custom_integrations):
+    """The energy integration needs the recorder: it must start before hass (overrides conftest)."""
+    yield
+
+
+def st(state, **attrs):
+    return SimpleNamespace(state=state, attributes=attrs)
+
+
+def test_states_and_meas_power():
+    tv = {"kind": "states", "states": [{"s": "playing", "w": 95}, {"s": "paused", "w": 70}], "other": 0.5}
+    assert EST.power(tv, st("playing")) == 95
+    assert EST.power(tv, st("paused")) == 70
+    assert EST.power(tv, st("off")) == 0.5
+    assert EST.power(tv, None) == 0.5
+    assert EST.power({"kind": "meas"}, st("1.2", unit_of_measurement="kW")) == 1200
+    assert EST.power({"kind": "meas"}, st("unavailable")) == 0
+    assert EST.power({"kind": "light", "idle": 0.4, "min": 3, "max": 10}, st("on", brightness=0)) == 3
+    assert EST.power({"kind": "light", "idle": 0.4, "min": 3, "max": 10}, st("off")) == 0.4
+    assert EST.energy_entity("x", {"kind": "meas", "energy": "sensor.x_kwh"}) == "sensor.x_kwh"
+    assert EST.energy_entity("x", {"kind": "meas"}) == "sensor.lhd_x_energy"
+    assert EST.power_entity("x", {"kind": "meas", "sensor": "sensor.x_w"}) == "sensor.x_w"
+
+
+def test_build_prefs_keeps_others():
+    prefs = {"energy_sources": [{"type": "grid", "flow_from": []}], "device_consumption": [
+        {"stat_consumption": "sensor.other_energy"}, {"stat_consumption": "sensor.lhd_gone_energy"},
+        {"stat_consumption": "sensor.child_energy", "included_in_stat": "sensor.lhd_kat_old_energy"}]}
+    ests = {"tv": {"name": "TV", "kind": "states", "cat": "medya"}, "p": {"name": "Priz", "kind": "meas", "sensor": "sensor.p_w", "energy": "sensor.p_kwh"}}
+    cats = [{"id": "medya", "name": "Medya"}]
+    out = EST.build_prefs(prefs, ests, cats, {"energy": {"solar": {"on": True, "prod": "sensor.pv_w"}}})
+    stats = [d["stat_consumption"] for d in out["device_consumption"]]
+    assert stats[:3] == ["sensor.lhd_kat_medya_energy", "sensor.lhd_tv_energy", "sensor.p_kwh"]
+    assert "sensor.other_energy" in stats and "sensor.lhd_gone_energy" not in stats
+    tvrow = out["device_consumption"][1]
+    assert tvrow["included_in_stat"] == "sensor.lhd_kat_medya_energy" and tvrow["stat_rate"] == "sensor.lhd_tv_power"
+    child = [d for d in out["device_consumption"] if d["stat_consumption"] == "sensor.child_energy"][0]
+    assert "included_in_stat" not in child
+    sol = [s for s in out["energy_sources"] if s["type"] == "solar"]
+    assert sol and sol[0]["stat_energy_from"] == "sensor.lhd_solar_energy" and sol[0]["stat_rate"] == "sensor.pv_w"
+    assert any(s["type"] == "grid" for s in out["energy_sources"])
+
+
+async def test_categories_meas_and_sync(hass: HomeAssistant, hass_ws_client, setup_lhd):
+    await async_setup_component(hass, "http", {})
+    assert await async_setup_component(hass, "energy", {})
+    hass.states.async_set("media_player.tv", "playing", {})
+    hass.states.async_set("sensor.priz_w", "40", {"unit_of_measurement": "W", "device_class": "power"})
+    hass.states.async_set("sensor.pv_w", "1500", {"unit_of_measurement": "W", "device_class": "power"})
+    ws = await hass_ws_client(hass)
+    cats = [{"id": "medya", "name": "Medya", "color": "#B388FF"}]
+    est = {"tv": {"name": "Salon TV", "kind": "states", "entity": "media_player.tv", "states": [{"s": "playing", "w": 95}, {"s": "paused", "w": 70}], "other": 0.5, "cat": "medya"},
+           "priz": {"name": "Priz", "kind": "meas", "sensor": "sensor.priz_w", "cat": "medya"}}
+    await ws.send_json({"id": 1, "type": "lemur_home_dashboard/set", "key": "ecats", "value": cats})
+    assert (await ws.receive_json())["success"]
+    await ws.send_json({"id": 2, "type": "lemur_home_dashboard/set", "key": "estimates", "value": est})
+    r = await ws.receive_json(); assert r["success"], r
+    await hass.async_block_till_done()
+    assert float(hass.states.get("sensor.lhd_tv_power").state) == 95
+    assert hass.states.get("sensor.lhd_priz_power") is None                 # measured: its own sensor
+    assert hass.states.get("sensor.lhd_priz_energy") is not None            # no kWh sensor: the dashboard counts
+    assert float(hass.states.get("sensor.lhd_kat_medya_power").state) == 135
+    hass.states.async_set("media_player.tv", "paused", {})
+    await hass.async_block_till_done()
+    await hass.async_block_till_done()   # the category follows the device sensor one step later
+    assert float(hass.states.get("sensor.lhd_kat_medya_power").state) == 110
+    # category kWh follows its devices' counters
+    ce = [x for x in hass.data["sensor"].entities if x.entity_id == "sensor.lhd_kat_medya_energy"][0]
+    tvE = [x for x in hass.data["sensor"].entities if x.entity_id == "sensor.lhd_tv_energy"][0]
+    tvE._t = dt_util.utcnow() - timedelta(hours=1)
+    tvE._tick(); await hass.async_block_till_done(); await hass.async_block_till_done()
+    assert abs(float(hass.states.get("sensor.lhd_tv_energy").state) - 0.07) < 0.002
+    assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.07) < 0.002
+    # counter reset of a member: decided on the next reading, then only what it gained after
+    hass.states.async_set("sensor.lhd_tv_energy", "0.01", {"unit_of_measurement": "kWh"})
+    await hass.async_block_till_done()
+    await hass.async_block_till_done()
+    assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.07) < 0.002
+    hass.states.async_set("sensor.lhd_tv_energy", "0.02", {"unit_of_measurement": "kWh"})
+    await hass.async_block_till_done()
+    await hass.async_block_till_done()
+    assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.09) < 0.002
+    # energy settings follow (debounced)
+    d = hass.data[DOMAIN]
+    assert await d.async_sync_prefs()
+    from homeassistant.components.energy.data import async_get_manager
+    prefs = (await async_get_manager(hass)).data
+    stats = [x["stat_consumption"] for x in prefs["device_consumption"]]
+    assert stats == ["sensor.lhd_kat_medya_energy", "sensor.lhd_tv_energy", "sensor.lhd_priz_energy"]
+    # solar without a kWh sensor: the dashboard counts it and adds a solar source
+    await ws.send_json({"id": 3, "type": "lemur_home_dashboard/set", "key": "settings", "value": {"energy": {"solar": {"on": True, "prod": "sensor.pv_w"}}}})
+    assert (await ws.receive_json())["success"]
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.lhd_solar_energy") is not None
+    assert await d.async_sync_prefs()
+    prefs = (await async_get_manager(hass)).data
+    assert [s["stat_energy_from"] for s in prefs["energy_sources"] if s["type"] == "solar"] == ["sensor.lhd_solar_energy"]
+    # removing the category: its sensors go, devices stay
+    await ws.send_json({"id": 4, "type": "lemur_home_dashboard/set", "key": "ecats", "value": []})
+    assert (await ws.receive_json())["success"]
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.lhd_kat_medya_power") is None
+    assert hass.states.get("sensor.lhd_tv_power") is not None
+    # bad category id refused, reserved device id refused
+    await ws.send_json({"id": 5, "type": "lemur_home_dashboard/set", "key": "ecats", "value": [{"id": "A B", "name": "x"}]})
+    assert not (await ws.receive_json())["success"]
+    await ws.send_json({"id": 6, "type": "lemur_home_dashboard/set", "key": "estimates", "value": {"solar": {"name": "x", "kind": "fixed", "w": 1}}})
+    assert not (await ws.receive_json())["success"]
+    await ws.send_json({"id": 7, "type": "lemur_home_dashboard/set", "key": "estimates", "value": {"kat_x": {"name": "x", "kind": "fixed", "w": 1}}})
+    assert not (await ws.receive_json())["success"]
+
+
+async def test_import(hass: HomeAssistant, hass_ws_client, setup_lhd):
+    """Entries of the other integration: two lights and a TV in two groups, a total group of groups."""
+    await async_setup_component(hass, "http", {})
+    assert await async_setup_component(hass, "energy", {})
+    reg = er.async_get(hass)
+    hass.states.async_set("light.tavan", "on", {"brightness": 128})
+    hass.states.async_set("media_player.tv", "playing", {})
+
+    def entry(eid, data, power, energy):
+        e = MockConfigEntry(domain="powercalc", entry_id=eid, data=data, title=data.get("name", eid))
+        e.add_to_hass(hass)
+        for ent, dc, unit, val in ((power, "power", "W", "20"), (energy, "energy", "kWh", "1.0")):
+            if ent:
+                reg.async_get_or_create("sensor", "powercalc", ent, suggested_object_id=ent.split(".")[1], config_entry=e, original_device_class=dc)
+                hass.states.async_set(ent, val, {"unit_of_measurement": unit, "device_class": dc})
+        return e
+    entry("e1", {"entity_id": "light.tavan", "name": "Salon Tavan", "mode": "linear", "linear": {"min_power": 2, "max_power": 46}, "standby_power": 0.4}, "sensor.salon_tavan_power", "sensor.salon_tavan_energy")
+    entry("e2", {"entity_id": "media_player.tv", "name": "Salon TV", "mode": "fixed", "fixed": {"states_power": {"playing": 95, "paused": 70}}, "standby_power": 0.5}, "sensor.salon_tv_power", "sensor.salon_tv_energy")
+    entry("e3", {"entity_id": "sensor.dummy", "name": "Modem", "mode": "fixed", "fixed": {"power": 9}}, "sensor.modem_power", "sensor.modem_energy")
+    entry("g1", {"sensor_type": "group", "name": "Enerji Işıklar", "group_member_sensors": ["e1"]}, "sensor.enerji_isiklar_power", "sensor.enerji_isiklar_energy")
+    entry("g2", {"sensor_type": "group", "name": "Enerji Medya", "group_member_sensors": ["e2", "e3"]}, "sensor.enerji_medya_power", "sensor.enerji_medya_energy")
+    entry("g3", {"sensor_type": "group", "name": "Ev Toplam", "group_member_sensors": ["g1", "g2"]}, "sensor.ev_toplam_power", "sensor.ev_toplam_energy")
+    from homeassistant.components.energy.data import async_get_manager
+    mgr = await async_get_manager(hass)
+    await mgr.async_update({"energy_sources": [], "device_consumption": [
+        {"stat_consumption": "sensor.enerji_isiklar_energy", "name": "Işıklar"}, {"stat_consumption": "sensor.enerji_medya_energy", "name": "Medya ve Ekranlar"},
+        {"stat_consumption": "sensor.salon_tavan_energy", "included_in_stat": "sensor.enerji_isiklar_energy"},
+        {"stat_consumption": "sensor.salon_tv_energy", "included_in_stat": "sensor.enerji_medya_energy"},
+        {"stat_consumption": "sensor.modem_energy", "included_in_stat": "sensor.enerji_medya_energy"},
+        {"stat_consumption": "sensor.unrelated_energy"}]})
+    ws = await hass_ws_client(hass)
+    await ws.send_json({"id": 1, "type": "lemur_home_dashboard/energy_import"})
+    r = await ws.receive_json(); assert r["success"], r
+    p = r["result"]
+    assert p["found"] == 6
+    assert sorted(c["name"] for c in p["cats"]) == ["Işıklar", "Medya ve Ekranlar"]
+    kinds = {x["name"]: x["kind"] for x in p["devices"]}
+    assert kinds == {"Salon Tavan": "light", "Salon TV": "states", "Modem": "fixed"}
+    assert set(p["drop"]) >= {"sensor.salon_tavan_energy", "sensor.enerji_isiklar_energy"}
+    assert p["old_w"] == 40
+    await ws.send_json({"id": 2, "type": "lemur_home_dashboard/energy_import", "apply": True})
+    r = await ws.receive_json(); assert r["success"], r
+    assert r["result"]["synced"]
+    await hass.async_block_till_done()
+    d = hass.data[DOMAIN]
+    e = {v["name"]: v for v in d.estimates().values()}
+    assert e["Salon Tavan"]["min"] == 2 and e["Salon Tavan"]["max"] == 46 and e["Salon Tavan"]["idle"] == 0.4
+    assert e["Salon TV"]["states"][:2] == [{"s": "playing", "w": 95.0}, {"s": "paused", "w": 70.0}]
+    assert [x["s"] for x in e["Salon TV"]["states"][2:]] == ["off", "standby", "unavailable"]
+    assert e["Modem"]["w"] == 9
+    stats = [x["stat_consumption"] for x in mgr.data["device_consumption"]]
+    assert "sensor.unrelated_energy" in stats and "sensor.salon_tv_energy" not in stats and "sensor.enerji_medya_energy" not in stats
+    assert any(s.startswith("sensor.lhd_kat_") for s in stats)
+    tav = [k for k, v in d.estimates().items() if v["name"] == "Salon Tavan"][0]
+    assert abs(float(hass.states.get(f"sensor.lhd_{tav}_power").state) - (2 + 44 * 128 / 255)) < 0.05
+    # running it again does not add the same devices twice
+    await ws.send_json({"id": 3, "type": "lemur_home_dashboard/energy_import"})
+    r = await ws.receive_json(); assert r["success"]
+    assert r["result"]["devices"] == [] and len(r["result"]["skipped"]) == 3

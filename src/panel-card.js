@@ -497,7 +497,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     if (!this._leciUnsub) this._leciUnsub = lpLecIconsSub(() => this._render());   // LEC simgeleri yüklendi
     if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub(() => { this._sig = null; this._render(); });   // renkli simge seti yüklendi
-    if (!this._enUnsub) this._enUnsub = lpEnSub(() => { if (this._ens && this._ens.length) this._enPaint(true); });   // enerji verisi yüklendi
+    if (!this._enUnsub) this._enUnsub = lpEnSub(() => { if (this._ens && this._ens.length) this._enPaint(true); this._enDot(); });   // enerji verisi yüklendi
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
     if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } }; window.addEventListener('resize', this._rsz); }
@@ -512,6 +512,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
     if (this._enUnsub) { this._enUnsub(); this._enUnsub = null; }
     clearTimeout(this._enT); this._enT = null;
+    clearInterval(this._tipT); this._tipT = null;
     clearInterval(this._clock); this._clock = null;
     clearInterval(this._tmr); this._tmr = null;
     clearInterval(this._camT); this._camT = null;
@@ -533,6 +534,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     (this._pets || []).forEach((el) => lpPetPaint(el, this._lang, Date.now()));   // "2 sa önce", durum rengi
     if (this._ticks % 4 === 0 && this._hasAgo) this._repaint();                       // "son değişim" ikinci satırları
     if (this._ticks % 4 === 3 && this._ens && this._ens.length) this._enPaint(true);  // enerji: dakikada bir (veri 5 dk'da bir tazelenir)
+    if (this._ticks % 4 === 1) this._enDot();
     this._ticks = (this._ticks || 0) + 1;
     if (this._ticks % 20 === 0 && this._def && this._hass) { this._def = null; this._render(); }   // otomatik düzen 5 dk'da bir tazelenir
   }
@@ -903,6 +905,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._last = {};
     this._lang = lang;
     if (this._ens.length) { this._enPaint(true); if (!edit) this._ens.forEach((el) => this._enBind(el)); }
+    this._enDot();
 
     // düzenleme modu (yönetim panelindeki önizleme): cihazlara dokunulmaz; tıklama seçer, sürükleme taşır, çizgiler boyutlandırır
     if (edit) { this._editBind(R, tab, widths, used); return; }
@@ -1675,6 +1678,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!this._enT) this._enT = setTimeout(() => { this._enT = null; this._enPaint(true); }, 2000 - (now - this._enAt));
       return;
     }
+    if (this._tipHold) { if (!this._enT) this._enT = setTimeout(() => { this._enT = null; this._enPaint(true); }, 700); return; }
     clearTimeout(this._enT); this._enT = null; this._enAt = now;
     const h = this._hass, M = lpEnGet(h, this._lang), ph = lpIsPhone(this._config);
     this._enIds = lpEnIds(M); this._enLast = {};
@@ -1683,11 +1687,49 @@ class LemurHomeDashboardCard extends HTMLElement {
       const html = lpEnCard(h, M, el._item || {}, this._lang, ph);
       if (el._html !== html) { el._html = html; el.innerHTML = html; }
     });
+    this._tipShow();
+    // ipuçları birden fazlaysa 6 sn'de bir sıradakine geçilir (yeniden çizmeden)
+    const many = this._ens.some((el) => el.querySelectorAll('.entip').length > 1);
+    if (many && !this._tipT) this._tipT = setInterval(() => { this._tipI = (this._tipI || 0) + 1; this._tipShow(); }, 6000);
+    if (!many && this._tipT) { clearInterval(this._tipT); this._tipT = null; }
+  }
+  _tipShow() {
+    (this._ens || []).forEach((el) => {
+      const L = el.querySelectorAll('.entip'); if (!L.length) return;
+      const k = (this._tipI || 0) % L.length;
+      for (let i = 0; i < L.length; i++) L[i].classList.toggle('on', i === k);
+    });
+  }
+  // İpucu olunca Enerji sekmesinin düğmesinde küçük nokta (Enerji sayfası → İpuçları, varsayılan kapalı)
+  _enDot() {
+    const R = this.shadowRoot, h = this._hass; if (!R || !h) return;
+    const on = lpEnTipCfg().dot === true && lpEnTipCfg().on !== false && !this._config.edit && !this._config.demo;
+    const tabs = on ? this._tabs().filter((T) => (T.sections || []).some((x) => x.type === 'energy' || lpEnOnly(x))) : [];
+    let n = 0;
+    if (tabs.length) { const M = lpEnGet(h, this._lang); n = M ? lpEnTips(h, M, this._lang).length : 0; }
+    R.querySelectorAll('.navb[data-nav], .pbi[data-nav]').forEach((b) => { const id = b.getAttribute('data-nav'); b.classList.toggle('endot', n > 0 && tabs.some((T) => T.id === id)); });
+    R.querySelectorAll('.pbi[data-cat="energy"]').forEach((b) => b.classList.toggle('endot', n > 0));   // telefonda kategori çubuğu
   }
   // dokunuşlar: kategori karosu o kategorinin cihazlarını açar, cihaz satırı cihaz penceresini
   _enBind(el) {
+    // ipucu: dokununca ilgili cihaz, basılı tutunca "bunu gösterme" (bu cihazda)
+    // eski Safari'de pointer olayı yok: dokunma ve fare ayrı
+    let hold = null, held = false, touched = 0;
+    const stop = () => { clearTimeout(hold); hold = null; this._tipHold = false; };
+    const begin = (tg) => {
+      const tp = tg && tg.closest ? tg.closest('[data-entip]') : null; if (!tp) return;
+      held = false; stop();
+      this._tipHold = true;   // basılıyken yeniden çizilmesin (eski Safari dokunuşu kopan düğüme gönderir)
+      hold = setTimeout(() => { hold = null; held = true; this._tipHold = false; lpEnTipHide(tp.getAttribute('data-entip')); tp.classList.add('gone'); setTimeout(() => { this._enPaint(true); this._enDot(); }, 500); }, LP_HOLD_MS);
+    };
+    el.addEventListener('touchstart', (e) => { touched = Date.now(); begin(e.target); }, { passive: true });
+    el.addEventListener('mousedown', (e) => { if (Date.now() - touched > 800 && e.button === 0) begin(e.target); });
+    ['touchend', 'touchcancel', 'touchmove', 'mouseup', 'mouseleave'].forEach((ev) => el.addEventListener(ev, stop, { passive: true }));
+    el.addEventListener('contextmenu', (e) => { if (e.target && e.target.closest && e.target.closest('[data-entip]')) e.preventDefault(); });
     el.addEventListener('click', (e) => {
       const tg = e.target && e.target.closest ? e.target : null; if (!tg) return;
+      const tip = tg.closest('[data-entip]');
+      if (tip) { if (held) { held = false; return; } const te = tip.getAttribute('data-tipent'); if (te && !this._config.demo) lpFire(this, 'hass-more-info', { entityId: te }); return; }
       const cat = tg.closest('[data-encat]'), more = tg.closest('[data-enmore]');
       if (cat) { this._enPop(cat.getAttribute('data-encat')); return; }
       if (more && more.getAttribute('data-enmore') && !this._config.demo) lpFire(this, 'hass-more-info', { entityId: more.getAttribute('data-enmore') });
