@@ -224,6 +224,7 @@ Drag tabs to reorder them. A tab tied to an area uses that room for the effect s
 - **Icon**: The room button's icon.
 - **Area**: The tab's room: the effect screen and brightness on the clock use it.
 - **Refill from area**: Rebuilds the tab from the devices of the chosen area.
+- **Layout** (Columns · Free grid): In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; Fit the screen or Scrollable. 6 columns on a large portrait screen.
 - **Columns**: 1 to 6 columns; drag the lines in the preview for widths.
 - **Tablet layout** (Tablet layout · Equal): Ready column ratios.
 - **Columns inside**: Splits a column into 2-3 columns of its own (advanced).

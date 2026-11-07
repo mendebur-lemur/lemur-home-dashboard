@@ -103,7 +103,8 @@ function lhdItemKey(x) {
 function lhdPhoneOrder(T, ord) {
   const secs = (T && T.sections) || [];
   const cols = (T && T.columns && T.columns.length) ? T.columns.length : 3, sp = (T && T.splits) || [];
-  const key = (s, i) => { const c = Math.max(0, Math.min(cols - 1, +s.col || 0)), n = parseInt(sp[c], 10) >= 1 && parseInt(sp[c], 10) <= 3 ? parseInt(sp[c], 10) : 1; return [c, Math.max(0, Math.min(n - 1, +s.sub || 0)), i]; };
+  const grid = T && T.layout === 'grid';   // serbest ızgara: okuma sırası (yukarıdan aşağı, soldan sağa)
+  const key = (s, i) => { if (grid) { const g = s.g || {}; return [+g.y || 0, +g.x || 0, i]; } const c = Math.max(0, Math.min(cols - 1, +s.col || 0)), n = parseInt(sp[c], 10) >= 1 && parseInt(sp[c], 10) <= 3 ? parseInt(sp[c], 10) : 1; return [c, Math.max(0, Math.min(n - 1, +s.sub || 0)), i]; };
   const base = secs.map((s, i) => ({ s: s, k: key(s, i) })).sort((a, b) => (a.k[0] - b.k[0]) || (a.k[1] - b.k[1]) || (a.k[2] - b.k[2])).map((x) => x.s);
   return lhdOrderBy(base, ord, (s) => s.id);
 }

@@ -106,6 +106,55 @@ function lpWeights(tab) {
   const c = (tab && tab.columns && tab.columns.length) ? tab.columns : LP_DEFAULT_COLS;
   return c.map((x) => { const v = parseFloat(typeof x === 'object' && x ? x.w : x); return v > 0 ? v : 10; });
 }
+// ---- serbest ızgara (tab.layout === 'grid'): bölümler 12 sütunluk ızgarada {x, y, w, h}; dikey ekranda 6 sütun ----
+// s.g geniş ekranın yeri, s.gm dikey ekranınki (tab.gm_own: elle düzenlendi, yoksa geniş düzenden türetilir).
+// tab.gfit: false ise satır yüksekliği sabit (tab.growh px) ve sayfa kayar; yoksa düzen ekranı doldurur (tab.grows satır).
+const LP_GMIN = { halo: [3, 4], cats: [3, 3], flow: [3, 4], top: [3, 3], week: [3, 3], day: [3, 3], battery: [2, 2], tariff: [3, 3], meter: [3, 3], tips: [3, 2], standby: [2, 2] };
+function lpGMin(s, C) {
+  const e = (s.entities || [])[0], k = s.type === 'energy' && e && typeof e === 'object' ? e.energy : null, m = LP_GMIN[k] || [2, 2];
+  return C === 6 ? [Math.max(2, Math.ceil(m[0] / 2) + (m[0] > 2 ? 1 : 0)), m[1]] : m;
+}
+const lpGHit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+// çakışanları aşağı iter, sonra boşlukları yukarı toplar; taşınan (moved) yerinde kalır
+function lpGSettle(L, moved, C) {
+  L.forEach((o) => { o.w = Math.max(1, Math.min(C, o.w)); o.x = Math.max(0, Math.min(C - o.w, o.x)); o.y = Math.max(0, o.y); o.h = Math.max(1, o.h); });
+  const ord = L.slice().sort((a, b) => (a.id === moved ? -1 : b.id === moved ? 1 : 0) || a.y - b.y || a.x - b.x), done = [];
+  ord.forEach((o) => { while (done.some((p) => lpGHit(p, o))) o.y++; done.push(o); });
+  const by = L.slice().sort((a, b) => a.y - b.y || a.x - b.x), put = [];
+  by.forEach((o) => { if (o.id !== moved) while (o.y > 0) { o.y--; if (put.some((p) => lpGHit(p, o))) { o.y++; break; } } put.push(o); });
+  return L;
+}
+// sütunlu düzenden ızgaraya: kolon genişlikleri 12'ye, aynı kolondaki kutular grow oranında 12 satıra bölünür
+function lpGridFromCols(T) {
+  const W = lpWeights(T), sum = W.reduce((a, b) => a + b, 0) || 1, n = W.length, xs = [], ws = []; let acc = 0;
+  W.forEach((w, i) => { const x0 = Math.round(acc / sum * 12), x1 = i === n - 1 ? 12 : Math.round((acc + w) / sum * 12); xs.push(x0); ws.push(Math.max(1, x1 - x0)); acc += w; });
+  const by = W.map(() => []); (T.sections || []).forEach((s) => by[Math.max(0, Math.min(n - 1, s.col || 0))].push(s));
+  by.forEach((L, i) => { const g = L.reduce((a, s) => a + (parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1), 0) || 1; let y = 0; L.forEach((s, k) => { const h = k === L.length - 1 ? Math.max(2, 12 - y) : Math.max(2, Math.round((parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1) / g * 12)); s.g = { x: xs[i], y: y, w: ws[i], h: h }; y += h; }); });
+  return T;
+}
+// boşlukları kapat: her kutu önce sağa, sonra en alt satıra kadar aşağı uzar (yalnız boş hücrelere)
+function lpGFill(L, C, rows) {
+  const ord = L.slice().sort((a, b) => a.y - b.y || a.x - b.x), free = (o, c) => !L.some((p) => p !== o && lpGHit(p, c));
+  ord.forEach((o) => { while (o.x + o.w < C && free(o, { x: o.x, y: o.y, w: o.w + 1, h: o.h })) o.w++; });
+  ord.forEach((o) => { while (o.y + o.h < rows && free(o, { x: o.x, y: o.y, w: o.w, h: o.h + 1 })) o.h++; });
+  return L;
+}
+// bölümlerin yerleri: { id: {x, y, w, h} }
+function lpGridPos(T, C, ids) {
+  const S = (T.sections || []).filter((s) => !ids || ids.indexOf(s.id) >= 0), out = {};
+  const wide = S.map((s) => { const g = s.g || {}; return { id: s.id, s: s, x: +g.x || 0, y: +g.y || 0, w: +g.w || 4, h: +g.h || 4 }; });
+  if (C === 12) { lpGSettle(wide, null, 12); wide.forEach((o) => { out[o.id] = { x: o.x, y: o.y, w: o.w, h: o.h }; }); return out; }
+  if (T.gm_own && S.every((s) => s.gm)) { const L = S.map((s) => ({ id: s.id, x: +s.gm.x || 0, y: +s.gm.y || 0, w: +s.gm.w || 3, h: +s.gm.h || 4 })); lpGSettle(L, null, C); L.forEach((o) => { out[o.id] = o; }); return out; }
+  // dikey: geniş düzenin okuma sırasıyla, genişlik yarıya (en az kartın en küçüğü), boş ilk yere
+  const put = [];
+  wide.sort((a, b) => a.y - b.y || a.x - b.x).forEach((o) => {
+    const m = lpGMin(o.s, C), w = Math.max(m[0], Math.min(C, Math.round(o.w / 2) || 1)), h = Math.max(m[1], o.h);
+    let y = 0, x = 0, ok = false;
+    for (y = 0; !ok && y < 400; y++) for (x = 0; x <= C - w; x++) { const c = { x: x, y: y, w: w, h: h }; if (!put.some((p) => lpGHit(p, c))) { ok = true; break; } }
+    const c = { id: o.id, x: x, y: y - 1, w: w, h: h }; put.push(c); out[o.id] = c;
+  });
+  return out;
+}
 const lpEnt = (x) => (typeof x === 'string' ? { entity: x } : (x && x.entity ? x : null));
 // Gömülü kart (Halo) tanımlı mı? customElements.get'e güvenilmez (kayıt defteri değişmiş olabilir), öğeyi oluşturup bakıyoruz.
 const LP_HAS = {};
@@ -744,7 +793,7 @@ class LemurHomeDashboardCard extends HTMLElement {
             if (hcol) hc.color = LP_HALO_RGB[hcol] || hcol;
             return emb('lemur-hd-sensor-card', hc, x.entity, x._i, x);
           }
-          if (x._k === 'energy') { ens.push(x); return '<div class="enc en-' + esc(x.energy) + '" data-en="' + (ens.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
+          if (x._k === 'energy') { ens.push(x); return '<div class="enc en-' + esc(x.energy) + (lpEnIsLook(x) ? ' enlook' : '') + '" data-en="' + (ens.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'card') { cards.push(x); return '<div class="emb hc' + (LP_EMB_H[x.height] ? ' hfix" style="min-height:' + LP_EMB_H[x.height] + 'px' : '') + '" data-hc="' + (cards.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'sub') return '<div class="subt' + (x._catSub ? ' csub' : '') + '"' + hidA(x) + mark(x._i) + '>' + esc(x.subtitle) + '</div>';
           const c = Object.assign({}, x); delete c._i; delete c._k; delete c._val; delete c._hid; delete c._act;
@@ -765,6 +814,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // Düzenleme modunda boş bölüm de bir kutu olarak görünür (içine sürüklenebilsin diye).
     const widths = lpWeights(tab), splits = lpSplits(tab, widths.length);
     const cols = widths.map((w, i) => { const a = []; for (let j = 0; j < splits[i]; j++) a.push([]); return a; });
+    const gbx = [];   // serbest ızgarada her bölümün kutusu
     (tab.sections || []).forEach((s) => {
       const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0)), sj = Math.max(0, Math.min(splits[ci] - 1, s.sub || 0));
       curSec = s.id;
@@ -773,6 +823,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!b) return;
       cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id], grow: parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1, gap: typeof s.gap === 'number' ? s.gap : null,
         fill: !!s.fill, align: !s.fill && (s.align === 'center' || s.align === 'spread') ? s.align : '' });   // doldururken hizalama yok (aralık kaybolmasın)
+      gbx.push({ s: s, b: cols[ci][sj][cols[ci][sj].length - 1] });
     });
     const used = [];
     cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
@@ -839,8 +890,20 @@ class LemurHomeDashboardCard extends HTMLElement {
       // telefon: kolonlar soldan sağa, sütunlar sırayla alt alta; boş sütun yer kaplamaz
       grid = '';
       const bx = [];
-      cols.forEach((c) => c.forEach((boxes) => boxes.forEach((b) => bx.push(b))));
+      if (tab.layout === 'grid' && !tab._ph) gbx.slice().sort((a, b) => ((a.s.g || {}).y || 0) - ((b.s.g || {}).y || 0) || ((a.s.g || {}).x || 0) - ((b.s.g || {}).x || 0)).forEach((x) => bx.push(x.b));   // ızgarada okuma sırası
+      else cols.forEach((c) => c.forEach((boxes) => boxes.forEach((b) => bx.push(b))));
       body = '<div class="pcol">' + (bx.length ? bx.map((b) => boxHtml(b, false)).join('') : '<div class="box empty">' + esc(t(lang, 'empty')) + '</div>') + '</div>';
+    } else if (tab.layout === 'grid' && gbx.length) {
+      // serbest ızgara: geniş ekranda 12, dikeyde 6 sütun; ekrana sığdır ya da sabit satırla kaydır
+      const lh = parseFloat(getComputedStyle(this).getPropertyValue('--lp-h')) || window.innerHeight, ow = this.offsetWidth || window.innerWidth;
+      const C = tab._gn === 6 || (tab._gn !== 12 && ow < lh * 0.95) ? 6 : 12, P = lpGridPos(tab, C, gbx.map((x) => x.s.id));
+      let rows = 0; gbx.forEach((x) => { const p = P[x.s.id]; if (p) rows = Math.max(rows, p.y + p.h); });
+      const fit = tab.gfit !== false, R0 = fit ? Math.max(+tab.grows || 12, rows) : rows + (edit ? 2 : 0);
+      if (fit && !edit) lpGFill(Object.keys(P).map((k) => P[k]), C, R0);   // panoda boş hücre kalmaz (düzenlemede gerçek yerler görünür)
+      this._gC = C; this._gR = R0;
+      grid = 'grid-template-columns:1fr;grid-template-areas:\'h\' \'c0\'';
+      body = '<div class="gl' + (fit ? ' gfit' : ' gscr') + '" data-gl style="grid-area:c0;grid-template-columns:repeat(' + C + ',minmax(0,1fr));grid-template-rows:repeat(' + R0 + ',' + (fit ? 'minmax(0,1fr)' : (+tab.growh || 70) + 'px') + ')">' +
+        gbx.map((x) => { const p = P[x.s.id]; return '<div class="gcell" data-gsec="' + esc(x.s.id) + '" style="grid-column:' + (p.x + 1) + ' / span ' + p.w + ';grid-row:' + (p.y + 1) + ' / span ' + p.h + '">' + boxHtml(x.b, false) + (edit ? '<i class="grz" title="' + esc(t(lang, 'drag_size')) + '"></i>' : '') + '</div>'; }).join('') + '</div>';
     } else if (used.length) {
       // kolon genişlikleri oran (fr): kolon sayısı ne olursa olsun ekrana sığar, aralıklar taşırmaz
       grid = 'grid-template-columns:' + used.map((i) => 'minmax(0,' + widths[i] + 'fr)').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
@@ -1089,6 +1152,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       const ch = tg.closest('.colh'), rh = tg.closest('.rowh');
       const item = !ch && !rh ? tg.closest('[data-idx]') : null;
       const box = !ch && !rh && !item ? tg.closest('.box[data-secs]') : null;
+      const gcell = tab.layout === 'grid' && !tab._ph ? tg.closest('.gcell') : null;
+      if (gcell && !item && (tg.closest('.grz') || box)) {   // ızgarada kutu taşınır ya da köşesinden büyütülür
+        const gl = R.querySelector('[data-gl]'), C = this._gC || 12, Rn = this._gR || 12;
+        const pos = {}; arr(gl.querySelectorAll('.gcell')).forEach((c) => { const a = c.style.gridColumn.match(/(\d+)\s*\/\s*span\s*(\d+)/), b = c.style.gridRow.match(/(\d+)\s*\/\s*span\s*(\d+)/); if (a && b) pos[c.getAttribute('data-gsec')] = { id: c.getAttribute('data-gsec'), x: +a[1] - 1, w: +a[2], y: +b[1] - 1, h: +b[2] }; });
+        const id = gcell.getAttribute('data-gsec'), sec = secById(tab, id);
+        D = { kind: tg.closest('.grz') ? 'gsize' : 'gmove', el: gcell, id: id, sx: e.clientX, sy: e.clientY, on: false, z: zoom(), C: C, cw: gl.offsetWidth / C, ch: (tab.gfit !== false ? gl.offsetHeight / Rn : (+tab.growh || 70)), pos: pos, o: JSON.parse(JSON.stringify(pos[id])), min: lpGMin(sec || {}, C), gl: gl };
+        e.preventDefault(); return;
+      }
       if (!ch && !rh && !item && !box) return;
       D = { kind: ch ? 'col' : rh ? 'row' : item ? 'item' : 'box', el: ch || rh || item || box, sx: e.clientX, sy: e.clientY, on: false, z: zoom() };
       if (ch) {
@@ -1109,7 +1180,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!D.on) {
         if (Math.abs(e.clientX - D.sx) + Math.abs(e.clientY - D.sy) < 6) return;
         D.on = true;
-        if (D.kind === 'box' || D.kind === 'item') D.el.classList.add('dragging');
+        if (D.kind === 'box' || D.kind === 'item' || D.kind === 'gmove' || D.kind === 'gsize') D.el.classList.add('dragging');
         // kutu: küçük bir başlık kartı imleci izler; kutunun kendisi canlı olarak yeni yerine geçer, ötekiler kayar
         if (D.kind === 'box') {
           D.home = { p: D.el.parentNode, n: D.el.nextSibling };
@@ -1128,6 +1199,16 @@ class LemurHomeDashboardCard extends HTMLElement {
           wrap.appendChild(g); D.gh = g;
         }
         if (D.kind !== 'item') arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { if (x !== D.el) x.style.display = 'none'; });   // kutu kayarken tutamaklar yerinde kalmasın
+      }
+      if (D.kind === 'gmove' || D.kind === 'gsize') {
+        const o = D.pos[D.id], L = Object.keys(D.pos).map((k) => D.pos[k]);
+        if (D.kind === 'gmove') { o.x = Math.round(D.o.x + dx / D.cw); o.y = Math.max(0, Math.round(D.o.y + dy / D.ch)); }
+        else { o.w = Math.max(D.min[0], Math.min(D.C - o.x, Math.round(D.o.w + dx / D.cw))); o.h = Math.max(D.min[1], Math.round(D.o.h + dy / D.ch)); }
+        lpGSettle(L, D.id, D.C);
+        arr(D.gl.querySelectorAll('.gcell')).forEach((c) => { const p = D.pos[c.getAttribute('data-gsec')]; if (!p) return; c.style.gridColumn = (p.x + 1) + ' / span ' + p.w; c.style.gridRow = (p.y + 1) + ' / span ' + p.h; });
+        if (tab.gfit === false) { let rr = 0; L.forEach((p) => { rr = Math.max(rr, p.y + p.h); }); D.gl.style.gridTemplateRows = 'repeat(' + (rr + 2) + ',' + (+tab.growh || 70) + 'px)'; }
+        else { let rr = 0; L.forEach((p) => { rr = Math.max(rr, p.y + p.h); }); if (rr > (this._gR || 12)) D.gl.style.gridTemplateRows = 'repeat(' + rr + ',minmax(0,1fr))'; }
+        return;
       }
       if (D.kind === 'col') {
         // kolon, içindeki sütun sayısı kadar daralabilir: her sütun en dar kanvasta (W, genelde 1280) en az 150 px.
@@ -1225,6 +1306,12 @@ class LemurHomeDashboardCard extends HTMLElement {
       arr(R.querySelectorAll('.colh,.rowh')).forEach((x) => { x.style.display = ''; });
       this._dragged = true; setTimeout(() => { this._dragged = false; }, 0);
       if (d.kind === 'col') { const nt = clone(); nt.columns = d.W; return emit(nt); }
+      if (d.kind === 'gmove' || d.kind === 'gsize') {
+        const nt = clone(), key = d.C === 6 ? 'gm' : 'g';
+        (nt.sections || []).forEach((s) => { const p = d.pos[s.id]; if (p) s[key] = { x: p.x, y: p.y, w: p.w, h: p.h }; });
+        if (d.C === 6) nt.gm_own = true;
+        return emit(nt);
+      }
       if (d.kind === 'row') {
         if (d.na === undefined) return;
         const nt = clone();

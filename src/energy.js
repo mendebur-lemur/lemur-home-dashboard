@@ -16,8 +16,8 @@
 // Eski Safari için ?. ve ?? yok.
 
 const LP_EN = window.__LEMUR_HD_EN || (window.__LEMUR_HD_EN = { m: null, key: '', at: 0, busy: false, subs: [], dm: null, dmL: '', tp: {} });
-const LP_EN_TYPES = ['halo', 'cats', 'top', 'week', 'day', 'standby', 'flow', 'battery'];
-const LP_EN_IC = { halo: 'mdi:lightning-bolt-circle', cats: 'mdi:view-grid-outline', top: 'mdi:format-list-numbered', week: 'mdi:chart-bar', day: 'mdi:chart-line', standby: 'mdi:power-sleep', flow: 'mdi:transmission-tower-export', battery: 'mdi:home-battery-outline' };
+const LP_EN_TYPES = ['halo', 'cats', 'top', 'week', 'day', 'standby', 'flow', 'battery', 'tariff', 'meter', 'tips'];
+const LP_EN_IC = { halo: 'mdi:lightning-bolt-circle', cats: 'mdi:view-grid-outline', top: 'mdi:format-list-numbered', week: 'mdi:chart-bar', day: 'mdi:chart-line', standby: 'mdi:power-sleep', flow: 'mdi:transmission-tower-export', battery: 'mdi:home-battery-outline', tariff: 'mdi:cash-multiple', meter: 'mdi:meter-electric-outline', tips: 'mdi:lightbulb-on-outline' };
 const LP_EN_LVL = ['#3DDC84', '#FFC94A', '#FF9142', '#FF5A5A'];
 const LP_EN_BINS = 48;   // son 24 saat yarım saatlik dilimler
 const LP_EN_DAYS = 35;   // günlük kWh: son 30 gün grafiği ve bu ayın başı
@@ -42,7 +42,7 @@ const LP_EN_TXT = {
     costMonth: 'bu ay', tierLo: 'Bu ay düşük kademe', tierHi: 'Bu ay yüksek kademede', yearL: 'Bu yıl · yıllık sınır', untracked: 'Ölçülmeyen', untrackedM: 'Ev sayacına göre', untrackedT: 'Son faturaya göre',
     k_halo: 'Evin anlık gücü', k_cats: 'Kategori karoları', k_top: 'Şu an en çok çekenler', k_week: 'Günlük tüketim', k_day: 'Son 24 saat', k_standby: 'Bekleme tüketimi',
     s_halo: 'Evin anlık gücü', s_standby: 'Bekleme', s_cats: 'Kategoriler', s_week: 'Son 7 gün · kWh', s_top: 'Şu an en çok çekenler', s_day: 'Son 24 saat', s_energy: 'Enerji',
-    loose: 'Kategorisiz', k_flow: 'Güneş ve şebeke akışı', k_battery: 'Batarya', s_flow: 'Enerji akışı', s_battery: 'Batarya',
+    loose: 'Kategorisiz', k_tariff: 'Bu ay ve tarife', k_meter: 'Ev sayacı', k_tips: 'İpuçları', s_tariff: 'Bu ay ve tarife', s_meter: 'Ev sayacı', s_tips: 'İpuçları', k_flow: 'Güneş ve şebeke akışı', k_battery: 'Batarya', s_flow: 'Enerji akışı', s_battery: 'Batarya',
     noSol: 'Güneş ya da batarya açık değil', noSolT: 'Enerji sayfasında "Güneş ve batarya" bölümünden "Güneş enerjisi var" ya da "Batarya var"ı aç.', nGridOff: 'Şebeke yok', nGridOffT: 'kesinti',  noBat: 'Batarya sensörü seçilmedi',
     nSun: 'Güneş', nGrid: 'Şebeke', nGridO: 'Şebekeye', nGridI: 'Şebekeden', nHome: 'Ev', nBat: 'Batarya', prodT: 'kWh üretim bugün', selfU: 'kendi kullanımı', expN: 'şebekeye', impN: 'şebekeden',
     bCh: 'Şarj oluyor', bDis: 'Evi besliyor', bIdle: 'Beklemede', bFull: '~{t} sonra dolu', bLeft: '~{t} yeter', bKwh: '{k} / {c} kWh',
@@ -55,7 +55,7 @@ const LP_EN_TXT = {
     costMonth: 'this month', tierLo: 'This month, lower tier', tierHi: 'This month, upper tier', yearL: 'This year · yearly limit', untracked: 'Not measured', untrackedM: 'From the home meter', untrackedT: 'From the last bill',
     k_halo: 'Home power now', k_cats: 'Category tiles', k_top: 'Top consumers now', k_week: 'Daily usage', k_day: 'Last 24 hours', k_standby: 'Standby usage',
     s_halo: 'Home power now', s_standby: 'Standby', s_cats: 'Categories', s_week: 'Last 7 days · kWh', s_top: 'Top consumers now', s_day: 'Last 24 hours', s_energy: 'Energy',
-    loose: 'Uncategorized', k_flow: 'Solar and grid flow', k_battery: 'Battery', s_flow: 'Energy flow', s_battery: 'Battery',
+    loose: 'Uncategorized', k_tariff: 'This month and tariff', k_meter: 'Home meter', k_tips: 'Tips', s_tariff: 'This month and tariff', s_meter: 'Home meter', s_tips: 'Tips', k_flow: 'Solar and grid flow', k_battery: 'Battery', s_flow: 'Energy flow', s_battery: 'Battery',
     noSol: 'Solar or battery is not on', noSolT: 'On the Energy page, turn on "I have solar" or "I have a battery" under "Solar and battery".', nGridOff: 'No grid', nGridOffT: 'outage',  noBat: 'No battery sensor picked',
     nSun: 'Solar', nGrid: 'Grid', nGridO: 'To grid', nGridI: 'From grid', nHome: 'Home', nBat: 'Battery', prodT: 'kWh produced today', selfU: 'used at home', expN: 'to grid', impN: 'from grid',
     bCh: 'Charging', bDis: 'Powering the home', bIdle: 'Idle', bFull: 'full in ~{t}', bLeft: 'lasts ~{t}', bKwh: '{k} / {c} kWh',
@@ -575,6 +575,7 @@ function lpEnEmpty(M, lang, big) {
 }
 function lpEnCard(h, M, it, lang, phone) {
   const S = (h && h.states) || {}, k = it.energy;
+  if (M) { const lk = lpEnLook(h, M, it, lang, phone); if (lk) return lk; }   // seçilen görünüm (enlooks.js)
   if (M && k === 'flow') return lpEnFlowCard(h, M, it, lang);
   if (M && k === 'battery') return lpEnBatCard(h, M, it, lang);
   const F0 = M && !M.cats.length && k === 'halo' ? lpEnFlowNow(S) : null;   // cihaz yok ama güneş/şebeke sayacı var: Halo yine evin gücünü gösterir
@@ -606,9 +607,11 @@ function lpEnCard(h, M, it, lang, phone) {
       '<div class="enw">' + esc(wp[0]) + '<small>' + wp[1] + '</small></div><div class="enlv" style="color:' + col + '">' + esc(lpEnT(lang, 'lvl' + lvl)) + '</div></div></div>' + (it.tips === false ? '' : lpEnTipsHtml(h, M, lang)) + chips2;
   }
   if (k === 'cats') {
-    const sum = M.cats.reduce((a, c) => a + (lpEnCatW(S, c) || 0), 0) || 1;
+    const sum = M.cats.reduce((a, c) => a + (it.loose === false && c.id === '__loose' ? 0 : lpEnCatW(S, c) || 0), 0) || 1;
     let L = M.cats.map((c) => ({ c: c, w: lpEnCatW(S, c) }));
     if (L.length > 12) L = L.slice().sort((a, b) => (b.w || 0) - (a.w || 0)).slice(0, 12);
+    if (it.sort === 'w') L = L.slice().sort((a, b) => (b.w || 0) - (a.w || 0));   // çok çekene göre; yoksa Kategoriler'deki sıra
+    L = L.filter((x) => x.c.id !== '__loose').concat(it.loose === false ? [] : L.filter((x) => x.c.id === '__loose'));   // kategorisiz hep sonda; istenirse gizli
     // sütun: seçilmediyse kategori sayısına göre (2 → yan yana, 4 → 2×2, 6 → 3×2, fazlası 5'li); boş hücre kalmaz
     const hm0 = lpEnCfg().untracked === false ? null : lpEnHomeMeter(S, M), nT = L.length + (lpEnCfg().untracked === false ? 0 : hm0 !== null ? (hm0 - sum >= 5 ? 1 : 0) : lpEnUntracked() ? 1 : 0);
     const cols = phone ? Math.min(2, Math.max(1, nT)) : +it.cols >= 2 ? Math.min(5, +it.cols) : nT <= 3 ? Math.max(1, nT) : nT === 4 ? 2 : nT <= 6 ? 3 : nT <= 8 ? 4 : 5;
@@ -628,9 +631,9 @@ function lpEnCard(h, M, it, lang, phone) {
         '<div class="ecv">' + esc(wp[0]) + '<small>' + wp[1] + (pct !== null ? '<span class="ecp"> · ' + (lang === 'tr' ? '%' + pct : pct + '%') + '</span>' : '') + '</small></div>' + gr + '</div>';
     });
     if (unT) tiles.push(unT);
-    // son satır eksikse son karo kalan hücreleri de kaplar (boş hücre kalmaz)
+    // son satır eksikse boşluğu ilk karo (en önemlisi) kapatır; kategorisiz ve ölçülmeyen küçük kalır
     const rem = phone ? 0 : tiles.length % cols;
-    if (rem && tiles.length) tiles[tiles.length - 1] = tiles[tiles.length - 1].replace('<div class="encat', '<div style="grid-column:span ' + (cols - rem + 1) + '" class="encat');
+    if (rem && tiles.length) tiles[0] = tiles[0].replace('<div class="encat', '<div style="grid-column:span ' + (cols - rem + 1) + '" class="encat');
     return '<div class="encats" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr));' + (phone ? '' : 'grid-template-rows:repeat(' + rows + ',minmax(0,1fr))') + '">' + tiles.join('') + '</div>';
   }
   if (k === 'top') {

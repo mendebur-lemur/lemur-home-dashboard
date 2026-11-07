@@ -649,6 +649,15 @@
      "en": "Rebuilds the tab from the devices of the chosen area."
     },
     {
+     "k": "layout",
+     "v": [
+      "layCols",
+      "layGrid"
+     ],
+     "tr": "Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; Ekrana sığdır ya da Kaydırılabilir. Büyük dikey ekranda 6 sütun.",
+     "en": "In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; Fit the screen or Scrollable. 6 columns on a large portrait screen."
+    },
+    {
      "k": "cols",
      "tr": "1 ile 6 arası kolon; genişlikler önizlemedeki çizgilerden sürüklenir.",
      "en": "1 to 6 columns; drag the lines in the preview for widths."

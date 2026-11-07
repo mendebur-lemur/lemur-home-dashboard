@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enlooks.js'), 'utf8');
 const SET = { s: {} };
 const ctx = {
   window: {}, SET: SET, STORE: { data: {} },
@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount };', ctx);
+vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -327,4 +327,23 @@ test('measured light table: same interpolation as the integration', () => {
   assert.strictEqual(E.lrCount(T), 24);
   assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 0.4, max: 9, lut: T }, { state: 'on', attributes: { brightness: 255, color_mode: 'hs', hs_color: [120, 100] } }), 14);
   assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 0.4, max: 9, lut: T }, { state: 'off', attributes: {} }), 0.4);
+});
+
+test('every card look draws with demo data, in both languages', () => {
+  const M = E.lpEnDemo('tr'), h = { states: {}, lhdEnDemo: true, config: {} };
+  Object.keys(E.LP_EL_LOOKS).forEach((k) => {
+    assert.strictEqual(E.lpElNames(k, 'tr').length, E.LP_EL_LOOKS[k].length, k + ' names');
+    assert.strictEqual(E.lpElNames(k, 'en').length, E.LP_EL_LOOKS[k].length, k + ' names en');
+    E.LP_EL_LOOKS[k].forEach((l) => {
+      ['tr', 'en'].forEach((lang) => {
+        const out = E.lpEnCard(h, M, { energy: k, look: l }, lang, false);
+        assert.ok(typeof out === 'string' && out.length > 20, k + '/' + l + ' empty');
+        assert.ok(!/undefined|NaN|\[object/.test(out), k + '/' + l + ' ' + lang + ': ' + (out.match(/.{0,60}(undefined|NaN|\[object).{0,30}/) || [''])[0]);
+      });
+    });
+  });
+  // görünüm seçilmediyse kartın kendi çizimi; seçildiyse kutuyu dolduran görünüm
+  assert.ok(E.lpEnCard(h, M, { energy: 'halo' }, 'tr', false).indexOf('enhalo') >= 0);
+  assert.ok(E.lpEnCard(h, M, { energy: 'halo', look: 'gauge' }, 'tr', false).indexOf('enlk') >= 0);
+  assert.ok(E.lpEnIsLook({ energy: 'tariff' }) && !E.lpEnIsLook({ energy: 'halo' }) && E.lpEnIsLook({ energy: 'cats', look: 'tree' }));
 });

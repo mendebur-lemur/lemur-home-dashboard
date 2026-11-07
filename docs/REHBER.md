@@ -224,6 +224,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Simge**: Oda düğmesinin simgesi.
 - **Alan**: Sekmenin odası: efekt ekranı ve saatte parlaklık bu odayı kullanır.
 - **Alandan yeniden doldur**: Seçili alanın cihazlarıyla sekmeyi baştan kurar.
+- **Düzen** (Sütunlar · Serbest ızgara): Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; Ekrana sığdır ya da Kaydırılabilir. Büyük dikey ekranda 6 sütun.
 - **Kolonlar**: 1 ile 6 arası kolon; genişlikler önizlemedeki çizgilerden sürüklenir.
 - **Tablet düzeni** (Tablet düzeni · Eşit): Hazır kolon oranları.
 - **Kolon içi sütun**: Bir kolonu kendi içinde 2-3 sütuna böler (gelişmiş).

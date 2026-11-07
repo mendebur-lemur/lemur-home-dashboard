@@ -679,3 +679,14 @@ div.ensr:hover { background: var(--s1); }
 .tfli .ennum .inp { width: 90px; }
 .tfd { padding: 10px 12px; border-radius: 12px; background: var(--s2); }
 @media (max-width: 760px) { .tfch { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tfch button:last-child:nth-child(odd) { grid-column: span 2; } .tfs { grid-template-columns: minmax(0, 1fr); } .tfn { display: none; } }
+
+/* v0.28 kart görünümü seçimi */
+.lkg { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.lkg button { display: flex; align-items: center; gap: 8px; text-align: left; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 13px; cursor: pointer; min-width: 0; }
+.lkg button i { font-style: normal; width: 20px; height: 20px; border-radius: 6px; background: rgba(255,255,255,.07); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--tx2); flex: 0 0 auto; }
+.lkg button.on { border-color: var(--ac); background: var(--acs); } .lkg button.on i { background: var(--ac); color: #1b1206; }
+.ensr > .encmv, .encmv { display: inline-flex; flex-direction: column; margin-right: 6px; flex: 0 0 22px !important; min-width: 0; }
+.encmv i { display: flex; width: 22px; height: 16px; align-items: center; justify-content: center; border-radius: 5px; color: var(--tx2); }
+.encmv i:hover { background: rgba(255,255,255,.08); color: var(--tx); }
+.encmv i.off { opacity: .25; pointer-events: none; }
+.encmv ha-icon { --mdc-icon-size: 16px; width: 16px; height: 16px; }

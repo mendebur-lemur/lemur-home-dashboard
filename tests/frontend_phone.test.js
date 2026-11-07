@@ -39,3 +39,9 @@ test('order by keys: listed first in that order, the rest keep their place', () 
   assert.strictEqual(ids(D.lhdOrderBy(L, null)), 'a,b,c,d');
   assert.strictEqual(D.lhdOrderBy(['light.x', 'light.y', { name: 'Z' }], ['light.y', 'n:Z|'], D.lhdItemKey).map(D.lhdItemKey).join(','), 'light.y,n:Z|,light.x');
 });
+
+test('phone order: a free-grid tab reads top to bottom, left to right', () => {
+  const T = { id: 'g', layout: 'grid', sections: [{ id: 'c', g: { x: 6, y: 0, w: 6, h: 4 } }, { id: 'b', g: { x: 0, y: 4, w: 12, h: 4 } }, { id: 'a', g: { x: 0, y: 0, w: 6, h: 4 } }] };
+  assert.strictEqual(ids(D.lhdPhoneOrder(T)), 'a,c,b');
+  assert.strictEqual(ids(D.lhdPhoneOrder(T, ['b'])), 'b,a,c');
+});
