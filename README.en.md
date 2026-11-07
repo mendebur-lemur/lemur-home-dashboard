@@ -2,7 +2,7 @@
 
 **[Türkçe](README.md)** · English
 
-A ready-made, full-screen home dashboard for Home Assistant. Add the integration, and a dashboard with your rooms, lights, scenes, climate, media and camera controls builds itself from the devices in your home. Designed for wall tablets and kiosk screens, and it works on phones too.
+A ready-made, full-screen home dashboard for Home Assistant. Add the integration, and a dashboard with your rooms, lights, scenes, climate, cover, media and camera controls and energy tracking builds itself from the devices in your home. Designed for wall tablets and kiosk screens, and it works on phones too.
 
 ![Lemur Home Dashboard in use](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/demo.webp)
 
@@ -17,6 +17,8 @@ A ready-made, full-screen home dashboard for Home Assistant. Add the integration
 - **Light window.** Hold a light tile to open a light window with a big brightness slider, white tones, a colour wheel, preset colours, effects and (if the light has them) segments. You can switch to Home Assistant's own dialog in the settings.
 - **Instant response.** Tap a light, switch or fan and the tile changes without waiting for the device; turning a light on shows its last colour. If the device reports something else, the real state is shown.
 - **Feeding card.** A feeding reminder for a cat, dog, fish...: green on time, red when late; tap "Fed", get a phone notification when late, optionally run an automatic feeder.
+- **Cover window.** Hold a cover tile for a window drawing that shows the cover at its real position, with Open, Stop and Close below. Six designs (center opening and one-side curtains, shutter, roller shade, venetian and vertical blinds); drag the drawing to fine-tune the position, and the slat angle on blinds.
+- **Energy tracking, no other add-on.** A ready Energy tab: home power now, categories, top consumers now, daily usage, the last 24 hours; with solar, the energy flow and the battery. Devices that measure power are added with one tap; the others get a virtual measurement (a light by brightness, a TV by state, a fridge from the label's yearly kWh). Tiered prices, a yearly limit and bills for the real unit price. No notifications: tips like "AC on for 3 hours" quietly rotate under the Halo. Definitions from another add-on are imported in one go.
 - **Cameras.** Cameras show as snapshot tiles that refresh every few seconds; tap one for the live view. A tile says so when the camera is off or gives no picture.
 - **Card picker.** Pick Halo cards, Home Assistant cards and installed custom cards from a list; they are added with the card's own visual editor and a live preview.
 - **Backup control and wall switches (Advanced).** A lamp that shows up in two integrations (e.g. Govee LAN and Matter) gets a backup: the command goes the fast way, and if the lamp does not answer it is sent again through the backup. A wall relay that only gives a signal is bound to a lamp; the switch keeps working even when the internet or Wi-Fi comes and goes.
@@ -201,6 +203,8 @@ The window closes with the back button, Esc or ✕. You can switch to Home Assis
 
 ## Cover window
 
+![Cover window](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/en/cover-window.webp)
+
 Long press a cover tile. At the top you see the name and state (opening, closing, how far open), in the middle a window drawing that shows the cover at its real position, and below **Open**, **Stop**, **Close**. While the cover moves, pressing the same button again stops it. If the device supports a position, drag the drawing to fine-tune it.
 
 There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one in the cover's ⚙ settings under **Cover window**; on Auto it follows the device type. One-side curtains and vertical blinds also let you choose which side they gather to (left, right, or both sides for vertical blinds). The settings show each design as a small window drawing. Venetian and vertical blinds get a second Open, Stop, Close row for the slat angle when the device supports it. If a separate motor turns the slats (a second cover entity in Home Assistant), pick it as the **Slat angle motor** in the ⚙ settings; the slat row then drives that motor, with 0-100% presets if it reports a position.
@@ -219,7 +223,11 @@ Devices and categories come from the **Energy** page in the admin panel. If it h
 - **Daily usage** (7 or 30 days, kWh or money), **Last 24 hours** (category lines or total) and **Standby usage**.
 - **Energy flow:** the power flowing between solar, grid, home and battery right now; below it today's production, the share used at home and what goes to the grid. **Battery:** charge, kWh, charging or discharging and time left.
 
+![Energy tab](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/en/energy.webp)
+
 **Energy page** (**Energy** in the admin panel's top bar):
+
+![Energy page: devices and power by state](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/en/energy-settings.webp)
 
 - **Devices:** devices in Home Assistant that measure power but are not on the dashboard are listed and come in with **Add** (their kWh sensor is found too; without one the dashboard counts kWh from the power). For devices that do not measure, a virtual measurement: light (standby, lowest and highest W, by brightness; e.g. a 2-60 W light at 30% is 19.4 W), **by state** (a W value per state: a TV at 95 W playing, 70 W paused, 28 W idle; an AC cooling, heating, fan), on/off, fixed, yearly usage (the label's kWh/year; 250 kWh/year ≈ 28.5 W) or cycles (kWh/100 cycles, cycles per week). The integration sets up `sensor.lhd_<name>_power` and `sensor.lhd_<name>_energy` for each. Cards show them with "~".
 - **Categories:** name, color and the devices in it. Each category gets `sensor.lhd_kat_<name>_power` and `_energy` (the sum of its devices).
@@ -286,6 +294,8 @@ After an update, if the dashboard or the admin panel is open, a "A new version i
 | Home tab | Room tab |
 |---|---|
 | ![Home tab](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/dashboard.png) | ![Room tab](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/room.png) |
+| **Energy** | **Phone** |
+| ![Energy](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/en/energy.webp) | ![Phone](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/en/phone.webp) |
 | **Admin panel** | **Auto setup** |
 | ![Admin panel](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/admin.png) | ![Auto setup](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/auto-setup.png) |
 

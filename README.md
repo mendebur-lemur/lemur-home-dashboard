@@ -2,7 +2,7 @@
 
 Türkçe · **[English](README.en.md)**
 
-Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, ışıkların, senaryoların, iklim, medya ve kamera kontrollerinin olduğu pano evindeki cihazlardan kendiliğinden kurulsun. Duvar tabletleri ve kiosk ekranları için tasarlandı, telefonda da çalışır.
+Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, ışıkların, senaryoların, iklim, perde, medya ve kamera kontrollerinin, enerji takibinin olduğu pano evindeki cihazlardan kendiliğinden kurulsun. Duvar tabletleri ve kiosk ekranları için tasarlandı, telefonda da çalışır.
 
 ![Lemur Home Dashboard kullanımda](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/demo.webp)
 
@@ -17,6 +17,8 @@ Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, 
 - **Işık penceresi.** Işık karosuna basılı tutunca büyük parlaklık çubuğu, beyaz tonlar, renk çemberi, hazır renkler, efektler ve (varsa) segmentlerle ışık penceresi açılır. İstersen ayarlardan Home Assistant'ın kendi penceresine geçersin.
 - **Anında tepki.** Işığa, prize ya da fana dokununca karo cihazın cevabını beklemeden değişir; açarken ışığın son renginde yanar. Cihaz başka bir şey bildirirse gerçek durum gösterilir.
 - **Besleme kartı.** Kedi, köpek, balık... için besleme hatırlatıcısı: zamanında yeşil, gecikince kırmızı; dokun "Besledim", gecikince telefona bildirim, istersen otomatik yemlik.
+- **Perde penceresi.** Perde karosuna basılı tutunca perdenin gerçek konumunu gösteren pencere çizimi, altında Aç, Durdur, Kapat. Altı tasarım (ortadan açılan, tek taraflı, panjur, stor, jaluzi, dikey stor); çizimi sürükleyerek konum ince ayarlanır, jaluzide kanat açısı da.
+- **Enerji takibi, başka eklentisiz.** Hazır Enerji sekmesi: evin anlık gücü, kategoriler, şu an en çok çekenler, günlük tüketim, son 24 saat; güneşli evde enerji akışı ve batarya. Güç ölçen cihazlar tek dokunuşla eklenir, ölçmeyenler için sanal ölçüm kurulur (ışık parlaklıkla, TV duruma göre, buzdolabı etiketteki yıllık kWh ile). Kademeli tarife, yıllık sınır ve faturalarla gerçek birim fiyat. Bildirim yok: "Klima 3 saattir açık" gibi ipuçları Halo'nun altında sessizce döner. Başka bir eklentideki tanımlar tek seferde aktarılır.
 - **Kameralar.** Kameralar anlık görüntü karosu olarak görünür ve birkaç saniyede bir yenilenir; dokununca canlı görüntü açılır. Kamera kapalıysa ya da görüntü vermiyorsa karoda yazar.
 - **Kart seçici.** Halo kartları, Home Assistant kartları ve kurulu özel kartlar listeden seçilir; kartın kendi görsel düzenleyicisi ve canlı önizlemeyle eklenir.
 - **Yedek kontrol ve duvar anahtarları (Gelişmiş).** İki entegrasyonda görünen lambaya (ör. Govee LAN ve Matter) yedek seçilir: komut hızlı yoldan gider, lamba cevap vermezse yedekten tekrar gönderilir. Yalnız sinyal veren duvar rölesi bir lambaya bağlanır; internet ya da Wi-Fi gidip gelse de anahtar çalışır.
@@ -201,6 +203,8 @@ Pencere geri tuşu, Esc ya da ✕ ile kapanır. Ayarlardan Home Assistant'ın ke
 
 ## Perde penceresi
 
+![Perde penceresi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/tr/cover-window.webp)
+
 Perde karosuna basılı tut. Üstte ad ve durum (açılıyor, kapanıyor, yüzde kaç açık), ortada perdenin gerçek konumunu gösteren bir pencere çizimi, altında **Aç**, **Durdur**, **Kapat**. Perde hareket ederken aynı düğmeye yeniden basınca durur. Cihaz konum destekliyorsa çizimi parmağınla sürükleyerek konumu ince ayarlarsın.
 
 Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında **Perde penceresi** satırından seçilir; Oto bırakılırsa cihazın türünden seçilir. Tek yönden açılan perde ve dikey storda toplanma yönü (sola, sağa, dikey storda iki yana) de seçilir. Tasarımlar ayarda küçük pencere çizimleriyle gösterilir. Jaluzi ve dikey storda, cihaz destekliyorsa, kanat açısı için ikinci bir Aç, Durdur, Kapat sırası çıkar. Kanatları ayrı bir motor döndürüyorsa (Home Assistant'ta ikinci bir perde varlığı) ⚙ ayarında **Kanat açısı motoru** olarak seçilir; kanat sırası o motoru sürer, motor konum bildiriyorsa %0-100 hazır açılar da çıkar.
@@ -219,7 +223,11 @@ Cihazlar ve kategoriler yönetim panelindeki **Enerji** sayfasından gelir. Orad
 - **Günlük tüketim** (7 ya da 30 gün, kWh ya da para), **Son 24 saat** (kategori çizgileri ya da toplam) ve **Bekleme tüketimi**.
 - **Enerji akışı:** güneş, şebeke, ev ve batarya arasında o an akan güç; altında bugünkü üretim, kendi kullanımı ve şebekeye verilen. **Batarya:** doluluk, kWh, şarj ya da boşalma ve kalan süre.
 
+![Enerji sekmesi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/tr/energy.webp)
+
 **Enerji sayfası** (yönetim panelinin üst çubuğunda **Enerji**):
+
+![Enerji sayfası: cihazlar ve duruma göre güç](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/tr/energy-settings.webp)
 
 - **Cihazlar:** Home Assistant'ta güç ölçen ama panelde olmayan cihazlar listelenir, **Ekle** ile gelir (kWh sensörü varsa o da bulunur, yoksa panel güçten hesaplar). Ölçmeyen cihazlar için sanal ölçüm: ışık (bekleme, en düşük ve en çok W, parlaklıkla; ör. 2-60 W ışık %30'da 19,4 W), **duruma göre** (her durum için ayrı W: TV oynatırken 95, duraklatınca 70, beklemede 28 W; klimada soğutma, ısıtma, fan), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl; 250 kWh/yıl ≈ 28,5 W) ya da çevrim (kWh/100 çevrim, haftada kaç kez). Entegrasyon her biri için `sensor.lhd_<ad>_power` ve `sensor.lhd_<ad>_energy` kurar. Kartlarda "~" ile görünür.
 - **Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için `sensor.lhd_kat_<ad>_power` ve `_energy` (cihazlarının toplamı).
@@ -286,6 +294,8 @@ Güncellemeden sonra pano ya da yönetim paneli açıksa üstte "Yeni sürüm y�
 | Ev sekmesi | Oda sekmesi |
 |---|---|
 | ![Ev sekmesi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/dashboard.png) | ![Oda sekmesi](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/room.png) |
+| **Enerji** | **Telefon** |
+| ![Enerji](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/tr/energy.webp) | ![Telefon](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/guide/tr/phone.webp) |
 | **Yönetim paneli** | **Otomatik kur** |
 | ![Yönetim paneli](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/admin.png) | ![Otomatik kur](https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/images/tr/auto-setup.png) |
 
