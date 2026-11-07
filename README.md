@@ -30,6 +30,8 @@ Home Assistant için hazır, tam ekran ev panosu. Entegrasyonu ekle; odaların, 
 - Türkçe ve İngilizce arayüz.
 
 
+**Görselli rehber:** panonun yapabildiği her şey adım adım [docs/REHBER.md](docs/REHBER.md)'de. Aynı rehber yönetim panelinde **⋯ → Rehber**'de de var.
+
 ## İçindekiler
 
 - [Kurulum](#kurulum)

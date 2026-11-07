@@ -1,0 +1,1400 @@
+{
+ "_note": "Rehber: yönetim panelinde (⋯ → Rehber, Ayarlar → Yardım) ve GitHub'da docs/REHBER.md, docs/GUIDE.md. build.py bunlardan ikisini de üretir. Görseller docs/guide/<dil>/<id>.webp; panel onları sürüme sabit GitHub adresinden yükler, kurulum dosyasına girmez. **kalın** yazılabilir. Seçenekler (opts): k = panelin yazı anahtarı (etiket panelden gelir; build.py anahtar yoksa durur), l = elle etiket, v = seçenekler (anahtar ya da =yazı, iki dilde farklıysa =tr|en).",
+ "steps": [
+  {
+   "id": "dashboard",
+   "group": "use",
+   "tr": [
+    "Pano bir bakışta",
+    "Üstte oda düğmeleri ve saat, altında kolonlar. Her kolonda bir ya da birkaç bölüm var: ışıklar, senaryolar, iklim, süpürge, medya, kameralar, değerler ve kartlar.",
+    "Pano evindeki alanlardan kendiliğinden kurulur: bir **Ev** sekmesi (bütün evin ışıkları, senaryolar ve kontroller) ve her oda için bir sekme. Hiçbir şeye dokunmadan kullanabilirsin.",
+    "Oda düğmesine dokununca o odanın sekmesi açılır. Sekmede o odanın ışıkları, perdeleri, iklim cihazları ve odaya özel senaryolar durur."
+   ],
+   "en": [
+    "The dashboard at a glance",
+    "Room buttons and the clock at the top, columns below. Each column holds one or more sections: lights, scenes, climate, vacuum, media, cameras, values and cards.",
+    "The dashboard builds itself from the areas in your home: a **Home** tab (lights, scenes and controls of the whole home) and one tab per room. You can use it without touching anything.",
+    "Tap a room button to open that room's tab, with its lights, covers, climate devices and room scenes."
+   ]
+  },
+  {
+   "id": "lights",
+   "group": "use",
+   "tr": [
+    "Işıklar",
+    "Karoya dokun: ışık anında açılır ya da kapanır. Açık ışık kendi renginde çerçeveyle görünür, ulaşılamayan cihaz soluk durur.",
+    "**Kaydırmalı** görünümde her ışık yatay bir çubuktur: dokun aç/kapat, sağa sola kaydır parlaklık. Aynı bölümde priz, perde ve fan da olabilir; perdede kaydırınca konum, fanda hız değişir.",
+    "Karo mu çubuk mu olacağını Stil seç'ten ya da bölümün ayarından seçersin."
+   ],
+   "en": [
+    "Lights",
+    "Tap a tile: the light turns on or off at once. A light that is on gets a frame in its own colour; an unavailable device is dimmed.",
+    "In the **Sliders** look every light is a horizontal bar: tap to toggle, slide left or right for brightness. Plugs, covers and fans can sit in the same section; sliding a cover sets its position, a fan its speed.",
+    "Choose tiles or sliders in Choose a style or in the section's settings."
+   ],
+   "opts": [
+    {
+     "k": "lookTile",
+     "tr": "Kare karolar; dokun aç/kapat, basılı tut pencere.",
+     "en": "Square tiles; tap to toggle, long press for the window."
+    },
+    {
+     "k": "lookBar",
+     "tr": "Yatay çubuklar; sağa sola kaydırınca parlaklık (perdede konum, fanda hız).",
+     "en": "Horizontal bars; slide for brightness (position for covers, speed for fans)."
+    },
+    {
+     "k": "lookPhone",
+     "tr": "Tablette karo, telefonda kaydırmalı çubuk.",
+     "en": "Tiles on the tablet, sliders on phones."
+    },
+    {
+     "k": "tileCols",
+     "v": [
+      "=2",
+      "=3",
+      "=4",
+      "=5",
+      "=6"
+     ],
+     "tr": "Karo görünümünde bir satıra kaç karo sığacağı.",
+     "en": "How many tiles fit in a row in the tile look."
+    },
+    {
+     "k": "barCols",
+     "v": [
+      "=1",
+      "=2",
+      "=3"
+     ],
+     "tr": "Kaydırmalı görünümde yan yana kaç çubuk.",
+     "en": "How many sliders sit side by side."
+    }
+   ]
+  },
+  {
+   "id": "light-window",
+   "group": "use",
+   "tr": [
+    "Işık penceresi",
+    "Işık karosuna basılı tut. Üstte büyük parlaklık çubuğu ve güç düğmesi, altında sekmeler:",
+    "**Renk:** 2200 K ile 6500 K arası beyaz tonlar, renk çemberi ve hazır renkler. **Efekt:** ışığın kendi efektleri. **Segment:** segmentli şerit ve lambalarda tek tek segmente renk.",
+    "Pencere dışarı dokununca, geri tuşuyla, Esc ya da ✕ ile kapanır. Telefonda alttan açılır, aşağı çekince kapanır."
+   ],
+   "en": [
+    "Light window",
+    "Long press a light tile. A big brightness bar and a power button at the top, tabs below:",
+    "**Colour:** white tones from 2200 K to 6500 K, a colour wheel and ready colours. **Effect:** the light's own effects. **Segment:** colour single segments of strips and lamps that have them.",
+    "Close it by tapping outside, with the back button, Esc or ✕. On phones it slides up from the bottom and closes when pulled down."
+   ],
+   "opts": [
+    {
+     "k": "hold",
+     "v": [
+      "hPop",
+      "hHa",
+      "hLec"
+     ],
+     "tr": "Işık karosuna basılı tutunca ne açılsın (Ayarlar).",
+     "en": "What opens on a long press of a light tile (Settings)."
+    },
+    {
+     "k": "phSheet",
+     "tr": "Telefonda pencere ekranın altından gelir, aşağı çekince kapanır (Stil seç → Telefon).",
+     "en": "On phones the window slides up from the bottom and closes when pulled down (Choose a style → Phone)."
+    }
+   ]
+  },
+  {
+   "id": "cover-window",
+   "group": "use",
+   "tr": [
+    "Perde penceresi",
+    "Perde karosuna basılı tut. Ortadaki çizim perdenin gerçek konumunu gösterir, altında **Aç**, **Durdur**, **Kapat**. Perde hareket ederken aynı düğmeye yeniden basınca durur; çizimi sürükleyerek konumu ince ayarlarsın.",
+    "Altı tasarım var: ortadan açılan perde, tek yönden açılan perde, panjur, stor, jaluzi ve dikey stor. Perdenin ⚙ ayarında çizimli kartlardan seçilir.",
+    "Jaluzi ve dikey storda kanat açısı için ikinci bir sıra çıkar. Kanatları ayrı bir motor döndürüyorsa ⚙'de **Kanat açısı motoru** olarak seçilir."
+   ],
+   "en": [
+    "Cover window",
+    "Long press a cover tile. The drawing shows the cover at its real position, with **Open**, **Stop**, **Close** below. While it moves, pressing the same button again stops it; drag the drawing to fine-tune the position.",
+    "There are six designs: center opening curtain, one-side curtain, shutter, roller shade, venetian blind and vertical blind. Pick one from the drawings in the cover's ⚙ settings.",
+    "Venetian and vertical blinds get a second row for the slat angle. If a separate motor turns the slats, pick it as the **Slat angle motor** in ⚙."
+   ],
+   "opts": [
+    {
+     "k": "covL",
+     "v": [
+      "covAuto",
+      "cov_center",
+      "cov_side",
+      "cov_shutter",
+      "cov_shade",
+      "cov_blind",
+      "cov_vert"
+     ],
+     "tr": "Pencerenin çizimi ve düğmeleri. Oto, cihazın türünden seçer.",
+     "en": "The drawing and buttons of the window. Auto picks from the device type."
+    },
+    {
+     "k": "covDir",
+     "v": [
+      "covDl",
+      "covDr",
+      "covDc"
+     ],
+     "tr": "Tek yönden açılan perde ve dikey storda perdenin toplandığı taraf.",
+     "en": "For one-side curtains and vertical blinds, the side the cover gathers to."
+    },
+    {
+     "k": "covTiltE",
+     "tr": "Jaluzi ve dikey storda kanatları döndüren ayrı motorun perde varlığı. Konum bildiriyorsa %0-100 hazır açılar çıkar.",
+     "en": "For venetian and vertical blinds, the cover entity of a separate slat motor. If it reports a position, 0-100% presets appear."
+    }
+   ]
+  },
+  {
+   "id": "scenes",
+   "group": "use",
+   "tr": [
+    "Senaryolar, iklim, süpürge ve medya",
+    "Senaryo düğmeleri bir betiği, sahneyi ya da otomasyonu tek dokunuşla çalıştırır; her birinin kendi rengi ve simgesi var.",
+    "İklim kartlarında klima ve petekler: aç/kapat, hedef sıcaklık, mod ve fan. **Mevsim** ayarına göre yazın klimalar, kışın petekler görünür.",
+    "Medya bölümünde TV ve hoparlörler; dokununca cihaz penceresi açılır.",
+    "Süpürge kartı başlatır, durdurur, istasyona gönderir. Stil seç'te **Halo** (büyük halkalı kartlar) ya da **Sade** (her cihaz tek satır, dokununca genişler) seçilir."
+   ],
+   "en": [
+    "Scenes, climate, vacuum and media",
+    "Scene buttons run a script, scene or automation with one tap; each has its own colour and icon.",
+    "Climate cards hold air conditioners and radiators: on/off, target temperature, mode and fan. Depending on the **Season** setting, air conditioners show in summer and radiators in winter.",
+    "The media section holds TVs and speakers; a tap opens the device window.",
+    "The vacuum card starts, stops and sends it to the dock. In Choose a style pick **Halo** (big ring cards) or **Simple** (one row per device that expands when tapped)."
+   ],
+   "opts": [
+    {
+     "k": "season",
+     "v": [
+      "sAuto",
+      "sSum",
+      "sWin"
+     ],
+     "tr": "İklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz (Ayarlar).",
+     "en": "Air conditioners in summer, radiators in winter. Automatic: May to September is summer (Settings)."
+    },
+    {
+     "k": "clSt",
+     "v": [
+      "clHalo",
+      "clRows"
+     ],
+     "tr": "Halo büyük halkalı kartlar; Sade her cihazı tek satırda gösterir, dokununca genişler (Stil seç).",
+     "en": "Halo shows big ring cards; Simple shows one row per device that expands when tapped (Choose a style)."
+    },
+    {
+     "k": "kind",
+     "v": [
+      "k_auto",
+      "k_ac",
+      "k_radiator"
+     ],
+     "tr": "İklim öğesinin türü (öğe ⚙).",
+     "en": "Whether a climate item is an air conditioner or a radiator (item ⚙)."
+    },
+    {
+     "k": "tSensor",
+     "tr": "Kartta gösterilecek oda sıcaklığı; boşsa cihazın kendi değeri.",
+     "en": "The room temperature shown on the card; empty uses the device's own value."
+    },
+    {
+     "k": "hSensor",
+     "tr": "Kartta gösterilecek nem.",
+     "en": "The humidity shown on the card."
+    },
+    {
+     "l": {
+      "tr": "Dış sıcaklık sensörü",
+      "en": "Outdoor temperature sensor"
+     },
+     "tr": "Petek kartı dışarısı soğukken ısıtma ihtiyacını gösterir.",
+     "en": "The radiator card shows the heating need when it is cold outside."
+    },
+    {
+     "l": {
+      "tr": "Birlikte kontrol edilen cihaz",
+      "en": "Device controlled together"
+     },
+     "tr": "Aynı komutu alan ikinci cihaz (ör. aynı odadaki ikinci petek).",
+     "en": "A second device that gets the same commands (e.g. a second radiator in the room)."
+    }
+   ]
+  },
+  {
+   "id": "cameras",
+   "group": "use",
+   "tr": [
+    "Kameralar",
+    "Kamera karosu anlık görüntüyü gösterir ve birkaç saniyede bir yeniler (öğe ayarından 5 sn ile 1 dk arası). Sekme ekranda değilken görüntü yenilenmez.",
+    "Karoya dokununca canlı görüntü ekrana sığan en büyük pencerede açılır.",
+    "**+ Sekme → Kameralar sekmesi** evdeki bütün kameraları tek sekmede toplar; satırda kaç kamera olacağı seçilir."
+   ],
+   "en": [
+    "Cameras",
+    "A camera tile shows a snapshot and refreshes it every few seconds (5 s to 1 min in the item settings). It does not refresh while the tab is not on screen.",
+    "Tap the tile and the live view opens in the largest window that fits the screen.",
+    "**+ Tab → Cameras tab** gathers every camera in one tab; choose how many cameras sit in a row."
+   ],
+   "opts": [
+    {
+     "k": "camRef",
+     "v": [
+      "=5 sn|5 s",
+      "=10 sn|10 s",
+      "=30 sn|30 s",
+      "=1 dk|1 min"
+     ],
+     "tr": "Tek kameranın görüntü yenileme aralığı (öğe ⚙).",
+     "en": "How often one camera refreshes (item ⚙)."
+    },
+    {
+     "k": "camRefS",
+     "tr": "Bölümdeki bütün kameralar için aynı ayar (bölüm ayarı).",
+     "en": "The same setting for every camera in the section (section settings)."
+    },
+    {
+     "k": "camCols",
+     "v": [
+      "camAuto",
+      "=1",
+      "=2",
+      "=3",
+      "=4"
+     ],
+     "tr": "Satırda kaç kamera; Oto kutuya sığdığı kadar (telefonda en fazla 2).",
+     "en": "Cameras per row; Auto fits as many as the box allows (at most 2 on phones)."
+    },
+    {
+     "k": "camTab",
+     "tr": "+ Sekme menüsünde: bütün kameralar tek sekmede.",
+     "en": "In the + Tab menu: every camera in one tab."
+    }
+   ]
+  },
+  {
+   "id": "pets",
+   "group": "use",
+   "tr": [
+    "Besleme kartı",
+    "Evcil hayvanların için besleme takibi: her N saatte bir ya da günün belli saatlerinde.",
+    "Kart zamanında yeşil, yaklaşınca sarı, zamanı gelince turuncu, gecikince kırmızı. Dokununca \"Besledim\" kaydedilir (10 sn içinde yeniden dokununca geri alınır), basılı tutunca son beslemeler açılır.",
+    "Gecikince bildirim gönderebilir ve isteğe bağlı otomatik yemliği çalıştırabilir. Bölüme **Evcil hayvan** olarak eklenir.",
+    "Home Assistant'ta her hayvan için \"<ad> besleme\" durumu ve \"<ad> besledim\" düğmesi oluşur; otomasyonlarda kullanılabilir."
+   ],
+   "en": [
+    "Feeding card",
+    "Feeding tracking for your pets: every N hours or at set times of day.",
+    "The card is green on time, yellow when it is close, orange when it is due and red when late. Tap to log \"Fed\" (tap again within 10 s to undo), long press for the last feedings.",
+    "It can send a notification when late and run an automatic feeder. Add it to a section as a **Pet**.",
+    "For every pet Home Assistant gets a \"<name> feeding\" state and a \"<name> fed\" button to use in automations."
+   ],
+   "opts": [
+    {
+     "k": "petKind",
+     "v": [
+      "pk_cat",
+      "pk_dog",
+      "pk_fish",
+      "pk_bird",
+      "pk_rabbit",
+      "pk_turtle",
+      "pk_other"
+     ],
+     "tr": "Kartın simgesi buna göre.",
+     "en": "Sets the card's icon."
+    },
+    {
+     "k": "petSched",
+     "v": [
+      "pm_interval",
+      "pm_times"
+     ],
+     "tr": "Besleme düzeni.",
+     "en": "The feeding schedule."
+    },
+    {
+     "k": "petEvery",
+     "tr": "Her N saatte bir düzeninde aralık.",
+     "en": "The interval for Every N hours."
+    },
+    {
+     "k": "petTimes",
+     "tr": "Günün belli saatlerinde düzeninde saatler (ör. 08:00, 20:00).",
+     "en": "The times for At set times of day (e.g. 08:00, 20:00)."
+    },
+    {
+     "k": "petSoon",
+     "tr": "Kart kaç dakika önceden sarıya döner.",
+     "en": "How many minutes before the card turns yellow."
+    },
+    {
+     "k": "petGrace",
+     "tr": "Zamanı geçtikten sonra kırmızıya dönmeden önceki süre.",
+     "en": "How long after the time before it turns red."
+    },
+    {
+     "k": "petNotify",
+     "tr": "Gecikince Home Assistant bildirimi gönderir.",
+     "en": "Sends a Home Assistant notification when late."
+    },
+    {
+     "k": "petFeeder",
+     "tr": "\"Besledim\"e basınca bir servis de çalışır (ör. yemlik düğmesi).",
+     "en": "Runs a service when you log a feeding (e.g. a feeder button)."
+    }
+   ]
+  },
+  {
+   "id": "effects",
+   "group": "use",
+   "tr": [
+    "Işık efektleri (isteğe bağlı)",
+    "Lemur Light Effect Card ayrıca kuruluysa pano onu kendiliğinden tanır: üst şeritte **Efektler** düğmesi çıkar, dokununca efekt ekranı o sekmenin odasıyla açılır.",
+    "Senaryolara efekt düğmeleri eklenebilir; odada efekt oynarken ışık karoları efektin renkleriyle parlar.",
+    "Kurulu değilse bu düğmeler görünmez, başka hiçbir şey değişmez."
+   ],
+   "en": [
+    "Light effects (optional)",
+    "If Lemur Light Effect Card is installed too, the dashboard finds it by itself: an **Effects** button appears in the top bar and opens the effect screen for that tab's room.",
+    "Effect buttons can be added to scenes; while an effect plays, the room's light tiles glow in its colours.",
+    "If it is not installed these buttons do not show and nothing else changes."
+   ],
+   "opts": [
+    {
+     "k": "lecNav",
+     "tr": "Üst şeritte efekt ekranını açan düğme (Stil seç → Işık efektleri).",
+     "en": "The button in the top bar that opens the effect screen (Choose a style → Light effects)."
+    },
+    {
+     "k": "navFx",
+     "tr": "Oda düğmeleri kolona hizalıyken Efektler de hizalı alanda dursun (Ayarlar).",
+     "en": "Keep Effects inside the aligned area when room buttons are aligned to a column (Settings)."
+    },
+    {
+     "k": "lecOpen",
+     "tr": "Senaryo bölümüne eklenen, efekt ekranını açan düğme.",
+     "en": "A scene button that opens the effect screen."
+    },
+    {
+     "k": "lecStop",
+     "tr": "Odadaki efekti durduran düğme.",
+     "en": "A button that stops the room's effect."
+    },
+    {
+     "k": "hLec",
+     "tr": "Işığa basılı tutunca doğrudan efekt ekranı (Ayarlar → Işığa basılı tutunca).",
+     "en": "A long press on a light opens the effect screen directly (Settings → Holding a light)."
+    }
+   ]
+  },
+  {
+   "id": "phone",
+   "group": "use",
+   "tr": [
+    "Telefonda",
+    "Aynı pano telefonda kendiliğinden telefon düzenine geçer; ayrı bir pano gerekmez.",
+    "Gezinme altta kategorilerle (Işıklar, İklim, Senaryolar, Kameralar), altta odalarla ya da üstte odalarla olabilir. Işıklar karo ya da tek sıra; ışık penceresi alttan açılır.",
+    "Işıklar kategorisinde üstteki oda şeridinde sağa sola kaydırarak odalar arasında geçilir; **Tümü** bütün evin ışıklarıdır.",
+    "Hepsi **Stil seç → Telefon**'dan seçilir; tablet hiçbirinden etkilenmez."
+   ],
+   "en": [
+    "On phones",
+    "The same dashboard switches to a phone layout by itself; no second dashboard needed.",
+    "Navigation can be categories at the bottom (Lights, Climate, Scenes, Cameras), rooms at the bottom or rooms at the top. Lights as tiles or one per row; the light window slides up from the bottom.",
+    "In the Lights category swipe the room strip on top to move between rooms; **All** shows every light in the home.",
+    "All of it is in **Choose a style → Phone**; the tablet is not affected."
+   ],
+   "opts": [
+    {
+     "k": "phNav",
+     "v": [
+      "phCats",
+      "phRooms",
+      "phTop"
+     ],
+     "tr": "Telefonda gezinme.",
+     "en": "Navigation on phones."
+    },
+    {
+     "k": "phLights",
+     "v": [
+      "phLAuto",
+      "phLTiles",
+      "phLRows"
+     ],
+     "tr": "Telefonda ışıklar.",
+     "en": "Lights on phones."
+    },
+    {
+     "k": "phSheet",
+     "tr": "Işık ve perde penceresi alttan açılır.",
+     "en": "The light and cover windows slide up from the bottom."
+    }
+   ]
+  },
+  {
+   "id": "admin",
+   "group": "edit",
+   "tr": [
+    "Yönetim paneli",
+    "Sol menüdeki **Lemur Home Dashboard** (yalnız yöneticiler görür). Üstte sekmeler, solda canlı önizleme, sağda seçili sekmenin bölümleri.",
+    "İlk değişiklikte otomatik düzen kaydedilir, sonra her şey buradan düzenlenir. Her değişiklik geri alınabilir (düğme ya da Ctrl+Z).",
+    "**Basit** modda yalnız temel ayarlar görünür; **Gelişmiş** boyut, renk, koşul ve kart ayarlarını da açar. Karmaşık ayarların yanındaki **?** örnekle anlatır."
+   ],
+   "en": [
+    "Admin panel",
+    "**Lemur Home Dashboard** in the sidebar (admins only). Tabs at the top, a live preview on the left, the selected tab's sections on the right.",
+    "Your first change saves the automatic layout; from then on everything is edited here. Every change can be undone (button or Ctrl+Z).",
+    "**Simple** mode shows only the basics; **Advanced** also opens size, colour, condition and card settings. The **?** next to harder settings explains them with an example."
+   ],
+   "opts": [
+    {
+     "k": "modeSimple",
+     "tr": "Temel ayarlar: sekme, bölüm, cihaz, ad, simge, görünüm, dokununca.",
+     "en": "The basics: tabs, sections, devices, name, icon, look, on tap."
+    },
+    {
+     "k": "modeAdv",
+     "tr": "Boyut, renk, koşul, özel eylem, kart ve yerleşim ayarlarını da açar; hiçbir ayar silinmez.",
+     "en": "Also opens size, colour, condition, custom action, card and layout settings; nothing is deleted."
+    },
+    {
+     "k": "preview",
+     "v": [
+      "scr_tab16",
+      "scr_tab43",
+      "scr_wide",
+      "scr_phone",
+      "scr_here"
+     ],
+     "tr": "Önizleme ekranı.",
+     "en": "The preview screen."
+    },
+    {
+     "k": "edMode",
+     "v": [
+      "edTab",
+      "edPh"
+     ],
+     "tr": "Değişikliklerin tablete mi yalnız telefona mı yazılacağı.",
+     "en": "Whether changes go to the tablet or only to phones."
+    },
+    {
+     "k": "undo",
+     "tr": "Her değişiklik geri alınır (Ctrl+Z).",
+     "en": "Every change can be undone (Ctrl+Z)."
+    }
+   ]
+  },
+  {
+   "group": "edit",
+   "tr": [
+    "Sekmeler",
+    "Üstte sekmeler, altında seçili sekmenin ayarları. Her sekme panonun üst şeridinde bir oda düğmesidir.",
+    "Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında ve saatte parlaklıkta o odayı kullanır."
+   ],
+   "en": [
+    "Tabs",
+    "Tabs on top, the selected tab's settings below. Every tab is a room button in the dashboard's top bar.",
+    "Drag tabs to reorder them. A tab tied to an area uses that room for the effect screen and brightness on the clock."
+   ],
+   "id": "tabs",
+   "opts": [
+    {
+     "k": "tabName",
+     "tr": "Oda düğmesindeki ad.",
+     "en": "The name on the room button."
+    },
+    {
+     "k": "icon",
+     "tr": "Oda düğmesinin simgesi.",
+     "en": "The room button's icon."
+    },
+    {
+     "k": "area",
+     "tr": "Sekmenin odası: efekt ekranı ve saatte parlaklık bu odayı kullanır.",
+     "en": "The tab's room: the effect screen and brightness on the clock use it."
+    },
+    {
+     "k": "refill",
+     "tr": "Seçili alanın cihazlarıyla sekmeyi baştan kurar.",
+     "en": "Rebuilds the tab from the devices of the chosen area."
+    },
+    {
+     "k": "cols",
+     "tr": "1 ile 6 arası kolon; genişlikler önizlemedeki çizgilerden sürüklenir.",
+     "en": "1 to 6 columns; drag the lines in the preview for widths."
+    },
+    {
+     "k": "colTab",
+     "v": [
+      "colTab",
+      "colEq"
+     ],
+     "tr": "Hazır kolon oranları.",
+     "en": "Ready column ratios."
+    },
+    {
+     "k": "splits",
+     "tr": "Bir kolonu kendi içinde 2-3 sütuna böler (gelişmiş).",
+     "en": "Splits a column into 2-3 columns of its own (advanced)."
+    },
+    {
+     "k": "addTab",
+     "v": [
+      "emptyTab",
+      "fromArea",
+      "camTab"
+     ],
+     "tr": "Yeni sekme.",
+     "en": "A new tab."
+    },
+    {
+     "k": "delTab",
+     "tr": "Sekmeyi siler (önce sorar, geri alınabilir).",
+     "en": "Deletes the tab (asks first, can be undone)."
+    }
+   ]
+  },
+  {
+   "group": "edit",
+   "tr": [
+    "Otomatik kur",
+    "**⋯ → Otomatik kur** panoyu evdeki alanlardan ve cihazlardan baştan kurar. Seçimleri yaparken sonucu önizlemede görürsün.",
+    "Önizleme hayali bir evden; uygulayınca pano senin odalarınla ve cihazlarınla kurulur."
+   ],
+   "en": [
+    "Auto setup",
+    "**⋯ → Auto setup** builds the dashboard from the areas and devices in your home. You see the result in the preview while choosing.",
+    "The preview uses an imaginary home; applying builds the dashboard with your own rooms and devices."
+   ],
+   "id": "autosetup",
+   "opts": [
+    {
+     "k": "akRooms",
+     "tr": "Her seçilen oda bir sekme olur.",
+     "en": "Every selected room becomes a tab."
+    },
+    {
+     "k": "akHome",
+     "tr": "Bütün evin özeti: odalardan sırayla ışıklar, senaryolar, iklim.",
+     "en": "A summary of the whole home: lights, scenes and climate from each room."
+    },
+    {
+     "k": "akOther",
+     "tr": "Seçilmeyen odaların ve alanı olmayan cihazların sekmesi.",
+     "en": "A tab for unselected rooms and devices without an area."
+    },
+    {
+     "k": "akWhat",
+     "v": [
+      "akL",
+      "akS",
+      "akC",
+      "akV",
+      "akM",
+      "akK"
+     ],
+     "tr": "Sekmelere hangi bölümler girsin.",
+     "en": "Which sections go into the tabs."
+    },
+    {
+     "k": "akLook",
+     "v": [
+      "akTiles",
+      "akBars",
+      "akPhoneBars"
+     ],
+     "tr": "Işıkların görünümü.",
+     "en": "How lights look."
+    },
+    {
+     "k": "clSt",
+     "v": [
+      "clHalo",
+      "clRows"
+     ],
+     "tr": "İklim ve süpürge kartları.",
+     "en": "Climate and vacuum cards."
+    },
+    {
+     "k": "akPhone",
+     "v": [
+      "phCats",
+      "phRooms",
+      "phTop"
+     ],
+     "tr": "Telefonda gezinme (önizlemede Telefon'a geçince görünür).",
+     "en": "Navigation on phones (shown when the preview is switched to Phone)."
+    },
+    {
+     "k": "akPop",
+     "v": [
+      "akSheetOn",
+      "akSheetOff"
+     ],
+     "tr": "Telefonda ışık penceresi.",
+     "en": "The light window on phones."
+    },
+    {
+     "k": "bg",
+     "tr": "Arka plan; seçmezsen şimdiki kalır.",
+     "en": "Background; if you pick none the current one stays."
+    },
+    {
+     "k": "akLec",
+     "v": [
+      "akLecOn",
+      "akLecOff"
+     ],
+     "tr": "Efektler düğmesi (Light Effect Card kuruluysa).",
+     "en": "The Effects button (when Light Effect Card is installed)."
+    },
+    {
+     "k": "akGo",
+     "tr": "Mevcut sekmelerin yerine geçer; ayarlar kalır, geri al ile dönülür.",
+     "en": "Replaces the current tabs; settings stay and undo brings them back."
+    }
+   ]
+  },
+  {
+   "id": "add",
+   "group": "edit",
+   "tr": [
+    "Cihaz eklemek",
+    "Bölümde **Ekle**'ye bas. Seçicide evdeki bütün cihazlar listelenir; üstteki süzgeçle (Işık ve anahtar, Senaryolar, Değerler, İklim, Süpürge, Medya, Kameralar) daraltılır.",
+    "Birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur; sensörler değer karosu.",
+    "**Kart** düğmesi Halo kartlarını, Home Assistant kartlarını ve kurulu özel kartları listeler."
+   ],
+   "en": [
+    "Adding devices",
+    "Press **Add** in a section. The picker lists every device in the home; the filter on top (Lights and switches, Scenes, Values, Climate, Vacuum, Media, Cameras) narrows it.",
+    "Add several at once. Scripts, scenes and automations become coloured buttons; sensors become value tiles.",
+    "The **Card** button lists Halo cards, Home Assistant cards and installed custom cards."
+   ],
+   "opts": [
+    {
+     "k": "pfAll",
+     "v": [
+      "pfAll",
+      "pfTile",
+      "t_scenes",
+      "t_values",
+      "t_climate",
+      "t_vacuum",
+      "t_media",
+      "t_camera"
+     ],
+     "tr": "Seçicideki süzgeç.",
+     "en": "The picker's filter."
+    },
+    {
+     "k": "addDev",
+     "tr": "Evdeki cihazlardan seç; birden fazla tek seferde.",
+     "en": "Pick from the home's devices; several at once."
+    },
+    {
+     "k": "addCard",
+     "tr": "Halo kartı, Home Assistant kartı ya da kurulu özel kart.",
+     "en": "A Halo card, a Home Assistant card or an installed custom card."
+    },
+    {
+     "k": "addPet",
+     "tr": "Besleme kartı.",
+     "en": "A feeding card."
+    },
+    {
+     "k": "addSub",
+     "tr": "Bölümün içinde küçük bir ara başlık.",
+     "en": "A small heading inside the section."
+    },
+    {
+     "k": "addPh",
+     "v": [
+      "addPh",
+      "addScPh"
+     ],
+     "tr": "Yer tutan boş karo ya da düğme (sonra ⚙ ile eylem verilir).",
+     "en": "A placeholder tile or button (give it an action in ⚙)."
+    }
+   ]
+  },
+  {
+   "id": "item",
+   "group": "edit",
+   "tr": [
+    "Öğe ayarları",
+    "Her öğenin yanındaki ⚙: ad, simge, **Görünüm** (karo, düğme, satır), **Dokununca** ve **Basılı tutunca** ne olacağı.",
+    "Dokununca ya da basılı tutunca: cihaz penceresi, aç/kapat, servis çalıştır, pencerede kart aç ya da hiçbir şey.",
+    "Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar da burada."
+   ],
+   "en": [
+    "Item settings",
+    "The ⚙ next to every item: name, icon, **Look** (tile, button, row), what a **Tap** and a **Long press** do.",
+    "Tap or long press: device window, toggle, run a service, open a card in a window or nothing.",
+    "Type-specific settings live here too, such as the cover design or how often a camera refreshes."
+   ],
+   "opts": [
+    {
+     "k": "name",
+     "tr": "Panoda görünen ad; şablon yazılabilir.",
+     "en": "The name shown on the dashboard; templates allowed."
+    },
+    {
+     "k": "icon",
+     "tr": "Panonun simge setinden ya da mdi:... adıyla.",
+     "en": "From the dashboard's icon set or an mdi:... name."
+    },
+    {
+     "k": "iconOn",
+     "v": [
+      "iconOn",
+      "iconOff"
+     ],
+     "tr": "Değer öğesinde açıkken ve kapalıyken ayrı simge (gelişmiş).",
+     "en": "Separate icons for on and off on value items (advanced)."
+    },
+    {
+     "k": "lookL",
+     "v": [
+      "lk_tile",
+      "lk_button",
+      "lk_row",
+      "lk_halo"
+     ],
+     "tr": "Öğenin çizimi; türüne göre seçenekler değişir.",
+     "en": "How the item is drawn; the choices depend on its type."
+    },
+    {
+     "k": "tapL",
+     "v": [
+      "a_more",
+      "a_tog",
+      "a_svc",
+      "a_pop",
+      "a_none",
+      "a_yaml"
+     ],
+     "tr": "Dokununca ne olsun.",
+     "en": "What a tap does."
+    },
+    {
+     "k": "holdL",
+     "tr": "Basılı tutunca ne olsun; seçenekler aynı.",
+     "en": "What a long press does; same choices."
+    },
+    {
+     "k": "cfmL",
+     "tr": "Önce \"çalıştırılsın mı?\" diye sorar; soru yazılabilir.",
+     "en": "Asks \"run it?\" first; the question can be written."
+    }
+   ]
+  },
+  {
+   "group": "edit",
+   "tr": [
+    "Kartlar ve değerler",
+    "Bölüme sensör, zamanlayıcı, sayaç gibi değerler ve herhangi bir kart eklenebilir.",
+    "Değer karoları simge, değer ve ad gösterir; çalışan zamanlayıcı geri sayar. Kartlar Halo kartlarından, Home Assistant kartlarından ya da kurulu özel kartlardan seçilir."
+   ],
+   "en": [
+    "Cards and values",
+    "Values such as sensors, timers and counters, and any card, can go into a section.",
+    "Value tiles show an icon, value and name; a running timer counts down. Cards come from Halo cards, Home Assistant cards or installed custom cards."
+   ],
+   "id": "cards",
+   "opts": [
+    {
+     "k": "addCard",
+     "v": [
+      "cpHalo",
+      "cpHa",
+      "cpCustom",
+      "cpYaml"
+     ],
+     "tr": "Kart seçici.",
+     "en": "The card picker."
+    },
+    {
+     "k": "ceVisual",
+     "v": [
+      "ceVisual",
+      "ceYaml"
+     ],
+     "tr": "Seçilen kart görsel düzenleyicisi ve canlı önizlemesiyle açılır; istersen YAML.",
+     "en": "The chosen card opens with its visual editor and live preview; or YAML."
+    },
+    {
+     "k": "heightL",
+     "v": [
+      "sz_auto",
+      "=1",
+      "=1,5|1.5",
+      "=2"
+     ],
+     "tr": "Kart ve Halo öğesinin yüksekliği (satır).",
+     "en": "Height of card and Halo items (rows)."
+    },
+    {
+     "k": "a_pop",
+     "tr": "Bir düğmeye verilince kart, ışık penceresi gibi panonun penceresinde açılır.",
+     "en": "Given to a button, the card opens in the dashboard's window like the light window."
+    },
+    {
+     "k": "secL",
+     "v": [
+      "sc_state",
+      "sc_lc",
+      "sc_attr",
+      "sc_tpl"
+     ],
+     "tr": "Değer öğesinin ikinci satırı.",
+     "en": "The second line of a value item."
+    },
+    {
+     "k": "swapL",
+     "tr": "Değer öğesinde ad üstte, değer altta.",
+     "en": "On value items, name on top and value below."
+    },
+    {
+     "k": "lk_halo",
+     "tr": "Sayısal değeri Halo sensör kartı olarak gösterir.",
+     "en": "Shows a numeric value as a Halo sensor card."
+    },
+    {
+     "k": "zonesL",
+     "tr": "4 sınır, 5 renk: değere göre çerçeve, değer ve simge rengi.",
+     "en": "4 limits, 5 colours: frame, value and icon colour by value."
+    },
+    {
+     "k": "scL",
+     "tr": "Bir varlığın durumunu renge eşler; metin değerlerde de çalışır.",
+     "en": "Maps an entity's state to a colour; works with text values too."
+    }
+   ]
+  },
+  {
+   "id": "sections",
+   "group": "edit",
+   "tr": [
+    "Bölümler ve kolonlar",
+    "Bölümler serbesttir: her kutuya her şey eklenebilir, her öğe kendi türüne göre görünür.",
+    "Önizlemede bölümü tutamağından sürükleyip başka kolona taşı; öğeyi kendisinden sürükleyip sırala ya da başka bölüme taşı. Kolon genişlikleri çizgilerden sürüklenir.",
+    "Bölüm ayarında başlık, kolon, görünüm (karo, kaydırmalı), satırdaki karo sayısı, doldurma ve hizalama seçilir."
+   ],
+   "en": [
+    "Sections and columns",
+    "Sections are free: anything can go into any box, and each item shows in its own way.",
+    "Drag a section by its handle in the preview to another column; drag an item itself to reorder it or move it to another section. Drag the lines to change column widths.",
+    "The section settings hold its title, column, look (tiles, sliders), tiles per row, fill and alignment."
+   ],
+   "opts": [
+    {
+     "k": "secTitle",
+     "tr": "Bölümün başlığı; boş bırakılabilir.",
+     "en": "The section's title; can be empty."
+    },
+    {
+     "k": "column",
+     "tr": "Bölümün durduğu kolon.",
+     "en": "The column the section sits in."
+    },
+    {
+     "k": "fillL",
+     "v": [
+      "fillC",
+      "fillF"
+     ],
+     "tr": "Düğmeler ve karolar kutunun yüksekliğine eşit dağılsın mı.",
+     "en": "Whether buttons and tiles spread over the box's height."
+    },
+    {
+     "k": "alignL",
+     "v": [
+      "alTop",
+      "alCenter",
+      "alSpread"
+     ],
+     "tr": "İçerik kutudan kısaysa nereye dursun.",
+     "en": "Where content sits when it is shorter than the box."
+    },
+    {
+     "k": "gapL",
+     "v": [
+      "gapAuto",
+      "=0",
+      "=6",
+      "=12",
+      "=18",
+      "=24"
+     ],
+     "tr": "Öğeler arası boşluk (piksel).",
+     "en": "Space between items (pixels)."
+    },
+    {
+     "k": "delSec",
+     "tr": "Bölümü siler (önce sorar, geri alınabilir).",
+     "en": "Deletes the section (asks first, can be undone)."
+    }
+   ]
+  },
+  {
+   "id": "icons",
+   "group": "edit",
+   "tr": [
+    "Simge seçici",
+    "Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; önce o şeye uygun olanlar önerilir, arama Türkçe kelimeleri de tanır.",
+    "★ işaretliler panoya özel çizimler. Light Effect Card kuruluysa efekt simgeleri de seçilebilir.",
+    "İstersen `mdi:...` adını doğrudan yazarsın."
+   ],
+   "en": [
+    "Icon picker",
+    "The button next to icon fields. Pick from the dashboard's colour icon set; icons that fit the thing come first, and search understands Turkish words too.",
+    "★ marks drawings made for this dashboard. With Light Effect Card installed its effect icons can be picked too.",
+    "You can also type an `mdi:...` name directly."
+   ],
+   "opts": [
+    {
+     "k": "iconSug",
+     "tr": "O şeye uygun simgeler önce.",
+     "en": "Icons that fit the thing come first."
+    },
+    {
+     "k": "iconEvery",
+     "tr": "Bütün set; arama Türkçe kelimeleri de tanır.",
+     "en": "The whole set; search understands Turkish words too."
+    },
+    {
+     "k": "icLec",
+     "tr": "Light Effect Card kuruluysa onun efekt simgeleri.",
+     "en": "Light Effect Card's effect icons when it is installed."
+    }
+   ]
+  },
+  {
+   "id": "style",
+   "group": "edit",
+   "tr": [
+    "Stil seç",
+    "Üst çubuktaki **Stil seç**. Solda önizleme, sağda büyük seçenekler; her seçim önizlemede anında görünür, **Uygula** hepsini birden kaydeder.",
+    "**Tablet:** ışıklar karo ya da çubuk; iklim kartları Halo ya da Sade. **Telefon:** gezinme, ışıklar, ışık penceresi.",
+    "**Arka plan:** 30 efekt renk, koyu, siyah, istediğin renk ya da kendi resmin."
+   ],
+   "en": [
+    "Choose a style",
+    "**Choose a style** in the top bar. Preview on the left, big options on the right; each choice shows in the preview at once and **Apply** saves them together.",
+    "**Tablet:** lights as tiles or sliders; climate cards Halo or Simple. **Phone:** navigation, lights, light window.",
+    "**Background:** 30 effect colours, dark, black, any colour or your own picture."
+   ],
+   "opts": [
+    {
+     "k": "akSrcMine",
+     "v": [
+      "akSrcMine",
+      "akSrcDemo"
+     ],
+     "tr": "Önizlemede kendi panon ya da örnek ev.",
+     "en": "Preview your own dashboard or the example home."
+    },
+    {
+     "k": "lookTile",
+     "v": [
+      "lookTile",
+      "lookBar"
+     ],
+     "tr": "Tablette ışıklar.",
+     "en": "Lights on the tablet."
+    },
+    {
+     "k": "clSt",
+     "v": [
+      "clHalo",
+      "clRows"
+     ],
+     "tr": "Tablette iklim ve süpürge kartları.",
+     "en": "Climate and vacuum cards on the tablet."
+    },
+    {
+     "k": "phNav",
+     "v": [
+      "phCats",
+      "phRooms",
+      "phTop"
+     ],
+     "tr": "Telefonda gezinme, ışıklar ve ışık penceresi.",
+     "en": "Navigation, lights and light window on phones."
+    },
+    {
+     "k": "bg",
+     "v": [
+      "bgFx",
+      "bgDark",
+      "bgBlack",
+      "bgColor",
+      "bgImg"
+     ],
+     "tr": "Pano zemini.",
+     "en": "The dashboard background."
+    },
+    {
+     "k": "bgFx",
+     "tr": "30 efekt renk: Meditasyon (varsayılan), Kutup ışığı, Ateş, Gün batımı, Okyanus ve daha fazlası.",
+     "en": "30 effect colours: Meditation (default), Aurora, Fire, Sunset, Ocean and more."
+    },
+    {
+     "k": "bgImg",
+     "tr": "HA'nın www klasöründeki bir resim (/local/zemin.jpg) ya da bir internet adresi.",
+     "en": "A picture in HA's www folder (/local/background.jpg) or a web address."
+    },
+    {
+     "k": "akLec",
+     "tr": "Efektler düğmesini açar ya da gizler; kurulu değilse kartı anlatır.",
+     "en": "Shows or hides the Effects button; explains the card if it is not installed."
+    }
+   ]
+  },
+  {
+   "id": "phone-layout",
+   "group": "edit",
+   "tr": [
+    "Telefona özel düzen",
+    "Yönetim panelinde **Düzenlenen: Telefon**'a geç: önizleme telefona döner ve değişiklikler yalnız telefona yazılır, tablet aynı kalır.",
+    "Telefonda oda düğmelerinin, bölümlerin ve öğelerin sırası ve görünürlüğü; bölümlerin görünümü; simge stili, iklim kartları ve zemin ayrı ayarlanır.",
+    "Değişen her yerde \"telefona özel\" yazar. **Telefonu tabletle aynı yap** telefona özel her şeyi siler (önce sorar)."
+   ],
+   "en": [
+    "Phone-only layout",
+    "Switch to **Editing: Phone** in the admin panel: the preview becomes a phone and changes apply to phones only; the tablet stays the same.",
+    "On phones set the order and visibility of room buttons, sections and items, the look of sections, the icon style, climate cards and background.",
+    "Everything you change says \"phone only\". **Make the phone match the tablet** removes all phone-only settings (it asks first)."
+   ],
+   "opts": [
+    {
+     "k": "phShown",
+     "v": [
+      "phShown",
+      "phHidden"
+     ],
+     "tr": "Bölümü telefonda göster ya da gizle.",
+     "en": "Show or hide a section on phones."
+    },
+    {
+     "k": "phLook",
+     "v": [
+      "phLookSame",
+      "phLookTiles",
+      "phLookRows"
+     ],
+     "tr": "Bölümün telefondaki görünümü.",
+     "en": "A section's look on phones."
+    },
+    {
+     "k": "phCols",
+     "v": [
+      "phColsAuto",
+      "=2",
+      "=3",
+      "=4",
+      "=5"
+     ],
+     "tr": "Telefonda satırdaki karo.",
+     "en": "Tiles per row on phones."
+    },
+    {
+     "k": "phItems",
+     "tr": "Öğeleri tek tek telefonda gizle; önizlemede sürükleyerek sırala.",
+     "en": "Hide single items on phones; drag them in the preview to reorder."
+    },
+    {
+     "k": "phTabName",
+     "v": [
+      "phTabName",
+      "phTabIcon",
+      "phTabShow"
+     ],
+     "tr": "Oda düğmesinin telefondaki adı, simgesi ve görünürlüğü.",
+     "en": "A room button's name, icon and visibility on phones."
+    },
+    {
+     "k": "phIcons",
+     "v": [
+      "phIcons",
+      "phClim",
+      "phBg"
+     ],
+     "tr": "Telefon görünümü kartında telefona ayrı stil.",
+     "en": "A separate style for phones in the Phone look card."
+    },
+    {
+     "k": "phReset",
+     "tr": "Bir ayarı tablettekine döndürür.",
+     "en": "Returns one setting to the tablet's."
+    },
+    {
+     "k": "phSame",
+     "tr": "Telefona özel her şeyi siler; önce sorar.",
+     "en": "Removes everything phone-only; asks first."
+    }
+   ]
+  },
+  {
+   "id": "settings",
+   "group": "more",
+   "tr": [
+    "Ayarlar",
+    "Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır: dil, mevsim, simge stili, üst şerit, saatte parlaklık, HA teması.",
+    "**Üst barı gizle / Yan menüyü gizle** yalnız bu panoda Home Assistant'ın başlığını ve menüsünü kapatır; tablette kiosk gibi kullanılır.",
+    "En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar."
+   ],
+   "en": [
+    "Settings",
+    "**Settings** at the top right apply to every tablet in the home: language, season, icon style, top bar, brightness on the clock, HA theme.",
+    "**Hide the top bar / Hide the sidebar** turn off Home Assistant's top bar and menu on this dashboard only, for kiosk use on a tablet.",
+    "Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue."
+   ],
+   "opts": [
+    {
+     "k": "sVer",
+     "tr": "Yüklü sürüm, Yenilikler ve güncelleme; yeni sürüm buradan indirilir ve HA yeniden başlatılır.",
+     "en": "Installed version, What's new and updates; download a new version and restart HA from here."
+    },
+    {
+     "k": "lang",
+     "v": [
+      "lAuto",
+      "=Türkçe",
+      "=English"
+     ],
+     "tr": "Panonun dili.",
+     "en": "The dashboard's language."
+    },
+    {
+     "k": "icStyle",
+     "v": [
+      "icAuto",
+      "icColor",
+      "icFlat",
+      "icTint"
+     ],
+     "tr": "Simgelerin renklendirilmesi.",
+     "en": "How icons are coloured."
+    },
+    {
+     "k": "icTintL",
+     "tr": "Tek renkte açık ışığın simgesi lambanın kendi renginde.",
+     "en": "In Single colour, a light that is on keeps its own colour."
+    },
+    {
+     "k": "navSz",
+     "tr": "Oda düğmelerinin genişliği ve yüksekliği (varsayılan 235 × 155).",
+     "en": "Width and height of room buttons (default 235 × 155)."
+    },
+    {
+     "k": "navAl",
+     "tr": "Oda düğmeleri seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır.",
+     "en": "Room buttons end at the chosen column's right edge and share the space evenly."
+    },
+    {
+     "k": "bb",
+     "v": [
+      "bbHidden",
+      "bbBox"
+     ],
+     "tr": "Saatin olduğu alanı kaydırınca odadaki açık ışıkların parlaklığı birlikte değişir.",
+     "en": "Swiping the clock area changes the brightness of every light that is on in the room."
+    },
+    {
+     "k": "bbVal",
+     "v": [
+      "bbDrag",
+      "bbAlways"
+     ],
+     "tr": "Parlaklık göstergesi ne zaman görünsün.",
+     "en": "When the brightness indicator shows."
+    },
+    {
+     "k": "theme",
+     "tr": "Açılır pencerelerin kullanacağı HA teması.",
+     "en": "The HA theme used by pop-up windows."
+    },
+    {
+     "k": "kHeader",
+     "v": [
+      "kHeader",
+      "kSide"
+     ],
+     "tr": "Bu panoda HA'nın üst barı ve sol menüsü gizlenir (kiosk).",
+     "en": "Hides HA's top bar and sidebar on this dashboard (kiosk)."
+    },
+    {
+     "k": "canvas",
+     "tr": "Tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir (gelişmiş).",
+     "en": "Design width and reference height; the dashboard scales to the screen with it (advanced)."
+    },
+    {
+     "k": "hold",
+     "v": [
+      "hPop",
+      "hHa",
+      "hLec"
+     ],
+     "tr": "Işığa basılı tutunca açılan pencere.",
+     "en": "The window a long press on a light opens."
+    },
+    {
+     "k": "repT",
+     "tr": "Sürüm ve cihaz bilgisiyle GitHub'da kayıt açar; oda, cihaz ya da kişi adı eklenmez.",
+     "en": "Opens a GitHub issue with version and device details; no room, device or person names are added."
+    },
+    {
+     "k": "bkDown",
+     "v": [
+      "bkDown",
+      "bkUp"
+     ],
+     "tr": "Sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada; geri yüklemeden önce sorar.",
+     "en": "Tabs, sections, settings and pets in one file; restoring asks first."
+    }
+   ]
+  },
+  {
+   "id": "advanced",
+   "group": "more",
+   "tr": [
+    "Gelişmiş ayarlar",
+    "**Sadece şu durumda göster:** öğe, seçilen varlık belli bir durumdayken görünür. **Değere göre renk** ve **Duruma göre renk:** sayı ya da duruma göre renk.",
+    "**İkinci satır** ve **şablon:** ad ve alt satıra Home Assistant şablonu yazılabilir. **Dokununca onay iste:** düğme önce sorar.",
+    "**Yedek kontrol:** iki kez görünen lambanın ikinci kopyası; lamba cevap vermezse komut yedekten gider. **Duvar anahtarları:** yalnız sinyal veren röleyi bir lambaya bağlar."
+   ],
+   "en": [
+    "Advanced settings",
+    "**Only show when:** the item shows while a chosen entity is in a given state. **Colour by value** and **Colour by state:** colour from a number or a state.",
+    "**Second line** and **templates:** the name and second line accept Home Assistant templates. **Ask before running:** the button asks first.",
+    "**Backup control:** the second copy of a lamp that shows up twice; if the lamp does not answer, the command goes through the backup. **Wall switches:** bind a signal-only relay to a lamp."
+   ],
+   "opts": [
+    {
+     "k": "sizeL",
+     "v": [
+      "=1×1",
+      "=2×1",
+      "=1×2",
+      "=2×2",
+      "sz_row"
+     ],
+     "tr": "Karonun ızgarada kapladığı yer.",
+     "en": "How much of the grid a tile takes."
+    },
+    {
+     "k": "icSizeL",
+     "v": [
+      "sz_auto",
+      "sz_s",
+      "sz_m",
+      "sz_l"
+     ],
+     "tr": "Simge ve yazı boyutu.",
+     "en": "Icon and text size."
+    },
+    {
+     "k": "colorsL",
+     "v": [
+      "cIcon",
+      "cOn",
+      "cBg"
+     ],
+     "tr": "Simge rengi, açıkken renk ve arka plan tonu.",
+     "en": "Icon colour, colour when on and background tint."
+    },
+    {
+     "k": "visL",
+     "v": [
+      "v_eq",
+      "v_in",
+      "v_not"
+     ],
+     "tr": "Öğe yalnız seçilen varlık şu durumdayken görünür; yoksa yerinde boşluk kalmaz.",
+     "en": "The item shows only while the entity is in that state; otherwise no gap is left."
+    },
+    {
+     "k": "secL",
+     "tr": "Ad ve ikinci satıra Home Assistant şablonu ({{ }}) yazılabilir.",
+     "en": "The name and second line accept Home Assistant templates ({{ }})."
+    },
+    {
+     "k": "twinL",
+     "tr": "İki kez görünen lambanın ikinci kopyası; cevap gelmezse komut oradan gider, karoda turuncu nokta çıkar.",
+     "en": "The second copy of a lamp that shows up twice; if it does not answer the command goes there and an orange dot appears."
+    },
+    {
+     "k": "sWalls",
+     "v": [
+      "wallBr",
+      "wallK"
+     ],
+     "tr": "Yalnız sinyal veren röle bir lambaya bağlanır; açarken parlaklık ve kelvin verilebilir (Ayarlar, gelişmiş).",
+     "en": "A signal-only relay is bound to a lamp; brightness and kelvin can be set for turning on (Settings, advanced)."
+    }
+   ]
+  },
+  {
+   "id": "tips",
+   "group": "more",
+   "tr": [
+    "İpuçları",
+    "Bir şey ters giderse **Geri al** (Ctrl+Z). **⋯ → Otomatik düzene dön** her şeyi baştan kurar.",
+    "HA'nın kendi düzenleyicisinde bu pano için \"kontrolü al\" dersen pano bu panelden kopar; düzenlemeyi hep buradan yap.",
+    "Bu rehber her zaman **⋯ → Rehber**'de ve **Ayarlar → Yardım**'da."
+   ],
+   "en": [
+    "Tips",
+    "If something goes wrong, **Undo** (Ctrl+Z). **⋯ → Back to automatic layout** rebuilds everything.",
+    "If you choose \"take control\" for this dashboard in HA's own editor, it leaves this panel; always edit here.",
+    "This guide is always in **⋯ → Guide** and **Settings → Help**."
+   ],
+   "opts": [
+    {
+     "k": "undo",
+     "tr": "Son değişiklikleri geri alır.",
+     "en": "Takes back the last changes."
+    },
+    {
+     "k": "resetAll",
+     "tr": "Bütün sekme ve bölümleri siler, panoyu evin alanlarından yeniden kurar; ayarlar kalır.",
+     "en": "Deletes every tab and section and rebuilds from the home's areas; settings stay."
+    },
+    {
+     "k": "newsT",
+     "tr": "Güncellemeden sonra bir kez çıkar; Ayarlar → Sürüm'den yeniden açılır.",
+     "en": "Shows once after an update; open it again from Settings → Version."
+    },
+    {
+     "k": "guideT",
+     "tr": "Bu rehber.",
+     "en": "This guide."
+    }
+   ]
+  }
+ ],
+ "groups": {
+  "use": {
+   "tr": "Kullanmak",
+   "en": "Using"
+  },
+  "edit": {
+   "tr": "Düzenlemek",
+   "en": "Editing"
+  },
+  "more": {
+   "tr": "Daha fazlası",
+   "en": "More"
+  }
+ }
+}

@@ -37,6 +37,38 @@ ha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px
 .btn.dash:hover { color: var(--tx); background: var(--s2); }
 .warn { background: var(--reds); border: 1px solid rgba(238,106,95,.35); color: #F3B0A9; padding: 10px 14px; border-radius: var(--r2); font-size: 13px; flex: none; }
 
+/* Rehber: solda adımlar, sağda GitHub'dan gelen görsel ve yazı; dar ekranda liste gizlenir, Önceki / Sonraki kalır */
+.dlg.guide { width: min(1120px, 100%); height: min(780px, 100%); }
+.guide .dh .gh { margin-left: auto; text-decoration: none; }
+.guide .dh .gh + .btn { margin-left: 8px; }
+.gbody { flex: 1; display: flex; min-height: 0; }
+.glist { flex: 0 0 250px; overflow-y: auto; padding: 8px 10px 14px; border-right: 1px solid var(--ln); display: flex; flex-direction: column; gap: 2px; }
+.ggrp { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); font-weight: 600; padding: 12px 8px 4px; }
+.gli { display: flex; align-items: center; gap: 10px; text-align: left; padding: 8px; border-radius: var(--r3); border: 0; background: none; color: var(--tx2); font: inherit; font-size: 13px; cursor: pointer; }
+.gli:hover { background: var(--s2); }
+.gli.on { background: var(--tint); color: var(--tx); font-weight: 600; }
+.gno { flex: none; width: 22px; height: 22px; border-radius: 7px; background: var(--s3); color: var(--mu); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+.gli.on .gno { background: var(--ac); color: var(--actx); }
+.gmain { flex: 1; overflow-y: auto; padding: 16px 20px 20px; min-width: 0; }
+.gfig { position: relative; border-radius: 14px; overflow: hidden; background: var(--s1); border: 1px solid var(--ln); aspect-ratio: 16 / 10; max-height: 52vh; width: 100%; display: grid; place-items: center; }
+.gfig img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+.gfig span { display: none; color: var(--mu); font-size: 13px; padding: 20px; text-align: center; }
+.gfig.bad img { display: none; } .gfig.bad span { display: block; } .gfig.bad { aspect-ratio: auto; min-height: 80px; max-height: none; }
+.gtx { margin-top: 16px; }
+.gstep { color: var(--ac); font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.gtx h3 { font-size: 20px; margin: 4px 0 8px; }
+.gtx p { color: var(--tx2); font-size: 14.5px; line-height: 1.6; margin: 0 0 10px; }
+.gtx b { color: var(--tx); } .gtx code { background: var(--s3); padding: 1px 6px; border-radius: 6px; font-size: 13px; }
+.gopt { margin-top: 18px; border-top: 1px solid var(--ln); padding-top: 14px; }
+.gopt h4 { margin: 0 0 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); }
+.go { padding: 10px 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--ln); }
+.go + .go { margin-top: 8px; }
+.go b { font-size: 14px; color: var(--tx); }
+.go p { margin: 4px 0 0; color: var(--tx2); font-size: 13.5px; line-height: 1.5; }
+.gv { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.gv span { font-size: 12px; padding: 3px 9px; border-radius: 99px; background: var(--s3); color: var(--tx); border: 1px solid var(--ln2); }
+@media (max-width: 760px) { .glist { display: none; } .gmain { padding: 12px 14px 16px; } .guide .dh .gh { display: none; } }
+
 /* perde tasarımı seçimi: küçük pencere çizimli kartlar */
 .cvps { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
 .cvp { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px 7px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2); font-size: 12px; line-height: 1.25; text-align: center; cursor: pointer; }

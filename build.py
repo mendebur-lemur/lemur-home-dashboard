@@ -43,7 +43,55 @@ def load_css(name):
     return "\n".join(l.strip() for l in c.splitlines() if l.strip())
 css = load_css("base.css")
 admin_css = load_css("admin.css")
-parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "yaml.js", "help.js", "admin.js")]
+# Rehber (src/guide.json): pakete veri olarak girer, GitHub için docs/REHBER.md ve docs/GUIDE.md buradan yazılır.
+# Görseller docs/guide/<dil>/<id>.webp; panel bunları sürümün GitHub etiketinden yükler (kurulum dosyasına girmez, .gitattributes).
+guide = json.loads((src / "guide.json").read_text(encoding="utf-8"))
+guide.pop("_note", None)
+for _st in guide["steps"]:
+    for _l in ("tr", "en"):
+        if not (isinstance(_st.get(_l), list) and len(_st[_l]) >= 2):
+            raise SystemExit("guide.json: '" + _st.get("id", "?") + "' adımında " + _l + " metni eksik")
+# panelin yazıları (src/admin.js'teki tr / en sözlüğü): rehberdeki seçenek adları buradan; anahtar yoksa derleme durur
+_adm = (src / "admin.js").read_text(encoding="utf-8")
+def _dict(block):
+    return {m.group(1): m.group(2).replace("\\'", "'") for m in re.finditer(r"(\w+): '((?:[^'\\]|\\.)*)'", block)}
+UI = {"tr": _dict(_adm[_adm.index("  tr: {"):_adm.index("  en: {")]), "en": _dict(_adm[_adm.index("  en: {"):_adm.index("\n};", _adm.index("  en: {"))])}
+for _st in guide["steps"]:
+    for _o in _st.get("opts", []):
+        for _k in ([_o["k"]] if _o.get("k") else []) + [x for x in _o.get("v", []) if not x.startswith("=")]:
+            for _l in ("tr", "en"):
+                if _k not in UI[_l]:
+                    raise SystemExit("guide.json: '" + _st["id"] + "' seçeneğinde '" + _k + "' panelin " + _l + " yazılarında yok")
+def guide_md(lang):
+    other = {"tr": ("GUIDE.md", "English"), "en": ("REHBER.md", "Türkçe")}[lang]
+    title = {"tr": "Lemur Home Dashboard rehberi", "en": "Lemur Home Dashboard guide"}[lang]
+    intro = {"tr": "Panonun yapabildiği her şey, sırayla. Aynı rehber yönetim panelinde **⋯ → Rehber**'de de var.",
+             "en": "Everything the dashboard can do, in order. The same guide is in the admin panel under **⋯ → Guide**."}[lang]
+    out = ["# " + title, "", intro + " [" + other[1] + "](" + other[0] + ")", ""]
+    last = None
+    for i, st in enumerate(guide["steps"], 1):
+        if st["group"] != last:
+            last = st["group"]; out += ["## " + guide["groups"][last][lang], ""]
+        T = st[lang]
+        out += ["### " + str(i) + ". " + T[0], ""]
+        if (root / "docs/guide" / lang / (st["id"] + ".webp")).exists():
+            out += ["![" + T[0] + "](guide/" + lang + "/" + st["id"] + ".webp)", ""]
+        for p in T[1:]:
+            out += [p, ""]
+        if st.get("opts"):
+            out += ["**" + {"tr": "Seçenekler", "en": "Options"}[lang] + "**", ""]
+            for o in st["opts"]:
+                lab = UI[lang][o["k"]] if o.get("k") else o["l"][lang]
+                vals = [(x[1:].split("|")[0 if lang == "tr" else -1]) if x.startswith("=") else UI[lang][x] for x in o.get("v", [])]
+                out += ["- **" + lab + "**" + (" (" + " · ".join(vals) + ")" if vals else "") + ": " + o[lang]]
+            out += [""]
+    return "\n".join(out).rstrip() + "\n"
+for _l, _n in (("tr", "REHBER.md"), ("en", "GUIDE.md")):
+    _p = root / "docs" / _n
+    _md = guide_md(_l)
+    if not _p.exists() or _p.read_text(encoding="utf-8") != _md:
+        _p.write_text(_md, encoding="utf-8")
+parts = ["const LHD_GUIDE = " + json.dumps(guide, ensure_ascii=False) + ";"] + [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "yaml.js", "help.js", "admin.js")]
 errlog = (src / "errlog.js").read_text(encoding="utf-8")
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{

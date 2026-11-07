@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.24.0',
+    tr: ['Görselli rehber: ⋯ → Rehber ve Ayarlar → Yardım. Panonun yapabildiği her şey 22 adımda, her adımda ekran görüntüsü ve bütün seçenekleriyle. Görseller kurulum dosyasında değil, açınca GitHub\'dan yüklenir; aynı rehber GitHub\'da da var.', 'Perde penceresinde yüzde İngilizcede "70%" diye yazılıyor.'],
+    en: ['Illustrated guide: ⋯ → Guide and Settings → Help. Everything the dashboard can do in 22 steps, each with a screenshot and all its options. The pictures are not in the install; they load from GitHub when opened, and the same guide is on GitHub too.', 'The cover window now writes percentages as "70%" in English.'] },
   { v: '0.23.2',
     tr: ['Perde ayarında tasarım ve toplanma yönü artık küçük pencere çizimleriyle seçiliyor; Oto kartı ne seçtiğini de yazıyor.', 'Kanatları ayrı bir motorla dönen dikey stor ve jaluzi: perdenin ⚙ ayarında Kanat açısı motoru seçilince penceredeki kanat sırası o motoru sürüyor. Konum bildiren kanat motorunda %0-100 hazır açılar var.', 'Durdurma komutu olmayan ama konum bildiren perdelerde Durdur da çalışıyor.'],
     en: ['Cover settings: the design and the gathering side are now picked from small window drawings; the Auto card says what it picked.', 'Vertical and venetian blinds whose slats turn with a separate motor: pick it as the Slat angle motor in the cover\'s ⚙ settings and the slat row in the window drives it. Slat motors that report a position get 0-100% presets.', 'Stop now also works on covers that have no stop command but report their position.'] },

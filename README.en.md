@@ -30,6 +30,8 @@ A ready-made, full-screen home dashboard for Home Assistant. Add the integration
 - Turkish and English interface.
 
 
+**Illustrated guide:** everything the dashboard can do, step by step, in [docs/GUIDE.md](docs/GUIDE.md). The same guide is in the admin panel under **⋯ → Guide**.
+
 ## Contents
 
 - [Installation](#installation)

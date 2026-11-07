@@ -128,6 +128,7 @@ class LemurCoverPopup extends LemurLightPopup {
   }
   _t(k, v) { let s = (LP_COV_TXT[this._lang] || LP_COV_TXT.en)[k] || k; if (v) Object.keys(v).forEach((x) => { s = s.replace('{' + x + '}', v[x]); }); return s; }
   _st() { return this._h.states[this._id]; }
+  _pc(n) { return this._lang === 'tr' ? '%' + n : n + '%'; }   // yüzde: Türkçede önde, İngilizcede sonda
   _ft() { const st = this._st(); return (st && st.attributes && st.attributes.supported_features) || 0; }
   _pos(st) {
     if (!st) return 0;
@@ -169,7 +170,7 @@ class LemurCoverPopup extends LemurLightPopup {
       h += '<div class="box"><div class="lbl">' + esc(this._t('tilt')) + '<b data-tl></b></div><div class="tri sm">' +
         btn('topen', 'mdi:arrow-top-right', this._t('open'), okO) + btn('tstop', 'mdi:stop', this._t('stop'), okS) + btn('tclose', 'mdi:arrow-bottom-left', this._t('close'), okC) + '</div>' +
         // konum destekleyen kanat motorunda hazır açılar (durdurması olmayan motorda ara açı ancak böyle verilir)
-        ((tt ? TF & LP_COV_F.tpos : TF & LP_COV_F.pos) ? '<div class="tpre">' + [0, 25, 50, 75, 100].map((v) => '<div data-ta="' + v + '">%' + v + '</div>').join('') + '</div>' : '') + '</div>';
+        ((tt ? TF & LP_COV_F.tpos : TF & LP_COV_F.pos) ? '<div class="tpre">' + [0, 25, 50, 75, 100].map((v) => '<div data-ta="' + v + '">' + this._pc(v) + '</div>').join('') + '</div>' : '') + '</div>';
     }
     this._pan.innerHTML = h;
     this._bind();
@@ -250,7 +251,7 @@ class LemurCoverPopup extends LemurLightPopup {
       else { e.style.left = s.left + '%'; e.style.width = s.w + '%'; e.style.transform = 'scaleX(' + s.sc.toFixed(2) + ')'; }
     });
     const pc = R.querySelector('[data-pct]');
-    if (pc) pc.textContent = (this._ft() & LP_COV_F.pos ? '%' + p : (p > 0 ? this._t('isOpen') : this._t('isClosed'))) + (this._tiltOk() && typeof t === 'number' ? ' · ' + this._t('tilt').toLowerCase() + ' %' + t : '');
+    if (pc) pc.textContent = (this._ft() & LP_COV_F.pos ? this._pc(p) : (p > 0 ? this._t('isOpen') : this._t('isClosed'))) + (this._tiltOk() && typeof t === 'number' ? ' · ' + this._t('tilt').toLowerCase() + ' ' + this._pc(t) : '');
   }
   _sync(onlyIfChanged) {
     const R = this._pan; if (!R || !R.querySelector('[data-w]')) return;
@@ -271,7 +272,7 @@ class LemurCoverPopup extends LemurLightPopup {
     const o = R.querySelector('[data-cv="open"]'), c = R.querySelector('[data-cv="close"]');
     if (o) o.classList.toggle('on', s === 'opening');
     if (c) c.classList.toggle('on', s === 'closing');
-    const tl = R.querySelector('[data-tl]'); if (tl) tl.textContent = typeof t === 'number' ? '%' + t : '';
+    const tl = R.querySelector('[data-tl]'); if (tl) tl.textContent = typeof t === 'number' ? this._pc(t) : '';
     Array.prototype.forEach.call(R.querySelectorAll('[data-ta]'), (el) => el.classList.toggle('on', typeof t === 'number' && Math.abs(t - +el.getAttribute('data-ta')) <= 5));
     const s2 = st2 ? st2.state : '', to = R.querySelector('[data-cv="topen"]'), tc = R.querySelector('[data-cv="tclose"]');   // ayrı kanat motoru hareket ederken
     if (to) to.classList.toggle('on', s2 === 'opening');
