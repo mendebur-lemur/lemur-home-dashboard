@@ -1,10 +1,10 @@
 {
   "domain": "lemur_home_dashboard",
   "name": "Lemur Home Dashboard",
+  "after_dependencies": ["energy", "recorder"],
   "codeowners": ["@mendebur-lemur"],
   "config_flow": true,
   "dependencies": ["http", "frontend", "panel_custom", "websocket_api"],
-  "after_dependencies": ["energy", "recorder"],
   "documentation": "https://github.com/mendebur-lemur/lemur-home-dashboard",
   "integration_type": "service",
   "iot_class": "calculated",
