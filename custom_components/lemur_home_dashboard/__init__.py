@@ -581,7 +581,7 @@ async def ws_energy_import(hass, connection, msg):
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/learn_start",
-        vol.Required("id"): vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$")),
+        vol.Required("device"): vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$")),   # not "id": that is the message's own number
         vol.Required("kind"): vol.In(["light", "states", "avg"]),
         vol.Optional("entity", default=""): vol.Any("", vol.All(str, vol.Match(r"^[a-z0-9_]+\.[a-z0-9_]+$"))),
         vol.Required("plug"): vol.All(str, vol.Match(r"^sensor\.[a-z0-9_]+$")),
@@ -596,7 +596,7 @@ def ws_learn_start(hass, connection, msg):
         connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
         return
     try:
-        r = d.learning.start(msg["id"], msg["kind"], msg["entity"], msg["plug"], msg["interval"])
+        r = d.learning.start(msg["device"], msg["kind"], msg["entity"], msg["plug"], msg["interval"])
     except ValueError as err:
         connection.send_error(msg["id"], str(err), str(err))
         return
@@ -614,7 +614,7 @@ async def ws_learn_status(hass, connection, msg):
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/learn_ctl",
-        vol.Required("id"): str,
+        vol.Required("device"): str,
         vol.Required("action"): vol.In(["pause", "resume", "cancel", "stop", "clear", "skipfx"]),
     }
 )
@@ -625,7 +625,7 @@ async def ws_learn_ctl(hass, connection, msg):
     try:
         if d is None:
             raise ValueError("not_loaded")
-        await d.learning.control(msg["id"], msg["action"])
+        await d.learning.control(msg["device"], msg["action"])
     except ValueError as err:
         connection.send_error(msg["id"], str(err), str(err))
         return

@@ -101,8 +101,8 @@ const ADM = {
     lrPoolNote: 'Hazır ölçüm kartlarda "~" ile görünür. Kendi ölçümün her zaman havuzdakinin önüne geçer.', lrPlug: 'Ölçen priz',
     lrC1: 'Priz değer gönderiyor', lrC1ok: '{s} saniyede bir · şu an {w}', lrC1wait: 'Şu an {w} · aralık ölçülüyor', lrC1T: 'Güç ölçen prizi seç',
     lrC2: 'Prizde yalnız bu cihaz var', lrC2T: 'Başka bir şey bağlıysa ölçüm yanlış çıkar', lrC2Ts: 'Soundbar ya da TV kutusu da bağlıysa onları başka prize al', lrC3: 'Cihaz bu prizde', lrC3T: 'Dene ile cihaz bir kez açılıp kapanır; prizin değiştiği görülür', lrTest: 'Dene',
-    lrWarn: 'Tam ölçüm: {n} adım, yaklaşık {e}. Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm Home Assistant\'ta sürer, tableti kapatabilirsin.', lrStHow: 'Cihazı her zamanki gibi kullan. Panel prizi ve cihazın durumunu birlikte dinler, her durumun ortalamasını tutar. Bir durumda 2 dakika veri olunca yeşil olur.',
-    lrStartL: 'Ölçmeye başla', lrStartS: 'Öğrenmeye başla', lrWhite: 'Beyaz tonlar', lrColor: 'Renkler · doygunluk %{s}', lrBri: 'Parlaklık',
+    lrWarn: 'Tam ölçüm: {n} adım, yaklaşık {e}. Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm arka planda sürer.', lrStHow: 'Cihazı her zamanki gibi kullan. Panel prizi ve cihazın durumunu birlikte dinler, her durumun ortalamasını tutar. Bir durumda 2 dakika veri olunca yeşil olur.',
+    lrStartL: 'Ölçmeye başla', lrNeedPlug: 'Başlamak için güç ölçen prizi seç.', lrNeedOnly: 'Başlamak için "Prizde yalnız bu cihaz var"ı işaretle.', lrNeedTest: 'Başlamak için Dene\'ye bas; prizin değiştiği görülmeli.', lrStartS: 'Öğrenmeye başla', lrWhite: 'Beyaz tonlar', lrColor: 'Renkler · doygunluk %{s}', lrBri: 'Parlaklık',
     lrErrRun_external: 'Işık başka bir yerden değiştirildi; ölçüm durdu. Yeniden başlatabilirsin.', lrErrRun_plug_silent: 'Priz bir süredir değer göndermiyor; ölçüm durdu.', lrErrRun_no_light: 'Işık bulunamadı.', lrErrRun_x: 'Ölçüm durdu ({e}).', lrAgain: 'Yeniden ölç',
     lrNowSb: 'Işık kapalı, bekleme okunuyor', lrNowProbe: 'Yoklama: {c} %100', lrC_white: 'Beyaz', lrC_red: 'Kırmızı', lrC_green: 'Yeşil', lrC_blue: 'Mavi', lrNowCt: '{k} K, %{b}', lrNowHs: '{h}° renk, doygunluk %{s}, %{b}', lrNowBr: 'Parlaklık %{b}',
     lrPlan: 'Renk farkı %{d}; plan: {n} ölçüm.', lrPaused: 'Duraklatıldı; ışık eski durumunda. Devam edince kaldığı yerden sürer.', lrDone: 'Ölçülen', lrLeft: 'Kalan', lrStandby: 'Bekleme', lrRepeats: 'Tekrarlanan adım',
@@ -113,7 +113,7 @@ const ADM = {
     lrNotSent: 'Gönderilmeyen', lrNot1: 'Ev, oda ve cihaz adları', lrNot2: 'Konum, IP ve kullanıcı bilgisi', lrNot3: 'Başka hiçbir Home Assistant verisi', lrBack: 'Işık eski durumuna döndü. Prizi başka cihaza takabilirsin.', lrSaveShare: 'Kaydet ve gönder',
     lrNowState: 'Şu an: {s}', lrState: 'Durum', lrGot: 'Toplanan', lrAvg: 'Ortalama', lrStHint: 'Görülmeyen durumlar "Diğer durumlar" değerini alır. En az 1 dakika verisi olan durumlar kaydedilir.', lrFinish: 'Bitir ve kaydet',
     lrPillDone: 'Ölçüm bitti · kaydet', lrPillErr: 'Ölçüm durdu', lrPillSt: 'Öğreniyor · {t}', lrPillL: 'Ölçülüyor · %{p}',
-    lrBoxDone: 'Ölçüm bitti; sonucu görüp kaydet.', lrBoxSt: 'Öğreniyor: {t} veri toplandı. Cihazı normal kullan.', lrBoxRun: 'Ölçülüyor: %{p}, kalan ~{e}. Tableti kapatabilirsin.',
+    lrBoxDone: 'Ölçüm bitti; sonucu görüp kaydet.', lrBoxSt: 'Öğreniyor: {t} veri toplandı. Cihazı normal kullan.', lrBoxRun: 'Ölçülüyor: %{p}, kalan ~{e}. Arka planda sürer.',
     lrBoxOwnL: 'Kendi ölçümün kullanılıyor ({n} nokta).', lrBoxOwnS: 'Öğrenilen {n} durum kullanılıyor.', lrBoxPool: 'Hazır ölçüm kullanılıyor. İstersen kendin ölçebilirsin.',
     lrBoxL: 'Bu ışık şu an tahmin. Önce ortak havuza bakılır; yoksa güç ölçen bir prizle bütün renk ve parlaklıklarda ölçülür.', lrBoxS: 'Bu cihaz şu an tahmin. Güç ölçen bir prize takıp birkaç saat normal kullan; her durumun ortalaması kendiliğinden dolar.',
     lrBoxTL: 'Prizle ölç', lrBoxTS: 'Prizle öğren', lrSee: 'İlerlemeyi gör', lrRe: 'Yeniden öğren', lrGo: 'Öğren', lrSaveFirst: 'Önce cihazı kaydet', lrOwnTag: 'ölçüldü', lrTblTag: 'tablo',
@@ -122,8 +122,8 @@ const ADM = {
     lrPoolNoteStrip: 'Bekleme (kumanda kutusu) aynı kalır, üstü uzunluğa göre ölçeklenir ama adaptörün gücünü geçmez. Kendi ölçümün her zaman havuzdakinin önüne geçer.',
     lrCapQ: 'Adaptörün gücü', lrCapMine: 'Adaptörün gücü (isteğe bağlı)', lrCapT: 'Adaptörün etiketinde yazar (ör. 24 V × 1 A = 24 W). Şerit uzasa da toplam güç bunu geçmez; uzatmalı şeritlerde parlaklık bu sınıra göre kısılır.', lrSent7: 'adaptör {w} W',
     lrSubA: 'Uzun süreli ortalama', lrErr_plug_busy: 'Bu priz şu an başka bir cihazı öğreniyor', lrErr_bridge_busy: 'Aynı köprüdeki bir ışık şu an ölçülüyor; bitince başlat', lrPlugBusy: 'şu an {n} öğreniyor',
-    lrAvgHow: 'Panel başlangıç zamanını not eder; ortalamayı Home Assistant\'ın priz kayıtlarından hesaplar. Home Assistant yeniden başlasa da, tablet kapansa da sürer. En az 1 gün, en iyisi 1 hafta.',
-    lrWarnFx: 'Tam ölçüm: {n} adım, yaklaşık {e}; bunun {f} adımı ışığın kendi efektleri (her biri yarım dakika dinlenir, istersen atlarsın). Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm Home Assistant\'ta sürer, tableti kapatabilirsin.',
+    lrAvgHow: 'Panel başlangıç zamanını not eder; ortalamayı Home Assistant\'ın priz kayıtlarından hesaplar. Arka planda sürer; Home Assistant yeniden başlasa da devam eder. En az 1 gün, en iyisi 1 hafta.',
+    lrWarnFx: 'Tam ölçüm: {n} adım, yaklaşık {e}; bunun {f} adımı ışığın kendi efektleri (her biri yarım dakika dinlenir, istersen atlarsın). Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm arka planda sürer.',
     lrNowFx: 'Efekt: {e}, %100 · ortalama alınıyor', lrNowFxb: 'Efekt: {e}, %{b} · parlaklık eğrisi', lrSkipFx: 'Efektleri atla', lrSkipFxT: 'Ölçülen efektler kalır, kalanlar ortalamayla hesaplanır', lrFxT: 'Efektler · {i} / {n}', lrFxAvg: 'Efektlerin ortalaması ({n})', lrFx50: 'Efektte %50 parlaklık',
     lrAvgSince: '{t} boyunca ortalama', lrQ_early: 'Henüz erken', lrQ_earlyT: 'İlk gün dolmadı; buzdolabı gibi cihazlarda gece-gündüz ve kompresör döngüleri henüz oturmadı.', lrQ_mid: 'Kabaca doğru', lrQ_midT: 'Bir günü geçti. Birkaç gün daha beklersen değer oturur; bir hafta en doğrusu.', lrQ_ok: 'Oturdu', lrQ_okT: 'Son 24 saatin ortalaması toplam ortalamadan %3\'ten az sapıyor. İstersen şimdi bitirebilirsin.',
     lrAvgKwh: 'Bu sürede', lrAvgDay: 'Günde', lrAvgYear: 'Yılda', lrAvg24: 'Son 24 saat', lrAvgNow: 'Şu an', lrAvgNote: 'Bitirince cihaz ölçülen ortalama watt ile "Sabit" türüne geçer.',
@@ -225,8 +225,8 @@ const ADM = {
     lrPoolNote: 'A ready measurement shows with "~" on the cards. Your own measurement always comes first.', lrPlug: 'Measuring plug',
     lrC1: 'The plug sends values', lrC1ok: 'every {s} s · now {w}', lrC1wait: 'Now {w} · measuring the interval', lrC1T: 'Pick the plug that measures power',
     lrC2: 'Only this device is on the plug', lrC2T: 'Anything else plugged in makes the measurement wrong', lrC2Ts: 'If a soundbar or TV box is on it too, move them to another plug', lrC3: 'The device is on this plug', lrC3T: 'Try turns the device on and off once and checks that the plug changes', lrTest: 'Try',
-    lrWarn: 'Full measure: {n} steps, about {e}. Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs inside Home Assistant; you can close the tablet.', lrStHow: 'Use the device as usual. The dashboard listens to the plug and the device\'s state together and keeps an average per state. A state turns green with 2 minutes of data.',
-    lrStartL: 'Start measuring', lrStartS: 'Start learning', lrWhite: 'White tones', lrColor: 'Colors · saturation {s}%', lrBri: 'Brightness',
+    lrWarn: 'Full measure: {n} steps, about {e}. Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs in the background.', lrStHow: 'Use the device as usual. The dashboard listens to the plug and the device\'s state together and keeps an average per state. A state turns green with 2 minutes of data.',
+    lrStartL: 'Start measuring', lrNeedPlug: 'To start, pick the plug that measures power.', lrNeedOnly: 'To start, tick "Only this device is on the plug".', lrNeedTest: 'To start, press Try; the plug has to change.', lrStartS: 'Start learning', lrWhite: 'White tones', lrColor: 'Colors · saturation {s}%', lrBri: 'Brightness',
     lrErrRun_external: 'The light was changed from elsewhere; measuring stopped. You can start again.', lrErrRun_plug_silent: 'The plug has not sent a value for a while; measuring stopped.', lrErrRun_no_light: 'Light not found.', lrErrRun_x: 'Measuring stopped ({e}).', lrAgain: 'Measure again',
     lrNowSb: 'Light off, reading standby', lrNowProbe: 'Probe: {c} 100%', lrC_white: 'White', lrC_red: 'Red', lrC_green: 'Green', lrC_blue: 'Blue', lrNowCt: '{k} K, {b}%', lrNowHs: '{h}° color, saturation {s}%, {b}%', lrNowBr: 'Brightness {b}%',
     lrPlan: 'Color difference {d}%; plan: {n} measurements.', lrPaused: 'Paused; the light is back as it was. Resuming continues where it stopped.', lrDone: 'Measured', lrLeft: 'Left', lrStandby: 'Standby', lrRepeats: 'Repeated steps',
@@ -237,7 +237,7 @@ const ADM = {
     lrNotSent: 'Not sent', lrNot1: 'Home, room and device names', lrNot2: 'Location, IP and user details', lrNot3: 'Any other Home Assistant data', lrBack: 'The light is back as it was. You can move the plug to another device.', lrSaveShare: 'Save and send',
     lrNowState: 'Now: {s}', lrState: 'State', lrGot: 'Collected', lrAvg: 'Average', lrStHint: 'States not seen take the "Other states" value. States with at least a minute of data are saved.', lrFinish: 'Finish and save',
     lrPillDone: 'Measured · save', lrPillErr: 'Measuring stopped', lrPillSt: 'Learning · {t}', lrPillL: 'Measuring · {p}%',
-    lrBoxDone: 'Measuring finished; review and save the result.', lrBoxSt: 'Learning: {t} of data so far. Use the device as usual.', lrBoxRun: 'Measuring: {p}%, about {e} left. You can close the tablet.',
+    lrBoxDone: 'Measuring finished; review and save the result.', lrBoxSt: 'Learning: {t} of data so far. Use the device as usual.', lrBoxRun: 'Measuring: {p}%, about {e} left. It runs in the background.',
     lrBoxOwnL: 'Your own measurement is in use ({n} points).', lrBoxOwnS: '{n} learned states are in use.', lrBoxPool: 'A ready measurement is in use. You can measure it yourself.',
     lrBoxL: 'This light is an estimate. The shared pool is checked first; otherwise a plug that measures power measures it in every color and brightness.', lrBoxS: 'This device is an estimate. Plug it into a plug that measures power and use it as usual for a few hours; each state\'s average fills in by itself.',
     lrBoxTL: 'Measure with a plug', lrBoxTS: 'Learn with a plug', lrSee: 'See progress', lrRe: 'Learn again', lrGo: 'Learn', lrSaveFirst: 'Save the device first', lrOwnTag: 'measured', lrTblTag: 'table',
@@ -246,8 +246,8 @@ const ADM = {
     lrPoolNoteStrip: 'Standby (the controller) stays the same; the rest scales with the length but never above the adapter\'s power. Your own measurement always comes first.',
     lrCapQ: 'Adapter power', lrCapMine: 'Adapter power (optional)', lrCapT: 'Printed on the adapter (e.g. 24 V × 1 A = 24 W). However long the strip, the total stays under it; extended strips get dimmed to that limit.', lrSent7: 'adapter {w} W',
     lrSubA: 'Long average', lrErr_plug_busy: 'This plug is learning another device right now', lrErr_bridge_busy: 'A light on the same bridge is being measured; start when it finishes', lrPlugBusy: 'learning {n} now',
-    lrAvgHow: 'The dashboard notes the start and works out the average from Home Assistant\'s records of the plug. It goes on through restarts and with the tablet off. At least a day, ideally a week.',
-    lrWarnFx: 'Full measure: {n} steps, about {e}; {f} of them are the light\'s own effects (each listened to for half a minute; you can skip them). Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs inside Home Assistant; you can close the tablet.',
+    lrAvgHow: 'The dashboard notes the start and works out the average from Home Assistant\'s records of the plug. It runs in the background, through restarts too. At least a day, ideally a week.',
+    lrWarnFx: 'Full measure: {n} steps, about {e}; {f} of them are the light\'s own effects (each listened to for half a minute; you can skip them). Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs in the background.',
     lrNowFx: 'Effect: {e}, 100% · averaging', lrNowFxb: 'Effect: {e}, {b}% · brightness curve', lrSkipFx: 'Skip effects', lrSkipFxT: 'Measured effects are kept; the rest use the average', lrFxT: 'Effects · {i} / {n}', lrFxAvg: 'Effects on average ({n})', lrFx50: 'Effects at 50% brightness',
     lrAvgSince: 'average over {t}', lrQ_early: 'Too early', lrQ_earlyT: 'Less than a day; day and night and compressor cycles have not evened out yet.', lrQ_mid: 'Roughly right', lrQ_midT: 'Past a day. A few more days make it settle; a week is best.', lrQ_ok: 'Settled', lrQ_okT: 'The last 24 hours are within 3% of the overall average. You can finish now.',
     lrAvgKwh: 'So far', lrAvgDay: 'Per day', lrAvgYear: 'Per year', lrAvg24: 'Last 24 hours', lrAvgNow: 'Now', lrAvgNote: 'When finished, the device becomes "Fixed" with the measured average watts.',
@@ -1429,7 +1429,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _lrnSame(id, ent) {   // aynı modeldeki diğer ışıklar
     const me = this._lrnDev(ent), E = this._hass.entities || {}, D = this._hass.devices || {};
     if (!me.man || !(me.model || me.model_id)) return [];
-    return Object.keys(this._hass.states).filter((x) => x.indexOf('light.') === 0 && x !== ent && E[x] && E[x].device_id && D[E[x].device_id]).filter((x) => {
+    const myDev = E[ent] ? E[ent].device_id : null;   // aynı cihazın parçaları (segmentler) ayrı ışık değil
+    return Object.keys(this._hass.states).filter((x) => x.indexOf('light.') === 0 && x !== ent && E[x] && E[x].device_id && E[x].device_id !== myDev && D[E[x].device_id] && !/_segment_?\d*$/.test(x)).filter((x) => {
       const d = D[E[x].device_id]; return d.manufacturer === me.man && (d.model || '') === me.model && (d.model_id || '') === me.model_id;
     });
   }
@@ -1480,14 +1481,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   async _lrnStart() {
     const L = this._lrn;
     try {
-      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_start', id: L.id, kind: L.kind, entity: L.entity || '', plug: L.plug, interval: L.iv || 3 });
+      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_start', device: L.id, kind: L.kind, entity: L.entity || '', plug: L.plug, interval: L.iv || 3 });
       L.step = 'run'; this._lrnJ = ''; this._lrnPoll();
     } catch (err) { const c = (err && err.code) || 'x'; this._toast(this._t(['busy', 'too_many', 'plug', 'entity', 'plug_busy', 'bridge_busy'].indexOf(c) >= 0 ? 'lrErr_' + c : 'lrErr_x'), false); }
     this._render();
   }
   _lrnCtl(action) {
     const L = this._lrn; if (!L) return Promise.resolve();
-    return this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: action }).then((r) => { this._lrnS = r || {}; this._lrnJ = ''; this._render(); }, () => {});
+    return this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', device: L.id, action: action }).then((r) => { this._lrnS = r || {}; this._lrnJ = ''; this._render(); }, () => {});
   }
   // sonucu cihazın kaydına yaz (ve aynı modeldekilere)
   async _lrnSave() {
@@ -1511,12 +1512,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       });
     } else if (L.kind === 'avg') {
       if (!run || run.avg === null || run.avg === undefined) return;
-      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'stop' }).catch(() => {});
+      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', device: L.id, action: 'stop' }).catch(() => {});
       E[L.id] = Object.assign({}, cur, { kind: 'fixed', w: Math.round(run.avg * 100) / 100, src: 'own' });
       ['year', 'k100', 'week', 'entity'].forEach((k) => { delete E[L.id][k]; });
     } else {
       if (!run) return;
-      if (run.phase === 'run') await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'stop' }).then((r) => { this._lrnS = r || {}; }).catch(() => {});
+      if (run.phase === 'run') await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', device: L.id, action: 'stop' }).then((r) => { this._lrnS = r || {}; }).catch(() => {});
       const R = this._lrnRun(L.id) || run, rows = [];
       Object.keys(R.states || {}).forEach((s) => { const x = R.states[s]; if (x.sec >= 60 && x.avg !== null) rows.push({ s: s.slice(0, 40), w: Math.round(x.avg * 100) / 100 }); });
       const off = rows.filter((x) => ['off', 'standby', 'unavailable'].indexOf(x.s) >= 0).map((x) => x.w);
@@ -1526,7 +1527,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     if (L.share && !(L.strip && !(L.len > 0)) && !(L.pool && L.pool.use)) this._lrnShare();
     await this._commit('estimates', E);
-    await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'clear' }).catch(() => {});
+    await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', device: L.id, action: 'clear' }).catch(() => {});
     this._lrnJ = ''; this._lrn = null; this._enE = null;
     LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass);
     this._toast(this._t('lrSaved')); this._lrnPoll(); this._render();
@@ -1596,7 +1597,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (L.kind === 'light') h += '<div class="lrwarn">' + t(nfx ? 'lrWarnFx' : 'lrWarn', { e: this._lrnEta(eta), n: n, f: nfx }) + '</div>';
     else h += '<div class="hint">' + t(L.kind === 'avg' ? 'lrAvgHow' : 'lrStHow') + '</div>';
     const ready = sent && L.only && (L.kind === 'avg' || L.tested === 2);
-    h += '<div class="acts"><span class="grow"></span><button class="btn pri" data-a="lrstart"' + (ready ? '' : ' disabled') + '>' + t(L.kind === 'light' ? 'lrStartL' : 'lrStartS') + '</button></div>';
+    const need = ready ? '' : !sent ? 'lrNeedPlug' : !L.only ? 'lrNeedOnly' : 'lrNeedTest';
+    h += '<div class="acts">' + (need ? '<span class="hint lrneed">' + t(need) + '</span>' : '') + '<span class="grow"></span><button class="btn pri" data-a="lrstart"' + (ready ? '' : ' disabled') + '>' + t(L.kind === 'light' ? 'lrStartL' : 'lrStartS') + '</button></div>';
     return h;
   }
   _lrnGrid(tb, cur) {   // ölçüm tablosu ızgarası (hücre rengi watt'a göre)

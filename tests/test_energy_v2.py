@@ -242,3 +242,25 @@ def test_library_profiles(tmp_path):
     assert fx["kind"] == "fixed" and fx["w"] == 12
     fx2 = EST.convert_entry({"entity_id": "select.yazici", "name": "Yazıcı", "mode": "fixed", "fixed": {"power": 12}}, 12, None)
     assert fx2["kind"] == "states" and fx2["other"] == 12 and EST.power(fx2, type("S", (), {"state": "idle", "attributes": {}})()) == 12
+
+
+async def test_learn_ws(hass: HomeAssistant, hass_ws_client, setup_lhd):
+    """The learn commands over the websocket: the device goes in "device", not "id" (that is the message number)."""
+    await async_setup_component(hass, "http", {})
+    hass.states.async_set("sensor.priz_power", "0.0", {"unit_of_measurement": "W", "device_class": "power"})
+    hass.states.async_set("climate.oda", "off", {})
+    ws = await hass_ws_client(hass)
+    await ws.send_json({"id": 1, "type": "lemur_home_dashboard/learn_start", "device": "oda_klima", "kind": "states", "entity": "climate.oda", "plug": "sensor.priz_power", "interval": 3})
+    r = await ws.receive_json()
+    assert r["success"], r
+    await ws.send_json({"id": 2, "type": "lemur_home_dashboard/learn_status"})
+    r = await ws.receive_json()
+    assert "oda_klima" in r["result"]
+    # the same plug for another device is refused with a code the dashboard shows
+    hass.states.async_set("climate.oda2", "off", {})
+    await ws.send_json({"id": 3, "type": "lemur_home_dashboard/learn_start", "device": "oda2", "kind": "states", "entity": "climate.oda2", "plug": "sensor.priz_power"})
+    r = await ws.receive_json()
+    assert not r["success"] and r["error"]["code"] == "plug_busy"
+    await ws.send_json({"id": 4, "type": "lemur_home_dashboard/learn_ctl", "device": "oda_klima", "action": "cancel"})
+    r = await ws.receive_json()
+    assert r["success"], r
