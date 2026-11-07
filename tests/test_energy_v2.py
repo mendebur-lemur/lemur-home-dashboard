@@ -207,6 +207,30 @@ def test_library_profiles(tmp_path):
     assert p["mode"] == "linear" and p["linear"] == {"min_power": 0.8, "max_power": 9.7} and p["standby_power"] == 0.28
     assert EI2.profile_data(tmp_path, "govee", "Bulb X")["linear"]["max_power"] == 9.7   # by alias
     assert EI2.profile_data(tmp_path, "govee", "nope") is None
+    # newer downloads: <model>/.powercalc/current/
+    n = tmp_path / "signify" / "BSB002" / ".powercalc" / "current"
+    n.mkdir(parents=True)
+    (n / "model.json").write_text(_j.dumps({"calculation_strategy": "fixed", "fixed_config": {"power": 1.74}}))
+    g2 = tmp_path / "govee" / "H61F5" / ".powercalc" / "current"
+    g2.mkdir(parents=True)
+    (g2 / "model.json").write_text(_j.dumps({"calculation_strategy": "lut", "standby_power": 1.2, "name": "Strip 2"}))
+    with gzip.open(g2 / "color_temp.csv.gz", "wt") as f:
+        f.write("bri,mired,watt\n1,153,4.8\n255,153,25.8\n")
+    with gzip.open(g2 / "effect.csv.gz", "wt") as f:
+        f.write("effect,bri,watt\nRainbow,255,14.2\nRainbow,128,7.5\n")
+    p2 = EI2.profile_data(tmp_path, "govee", "H61F5")
+    assert p2["standby_power"] == 1.2 and p2["linear"]["max_power"] == 25.8 and "fx" in p2["lut"]
+    assert EI2.profile_data(tmp_path, "govee", "Strip 2")["standby_power"] == 1.2   # by name
+    assert EI2.profile_data(tmp_path, "signify", "BSB002")["fixed"]["power"] == 1.74
+    # a sub profile (LST002/230v) inherits its parent's strategy and standby
+    par = tmp_path / "signify" / "LST002" / ".powercalc" / "current"
+    (par / "230v").mkdir(parents=True)
+    (par / "model.json").write_text(_j.dumps({"calculation_strategy": "lut", "standby_power": 0.18}))
+    (par / "230v" / "model.json").write_text(_j.dumps({"name": "Strip 230V"}))
+    with gzip.open(par / "230v" / "color_temp.csv.gz", "wt") as f:
+        f.write("bri,mired,watt\n1,153,1.0\n255,153,20.0\n")
+    p3 = EI2.profile_data(tmp_path, "signify", "LST002/230v")
+    assert p3["standby_power"] == 0.18 and p3["linear"]["max_power"] == 20.0
     hp = EI2.profile_data(tmp_path, "apple", "A2374")
     r = EST.convert_entry({"entity_id": "media_player.hp", "name": "HomePod", **hp}, 0.65, None)
     assert r["kind"] == "states" and r["states"] == [{"s": "playing", "w": 2.6}] and r["other"] == 0.65

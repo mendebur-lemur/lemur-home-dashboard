@@ -52,6 +52,14 @@ def _read_json(p: Path) -> dict:
         return {}
 
 
+def _cur(d: Path | None) -> Path | None:
+    """Newer downloads keep the files in <model>/.powercalc/current/; older ones directly in <model>/."""
+    if d is None or (d / "model.json").is_file():
+        return d
+    c = d / ".powercalc" / "current"
+    return c if (c / "model.json").is_file() else d
+
+
 def _model_dir(root: Path, man: str, model: str) -> Path | None:
     mdir = _ci(root, man)
     if mdir is None:
@@ -61,15 +69,15 @@ def _model_dir(root: Path, man: str, model: str) -> Path | None:
     if d is None and parts:   # by an alias in the model files
         want = parts[0].casefold()
         for c in mdir.iterdir():
-            js = _read_json(c / "model.json") if c.is_dir() else {}
+            js = _read_json(_cur(c) / "model.json") if c.is_dir() and not c.name.startswith(".") else {}
             names = [str(x).casefold() for x in (js.get("aliases") or []) + (js.get("legacy_ids") or []) + [js.get("name") or ""]]
             if want in names:
                 d = c
                 break
     for sub in parts[1:]:
         if d is not None:
-            d = _ci(d, sub) or d
-    return d
+            d = _ci(_cur(d), sub) or _ci(d, sub) or d
+    return _cur(d)
 
 
 def _read_csv(d: Path, name: str) -> list[tuple] | None:
@@ -151,8 +159,13 @@ def profile_data(root: Path, man: str, model: str) -> dict | None:
     if d is None:
         return None
     js = _read_json(d / "model.json")
+    if not js.get("calculation_strategy") and (d.parent / "model.json").is_file():   # a sub profile (e.g. 230v) inherits its parent's settings
+        up = _read_json(d.parent / "model.json")
+        if up.get("calculation_strategy"):
+            js = {**up, **js}
     if not js.get("calculation_strategy"):
-        subs = [c for c in sorted(d.iterdir()) if c.is_dir() and (c / "model.json").is_file()]   # sub profiles: the first one
+        subs = [_cur(c) for c in sorted(d.iterdir()) if c.is_dir() and not c.name.startswith(".")]   # sub profiles: the first one
+        subs = [c for c in subs if c is not None and (c / "model.json").is_file()]
         if subs:
             js = {**js, **_read_json(subs[0] / "model.json")}
             d = subs[0]

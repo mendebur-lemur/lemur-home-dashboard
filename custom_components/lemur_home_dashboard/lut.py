@@ -53,7 +53,7 @@ def valid_lut(v: Any) -> dict:
         t = v["ct"]
         if not isinstance(t, dict):
             raise vol.Invalid("bad ct")
-        k, b = _sorted(_nums(t.get("k"), 12, 1000, 10000)), _sorted(_nums(t.get("b"), 16, 0, 100))
+        k, b = _sorted(_nums(t.get("k"), 40, 1000, 10000)), _sorted(_nums(t.get("b"), 16, 0, 100))
         w = t.get("w")
         if not isinstance(w, list) or len(w) != len(k):
             raise vol.Invalid("bad ct rows")
@@ -226,11 +226,13 @@ def from_csv(kind: str, rows: list[tuple]) -> dict | None:
     if kind == "br":
         return {"b": BRI, "w": [round(min(_near(rows, b * 2.55), key=lambda r: 0)[1], 2) for b in BRI]}
     if kind == "ct":
-        mireds = sorted({r[1] for r in rows})
-        ks = sorted({int(round(1e6 / m / 100.0) * 100) for m in (mireds[0], mireds[-1])})
-        lo, hi = ks[0], ks[-1]
-        grid = [k for k in KS if lo <= k <= hi] or [lo, hi]
-        grid = sorted(set([lo] + grid + [hi]))[:12]
+        # the white tones the profile was measured at (its curve can bend sharply between two of them), at most 40
+        mireds = sorted({r[1] for r in rows if r[1] > 0})
+        if not mireds:
+            return None
+        if len(mireds) > 40:
+            mireds = [mireds[round(i * (len(mireds) - 1) / 39)] for i in range(40)]
+        grid = sorted({min(10000, max(1000, int(round(1e6 / m / 10.0) * 10))) for m in mireds})
         w = []
         for k in grid:
             m = 1e6 / k

@@ -41,7 +41,7 @@ def test_table_power_and_schema():
 def test_from_csv():
     ct = [(b, m, round(b / 255 * 10 + (m - 153) / 347, 2)) for b in (1, 128, 255) for m in (153, 250, 370, 454, 500)]
     t = LUT.from_csv("ct", ct)
-    assert t["k"][0] == 2000 and t["k"][-1] == 6500 and len(t["w"]) == len(t["k"]) and len(t["w"][0]) == len(LUT.BRI)
+    assert t["k"][0] == 2000 and abs(t["k"][-1] - 6500) <= 50 and len(t["w"]) == len(t["k"]) and len(t["w"][0]) == len(LUT.BRI)
     hs = [(b, h, s, round(b / 255 * 10 + h / 65535, 2)) for b in (1, 255) for h in range(0, 65536, 6553) for s in (127, 254)]
     t2 = LUT.from_csv("hs", hs)
     assert len(t2["w"]) == 2 and len(t2["w"][0]) == 12
