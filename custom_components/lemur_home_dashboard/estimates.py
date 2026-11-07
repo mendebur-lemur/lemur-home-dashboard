@@ -22,6 +22,8 @@ from typing import Any
 
 import voluptuous as vol
 
+from . import lut as LUT
+
 KINDS = ("meas", "light", "states", "onoff", "fixed", "year", "cycle")
 MAX_ESTIMATES = 200
 MAX_CATS = 40
@@ -55,6 +57,8 @@ ESTIMATE_SCHEMA = vol.Schema(
         vol.Optional("k100"): vol.All(vol.Coerce(float), vol.Range(min=0, max=10000)),
         vol.Optional("week"): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
         vol.Optional("cat"): vol.Any(None, "", vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$"))),
+        vol.Optional("lut"): LUT.valid_lut,   # measured table of a light (Öğren, pool, import)
+        vol.Optional("src"): vol.All(str, vol.Length(max=40)),   # where the table came from: own | pool | library | import
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -134,6 +138,10 @@ def power(est: dict, state: Any = None) -> float:
         idle, mx = _f(est, "idle"), _f(est, "max")
         if not on:
             return idle
+        if est.get("lut") and state is not None:
+            w = LUT.power(est["lut"], dict(state.attributes or {}))
+            if w is not None:
+                return max(0.0, w)
         lo = _f(est, "min", idle) if est.get("min") is not None else idle
         bri = state.attributes.get("brightness") if state is not None else None
         try:
@@ -292,6 +300,15 @@ def convert_entry(d: dict, power_now: float | None, src_state: Any) -> dict | No
         mn, mx = _num(linear.get("min_power")) or 0.0, _num(linear.get("max_power")) or 0.0
         out.update(kind="states", entity=ent, states=[{"s": "playing", "w": round((mn + mx) / 2, 2)}], other=standby)
         return out
+    if dom == "light" and isinstance(d.get("lut"), dict):   # a measured table: kept as it is
+        try:
+            tb = LUT.valid_lut(d["lut"])
+        except vol.Invalid:
+            tb = None
+        if tb:
+            lo, hi = LUT.span(tb)
+            out.update(kind="light", entity=ent, idle=standby, min=round(lo, 2), max=round(hi, 2), lut=tb, src="import")
+            return out
     if mode == "linear" and dom == "light":
         mn, mx = _num(linear.get("min_power")), _num(linear.get("max_power"))
         out.update(kind="light", entity=ent, idle=standby, min=mn if mn is not None else standby, max=mx if mx is not None else (power_now or 10.0))

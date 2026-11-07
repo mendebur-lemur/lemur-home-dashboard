@@ -212,6 +212,7 @@ def test_library_profiles(tmp_path):
     assert r["kind"] == "states" and r["states"] == [{"s": "playing", "w": 2.6}] and r["other"] == 0.65
     lt = EST.convert_entry({"entity_id": "light.x", "name": "Lamba", **p}, 0, None)
     assert lt["kind"] == "light" and lt["max"] == 9.7 and lt["min"] == 0.8 and lt["idle"] == 0.28 and "check" not in lt
+    assert lt["src"] == "import" and lt["lut"]["ct"]["w"][-1][-1] == 9.7   # the measured table itself, not a straight line
     # a fixed device that is on in a state the other integration counts as on (a printer "idle")
     fx = EST.convert_entry({"entity_id": "sensor.yazici_durum", "name": "Yazıcı", "mode": "fixed", "fixed": {"power": 12}}, 12, None)
     assert fx["kind"] == "fixed" and fx["w"] == 12

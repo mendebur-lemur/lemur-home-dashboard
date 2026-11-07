@@ -299,6 +299,8 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 
 **Cihazlar:** güç ölçen cihazlar bulunur ve **Ekle** ile doğrudan gelir. Ölçmeyenler için sanal ölçüm: ışık (bekleme, en düşük ve en çok W, parlaklıkla), duruma göre (her durum için ayrı W; ör. TV oynatırken 95, duraklatınca 70 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim. Her biri için Home Assistant'ta güç ve enerji sensörü oluşur; kartlarda "~" ile görünür.
 
+**Öğren:** ölçmeyen akıllı bir cihaz bir kez güç ölçen prize takılıp öğretilir. Işıkta önce ortak havuza bakılır; yoksa bütün beyaz tonlar, renkler ve parlaklıklar sırayla ölçülür (Home Assistant'ta sürer, tablet kapansa da devam eder). Efektler de ölçülür. TV gibi cihazlarda her durumun ortalaması kullanırken toplanır; buzdolabı gibi sürekli açık cihazlarda prizin günlerce ortalaması alınır. Farklı prizlerle birkaç öğrenme birlikte sürer. Ölçümü isteğe bağlı olarak ortak havuza gönderebilirsin; şerit LED'ler metre başına tutulur.
+
 **Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için toplam güç ve kWh sensörü oluşur; cihazlar ve kategoriler Home Assistant Enerji ayarlarına kendiliğinden eklenir (Veri kaynağı → Enerji ayarlarıyla eşle).
 
 **Güneş ve batarya:** üretim, şebeke (tek sensör ya da alınan ve verilen ayrı) ve batarya sensörleri; akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.
@@ -314,6 +316,7 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 - **Son 12 ayın tüketimi (kWh)**: Faturanın arkasındaki grafikten.
 - **Tür** (Ölçen · Işık · Duruma göre · Aç / kapa · Sabit · Yıllık tüketim · Çevrim): Cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.
 - **Kategori**: Cihazın kategorisi; buradan yeni kategori de açılır.
+- **Şerit LED**: Öğren sonucunda: şeritte uzunluk ve adaptör gücü; havuzdan alınan tablo buna göre uyarlanır.
 - **Tek sensör** (Tek sensör · Alınan ve verilen ayrı · Yok): Şebeke ölçümü: artı/eksi tek sensör ya da alınan ve verilen ayrı.
 - **İşaret ters**: Batarya sensörü şarjı eksi gösteriyorsa.
 - **Uzun süre açık kalan**: İpucu: bu güçten fazlasını bu süreden uzun çeken cihaz (varsayılan 300 W, 3 saat).

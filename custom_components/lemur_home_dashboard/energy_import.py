@@ -20,6 +20,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.util import slugify
 
 from . import estimates as EST
+from . import lut as LUT
 
 SOURCE = "powercalc"
 
@@ -69,6 +70,40 @@ def _model_dir(root: Path, man: str, model: str) -> Path | None:
         if d is not None:
             d = _ci(d, sub) or d
     return d
+
+
+def _read_csv(d: Path, name: str) -> list[tuple] | None:
+    for fn, op in ((d / name, open), (d / (name + ".gz"), gzip.open)):
+        if fn.is_file():
+            try:
+                with op(fn, "rt", encoding="utf-8") as f:
+                    return LUT.parse_csv(f.read())
+            except (OSError, EOFError, ValueError):
+                continue
+    return None
+
+
+def table_of(d: Path) -> dict | None:
+    """The measured CSVs of a profile directory as our table."""
+    out = {}
+    for kind, name in (("ct", "color_temp.csv"), ("hs", "hs.csv"), ("br", "brightness.csv")):
+        rows = _read_csv(d, name)
+        t = LUT.from_csv(kind, rows) if rows else None
+        if t:
+            out[kind] = t
+    for fn, op in ((d / "effect.csv", open), (d / "effect.csv.gz", gzip.open)):
+        if out and fn.is_file() and "fx" not in out:
+            try:
+                with op(fn, "rt", encoding="utf-8") as f:
+                    fx = LUT.from_effect_csv(f.read())
+                if fx:
+                    out["fx"] = fx
+            except (OSError, EOFError, ValueError):
+                pass
+    try:
+        return LUT.valid_lut(out) if out else None
+    except Exception:  # noqa: BLE001 - a table we cannot use is left out
+        return None
 
 
 def _lut(d: Path) -> tuple[float, float] | None:
@@ -131,6 +166,9 @@ def profile_data(root: Path, man: str, model: str) -> dict | None:
         if mm is None:
             return None
         out.update(mode="linear", linear={"min_power": mm[0], "max_power": mm[1]})
+        tb = table_of(d)
+        if tb:
+            out["lut"] = tb
     elif strat == "linear":
         lc = dict(js.get("linear_config") or {})
         mm = _cal(lc.get("calibrate"))

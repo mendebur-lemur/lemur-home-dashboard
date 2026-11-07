@@ -25,6 +25,8 @@ from datetime import timedelta
 
 from . import energy_import as EI
 from . import estimates as EST
+from . import learn as LRN
+from . import pool as POOL
 from . import pets as P
 from . import safety as SF
 from . import twins as TW
@@ -52,7 +54,8 @@ _LOGGER = logging.getLogger(__name__)
 # pets / feed: feeding reminders (pets.py); older stored data simply has none
 # twins / walls: backup control and wall switches (twins.py)
 # estimates / ecats: energy devices (measured and virtual) and categories (estimates.py, sensor.py)
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": []}
+# energy_solar_src: the solar statistic the dashboard put into the energy settings; learn_avg: long averages running (learn.py)
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "learn_avg": {}}
 PLATFORMS = ["sensor", "button"]
 
 
@@ -65,6 +68,7 @@ class PanelData:
         self.data: dict[str, Any] = json.loads(json.dumps(DEFAULT_DATA))
         self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
+        self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (a restart ends a light run; long averages go on)
         self._prefs_unsub = None
 
     @callback
@@ -79,6 +83,12 @@ class PanelData:
                 val = stored.get(key)
                 if isinstance(val, type(default)):
                     self.data[key] = val
+        self.learning = LRN.Learning(self.hass, self.data.get("learn_avg"), self._save_learn)
+
+    def _save_learn(self, runs: dict) -> None:
+        if runs != self.data.get("learn_avg"):
+            self.data["learn_avg"] = runs
+            self.store.async_delay_save(lambda: self.data, 1.0)
 
     @callback
     def changed(self) -> None:
@@ -131,8 +141,8 @@ class PanelData:
                 prefs["device_consumption"] = [d for d in prefs.get("device_consumption") or [] if d.get("stat_consumption") not in drop]
             new = EST.build_prefs(prefs, self.estimates(), self.ecats(), st, owned)
             sol = EST.solar_energy_entity(st)
-            if self.data.get("energy_solar_src") != sol:   # which solar statistic is the dashboard's (taken out when it changes)
-                self.data["energy_solar_src"] = sol
+            if (self.data.get("energy_solar_src") or None) != sol:   # which solar statistic is the dashboard's (taken out when it changes)
+                self.data["energy_solar_src"] = sol or ""
                 self.store.async_delay_save(lambda: self.data, 1)
             if new["device_consumption"] == (mgr.data or {}).get("device_consumption") and new["energy_sources"] == (mgr.data or {}).get("energy_sources"):
                 return True
@@ -291,7 +301,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import):
+        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
 
@@ -344,6 +354,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     d = _data(hass)
     if d is not None:
         d.twins.stop()
+        await d.learning.async_stop()
         if d._prefs_unsub:
             d._prefs_unsub()
             d._prefs_unsub = None
@@ -564,3 +575,77 @@ async def ws_energy_import(hass, connection, msg):
     async_dispatcher_send(hass, SIGNAL_EST)
     synced = await data.async_sync_prefs(set(p["drop"]))
     connection.send_result(msg["id"], dict(p, applied=True, synced=synced))
+
+
+# ---- Enerji → Öğren: measure a device with a plug (learn.py) and the shared pool (pool.py) ----
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/learn_start",
+        vol.Required("id"): vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$")),
+        vol.Required("kind"): vol.In(["light", "states", "avg"]),
+        vol.Optional("entity", default=""): vol.Any("", vol.All(str, vol.Match(r"^[a-z0-9_]+\.[a-z0-9_]+$"))),
+        vol.Required("plug"): vol.All(str, vol.Match(r"^sensor\.[a-z0-9_]+$")),
+        vol.Optional("interval", default=2.0): vol.All(vol.Coerce(float), vol.Range(min=0.2, max=120)),
+    }
+)
+@websocket_api.require_admin
+@callback
+def ws_learn_start(hass, connection, msg):
+    d = _data(hass)
+    if d is None:
+        connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
+        return
+    try:
+        r = d.learning.start(msg["id"], msg["kind"], msg["entity"], msg["plug"], msg["interval"])
+    except ValueError as err:
+        connection.send_error(msg["id"], str(err), str(err))
+        return
+    connection.send_result(msg["id"], r.status())
+
+
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/learn_status"})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_learn_status(hass, connection, msg):
+    d = _data(hass)
+    connection.send_result(msg["id"], (await d.learning.async_status()) if d else {})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/learn_ctl",
+        vol.Required("id"): str,
+        vol.Required("action"): vol.In(["pause", "resume", "cancel", "stop", "clear", "skipfx"]),
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_learn_ctl(hass, connection, msg):
+    d = _data(hass)
+    try:
+        if d is None:
+            raise ValueError("not_loaded")
+        await d.learning.control(msg["id"], msg["action"])
+    except ValueError as err:
+        connection.send_error(msg["id"], str(err), str(err))
+        return
+    connection.send_result(msg["id"], await d.learning.async_status())
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/pool_lookup",
+        vol.Required("manufacturer"): vol.All(str, vol.Length(max=100)),
+        vol.Required("model"): vol.All(str, vol.Length(max=100)),
+        vol.Optional("model_id", default=""): vol.All(str, vol.Length(max=100)),
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_pool_lookup(hass, connection, msg):
+    try:
+        r = await POOL.lookup(hass, msg["manufacturer"], msg["model"], msg["model_id"])
+    except Exception as err:  # noqa: BLE001 - the page shows "not found"
+        _LOGGER.debug("Pool lookup failed: %s", err)
+        r = None
+    connection.send_result(msg["id"], r)

@@ -9,3 +9,4 @@ build.py export-ignore
 pytest.ini export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
+library/ export-ignore

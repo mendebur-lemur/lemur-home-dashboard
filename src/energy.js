@@ -132,6 +132,29 @@ function lpEnPeriodKwh(h, from, to) {
   return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: a.toISOString(), end_time: b.toISOString(), period: 'day', statistic_ids: M.cats.reduce((a, c) => a.concat(c.e ? [c.e] : c.es || []), []).filter((x) => !!x), types: ['change'], units: { energy: 'kWh' } })
     .then((r) => { let s = 0; Object.keys(r || {}).forEach((k) => (r[k] || []).forEach((p) => { if (isFinite(p.change)) s += Math.max(0, p.change); })); return Math.round(s * 10) / 10; }).catch(() => 0);
 }
+// ölçülmüş ışık tablosu (Öğren, ortak havuz, aktarma): entegrasyondaki lut.power ile aynı ara değer hesabı
+function lrLin(xs, ys, x) { if (xs.length === 1 || x <= xs[0]) return ys[0]; if (x >= xs[xs.length - 1]) return ys[ys.length - 1]; for (let i = 1; i < xs.length; i++) if (x <= xs[i]) return ys[i - 1] + (ys[i] - ys[i - 1]) * (x - xs[i - 1]) / (xs[i] - xs[i - 1]); return ys[ys.length - 1]; }
+function lrHue(hs, ys, h) { h = ((h % 360) + 360) % 360; if (hs.length === 1) return ys[0]; const xs = hs.concat([hs[0] + 360]), vs = ys.concat([ys[0]]); if (h < xs[0]) h += 360; return lrLin(xs, vs, h); }
+function lrPow(lut, a) {
+  if (!lut || typeof lut !== 'object') return null;
+  const bri = parseFloat(a.brightness), b = isFinite(bri) ? Math.max(0, Math.min(100, bri / 255 * 100)) : 100;
+  if (lut.fx !== undefined && lut.fx !== null && ['', 'None', 'none', 'off', 'Off', 'solid', 'Solid'].indexOf(String(a.effect === undefined || a.effect === null ? '' : a.effect)) < 0) {
+    const f = lut.fx; if (typeof f !== 'object') return +f;   // efekt: %100'deki gücü × efektlerin parlaklık eğrisi
+    const w = f.e && f.e[String(a.effect)] !== undefined ? +f.e[String(a.effect)] : +(f.avg || 0);
+    return w * (f.b && f.r ? lrLin(f.b, f.r, b) : (b < 100 ? b / 100 : 1));
+  }
+  const mode = String(a.color_mode || ''), hs = a.hs_color;
+  if (lut.hs && (['hs', 'xy', 'rgb', 'rgbw', 'rgbww'].indexOf(mode) >= 0 || (!mode && hs)) && hs && hs.length === 2) {
+    const t = lut.hs, per = t.w.map((plane) => lrHue(t.h, plane.map((row) => lrLin(t.b, row, b)), +hs[0] || 0));
+    const o = t.s.map((x, i) => i).sort((i, j) => t.s[i] - t.s[j]);
+    return lrLin(o.map((i) => t.s[i]), o.map((i) => per[i]), +hs[1] || 0);
+  }
+  if (lut.ct) { const t = lut.ct; let k = parseFloat(a.color_temp_kelvin); if (!isFinite(k) && parseFloat(a.color_temp) > 0) k = 1e6 / parseFloat(a.color_temp); if (!isFinite(k)) k = t.k[Math.floor(t.k.length / 2)]; return lrLin(t.k, t.w.map((row) => lrLin(t.b, row, b)), k); }
+  if (lut.br) return lrLin(lut.br.b, lut.br.w, b);
+  if (lut.hs) { const t = lut.hs; let i = 0; t.s.forEach((x, j) => { if (x < t.s[i]) i = j; }); return t.w[i].reduce((acc, row) => acc + lrLin(t.b, row, b), 0) / t.h.length; }
+  return null;
+}
+function lrCount(lut) { let n = 0; if (lut && lut.ct) n += lut.ct.k.length * lut.ct.b.length; if (lut && lut.hs) n += lut.hs.s.length * lut.hs.h.length * lut.hs.b.length; if (lut && lut.br) n += lut.br.b.length; if (lut && lut.fx && typeof lut.fx === 'object' && lut.fx.e) n += Object.keys(lut.fx.e).length; return n; }
 // tahmini cihazın gücü (yönetim panelindeki hesap; entegrasyondaki estimates.power ile aynı)
 function lpEnEstW(e, st) {
   const n = (k) => lpEnNumOf(e[k]);
@@ -143,6 +166,7 @@ function lpEnEstW(e, st) {
   const on = !!st && ['off', 'unavailable', 'unknown', 'standby', 'idle', 'closed', 'docked', 'none', ''].indexOf(String(st.state)) < 0;
   if (e.kind === 'light') {
     if (!on) return n('idle');
+    if (e.lut) { const v = lrPow(e.lut, st.attributes || {}); if (v !== null && isFinite(v)) return Math.max(0, v); }
     const lo = e.min !== undefined && e.min !== null && e.min !== '' ? n('min') : n('idle'), b = st.attributes.brightness;
     const f = b === undefined || b === null ? 1 : Math.max(0, Math.min(1, b / 255));
     return lo + (Math.max(n('max'), lo) - lo) * f;

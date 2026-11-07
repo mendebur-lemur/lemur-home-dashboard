@@ -1,0 +1,27 @@
+# Ortak havuza gelen ölçüm: yalnız biçim kontrolü. Havuza hiçbir şey otomatik eklenmez (haftalık inceleme: library/tools/review.py).
+name: Ölçüm kontrolü
+on:
+  issues:
+    types: [opened, edited]
+permissions:
+  issues: write
+  contents: read
+jobs:
+  check:
+    if: startsWith(github.event.issue.title, 'Ölçüm:') || contains(github.event.issue.labels.*.name, 'olcum')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            library/tools
+            custom_components/lemur_home_dashboard/lut.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install voluptuous==0.15.2
+      # gönderimin metni yalnız olay dosyasından okunur; komut satırına hiç girmez
+      - run: python library/tools/check.py --event "$GITHUB_EVENT_PATH" --post
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}

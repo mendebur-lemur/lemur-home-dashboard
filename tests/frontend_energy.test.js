@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur };', ctx);
+vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -261,4 +261,17 @@ test('tips: left on, night standby, yearly limit, hidden ones, off switch', () =
   SET.s = { energy: { tips: { left_w: 2000, standby_w: 300 } } };
   assert.strictEqual(E.lpEnTips(h, M, 'tr').length, 0);
   SET.s = {};
+});
+
+
+test('measured light table: same interpolation as the integration', () => {
+  const T = { ct: { k: [2700, 6500], b: [1, 50, 100], w: [[1, 8, 18], [1, 9, 20]] },
+    hs: { h: [0, 120, 240], s: [100, 50], b: [1, 50, 100], w: [[[1, 6, 12], [1, 7, 14], [1, 9, 18]], [[1, 7, 16], [1, 7, 16], [1, 8, 17]]] } };
+  assert.strictEqual(E.lrPow(T, { brightness: 255, color_mode: 'color_temp', color_temp_kelvin: 6500 }), 20);
+  assert.ok(Math.abs(E.lrPow(T, { brightness: 255, color_mode: 'color_temp', color_temp_kelvin: 4600 }) - 19) < 1e-9);
+  assert.strictEqual(E.lrPow(T, { brightness: 255, color_mode: 'hs', hs_color: [300, 100] }), 15);
+  assert.strictEqual(E.lrPow(T, { brightness: 255, color_mode: 'hs', hs_color: [0, 75] }), 14);
+  assert.strictEqual(E.lrCount(T), 24);
+  assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 0.4, max: 9, lut: T }, { state: 'on', attributes: { brightness: 255, color_mode: 'hs', hs_color: [120, 100] } }), 14);
+  assert.strictEqual(E.lpEnEstW({ kind: 'light', idle: 0.4, max: 9, lut: T }, { state: 'off', attributes: {} }), 0.4);
 });

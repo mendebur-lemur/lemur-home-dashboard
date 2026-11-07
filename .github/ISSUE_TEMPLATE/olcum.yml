@@ -1,0 +1,18 @@
+name: Işık ölçümü / Light measurement
+description: Panelin Öğren ile ölçtüğü bir ışığın tablosu. Panel doldurur; değiştirme. / Filled in by the dashboard's Learn; please don't edit.
+title: "Ölçüm: "
+labels: ["olcum"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Bu sayfayı panel hazırladı. Yalnız marka, model, ışığın özellikleri ve ölçüm tablosu gönderilir; ev ve cihaz adları yoktur. Biçim hemen kontrol edilir, haftalık incelemeden sonra ortak havuza eklenir.
+        This page was prepared by the dashboard. Only the brand, model, the light's features and the table are sent; no home or device names. The format is checked right away; it joins the shared pool after the weekly review.
+  - type: textarea
+    id: olcum
+    attributes:
+      label: Ölçüm / Measurement
+      description: Panelin hazırladığı veri / Data prepared by the dashboard
+      render: json
+    validations:
+      required: true

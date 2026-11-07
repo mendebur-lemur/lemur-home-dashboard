@@ -92,7 +92,42 @@ const ADM = {
     enDevN: '{n} cihaz ({m} ölçen, {v} sanal) · şu an ~{w}', enFoundP: '+{n} bulundu', enCatN: '{n} kategori · {u} kategorisiz', enSolN: 'Üretim şu an {w}', enSolNoS: 'Sensör seçilmedi', enOff: 'Kapalı',
     enSyncOn: 'Enerji ayarlarıyla eşleniyor', enSyncOff: 'Eşleme kapalı', enSrcT2: 'Kartlar panelin cihaz ve kategorilerinden dolar. Panel bunları Home Assistant Enerji ayarlarına da ekler; senin eklediğin diğer girişlere dokunmaz.', enSync: 'Enerji ayarlarıyla eşle', enSyncT: 'Cihazlar, kategoriler ve güneş üretimi Home Assistant\'ın Enerji panosunda da görünsün',
     enWNoEnt: 'Bu cihaz Home Assistant\'ta bulunamadı; adını kontrol et.', enWZero: 'Hiçbir duruma W yazılmadı; cihaz 0 W sayılır.', enCSame: 'Bu adla bir kategori zaten var', enMUsed: 'Bu güç sensörü başka bir cihazda kullanılıyor', enAddAllQ: 'Emin misin? {n} cihaz eklenecek',
-    enImpToDev: 'Cihazlara git', enGInv: 'İşaret ters', enGInvT: 'Sayaç şebekeye vermeyi artı gösteriyorsa aç'
+    enImpToDev: 'Cihazlara git', enGInv: 'İşaret ters', enGInvT: 'Sayaç şebekeye vermeyi artı gösteriyorsa aç',
+    lrNoEnt: 'Önce durumunu okuyan cihazı seç ve kaydet', lrH: '{h} sa {m} dk', lrM: '{m} dk', lrTestOk: 'Prizde {a} → {b} değişti. Cihaz bu prizde.', lrTestNo: 'Prizin değeri değişmedi ({a}). Cihaz bu prize takılı mı?',
+    lrErr_busy: 'Bu cihaz zaten ölçülüyor', lrErr_too_many: 'Aynı anda en çok 3 ölçüm olabilir', lrErr_plug: 'Priz değer göndermiyor', lrErr_entity: 'Cihaz bulunamadı', lrErr_x: 'Başlatılamadı', lrSaved: 'Kaydedildi',
+    lrTitle: 'Öğren · {n}', lrSubL: 'Bütün renk ve parlaklıklarda gerçek güç', lrSubS: 'Her durumun gerçek gücü', lrS_pool: 'Havuz', lrS_prep: 'Hazırlık', lrS_probe: 'Yoklama', lrS_full: 'Tam ölçüm', lrS_res: 'Sonuç', lrS_listen: 'Dinleme',
+    lrPoolLook: 'Ortak havuzda aranıyor', lrNoModel: 'Home Assistant bu cihazın modelini bildirmiyor', lrPoolNoModel: 'Model bilinmiyor', lrPoolErr: 'Havuza ulaşılamadı', lrPoolNone: 'Bu model havuzda yok', lrPoolNoneT: 'Güç ölçen bir prizle kendin ölçebilirsin; istersen sonra havuza gönderirsin.', lrOwn: 'Kendim ölçeyim',
+    lrSrcPool: 'Bu modeli {n} ev ölçmüş', lrVerified: 'doğrulandı', lrSrcLib: 'Açık ölçüm kütüphanesinde var', lrPoolVals: 'Bekleme {s}, en düşük {a}, en yüksek {b} · {n} nokta.', lrV: 'Ölçüm {v} V şebekede yapılmış.', lrUse: 'Hazır ölçümü kullan',
+    lrPoolNote: 'Hazır ölçüm kartlarda "~" ile görünür. Kendi ölçümün her zaman havuzdakinin önüne geçer.', lrPlug: 'Ölçen priz',
+    lrC1: 'Priz değer gönderiyor', lrC1ok: '{s} saniyede bir · şu an {w}', lrC1wait: 'Şu an {w} · aralık ölçülüyor', lrC1T: 'Güç ölçen prizi seç',
+    lrC2: 'Prizde yalnız bu cihaz var', lrC2T: 'Başka bir şey bağlıysa ölçüm yanlış çıkar', lrC2Ts: 'Soundbar ya da TV kutusu da bağlıysa onları başka prize al', lrC3: 'Cihaz bu prizde', lrC3T: 'Dene ile cihaz bir kez açılıp kapanır; prizin değiştiği görülür', lrTest: 'Dene',
+    lrWarn: 'Tam ölçüm: {n} adım, yaklaşık {e}. Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm Home Assistant\'ta sürer, tableti kapatabilirsin.', lrStHow: 'Cihazı her zamanki gibi kullan. Panel prizi ve cihazın durumunu birlikte dinler, her durumun ortalamasını tutar. Bir durumda 2 dakika veri olunca yeşil olur.',
+    lrStartL: 'Ölçmeye başla', lrStartS: 'Öğrenmeye başla', lrWhite: 'Beyaz tonlar', lrColor: 'Renkler · doygunluk %{s}', lrBri: 'Parlaklık',
+    lrErrRun_external: 'Işık başka bir yerden değiştirildi; ölçüm durdu. Yeniden başlatabilirsin.', lrErrRun_plug_silent: 'Priz bir süredir değer göndermiyor; ölçüm durdu.', lrErrRun_no_light: 'Işık bulunamadı.', lrErrRun_x: 'Ölçüm durdu ({e}).', lrAgain: 'Yeniden ölç',
+    lrNowSb: 'Işık kapalı, bekleme okunuyor', lrNowProbe: 'Yoklama: {c} %100', lrC_white: 'Beyaz', lrC_red: 'Kırmızı', lrC_green: 'Yeşil', lrC_blue: 'Mavi', lrNowCt: '{k} K, %{b}', lrNowHs: '{h}° renk, doygunluk %{s}, %{b}', lrNowBr: 'Parlaklık %{b}',
+    lrPlan: 'Renk farkı %{d}; plan: {n} ölçüm.', lrPaused: 'Duraklatıldı; ışık eski durumunda. Devam edince kaldığı yerden sürer.', lrDone: 'Ölçülen', lrLeft: 'Kalan', lrStandby: 'Bekleme', lrRepeats: 'Tekrarlanan adım',
+    lrBgNote: 'Pencereyi kapatsan da ölçüm sürer; cihaz satırında ilerleme görünür. Işık başka yerden değiştirilirse ölçüm durur.', lrCancel: 'Vazgeç', lrResume: 'Devam et', lrPause: 'Duraklat', lrBg: 'Arka planda sürsün',
+    lrV100w: '%100 soğuk beyaz', lrV50w: '%50 sıcak beyaz', lrV100r: '%100 kırmızı', lrV100b: '%100 mavi', lrV100: '%100', lrPoints: 'Nokta',
+    lrSame: 'Aynı modeldeki {n} ışığa da uygula', lrShare: 'Ölçümü ortak havuza gönder', lrShareT: 'İsteğe bağlı. Kaydedince GitHub\'da hazır doldurulmuş bir gönderim sayfası açılır; haftalık incelemeden sonra havuza girer.', lrShareNo: 'Home Assistant bu ışığın marka ve modelini bildirmediği için gönderilemez.',
+    lrSent: 'Gönderilen', lrSent1: 'Marka ve model ({m})', lrSent2: 'Işığın özellikleri: entegrasyon, renk modları, sıcaklık aralığı, efekt sayısı, yazılım sürümü', lrSent3: 'Ölçüm tablosu ({n} nokta) ve bekleme', lrSent4: 'Ölçüm özeti ve ölçen prizin modeli', lrSent5: 'Şebeke gerilimi ({v} V)',
+    lrNotSent: 'Gönderilmeyen', lrNot1: 'Ev, oda ve cihaz adları', lrNot2: 'Konum, IP ve kullanıcı bilgisi', lrNot3: 'Başka hiçbir Home Assistant verisi', lrBack: 'Işık eski durumuna döndü. Prizi başka cihaza takabilirsin.', lrSaveShare: 'Kaydet ve gönder',
+    lrNowState: 'Şu an: {s}', lrState: 'Durum', lrGot: 'Toplanan', lrAvg: 'Ortalama', lrStHint: 'Görülmeyen durumlar "Diğer durumlar" değerini alır. En az 1 dakika verisi olan durumlar kaydedilir.', lrFinish: 'Bitir ve kaydet',
+    lrPillDone: 'Ölçüm bitti · kaydet', lrPillErr: 'Ölçüm durdu', lrPillSt: 'Öğreniyor · {t}', lrPillL: 'Ölçülüyor · %{p}',
+    lrBoxDone: 'Ölçüm bitti; sonucu görüp kaydet.', lrBoxSt: 'Öğreniyor: {t} veri toplandı. Cihazı normal kullan.', lrBoxRun: 'Ölçülüyor: %{p}, kalan ~{e}. Tableti kapatabilirsin.',
+    lrBoxOwnL: 'Kendi ölçümün kullanılıyor ({n} nokta).', lrBoxOwnS: 'Öğrenilen {n} durum kullanılıyor.', lrBoxPool: 'Hazır ölçüm kullanılıyor. İstersen kendin ölçebilirsin.',
+    lrBoxL: 'Bu ışık şu an tahmin. Önce ortak havuza bakılır; yoksa güç ölçen bir prizle bütün renk ve parlaklıklarda ölçülür.', lrBoxS: 'Bu cihaz şu an tahmin. Güç ölçen bir prize takıp birkaç saat normal kullan; her durumun ortalaması kendiliğinden dolar.',
+    lrBoxTL: 'Prizle ölç', lrBoxTS: 'Prizle öğren', lrSee: 'İlerlemeyi gör', lrRe: 'Yeniden öğren', lrGo: 'Öğren', lrSaveFirst: 'Önce cihazı kaydet', lrOwnTag: 'ölçüldü', lrTblTag: 'tablo',
+    lrStrip: 'Şerit LED', lrStripT: 'Şeritte tüketim uzunlukla değişir. Uzunluğu yazarsan havuza metre başına girer; başkası kendi uzunluğuna göre kullanır.', lrLenMine: 'Bu şeridin uzunluğu', lrLenQ: 'Senin şeridinin uzunluğu', lrSameStrip: 'Uzunluğu farklıysa her biri için yaz; tablo uzunluğa göre uyarlanır.',
+    lrShareLen: 'Şerit LED için önce uzunluğu yaz.', lrSent6: 'Şerit uzunluğu ({m} m)', lrPoolValsM: 'Metre başına: bekleme {s}, en yüksek {b} · {n} nokta.', lrPoolLen: '{m} m şeritte ölçülmüş.', lrLenUnknown: 'Ölçülen uzunluk bilinmiyor; şeritte kendin ölçmen daha doğru olur.',
+    lrPoolNoteStrip: 'Bekleme (kumanda kutusu) aynı kalır, üstü uzunluğa göre ölçeklenir ama adaptörün gücünü geçmez. Kendi ölçümün her zaman havuzdakinin önüne geçer.',
+    lrCapQ: 'Adaptörün gücü', lrCapMine: 'Adaptörün gücü (isteğe bağlı)', lrCapT: 'Adaptörün etiketinde yazar (ör. 24 V × 1 A = 24 W). Şerit uzasa da toplam güç bunu geçmez; uzatmalı şeritlerde parlaklık bu sınıra göre kısılır.', lrSent7: 'adaptör {w} W',
+    lrSubA: 'Uzun süreli ortalama', lrErr_plug_busy: 'Bu priz şu an başka bir cihazı öğreniyor', lrErr_bridge_busy: 'Aynı köprüdeki bir ışık şu an ölçülüyor; bitince başlat', lrPlugBusy: 'şu an {n} öğreniyor',
+    lrAvgHow: 'Panel başlangıç zamanını not eder; ortalamayı Home Assistant\'ın priz kayıtlarından hesaplar. Home Assistant yeniden başlasa da, tablet kapansa da sürer. En az 1 gün, en iyisi 1 hafta.',
+    lrWarnFx: 'Tam ölçüm: {n} adım, yaklaşık {e}; bunun {f} adımı ışığın kendi efektleri (her biri yarım dakika dinlenir, istersen atlarsın). Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm Home Assistant\'ta sürer, tableti kapatabilirsin.',
+    lrNowFx: 'Efekt: {e}, %100 · ortalama alınıyor', lrNowFxb: 'Efekt: {e}, %{b} · parlaklık eğrisi', lrSkipFx: 'Efektleri atla', lrSkipFxT: 'Ölçülen efektler kalır, kalanlar ortalamayla hesaplanır', lrFxT: 'Efektler · {i} / {n}', lrFxAvg: 'Efektlerin ortalaması ({n})', lrFx50: 'Efektte %50 parlaklık',
+    lrAvgSince: '{t} boyunca ortalama', lrQ_early: 'Henüz erken', lrQ_earlyT: 'İlk gün dolmadı; buzdolabı gibi cihazlarda gece-gündüz ve kompresör döngüleri henüz oturmadı.', lrQ_mid: 'Kabaca doğru', lrQ_midT: 'Bir günü geçti. Birkaç gün daha beklersen değer oturur; bir hafta en doğrusu.', lrQ_ok: 'Oturdu', lrQ_okT: 'Son 24 saatin ortalaması toplam ortalamadan %3\'ten az sapıyor. İstersen şimdi bitirebilirsin.',
+    lrAvgKwh: 'Bu sürede', lrAvgDay: 'Günde', lrAvgYear: 'Yılda', lrAvg24: 'Son 24 saat', lrAvgNow: 'Şu an', lrAvgNote: 'Bitirince cihaz ölçülen ortalama watt ile "Sabit" türüne geçer.',
+    lrPillAvg: 'Öğreniyor · {t} · ~{w}', lrBoxA: 'Bu cihaz şu an etiket değeri ya da tahmin. Güç ölçen bir prize takıp birkaç gün bekle; gerçek ortalaması kaydedilir.', lrBoxAvgRun: 'Öğreniyor: {t}, şu ana kadar ortalama ~{w}.', lrBoxOwnA: 'Ölçülen ortalama kullanılıyor ({w}).', lrSaveGo: 'Kaydet ve öğren', lrNameFirst: 'Önce ad yaz'
   },
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
@@ -181,7 +216,42 @@ const ADM = {
     enDevN: '{n} devices ({m} measured, {v} virtual) · ~{w} now', enFoundP: '+{n} found', enCatN: '{n} categories · {u} uncategorized', enSolN: 'Producing {w} now', enSolNoS: 'No sensor picked', enOff: 'Off',
     enSyncOn: 'Kept in step with the Energy settings', enSyncOff: 'Sync off', enSrcT2: 'The cards fill from the dashboard\'s devices and categories. The dashboard also adds them to Home Assistant\'s Energy settings and leaves your other entries alone.', enSync: 'Sync with the Energy settings', enSyncT: 'Devices, categories and solar production also show on Home Assistant\'s Energy dashboard',
     enWNoEnt: 'This device was not found in Home Assistant; check its id.', enWZero: 'No state has a W value; the device counts as 0 W.', enCSame: 'A category with this name already exists', enMUsed: 'This power sensor is already used by another device', enAddAllQ: 'Sure? {n} devices will be added',
-    enImpToDev: 'Go to devices', enGInv: 'Reversed sign', enGInvT: 'Turn on if the meter shows sending to the grid as plus'
+    enImpToDev: 'Go to devices', enGInv: 'Reversed sign', enGInvT: 'Turn on if the meter shows sending to the grid as plus',
+    lrNoEnt: 'Pick the device that gives the state and save first', lrH: '{h} h {m} min', lrM: '{m} min', lrTestOk: 'The plug went {a} → {b}. The device is on this plug.', lrTestNo: 'The plug did not change ({a}). Is the device plugged into it?',
+    lrErr_busy: 'This device is already being measured', lrErr_too_many: 'At most 3 measurements at a time', lrErr_plug: 'The plug sends no value', lrErr_entity: 'Device not found', lrErr_x: 'Could not start', lrSaved: 'Saved',
+    lrTitle: 'Learn · {n}', lrSubL: 'Real power in every color and brightness', lrSubS: 'Real power in each state', lrS_pool: 'Pool', lrS_prep: 'Prepare', lrS_probe: 'Probe', lrS_full: 'Full measure', lrS_res: 'Result', lrS_listen: 'Listening',
+    lrPoolLook: 'Looking in the shared pool', lrNoModel: 'Home Assistant does not report this device\'s model', lrPoolNoModel: 'Model unknown', lrPoolErr: 'The pool could not be reached', lrPoolNone: 'This model is not in the pool', lrPoolNoneT: 'Measure it yourself with a plug that measures power; you can send it to the pool afterwards.', lrOwn: 'I\'ll measure it',
+    lrSrcPool: 'Measured in {n} homes', lrVerified: 'verified', lrSrcLib: 'In the open measurement library', lrPoolVals: 'Standby {s}, lowest {a}, highest {b} · {n} points.', lrV: 'Measured on {v} V mains.', lrUse: 'Use this measurement',
+    lrPoolNote: 'A ready measurement shows with "~" on the cards. Your own measurement always comes first.', lrPlug: 'Measuring plug',
+    lrC1: 'The plug sends values', lrC1ok: 'every {s} s · now {w}', lrC1wait: 'Now {w} · measuring the interval', lrC1T: 'Pick the plug that measures power',
+    lrC2: 'Only this device is on the plug', lrC2T: 'Anything else plugged in makes the measurement wrong', lrC2Ts: 'If a soundbar or TV box is on it too, move them to another plug', lrC3: 'The device is on this plug', lrC3T: 'Try turns the device on and off once and checks that the plug changes', lrTest: 'Try',
+    lrWarn: 'Full measure: {n} steps, about {e}. Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs inside Home Assistant; you can close the tablet.', lrStHow: 'Use the device as usual. The dashboard listens to the plug and the device\'s state together and keeps an average per state. A state turns green with 2 minutes of data.',
+    lrStartL: 'Start measuring', lrStartS: 'Start learning', lrWhite: 'White tones', lrColor: 'Colors · saturation {s}%', lrBri: 'Brightness',
+    lrErrRun_external: 'The light was changed from elsewhere; measuring stopped. You can start again.', lrErrRun_plug_silent: 'The plug has not sent a value for a while; measuring stopped.', lrErrRun_no_light: 'Light not found.', lrErrRun_x: 'Measuring stopped ({e}).', lrAgain: 'Measure again',
+    lrNowSb: 'Light off, reading standby', lrNowProbe: 'Probe: {c} 100%', lrC_white: 'White', lrC_red: 'Red', lrC_green: 'Green', lrC_blue: 'Blue', lrNowCt: '{k} K, {b}%', lrNowHs: '{h}° color, saturation {s}%, {b}%', lrNowBr: 'Brightness {b}%',
+    lrPlan: 'Color difference {d}%; plan: {n} measurements.', lrPaused: 'Paused; the light is back as it was. Resuming continues where it stopped.', lrDone: 'Measured', lrLeft: 'Left', lrStandby: 'Standby', lrRepeats: 'Repeated steps',
+    lrBgNote: 'Measuring continues if you close this window; the device row shows the progress. It stops if the light is changed from elsewhere.', lrCancel: 'Cancel', lrResume: 'Resume', lrPause: 'Pause', lrBg: 'Keep going in the background',
+    lrV100w: '100% cool white', lrV50w: '50% warm white', lrV100r: '100% red', lrV100b: '100% blue', lrV100: '100%', lrPoints: 'Points',
+    lrSame: 'Also apply to {n} lights of the same model', lrShare: 'Send the measurement to the shared pool', lrShareT: 'Optional. Saving opens a pre-filled submission page on GitHub; it joins the pool after the weekly review.', lrShareNo: 'Home Assistant does not report this light\'s brand and model, so it cannot be sent.',
+    lrSent: 'Sent', lrSent1: 'Brand and model ({m})', lrSent2: 'The light\'s features: integration, color modes, temperature range, effect count, firmware', lrSent3: 'The table ({n} points) and standby', lrSent4: 'A measurement summary and the plug\'s model', lrSent5: 'Mains voltage ({v} V)',
+    lrNotSent: 'Not sent', lrNot1: 'Home, room and device names', lrNot2: 'Location, IP and user details', lrNot3: 'Any other Home Assistant data', lrBack: 'The light is back as it was. You can move the plug to another device.', lrSaveShare: 'Save and send',
+    lrNowState: 'Now: {s}', lrState: 'State', lrGot: 'Collected', lrAvg: 'Average', lrStHint: 'States not seen take the "Other states" value. States with at least a minute of data are saved.', lrFinish: 'Finish and save',
+    lrPillDone: 'Measured · save', lrPillErr: 'Measuring stopped', lrPillSt: 'Learning · {t}', lrPillL: 'Measuring · {p}%',
+    lrBoxDone: 'Measuring finished; review and save the result.', lrBoxSt: 'Learning: {t} of data so far. Use the device as usual.', lrBoxRun: 'Measuring: {p}%, about {e} left. You can close the tablet.',
+    lrBoxOwnL: 'Your own measurement is in use ({n} points).', lrBoxOwnS: '{n} learned states are in use.', lrBoxPool: 'A ready measurement is in use. You can measure it yourself.',
+    lrBoxL: 'This light is an estimate. The shared pool is checked first; otherwise a plug that measures power measures it in every color and brightness.', lrBoxS: 'This device is an estimate. Plug it into a plug that measures power and use it as usual for a few hours; each state\'s average fills in by itself.',
+    lrBoxTL: 'Measure with a plug', lrBoxTS: 'Learn with a plug', lrSee: 'See progress', lrRe: 'Learn again', lrGo: 'Learn', lrSaveFirst: 'Save the device first', lrOwnTag: 'measured', lrTblTag: 'table',
+    lrStrip: 'LED strip', lrStripT: 'A strip\'s power changes with its length. With the length, it goes into the pool per meter and others scale it to theirs.', lrLenMine: 'This strip\'s length', lrLenQ: 'Your strip\'s length', lrSameStrip: 'If their lengths differ, enter each; the table is scaled to the length.',
+    lrShareLen: 'Enter the length first for an LED strip.', lrSent6: 'Strip length ({m} m)', lrPoolValsM: 'Per meter: standby {s}, highest {b} · {n} points.', lrPoolLen: 'Measured on a {m} m strip.', lrLenUnknown: 'The measured length is unknown; measuring your strip yourself is more accurate.',
+    lrPoolNoteStrip: 'Standby (the controller) stays the same; the rest scales with the length but never above the adapter\'s power. Your own measurement always comes first.',
+    lrCapQ: 'Adapter power', lrCapMine: 'Adapter power (optional)', lrCapT: 'Printed on the adapter (e.g. 24 V × 1 A = 24 W). However long the strip, the total stays under it; extended strips get dimmed to that limit.', lrSent7: 'adapter {w} W',
+    lrSubA: 'Long average', lrErr_plug_busy: 'This plug is learning another device right now', lrErr_bridge_busy: 'A light on the same bridge is being measured; start when it finishes', lrPlugBusy: 'learning {n} now',
+    lrAvgHow: 'The dashboard notes the start and works out the average from Home Assistant\'s records of the plug. It goes on through restarts and with the tablet off. At least a day, ideally a week.',
+    lrWarnFx: 'Full measure: {n} steps, about {e}; {f} of them are the light\'s own effects (each listened to for half a minute; you can skip them). Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs inside Home Assistant; you can close the tablet.',
+    lrNowFx: 'Effect: {e}, 100% · averaging', lrNowFxb: 'Effect: {e}, {b}% · brightness curve', lrSkipFx: 'Skip effects', lrSkipFxT: 'Measured effects are kept; the rest use the average', lrFxT: 'Effects · {i} / {n}', lrFxAvg: 'Effects on average ({n})', lrFx50: 'Effects at 50% brightness',
+    lrAvgSince: 'average over {t}', lrQ_early: 'Too early', lrQ_earlyT: 'Less than a day; day and night and compressor cycles have not evened out yet.', lrQ_mid: 'Roughly right', lrQ_midT: 'Past a day. A few more days make it settle; a week is best.', lrQ_ok: 'Settled', lrQ_okT: 'The last 24 hours are within 3% of the overall average. You can finish now.',
+    lrAvgKwh: 'So far', lrAvgDay: 'Per day', lrAvgYear: 'Per year', lrAvg24: 'Last 24 hours', lrAvgNow: 'Now', lrAvgNote: 'When finished, the device becomes "Fixed" with the measured average watts.',
+    lrPillAvg: 'Learning · {t} · ~{w}', lrBoxA: 'This device uses a label value or a guess. Plug it into a plug that measures power for a few days; its real average is saved.', lrBoxAvgRun: 'Learning: {t}, average so far ~{w}.', lrBoxOwnA: 'The measured average is in use ({w}).', lrSaveGo: 'Save and learn', lrNameFirst: 'Enter a name first'
   }
 };
 // Bölüm türleri sadece başlangıç (başlık ve simge); her bölüme her şey eklenebilir. domains: seçicideki süzgeç
@@ -1186,6 +1256,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._modal = 'energy'; this._menu = null; this._env = view || this._env || 'sum';
     if (!this._enU) this._enU = lpEnSub(() => { if (this._modal === 'energy') this._render(); });
     LP_EN.at = 0; lpEnEnsure(this._hass);
+    this._lrnStartPoll();
     this._render();
   }
   _enEsts() { const E = STORE.data && STORE.data.estimates; return lhdIsObj(E) ? E : {}; }
@@ -1197,7 +1268,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const body = V === 'src' ? this._enSrc() : V === 'tariff' ? this._enTariff() : V === 'bill' ? this._enBill() : V === 'dev' ? this._enDev() : V === 'cat' ? this._enCat() : V === 'solar' ? this._enSolarV() : V === 'tips' ? this._enTipsV() : V === 'imp' ? this._enImpV() : V === 'look' ? this._enLook() : this._enSum();
     return '<div class="ov" data-ovl><div class="dlg guide enpg"><div class="dh"><div class="di"><ha-icon icon="mdi:lightning-bolt"></ha-icon></div><h2>' + t('enPage') + '</h2>' +
       '<button class="btn ic" data-a="close" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
-      '<div class="gbody"><div class="glist enl">' + list + '</div><div class="gmain enm"><div class="ennav">' + nav.map((n) => '<button class="' + (V === n[0] ? 'on' : '') + '" data-env="' + n[0] + '">' + t('en_' + n[0]) + '</button>').join('') + '</div>' + body + '</div></div></div></div>';
+      '<div class="gbody"><div class="glist enl">' + list + '</div><div class="gmain enm"><div class="ennav">' + nav.map((n) => '<button class="' + (V === n[0] ? 'on' : '') + '" data-env="' + n[0] + '">' + t('en_' + n[0]) + '</button>').join('') + '</div>' + body + '</div></div></div></div>' + this._lrnHtml();
   }
   _enNum(v, d) { return lpEnNum(v, d || 0, this._lang); }
   _enCur() { return lpEnMoney(this._hass, 1, this._lang).replace(/[\d.,\s\u00a0]/g, '') || ''; }
@@ -1312,6 +1383,333 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _enLater() { clearTimeout(this._enLT); this._enLT = setTimeout(() => { if (this._modal === 'energy') this._render(); }, 350); }
   // düzenleyici açılınca görünsün (listenin üstünde)
   _enTop() { const ed = this.shadowRoot && this.shadowRoot.querySelector('.enm .ened'); if (ed && ed.scrollIntoView) ed.scrollIntoView({ block: 'nearest' }); }
+  // ---- Öğren: bir cihazı güç ölçen bir prizle ölç (ışıkta tam tablo, diğerlerinde durumlara göre). Ölçüm Home Assistant'ta sürer (learn.py) ----
+  // this._lrn = { id, kind: 'light'|'states', entity, step: 'pool'|'prep'|'run', plug, iv, only, tested, pool, share, apply: {id: true} }
+  _lrnRun(id) { const S = this._lrnS || {}; return S[id] || null; }
+  _lrnPoll() {
+    if (this._lrnBusy || !this._hass) return;
+    if (this._modal !== 'energy') { clearInterval(this._lrnT); this._lrnT = null; return; }
+    this._lrnBusy = true;
+    this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_status' }).then((r) => {
+      this._lrnBusy = false;
+      const j = JSON.stringify(r || {});
+      if (j === this._lrnJ) return;
+      this._lrnJ = j; this._lrnS = r || {};
+      if (this._lrn && this._lrn.step === 'run') this._lrnPaint(); else if (this._env === 'dev' || this._lrn) this._render();
+    }, () => { this._lrnBusy = false; });
+  }
+  // prizin gönderdiği değerler: hazırlıkta saniyede bir bakılır (aralık ve şu anki değer)
+  _lrnWatch() {
+    clearInterval(this._lrnW);
+    this._lrnW = setInterval(() => {
+      const L = this._lrn; if (!L || L.step !== 'prep' || this._modal !== 'energy') { clearInterval(this._lrnW); this._lrnW = null; return; }
+      const iv = L.iv, w = L.plug ? lpEnW(this._hass.states, L.plug) : null; this._lrnIv();
+      if (iv !== L.iv || w !== L.lw) { L.lw = w; const R = this.shadowRoot, act = R && R.activeElement; if (!act || !act.hasAttribute || !act.hasAttribute('data-lrf')) this._render(); }
+    }, 1000);
+  }
+  _lrnStartPoll() { if (!this._lrnT) this._lrnT = setInterval(() => this._lrnPoll(), 2000); this._lrnPoll(); }
+  // cihazın marka ve modeli (Home Assistant cihaz kaydından)
+  _lrnDev(ent) {
+    const E = this._hass.entities || {}, D = this._hass.devices || {}, e = E[ent], d = e && e.device_id ? D[e.device_id] : null;
+    return { man: (d && d.manufacturer) || '', model: (d && d.model) || '', model_id: (d && d.model_id) || '', sw: (d && d.sw_version) || '', integ: (e && e.platform) || '', dev: e ? e.device_id : null };
+  }
+  // şerit LED mi: tüketim uzunlukla orantılı, havuzda metre başına tutulur
+  _lrnIsStrip(ent, extra) { const d = this._lrnDev(ent); return /strip|şerit|serit|bant|lightstrip|led ?tape|neon/i.test([this._ename(ent), d.model, d.model_id, extra || ''].join(' ')); }
+  // tabloyu başka uzunluğa uyarla: bekleme aynı, üstü uzunlukla orantılı
+  // cap: adaptörün verebildiği en çok güç (şerit uzasa da toplam bunu geçmez)
+  _lrnScale(lut, sb, k, cap) {
+    const f = (w) => { let v = sb + Math.max(0, w - sb) * k; if (cap > 0) v = Math.min(v, cap); return Math.round(v * 100) / 100; }, o = JSON.parse(JSON.stringify(lut));
+    if (o.ct) o.ct.w = o.ct.w.map((r) => r.map(f));
+    if (o.hs) o.hs.w = o.hs.w.map((p) => p.map((r) => r.map(f)));
+    if (o.br) o.br.w = o.br.w.map(f);
+    if (o.fx !== undefined && o.fx !== null) { if (typeof o.fx === 'object') { Object.keys(o.fx.e || {}).forEach((k) => { o.fx.e[k] = f(o.fx.e[k]); }); if (o.fx.avg !== undefined) o.fx.avg = f(o.fx.avg); } else o.fx = f(o.fx); }
+    return o;
+  }
+  _lrnSpan(lut) { const v = []; if (lut.ct) lut.ct.w.forEach((r) => r.forEach((x) => v.push(x))); if (lut.hs) lut.hs.w.forEach((p) => p.forEach((r) => r.forEach((x) => v.push(x)))); if (lut.br) lut.br.w.forEach((x) => v.push(x)); if (lut.fx && typeof lut.fx === 'object' && lut.fx.e) Object.keys(lut.fx.e).forEach((k) => v.push(lut.fx.e[k])); return v.length ? [Math.min.apply(null, v), Math.max.apply(null, v)] : [0, 0]; }
+  _lrnSame(id, ent) {   // aynı modeldeki diğer ışıklar
+    const me = this._lrnDev(ent), E = this._hass.entities || {}, D = this._hass.devices || {};
+    if (!me.man || !(me.model || me.model_id)) return [];
+    return Object.keys(this._hass.states).filter((x) => x.indexOf('light.') === 0 && x !== ent && E[x] && E[x].device_id && D[E[x].device_id]).filter((x) => {
+      const d = D[E[x].device_id]; return d.manufacturer === me.man && (d.model || '') === me.model && (d.model_id || '') === me.model_id;
+    });
+  }
+  _lrnOpen(id) {
+    const e = this._enEsts()[id] || (this._enE && this._enE.f) || {}, avgK = ['fixed', 'year', 'cycle'].indexOf(e.kind) >= 0;
+    const ent = avgK ? '' : e.entity || (this._enE && this._enE.f.entity) || '';
+    if (!avgK && (!ent || !this._hass.states[ent])) { this._toast(this._t('lrNoEnt'), false); return; }
+    const kind = avgK ? 'avg' : ent.indexOf('light.') === 0 ? 'light' : 'states', run = this._lrnRun(id);
+    this._lrn = { id: id, kind: kind, entity: ent, name: e.name || id, step: run ? 'run' : kind === 'light' ? 'pool' : 'prep', plug: (run && run.plug) || '', iv: 0, only: false, tested: 0, pool: null, share: false, apply: {} };
+    if (kind === 'light') this._lrnSame(id, ent).forEach((x) => { this._lrn.apply[x] = true; });
+    this._lrn.strip = kind === 'light' && this._lrnIsStrip(ent); this._lrn.len = 0; this._lrn.lens = {};
+    this._lrnStartPoll();
+    if (this._lrn.step === 'pool') this._lrnPool();
+    this._render();
+  }
+  _lrnPool() {
+    const L = this._lrn, d = this._lrnDev(L.entity);
+    L.pool = { busy: true, dev: d };
+    if (!d.man || !(d.model || d.model_id)) { L.pool = { none: true, dev: d, nomodel: true }; return; }
+    this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/pool_lookup', manufacturer: d.man, model: d.model, model_id: d.model_id })
+      .then((r) => { if (this._lrn !== L) return; L.pool = r ? Object.assign({ dev: d }, r) : { none: true, dev: d }; this._render(); }, () => { if (this._lrn === L) { L.pool = { none: true, dev: d, err: true }; this._render(); } });
+  }
+  // prizin değer gönderme aralığı: son değişimler arasındaki süre (Home Assistant ekrana gönderdikçe)
+  _lrnIv() {
+    const L = this._lrn; if (!L || !L.plug) return;
+    const st = this._hass.states[L.plug]; if (!st) return;
+    const t = Date.parse(st.last_reported || st.last_updated || '');
+    L.ts = L.ts || [];
+    if (isFinite(t) && L.ts.indexOf(t) < 0) { L.ts.push(t); L.ts = L.ts.slice(-6); }
+    if (L.ts.length >= 3) { const d = []; for (let i = 1; i < L.ts.length; i++) d.push((L.ts[i] - L.ts[i - 1]) / 1000); d.sort((a, b) => a - b); L.iv = Math.max(0.5, Math.min(60, d[Math.floor(d.length / 2)])); }
+  }
+  _lrnSteps(L) { const st = this._hass.states[L.entity], m = (st && st.attributes.supported_color_modes) || []; let n = 5; if (m.indexOf('color_temp') >= 0) n += 40; if (m.some((x) => ['hs', 'xy', 'rgb', 'rgbw', 'rgbww'].indexOf(x) >= 0)) n += 192; if (n === 5) n += 8; return n; }
+  _lrnEta(sec) { const m = Math.max(1, Math.round(sec / 60)); return m >= 60 ? this._t('lrH', { h: Math.floor(m / 60), m: m % 60 }) : this._t('lrM', { m: m }); }
+  async _lrnTest() {
+    const L = this._lrn, S = () => this._hass.states, w0 = lpEnW(S(), L.plug), st = S()[L.entity], wasOn = st && st.state === 'on';
+    L.tested = 1; L.testMsg = ''; this._render();
+    const call = (svc, data) => this._hass.callService(L.kind === 'light' ? 'light' : 'homeassistant', svc, Object.assign({ entity_id: L.entity }, data || {}));
+    try {
+      await call(wasOn ? 'turn_off' : 'turn_on', wasOn || L.kind !== 'light' ? {} : { brightness_pct: 100 });
+      let w1 = w0;
+      for (let i = 0; i < 30; i++) { await new Promise((r) => setTimeout(r, 500)); w1 = lpEnW(S(), L.plug); if (w1 !== null && w0 !== null && Math.abs(w1 - w0) >= 1) break; }
+      await call(wasOn ? 'turn_on' : 'turn_off');
+      const ok = w1 !== null && w0 !== null && Math.abs(w1 - w0) >= 1;
+      L.tested = ok ? 2 : 3; L.testMsg = this._t(ok ? 'lrTestOk' : 'lrTestNo', { a: lpEnWs(Math.min(w0, w1), this._lang), b: lpEnWs(Math.max(w0, w1), this._lang) });
+    } catch (err) { L.tested = 3; L.testMsg = String((err && err.message) || err); }
+    this._render();
+  }
+  async _lrnStart() {
+    const L = this._lrn;
+    try {
+      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_start', id: L.id, kind: L.kind, entity: L.entity || '', plug: L.plug, interval: L.iv || 3 });
+      L.step = 'run'; this._lrnJ = ''; this._lrnPoll();
+    } catch (err) { const c = (err && err.code) || 'x'; this._toast(this._t(['busy', 'too_many', 'plug', 'entity', 'plug_busy', 'bridge_busy'].indexOf(c) >= 0 ? 'lrErr_' + c : 'lrErr_x'), false); }
+    this._render();
+  }
+  _lrnCtl(action) {
+    const L = this._lrn; if (!L) return Promise.resolve();
+    return this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: action }).then((r) => { this._lrnS = r || {}; this._lrnJ = ''; this._render(); }, () => {});
+  }
+  // sonucu cihazın kaydına yaz (ve aynı modeldekilere)
+  async _lrnSave() {
+    const L = this._lrn, run = this._lrnRun(L.id), E = lhdClone(this._enEsts()), S = this._hass.states;
+    const cur = E[L.id] || (this._enE && this._enE.id === null ? this._enRec(this._enE.f) : null) || { name: this._ename(L.entity), kind: L.kind === 'light' ? 'light' : 'states', entity: L.entity };
+    if (L.kind === 'light') {
+      const usePool = !!(L.pool && L.pool.use), r = usePool ? L.pool : run && run.result; if (!r) return;
+      const src = usePool ? L.pool.source : 'own', sb = r.standby || 0;
+      // şerit: havuzdaki tablo metre başına ya da ölçüldüğü uzunlukta; kendi uzunluğuna göre uyarlanır
+      let base = r.lut, baseLen = 0;
+      const cap = L.cap > 0 ? L.cap : r.cap_w > 0 ? r.cap_w : 0;
+      if (usePool && (r.strip || L.strip) && L.len > 0 && (r.per_m || r.length_m > 0)) base = this._lrnScale(r.lut, sb, r.per_m ? L.len : L.len / r.length_m, cap);
+      if (!usePool && L.strip && L.len > 0) baseLen = L.len;
+      const rec = (x, tb, len) => { const sp = this._lrnSpan(tb), o = Object.assign({}, x, { kind: 'light', idle: sb, min: Math.round(sp[0] * 100) / 100, max: Math.round(sp[1] * 100) / 100, lut: tb, src: src }); return o; };
+      E[L.id] = rec(Object.assign({}, cur, { entity: L.entity }), base);
+      Object.keys(L.apply).filter((x) => L.apply[x]).forEach((x) => {
+        const ln = parseFloat(L.lens[x]), tb = L.strip && baseLen > 0 && ln > 0 ? this._lrnScale(base, sb, ln / baseLen, L.cap > 0 ? L.cap : 0) : base;
+        const k = Object.keys(E).filter((k2) => E[k2].entity === x)[0];
+        if (k) { if (E[k].kind === 'light' && (!E[k].lut || E[k].src !== 'own')) E[k] = rec(E[k], tb); }
+        else { const nid = this._enSlug(this._ename(x), E); E[nid] = rec({ name: String(this._ename(x)).slice(0, 60), entity: x, cat: E[L.id].cat }, tb); }
+      });
+    } else if (L.kind === 'avg') {
+      if (!run || run.avg === null || run.avg === undefined) return;
+      await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'stop' }).catch(() => {});
+      E[L.id] = Object.assign({}, cur, { kind: 'fixed', w: Math.round(run.avg * 100) / 100, src: 'own' });
+      ['year', 'k100', 'week', 'entity'].forEach((k) => { delete E[L.id][k]; });
+    } else {
+      if (!run) return;
+      if (run.phase === 'run') await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'stop' }).then((r) => { this._lrnS = r || {}; }).catch(() => {});
+      const R = this._lrnRun(L.id) || run, rows = [];
+      Object.keys(R.states || {}).forEach((s) => { const x = R.states[s]; if (x.sec >= 60 && x.avg !== null) rows.push({ s: s.slice(0, 40), w: Math.round(x.avg * 100) / 100 }); });
+      const off = rows.filter((x) => ['off', 'standby', 'unavailable'].indexOf(x.s) >= 0).map((x) => x.w);
+      const old = cur.kind === 'states' ? cur : null;
+      E[L.id] = Object.assign({}, cur, { kind: 'states', entity: L.entity, states: rows.slice(0, 24), other: off.length ? Math.min.apply(null, off) : old && old.other !== undefined ? old.other : lpEnNumOf(cur.off), src: 'own' });
+      delete E[L.id].on; delete E[L.id].off;
+    }
+    if (L.share && !(L.strip && !(L.len > 0)) && !(L.pool && L.pool.use)) this._lrnShare();
+    await this._commit('estimates', E);
+    await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', id: L.id, action: 'clear' }).catch(() => {});
+    this._lrnJ = ''; this._lrn = null; this._enE = null;
+    LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass);
+    this._toast(this._t('lrSaved')); this._lrnPoll(); this._render();
+  }
+  // ortak havuza gönderim: GitHub'da hazır doldurulmuş sayfa (yalnız model, özellikler ve ölçüm; ev ve cihaz adları yok)
+  _lrnPayload() {
+    const L = this._lrn, run = this._lrnRun(L.id), r = run && run.result, st = this._hass.states[L.entity], a = (st && st.attributes) || {}, d = this._lrnDev(L.entity), p = this._lrnDev(L.plug);
+    const c = String((this._hass.config && this._hass.config.country) || '').toUpperCase();
+    return { v: 1, model: { manufacturer: d.man, model: d.model, model_id: d.model_id, integration: d.integ }, caps: { color_modes: a.supported_color_modes || [], kelvin: [a.min_color_temp_kelvin || null, a.max_color_temp_kelvin || null], effects: (a.effect_list || []).length, sw: d.sw },
+      mains_v: ['US', 'CA', 'MX', 'JP', 'TW', 'BR', 'CO', 'VE', 'PH', 'SA'].indexOf(c) >= 0 ? 120 : 230, plug: { manufacturer: p.man, model: p.model }, standby: r ? r.standby : null, lut: r ? r.lut : null,
+      samples: r ? { n: r.n, settle_s: r.settle, repeats: r.repeats, diff: run.plan ? run.plan.diff : null } : null, strip: !!L.strip, length_m: L.strip && L.len > 0 ? L.len : null, adapter_w: L.strip && L.cap > 0 ? L.cap : null, panel: PANEL_VERSION };
+  }
+  _lrnShare() {
+    const P = this._lrnPayload(), t = 'Ölçüm: ' + P.model.manufacturer + ' ' + (P.model.model_id || P.model.model);
+    const u = 'https://github.com/mendebur-lemur/lemur-home-dashboard/issues/new?template=olcum.yml&title=' + encodeURIComponent(t) + '&olcum=' + encodeURIComponent(JSON.stringify(P));
+    try { window.open(u, '_blank', 'noopener'); } catch (e) {}
+  }
+  // ---- pencere ----
+  _lrnHtml() {
+    const L = this._lrn; if (!L) return '';
+    const t = (k, v) => esc(this._t(k, v)), S = this._hass.states, run = this._lrnRun(L.id), nm = L.entity ? this._ename(L.entity) : L.name;
+    const names = L.kind === 'light' ? ['lrS_pool', 'lrS_prep', 'lrS_probe', 'lrS_full', 'lrS_res'] : ['lrS_prep', 'lrS_listen', 'lrS_res'];
+    let stepI = 0, body = '';
+    const ph = run ? run.phase : '';
+    if (L.step === 'pool') { stepI = 0; body = this._lrnPoolHtml(); }
+    else if (L.step === 'prep') { stepI = L.kind === 'light' ? 1 : 0; body = this._lrnPrepHtml(); }
+    else if (L.kind === 'light') {
+      if (ph === 'done') { stepI = 4; body = this._lrnResHtml(); }
+      else if (ph === 'standby' || ph === 'probe' || ph === 'start' || (ph === 'paused' && !run.n)) { stepI = 2; body = this._lrnRunHtml(); }
+      else { stepI = 3; body = this._lrnRunHtml(); }
+    } else if (L.kind === 'avg') { stepI = 1; body = this._lrnAvgHtml(); }
+    else { stepI = ph === 'done' ? 2 : 1; body = this._lrnStHtml(); }
+    return '<div class="ov lrov"><div class="dlg lrd" role="dialog" aria-modal="true"><div class="dh"><div class="di"><ha-icon icon="mdi:school-outline"></ha-icon></div><h2>' + t('lrTitle', { n: nm }) + '<small>' + t(L.kind === 'light' ? 'lrSubL' : L.kind === 'avg' ? 'lrSubA' : 'lrSubS') + '</small></h2>' +
+      '<button class="btn ic" data-a="lrclose" style="margin-left:auto" title="' + t('close') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="lrsteps">' + names.map((n, i) => '<div class="' + (i < stepI ? 'done' : i === stepI ? 'on' : '') + '">' + t(n) + '</div>').join('') + '</div>' + body + '</div></div>';
+  }
+  _lrnPoolHtml() {
+    const t = (k, v) => esc(this._t(k, v)), P = this._lrn.pool || {}, d = P.dev || {};
+    let h = '<div class="lrchk"><div><em class="' + (P.busy ? 'wait' : 'ok') + '">' + (P.busy ? '…' : '✓') + '</em><span>' + t('lrPoolLook') + '<i>' + esc([d.man, d.model_id || d.model, d.integ].filter((x) => x).join(' · ') || this._t('lrNoModel')) + '</i></span></div></div>';
+    if (P.busy) return h;
+    if (P.none) h += '<div class="lrpool"><div class="t"><b>' + t(P.nomodel ? 'lrPoolNoModel' : P.err ? 'lrPoolErr' : 'lrPoolNone') + '</b><span>' + t('lrPoolNoneT') + '</span></div><div class="acts"><button class="btn pri" data-a="lrown">' + t('lrOwn') + '</button></div></div>';
+    else {
+      const src = P.source === 'pool' ? this._t('lrSrcPool', { n: P.n || 1 }) + (P.n >= 2 ? ' · ' + this._t('lrVerified') : '') : this._t('lrSrcLib');
+      const L = this._lrn, strip = P.strip || L.strip, known = P.per_m || P.length_m > 0, need = strip && known && !(L.len > 0);
+      h += '<div class="lrpool"><div class="t"><b>' + esc(src) + '</b><span>' + (strip && P.per_m ? t('lrPoolValsM', { s: lpEnWs(P.standby || 0, this._lang), b: lpEnWs(P.max, this._lang), n: P.lut ? lrCount(P.lut) : 0 }) : t('lrPoolVals', { s: lpEnWs(P.standby || 0, this._lang), a: lpEnWs(P.min, this._lang), b: lpEnWs(P.max, this._lang), n: P.lut ? lrCount(P.lut) : 0 }) + (strip && P.length_m > 0 ? ' ' + t('lrPoolLen', { m: lpEnNum(P.length_m, 1, this._lang) }) : '')) + (P.mains_v && P.mains_v !== 230 ? ' ' + t('lrV', { v: P.mains_v }) : '') + '</span>' +
+        (strip ? (known ? '<label class="lrlen">' + t('lrLenQ') + ' <input class="inp" type="number" min="0.1" max="50" step="0.1" data-lrf="len" value="' + (L.len > 0 ? L.len : '') + '"> m</label>' +
+          '<label class="lrlen">' + t('lrCapQ') + ' <input class="inp" type="number" min="1" max="2000" step="1" data-lrf="cap" value="' + (L.cap > 0 ? L.cap : P.cap_w > 0 ? P.cap_w : '') + '"> W</label><span class="hint">' + t('lrCapT') + '</span>' : '<span class="lrwarn2">' + t('lrLenUnknown') + '</span>') : '') + '</div>' +
+        '<div class="acts"><button class="btn" data-a="lruse"' + (need ? ' disabled' : '') + '>' + t('lrUse') + '</button><button class="btn pri" data-a="lrown">' + t('lrOwn') + '</button></div></div><div class="hint">' + t(strip ? 'lrPoolNoteStrip' : 'lrPoolNote') + '</div>';
+    }
+    return h;
+  }
+  _lrnPrepHtml() {
+    const L = this._lrn, t = (k, v) => esc(this._t(k, v)), S = this._hass.states;
+    const used = {}; [lpEnSolar().prod, lpEnSolar().grid, lpEnSolar().bat_power].forEach((x) => { if (x) used[x] = 1; });
+    const plugs = Object.keys(S).filter((x) => x.indexOf('sensor.') === 0 && x.indexOf('sensor.lhd_') !== 0 && lpEnIsPow(S[x]) && !used[x]).sort((a, b) => this._ename(a).localeCompare(this._ename(b), this._lang));
+    const busy = {}, RS = this._lrnS || {}, E0 = this._enEsts();   // başka bir öğrenmede kullanılan prizler
+    Object.keys(RS).forEach((k) => { const r = RS[k]; if (k !== L.id && r && ['done', 'error', 'stopped'].indexOf(r.phase) < 0) busy[r.plug] = (E0[k] && E0[k].name) || k; });
+    this._lrnIv();
+    const w = L.plug ? lpEnW(S, L.plug) : null, sent = L.plug && w !== null;
+    const st0 = L.entity ? S[L.entity] : null, nfx = L.kind === 'light' && st0 ? (st0.attributes.effect_list || []).filter((x) => ['None', 'none', 'off', 'Off', 'solid', 'Solid', ''].indexOf(String(x)) < 0).slice(0, 150).length : 0;
+    const n = L.kind === 'light' ? this._lrnSteps(L) + nfx + (nfx ? 12 : 0) : 0, eta = (n - nfx - (nfx ? 12 : 0)) * ((L.iv || 3) * 3 + 2) + (nfx ? (nfx + 12) * (Math.max(30, (L.iv || 3) * 6) + 3) : 0);
+    let h = '<div class="engrid"><div class="fld"><label>' + t('lrPlug') + '</label><select class="inp" data-lrf="plug"><option value="">' + t('enPick') + '</option>' + plugs.map((x) => '<option value="' + esc(x) + '"' + (L.plug === x ? ' selected' : '') + (busy[x] ? ' disabled' : '') + '>' + esc(this._ename(x)) + ' · ' + esc(busy[x] ? this._t('lrPlugBusy', { n: busy[x] }) : lpEnWs(lpEnW(S, x), this._lang)) + '</option>').join('') + '</select></div></div>';
+    h += '<div class="lrchk"><div><em class="' + (sent ? 'ok' : L.plug ? 'wait' : '') + '">' + (sent ? '✓' : L.plug ? '…' : '1') + '</em><span>' + t('lrC1') + '<i>' + (sent ? t(L.iv ? 'lrC1ok' : 'lrC1wait', { s: lpEnNum(L.iv || 0, (L.iv || 0) < 10 ? 1 : 0, this._lang), w: lpEnWs(w, this._lang) }) : t('lrC1T')) + '</i></span></div>' +
+      '<div><label><input type="checkbox" data-lrf="only"' + (L.only ? ' checked' : '') + '><span>' + t('lrC2') + '<i>' + t(L.kind === 'light' ? 'lrC2T' : 'lrC2Ts') + '</i></span></label></div>' +
+      (L.kind === 'avg' ? '' : '<div><em class="' + (L.tested === 2 ? 'ok' : L.tested === 1 ? 'wait' : L.tested === 3 ? 'bad' : '') + '">' + (L.tested === 2 ? '✓' : L.tested === 1 ? '…' : L.tested === 3 ? '!' : '3') + '</em><span>' + t('lrC3') + '<i>' + (L.testMsg ? esc(L.testMsg) : t('lrC3T')) + '</i></span>' +
+      '<button class="btn sm" data-a="lrtest"' + (sent && L.only && L.tested !== 1 ? '' : ' disabled') + '>' + t('lrTest') + '</button></div>') + '</div>';
+    if (L.kind === 'light') h += '<div class="lrwarn">' + t(nfx ? 'lrWarnFx' : 'lrWarn', { e: this._lrnEta(eta), n: n, f: nfx }) + '</div>';
+    else h += '<div class="hint">' + t(L.kind === 'avg' ? 'lrAvgHow' : 'lrStHow') + '</div>';
+    const ready = sent && L.only && (L.kind === 'avg' || L.tested === 2);
+    h += '<div class="acts"><span class="grow"></span><button class="btn pri" data-a="lrstart"' + (ready ? '' : ' disabled') + '>' + t(L.kind === 'light' ? 'lrStartL' : 'lrStartS') + '</button></div>';
+    return h;
+  }
+  _lrnGrid(tb, cur) {   // ölçüm tablosu ızgarası (hücre rengi watt'a göre)
+    if (!tb) return '';
+    const all = []; const push = (v) => { if (typeof v === 'number') all.push(v); };
+    if (tb.ct) tb.ct.w.forEach((r) => r.forEach(push));
+    if (tb.hs) tb.hs.w.forEach((p) => p.forEach((r) => r.forEach(push)));
+    if (tb.br) tb.br.w.forEach(push);
+    const mx = Math.max.apply(null, all.concat([1])), t = (k, v) => esc(this._t(k, v));
+    const cell = (v, on) => '<td' + (on ? ' class="cur"' : '') + (typeof v === 'number' ? ' style="background:rgba(255,181,74,' + (0.12 + 0.88 * Math.min(1, v / mx)).toFixed(2) + ')" title="' + esc(lpEnNum(v, 1, this._lang)) + ' W"' : '') + '></td>';
+    const head = (b) => '<tr><th></th>' + b.map((x) => '<th>%' + x + '</th>').join('') + '</tr>';
+    let h = '';
+    if (tb.ct) h += '<div class="lrgt">' + t('lrWhite') + '</div><div class="lrgw"><table class="lrgrid">' + head(tb.ct.b) + tb.ct.k.map((k, i) => '<tr><th class="r">' + k + ' K</th>' + tb.ct.b.map((b, j) => cell(tb.ct.w[i][j], cur && cur.t === 'ct' && cur.k === k && cur.b === b)).join('') + '</tr>').join('') + '</table></div>';
+    if (tb.hs) tb.hs.s.forEach((s, si) => { h += '<div class="lrgt">' + t('lrColor', { s: s }) + '</div><div class="lrgw"><table class="lrgrid">' + head(tb.hs.b) + tb.hs.h.map((hh, i) => '<tr><th class="r"><i class="lrsw" style="background:hsl(' + hh + ',' + s + '%,55%)"></i>' + hh + '°</th>' + tb.hs.b.map((b, j) => cell(tb.hs.w[si][i][j], cur && cur.t === 'hs' && cur.h === hh && cur.s === s && cur.b === b)).join('') + '</tr>').join('') + '</table></div>'; });
+    if (tb.br) h += '<div class="lrgt">' + t('lrBri') + '</div><div class="lrgw"><table class="lrgrid">' + head(tb.br.b) + '<tr><th class="r">W</th>' + tb.br.b.map((b, j) => cell(tb.br.w[j], cur && cur.t === 'br' && cur.b === b)).join('') + '</tr></table></div>';
+    return h + '<div class="lrleg"><span>0 W</span><i></i><span>' + esc(lpEnWs(mx, this._lang)) + '</span></div>';
+  }
+  _lrnFx(fxl, n, cur) {   // efekt listesi: ölçülenler ve sıradaki
+    if (!n) return '';
+    const t = (k, v) => esc(this._t(k, v)), L = Object.keys(fxl || {});
+    return '<div class="lrgt">' + t('lrFxT', { i: L.length, n: n }) + '</div><div class="lrfx">' + L.slice(-24).map((k) => '<span' + (k === cur ? ' class="cur"' : '') + '>' + esc(k) + ' <b>' + esc(lpEnNum(fxl[k], 1, this._lang)) + ' W</b></span>').join('') + (cur && L.indexOf(cur) < 0 ? '<span class="cur">' + esc(cur) + ' <b>…</b></span>' : '') + '</div>';
+  }
+  _lrnRunHtml() {
+    const L = this._lrn, run = this._lrnRun(L.id), t = (k, v) => esc(this._t(k, v));
+    if (!run) return '<div class="hint">' + t('enLoading') + '</div>';
+    if (run.phase === 'error' || run.phase === 'stopped') return '<div class="imerr">' + t('lrErrRun_' + (run.msg === 'external' || run.msg === 'plug_silent' || run.msg === 'no_light' ? run.msg : 'x'), { e: run.msg }) + '</div><div class="acts"><span class="grow"></span><button class="btn" data-a="lrclear">' + t('close') + '</button><button class="btn pri" data-a="lragain">' + t('lrAgain') + '</button></div>';
+    const cur = run.cur, ph = run.phase;
+    const fxCur = cur && (cur.t === 'fx' || cur.t === 'fxb');
+    const now = fxCur ? this._t(cur.t === 'fx' ? 'lrNowFx' : 'lrNowFxb', { e: cur.e, b: cur.b }) : ph === 'standby' ? this._t('lrNowSb') : ph === 'probe' && cur ? this._t('lrNowProbe', { c: this._t('lrC_' + cur.c) }) : cur && cur.t === 'ct' ? this._t('lrNowCt', { k: cur.k, b: cur.b }) : cur && cur.t === 'hs' ? this._t('lrNowHs', { h: cur.h, s: cur.s, b: cur.b }) : cur && cur.t === 'br' ? this._t('lrNowBr', { b: cur.b }) : '';
+    let h = '<div class="lrrow"><div class="lrleft">';
+    if (run.probe && run.probe.length) h += '<div class="lrprobe">' + run.probe.map((p) => '<div><i style="background:' + ({ white: '#F4EFE6', red: '#E5484D', green: '#3DDC84', blue: '#5B8DEF' }[p.c] || '#888') + '"></i><span>' + t('lrC_' + p.c) + '</span><b>' + esc(lpEnWs(p.w, this._lang)) + '</b></div>').join('') + '</div>';
+    if (run.plan && run.plan.b) h += '<div class="hint">' + t('lrPlan', { d: Math.round((run.plan.diff || 0) * 100), n: run.n }) + '</div>';
+    h += this._lrnGrid(run.res, cur) + this._lrnFx(run.res && run.res.fxl, run.fx_n, fxCur ? cur.e : null) + '</div><div class="lrside"><div class="lrbig"><b>' + (run.w === null || run.w === undefined ? '–' : esc(lpEnNum(run.w, 1, this._lang)) + '<small>W</small>') + '</b></div><div class="hint lrnow">' + esc(ph === 'paused' ? this._t('lrPaused') : now) + '</div>' +
+      '<div class="lrbar"><i style="width:' + (run.n ? run.i / run.n * 100 : 0).toFixed(1) + '%"></i></div><div class="encalc"><div><span>' + t('lrDone') + '</span><b>' + run.i + ' / ' + (run.n || '…') + '</b></div><div><span>' + t('lrLeft') + '</span><b>~' + esc(this._lrnEta(run.eta || 0)) + '</b></div>' +
+      (run.standby !== null && run.standby !== undefined ? '<div><span>' + t('lrStandby') + '</span><b>' + esc(lpEnNum(run.standby, 1, this._lang)) + ' W</b></div>' : '') + (run.repeats ? '<div><span>' + t('lrRepeats') + '</span><b>' + run.repeats + '</b></div>' : '') + '</div>' +
+      '<div class="hint">' + t('lrBgNote') + '</div></div></div>' +
+      '<div class="acts"><button class="btn" data-a="lrcancel">' + t('lrCancel') + '</button><span class="grow"></span>' + (run.fx_n && !run.skip_fx ? '<button class="btn" data-a="lrskipfx" title="' + t('lrSkipFxT') + '">' + t('lrSkipFx') + '</button>' : '') + '<button class="btn" data-a="' + (ph === 'paused' ? 'lrresume' : 'lrpause') + '">' + t(ph === 'paused' ? 'lrResume' : 'lrPause') + '</button><button class="btn" data-a="lrclose">' + t('lrBg') + '</button></div>';
+    return h;
+  }
+  _lrnPaint() {   // ölçüm sürerken yalnız pencerenin gövdesi yenilenir
+    const R = this.shadowRoot, d = R && R.querySelector('.lrd'); if (!d) return this._render();
+    const L = this._lrn, run = this._lrnRun(L.id);
+    if (!run || run.phase === 'done' || run.phase === 'error' || run.phase === 'stopped') return this._render();
+    const box = document.createElement('div'); box.innerHTML = this._lrnHtml();
+    const nd = box.querySelector('.lrd'); if (nd) { d.innerHTML = nd.innerHTML; }
+  }
+  _lrnResHtml() {
+    const L = this._lrn, run = this._lrnRun(L.id), r = run && run.result, t = (k, v) => esc(this._t(k, v)); if (!r) return '';
+    const same = this._lrnSame(L.id, L.entity), P = this._lrnPayload(), canShare = !!(P.model.manufacturer && (P.model.model || P.model.model_id));
+    const val = (a) => { const v = lrPow(r.lut, a); return v === null ? '–' : lpEnNum(v, 1, this._lang) + ' W'; };
+    let h = '<div class="lrrow"><div class="lrleft">' + this._lrnGrid(r.lut, null) + '</div><div class="lrside"><div class="encalc"><div><span>' + t('lrStandby') + '</span><b>' + esc(lpEnNum(r.standby || 0, 1, this._lang)) + ' W</b></div>' +
+      (r.lut.ct ? '<div><span>' + t('lrV100w') + '</span><b>' + esc(val({ brightness: 255, color_mode: 'color_temp', color_temp_kelvin: 6500 })) + '</b></div><div><span>' + t('lrV50w') + '</span><b>' + esc(val({ brightness: 128, color_mode: 'color_temp', color_temp_kelvin: 2700 })) + '</b></div>' : '') +
+      (r.lut.hs ? '<div><span>' + t('lrV100r') + '</span><b>' + esc(val({ brightness: 255, color_mode: 'hs', hs_color: [0, 100] })) + '</b></div><div><span>' + t('lrV100b') + '</span><b>' + esc(val({ brightness: 255, color_mode: 'hs', hs_color: [240, 100] })) + '</b></div>' : '') +
+      (r.lut.br ? '<div><span>' + t('lrV100') + '</span><b>' + esc(val({ brightness: 255 })) + '</b></div>' : '') +
+      (r.lut.fx && typeof r.lut.fx === 'object' ? '<div><span>' + t('lrFxAvg', { n: Object.keys(r.lut.fx.e || {}).length }) + '</span><b>' + esc(lpEnNum(r.lut.fx.avg || 0, 1, this._lang)) + ' W</b></div>' + (r.lut.fx.r ? '<div><span>' + t('lrFx50') + '</span><b>%' + Math.round(lrLin(r.lut.fx.b, r.lut.fx.r, 50) * 100) + '</b></div>' : '') : '') +
+      '<div><span>' + t('lrPoints') + '</span><b>' + r.n + '</b></div></div></div></div>' + (r.lut.fx && r.lut.fx.e ? this._lrnFx(r.lut.fx.e, Object.keys(r.lut.fx.e).length, null) : '');
+    h += '<div class="lrsend"><label><input type="checkbox" data-lrf="strip"' + (L.strip ? ' checked' : '') + '><span><b>' + t('lrStrip') + '</b><i>' + t('lrStripT') + '</i></span></label>' +
+      (L.strip ? '<label class="lrlen">' + t('lrLenMine') + ' <input class="inp" type="number" min="0.1" max="50" step="0.1" data-lrf="len" value="' + (L.len > 0 ? L.len : '') + '"> m</label>' +
+        '<label class="lrlen">' + t('lrCapMine') + ' <input class="inp" type="number" min="1" max="2000" step="1" data-lrf="cap" value="' + (L.cap > 0 ? L.cap : '') + '"> W</label><span class="hint">' + t('lrCapT') + '</span>' : '') + '</div>';
+    if (same.length) h += '<div class="lrsend"><b>' + t('lrSame', { n: same.length }) + '</b>' + (L.strip ? '<i class="hint">' + t('lrSameStrip') + '</i>' : '') + same.map((x) => '<label><input type="checkbox" data-lrap="' + esc(x) + '"' + (L.apply[x] ? ' checked' : '') + '><span>' + esc(this._ename(x)) + '</span>' +
+      (L.strip ? '<input class="inp lrlenin" type="number" min="0.1" max="50" step="0.1" data-lrlen="' + esc(x) + '" value="' + esc(L.lens[x] || (L.len > 0 ? L.len : '')) + '"> m' : '') + '</label>').join('') + '</div>';
+    const shareOk = canShare && !(L.strip && !(L.len > 0));
+    h += '<div class="lrsend"><label><input type="checkbox" data-lrf="share"' + (L.share && shareOk ? ' checked' : '') + (shareOk ? '' : ' disabled') + '><span><b>' + t('lrShare') + '</b><i>' + t(!canShare ? 'lrShareNo' : !shareOk ? 'lrShareLen' : 'lrShareT') + '</i></span></label>' +
+      (L.share ? '<div class="lrcols"><div><b>' + t('lrSent') + '</b><ul><li>' + t('lrSent1', { m: [P.model.manufacturer, P.model.model_id || P.model.model].join(' ') }) + '</li><li>' + t('lrSent2') + '</li><li>' + t('lrSent3', { n: r.n }) + '</li><li>' + t('lrSent4') + '</li><li>' + t('lrSent5', { v: P.mains_v }) + '</li>' + (L.strip ? '<li>' + t('lrSent6', { m: lpEnNum(L.len, 1, this._lang) }) + (L.cap > 0 ? ', ' + t('lrSent7', { w: L.cap }) : '') + '</li>' : '') + '</ul></div><div><b>' + t('lrNotSent') + '</b><ul><li>' + t('lrNot1') + '</li><li>' + t('lrNot2') + '</li><li>' + t('lrNot3') + '</li></ul></div></div><pre class="lrjs">' + esc(JSON.stringify(P, null, 1).slice(0, 1500)) + '</pre>' : '') + '</div>';
+    h += '<div class="acts"><span class="hint" style="flex:1">' + t('lrBack') + '</span><button class="btn" data-a="lragain">' + t('lrAgain') + '</button><button class="btn pri" data-a="lrsave">' + t(L.share ? 'lrSaveShare' : 'enESave') + '</button></div>';
+    return h;
+  }
+  _lrnStHtml() {
+    const L = this._lrn, run = this._lrnRun(L.id), t = (k, v) => esc(this._t(k, v)), st = this._hass.states[L.entity];
+    if (!run) return '<div class="hint">' + t('enLoading') + '</div>';
+    const keys = this._enStatesOf(L.entity); Object.keys(run.states || {}).forEach((k) => { if (keys.indexOf(k) < 0) keys.push(k); });
+    let ok = 0;
+    const rows = keys.map((k) => { const x = (run.states || {})[k] || { sec: 0, avg: null }, good = x.sec >= 120; if (good) ok++;
+      return '<tr' + (run.cur === k ? ' class="cur"' : '') + '><td>' + esc(this._enStLab(st, k)) + '</td><td>' + (x.sec ? esc(this._lrnEta(x.sec)) : '–') + '</td><td><span class="lrmini"><i class="' + (good ? 'ok' : '') + '" style="width:' + Math.min(100, x.sec / 120 * 100).toFixed(0) + '%"></i></span></td><td class="n">' + (x.avg === null ? '–' : esc(lpEnNum(x.avg, x.avg < 10 ? 1 : 0, this._lang)) + ' W') + '</td></tr>'; }).join('');
+    return '<div class="lrbig"><b>' + (run.w === null || run.w === undefined ? '–' : esc(lpEnNum(run.w, run.w < 10 ? 1 : 0, this._lang)) + '<small>W</small>') + '</b><span>' + t('lrNowState', { s: run.cur ? this._enStLab(st, run.cur) : '–' }) + '</span></div>' +
+      '<div class="lrgw"><table class="lrst"><thead><tr><th>' + t('lrState') + '</th><th>' + t('lrGot') + '</th><th></th><th class="n">' + t('lrAvg') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div><div class="hint">' + t('lrStHint') + '</div>' +
+      '<div class="acts"><button class="btn" data-a="lrcancel">' + t('lrCancel') + '</button><span class="grow"></span><span class="hint">' + esc(this._lrnEta(run.sec || 0)) + '</span><button class="btn" data-a="lrclose">' + t('lrBg') + '</button><button class="btn pri" data-a="lrsave"' + (ok ? '' : ' disabled') + '>' + t('lrFinish') + '</button></div>';
+  }
+  _lrnAvgHtml() {   // sürekli açık cihaz: başından bu yana ortalama (Home Assistant'ın kayıtlarından)
+    const L = this._lrn, run = this._lrnRun(L.id), t = (k, v) => esc(this._t(k, v));
+    if (!run) return '<div class="hint">' + t('enLoading') + '</div>';
+    const h0 = run.hours || 0, lvl = run.settled ? 'ok' : h0 >= 24 ? 'mid' : 'early';
+    const days = run.days || [], mx = Math.max.apply(null, days.map((d) => d.avg).concat([1]));
+    let h = '<div class="lrbig"><b>' + (run.avg === null || run.avg === undefined ? '–' : esc(lpEnNum(run.avg, 1, this._lang)) + '<small>W</small>') + '</b><span>' + t('lrAvgSince', { t: this._lrnEta(run.sec || 0) }) + '</span></div>' +
+      '<div class="lrq ' + lvl + '"><b>' + t('lrQ_' + lvl) + '</b><span>' + t('lrQ_' + lvl + 'T') + '</span></div>' +
+      '<div class="encalc"><div><span>' + t('lrAvgKwh') + '</span><b>' + esc(lpEnNum(run.kwh || 0, 2, this._lang)) + ' kWh</b></div>' +
+      (run.avg ? '<div><span>' + t('lrAvgDay') + '</span><b>' + esc(lpEnNum(run.avg * 24 / 1000, 2, this._lang)) + ' kWh</b></div><div><span>' + t('lrAvgYear') + '</span><b>' + esc(lpEnNum(run.avg * 8.76, 0, this._lang)) + ' kWh</b></div>' : '') +
+      (run.avg24 !== null && run.avg24 !== undefined ? '<div><span>' + t('lrAvg24') + '</span><b>' + esc(lpEnNum(run.avg24, 1, this._lang)) + ' W</b></div>' : '') + '<div><span>' + t('lrAvgNow') + '</span><b>' + esc(lpEnWs(run.w, this._lang)) + '</b></div></div>';
+    if (days.length) h += '<div class="lrdays">' + days.map((d) => '<div><i style="height:' + Math.max(4, d.avg / mx * 60).toFixed(0) + 'px"></i><b>' + esc(lpEnNum(d.avg, 0, this._lang)) + '</b><span>' + esc(d.d.slice(5).split('-').reverse().join('.')) + '</span></div>').join('') + '</div>';
+    h += '<div class="hint">' + t('lrAvgNote') + '</div><div class="acts"><button class="btn" data-a="lrcancel">' + t('lrCancel') + '</button><span class="grow"></span><button class="btn" data-a="lrclose">' + t('lrBg') + '</button><button class="btn pri" data-a="lrsave"' + (run.avg ? '' : ' disabled') + '>' + t('lrFinish') + '</button></div>';
+    return h;
+  }
+  // cihaz satırı ve düzenleyicide öğrenme durumu
+  _lrnPill(id) {
+    const r = this._lrnRun(id); if (!r) return '';
+    if (r.phase === 'done') return '<em class="enp ok">' + esc(this._t('lrPillDone')) + '</em>';
+    if (r.phase === 'error') return '<em class="enp w">' + esc(this._t('lrPillErr')) + '</em>';
+    if (r.kind === 'states') return '<em class="enp w lrlive">' + esc(this._t('lrPillSt', { t: this._lrnEta(r.sec || 0) })) + '</em>';
+    if (r.kind === 'avg') return '<em class="enp ' + (r.settled ? 'ok' : 'w') + ' lrlive">' + esc(this._t('lrPillAvg', { t: this._lrnEta(r.sec || 0), w: r.avg === null || r.avg === undefined ? '…' : lpEnWs(r.avg, this._lang) })) + '</em>';
+    return '<em class="enp w lrlive">' + esc(this._t('lrPillL', { p: r.n ? Math.round(r.i / r.n * 100) : 0 })) + '</em>';
+  }
+  _lrnBox() {
+    const D = this._enE; if (!D) return '';
+    const f = D.f, t = (k, v) => esc(this._t(k, v));
+    const avgK = ['fixed', 'year', 'cycle'].indexOf(f.kind) >= 0;
+    if (!avgK && (['light', 'states', 'onoff'].indexOf(f.kind) < 0 || !f.entity || !this._hass.states[f.entity])) return '';
+    const id = D.id, run = id ? this._lrnRun(id) : null, light = !avgK && f.entity.indexOf('light.') === 0;
+    const e = id ? this._enEsts()[id] : null, own = e && e.src === 'own', pool = e && (e.src === 'pool' || e.src === 'library' || e.src === 'import') && e.lut;
+    const txt = run ? (run.phase === 'done' ? this._t('lrBoxDone') : run.kind === 'states' ? this._t('lrBoxSt', { t: this._lrnEta(run.sec || 0) }) : run.kind === 'avg' ? this._t('lrBoxAvgRun', { t: this._lrnEta(run.sec || 0), w: run.avg ? lpEnWs(run.avg, this._lang) : '…' }) : this._t('lrBoxRun', { p: run.n ? Math.round(run.i / run.n * 100) : 0, e: this._lrnEta(run.eta || 0) }))
+      : own ? this._t(avgK ? 'lrBoxOwnA' : light ? 'lrBoxOwnL' : 'lrBoxOwnS', { n: e.lut ? lrCount(e.lut) : (e.states || []).length, w: lpEnWs(lpEnNumOf(e.w), this._lang) }) : pool ? this._t('lrBoxPool') : this._t(avgK ? 'lrBoxA' : light ? 'lrBoxL' : 'lrBoxS');
+    const can = id || String(f.name || '').trim();   // yeni cihaz: önce kaydedilir, sonra öğrenme açılır
+    return '<div class="lrbox"><div class="t"><b>' + t(light ? 'lrBoxTL' : 'lrBoxTS') + '</b><span>' + esc(txt) + '</span></div><button class="btn pri" data-a="lropen"' + (can ? '' : ' disabled title="' + t('lrNameFirst') + '"') + '>' + t(run ? 'lrSee' : own || pool ? 'lrRe' : id ? 'lrGo' : 'lrSaveGo') + '</button></div>';
+  }
   _enCats() { const C = STORE.data && STORE.data.ecats; return Array.isArray(C) ? C : []; }
   _enGet(path) { let o = this._settings(); const p = path.split('.'); for (let i = 0; i < p.length; i++) { if (!o || typeof o !== 'object') return undefined; o = o[p[i]]; } return o; }
   _enKindIc(k) { return { meas: 'mdi:gauge', light: 'mdi:lightbulb-outline', states: 'mdi:format-list-bulleted-type', onoff: 'mdi:power-plug-outline', fixed: 'mdi:router-wireless', year: 'mdi:fridge-outline', cycle: 'mdi:washing-machine' }[k] || 'mdi:flash'; }
@@ -1393,7 +1791,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
     h += this._enEditor();
     h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = this._enDevW(id, e), est = e.kind !== 'meas';
-      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e)) + '</i></span><em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
+      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e) + (e.src === 'own' ? ' · ' + this._t('lrOwnTag') : e.lut ? ' · ' + this._t('lrTblTag') : '')) + '</i></span>' + this._lrnPill(id) + '<em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
     // bulunan ölçen cihazlar
     const fd = this._enFound();
     if (fd.length) {
@@ -1446,7 +1844,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     else calc = '<div><span>' + t('enEAvg') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div><div class="tot"><span>' + t('enEDay', { k: lpEnNum(now * 24 / 1000, 2, this._lang), y: lpEnNum(now * 8.76, 0, this._lang) }) + '</span><b></b></div>';
     if (calc) h += '<div class="encalc">' + calc + '</div>';
     const warn = (f.kind === 'light' || f.kind === 'onoff' || f.kind === 'states') && f.entity && !st ? t('enWNoEnt') : f.kind === 'states' && f.entity && !e.states.length && !e.other ? t('enWZero') : '';
-    h += '<div class="hint enwarn">' + warn + '</div>';
+    h += '<div class="hint enwarn">' + warn + '</div>' + this._lrnBox();
     if (f.kind === 'year') h += '<div class="hint">' + t('enEYearT') + '</div>';
     const sid = D.id || this._enSlug(f.name);
     h += (f.kind === 'meas' ? (f.energy ? '' : '<div class="hint">' + t('enMCalcT', { e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') : '<div class="hint">' + t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') +
@@ -2056,6 +2454,20 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'energy') return this._enOpen();
       if (act === 'enbadd') return this._enBillAdd();
       if (act === 'enenew') { this._enDraft(null); this._enErr = ''; this._render(); return this._enTop(); }
+      if (act === 'lropen' && this._enE && this._enE.id) return this._lrnOpen(this._enE.id);
+      if (act === 'lropen' && this._enE && !this._enE.id) return this._enSave().then(() => { if (this._enE && this._enE.id && !this._enErr) this._lrnOpen(this._enE.id); });
+      if (act === 'lrskipfx') return this._lrnCtl('skipfx');
+      if (act === 'lrclose') { this._lrn = null; return this._render(); }
+      if (act === 'lrown' && this._lrn) { this._lrn.step = 'prep'; return this._render(); }
+      if (act === 'lruse' && this._lrn && this._lrn.pool) { this._lrn.pool.use = true; this._lrn.share = false; return this._lrnSave(); }
+      if (act === 'lrtest' && this._lrn) return this._lrnTest();
+      if (act === 'lrstart' && this._lrn) return this._lrnStart();
+      if (act === 'lrpause') return this._lrnCtl('pause');
+      if (act === 'lrresume') return this._lrnCtl('resume');
+      if (act === 'lrcancel') { const L0 = this._lrn; return this._lrnCtl('cancel').then(() => { if (this._lrn === L0) this._lrn = null; this._render(); }); }
+      if (act === 'lrclear') { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { if (this._lrn === L0) this._lrn = null; this._render(); }); }
+      if (act === 'lragain' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { L0.step = 'prep'; L0.tested = 0; L0.testMsg = ''; this._render(); }); }
+      if (act === 'lrsave' && this._lrn) return this._lrnSave();
       if (act === 'eneclose') { this._enE = null; this._enErr = ''; return this._render(); }
       if (act === 'enaddall') { if (!this._enAskAll) { this._enAskAll = true; return this._render(); } this._enAskAll = false; return this._enAddMeas(this._enFound()); }
       if (act === 'enfoundall') { this._enAllF = true; return this._render(); }
@@ -2479,6 +2891,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); const en = sf.indexOf('energy.') === 0, sel = el.tagName === 'SELECT'; this._setting(sf, v, !en || !sel); if (en && !sel) this._enLater(); return; }   // enerji sayfasında hesaplar yenilensin (yazı alanında biraz sonra: basılan düğme kaybolmasın)   // enerji sayfasında hesaplar yenilensin
       // yazı ve sayı alanı: yalnız taslağa yazılır, hesap yerinde yenilenir (tam çizim, alandan çıkarken basılan düğmenin tıklamasını yutuyordu)
       if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { const k = el.getAttribute('data-enf'); this._enE.f[k] = el.value; this._enErr = ''; if (el.tagName === 'SELECT') return this._render(); if (k === 'entity') return this._enLater(); return this._enCalc(); }
+      if (el.hasAttribute && el.hasAttribute('data-lrf') && this._lrn) { const k = el.getAttribute('data-lrf'); if (k === 'plug') { this._lrn.plug = el.value; this._lrn.ts = []; this._lrn.iv = 0; this._lrn.tested = 0; this._lrn.testMsg = ''; this._lrnWatch(); } else if (k === 'len' || k === 'cap') { const v = parseFloat(String(el.value).replace(',', '.')); this._lrn[k] = v > 0 && v <= (k === 'len' ? 50 : 2000) ? v : 0; } else this._lrn[k] = !!el.checked; return this._render(); }
+      if (el.hasAttribute && el.hasAttribute('data-lrlen') && this._lrn) { this._lrn.lens[el.getAttribute('data-lrlen')] = String(el.value).replace(',', '.'); return; }
+      if (el.hasAttribute && el.hasAttribute('data-lrap') && this._lrn) { this._lrn.apply[el.getAttribute('data-lrap')] = !!el.checked; return; }
       if (el.hasAttribute && el.hasAttribute('data-enst') && this._enE) { this._enE.f.st[el.getAttribute('data-enst')] = el.value; this._enErr = ''; return this._enCalc(); }
       if (el.hasAttribute && el.hasAttribute('data-encf') && this._enC) { this._enC[el.getAttribute('data-encf')] = el.value; return; }
       if (el.hasAttribute && el.hasAttribute('data-encm') && this._enC) { this._enC.m[el.getAttribute('data-encm')] = el.checked; return this._render(); }

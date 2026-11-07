@@ -299,6 +299,8 @@ The **Energy** button in the top bar opens devices, categories, solar, price, bi
 
 **Devices:** devices that measure power are found and come in with **Add**. For the others, a virtual measurement: light (standby, lowest and highest W, by brightness), by state (a W value per state; e.g. a TV at 95 W playing, 70 W paused), on/off, fixed, yearly usage (the label's kWh/year) or cycles. Each gets a power and an energy sensor in Home Assistant; cards show them with "~".
 
+**Learn:** a smart device that does not measure power is plugged into a plug that does, once. For a light the shared pool is checked first; otherwise every white tone, color and brightness is measured in turn (inside Home Assistant; it keeps going if the tablet is closed). Effects are measured too. Devices like a TV collect an average per state while used; always-on devices like a fridge take the plug's average over days. Several learns run together on different plugs. You can send your measurement to the shared pool; LED strips are kept per meter.
+
 **Categories:** name, color and the devices in it. Each category gets a total power and kWh sensor; devices and categories are added to Home Assistant's Energy settings by themselves (Data source → Sync with the Energy settings).
 
 **Solar and battery:** production, grid (one sensor, or import and export apart) and battery sensors; the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.
@@ -314,6 +316,7 @@ The **Energy** button in the top bar opens devices, categories, solar, price, bi
 - **Usage of the last 12 months (kWh)**: From the chart on the back of the bill.
 - **Kind** (Measured · Light · By state · On / off · Fixed · Yearly usage · Cycles): How the device is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W.
 - **Category**: The device's category; a new one can be made from here.
+- **LED strip**: In the Learn result: a strip's length and adapter power; a table from the pool is scaled to them.
 - **One sensor** (One sensor · Import and export apart · None): Grid metering: one plus/minus sensor, or import and export apart.
 - **Reversed sign**: If the battery sensor shows charging as minus.
 - **Left on for long**: Tip: a device drawing more than this for longer than this (default 300 W, 3 hours).
