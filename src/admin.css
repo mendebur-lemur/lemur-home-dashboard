@@ -800,7 +800,12 @@ div.ensr:hover { background: var(--s1); }
 .endr .wv { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 13.5px; }
 .etg { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
 .etg.t-meas { background: rgba(70,190,120,.14); color: #5FD08F; }
-.etg.t-lrn, .etg.t-run { background: rgba(91,141,239,.15); color: #93B4F6; }
+.etg.t-lrn { background: rgba(91,141,239,.15); color: #93B4F6; }
+/* v0.28.9: öğreniliyor (sürüyor, mor ve yanıp sönen nokta) ile öğrenildi (bitti, turkuaz) aynı maviydi */
+.etg.t-own { background: rgba(77,208,225,.14); color: #6FDCEA; }
+.etg.t-run { background: rgba(179,136,255,.16); color: #C7A8FF; display: inline-flex; align-items: center; gap: 5px; }
+.etg.t-run::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: etgp 1.4s ease-in-out infinite; }
+@keyframes etgp { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
 .etg.t-est { background: rgba(255,255,255,.07); color: var(--tx2); }
 .etg.t-chk { background: rgba(242,169,59,.16); color: var(--ac); }
 .endempty { padding: 26px; text-align: center; color: var(--tx2); background: var(--s1); border: 1px dashed var(--ln2); border-radius: 13px; }

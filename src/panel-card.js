@@ -1544,7 +1544,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const busy = mode === 'cleaning';
       kind = busy ? 'cool' : mode === 'error' ? 'err' : mode === 'returning' ? 'heat' : 'off';
       sub = '<em>' + esc(lpClW(LP_VAC, lang, mode)) + '</em>' + (typeof a.battery_level === 'number' ? ' · %' + Math.round(a.battery_level) : '');
-      if (!na) right = ib(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', busy) + ib('vdock', 'mdi:home-import-outline', mode === 'returning');
+      // istasyondayken "istasyona dön" düğmesi işe yaramıyor: yalnız başlat (dar telefonda ad sığsın)
+      if (!na) right = ib(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', busy) + (mode === 'docked' ? '' : ib('vdock', 'mdi:home-import-outline', mode === 'returning'));
       const fs = a.fan_speed_list || [];
       more = chip('vstop', '', t(lang, 'cl_stop')) + chip('vloc', '', t(lang, 'cl_find')) + (fs.length ? chip('vfan', t(lang, 'cl_suction'), lpClW(LP_FANW, lang, a.fan_speed || '–')) : '');
       if (el._menu === 'vfan') { opts = fs; curO = a.fan_speed; }

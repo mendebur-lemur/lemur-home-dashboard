@@ -1916,7 +1916,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const gKey = (k) => (G === 'room' ? I[k].room : I[k].e.cat && catN(I[k].e.cat) ? I[k].e.cat : '');
     const gName = (g) => (G === 'room' ? (g ? this._enAreaN(g) : this._t('enDvNoRoom')) : (g ? catN(g) : this._t('enNoCat')));
     const GR = {}; top.forEach((k) => { const g = gKey(k); (GR[g] = GR[g] || []).push(k); });
-    const tag = { meas: ['t-meas', 'enTgM'], run: ['t-run', 'enTgR'], own: ['t-lrn', 'enTgO'], lib: ['t-lrn', 'enTgL'], est: ['t-est', 'enTgE'], chk: ['t-chk', 'enTgC'] };
+    const tag = { meas: ['t-meas', 'enTgM'], run: ['t-run', 'enTgR'], own: ['t-own', 'enTgO'], lib: ['t-lrn', 'enTgL'], est: ['t-est', 'enTgE'], chk: ['t-chk', 'enTgC'] };
     const row = (k, sub) => {
       const x = I[k], e = x.e, tg = tag[x.st.s], on = this._enE && this._enE.id === k;
       const other = G === 'room' ? (e.cat && catN(e.cat) ? catN(e.cat) : this._t('enNoCat')) : (x.room ? this._enAreaN(x.room) : this._t('enDvNoRoom'));
