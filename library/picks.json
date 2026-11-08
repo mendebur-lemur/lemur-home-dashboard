@@ -1,6 +1,6 @@
 {
  "v": 1,
- "updated": "2026-11-08",
+ "updated": "2026-11-09",
  "_note": "Önerilen ürünler (yönetim paneli → Önerilen ürünler). Pano bu dosyayı GitHub'dan 6 saatte bir okur; pakettekinden yeniyse onu kullanır. buy: mağaza linkleri (lemur.run kısa linkleri), img: docs/picks/<img>.webp (isteğe bağlı). energy: lut (ölçüm tablosu hazır), self (gücünü kendisi ölçer), wait (ölçülüyor), none (gerekmez).",
  "items": [
   {
@@ -219,7 +219,7 @@
     "Bluetooth",
     "Matter"
    ],
-   "energy": "wait",
+   "energy": "lut",
    "buy": {
     "amz": "https://lemur.run/goveelyraproamz"
    },
@@ -242,7 +242,7 @@
     "Zigbee",
     "Bluetooth"
    ],
-   "energy": "wait",
+   "energy": "lut",
    "buy": {
     "amz": "https://lemur.run/hueplayamz"
    },

@@ -115,6 +115,12 @@ def per_meter(c: dict) -> dict:
         t["hs"]["w"] = [[[f(x) for x in r] for r in p2] for p2 in t["hs"]["w"]]
     if t.get("br"):
         t["br"]["w"] = [f(x) for x in t["br"]["w"]]
-    if t.get("fx") is not None:
-        t["fx"] = f(t["fx"])
+    fx = t.get("fx")
+    if isinstance(fx, (int, float)) and not isinstance(fx, bool):
+        t["fx"] = f(fx)
+    elif isinstance(fx, dict):  # v0.28+: efekt başına güç (e), ortalama (avg); b/r parlaklık oranları ölçeklenmez
+        if isinstance(fx.get("e"), dict):
+            fx["e"] = {k: f(v) for k, v in fx["e"].items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
+        if isinstance(fx.get("avg"), (int, float)):
+            fx["avg"] = f(fx["avg"])
     return t

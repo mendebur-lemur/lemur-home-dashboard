@@ -22,9 +22,9 @@ test('the bundled list is used and every link is https', () => {
 });
 test('mobile app service name follows HA slugify', () => {
   const P = load();
-  assert.strictEqual(P.lhdMaSlug('Hakan iPhone’u'), 'hakan_iphoneu');
+  assert.strictEqual(P.lhdMaSlug('Ali iPhone’u'), 'ali_iphoneu');
   assert.strictEqual(P.lhdMaSlug('Galaxy S26 Ultra'), 'galaxy_s26_ultra');
-  assert.strictEqual(P.lhdMaSlug("Hakan's iPhone"), 'hakan_s_iphone');
+  assert.strictEqual(P.lhdMaSlug("Ali's iPhone"), 'ali_s_iphone');
   assert.strictEqual(P.lhdMaSlug('Çalışma Odası Tablet'), 'calisma_odasi_tablet');
 });
 test("the logged-in person's phones are found, others' are not", () => {

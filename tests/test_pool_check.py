@@ -28,3 +28,10 @@ def test_missing_standby_without_floor_still_rejected():
 def test_measured_standby_kept():
     errs, clean = common.check(_sub(standby=0.3))
     assert errs == [] and clean["standby"] == 0.3
+
+
+def test_strip_per_meter_scales_effect_table():
+    c = {"strip": True, "length_m": 2.0, "standby": 0.0,
+         "lut": {"br": {"b": [1, 100], "w": [1.0, 10.0]}, "fx": {"e": {"Fire": 4.0}, "avg": 4.0, "b": [10, 100], "r": [0.5, 1.0]}}}
+    t = common.per_meter(c)
+    assert t["fx"]["e"]["Fire"] == 2.0 and t["fx"]["avg"] == 2.0 and t["fx"]["r"] == [0.5, 1.0]
