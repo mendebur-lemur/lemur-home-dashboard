@@ -857,3 +857,7 @@ div.ensr:hover { background: var(--s1); }
   .stb .l, .enb .l { display: none; } .stb, .enb { width: 34px; padding: 0; justify-content: center; }
 }
 @media (min-width: 601px) and (max-width: 860px) { .top h1 { display: none; } }
+/* v0.28.8 ayarlarda açıklamalar iki satır; dokununca açılır */
+.sset .srow .t > span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+.sset .srow .t > span.open { -webkit-line-clamp: unset; display: block; }
+.ensep { height: 1px; background: var(--ln); margin: 22px 0 6px; }
