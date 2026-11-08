@@ -23,6 +23,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveetreelamphb",
     "amz": "https://lemur.run/goveetreelampamz"
    },
    "img": "govee-tree-lamp"
@@ -48,6 +49,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveestripshb",
     "amz": "https://lemur.run/goveestripsamz"
    },
    "img": "govee-strip-s"
@@ -73,6 +75,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveeflowplushb",
     "amz": "https://lemur.run/goveeflowplusamz"
    },
    "img": "govee-flow-plus"
@@ -98,6 +101,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveesyncboxhb",
     "amz": "https://lemur.run/goveesyncboxamz"
    },
    "img": "govee-sync-box"
@@ -122,6 +126,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveeoutdoorwallhb",
     "amz": "https://lemur.run/goveeoutdoorwallamz"
    },
    "img": "govee-outdoor-wall"
@@ -147,6 +152,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveekaretavanhb",
     "amz": "https://lemur.run/goveekaretavanamz"
    },
    "img": "govee-kare-tavan"
@@ -172,6 +178,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveeyuvarlaktavanhb",
     "amz": "https://lemur.run/goveeyuvarlaktavanamz"
    },
    "img": "govee-yuvarlak-tavan"
@@ -196,6 +203,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/goveemasalambasihb",
     "amz": "https://lemur.run/goveemasalambasiamz"
    },
    "img": "govee-masa-lambasi"
@@ -221,6 +229,7 @@
    ],
    "energy": "lut",
    "buy": {
+    "hb": "https://lemur.run/goveelyraprohb",
     "amz": "https://lemur.run/goveelyraproamz"
    },
    "img": "govee-lyra-pro"
@@ -244,6 +253,7 @@
    ],
    "energy": "lut",
    "buy": {
+    "hb": "https://lemur.run/hueplayhb",
     "amz": "https://lemur.run/hueplayamz"
    },
    "img": "hue-play"
@@ -266,6 +276,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/git.php?k=q6t&m=136&a=akilliev",
     "amz": "https://lemur.run/huegradientstripamz"
    },
    "img": "hue-gradient-strip"
@@ -288,6 +299,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/hueoutdoorstriphb",
     "amz": "https://lemur.run/hueoutdoorstripamz"
    },
    "img": "hue-outdoor-strip"
@@ -311,6 +323,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/huesignehb",
     "amz": "https://lemur.run/huesigneamz"
    },
    "img": "hue-signe"
@@ -334,6 +347,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/huebridgehb",
     "amz": "https://lemur.run/huebridgeamz"
    },
    "img": "hue-bridge"
@@ -357,6 +371,7 @@
    ],
    "energy": "wait",
    "buy": {
+    "hb": "https://lemur.run/aqarat1mhb",
     "amz": "https://lemur.run/aqarat1mamz"
    },
    "img": "aqara-t1m"
@@ -380,6 +395,7 @@
    ],
    "energy": "self",
    "buy": {
+    "hb": "https://lemur.run/sonoffs60hb",
     "amz": "https://lemur.run/sonoffs60amz"
    },
    "img": "sonoff-s60"
@@ -404,6 +420,7 @@
    ],
    "energy": "self",
    "buy": {
+    "hb": "https://lemur.run/shelly1pmminihb",
     "amz": "https://lemur.run/shelly1pmminiamz"
    },
    "img": "shelly-1pm-mini"
@@ -428,6 +445,7 @@
    ],
    "energy": "self",
    "buy": {
+    "hb": "https://lemur.run/shellyrgbwhb",
     "amz": "https://lemur.run/shellyrgbwamz"
    },
    "img": "shelly-rgbw"
@@ -451,6 +469,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonoffminidhb",
     "amz": "https://lemur.run/sonoffminidamz"
    },
    "img": "sonoff-mini-d"
@@ -474,6 +493,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonoffm5hb",
     "amz": "https://lemur.run/sonoffm5amz"
    },
    "img": "sonoff-m5"
@@ -496,6 +516,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonofft5hb",
     "amz": "https://lemur.run/sonofft5amz"
    },
    "img": "sonoff-t5"
@@ -542,6 +563,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/shellywallxlhb",
     "amz": "https://lemur.run/shellywallxlamz"
    },
    "img": "shelly-wall-xl"
@@ -564,6 +586,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonoffr5hb",
     "amz": "https://lemur.run/sonoffr5amz"
    },
    "img": "sonoff-r5"
@@ -586,6 +609,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqaraminianahtarhb",
     "amz": "https://lemur.run/aqaraminianahtaramz"
    },
    "img": "aqara-mini-anahtar"
@@ -608,6 +632,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqarap1hb",
     "amz": "https://lemur.run/aqarap1amz"
    },
    "img": "aqara-p1"
@@ -631,6 +656,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqarakapip2hb",
     "amz": "https://lemur.run/aqarakapip2amz"
    },
    "img": "aqara-kapi-p2"
@@ -653,6 +679,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqaratitresimhb",
     "amz": "https://lemur.run/aqaratitresimamz"
    },
    "img": "aqara-titresim"
@@ -675,6 +702,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqarasusizintihb",
     "amz": "https://lemur.run/aqarasusizintiamz"
    },
    "img": "aqara-su-sizinti"
@@ -697,6 +725,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/hueharekethb",
     "amz": "https://lemur.run/huehareketamz"
    },
    "img": "hue-hareket"
@@ -719,6 +748,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonoffsnzb02dhb",
     "amz": "https://lemur.run/sonoffsnzb02damz"
    },
    "img": "sonoff-snzb02d"
@@ -744,6 +774,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/aqaram3hb",
     "amz": "https://lemur.run/aqaram3amz"
    },
    "img": "aqara-m3"
@@ -767,6 +798,7 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/sonoffdonglehb",
     "amz": "https://lemur.run/sonoffdongleamz"
    },
    "img": "sonoff-dongle"
@@ -790,9 +822,777 @@
    ],
    "energy": "none",
    "buy": {
+    "hb": "https://lemur.run/asusbq16hb",
     "amz": "https://lemur.run/asusbq16amz"
    },
    "img": "asus-bq16"
+  },
+  {
+   "id": "govee-ultra-tavan",
+   "cat": "light",
+   "icon": "mdi:ceiling-light",
+   "name": "Govee Ceiling Light Ultra",
+   "kind": {
+    "tr": "Tavan lambası",
+    "en": "Ceiling light"
+   },
+   "what": {
+    "tr": "53 cm tavan lambası; ortası ve halkası ayrı renk, efektler panelden.",
+    "en": "53 cm ceiling light; centre and ring in separate colours, effects from the dashboard."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/goveeultratavanhb"
+   },
+   "img": "govee-ultra-tavan"
+  },
+  {
+   "id": "govee-r1250",
+   "cat": "light",
+   "icon": "mdi:ceiling-light-outline",
+   "name": "Govee Ceiling Light Pro",
+   "kind": {
+    "tr": "Tavan lambası",
+    "en": "Ceiling light"
+   },
+   "what": {
+    "tr": "46 cm yuvarlak tavan lambası; iki bölgeli renk, beyazı da ayarlanır.",
+    "en": "46 cm round ceiling light; two-zone colour plus tunable white."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/goveer1250hb"
+   },
+   "img": "govee-r1250"
+  },
+  {
+   "id": "govee-lantern",
+   "cat": "light",
+   "icon": "mdi:floor-lamp-outline",
+   "name": "Govee Lantern Floor Lamp",
+   "kind": {
+    "tr": "Köşe lambası",
+    "en": "Floor lamp"
+   },
+   "what": {
+    "tr": "160 cm fener tipi köşe lambası; sıcak-soğuk beyaz ve renk.",
+    "en": "160 cm lantern floor lamp; warm to cool white and colour."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/goveelanternhb"
+   },
+   "img": "govee-lantern"
+  },
+  {
+   "id": "govee-h61f5",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Govee Strip Light 2 Pro",
+   "kind": {
+    "tr": "LED şerit",
+    "en": "LED strip"
+   },
+   "what": {
+    "tr": "5 m kesilebilir şerit; renkli ve ayrı beyaz LED, Matter destekli.",
+    "en": "5 m cuttable strip; colour plus separate white LEDs, Matter ready."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "lut",
+   "buy": {
+    "hb": "https://lemur.run/goveeh61f5hb"
+   },
+   "img": "govee-h61f5"
+  },
+  {
+   "id": "govee-h6046",
+   "cat": "light",
+   "icon": "mdi:lightbulb-variant-outline",
+   "name": "Govee Flow Plus 38 cm",
+   "kind": {
+    "tr": "Işık çubukları",
+    "en": "Light bars"
+   },
+   "what": {
+    "tr": "38 cm iki ışık çubuğu; TV ya da masa arkası için.",
+    "en": "Two 38 cm light bars; for behind a TV or desk."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/goveeh6046hb"
+   },
+   "img": "govee-h6046"
+  },
+  {
+   "id": "hue-duvar",
+   "cat": "light",
+   "icon": "mdi:wall-sconce-flat-variant",
+   "name": "Philips Hue duvar aydınlatma (2'li)",
+   "kind": {
+    "tr": "Duvar lambası",
+    "en": "Wall light"
+   },
+   "what": {
+    "tr": "İç mekân duvar lambası, iki adet; Hue köprüsüyle çalışır.",
+    "en": "Indoor wall lights, pack of two; works with the Hue bridge."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/hueduvarhb"
+   },
+   "img": "hue-duvar"
+  },
+  {
+   "id": "hue-flourish",
+   "cat": "light",
+   "icon": "mdi:lamp",
+   "name": "Philips Hue Flourish masa lambası",
+   "kind": {
+    "tr": "Masa lambası",
+    "en": "Table lamp"
+   },
+   "what": {
+    "tr": "Renkli masa lambası; Hue köprüsüyle yerel çalışır.",
+    "en": "Colour table lamp; runs locally with the Hue bridge."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/hueflourishhb"
+   },
+   "img": "hue-flourish"
+  },
+  {
+   "id": "hue-signe-masa",
+   "cat": "light",
+   "icon": "mdi:desk-lamp",
+   "name": "Philips Hue Gradient Signe masa",
+   "kind": {
+    "tr": "Masa lambası",
+    "en": "Table lamp"
+   },
+   "what": {
+    "tr": "Gradyan renkli ince masa lambası; duvara renk yayar.",
+    "en": "Slim gradient table lamp; washes the wall with colour."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/huesignemasahb"
+   },
+   "img": "hue-signe-masa"
+  },
+  {
+   "id": "shelly-plug-m",
+   "cat": "plug",
+   "icon": "mdi:power-socket-de",
+   "name": "Shelly Plug M Gen3 (2'li)",
+   "kind": {
+    "tr": "Priz ve ölçüm",
+    "en": "Plug and metering"
+   },
+   "what": {
+    "tr": "Enerji ölçümlü akıllı priz, iki adet; yerel çalışır.",
+    "en": "Smart plug with energy metering, pack of two; works locally."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth",
+    "Matter",
+    "Local"
+   ],
+   "energy": "self",
+   "buy": {
+    "hb": "https://lemur.run/shellyplugmhb"
+   },
+   "img": "shelly-plug-m"
+  },
+  {
+   "id": "sonoff-mini-r4",
+   "cat": "plug",
+   "icon": "mdi:electric-switch",
+   "name": "Sonoff MINI R4",
+   "kind": {
+    "tr": "Röle",
+    "en": "Relay"
+   },
+   "what": {
+    "tr": "Duvar anahtarının arkasına giren küçük röle; Matter destekli.",
+    "en": "Small relay that fits behind a wall switch; Matter ready."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/sonoffminir4hb"
+   },
+   "img": "sonoff-mini-r4"
+  },
+  {
+   "id": "sonoff-nspanel-gen2",
+   "cat": "switch",
+   "icon": "mdi:tablet-dashboard",
+   "name": "Sonoff NSPanel Pro Gen2",
+   "kind": {
+    "tr": "Duvar paneli",
+    "en": "Wall panel"
+   },
+   "what": {
+    "tr": "Dokunmatik duvar paneli; iki kanal röle ve Zigbee hub.",
+    "en": "Touch wall panel; two relay channels and a Zigbee hub."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Zigbee",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/sonoffnspanelgen2hb"
+   },
+   "img": "sonoff-nspanel-gen2"
+  },
+  {
+   "id": "aqara-h1-remote",
+   "cat": "remote",
+   "icon": "mdi:light-switch",
+   "name": "Aqara H1 kablosuz ikili anahtar",
+   "kind": {
+    "tr": "Kumanda",
+    "en": "Remote"
+   },
+   "what": {
+    "tr": "Pilli, iki tuşlu duvar anahtarı; istediğin yere yapışır.",
+    "en": "Battery two-button wall switch; sticks anywhere."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/aqarah1remotehb"
+   },
+   "img": "aqara-h1-remote"
+  },
+  {
+   "id": "hue-dial",
+   "cat": "remote",
+   "icon": "mdi:knob",
+   "name": "Philips Hue Tap Dial",
+   "kind": {
+    "tr": "Kumanda",
+    "en": "Remote"
+   },
+   "what": {
+    "tr": "Dört tuşlu, döner düğmeli kumanda; ışığı çevirerek kısıp açarsın.",
+    "en": "Four-button remote with a dial; turn it to dim lights."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/huedialhb"
+   },
+   "img": "hue-dial"
+  },
+  {
+   "id": "aqara-p2-motion",
+   "cat": "sensor",
+   "icon": "mdi:motion-sensor",
+   "name": "Aqara Motion Sensor P2",
+   "kind": {
+    "tr": "Hareket sensörü",
+    "en": "Motion sensor"
+   },
+   "what": {
+    "tr": "Hareket ve ışık sensörü; Thread ile Matter üzerinden bağlanır.",
+    "en": "Motion and light sensor; joins over Thread with Matter."
+   },
+   "proto": [
+    "Thread",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/aqarap2motionhb"
+   },
+   "img": "aqara-p2-motion"
+  },
+  {
+   "id": "sonoff-snzb02p",
+   "cat": "sensor",
+   "icon": "mdi:thermometer",
+   "name": "Sonoff SNZB-02P",
+   "kind": {
+    "tr": "Sıcaklık ve nem",
+    "en": "Temperature and humidity"
+   },
+   "what": {
+    "tr": "Küçük sıcaklık ve nem sensörü; Zigbee.",
+    "en": "Small temperature and humidity sensor; Zigbee."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/sonoffsnzb02phb"
+   },
+   "img": "sonoff-snzb02p"
+  },
+  {
+   "id": "aqara-e1-stor",
+   "cat": "other",
+   "icon": "mdi:roller-shade",
+   "name": "Aqara Roller Shade Driver E1",
+   "kind": {
+    "tr": "Stor motoru",
+    "en": "Roller shade driver"
+   },
+   "what": {
+    "tr": "Zincirli storu akıllı yapar; panelden açılıp kapanır.",
+    "en": "Makes a chain roller shade smart; opens and closes from the dashboard."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/aqarae1storhb"
+   },
+   "img": "aqara-e1-stor"
+  },
+  {
+   "id": "sensibo-sky",
+   "cat": "climate",
+   "icon": "mdi:air-conditioner",
+   "name": "Sensibo Sky",
+   "kind": {
+    "tr": "Klima kontrolü",
+    "en": "AC controller"
+   },
+   "what": {
+    "tr": "Kızılötesiyle klimayı akıllı yapar; sıcaklık ve nem de ölçer.",
+    "en": "Makes an AC smart over infrared; also reads temperature and humidity."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/sensiboskyhb"
+   },
+   "img": "sensibo-sky"
+  },
+  {
+   "id": "homepod-mini",
+   "cat": "other",
+   "icon": "mdi:speaker",
+   "name": "Apple HomePod mini",
+   "kind": {
+    "tr": "Akıllı hoparlör",
+    "en": "Smart speaker"
+   },
+   "what": {
+    "tr": "Hoparlör ve Thread sınır yönlendirici; panelden müzik çalınır.",
+    "en": "Speaker and Thread border router; play music from the dashboard."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Thread"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/homepodminihb"
+   },
+   "img": "homepod-mini"
+  },
+  {
+   "id": "homepod",
+   "cat": "other",
+   "icon": "mdi:speaker",
+   "name": "Apple HomePod",
+   "kind": {
+    "tr": "Akıllı hoparlör",
+    "en": "Smart speaker"
+   },
+   "what": {
+    "tr": "Güçlü ses, sıcaklık ve nem sensörü; Thread sınır yönlendirici.",
+    "en": "Big sound, temperature and humidity sensor; Thread border router."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Thread"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://app.hb.biz/mrkGMhFKHn2M"
+   },
+   "img": "homepod"
+  },
+  {
+   "id": "apple-tv",
+   "cat": "other",
+   "icon": "mdi:apple",
+   "name": "Apple TV 4K",
+   "kind": {
+    "tr": "Medya oynatıcı",
+    "en": "Media player"
+   },
+   "what": {
+    "tr": "Panelden kumanda edilir; Thread sınır yönlendirici.",
+    "en": "Controlled from the dashboard; Thread border router."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Ethernet",
+    "Thread"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://app.hb.biz/mm0Ki9Mx29Q1"
+   },
+   "img": "apple-tv"
+  },
+  {
+   "id": "roborock-saros10",
+   "cat": "other",
+   "icon": "mdi:robot-vacuum",
+   "name": "Roborock Saros 10",
+   "kind": {
+    "tr": "Robot süpürge",
+    "en": "Robot vacuum"
+   },
+   "what": {
+    "tr": "Süpürür ve paspaslar; odaları panelden başlatırsın.",
+    "en": "Vacuums and mops; start rooms from the dashboard."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://app.hb.biz/gmK4QzqsoGQS"
+   },
+   "img": "roborock-saros10"
+  },
+  {
+   "id": "govee-sync-box-55",
+   "cat": "light",
+   "icon": "mdi:television-ambient-light",
+   "name": "Govee AI Sync Box 2 (55-65\")",
+   "kind": {
+    "tr": "TV arkası ışık",
+    "en": "TV backlight"
+   },
+   "what": {
+    "tr": "55-65 inç TV için kamerasız ekran senkronu; şerit HDMI kutusuyla gelir.",
+    "en": "Screen sync for 55-65 inch TVs without a camera; strip comes with an HDMI box."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=tvbox1&m=268&a=akilliev"
+   },
+   "img": "govee-sync-box-55"
+  },
+  {
+   "id": "govee-uplighter",
+   "cat": "light",
+   "icon": "mdi:floor-lamp-torchiere",
+   "name": "Govee Uplighter Floor Lamp",
+   "kind": {
+    "tr": "Köşe lambası",
+    "en": "Floor lamp"
+   },
+   "what": {
+    "tr": "Tavana vuran renkli köşe lambası; odayı dolaylı aydınlatır.",
+    "en": "Colour floor lamp that washes the ceiling; lights the room indirectly."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=uplight&m=84&a=akilliev",
+    "amz": "https://lemur.run/git.php?k=uplight&m=86&a=akilliev"
+   },
+   "img": "govee-uplighter"
+  },
+  {
+   "id": "govee-neon",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Govee Neon şerit (3 m)",
+   "kind": {
+    "tr": "Neon şerit",
+    "en": "Neon strip"
+   },
+   "what": {
+    "tr": "Bükülebilen neon şerit; duvara yazı ve şekil yapılır.",
+    "en": "Bendable neon strip; shape words and figures on the wall."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=2hwq&m=142&a=akilliev"
+   },
+   "img": "govee-neon"
+  },
+  {
+   "id": "govee-strip-uzatma",
+   "cat": "light",
+   "icon": "mdi:led-strip",
+   "name": "Govee Strip Light 2 Pro uzatma (1 m)",
+   "kind": {
+    "tr": "Şerit uzatma",
+    "en": "Strip extension"
+   },
+   "what": {
+    "tr": "Strip Light 2 Pro için 1 metre uzatma.",
+    "en": "1 metre extension for Strip Light 2 Pro."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=serituzatma&m=274&a=akilliev"
+   },
+   "img": "govee-strip-uzatma"
+  },
+  {
+   "id": "hue-gradient-lightstrip",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Philips Hue Gradient Lightstrip (2 m)",
+   "kind": {
+    "tr": "LED şerit",
+    "en": "LED strip"
+   },
+   "what": {
+    "tr": "Aynı anda birden çok renk gösteren 2 m Hue şeridi.",
+    "en": "2 m Hue strip that shows several colours at once."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=cybtz&m=155&a=akilliev"
+   },
+   "img": "hue-gradient-lightstrip"
+  },
+  {
+   "id": "tapo-priz",
+   "cat": "plug",
+   "icon": "mdi:power-socket-de",
+   "name": "TP-Link Tapo akıllı priz",
+   "kind": {
+    "tr": "Akıllı priz",
+    "en": "Smart plug"
+   },
+   "what": {
+    "tr": "Uygun fiyatlı Wi-Fi priz; Home Assistant’a yerel bağlanır.",
+    "en": "Affordable Wi-Fi plug; connects to Home Assistant locally."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=h0m58&m=129&a=akilliev"
+   },
+   "img": "tapo-priz"
+  },
+  {
+   "id": "sonoff-mini-rbs",
+   "cat": "plug",
+   "icon": "mdi:window-shutter-settings",
+   "name": "Sonoff MINI-RBS",
+   "kind": {
+    "tr": "Perde rölesi",
+    "en": "Shade relay"
+   },
+   "what": {
+    "tr": "Panjur ve stor motorunu akıllı yapan küçük röle; konum yüzdesiyle çalışır.",
+    "en": "Small relay that makes shutter and shade motors smart; works with position percent."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=wav&m=157&a=akilliev"
+   },
+   "img": "sonoff-mini-rbs"
+  },
+  {
+   "id": "stor-motoru",
+   "cat": "other",
+   "icon": "mdi:roller-shade",
+   "name": "Boru tipi stor motoru",
+   "kind": {
+    "tr": "Stor motoru",
+    "en": "Tubular shade motor"
+   },
+   "what": {
+    "tr": "Stor perdenin borusuna giren motor; perde rölesiyle panelden kumanda edilir.",
+    "en": "Motor that fits inside the shade tube; controlled from the dashboard with a shade relay."
+   },
+   "proto": [
+    "RF"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=83fh&m=158&a=akilliev"
+   },
+   "img": "stor-motoru"
+  },
+  {
+   "id": "sonoff-trvzb",
+   "cat": "climate",
+   "icon": "mdi:radiator",
+   "name": "Sonoff TRVZB",
+   "kind": {
+    "tr": "Kalorifer vanası",
+    "en": "Radiator valve"
+   },
+   "what": {
+    "tr": "Peteği oda oda ısıtır; sıcaklığı panelden ayarlarsın.",
+    "en": "Heats each radiator room by room; set the temperature from the dashboard."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=qhuz&m=161&a=akilliev"
+   },
+   "img": "sonoff-trvzb"
+  },
+  {
+   "id": "sonoff-dongle-max",
+   "cat": "hub",
+   "icon": "mdi:usb",
+   "name": "Sonoff Dongle Max",
+   "kind": {
+    "tr": "Zigbee ve Thread hub",
+    "en": "Zigbee and Thread hub"
+   },
+   "what": {
+    "tr": "Home Assistant için Zigbee ve Thread; USB, Ethernet ya da Wi-Fi ile bağlanır.",
+    "en": "Zigbee and Thread for Home Assistant; connects over USB, Ethernet or Wi-Fi."
+   },
+   "proto": [
+    "Zigbee",
+    "Thread",
+    "Ethernet"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=p931&m=164&a=akilliev"
+   },
+   "img": "sonoff-dongle-max"
+  },
+  {
+   "id": "sonoff-zbbridge",
+   "cat": "hub",
+   "icon": "mdi:hub",
+   "name": "Sonoff Zigbee Bridge Pro",
+   "kind": {
+    "tr": "Hub",
+    "en": "Hub"
+   },
+   "what": {
+    "tr": "Sonoff Zigbee cihazları için hub.",
+    "en": "Hub for Sonoff Zigbee devices."
+   },
+   "proto": [
+    "Zigbee",
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=0tglak&m=162&a=akilliev"
+   },
+   "img": "sonoff-zbbridge"
+  },
+  {
+   "id": "ezviz-kapi",
+   "cat": "other",
+   "icon": "mdi:doorbell-video",
+   "name": "EZVIZ kameralı kapı dürbünü",
+   "kind": {
+    "tr": "Kapı dürbünü",
+    "en": "Door viewer camera"
+   },
+   "what": {
+    "tr": "Ekranlı kameralı kapı dürbünü; kapıdakini telefondan görürsün.",
+    "en": "Door viewer with a screen and camera; see who is at the door on your phone."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "hb": "https://lemur.run/git.php?k=ql2x&m=111&a=akilliev"
+   },
+   "img": "ezviz-kapi"
   }
  ]
 }
