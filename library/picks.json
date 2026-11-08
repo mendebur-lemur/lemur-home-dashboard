@@ -24,7 +24,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveetreelampamz"
-   }
+   },
+   "img": "govee-tree-lamp"
   },
   {
    "id": "govee-strip-s",
@@ -48,7 +49,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveestripsamz"
-   }
+   },
+   "img": "govee-strip-s"
   },
   {
    "id": "govee-flow-plus",
@@ -72,7 +74,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveeflowplusamz"
-   }
+   },
+   "img": "govee-flow-plus"
   },
   {
    "id": "govee-sync-box",
@@ -96,7 +99,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveesyncboxamz"
-   }
+   },
+   "img": "govee-sync-box"
   },
   {
    "id": "govee-outdoor-wall",
@@ -119,7 +123,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveeoutdoorwallamz"
-   }
+   },
+   "img": "govee-outdoor-wall"
   },
   {
    "id": "govee-kare-tavan",
@@ -143,7 +148,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveekaretavanamz"
-   }
+   },
+   "img": "govee-kare-tavan"
   },
   {
    "id": "govee-yuvarlak-tavan",
@@ -167,7 +173,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveeyuvarlaktavanamz"
-   }
+   },
+   "img": "govee-yuvarlak-tavan"
   },
   {
    "id": "govee-masa-lambasi",
@@ -190,7 +197,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveemasalambasiamz"
-   }
+   },
+   "img": "govee-masa-lambasi"
   },
   {
    "id": "govee-lyra-pro",
@@ -214,7 +222,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/goveelyraproamz"
-   }
+   },
+   "img": "govee-lyra-pro"
   },
   {
    "id": "hue-play",
@@ -236,7 +245,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/hueplayamz"
-   }
+   },
+   "img": "hue-play"
   },
   {
    "id": "hue-gradient-strip",
@@ -257,7 +267,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/huegradientstripamz"
-   }
+   },
+   "img": "hue-gradient-strip"
   },
   {
    "id": "hue-outdoor-strip",
@@ -278,7 +289,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/hueoutdoorstripamz"
-   }
+   },
+   "img": "hue-outdoor-strip"
   },
   {
    "id": "hue-signe",
@@ -300,7 +312,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/huesigneamz"
-   }
+   },
+   "img": "hue-signe"
   },
   {
    "id": "hue-bridge",
@@ -322,7 +335,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/huebridgeamz"
-   }
+   },
+   "img": "hue-bridge"
   },
   {
    "id": "aqara-t1m",
@@ -344,7 +358,8 @@
    "energy": "wait",
    "buy": {
     "amz": "https://lemur.run/aqarat1mamz"
-   }
+   },
+   "img": "aqara-t1m"
   },
   {
    "id": "sonoff-s60",
@@ -366,7 +381,8 @@
    "energy": "self",
    "buy": {
     "amz": "https://lemur.run/sonoffs60amz"
-   }
+   },
+   "img": "sonoff-s60"
   },
   {
    "id": "shelly-1pm-mini",
@@ -389,7 +405,8 @@
    "energy": "self",
    "buy": {
     "amz": "https://lemur.run/shelly1pmminiamz"
-   }
+   },
+   "img": "shelly-1pm-mini"
   },
   {
    "id": "shelly-rgbw",
@@ -412,7 +429,8 @@
    "energy": "self",
    "buy": {
     "amz": "https://lemur.run/shellyrgbwamz"
-   }
+   },
+   "img": "shelly-rgbw"
   },
   {
    "id": "sonoff-mini-d",
@@ -434,7 +452,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffminidamz"
-   }
+   },
+   "img": "sonoff-mini-d"
   },
   {
    "id": "sonoff-m5",
@@ -456,7 +475,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffm5amz"
-   }
+   },
+   "img": "sonoff-m5"
   },
   {
    "id": "sonoff-t5",
@@ -477,7 +497,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonofft5amz"
-   }
+   },
+   "img": "sonoff-t5"
   },
   {
    "id": "sonoff-nspanel-pro",
@@ -499,7 +520,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffnspanelproamz"
-   }
+   },
+   "img": "sonoff-nspanel-pro"
   },
   {
    "id": "shelly-wall-xl",
@@ -521,7 +543,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/shellywallxlamz"
-   }
+   },
+   "img": "shelly-wall-xl"
   },
   {
    "id": "sonoff-r5",
@@ -542,7 +565,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffr5amz"
-   }
+   },
+   "img": "sonoff-r5"
   },
   {
    "id": "aqara-mini-anahtar",
@@ -563,7 +587,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqaraminianahtaramz"
-   }
+   },
+   "img": "aqara-mini-anahtar"
   },
   {
    "id": "aqara-p1",
@@ -584,7 +609,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqarap1amz"
-   }
+   },
+   "img": "aqara-p1"
   },
   {
    "id": "aqara-kapi-p2",
@@ -606,7 +632,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqarakapip2amz"
-   }
+   },
+   "img": "aqara-kapi-p2"
   },
   {
    "id": "aqara-titresim",
@@ -627,7 +654,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqaratitresimamz"
-   }
+   },
+   "img": "aqara-titresim"
   },
   {
    "id": "aqara-su-sizinti",
@@ -648,7 +676,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqarasusizintiamz"
-   }
+   },
+   "img": "aqara-su-sizinti"
   },
   {
    "id": "hue-hareket",
@@ -669,7 +698,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/huehareketamz"
-   }
+   },
+   "img": "hue-hareket"
   },
   {
    "id": "sonoff-snzb02d",
@@ -690,7 +720,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffsnzb02damz"
-   }
+   },
+   "img": "sonoff-snzb02d"
   },
   {
    "id": "aqara-m3",
@@ -714,7 +745,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/aqaram3amz"
-   }
+   },
+   "img": "aqara-m3"
   },
   {
    "id": "sonoff-dongle",
@@ -736,7 +768,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/sonoffdongleamz"
-   }
+   },
+   "img": "sonoff-dongle"
   },
   {
    "id": "asus-bq16",
@@ -758,7 +791,8 @@
    "energy": "none",
    "buy": {
     "amz": "https://lemur.run/asusbq16amz"
-   }
+   },
+   "img": "asus-bq16"
   }
  ]
 }
