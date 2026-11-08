@@ -55,6 +55,10 @@ def check(p: dict) -> tuple[list[str], dict]:
     except Exception as err:  # noqa: BLE001
         return errs + [f"tablo geçersiz / table invalid: {err}"], {}
     sb = p.get("standby")
+    # v0.28.8+: prizin okuyamadığı bekleme "ölçülemedi" olarak boş (null) gelir, standby_floor ile; geçerli sayılır, havuzda 0 olarak
+    # tutulur (inceleme 0.1 W altını yok sayar, pano kendi tabanını kullanır). Hue Play gönderimi bu yüzden reddedilmişti.
+    if sb is None and p.get("standby_floor") is True:
+        sb = 0.0
     if not isinstance(sb, (int, float)) or isinstance(sb, bool) or not math.isfinite(sb) or not 0 <= sb <= 20:
         errs.append("bekleme gücü geçersiz / standby invalid")
         sb = 0.0
