@@ -54,7 +54,7 @@ const ADM = {
     enAuto: 'Kategorilerin toplamı', enSb: 'Bekleme gücü', enSbT: 'Seçilmezse son 24 saatin en düşük toplam gücü', enSbAuto: 'Son 24 saatin en düşüğü', enLim: 'Halo renk sınırları (W)', enLimT: 'Yeşil, sarı, turuncu; üstü kırmızı',
     enBadge: 'Işık karosunda watt', enBadgeT: 'Güç ölçen ışık ve prizlerin karosunun köşesinde anlık watt', enB_off: 'Kapalı', enB_on: 'Açıkken', enB_always: 'Hep',
     enCols: 'Sütun', enChart: 'Küçük grafik', enC24: '24 saat', enC7: '7 gün', enChNone: 'Yok', enCount: 'Kaç cihaz', enCat: 'Kategori', enAll: 'Hepsi', enIdle: 'Beklemedekileri gizle', enIdleT: '2 W altındaki cihazlar listede görünmez',
-    pfEnergy: 'Enerji', addEnPick: 'Eklenecek kartı seç; görünümünü sonra kartın ayarından değiştirirsin', lrLeftCol: 'Renkler ve beyaz tonlar ({n} adım)', lrLeftFx: 'Efektler ({n} adım)', lrEvery: 'Prizin yeni değer gönderme sıklığı', lrEveryV: '~{s} sn', lrResumed: 'Yeniden başlatmadan sonra kaldığı yerden sürüyor', enLook: 'Görünüm', enSort: 'Sıra', enSortFix: 'Kategoriler\'deki sıra', enSortW: 'Çok çekene göre', enLoose: 'Kategorisiz karosu', enLooseT: 'Kategoriye konmamış cihazların toplamı', enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
+    pfEnergy: 'Enerji', addEnPick: 'Eklenecek kartı seç; görünümünü sonra kartın ayarından değiştirirsin', addEnVals: 'Bölüme uyan değerler', addEnValsT: 'Bu bölümde {l} olarak eklenir, öteki öğelerle aynı boyda', addEnCards: 'Büyük kartlar', lrLeftCol: 'Renkler ve beyaz tonlar ({n} adım)', lrLeftFx: 'Efektler ({n} adım)', lrEvery: 'Prizin yeni değer gönderme sıklığı', lrEveryV: '~{s} sn', lrResumed: 'Yeniden başlatmadan sonra kaldığı yerden sürüyor', enLook: 'Görünüm', enSort: 'Sıra', enSortFix: 'Kategoriler\'deki sıra', enSortW: 'Çok çekene göre', enLoose: 'Kategorisiz karosu', enLooseT: 'Kategoriye konmamış cihazların toplamı', enDays: 'Gün', enUnit: 'Birim', enKwh: 'kWh', enCost: 'Para', enCostT: 'Para için Enerji sayfasında fiyat girilmeli', enMode: 'Çizgiler', enModeCats: 'Kategoriler', enModeTot: 'Toplam', enChips: 'Altındaki bilgiler', enChipsT: 'Bugünkü kWh, para ve bu hızla aylık tüketim', enKind: 'Kart',
     enPage: 'Enerji ayarları', enBtn: 'Enerji', enOpenT: 'Cihazlar, kategoriler, güneş, fiyat, faturalar ve ipuçları kendi sayfasında', en_sum: 'Özet', en_src: 'Veri kaynağı', en_tariff: 'Fiyat ve tarife', en_bill: 'Faturalar', en_est: 'Tahmini cihazlar', en_look: 'Görünüm',
     enSumT: 'Ayarların bugün ne sonuç verdiği. Bir satıra dokununca ilgili bölüm açılır.', enSMonth: 'Bu ay', enSYear: 'Bu yıl', enSBill: 'Son fatura', enSEst: 'Tahmini cihazlar', enNoBill: 'Fatura girilmedi', enNoData: 'Enerji verisi henüz yok', enCats: '{n} kategori, {d} cihaz', enUnt: '%{p} ölçülmüyor', enEstN: '{n} cihaz · şu an ~{w}', enNone: 'Yok', enLoading: 'Yükleniyor…', enPriceNone: 'Fiyat yok',
     enPrMode: 'Fiyat', enPrBill: 'Faturadan', enPrSingle: 'Tek fiyat', enPrTier: 'Kademeli', enPrBillT: 'Son fatura: {k} kWh, {t} → 1 kWh {u}. Yeni fatura girildikçe güncellenir.', enPrBillNo: 'Faturalar bölümüne bir fatura girince birim fiyat ondan hesaplanır (vergiler ve sabit bedeller dahil).',
@@ -180,7 +180,7 @@ const ADM = {
     enAuto: 'Sum of categories', enSb: 'Standby power', enSbT: 'If none is picked, the lowest total power of the last 24 hours', enSbAuto: 'Lowest of the last 24 hours', enLim: 'Halo colour limits (W)', enLimT: 'Green, yellow, orange; above is red',
     enBadge: 'Watts on light tiles', enBadgeT: 'Live watts in the corner of light and plug tiles that measure power', enB_off: 'Off', enB_on: 'When on', enB_always: 'Always',
     enCols: 'Columns', enChart: 'Small chart', enC24: '24 hours', enC7: '7 days', enChNone: 'None', enCount: 'How many devices', enCat: 'Category', enAll: 'All', enIdle: 'Hide idle devices', enIdleT: 'Devices under 2 W are not listed',
-    pfEnergy: 'Energy', addEnPick: 'Pick the card to add; change its look later in the card settings', lrLeftCol: 'Colors and white tones ({n} steps)', lrLeftFx: 'Effects ({n} steps)', lrEvery: 'How often the plug sends a reading', lrEveryV: '~{s} s', lrResumed: 'Going on from where it was after a restart', enLook: 'Look', enSort: 'Order', enSortFix: 'Order in Categories', enSortW: 'Highest first', enLoose: 'Uncategorized tile', enLooseT: 'The total of devices without a category', enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
+    pfEnergy: 'Energy', addEnPick: 'Pick the card to add; change its look later in the card settings', addEnVals: 'Values that fit this section', addEnValsT: 'Added here as a {l}, the same size as the other items', addEnCards: 'Large cards', lrLeftCol: 'Colors and white tones ({n} steps)', lrLeftFx: 'Effects ({n} steps)', lrEvery: 'How often the plug sends a reading', lrEveryV: '~{s} s', lrResumed: 'Going on from where it was after a restart', enLook: 'Look', enSort: 'Order', enSortFix: 'Order in Categories', enSortW: 'Highest first', enLoose: 'Uncategorized tile', enLooseT: 'The total of devices without a category', enDays: 'Days', enUnit: 'Unit', enKwh: 'kWh', enCost: 'Money', enCostT: 'For money, set a price on the Energy page', enMode: 'Lines', enModeCats: 'Categories', enModeTot: 'Total', enChips: 'Details below', enChipsT: 'Today\'s kWh, cost and monthly usage at this rate', enKind: 'Card',
     enPage: 'Energy settings', enBtn: 'Energy', enOpenT: 'Devices, categories, solar, price, bills and tips on their own page', en_sum: 'Summary', en_src: 'Data source', en_tariff: 'Price and tariff', en_bill: 'Bills', en_est: 'Estimated devices', en_look: 'Look',
     enSumT: 'What the settings give today. Tap a row to open that part.', enSMonth: 'This month', enSYear: 'This year', enSBill: 'Last bill', enSEst: 'Estimated devices', enNoBill: 'No bill entered', enNoData: 'No energy data yet', enCats: '{n} categories, {d} devices', enUnt: '{p}% not measured', enEstN: '{n} devices · ~{w} now', enNone: 'None', enLoading: 'Loading…', enPriceNone: 'No price',
     enPrMode: 'Price', enPrBill: 'From the bill', enPrSingle: 'One price', enPrTier: 'Tiered', enPrBillT: 'Last bill: {k} kWh, {t} → {u} per kWh. Updated with every new bill.', enPrBillNo: 'Enter a bill under Bills and the unit price comes from it (taxes and fixed charges included).',
@@ -2265,8 +2265,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     if (m.kind === 'addenergy') {   // kart türleri canlı küçük önizlemeyle
       LP_EL_MINI.h = this._hass; LP_EL_MINI.lang = this._lang;
-      const W = Math.min(600, window.innerWidth - 24);
-      return '<div class="menu enmenu" style="left:' + Math.max(12, Math.min(m.x, window.innerWidth - W - 12)) + 'px;top:' + m.y + 'px;width:' + W + 'px;max-height:' + Math.max(240, window.innerHeight - m.y - 20) + 'px;overflow:auto"><div class="mh">' + t('addEnPick') + '</div><div class="enmg">' +
+      // menü uygulamanın içinde kalsın: alta sığmazsa yukarı kayar, sağa taşmaz
+      const app = this.shadowRoot && this.shadowRoot.querySelector('.app'), AW = (app && app.clientWidth) || window.innerWidth, AH = (app && app.clientHeight) || window.innerHeight;
+      const W = Math.min(600, AW - 24), H = Math.min(640, AH - 24), top = Math.max(12, Math.min(m.y, AH - H - 12));
+      const vs = this._enVals(), fit = this._enFit(this._curSec(this._curTab(this._work())));
+      const vHtml = vs.length ? '<div class="mh">' + t('addEnVals') + '</div><div class="envg">' + vs.map((x) => '<button data-addvirt="' + esc(x.id) + '"' + (x.room ? ' class="rm"' : '') + '><ha-icon class="s16" icon="' + esc(x.icon) + '"></ha-icon><span><b>' + esc(x.name) + '</b><i>' + esc(x.val) + '</i></span></button>').join('') + '</div><div class="hint" style="padding:0 10px 6px">' + esc(this._t('addEnValsT', { l: this._t(fit === 'halo' ? 'lk_halo' : fit === 'button' ? 'lk_button' : 'lk_tile') })) + '</div><div class="mh">' + t('addEnCards') + '</div>' : '';
+      return '<div class="menu enmenu" style="left:' + Math.max(12, Math.min(m.x, AW - W - 12)) + 'px;top:' + top + 'px;width:' + W + 'px;max-height:' + H + 'px;overflow:auto">' + vHtml + (vs.length ? '' : '<div class="mh">' + t('addEnPick') + '</div>') + '<div class="enmg">' +
         LP_EN_TYPES.map((x) => '<button data-adden="' + x + '"><div class="mk"><lhd-en-mini k="' + x + '"></lhd-en-mini></div><b><ha-icon class="s16" icon="' + LP_EN_IC[x] + '"></ha-icon>' + esc(lpEnT(this._lang, 'k_' + x)) + '</b><span>' + esc(lpEnT(this._lang, 'd_' + x)) + '</span></button>').join('') + '</div></div>';
     }
     if (m.kind === 'addsec') inner = '<div class="mh" style="white-space:normal;max-width:290px;line-height:1.45;text-transform:none;letter-spacing:0;font-weight:500;font-size:12.5px">' + t('secFree') + '</div>' + Object.keys(LHD_TYPES).map((k) => '<button data-newsec="' + k + '"><ha-icon class="s16" icon="' + LHD_TYPES[k].icon + '"></ha-icon><span><b>' + t('t_' + k) + '</b><br><span class="mu" style="font-size:12px">' + t('d_' + k) + '</span></span></button>').join('');
@@ -2776,6 +2780,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
                 color: LHD_COLORS[nBtn() % LHD_COLORS.length], action: { service: sv, target: id } });
               return;
             }
+            if (lpEnIsVirt(id)) { const lk = this._enFit(S); S.entities.push(lk ? { entity: id, look: lk } : id); return; }   // enerji değeri bölüme uyan görünümle
             S.entities.push(d === 'climate' ? this._climateItem(id) : id);
           });
         });
@@ -2810,6 +2815,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         this._tab = id; this._sec = null;
         return this._edit((T) => { T.push(nw); });
       }
+      const avb = g('[data-addvirt]');
+      if (avb) { this._menu = null; const id = avb.getAttribute('data-addvirt'); return editSec((S) => { const lk = this._enFit(S), it = { entity: id }; if (lk) it.look = lk; S.entities = (S.entities || []).concat([it]); }); }
       const aen = g('[data-adden]');
       if (aen) { this._menu = null; const ty = aen.getAttribute('data-adden'); return editSec((S) => { S.entities = (S.entities || []).concat([{ energy: ty }]); }); }
       if (act === 'addcamtab') {
@@ -3195,6 +3202,23 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   // --- öğe ayarları penceresi: ad, simge, açık/kapalı simgeleri, dokununca / basılı tutunca, düğmenin eylemi, gömülü kart, koşullu görünürlük ---
   // Alanlar taslakta (this._im.f) tutulur; "Kaydet"e basınca öğeye yazılır (YAML hatalıysa pencere açık kalır, hata gösterilir).
   // öğe ayarlarındaki enerji kartı (önizleme için): kayıttaki gibi, görünüm hariç
+  // enerji değerinin bölüme uyan görünümü: iklim/süpürge kartlarının yanında Halo, düğmelerin yanında düğme, ışıkların yanında karo
+  _enFit(S) {
+    const k = lhdKinds(S || {});
+    if (k.climate || k.vacuum) return 'halo';
+    if ((k.scene || 0) > (k.tile || 0)) return 'button';
+    return '';
+  }
+  // Enerji kartı menüsündeki değerler: önce sekmenin odası, sonra ev geneli, sonra öteki odalar
+  _enVals() {
+    const h = this._hass, S = (h && h.states) || {}, tab = this._curTab(this._work()), area = tab && tab.area, out = [];
+    const fmt = (st) => { if (!st || st.state === 'unavailable') return '–'; const n = parseFloat(st.state), u = st.attributes.unit_of_measurement; return (isNaN(n) ? st.state : n.toLocaleString(this._lang === 'tr' ? 'tr-TR' : 'en-GB', { maximumFractionDigits: 2 })) + (u ? ' ' + u : ''); };
+    const push = (id, room) => { const st = S[id]; if (st) out.push({ id: id, name: st.attributes.friendly_name || id, icon: st.attributes.icon || 'mdi:flash', val: fmt(st), room: room }); };
+    if (area) ['guc', 'bugun'].forEach((k) => push(lpEnRoomId(area, k), true));
+    LP_EN_VIRT.forEach((x) => push('sensor.lhdx_' + x[0], false));
+    Object.keys(S).filter((id) => id.indexOf('sensor.lhdx_oda_') === 0 && !(area && S[id].attributes.lhd_area === area)).sort().forEach((id) => push(id, true));
+    return out;
+  }
   // küçük resimler için öğelerin simge ve adları (en çok 3)
   _thItems(list) {
     const S = (this._hass && this._hass.states) || {}, out = [];
@@ -3355,7 +3379,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
         : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
           : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
-      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo') : lks;
+      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo' || lpEnIsVirt(it.entity)) : lks;
       if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2.map((x) => [x[0], this._t(x[1]), '', lhdThLook('i' + x[1].slice(3), thMe)])));
       const L0 = f.look || '';
       const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');

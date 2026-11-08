@@ -843,6 +843,31 @@ function lpEnVirtVals(h) {
   try { const C = lpElCtx(h, M, pickLang(h)); if (C.unt > 0) out.olcmeyen = Math.round(C.unt); } catch (e) {}
   return out;
 }
+// cihazın alanı (oda): bağlı varlığın ya da güç sensörünün alanı, yoksa cihazının alanı
+function lpEnAreaOf(h, d) {
+  const E = (h && h.entities) || {}, D = (h && h.devices) || {};
+  const ids = [d.link, d.p, d.e];
+  for (let i = 0; i < ids.length; i++) {
+    const r = ids[i] && E[ids[i]]; if (!r) continue;
+    if (r.area_id) return r.area_id;
+    const dv = r.device_id && D[r.device_id]; if (dv && dv.area_id) return dv.area_id;
+  }
+  return null;
+}
+// odaların enerjisi: şu anki güç (W) ve bugünkü tüketim (kWh, son 24 saatin kaydından gece yarısından beri)
+function lpEnRooms(h) {
+  const M = LP_EN.m; if (!M || M.demo || !M.devs || !M.devs.length) return {};
+  const S = (h && h.states) || {}, out = {}, H = M.hist, mid = new Date(); mid.setHours(0, 0, 0, 0);
+  M.devs.forEach((d) => {
+    const a = lpEnAreaOf(h, d); if (!a) return;
+    const o = out[a] || (out[a] = { w: null, kwh: null, n: 0 }); o.n++;
+    const w = lpEnWOf(S, d); if (w !== null) o.w = (o.w || 0) + w;
+    const ser = H && H.devs && H.devs[d.id];
+    if (ser) { let k = 0, any = false; ser.forEach((v, i) => { if (v !== null && v !== undefined && H.t0 + (i + 1) * H.step > mid.getTime()) { k += v * H.step / 3600000000; any = true; } }); if (any) o.kwh = (o.kwh || 0) + k; }
+  });
+  return out;
+}
+const lpEnRoomId = (a, k) => 'sensor.lhdx_oda_' + String(a).replace(/[^a-z0-9_]/gi, '_').toLowerCase() + '_' + k;
 // hass'ın kopyası, sanal sensörlerle (aynı değer aynı nesne: panel boşuna yeniden çizmesin)
 function lpEnVirt(h) {
   if (!h || !h.states) return h;
@@ -854,6 +879,18 @@ function lpEnVirt(h) {
     if (x[2]) a.device_class = x[2];
     const now = new Date().toISOString();
     C[id] = add[id] = { entity_id: id, state: v, attributes: a, last_changed: now, last_updated: now, context: { id: '' }, _l: lang };
+  });
+  // odalar: her alan için şu an ve bugün
+  const R = lpEnRooms(h), AR = h.areas || {}, tr = lang === 'tr';
+  Object.keys(R).forEach((a) => {
+    const an = (AR[a] && AR[a].name) || a, r = R[a];
+    [['guc', r.w === null ? 'unavailable' : String(Math.round(r.w)), 'power', 'W', tr ? an + ' şu an' : an + ' now', 'mdi:lightning-bolt-outline'],
+      ['bugun', r.kwh === null ? 'unavailable' : String(Math.round(r.kwh * 100) / 100), 'energy', 'kWh', tr ? an + ' bugün' : an + ' today', 'mdi:calendar-today']].forEach((x) => {
+      const id = lpEnRoomId(a, x[0]), o = C[id];
+      if (o && o.state === x[1] && o._l === lang && o.attributes.friendly_name === x[4]) { add[id] = o; return; }
+      const now = new Date().toISOString();
+      C[id] = add[id] = { entity_id: id, state: x[1], attributes: { friendly_name: x[4], icon: x[5], unit_of_measurement: x[3], device_class: x[2], lhd_energy: true, lhd_area: a }, last_changed: now, last_updated: now, context: { id: '' }, _l: lang };
+    });
   });
   return Object.assign({}, h, { states: Object.assign({}, h.states, add) });
 }
