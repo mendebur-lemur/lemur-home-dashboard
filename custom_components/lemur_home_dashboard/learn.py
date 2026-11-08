@@ -10,8 +10,8 @@ AvgLearn    an always-on device (fridge, router): only the start is kept (across
             Home Assistant's own records of the plug.
 A light run is saved after every step (the plan, what was measured, the next step) and goes on after a restart
 from where it was: standby and the probe are not repeated.
-None writes the device record: the admin page saves the result. A plug serves one run at a time, and two lights
-on the same bridge are not measured at once (their commands would queue up).
+None writes the device record: the admin page saves the result. A plug serves one run at a time. Lights on the
+same bridge or MQTT can learn at once: a step sends a command every few seconds, and each light has its own plug.
 """
 from __future__ import annotations
 
@@ -686,11 +686,8 @@ class Learning:
             lights = [r for r in self.runs.values() if isinstance(r, LightLearn) and r.phase in ACTIVE]
             if len(lights) >= MAX_LIGHT_RUNS:
                 raise ValueError("too_many")
-            br = self._bridge(entity)
-            if br and any(r.bridge == br for r in lights):
-                raise ValueError("bridge_busy")
             run: _Base = LightLearn(self.hass, rid, entity, plug, interval)
-            run.bridge = br
+            run.bridge = self._bridge(entity)
             run.on_step = self._persist
         elif kind == "avg":
             run = AvgLearn(self.hass, rid, entity, plug)

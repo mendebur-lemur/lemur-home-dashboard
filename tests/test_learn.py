@@ -232,7 +232,7 @@ async def test_skip_effects(hass: HomeAssistant, fast, monkeypatch):
     assert 2 <= len(e) < 20 and "b" not in r.result["lut"]["fx"]
 
 
-async def test_plug_and_bridge_busy_and_average(hass: HomeAssistant, fast, monkeypatch):
+async def test_plug_busy_same_bridge_and_average(hass: HomeAssistant, fast, monkeypatch):
     from homeassistant.helpers import entity_registry as er
     from pytest_homeassistant_custom_component.common import MockConfigEntry
     hass.states.async_set("sensor.p", "30", {"unit_of_measurement": "W"})
@@ -255,7 +255,7 @@ async def test_plug_and_bridge_busy_and_average(hass: HomeAssistant, fast, monke
     assert L2.runs["buz"].plug == "sensor.p" and L2.runs["buz"].started == a.started
     await L.control("buz", "stop")
     assert L.runs["buz"].phase == "done" and "buz" not in saved["runs"]
-    # two lights on the same bridge are not measured at once
+    # two lights on the same bridge learn at once (v0.28.7), each with its own plug
     entry = MockConfigEntry(domain="hue"); entry.add_to_hass(hass)
     reg = er.async_get(hass)
     for n in ("a", "b"):
@@ -266,9 +266,9 @@ async def test_plug_and_bridge_busy_and_average(hass: HomeAssistant, fast, monke
     async def svc(call):
         return None
     hass.services.async_register("light", "turn_on", svc); hass.services.async_register("light", "turn_off", svc)
-    L.start("la", "light", "light.a", "sensor.r", 1)
-    with pytest.raises(ValueError, match="bridge_busy"):
-        L.start("lb", "light", "light.b", "sensor.s", 1)
+    ra = L.start("la", "light", "light.a", "sensor.r", 1)
+    rb = L.start("lb", "light", "light.b", "sensor.s", 1)
+    assert ra.bridge == rb.bridge == entry.entry_id and ra.phase in LRN.ACTIVE and rb.phase in LRN.ACTIVE
     await L.async_stop()
 
 
