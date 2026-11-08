@@ -138,6 +138,8 @@ class LightLearn(_Base):
     def to_dict(self) -> dict:
         d = {k: getattr(self, k) for k in self.KEEP}
         d.update(kind="light", entity=self.entity, plug=self.plug)
+        if self.phase == "done" and self.result:   # finished, not saved yet: the result waits for Save (also across a restart)
+            d.update(phase="done", result=self.result)
         return d
 
     @classmethod
@@ -646,6 +648,12 @@ class Learning:
                 except (TypeError, ValueError):
                     continue
                 r.on_step = self._persist
+                if v.get("phase") == "done" and isinstance(v.get("result"), dict):
+                    # finished before the restart: the result is kept until Save or Clear (before v0.28.9 it was lost)
+                    r.result = v["result"]
+                    r.phase = "done"
+                    self.runs[rid] = r
+                    continue
                 r.phase = "start"
                 self.runs[rid] = r
                 self._resume.append(r)
@@ -663,6 +671,8 @@ class Learning:
             out = {k: {"plug": r.plug, "entity": r.entity, "started": r.started} for k, r in self.runs.items() if isinstance(r, AvgLearn) and r.phase == "listen"}
             # a light run with steps left is kept also when it stopped or failed: it goes on from that step (after a restart, or with "go on")
             out.update({k: r.to_dict() for k, r in self.runs.items() if isinstance(r, LightLearn) and r.steps and r.i < len(r.steps) and r.phase in ACTIVE + ("error", "stopped")})
+            # a finished light run waits for Save: kept with its result
+            out.update({k: r.to_dict() for k, r in self.runs.items() if isinstance(r, LightLearn) and r.phase == "done" and r.result})
             self._save(out)
 
     def _bridge(self, entity: str) -> str | None:

@@ -294,9 +294,17 @@ async def test_light_learn_goes_on_after_restart(hass: HomeAssistant, fast):
     assert r2.phase == "done" and r2.result["n"] == len(snap["plan"]["k"]) * 8
     after = calls[n0:]
     assert after[0][0] == "on" and after[0][1] == {"entity_id": "light.x", "brightness_pct": snap["steps"][snap["i"]]["b"], "color_temp_kelvin": snap["steps"][snap["i"]]["k"]}   # straight to the next step: no standby, no probe
-    assert "x" not in saved["runs"]            # finished: no longer kept
+    # finished, not saved yet: kept with its result, also across another restart (v0.28.9; it was lost before)
+    assert saved["runs"]["x"]["phase"] == "done" and saved["runs"]["x"]["result"]["n"] == r2.result["n"]
     st = r2.status()
     assert st["eta"] == 0 and "eta_col" in st and "eta_fx" in st
+    await L2.async_stop()
+    L3 = LRN.Learning(hass, saved["runs"], lambda runs: saved.update(runs=runs))
+    r3 = L3.runs["x"]
+    assert r3.phase == "done" and r3.result == r2.result and r3 not in L3._resume
+    assert L3.status()["x"]["result"]["n"] == r2.result["n"]
+    await L3.control("x", "clear")             # saved (or thrown away) on the page: gone
+    assert "x" not in saved["runs"] and "x" not in L3.runs
 
 
 async def test_light_learn_waits_for_a_late_light_and_goes_on(hass: HomeAssistant, fast):
@@ -329,4 +337,4 @@ async def test_light_learn_waits_for_a_late_light_and_goes_on(hass: HomeAssistan
     assert saved["runs"]["x"]["i"] == i0
     await L2.control("x", "continue")
     assert await _until(lambda: r2.phase in ("done", "error")), r2.status()
-    assert r2.phase == "done" and "x" not in saved["runs"]
+    assert r2.phase == "done" and saved["runs"]["x"]["phase"] == "done"   # waits for Save
