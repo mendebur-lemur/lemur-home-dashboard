@@ -792,3 +792,18 @@
 .phone .tile.val.entl .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
 .phone .tile.val.entl .vl { font-size: 10.5px; line-height: 13px; }
 .tile.val.entl.wide .nm, .tile.val.entl.wide .vl { order: 0; }
+
+/* v0.28.9 sade satır: düğmeler biraz büyük, açık hâlde düzenli ızgara */
+.cbt, .cib { flex: 0 0 38px; width: 38px; height: 38px; border-radius: 12px; line-height: 38px; --mdc-icon-size: 20px; }
+.cstep .cbt { flex: 0 0 52px; width: 52px; height: 44px; }
+.cl2 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.cl2.n1 { grid-template-columns: minmax(0, 1fr); } .cl2.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cl2.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.clr .cl2 .cch b { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.clr .cl2 .cch { margin: 0; height: 44px; padding: 0 4px; min-width: 0; align-items: center; text-align: center; }
+.clr .cl2.n4 .cch b { font-size: 12.5px; }
+.clr .cl2 .cch.cinf { padding: 0; }
+.cvac { gap: 6px; }
+.cbig { flex: 1 1 0; min-width: 0; height: 44px; border-radius: 12px; background: rgba(255, 255, 255, 0.08) !important; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px !important; font-weight: 600; --mdc-icon-size: 20px; }
+.cbig span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cbig.on { color: var(--clc) !important; background: rgba(255, 255, 255, 0.14) !important; }
+.cbig[disabled] { opacity: .4; cursor: default; }

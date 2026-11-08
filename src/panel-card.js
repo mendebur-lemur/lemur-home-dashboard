@@ -322,8 +322,8 @@ const LP_HACT = {
   tr: { heating: 'Isıtıyor', cooling: 'Soğutuyor', idle: 'Bekliyor', off: 'Kapalı', drying: 'Nem alıyor', fan: 'Fan çalışıyor', preheating: 'Isınıyor', defrosting: 'Buz çözüyor' },
   en: { heating: 'Heating', cooling: 'Cooling', idle: 'Idle', off: 'Off', drying: 'Drying', fan: 'Fan', preheating: 'Preheating', defrosting: 'Defrosting' } };
 const LP_FANW = {
-  tr: { auto: 'Oto', low: 'Düşük', medium: 'Orta', middle: 'Orta', mid: 'Orta', high: 'Yüksek', quiet: 'Sessiz', silent: 'Sessiz', turbo: 'Turbo', strong: 'Güçlü', on: 'Açık', off: 'Kapalı', vertical: 'Dikey', horizontal: 'Yatay', both: 'İkisi' },
-  en: { auto: 'Auto', low: 'Low', medium: 'Medium', middle: 'Medium', mid: 'Medium', high: 'High', quiet: 'Quiet', silent: 'Quiet', turbo: 'Turbo', strong: 'Strong', on: 'On', off: 'Off', vertical: 'Vertical', horizontal: 'Horizontal', both: 'Both' } };
+  tr: { auto: 'Oto', low: 'Düşük', medium: 'Orta', middle: 'Orta', mid: 'Orta', high: 'Yüksek', quiet: 'Sessiz', silent: 'Sessiz', turbo: 'Turbo', strong: 'Güçlü', on: 'Açık', off: 'Kapalı', vertical: 'Dikey', horizontal: 'Yatay', both: 'İkisi', stopped: 'Kapalı', stop: 'Kapalı', swing: 'Açık', rangefull: 'Tam', fixedtop: 'Üst', fixedmiddletop: 'Orta üst', fixedmiddle: 'Orta', fixedmiddlebottom: 'Orta alt', fixedbottom: 'Alt', standard: 'Standart', normal: 'Normal', max: 'En yüksek', min: 'En düşük', gentle: 'Hafif', balanced: 'Dengeli', mop: 'Paspas' },
+  en: { auto: 'Auto', low: 'Low', medium: 'Medium', middle: 'Medium', mid: 'Medium', high: 'High', quiet: 'Quiet', silent: 'Quiet', turbo: 'Turbo', strong: 'Strong', on: 'On', off: 'Off', vertical: 'Vertical', horizontal: 'Horizontal', both: 'Both', stopped: 'Off', stop: 'Off', swing: 'On', rangefull: 'Full', fixedtop: 'Top', fixedmiddletop: 'Upper middle', fixedmiddle: 'Middle', fixedmiddlebottom: 'Lower middle', fixedbottom: 'Bottom', standard: 'Standard', normal: 'Normal', max: 'Max', min: 'Min', gentle: 'Gentle', balanced: 'Balanced', mop: 'Mop' } };
 const lpClW = (map, lang, v) => {
   const d = map[lang] || map.en, k = String(v), lk = k.toLowerCase();
   if (d[k] || d[lk]) return d[k] || d[lk];
@@ -1544,8 +1544,11 @@ class LemurHomeDashboardCard extends HTMLElement {
       const busy = mode === 'cleaning';
       kind = busy ? 'cool' : mode === 'error' ? 'err' : mode === 'returning' ? 'heat' : 'off';
       sub = '<em>' + esc(lpClW(LP_VAC, lang, mode)) + '</em>' + (typeof a.battery_level === 'number' ? ' · %' + Math.round(a.battery_level) : '');
-      // istasyondayken "istasyona dön" düğmesi işe yaramıyor: yalnız başlat (dar telefonda ad sığsın)
-      if (!na) right = ib(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', busy) + (mode === 'docked' ? '' : ib('vdock', 'mdi:home-import-outline', mode === 'returning'));
+      // kapalı satırda tek düğme (başlat ya da duraklat), dar telefonda ad sığsın. Açıkken sağdaki düğme gizlenir,
+      // yerine iklimdeki hedef alanı gibi iki büyük düğme gelir: başlat/duraklat ve istasyona dön (v0.28.9)
+      if (!na && !el._open) right = ib(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', busy);   // kapalıyken tek düğme; istasyona dön açınca
+      const big = (c, icon, label, on, off) => '<button class="cbig' + (on ? ' on' : '') + '" data-c="' + c + '"' + (off ? ' disabled' : '') + '><ha-icon icon="' + icon + '"></ha-icon><span>' + esc(label) + '</span></button>';
+      if (!na) stepH = '<div class="cstep cvac">' + big(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', t(lang, busy ? 'cl_pause' : 'cl_start'), busy) + big('vdock', 'mdi:home-import-outline', t(lang, 'cl_dock'), mode === 'returning', mode === 'docked') + '</div>';
       const fs = a.fan_speed_list || [];
       more = chip('vstop', '', t(lang, 'cl_stop')) + chip('vloc', '', t(lang, 'cl_find')) + (fs.length ? chip('vfan', t(lang, 'cl_suction'), lpClW(LP_FANW, lang, a.fan_speed || '–')) : '');
       if (el._menu === 'vfan') { opts = fs; curO = a.fan_speed; }
@@ -1571,10 +1574,11 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (el._menu === 'fan') { opts = fans; curO = a.fan_mode; }
       if (el._menu === 'swing') { opts = sw; curO = a.swing_mode; }
     }
+    if (el._open && !na) right = '<button class="cib" data-c="info" title="' + esc(t(lang, 'cl_more')) + '"><ha-icon icon="mdi:dots-horizontal"></ha-icon></button>';   // açıkken ayrıntılar başlıkta
     let h = '<div class="cl1"><span class="cli">' + lpIcon(lpEntIcon(st, it.icon)) + '</span><div class="ct" data-c="tog"><b>' + name + '</b><span>' + sub + '</span></div><div class="crt">' + right + '</div>' +
       (na ? '' : '<span class="chev"><ha-icon icon="mdi:chevron-' + (el._open ? 'up' : 'down') + '"></ha-icon></span>') + '</div>';
     if (el._open && !na) {
-      h += stepH + '<div class="cl2">' + more + '<button class="cch cinf" data-c="info"><ha-icon icon="mdi:dots-horizontal"></ha-icon></button></div>';
+      h += stepH + (more ? '<div class="cl2 n' + (more.split('class="cch').length - 1) + '">' + more + '</div>' : '');
       if (opts.length) h += '<div class="cmenu">' + opts.map((o) => '<button class="cop' + (o === curO ? ' sel' : '') + '" data-o="' + esc(o) + '">' + esc(lpClW(omap, lang, o)) + '</button>').join('') + '</div>';
     }
     el.className = cls + ' k-' + kind + (na ? ' na' : '');
