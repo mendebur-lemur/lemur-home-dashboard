@@ -75,6 +75,33 @@ const LemurScale = (() => {
     if (!peek && e.clientX <= 3) { peek = true; run(); }
     else if (peek && e.clientX > 300) { peek = false; run(); }
   }, { passive: true });
+  // dokunmatikte gizli yan menü: sol kenardan sağa kaydırınca açılır. iOS uygulaması bunu kendisi yapıyor; Android uygulaması,
+  // Fully Kiosk ve tarayıcılar yapmıyordu (v0.28.9). Android'in geri hareketi en kenarı tuttuğu için kenardan 48 piksele kadar başlayan kaydırma sayılır.
+  const nv = typeof navigator !== 'undefined' ? navigator : {}, iosApp = /iPad|iPhone|iPod/.test(nv.userAgent || '') || (nv.platform === 'MacIntel' && nv.maxTouchPoints > 1);
+  const mainEl = () => { try { return document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main'); } catch (e) { return null; } };
+  const drawer = () => { const m = mainRoot(); return m ? m.querySelector('ha-drawer') : null; };
+  let tx = -1, ty = 0;
+  if (!iosApp) {
+    window.addEventListener('touchstart', (e) => {
+      const p = e.touches && e.touches[0]; if (!p) return;
+      tx = -1;
+      // açık menünün dışına dokununca yine gizlenir (dar ekranda HA'nın kendi çekmecesi kapanınca)
+      if (peek) { const d = drawer(); if (p.clientX > 320 && !(d && d.open)) { peek = false; run(); } return; }
+      if (hidden && p.clientX <= 48) { tx = p.clientX; ty = p.clientY; }
+    }, { passive: true, capture: true });
+    window.addEventListener('touchmove', (e) => {
+      if (tx < 0) return;
+      const p = e.touches && e.touches[0]; if (!p) return;
+      const dx = p.clientX - tx, dy = Math.abs(p.clientY - ty);
+      if (dy > 40) { tx = -1; return; }
+      if (dx > 60 && dy < dx * 0.6) {
+        tx = -1; peek = true; run();
+        // dar ekranda (telefon) menü HA'nın çekmecesi: açılması için HA'ya söylenir; genişte yalnız gizlemeyi kaldırmak yeter
+        const me = mainEl();
+        if (me && me.narrow) setTimeout(() => { const d = drawer(); if (!(d && d.open)) me.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true, detail: { open: true } })); }, 30);
+      }
+    }, { passive: true, capture: true });
+  }
   window.addEventListener('resize', run);
   window.addEventListener('location-changed', () => { run(); setTimeout(run, 0); setTimeout(run, 100); });
   setInterval(run, 1000);

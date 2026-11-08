@@ -2116,8 +2116,8 @@ function lhdRetryMsg(conn, msg, n) {
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
   { v: '0.28.9',
-    tr: ['Biten ama henüz kaydedilmemiş ışık öğrenimi Home Assistant yeniden başlayınca kaybolmuyor; sonuç Kaydet\'e basılana kadar bekliyor. Önceden bu sırada yeniden başlatılırsa ölçüm baştan yapılmak zorundaydı.'],
-    en: ['A light learning that finished but is not saved yet is no longer lost when Home Assistant restarts; the result waits for Save. Before, a restart at that point meant measuring again from the start.'] },
+    tr: ['Biten ama henüz kaydedilmemiş ışık öğrenimi Home Assistant yeniden başlayınca kaybolmuyor; sonuç Kaydet\'e basılana kadar bekliyor. Önceden bu sırada yeniden başlatılırsa ölçüm baştan yapılmak zorundaydı.', 'Gizli yan menü Android\'de de (Home Assistant uygulaması, Fully Kiosk, tarayıcı) sol kenardan sağa kaydırınca açılıyor; önceden yalnız iPhone ve iPad\'de açılıyordu. Menünün dışına dokununca yine gizleniyor.'],
+    en: ['A light learning that finished but is not saved yet is no longer lost when Home Assistant restarts; the result waits for Save. Before, a restart at that point meant measuring again from the start.', 'The hidden sidebar opens with a swipe right from the left edge on Android too (Home Assistant app, Fully Kiosk, browsers); before, only on iPhone and iPad. A tap outside hides it again.'] },
   { v: '0.28.8',
     tr: ['Prizin okuyamadığı bekleme: öğrenilen bir ışığın beklemesi 0 W çıktıysa (çoğu priz 1 W\'ın altını okuyamıyor) ışık kapalıyken ağdaysa 0,4 W sayılıyor; havuzda aynı model için ölçülmüş bekleme varsa o kullanılıyor. Işık kullanılamıyorsa (elektriği kesik) 0 W. Havuza gönderilen ölçümde 0 yerine "ölçülemedi" gidiyor.', 'Birden çok ışığı birlikte süren karo (ışık grubu, ör. iki şeridi yakan tek düğme) watt rozetinde ışıklarının toplam gücünü gösteriyor.', 'Yıl tahmini 2 haftadan az kayıtla yapılmıyor (1 günlük kayıttan yılı 52 kWh gösteriyordu); o zamana kadar yalnız sayılan kWh ve fatura girme önerisi.', 'Ayarlar: üstte bölümlere atlama düğmeleri; telefonda Ayarlar ve yönetim paneli bütün olarak kayıyor (sekme düzenleyici ekranı kaplayıp altta küçük bir alan bırakıyordu); orta genişlikte üst şerit sığıyor; Kanvas kutuları yan yana; oda düğmesi hizalama seçenekleri kısa adlı. Uzun açıklamalar iki satır, dokununca tamamı açılıyor.', 'Işığa basılı tutunca açılan pencere Ayarlar\'dan Stil seç\'e, ışık görünümünün yanına taşındı. Enerji\'de Görünüm ve Veri kaynağı tek sayfa: Görünüm ve veri.'],
     en: ['Standby a plug cannot read: if a learned light\'s standby read 0 W (most plugs cannot read under 1 W), it counts as 0.4 W while off and on the network; a standby measured for the same model in the pool is used if there is one. An unavailable light (power cut) is 0 W. Shared measurements send "not readable" instead of 0.', 'A tile that drives a light group (e.g. one button for two strips) shows the total power of its lights in the watt badge.', 'The year estimate is not made from under 2 weeks of records (one day showed the year as 52 kWh); until then only the counted kWh and a hint to enter a bill.', 'Settings: buttons at the top jump to each part; on a phone Settings and the admin page scroll as a whole (the tab editor filled the screen and left a small area below); the top bar fits on mid-size screens; the Canvas boxes sit side by side; shorter names for the room button align choices. Long descriptions show two lines and open in full on a tap.', 'The window a long press on a light opens moved from Settings to Choose a style, next to the light look. In Energy, Look and Data source are one page: Look and data.'] },
@@ -3394,6 +3394,33 @@ const LemurScale = (() => {
     if (!peek && e.clientX <= 3) { peek = true; run(); }
     else if (peek && e.clientX > 300) { peek = false; run(); }
   }, { passive: true });
+  // dokunmatikte gizli yan menü: sol kenardan sağa kaydırınca açılır. iOS uygulaması bunu kendisi yapıyor; Android uygulaması,
+  // Fully Kiosk ve tarayıcılar yapmıyordu (v0.28.9). Android'in geri hareketi en kenarı tuttuğu için kenardan 48 piksele kadar başlayan kaydırma sayılır.
+  const nv = typeof navigator !== 'undefined' ? navigator : {}, iosApp = /iPad|iPhone|iPod/.test(nv.userAgent || '') || (nv.platform === 'MacIntel' && nv.maxTouchPoints > 1);
+  const mainEl = () => { try { return document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main'); } catch (e) { return null; } };
+  const drawer = () => { const m = mainRoot(); return m ? m.querySelector('ha-drawer') : null; };
+  let tx = -1, ty = 0;
+  if (!iosApp) {
+    window.addEventListener('touchstart', (e) => {
+      const p = e.touches && e.touches[0]; if (!p) return;
+      tx = -1;
+      // açık menünün dışına dokununca yine gizlenir (dar ekranda HA'nın kendi çekmecesi kapanınca)
+      if (peek) { const d = drawer(); if (p.clientX > 320 && !(d && d.open)) { peek = false; run(); } return; }
+      if (hidden && p.clientX <= 48) { tx = p.clientX; ty = p.clientY; }
+    }, { passive: true, capture: true });
+    window.addEventListener('touchmove', (e) => {
+      if (tx < 0) return;
+      const p = e.touches && e.touches[0]; if (!p) return;
+      const dx = p.clientX - tx, dy = Math.abs(p.clientY - ty);
+      if (dy > 40) { tx = -1; return; }
+      if (dx > 60 && dy < dx * 0.6) {
+        tx = -1; peek = true; run();
+        // dar ekranda (telefon) menü HA'nın çekmecesi: açılması için HA'ya söylenir; genişte yalnız gizlemeyi kaldırmak yeter
+        const me = mainEl();
+        if (me && me.narrow) setTimeout(() => { const d = drawer(); if (!(d && d.open)) me.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true, detail: { open: true } })); }, 30);
+      }
+    }, { passive: true, capture: true });
+  }
   window.addEventListener('resize', run);
   window.addEventListener('location-changed', () => { run(); setTimeout(run, 0); setTimeout(run, 100); });
   setInterval(run, 1000);
