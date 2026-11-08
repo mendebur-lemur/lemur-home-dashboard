@@ -636,7 +636,7 @@ async def ws_learn_status(hass, connection, msg):
     {
         vol.Required("type"): "lemur_home_dashboard/learn_ctl",
         vol.Required("device"): str,
-        vol.Required("action"): vol.In(["pause", "resume", "cancel", "stop", "clear", "skipfx"]),
+        vol.Required("action"): vol.In(["pause", "resume", "cancel", "stop", "clear", "skipfx", "continue"]),
     }
 )
 @websocket_api.require_admin

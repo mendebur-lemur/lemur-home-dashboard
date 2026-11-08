@@ -95,6 +95,9 @@ def fast(monkeypatch):
     monkeypatch.setattr(LRN.LightLearn, "quiet", 0.01)
     monkeypatch.setattr(LRN.LightLearn, "poll", 0.002)
     monkeypatch.setattr(LRN.LightLearn, "fx_window", 0.02)
+    monkeypatch.setattr(LRN.LightLearn, "ready_wait", 0.0)
+    monkeypatch.setattr(LRN.LightLearn, "ready_poll", 0.005)
+    monkeypatch.setattr(LRN.LightLearn, "late_wait", 0.01)
 
 
 async def test_light_learn_full(hass: HomeAssistant, fast):
@@ -294,3 +297,36 @@ async def test_light_learn_goes_on_after_restart(hass: HomeAssistant, fast):
     assert "x" not in saved["runs"]            # finished: no longer kept
     st = r2.status()
     assert st["eta"] == 0 and "eta_col" in st and "eta_fx" in st
+
+
+async def test_light_learn_waits_for_a_late_light_and_goes_on(hass: HomeAssistant, fast):
+    """After a restart the light is first "unavailable" (restored state): the run waits for it instead of failing.
+    A run that stopped with steps left is kept and goes on from that step with "continue"."""
+    def w(a):
+        return round(1 + 19 * a.get("brightness", 255) / 255, 2)
+    calls = await _fake_light(hass, ["color_temp"], w)
+    saved = {}
+    L = LRN.Learning(hass, None, lambda runs: saved.update(runs=runs))
+    r = L.start("x", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.i >= 5), r.status()
+    await L.async_stop()
+    await asyncio.sleep(0.05)
+    snap = saved["runs"]["x"]
+    # restart: the light comes back as "unavailable" first, then answers
+    hass.states.async_set("light.x", "unavailable", dict(hass.states.get("light.x").attributes))
+    L2 = LRN.Learning(hass, snap and saved["runs"], lambda runs: saved.update(runs=runs))
+    r2 = L2.runs["x"]
+    L2.resume_saved()
+    await asyncio.sleep(0.1)
+    assert r2.phase == "start" and r2.i == snap["i"]          # still waiting, not failed
+    hass.states.async_set("light.x", "off", dict(hass.states.get("light.x").attributes))
+    assert await _until(lambda: r2.i > snap["i"] + 2), r2.status()
+    # the user stops it: kept with its steps, "continue" goes on from there
+    await r2.cancel()
+    await asyncio.sleep(0.05)
+    L2._persist()
+    i0 = r2.i
+    assert saved["runs"]["x"]["i"] == i0
+    await L2.control("x", "continue")
+    assert await _until(lambda: r2.phase in ("done", "error")), r2.status()
+    assert r2.phase == "done" and "x" not in saved["runs"]

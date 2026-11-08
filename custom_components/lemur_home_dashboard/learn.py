@@ -57,6 +57,9 @@ class LightLearn(_Base):
     quiet: float | None = None
     poll = 0.5
     fx_window: float | None = None    # seconds an effect is listened to (default: 30 s or 6 plug readings)
+    ready_wait = 5.0    # after a restart: seconds to let the light settle once it answers
+    ready_poll = 1.0
+    late_wait = 10.0    # a light that looks off after a step: look again after this
 
     def __init__(self, hass: HomeAssistant, rid: str, entity: str, plug: str, interval: float = 2.0) -> None:
         super().__init__(hass, rid, entity, plug)
@@ -317,13 +320,42 @@ class LightLearn(_Base):
             raise RuntimeError("external")
         return w
 
-    async def _wait_ready(self) -> bool:
-        """After a restart the light and the plug come up a little later."""
-        for _ in range(180):
-            if self.hass.states.get(self.entity) is not None and EST.watts_of(self.hass.states.get(self.plug)) is not None:
-                return True
-            await asyncio.sleep(1)
+    def _ready(self) -> bool:
+        """The light answers (not unavailable) and the plug sends a number."""
+        st = self.hass.states.get(self.entity)
+        return st is not None and st.state not in ("unavailable", "unknown") and EST.watts_of(self.hass.states.get(self.plug)) is not None
+
+    async def _wait_ready(self, secs: int = 600) -> bool:
+        """After a restart the light and the plug come up later (a light behind a bridge or MQTT can take minutes).
+        A restored state of "unavailable" does not count as up."""
+        for _ in range(int(secs / self.ready_poll)):
+            if self._ready():
+                await asyncio.sleep(self.ready_wait)   # let the light settle before the first step
+                return self._ready()
+            await asyncio.sleep(self.ready_poll)
         return False
+
+    async def _step_safe(self, q: dict) -> float:
+        """A step that rides out a short outage: the light or plug dropping away, or a light that reports late.
+        Tried up to three times; only then the run stops (and can go on from this step later)."""
+        for n in range(3):
+            try:
+                return await self._step(q)
+            except asyncio.CancelledError:
+                raise
+            except Exception:  # noqa: BLE001 - retried below
+                if n == 2:
+                    raise
+                if self.msg == "external":
+                    # turned off from elsewhere, or the light reported "on" late: look again in a moment
+                    await asyncio.sleep(self.late_wait)
+                    st = self.hass.states.get(self.entity)
+                    if st is not None and st.state == "off" and self._ready():
+                        raise
+                    self.msg = ""
+                if not await self._wait_ready(600):
+                    raise
+        raise RuntimeError("step")
 
     async def _run(self) -> None:
         if self.resumed and not await self._wait_ready():
@@ -386,7 +418,7 @@ class LightLearn(_Base):
                     self.phase = "fx"
                 self.cur = q
                 t0 = time.monotonic()
-                w = await self._step(q)
+                w = await self._step_safe(q)
                 if q["t"] not in ("fx", "fxb"):
                     self.t_steps += time.monotonic() - t0
                 self.last_w = w
@@ -629,7 +661,8 @@ class Learning:
     def _persist(self) -> None:
         if self._save:
             out = {k: {"plug": r.plug, "entity": r.entity, "started": r.started} for k, r in self.runs.items() if isinstance(r, AvgLearn) and r.phase == "listen"}
-            out.update({k: r.to_dict() for k, r in self.runs.items() if isinstance(r, LightLearn) and r.phase in ACTIVE and r.steps})
+            # a light run with steps left is kept also when it stopped or failed: it goes on from that step (after a restart, or with "go on")
+            out.update({k: r.to_dict() for k, r in self.runs.items() if isinstance(r, LightLearn) and r.steps and r.i < len(r.steps) and r.phase in ACTIVE + ("error", "stopped")})
             self._save(out)
 
     def _bridge(self, entity: str) -> str | None:
@@ -678,6 +711,17 @@ class Learning:
             r.resume()
         elif action == "skipfx" and isinstance(r, LightLearn):
             r.skip_fx = True
+        elif action == "continue" and isinstance(r, LightLearn):
+            # a stopped or failed light run goes on from the step it was at
+            if r.phase in ACTIVE:
+                raise ValueError("busy")
+            if not r.steps or r.i >= len(r.steps):
+                raise ValueError("nothing")
+            r.resumed = True
+            r.msg = ""
+            r.phase = "start"
+            r.on_step = self._persist
+            r.start()
         elif action == "cancel":
             await r.cancel()
             self.runs.pop(rid, None)

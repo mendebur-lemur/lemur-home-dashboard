@@ -106,6 +106,7 @@ const ADM = {
     lrC2: 'Prizde yalnız bu cihaz var', lrC2T: 'Başka bir şey bağlıysa ölçüm yanlış çıkar', lrC2Ts: 'Soundbar ya da TV kutusu da bağlıysa onları başka prize al', lrC3: 'Cihaz bu prizde', lrC3T: 'Dene ile cihaz bir kez açılıp kapanır; prizin değiştiği görülür', lrTest: 'Dene',
     lrWarn: 'Tam ölçüm: {n} adım, yaklaşık {e}. Bu sürede ışık renk renk yanıp söner; evde kimse yokken ya da gece başlatmak iyi olur. Ölçüm arka planda sürer.', lrStHow: 'Cihazı her zamanki gibi kullan. Panel prizi ve cihazın durumunu birlikte dinler, her durumun ortalamasını tutar. Bir durumda 2 dakika veri olunca yeşil olur.',
     lrStartL: 'Ölçmeye başla', lrNeedPlug: 'Başlamak için güç ölçen prizi seç.', lrNeedOnly: 'Başlamak için "Prizde yalnız bu cihaz var"ı işaretle.', lrNeedTest: 'Başlamak için Dene\'ye bas; prizin değiştiği görülmeli.', lrStartS: 'Öğrenmeye başla', lrWhite: 'Beyaz tonlar', lrColor: 'Renkler · doygunluk %{s}', lrBri: 'Parlaklık',
+    enWLrn: 'Öğrenim yarıda kaldı ({i}/{n} adım); kaldığı yerden sürdürebilirsin', lrCont: 'Kaldığı yerden devam et', lrAgainZero: 'Baştan başlat', lrContT: '{n} adımın {i} tanesi ölçüldü. Kaldığı yerden devam edersen ölçülenler korunur.',
     lrErrRun_external: 'Işık başka bir yerden değiştirildi; ölçüm durdu. Yeniden başlatabilirsin.', lrErrRun_plug_silent: 'Priz bir süredir değer göndermiyor; ölçüm durdu.', lrErrRun_no_light: 'Işık bulunamadı.', lrErrRun_x: 'Ölçüm durdu ({e}).', lrAgain: 'Yeniden ölç',
     lrNowSb: 'Işık kapalı, bekleme okunuyor', lrNowProbe: 'Yoklama: {c} %100', lrC_white: 'Beyaz', lrC_red: 'Kırmızı', lrC_green: 'Yeşil', lrC_blue: 'Mavi', lrNowCt: '{k} K, %{b}', lrNowHs: '{h}° renk, doygunluk %{s}, %{b}', lrNowBr: 'Parlaklık %{b}',
     lrPlan: 'Renk farkı %{d}; plan: {n} ölçüm.', lrPaused: 'Duraklatıldı; ışık eski durumunda. Devam edince kaldığı yerden sürer.', lrDone: 'Ölçülen', lrLeft: 'Kalan', lrStandby: 'Bekleme', lrRepeats: 'Tekrarlanan adım',
@@ -233,6 +234,7 @@ const ADM = {
     lrC2: 'Only this device is on the plug', lrC2T: 'Anything else plugged in makes the measurement wrong', lrC2Ts: 'If a soundbar or TV box is on it too, move them to another plug', lrC3: 'The device is on this plug', lrC3T: 'Try turns the device on and off once and checks that the plug changes', lrTest: 'Try',
     lrWarn: 'Full measure: {n} steps, about {e}. Meanwhile the light flashes through the colors; best started at night or when nobody is home. It runs in the background.', lrStHow: 'Use the device as usual. The dashboard listens to the plug and the device\'s state together and keeps an average per state. A state turns green with 2 minutes of data.',
     lrStartL: 'Start measuring', lrNeedPlug: 'To start, pick the plug that measures power.', lrNeedOnly: 'To start, tick "Only this device is on the plug".', lrNeedTest: 'To start, press Try; the plug has to change.', lrStartS: 'Start learning', lrWhite: 'White tones', lrColor: 'Colors · saturation {s}%', lrBri: 'Brightness',
+    enWLrn: 'Learning stopped halfway ({i}/{n} steps); you can go on from there', lrCont: 'Go on from where it stopped', lrAgainZero: 'Start over', lrContT: '{i} of {n} steps are measured. Going on keeps them.',
     lrErrRun_external: 'The light was changed from elsewhere; measuring stopped. You can start again.', lrErrRun_plug_silent: 'The plug has not sent a value for a while; measuring stopped.', lrErrRun_no_light: 'Light not found.', lrErrRun_x: 'Measuring stopped ({e}).', lrAgain: 'Measure again',
     lrNowSb: 'Light off, reading standby', lrNowProbe: 'Probe: {c} 100%', lrC_white: 'White', lrC_red: 'Red', lrC_green: 'Green', lrC_blue: 'Blue', lrNowCt: '{k} K, {b}%', lrNowHs: '{h}° color, saturation {s}%, {b}%', lrNowBr: 'Brightness {b}%',
     lrPlan: 'Color difference {d}%; plan: {n} measurements.', lrPaused: 'Paused; the light is back as it was. Resuming continues where it stopped.', lrDone: 'Measured', lrLeft: 'Left', lrStandby: 'Standby', lrRepeats: 'Repeated steps',
@@ -1683,7 +1685,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _lrnRunHtml() {
     const L = this._lrn, run = this._lrnRun(L.id), t = (k, v) => esc(this._t(k, v));
     if (!run) return '<div class="hint">' + t('enLoading') + '</div>';
-    if (run.phase === 'error' || run.phase === 'stopped') return '<div class="imerr">' + t('lrErrRun_' + (run.msg === 'external' || run.msg === 'plug_silent' || run.msg === 'no_light' ? run.msg : 'x'), { e: run.msg }) + '</div><div class="acts"><span class="grow"></span><button class="btn" data-a="lrclear">' + t('close') + '</button><button class="btn pri" data-a="lragain">' + t('lrAgain') + '</button></div>';
+    if (run.phase === 'error' || run.phase === 'stopped') return '<div class="imerr">' + t('lrErrRun_' + (run.msg === 'external' || run.msg === 'plug_silent' || run.msg === 'no_light' ? run.msg : 'x'), { e: run.msg }) + '</div>' + (run.kind === 'light' && run.i > 0 && run.i < run.n ? '<div class="hint">' + t('lrContT', { i: run.i, n: run.n }) + '</div>' : '') + '<div class="acts"><span class="grow"></span><button class="btn" data-a="lrclear">' + t('close') + '</button>' +
+      (run.kind === 'light' && run.i > 0 && run.i < run.n ? '<button class="btn" data-a="lragain">' + t('lrAgainZero') + '</button><button class="btn pri" data-a="lrcont">' + t('lrCont') + '</button>' : '<button class="btn pri" data-a="lragain">' + t('lrAgain') + '</button>') + '</div>';
     const cur = run.cur, ph = run.phase;
     const fxCur = cur && (cur.t === 'fx' || cur.t === 'fxb');
     const now = fxCur ? this._t(cur.t === 'fx' ? 'lrNowFx' : 'lrNowFxb', { e: cur.e, b: cur.b }) : ph === 'standby' ? this._t('lrNowSb') : ph === 'probe' && cur ? this._t('lrNowProbe', { c: this._t('lrC_' + cur.c) }) : cur && cur.t === 'ct' ? this._t('lrNowCt', { k: cur.k, b: cur.b }) : cur && cur.t === 'hs' ? this._t('lrNowHs', { h: cur.h, s: cur.s, b: cur.b }) : cur && cur.t === 'br' ? this._t('lrNowBr', { b: cur.b }) : '';
@@ -1872,7 +1875,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const S = this._hass.states, bad = (x) => !S[x] || ['unavailable', 'unknown'].indexOf(String(S[x].state)) >= 0;
     if (e.kind === 'meas') return bad(e.sensor) ? { s: 'chk', w: this._t('enWSens') } : { s: 'meas' };
     if (['light', 'states', 'onoff'].indexOf(e.kind) >= 0 && (!e.entity || !S[e.entity])) return { s: 'chk', w: this._t('enWNoEnt') };
-    const run = this._lrnRun(id); if (run && run.phase !== 'done') return { s: 'run' };
+    const run = this._lrnRun(id);
+    if (run && (run.phase === 'error' || run.phase === 'stopped')) return run.kind === 'light' && run.i > 0 && run.i < run.n ? { s: 'chk', w: this._t('enWLrn', { i: run.i, n: run.n }) } : { s: 'est' };
+    if (run && run.phase !== 'done') return { s: 'run' };
     if (e.src === 'own') return { s: 'own' };
     if (e.lut && (e.src === 'pool' || e.src === 'library' || e.src === 'import')) return { s: 'lib' };
     return { s: 'est' };
@@ -2812,6 +2817,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'lrresume') return this._lrnCtl('resume');
       if (act === 'lrcancel') { const L0 = this._lrn; return this._lrnCtl('cancel').then(() => { if (this._lrn === L0) this._lrn = null; this._render(); }); }
       if (act === 'lrclear') { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { if (this._lrn === L0) this._lrn = null; this._render(); }); }
+      if (act === 'lrcont' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('continue').then(() => { L0.step = 'run'; this._render(); }); }
       if (act === 'lragain' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { L0.step = 'prep'; L0.tested = 0; L0.testMsg = ''; this._render(); }); }
       if (act === 'lrsave' && this._lrn) return this._lrnSave();
       if (act === 'eneclose') { this._enE = null; this._enErr = ''; return this._render(); }
