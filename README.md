@@ -172,7 +172,7 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. Görünümle ilg
 - *Üst şerit:* Oda düğmelerinin boyutu (varsayılan 235 × 155) ve **Kolona hizala**: düğmeler seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır; her ekran boyutunda aynı hizada kalır. Light Effect Card kuruluysa Efektler düğmesi hizalı alana alınabilir ya da saatin yanında kalır.
 - *Saatte parlaklık (isteğe bağlı, varsayılan kapalı):* üst şeritte saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık olan bütün ışıkların parlaklığı birlikte değişir (odası olmayan sekmede sekmedeki ışıklar). En sola çekince kapanırlar; hepsi kapalıyken kaydırınca buradan en son kapatılanlar yeniden açılır. Görünüm: *Gizli* (yalnız saat görünür, kaydırınca belirir) ya da *Kutu* (oda düğmeleri gibi); istenirse solda ampul simgesi; parlaklık göstergesi yalnız kaydırırken ya da hep. Telefonda yok.
 - *HA teması:* açılır pencerelerin kullanacağı Home Assistant teması (boş bırakılabilir).
-- *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez.
+- *Üst barı gizle / Yan menüyü gizle:* yalnızca bu panoda Home Assistant'ın başlık çubuğu ve sol menüsü görünmez. Her biri için Gizleme, Telefon ve tablette (bilgisayarda görünür kalır) ya da Her yerde. Bilgisayarda gizli yan menü, fare ekranın sol kenarına gidince açılır; telefonda ve tablette sağa kaydırınca.
 - *Kanvas (Gelişmiş):* tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir.
 - *Işığa basılı tutunca:* Işık penceresi (varsayılan), HA penceresi ya da (Light Effect Card kuruluysa) efekt ekranı.
 - *Lemur Light Effect Card:* kurulu olup olmadığı (Efektler düğmesi Stil seç'te).

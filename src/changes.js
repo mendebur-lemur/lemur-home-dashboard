@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.28.4',
+    tr: ['Yan menüyü ve üst barı gizle artık üç seçenekli: Gizleme, Telefon ve tablette, Her yerde. Bilgisayarda gizli yan menü, fare ekranın sol kenarına gidince açılır. Sayfa yenilenince menü bir an görünüp kaybolmuyor.'],
+    en: ['Hide the sidebar and the top bar now have three choices: Don\'t hide, Phone and tablet, Everywhere. On a computer the hidden sidebar opens when the mouse reaches the left edge of the screen. The menu no longer flashes when the page reloads.'] },
   { v: '0.28.3',
     tr: ['Odaya özel enerji: her oda için "şu an" (W) ve "bugün" (kWh) değerleri. Odanın sekmesinde Enerji kartı menüsünün en üstünde.', 'Enerji kartı menüsünde Bölüme uyan değerler: seçtiğin değer bölüme uyan görünümle eklenir (iklim ve süpürge kartlarının yanında Halo, senaryo düğmelerinin yanında düğme, ışıkların yanında karo). Menü artık ekranın altında kaybolmuyor.', 'Enerji değerlerinde Halo görünümü Basit modda da seçilebiliyor.'],
     en: ['Energy per room: "now" (W) and "today" (kWh) for every room, at the top of the Energy card menu in that room\'s tab.', 'Values that fit this section in the Energy card menu: the value is added in the look that fits (Halo next to climate and vacuum cards, a button next to scene buttons, a tile next to lights). The menu no longer runs off the bottom of the screen.', 'The Halo look can be picked for energy values in Simple mode too.'] },
