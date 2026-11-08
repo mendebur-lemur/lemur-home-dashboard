@@ -74,7 +74,7 @@ const ADM = {
     enDevT: 'Panelin takip ettiği cihazlar. Güç ölçen cihazlar doğrudan eklenir; ölçmeyenler için sanal ölçüm kurulur ve Home Assistant\'ta güç ve enerji sensörü oluşur. Hepsi Enerji ayarlarına seçtiğin kategorinin içinde eklenir.',
     enFMeas: 'Ölçen', enFVirt: 'Sanal', enNoCat: 'Kategorisiz', enDNoF: 'Bu filtrede cihaz yok.', enFound: 'Güç ölçen {n} cihaz bulundu', enFoundT: 'Home Assistant\'ta güç sensörü olan ama panelde olmayan cihazlar', enAddAll: 'Hepsini ekle ({n})', enAdd1: 'Ekle', enShowAll: 'Hepsini göster ({n})', enDAdded: '{n} cihaz eklendi',
     enEEdit: 'Cihazı düzenle', ek_meas: 'Ölçen', ek_measT: 'Kendi güç sensörü var', ek_states: 'Duruma göre', ek_statesT: 'Her durum için ayrı W',
-    enMSensor: 'Güç sensörü (W)', enMEnergy: 'Enerji sensörü (kWh)', enPick: 'Seç', enMCalc: 'Panel hesaplasın', enMCalcT: 'Enerji sensörü seçilmezse panel güçten kWh hesaplar: {e}', enEMin: 'En düşük parlaklıkta W', enPick1: 'Panelden seç', enPick1N: 'Paneldeki cihazlar ({n})', enPickOther: 'Diğer cihazlar', enLibBusy: 'Ölçüm kütüphanesine bakılıyor…', enLibOk: 'Değerler ölçülmüş tablodan geldi: {n}', enLibStrip: 'Bu şerit havuzda metre başına; Öğren\'de uzunluğunu girince uyarlanır.', enLibNone: 'Bu model kütüphanede yok: değerleri gir ya da prizle öğret.', enMinPh: 'boş: bekleme',
+    enInT: 'Bu prize bağlı cihazlar', enInTag: '{n} cihaz bağlı', enInH: 'Prizde başka takip edilen cihazlar da varsa (ör. masadaki şerit LED) işaretle: güçleri prizin değerinden çıkar, kalan pay ayrı satır olur, hiçbiri iki kez sayılmaz.', enInNone: 'Bağlanabilecek başka cihaz yok. Önce prizdeki ışıkları ya da öteki cihazları ekle.', enInRest: 'Kalan payın adı', enInRestPh: 'Prizdeki öteki cihazlar', enInPlug: 'Prizin ölçtüğü', enInDevs: 'İşaretli {n} cihaz', enInHint: 'Kartlarda ve Home Assistant\'ın Enerji sayfasında prizin toplamı yerine kalan pay ve işaretli cihazlar ayrı ayrı görünür. Kalan pay bu cihazın kategorisine girer.', enMSensor: 'Güç sensörü (W)', enMEnergy: 'Enerji sensörü (kWh)', enPick: 'Seç', enMCalc: 'Panel hesaplasın', enMCalcT: 'Enerji sensörü seçilmezse panel güçten kWh hesaplar: {e}', enEMin: 'En düşük parlaklıkta W', enPick1: 'Panelden seç', enPick1N: 'Paneldeki cihazlar ({n})', enPickOther: 'Diğer cihazlar', enLibBusy: 'Ölçüm kütüphanesine bakılıyor…', enLibOk: 'Değerler ölçülmüş tablodan geldi: {n}', enLibStrip: 'Bu şerit havuzda metre başına; Öğren\'de uzunluğunu girince uyarlanır.', enLibNone: 'Bu model kütüphanede yok: değerleri gir ya da prizle öğret.', enMinPh: 'boş: bekleme',
     enNewCat: '+ Yeni kategori', enNewCatN: 'Yeni kategorinin adı', enStT: 'Durumlara göre güç', enStH: 'Boş bırakılan durum "Diğer durumlar" değerini alır', enStOther: 'Diğer durumlar', enStPick: 'Önce durumunu okuyan cihazı seç; alabileceği durumlar burada listelenir.',
     enMNeed: 'Güç sensörünü seç', enCNeed: 'Kategoriye ad yaz',
     enCatT: 'Kategoriler kartlardaki karolardır. Her biri için Home Assistant\'ta toplam güç ve kWh sensörü oluşur ve Enerji ayarlarına eklenir; içindeki cihazlar onun altında görünür.', enCDevs: '{n} cihaz', enCNone: 'Henüz kategori yok. Kategorisiz cihazlar kartlarda "Kategorisiz" karosunda toplanır.', enCAdd: 'Kategori ekle', enCEdit: 'Kategoriyi düzenle', enCColor: 'Renk', enCMem: 'İçindeki cihazlar ({n})',
@@ -200,7 +200,7 @@ const ADM = {
     enDevT: 'The devices the dashboard tracks. Devices that measure power are added as they are; for the others a virtual measurement is set up and Home Assistant gets a power and an energy sensor. All are added to the Energy settings inside the category you pick.',
     enFMeas: 'Measured', enFVirt: 'Virtual', enNoCat: 'Uncategorized', enDNoF: 'No devices in this filter.', enFound: '{n} devices that measure power found', enFoundT: 'Devices with a power sensor in Home Assistant that are not on the dashboard yet', enAddAll: 'Add all ({n})', enAdd1: 'Add', enShowAll: 'Show all ({n})', enDAdded: '{n} devices added',
     enEEdit: 'Edit device', ek_meas: 'Measured', ek_measT: 'Has its own power sensor', ek_states: 'By state', ek_statesT: 'A W value for each state',
-    enMSensor: 'Power sensor (W)', enMEnergy: 'Energy sensor (kWh)', enPick: 'Pick', enMCalc: 'Let the dashboard count', enMCalcT: 'Without an energy sensor the dashboard counts kWh from the power: {e}', enEMin: 'W at lowest brightness', enPick1: 'Pick from the dashboard', enPick1N: 'Devices on the dashboard ({n})', enPickOther: 'Other devices', enLibBusy: 'Checking the measurement library…', enLibOk: 'Values come from a measured table: {n}', enLibStrip: 'This strip is kept per meter in the pool; it is scaled once you enter its length in Learn.', enLibNone: 'This model is not in the library: enter values or learn them with a plug.', enMinPh: 'empty: standby',
+    enInT: 'Devices on this plug', enInTag: '{n} devices on it', enInH: 'If other tracked devices are on this plug too (e.g. an LED strip on the desk), tick them: their power is taken off the plug, what is left gets a row of its own and nothing is counted twice.', enInNone: 'No other device to link. Add the lights or other devices on the plug first.', enInRest: 'Name of what is left', enInRestPh: 'Other devices on the plug', enInPlug: 'The plug measures', enInDevs: '{n} ticked devices', enInHint: 'On the cards and in Home Assistant\'s Energy page, the rest and the ticked devices show separately instead of the plug\'s total. The rest goes in this device\'s category.', enMSensor: 'Power sensor (W)', enMEnergy: 'Energy sensor (kWh)', enPick: 'Pick', enMCalc: 'Let the dashboard count', enMCalcT: 'Without an energy sensor the dashboard counts kWh from the power: {e}', enEMin: 'W at lowest brightness', enPick1: 'Pick from the dashboard', enPick1N: 'Devices on the dashboard ({n})', enPickOther: 'Other devices', enLibBusy: 'Checking the measurement library…', enLibOk: 'Values come from a measured table: {n}', enLibStrip: 'This strip is kept per meter in the pool; it is scaled once you enter its length in Learn.', enLibNone: 'This model is not in the library: enter values or learn them with a plug.', enMinPh: 'empty: standby',
     enNewCat: '+ New category', enNewCatN: 'Name of the new category', enStT: 'Power by state', enStH: 'An empty state takes the "Other states" value', enStOther: 'Other states', enStPick: 'Pick the device that gives the state first; its states are listed here.',
     enMNeed: 'Pick the power sensor', enCNeed: 'Enter a category name',
     enCatT: 'Categories are the tiles on the cards. Each gets a total power and kWh sensor in Home Assistant and is added to the Energy settings, with its devices under it.', enCDevs: '{n} devices', enCNone: 'No categories yet. Devices without one are grouped in an "Uncategorized" tile.', enCAdd: 'Add category', enCEdit: 'Edit category', enCColor: 'Color', enCMem: 'Devices in it ({n})',
@@ -1294,7 +1294,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (!M) return '<h3 class="enh">' + t('en_sum') + '</h3><div class="hint">' + t('enLoading') + '</div>';
     const mk = lpEnMonthKwh(M), u = lpEnUnit(M), mc = M.days ? lpEnMonthCost(mk, lpEnMonthDays(), M) : null, mode = lpEnMode();
     const yk = lpEnYear(M), yl = lpEnYearLimit(), b = lpEnLastBill(), E = this._enEsts(), ek = Object.keys(E), nm = ek.filter((k) => E[k].kind === 'meas').length;
-    const ew = ek.reduce((a, k) => a + (this._enDevW(k, E[k]) || 0), 0), C = this._enCats(), sol = lpEnSolar(), F = lpEnFlowNow(S), tips = lpEnTips(this._hass, M, this._lang), nf = this._enFound().length;
+    const ew = ek.reduce((a, k) => a + (this._enDevNetW(k, E[k]) || 0), 0), C = this._enCats(), sol = lpEnSolar(), F = lpEnFlowNow(S), tips = lpEnTips(this._hass, M, this._lang), nf = this._enFound().length;
     return '<h3 class="enh">' + t('en_sum') + '</h3><p class="enlead">' + t('enSumT') + '</p><div class="ensl">' +
       row('tariff', this._t('enSMonth'), M.days ? this._enNum(mk) + ' kWh' + (u ? ' · ' + this._enTl(mc.tl) : '') : '–',
         mode === 'tou' ? pill(this._t('enChTou')) : mode === 'tier' && mc ? pill(this._t(mc.hi > 0 ? 'enHigh' : 'enLow'), mc.hi > 0 ? 'w' : 'ok') : pill(u ? (mode === 'bill' ? this._t('enPrBill') : this._t('enPrSingle')) + ' · ' + this._enNum(u, 2) + ' ' + this._enCur() + '/kWh' : this._t('enPriceNone'))) +
@@ -1776,6 +1776,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _enGet(path) { let o = this._settings(); const p = path.split('.'); for (let i = 0; i < p.length; i++) { if (!o || typeof o !== 'object') return undefined; o = o[p[i]]; } return o; }
   _enKindIc(k) { return { meas: 'mdi:gauge', light: 'mdi:lightbulb-outline', states: 'mdi:format-list-bulleted-type', onoff: 'mdi:power-plug-outline', fixed: 'mdi:router-wireless', year: 'mdi:fridge-outline', cycle: 'mdi:washing-machine' }[k] || 'mdi:flash'; }
   // cihazın şu anki gücü: ölçende sensörü, sanalda entegrasyonun sensörü (yoksa burada hesaplanır)
+  // toplamlarda: paylaşımlı prizin kalan payı (prizdeki cihazlar kendileri sayılır)
+  _enDevNetW(id, e) {
+    const w = this._enDevW(id, e), E = this._enEsts(), ins = lpEnInside(id, e, E);
+    if (w === null || !ins.length) return w;
+    return Math.max(0, ins.reduce((a, k) => a - (this._enDevW(k, E[k]) || 0), w));
+  }
   _enDevW(id, e) {
     const S = this._hass.states;
     if (e.kind === 'meas') return lpEnW(S, e.sensor);
@@ -1842,12 +1848,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const f = e ? Object.assign({}, e) : { name: '', kind: 'light', entity: '', cat: '' };
     Object.keys(D0).forEach((k) => { f[k] = String(f[k] === undefined ? D0[k] : f[k]); });
     f.st = {}; (Array.isArray(f.states) ? f.states : []).forEach((x) => { if (x && x.s) f.st[x.s] = String(x.w); });
+    f.inside = Array.isArray(f.inside) ? f.inside.slice() : []; f.rest = f.rest || '';
     this._enE = { id: e ? id : null, f: f, ask: false };
   }
   _enDev() {
     const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), C = this._enCats(), S = this._hass.states, F = this._enF || 'all';
     const catN = (id) => (C.filter((c) => c.id === id)[0] || {}).name || '';
-    const sub = (e) => this._t('ek_' + e.kind) + (e.cat && catN(e.cat) ? ' · ' + catN(e.cat) : ' · ' + this._t('enNoCat'));
+    const sub = (e, id) => this._t('ek_' + e.kind) + (e.cat && catN(e.cat) ? ' · ' + catN(e.cat) : ' · ' + this._t('enNoCat')) + (lpEnInside(id, e, E).length ? ' · ' + this._t('enInTag', { n: lpEnInside(id, e, E).length }) : '');
     let h = '<h3 class="enh">' + t('en_dev') + '</h3><p class="enlead">' + t('enDevT') + '</p>';
     const ids = Object.keys(E).filter((id) => F === 'all' || (F === 'meas' ? E[id].kind === 'meas' : E[id].kind !== 'meas'));
     const nAll = Object.keys(E).length, nM = Object.keys(E).filter((id) => E[id].kind === 'meas').length;
@@ -1855,7 +1862,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
     h += this._enEditor();
     h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = this._enDevW(id, e), est = e.kind !== 'meas';
-      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e) + (e.src === 'own' ? ' · ' + this._t('lrOwnTag') : e.lut ? ' · ' + this._t('lrTblTag') : '')) + '</i></span>' + this._lrnPill(id) + '<em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
+      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e, id) + (e.src === 'own' ? ' · ' + this._t('lrOwnTag') : e.lut ? ' · ' + this._t('lrTblTag') : '')) + '</i></span>' + this._lrnPill(id) + '<em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
     // bulunan ölçen cihazlar
     const fd = this._enFound();
     if (fd.length) {
@@ -1908,6 +1915,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     else if (f.kind === 'onoff' || f.kind === 'states' || f.kind === 'meas') calc = now !== null && (st || f.kind === 'meas') ? '<div class="tot"><span>' + t('enENow') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div>' : '';
     else calc = '<div><span>' + t('enEAvg') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div><div class="tot"><span>' + t('enEDay', { k: lpEnNum(now * 24 / 1000, 2, this._lang), y: lpEnNum(now * 8.76, 0, this._lang) }) + '</span><b></b></div>';
     if (calc) h += '<div class="encalc">' + calc + '</div>';
+    if (f.kind === 'meas') h += this._enInsideHtml(D, now);
     const warn = (f.kind === 'light' || f.kind === 'onoff' || f.kind === 'states') && f.entity && !st ? t('enWNoEnt') : f.kind === 'states' && f.entity && !e.states.length && !e.other ? t('enWZero') : '';
     h += '<div class="hint enwarn">' + warn + '</div>' + this._lrnBox();
     if (f.kind === 'year') h += '<div class="hint">' + t('enEYearT') + '</div>';
@@ -1919,6 +1927,27 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     h += '<datalist id="enlights">' + ids.filter((x) => x.indexOf('light.') === 0).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>' +
       '<datalist id="enents">' + ids.filter((x) => /^(light|switch|media_player|fan|climate|input_boolean|binary_sensor|vacuum|humidifier|water_heater|select|input_select|remote|lock|cover)\./.test(x)).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>';
     return h;
+  }
+  // ölçen prize bağlı öteki cihazlar: işaretlenenlerin gücü prizin değerinden çıkar, kalan pay ayrı satır olur
+  _enInsideCand(D) {
+    const E = this._enEsts(), me = D.id;
+    const other = {}; Object.keys(E).forEach((k) => { if (k !== me && E[k].kind === 'meas' && Array.isArray(E[k].inside)) E[k].inside.forEach((x) => { other[x] = k; }); });
+    return Object.keys(E).filter((k) => k !== me && !(E[k].kind === 'meas' && Array.isArray(E[k].inside) && E[k].inside.length) && !other[k])
+      .sort((a, b) => String(E[a].name).localeCompare(String(E[b].name), this._lang));
+  }
+  _enInsideHtml(D, now) {
+    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), f = D.f, ins = f.inside || [], L = this._enInsideCand(D);
+    let h = '<div class="eninside"><div class="ensh"><b>' + t('enInT') + '</b><span>' + t('enInH') + '</span></div>';
+    if (!L.length) return h + '<div class="hint">' + t('enInNone') + '</div></div>';
+    let sum = 0;
+    h += '<div class="eninl">' + L.map((k) => { const on = ins.indexOf(k) >= 0, w = this._enDevW(k, E[k]); if (on && w !== null) sum += w;
+      return '<button class="eninb' + (on ? ' on' : '') + '" data-eninside="' + esc(k) + '" aria-pressed="' + on + '"><span class="ck"></span><ha-icon class="s16" icon="' + esc(E[k].icon || this._enKindIc(E[k].kind)) + '"></ha-icon><b>' + esc(E[k].name) + '</b><em>' + (w === null ? '–' : esc(lpEnNum(w, 1, this._lang)) + ' W') + '</em></button>'; }).join('') + '</div>';
+    if (ins.length) {
+      h += '<div class="fld"><label>' + t('enInRest') + '</label><input class="inp" data-enf="rest" value="' + esc(f.rest || '') + '" placeholder="' + esc(this._t('enInRestPh')) + '"></div>';
+      if (now !== null && now !== undefined) h += '<div class="encalc"><div><span>' + t('enInPlug') + '</span><b>' + esc(lpEnNum(now, 1, this._lang)) + ' W</b></div><div><span>' + t('enInDevs', { n: ins.length }) + '</span><b>− ' + esc(lpEnNum(sum, 1, this._lang)) + ' W</b></div><div class="tot"><span>' + esc(String(f.rest || '').trim() || this._t('enInRestPh')) + '</span><b>' + esc(lpEnNum(Math.max(0, now - sum), 1, this._lang)) + ' W</b></div></div>';
+      h += '<div class="hint">' + t('enInHint') + '</div>';
+    }
+    return h + '</div>';
   }
   // taslaktan kayıt (sayılar 0-50000)
   // paneldeki adlar: sekmelerdeki öğelerin kendi adı (yoksa Home Assistant'taki adı)
@@ -1967,7 +1996,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _enRec(f) {
     const n = (k) => Math.min(50000, lpEnNumOf(f[k])), ent = String(f.entity || '').trim(), e = { name: String(f.name || '').trim().slice(0, 60), kind: f.kind };
-    if (f.kind === 'meas') { e.sensor = f.sensor || ''; if (f.energy) e.energy = f.energy; }
+    if (f.kind === 'meas') {
+      e.sensor = f.sensor || ''; if (f.energy) e.energy = f.energy;
+      const ins = (f.inside || []).filter((k) => this._enEsts()[k]).slice(0, 20);
+      if (ins.length) { e.inside = ins; const r = String(f.rest || '').trim().slice(0, 60); if (r) e.rest = r; }
+    }
     if (f.kind === 'light') { Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent }); if (String(f.min).trim() !== '') e.min = n('min'); if (f.lut && typeof f.lut === 'object') e.lut = f.lut; }
     if (f.src && (f.kind === 'light' || f.kind === 'fixed' || f.kind === 'states')) e.src = f.src;
     if (f.kind === 'onoff') Object.assign(e, { off: n('off'), on: n('on'), entity: ent });
@@ -2692,6 +2725,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (env) { this._env = env.getAttribute('data-env'); this._enErr = ''; this._enAskAll = false; if (this._enImp) { this._enImp.ask = false; if (this._enImp.done) this._enImp = null; } const m = this.shadowRoot.querySelector('.enm'); this._render(); const m2 = this.shadowRoot.querySelector('.enm'); if (m2 && m) m2.scrollTop = 0; return; }
       const ene = g('[data-enest]');
       if (ene) { this._enDraft(ene.getAttribute('data-enest')); this._enErr = ''; this._render(); return this._enTop(); }
+      const eni = g('[data-eninside]');
+      if (eni && this._enE) { const k = eni.getAttribute('data-eninside'), L = this._enE.f.inside = (this._enE.f.inside || []).slice(), i = L.indexOf(k); if (i >= 0) L.splice(i, 1); else L.push(k); return this._render(); }
       const enk = g('[data-enk]');
       if (enk && this._enE) { this._enE.f.kind = enk.getAttribute('data-enk'); this._enErr = ''; return this._render(); }
       const ebd = g('[data-enbdel]');

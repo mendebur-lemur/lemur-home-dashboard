@@ -35,6 +35,9 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
                 keys.append(("power", lambda d=data, i=eid: EstimatePowerSensor(d, i)))
             if EST.needs_energy_sensor(est):
                 keys.append(("energy", lambda d=data, i=eid: EstimateEnergySensor(d, i)))
+            if EST.has_net(eid, est, data.estimates()):   # shared plug: what is left after the devices on it
+                keys.append(("net_power", lambda d=data, i=eid: NetPowerSensor(d, i)))
+                keys.append(("net_energy", lambda d=data, i=eid: NetEnergySensor(d, i)))
             for suffix, make in keys:
                 out[f"est_{eid}_{suffix}"] = make
         for c in data.ecats():
@@ -265,6 +268,63 @@ class SolarEnergySensor(_Base, _Integrating):
         return max(0.0, w) if w is not None else 0.0
 
 
+class _Net(_Device):
+    """The rest of a shared plug: the plug's power minus the devices on it."""
+
+    def _sync_name(self) -> None:
+        e = self.est()
+        name = e.get("rest") or e.get("name") or self.est_id
+        self._attr_name = f"{name} {self._word(self._suffix == 'net_power')}"
+        self._attr_icon = e.get("icon") or ("mdi:flash-outline" if self._suffix == "net_power" else "mdi:lightning-bolt-outline")
+
+    def _follow(self) -> list[str]:
+        ests = self._d.estimates()
+        return [EST.power_entity(self.est_id, self.est())] + [EST.power_entity(k, ests[k]) for k in EST.inside_of(self.est_id, self.est(), ests)]
+
+    def _watts(self) -> float:
+        return EST.net_power(self.est_id, self.est(), self._d.estimates(), self.hass.states if self.hass else None)
+
+    @property
+    def extra_state_attributes(self):
+        e = self.est()
+        return {"plug": EST.power_entity(self.est_id, e), "inside": EST.inside_of(self.est_id, e, self._d.estimates()), "category": e.get("cat") or None}
+
+
+class NetPowerSensor(_Net, SensorEntity):
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.WATT
+    _attr_suggested_display_precision = 1
+
+    def __init__(self, data, eid: str) -> None:
+        self._init_dev(data, eid, "net_power")
+
+    async def async_added_to_hass(self) -> None:
+        self._relink(self._changed)
+        self.async_on_remove(self._unlink)
+
+    @callback
+    def _changed(self, _event) -> None:
+        self.async_write_ha_state()
+
+    @callback
+    def async_est_changed(self) -> None:
+        self._sync_name()
+        if self.hass:
+            self._relink(self._changed)
+            self.async_write_ha_state()
+
+    @property
+    def native_value(self):
+        return round(self._watts(), 2)
+
+
+class NetEnergySensor(_Net, _Integrating):
+    def __init__(self, data, eid: str) -> None:
+        self._init_int()
+        self._init_dev(data, eid, "net_energy")
+
+
 class _Cat(_Base):
     def _init_cat(self, data, cid: str, suffix: str) -> None:
         self.cat_id = cid
@@ -299,7 +359,8 @@ class CategoryPowerSensor(_Cat, SensorEntity):
         self._init_cat(data, cid, "power")
 
     def _follow(self) -> list[str]:
-        return [EST.power_entity(eid, e) for eid, e in self.members()]
+        ests = self._d.estimates()
+        return [EST.member_power_entity(eid, e, ests) for eid, e in self.members()]
 
     async def async_added_to_hass(self) -> None:
         self._relink(self._changed)
@@ -321,8 +382,9 @@ class CategoryPowerSensor(_Cat, SensorEntity):
         if not self.hass:
             return None
         s = 0.0
+        ests = self._d.estimates()
         for eid, e in self.members():
-            w = EST.watts_of(self.hass.states.get(EST.power_entity(eid, e)))
+            w = EST.watts_of(self.hass.states.get(EST.member_power_entity(eid, e, ests)))
             if w is not None and w > 0:
                 s += w
         return round(s, 2)
@@ -345,7 +407,8 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
         self._init_cat(data, cid, "energy")
 
     def _follow(self) -> list[str]:
-        return [EST.energy_entity(eid, e) for eid, e in self.members()]
+        ests = self._d.estimates()
+        return [EST.member_energy_entity(eid, e, ests) for eid, e in self.members()]
 
     def _val(self, ent: str) -> float | None:
         st = self.hass.states.get(ent) if self.hass else None

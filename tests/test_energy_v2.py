@@ -283,3 +283,59 @@ def test_meter_grid_source():
     assert not [x for x in new3["energy_sources"] if x["type"] == "grid"]
     # old record with only "on": solar if a production sensor is set
     assert EST.solar_energy_entity({"energy": {"solar": {"on": True, "prod": "sensor.pv"}}}) == "sensor.lhd_solar_energy"
+
+
+def test_shared_plug_rest():
+    """A plug with two lights on it: the rest is the plug minus the lights; HA's settings list the rest, not the total."""
+    ests = {"masa": {"name": "PC masası prizi", "kind": "meas", "sensor": "sensor.masa_w", "energy": "sensor.masa_kwh", "inside": ["led", "mon", "masa", "yok"], "rest": "Bilgisayar ve monitörler", "cat": "pc"},
+            "led": {"name": "Şerit LED", "kind": "fixed", "w": 13, "cat": "isik"},
+            "mon": {"name": "Monitör ışığı", "kind": "fixed", "w": 7, "cat": "isik"}}
+    assert EST.inside_of("masa", ests["masa"], ests) == ["led", "mon"]          # itself and unknown ids dropped
+    assert EST.owner_of("led", ests) == "masa" and EST.owner_of("masa", ests) is None
+    S = {"sensor.masa_w": st("180", unit_of_measurement="W"), "sensor.lhd_led_power": st("13"), "sensor.lhd_mon_power": st("7")}
+    assert EST.net_power("masa", ests["masa"], ests, S) == 160
+    S["sensor.masa_w"] = st("10", unit_of_measurement="W")
+    assert EST.net_power("masa", ests["masa"], ests, S) == 0                  # never below zero
+    assert EST.member_power_entity("masa", ests["masa"], ests) == "sensor.lhd_masa_net_power"
+    assert EST.member_power_entity("led", ests["led"], ests) == "sensor.lhd_led_power"
+    prefs = {"energy_sources": [], "device_consumption": [{"stat_consumption": "sensor.masa_kwh"}]}
+    out = EST.build_prefs(prefs, ests, [{"id": "pc", "name": "Bilgisayar"}, {"id": "isik", "name": "Işıklar"}], {})
+    rows = {d["stat_consumption"]: d for d in out["device_consumption"]}
+    assert "sensor.masa_kwh" not in rows                                      # the total would count the lights twice
+    assert rows["sensor.lhd_masa_net_energy"]["name"] == "Bilgisayar ve monitörler"
+    assert rows["sensor.lhd_masa_net_energy"]["included_in_stat"] == "sensor.lhd_kat_pc_energy"
+    assert rows["sensor.lhd_led_energy"]["included_in_stat"] == "sensor.lhd_kat_isik_energy"
+    # a plug that lists another shared plug: that one is not taken (no nesting)
+    ests["ust"] = {"name": "Üst", "kind": "meas", "sensor": "sensor.ust_w", "inside": ["masa", "led"]}
+    assert EST.inside_of("ust", ests["ust"], ests) == ["led"]
+
+
+async def test_shared_plug_sensors(hass: HomeAssistant, hass_ws_client, setup_lhd):
+    await async_setup_component(hass, "http", {})
+    hass.states.async_set("sensor.masa_w", "180", {"unit_of_measurement": "W", "device_class": "power"})
+    hass.states.async_set("light.led", "on", {"brightness": 255})
+    ws = await hass_ws_client(hass)
+    cats = [{"id": "pc", "name": "Bilgisayar"}, {"id": "isik", "name": "Işıklar"}]
+    est = {"masa": {"name": "PC masası prizi", "kind": "meas", "sensor": "sensor.masa_w", "inside": ["led"], "rest": "Bilgisayar ve monitörler", "cat": "pc"},
+           "led": {"name": "Şerit LED", "kind": "light", "entity": "light.led", "idle": 0.5, "min": 2, "max": 20, "cat": "isik"}}
+    await ws.send_json({"id": 1, "type": "lemur_home_dashboard/set", "key": "ecats", "value": cats})
+    assert (await ws.receive_json())["success"]
+    await ws.send_json({"id": 2, "type": "lemur_home_dashboard/set", "key": "estimates", "value": est})
+    r = await ws.receive_json(); assert r["success"], r
+    await hass.async_block_till_done(); await hass.async_block_till_done()
+    assert float(hass.states.get("sensor.lhd_led_power").state) == 20
+    assert float(hass.states.get("sensor.lhd_masa_net_power").state) == 160
+    assert hass.states.get("sensor.lhd_masa_net_power").name == "Bilgisayar ve monitörler güç"
+    assert hass.states.get("sensor.lhd_masa_net_energy") is not None
+    assert float(hass.states.get("sensor.lhd_kat_pc_power").state) == 160       # the rest, not the plug's 180
+    assert float(hass.states.get("sensor.lhd_kat_isik_power").state) == 20
+    hass.states.async_set("light.led", "on", {"brightness": 0})
+    await hass.async_block_till_done(); await hass.async_block_till_done(); await hass.async_block_till_done()
+    assert float(hass.states.get("sensor.lhd_masa_net_power").state) == 178
+    # the plug no longer shared: its rest sensors go
+    est["masa"].pop("inside")
+    await ws.send_json({"id": 3, "type": "lemur_home_dashboard/set", "key": "estimates", "value": est})
+    assert (await ws.receive_json())["success"]
+    await hass.async_block_till_done()
+    assert hass.states.get("sensor.lhd_masa_net_power") is None
+    assert float(hass.states.get("sensor.lhd_kat_pc_power").state) == 180

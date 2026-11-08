@@ -753,3 +753,15 @@ div.ensr:hover { background: var(--s1); }
 .enmenu .envg span { display: flex; flex-direction: column; min-width: 0; }
 .enmenu .envg b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .enmenu .envg i { font-style: normal; font-size: 12px; color: var(--tx2); }
+
+/* paylaşımlı priz: prize bağlı cihazlar */
+.eninside { margin: 10px 0; padding: 12px; border-radius: 12px; background: var(--s2); border: 1px solid var(--ln); display: flex; flex-direction: column; gap: 10px; }
+.eninl { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; }
+.eninb { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--ln2); background: var(--s1); color: var(--tx); font: inherit; font-size: 13px; text-align: left; cursor: pointer; min-width: 0; }
+.eninb b { font-weight: 600; flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eninb em { font-style: normal; color: var(--tx2); font-size: 12px; flex: none; }
+.eninb .ck { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--ln3); flex: none; display: grid; place-items: center; }
+.eninb.on { border-color: var(--ac); background: var(--acs); }
+.eninb.on .ck { background: var(--ac); border-color: var(--ac); }
+.eninb.on .ck::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--actx); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.eninside .encalc { margin: 0; }

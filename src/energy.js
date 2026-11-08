@@ -328,12 +328,21 @@ function lpEnLemur() {
 // cihazın güç ve kWh sensörü (entegrasyonun kurdukları ya da ölçen cihazın kendi sensörleri)
 const lpEnDevP = (id, x) => (x.kind === 'meas' ? x.sensor || '' : 'sensor.lhd_' + id + '_power');
 const lpEnDevE = (id, x) => (x.kind === 'meas' && x.energy ? x.energy : 'sensor.lhd_' + id + '_energy');
+// ölçen prize bağlı cihazlar (Python'daki estimates.inside_of ile aynı kural): var olan, kendisi değil, kendi prizi olmayan
+function lpEnInside(id, x, E) {
+  if (!x || x.kind !== 'meas' || !Array.isArray(x.inside)) return [];
+  const out = [];
+  x.inside.forEach((k) => { const e = E[k]; if (k !== id && e && !(e.kind === 'meas' && Array.isArray(e.inside) && e.inside.length) && out.indexOf(k) < 0) out.push(k); });
+  return out;
+}
 function lpEnModelLemur(h, L, prefs) {
   const cats = L.C.map((c, i) => { const lk = lpEnLookOf(c.name, i); return { id: 'sensor.lhd_kat_' + c.id + '_energy', cid: c.id, name: c.name, icon: c.icon || lk[0], color: c.color || lk[1], e: 'sensor.lhd_kat_' + c.id + '_energy', p: 'sensor.lhd_kat_' + c.id + '_power', kids: [] }; });
   const by = {}; cats.forEach((c) => { by[c.cid] = c; });
   const devs = Object.keys(L.E).map((id) => {
-    const x = L.E[id] || {}, c = by[x.cat];
-    return { id: lpEnDevE(id, x), lid: id, name: String(x.name || id), e: lpEnDevE(id, x), p: lpEnDevP(id, x), cat: c ? c.id : null, icon: x.icon || (c ? c.icon : 'mdi:flash'), color: c ? c.color : '#8A8F96', est: x.kind !== 'meas', kind: x.kind, link: x.entity || x.sensor || null };
+    const x = L.E[id] || {}, c = by[x.cat], net = lpEnInside(id, x, L.E).length > 0;
+    // paylaşımlı priz: kartlarda prizin toplamı yerine kalan pay (prizdeki işaretli cihazlar kendi satırlarında)
+    const e = net ? 'sensor.lhd_' + id + '_net_energy' : lpEnDevE(id, x), p = net ? 'sensor.lhd_' + id + '_net_power' : lpEnDevP(id, x);
+    return { id: e, lid: id, name: String((net && x.rest) || x.name || id), e: e, p: p, cat: c ? c.id : null, icon: x.icon || (c ? c.icon : 'mdi:flash'), color: c ? c.color : '#8A8F96', est: x.kind !== 'meas', kind: x.kind, link: x.entity || x.sensor || null, plug: net ? lpEnDevP(id, x) : null };
   });
   devs.forEach((d) => { if (d.cat) by[d.cat.replace(/^sensor\.lhd_kat_|_energy$/g, '')].kids.push(d); });
   const loose = devs.filter((d) => !d.cat);

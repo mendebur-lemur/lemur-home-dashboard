@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
+vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -346,4 +346,16 @@ test('every card look draws with demo data, in both languages', () => {
   assert.ok(E.lpEnCard(h, M, { energy: 'halo' }, 'tr', false).indexOf('enhalo') >= 0);
   assert.ok(E.lpEnCard(h, M, { energy: 'halo', look: 'gauge' }, 'tr', false).indexOf('enlk') >= 0);
   assert.ok(E.lpEnIsLook({ energy: 'tariff' }) && !E.lpEnIsLook({ energy: 'halo' }) && E.lpEnIsLook({ energy: 'cats', look: 'tree' }));
+});
+
+test('shared plug: cards take the rest, the devices on it keep their own rows', () => {
+  const Est = { masa: { name: 'PC masası prizi', kind: 'meas', sensor: 'sensor.masa_w', inside: ['led', 'masa', 'yok'], rest: 'Bilgisayar', cat: 'pc' }, led: { name: 'LED', kind: 'fixed', w: 13, cat: 'isik' } };
+  assert.strictEqual(JSON.stringify(E.lpEnInside('masa', Est.masa, Est)), '["led"]');
+  const M = E.lpEnModelLemur({ states: {} }, { E: Est, C: [{ id: 'pc', name: 'Bilgisayar' }, { id: 'isik', name: 'Işıklar' }] }, null);
+  const d = M.devs.filter((x) => x.lid === 'masa')[0];
+  assert.strictEqual(d.p, 'sensor.lhd_masa_net_power');
+  assert.strictEqual(d.e, 'sensor.lhd_masa_net_energy');
+  assert.strictEqual(d.name, 'Bilgisayar');
+  assert.strictEqual(d.plug, 'sensor.masa_w');
+  assert.strictEqual(M.devs.filter((x) => x.lid === 'led')[0].p, 'sensor.lhd_led_power');
 });

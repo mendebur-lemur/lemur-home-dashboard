@@ -10,7 +10,10 @@ Devices (data["estimates"]): every device the dashboard tracks, measured or virt
   year    the label's kWh per year, as an average (kWh / 8.76 = W)
   cycle   the label's kWh per 100 cycles and cycles per week, as an average
 Every virtual device gets sensor.lhd_<id>_power and sensor.lhd_<id>_energy; a measured device without its own
-kWh sensor gets sensor.lhd_<id>_energy. Categories (data["ecats"]) get sensor.lhd_kat_<id>_power and _energy:
+kWh sensor gets sensor.lhd_<id>_energy. A measured plug that feeds other tracked devices too ("inside": their ids)
+gets sensor.lhd_<id>_net_power and _net_energy: the plug minus those devices, named "rest" (e.g. a desk plug with the
+computer and two lights on it: the lights keep their own values, the rest is the computer). Categories and Home Assistant's
+Energy settings take the rest instead of the plug's total, so nothing is counted twice. Categories (data["ecats"]) get sensor.lhd_kat_<id>_power and _energy:
 the sum of their devices. Solar production without a kWh sensor gets sensor.lhd_solar_energy.
 Home Assistant's Energy settings are kept in step (sync_prefs): categories and devices as individual devices,
 solar production as a solar source. Entries the dashboard did not make are kept as they are.
@@ -59,6 +62,8 @@ ESTIMATE_SCHEMA = vol.Schema(
         vol.Optional("cat"): vol.Any(None, "", vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$"))),
         vol.Optional("lut"): LUT.valid_lut,   # measured table of a light (Öğren, pool, import)
         vol.Optional("src"): vol.All(str, vol.Length(max=40)),   # where the table came from: own | pool | library | import
+        vol.Optional("inside"): vol.All([vol.Match(r"^(?!kat_)[a-z0-9_]{1,40}$")], vol.Length(max=20)),   # meas: other devices on this plug
+        vol.Optional("rest"): vol.All(str, vol.Length(max=60)),   # meas with inside: the name of what is left
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -181,6 +186,51 @@ def energy_entity(eid: str, est: dict) -> str:
     return (est.get("energy") or f"sensor.lhd_{eid}_energy") if est.get("kind") == "meas" else f"sensor.lhd_{eid}_energy"
 
 
+def inside_of(eid: str, est: dict, ests: dict) -> list[str]:
+    """The devices on a measured plug: known ids, not itself and not a plug with devices of its own."""
+    if est.get("kind") != "meas":
+        return []
+    out = []
+    for k in est.get("inside") or []:
+        e = ests.get(k) if isinstance(ests, dict) else None
+        if k != eid and isinstance(e, dict) and not (e.get("kind") == "meas" and e.get("inside")) and k not in out:
+            out.append(k)
+    return out
+
+
+def has_net(eid: str, est: dict, ests: dict) -> bool:
+    return bool(inside_of(eid, est, ests))
+
+
+def owner_of(eid: str, ests: dict) -> str | None:
+    """The plug a device is on (the first one that lists it)."""
+    for k, e in (ests or {}).items():
+        if k != eid and isinstance(e, dict) and eid in inside_of(k, e, ests):
+            return k
+    return None
+
+
+def member_power_entity(eid: str, est: dict, ests: dict) -> str:
+    """What a category adds up for this device: the rest of a shared plug, otherwise its power."""
+    return f"sensor.lhd_{eid}_net_power" if has_net(eid, est, ests) else power_entity(eid, est)
+
+
+def member_energy_entity(eid: str, est: dict, ests: dict) -> str:
+    return f"sensor.lhd_{eid}_net_energy" if has_net(eid, est, ests) else energy_entity(eid, est)
+
+
+def net_power(eid: str, est: dict, ests: dict, states: Any) -> float:
+    """A shared plug minus the devices on it (never below 0). states: hass.states."""
+    w = watts_of(states.get(power_entity(eid, est))) if states is not None else None
+    if w is None:
+        return 0.0
+    for k in inside_of(eid, est, ests):
+        c = watts_of(states.get(power_entity(k, ests[k])))
+        if c is not None and c > 0:
+            w -= c
+    return max(0.0, w)
+
+
 def needs_power_sensor(est: dict) -> bool:
     return est.get("kind") != "meas"
 
@@ -229,15 +279,18 @@ def build_prefs(prefs: dict, ests: dict, cats: list, settings: dict, owned: str 
             row["included_in_stat"] = up
         rows.append(row)
     for eid, est in ests.items():
-        st = energy_entity(eid, est)
+        st = member_energy_entity(eid, est, ests)
         if st in mine:
             continue
         mine.add(st)
-        row = {"stat_consumption": st, "stat_rate": power_entity(eid, est), "name": str(est.get("name") or eid)}
+        net = has_net(eid, est, ests)   # a shared plug: the rest goes in, the devices on it are listed by themselves
+        row = {"stat_consumption": st, "stat_rate": member_power_entity(eid, est, ests), "name": str((est.get("rest") if net else None) or est.get("name") or eid)}
         if est.get("cat") in cat_ids:
             row["included_in_stat"] = f"sensor.lhd_kat_{est['cat']}_energy"
         rows.append(row)
-    keep = [dict(d) for d in dc_old if d.get("stat_consumption") not in mine and not str(d.get("stat_consumption", "")).startswith("sensor.lhd_")]
+    # a shared plug's own total is not listed: its rest and the devices on it are (otherwise counted twice)
+    gone = {energy_entity(eid, est) for eid, est in ests.items() if has_net(eid, est, ests)} - mine
+    keep = [dict(d) for d in dc_old if d.get("stat_consumption") not in mine and d.get("stat_consumption") not in gone and not str(d.get("stat_consumption", "")).startswith("sensor.lhd_")]
     # an entry kept from before may point into one of ours that no longer exists; a category only sums its own devices
     present = {d.get("stat_consumption") for d in keep} | mine
     for d in keep:
