@@ -175,6 +175,7 @@ function lpEnSince(t0) {
   return Y.src === 'grid' ? s : s / (1 - lpEnUntracked());
 }
 // bu takvim yılı (1 Ocak'tan bu yana): { k, src: manual | bills | grid | panel, est: kayıt yılın başını tutmuyor (ortalamayla tamamlandı), low: panel ölçmeyeni görmüyor (en az) }
+const LP_EN_MIN_DAYS = 14;   // yıl sonu tahmini için en az bu kadar günlük kayıt
 function lpEnYtdInfo(M) {
   const c = lpEnCfg(), D = 86400000, now = Date.now(), y0 = new Date(new Date().getFullYear(), 0, 1).getTime(), b = lpEnLastBill(), Y = LP_EN.yr;
   const end = (x) => Date.parse(x.to + 'T00:00:00') + D;
@@ -186,10 +187,12 @@ function lpEnYtdInfo(M) {
   if (base) { const f0 = Math.min.apply(null, lpEnBills().map((x) => Date.parse(x.from + 'T00:00:00')).filter((f) => f + 40 * D > y0)); if (f0 <= y0 + 3 * D) return { k: base + tail(upto), src: 'bills' }; }
   if (Y && Y.y === new Date().getFullYear() && Y.first) {
     let s = 0; Object.keys(Y.days).forEach((k) => { s += Y.days[k]; });
-    const covered = Math.max(1, (now - Y.first) / D), elapsed = Math.max(1, (now - y0) / D), est = Y.first > y0 + 2 * D;
+    const covered = Math.max(1, (now - Y.first) / D), elapsed = Math.max(1, (now - y0) / D), late = Y.first > y0 + 2 * D;
+    // kayıt yılın ortasında başladıysa yılın başı tahmin edilir; ama 2 haftadan az kayıtla tahmin anlamsız (1 günden 52 kWh çıkıyordu): yalnız sayılan
+    const short = late && covered < LP_EN_MIN_DAYS, est = late && !short;
     let k = est ? s / covered * elapsed : s;
     if (Y.src === 'panel') k = k / (1 - lpEnUntracked());
-    return { k: k, src: Y.src, est: est, low: Y.src === 'panel' && !lpEnLastBill() };
+    return { k: k, src: Y.src, est: est, short: short, days: Math.floor(covered), low: short || (Y.src === 'panel' && !lpEnLastBill()) };
   }
   if (base) return { k: base + tail(upto), src: 'bills' };
   return { k: 0, src: '' };
@@ -203,11 +206,11 @@ function lpEnYearPlan(M) {
   const I = lpEnYtdInfo(M), k = I.k, y = new Date().getFullYear(), prev = lpEnPrev(), prevOver = prev > 0 && prev >= lpEnLimitOf(y);
   if (!k && !prevOver) return null;
   const now = new Date(), y0 = new Date(y, 0, 1), D = 86400000;
-  const days = Math.max(1, (now - y0) / D), avg = k / days, lim = lpEnYearLimit(), proj = k + avg * (new Date(y + 1, 0, 1) - now) / D;
-  const cross = k && proj >= lim ? new Date(y0.getTime() + Math.min(lim / avg, 366) * D) : null;
+  const days = Math.max(1, (now - y0) / D), avg = k / days, lim = lpEnYearLimit(), proj = I.short ? null : k + avg * (new Date(y + 1, 0, 1) - now) / D;
+  const cross = k && proj !== null && proj >= lim ? new Date(y0.getTime() + Math.min(lim / avg, 366) * D) : null;
   let start = cross ? new Date(cross.getFullYear(), cross.getMonth() + 3, 1) : null;
   if (start && y === 2026 && lpEnCfg().year_mode !== 'manual' && start < new Date(2027, 0, 1)) start = new Date(2027, 0, 1);   // yeni sınır 1.1.2027'de yürürlükte
-  return { k: k, src: I.src, est: !!I.est, low: !!I.low, lim: lim, avg: avg, proj: proj, cross: cross, start: start, past: k >= lim, prev: prev, prevOver: prevOver, nowIn: prevOver || (!!start && start <= now) };
+  return { k: k, src: I.src, est: !!I.est, low: !!I.low, short: !!I.short, days: I.days || 0, lim: lim, avg: avg, proj: proj, cross: cross, start: start, past: k >= lim, prev: prev, prevOver: prevOver, nowIn: prevOver || (!!start && start <= now) };
 }
 // tahmini cihaz (entegrasyonun kurduğu sensör): kartlarda "~" ile
 const lpEnIsEst = (x) => !!x && (x.est !== undefined ? !!x.est : typeof x.e === 'string' && /^sensor\.lhd_[a-z0-9_]+_energy$/.test(x.e));

@@ -383,3 +383,15 @@ test('a light group tile sums its members\' power (v0.28.8)', () => {
   assert.strictEqual(E.lpEnWSum(h.states, 'sensor.salon_serit_power'), 42.3);
   E.LP_EN.tp = {};
 });
+
+test('under two weeks of records the year is not extrapolated (v0.28.8)', () => {
+  const y = new Date().getFullYear(), now = Date.now(), f = now - 1.5 * 86400000;
+  if (f < new Date(y, 0, 1).getTime() + 3 * 86400000) return;   // ocak başında anlamsız
+  E.LP_EN.yr = { key: 'x', at: now, y: y, src: 'grid', days: { [f]: 12 }, first: f, prev: 0, pfull: false };
+  const I = E.lpEnYtdInfo(null), P = E.lpEnYearPlan(null);
+  assert.strictEqual(I.short, true); assert.strictEqual(I.k, 12); assert.strictEqual(I.est, false);
+  assert.strictEqual(P.proj, null); assert.strictEqual(P.cross, null); assert.strictEqual(P.short, true);
+  E.LP_EN.yr = { key: 'x', at: now, y: y, src: 'grid', days: { [now - 20 * 86400000]: 120 }, first: now - 20 * 86400000, prev: 0, pfull: false };
+  assert.strictEqual(E.lpEnYtdInfo(null).est, true);
+  E.LP_EN.yr = null;
+});
