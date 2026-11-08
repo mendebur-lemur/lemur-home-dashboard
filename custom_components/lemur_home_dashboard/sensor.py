@@ -7,6 +7,8 @@ import math
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.const import UnitOfEnergy, UnitOfPower
 from homeassistant.core import callback
+from homeassistant.helpers import area_registry as ar
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.event import async_track_state_change_event
@@ -47,6 +49,14 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
         st = EST.solar_cfg(data.data.get("settings") or {})
         if st.get("on") and st.get("prod") and not st.get("prod_energy"):
             out["solar_energy"] = lambda d=data: SolarEnergySensor(d)
+        # the home's and each room's totals (power now, kWh today)
+        ests = data.estimates()
+        if ests or EST.meter_cfg(data.data.get("settings") or {}).get("power"):
+            out["ev_power"] = lambda d=data: HomePowerSensor(d)
+            out["ev_energy"] = lambda d=data: HomeEnergySensor(d)
+        for aid in sorted({a for a in (area_of(hass, k, e) for k, e in ests.items()) if a}):
+            out[f"oda_{aid}_power"] = lambda d=data, a=aid: RoomPowerSensor(d, a)
+            out[f"oda_{aid}_energy"] = lambda d=data, a=aid: RoomEnergySensor(d, a)
         return out
 
     @callback
@@ -75,6 +85,27 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
 
     sync()
     entry.async_on_unload(async_dispatcher_connect(hass, SIGNAL_EST, sync))
+    # a device moved to another room, a room added or removed: the room sensors follow
+    reg_sync = callback(lambda _e: sync())
+    for ev in (er.EVENT_ENTITY_REGISTRY_UPDATED, dr.EVENT_DEVICE_REGISTRY_UPDATED, ar.EVENT_AREA_REGISTRY_UPDATED):
+        entry.async_on_unload(hass.bus.async_listen(ev, reg_sync))
+
+
+def area_of(hass, eid: str, est: dict) -> str | None:
+    """The room of a device: its linked entity's or its power sensor's area, otherwise that entity's device's."""
+    if hass is None:
+        return None
+    ents, devs = er.async_get(hass), dr.async_get(hass)
+    for x in (est.get("entity"), est.get("sensor"), EST.power_entity(eid, est)):
+        r = ents.async_get(x) if x else None
+        if r is None:
+            continue
+        if r.area_id:
+            return r.area_id
+        d = devs.async_get(r.device_id) if r.device_id else None
+        if d is not None and d.area_id:
+            return d.area_id
+    return None
 
 
 class _Base:
@@ -480,6 +511,134 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
     @property
     def native_value(self):
         return round(self._kwh, 4)
+
+
+class _Total:
+    """Shared by the home and room totals: a note that they are totals, not devices."""
+
+    def _note(self) -> str:
+        return ("Toplam değer: Enerji ayarına cihaz olarak eklenmez (ev iki kez sayılırdı)" if is_tr(self._d.hass)
+                else "A total: not to be added as a device in the Energy settings (the home would count twice)")
+
+
+class _RoomMixin(_Total):
+    def _room_name(self) -> str:
+        a = ar.async_get(self._d.hass).async_get_area(self.area_id) if self._d.hass else None
+        return (a.name if a else None) or self.area_id
+
+    def members(self) -> list[tuple[str, dict]]:
+        return [(k, e) for k, e in self._d.estimates().items() if area_of(self._d.hass, k, e) == self.area_id]
+
+    def _sync_name(self) -> None:
+        tr = is_tr(self._d.hass)
+        n = self._room_name()
+        self._attr_name = (f"{n} toplam güç" if tr else f"{n} total power") if self._suffix == "power" else (f"{n} bugün toplam" if tr else f"{n} total today")
+        self._attr_icon = "mdi:home-lightning-bolt-outline" if self._suffix == "power" else "mdi:calendar-today"
+
+    @property
+    def extra_state_attributes(self):
+        return {"area": self.area_id, "devices": len(self.members()), "lhd_total": True, "note": self._note()}
+
+
+class _HomeMixin(_Total):
+    def members(self) -> list[tuple[str, dict]]:
+        return list(self._d.estimates().items())
+
+    def _sync_name(self) -> None:
+        tr = is_tr(self._d.hass)
+        self._attr_name = ("Ev toplam güç" if tr else "Home total power") if self._suffix == "power" else ("Ev bugün toplam" if tr else "Home total today")
+        self._attr_icon = "mdi:home-lightning-bolt-outline" if self._suffix == "power" else "mdi:calendar-today"
+
+    @property
+    def extra_state_attributes(self):
+        return {"devices": len(self.members()), "lhd_total": True, "note": self._note()}
+
+
+class RoomPowerSensor(_RoomMixin, CategoryPowerSensor):
+    """A room's devices' power together (a shared plug counts with its rest)."""
+
+    def __init__(self, data, aid: str) -> None:
+        self.area_id = aid
+        self._suffix = "power"
+        self._init(data, f"oda_{aid}_power", f"sensor.lhd_oda_{aid}_power")
+
+
+class HomePowerSensor(_HomeMixin, CategoryPowerSensor):
+    """The home's power now, worked out like the dashboard's cards (meter, flow, or the devices together)."""
+
+    def __init__(self, data) -> None:
+        self._suffix = "power"
+        self._init(data, "ev_power", "sensor.lhd_ev_power")
+
+    def _follow(self) -> list[str]:
+        return EST.home_follow(self._d.data.get("settings") or {}, self._d.estimates())
+
+    @property
+    def native_value(self):
+        if not self.hass:
+            return None
+        v = EST.home_power(self.hass.states, self._d.data.get("settings") or {}, self._d.estimates())
+        return round(v, 2) if v is not None else None
+
+
+class _Daily:
+    """kWh since midnight: the sum's counter starts from zero every day (Home Assistant sees the drop as a new cycle)."""
+
+    def _roll(self) -> bool:
+        today = dt_util.now().date()
+        if getattr(self, "_day", None) != today:
+            first = getattr(self, "_day", None) is None
+            self._day = today
+            if not first:
+                self._kwh = 0.0
+                return True
+        return False
+
+    async def _daily_start(self) -> None:
+        last = await self.async_get_last_state()
+        if last is not None and dt_util.as_local(last.last_updated).date() != dt_util.now().date():
+            self._kwh = 0.0
+        self._day = dt_util.now().date()
+        self.async_on_remove(async_dispatcher_connect(self.hass, SIGNAL_TICK, self._daily_tick))
+
+    @callback
+    def _daily_tick(self) -> None:
+        if self._roll():
+            self.async_write_ha_state()
+
+    @callback
+    def _changed(self, event) -> None:
+        self._roll()
+        CategoryEnergySensor._changed(self, event)
+
+
+class RoomEnergySensor(_RoomMixin, _Daily, CategoryEnergySensor):
+    def __init__(self, data, aid: str) -> None:
+        self._kwh = 0.0
+        self._last = {}
+        self._held = {}
+        self._day = None
+        self.area_id = aid
+        self._suffix = "energy"
+        self._init(data, f"oda_{aid}_energy", f"sensor.lhd_oda_{aid}_energy")
+
+    async def async_added_to_hass(self) -> None:
+        await CategoryEnergySensor.async_added_to_hass(self)
+        await self._daily_start()
+
+
+class HomeEnergySensor(_HomeMixin, _Daily, CategoryEnergySensor):
+    def __init__(self, data) -> None:
+        self._kwh = 0.0
+        self._last = {}
+        self._held = {}
+        self._day = None
+        self._suffix = "energy"
+        self._init(data, "ev_energy", "sensor.lhd_ev_energy")
+
+    async def async_added_to_hass(self) -> None:
+        await CategoryEnergySensor.async_added_to_hass(self)
+        await self._daily_start()
 
 
 class PetFeedingSensor(SensorEntity):

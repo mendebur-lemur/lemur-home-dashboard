@@ -83,6 +83,17 @@ class PanelData:
                 val = stored.get(key)
                 if isinstance(val, type(default)):
                     self.data[key] = val
+        # v0.28.5: the former browser-only energy values became real sensors; panels and records follow
+        tabs = self.data.get("tabs")
+        if tabs:
+            new = EST.migrate_ids(tabs)
+            if new != tabs:
+                self.data["tabs"] = new
+                self.store.async_delay_save(lambda: self.data, 1.0)
+        est = self.data.get("estimates")
+        if isinstance(est, dict) and any(EST.is_virtual(v) for v in est.values()):
+            self.data["estimates"] = {k: v for k, v in est.items() if not EST.is_virtual(v)}
+            self.store.async_delay_save(lambda: self.data, 1.0)
         self.learning = LRN.Learning(self.hass, self.data.get("learn_avg"), self._save_learn)
         self.learning.resume_saved()   # yeniden başlatmayla kesilen ışık ölçümü kaldığı yerden sürer
 
@@ -166,7 +177,7 @@ class PanelData:
         est = self.data.get("estimates")
         if not isinstance(est, dict):
             return {}
-        return {k: v for k, v in est.items() if isinstance(k, str) and isinstance(v, dict)}
+        return {k: v for k, v in est.items() if isinstance(k, str) and isinstance(v, dict) and not EST.is_virtual(v)}
 
     def rec(self, pid: str) -> dict:
         feed = self.data.get("feed")
@@ -431,7 +442,7 @@ def ws_set(hass, connection, msg):
             connection.send_error(msg["id"], "invalid", f"{key}: {err}")
             return
     elif key == "tabs":
-        value = SF.clean_tabs(value)
+        value = EST.migrate_ids(SF.clean_tabs(value))
     elif key in ("twins", "walls"):
         try:
             value = (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)

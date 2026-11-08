@@ -76,7 +76,17 @@ def _no_reserved(v: dict) -> dict:
     return v
 
 
-ESTIMATES_SCHEMA = vol.All(vol.Schema({_ID: ESTIMATE_SCHEMA}), vol.Length(max=MAX_ESTIMATES), _no_reserved)
+def is_virtual(est: Any) -> bool:
+    """A record tied to the dashboard's own energy values (sensor.lhdx_..., only in the browser): not a device.
+    Added by mistake it made the home total add itself; such records are dropped."""
+    return isinstance(est, dict) and any(str(est.get(k) or "").startswith("sensor.lhdx_") for k in ("sensor", "energy"))
+
+
+def _drop_virtual(v: dict) -> dict:
+    return {k: e for k, e in v.items() if not is_virtual(e)}
+
+
+ESTIMATES_SCHEMA = vol.All(vol.Schema({_ID: ESTIMATE_SCHEMA}), _drop_virtual, vol.Length(max=MAX_ESTIMATES), _no_reserved)
 ECAT_SCHEMA = vol.Schema(
     {
         vol.Required("id"): vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$")),
@@ -229,6 +239,92 @@ def net_power(eid: str, est: dict, ests: dict, states: Any) -> float:
         if c is not None and c > 0:
             w -= c
     return max(0.0, w)
+
+
+# ---- the home's and each room's totals (sensor.lhd_ev_*, sensor.lhd_oda_<area>_*) ----
+# Real sensors so they have history and work in automations. Their names start with lhd_ like the dashboard's other
+# sensors, so the dashboard never takes them for a device; build_prefs drops any lhd_ entry it did not write, so they
+# cannot end up in Home Assistant's Energy settings as a device either (that would count the home twice).
+OLD_IDS = {"sensor.lhdx_ev": "sensor.lhd_ev_power", "sensor.lhdx_bugun": "sensor.lhd_ev_energy"}
+
+
+def new_id(v: str) -> str:
+    """The dashboard's former browser-only values (sensor.lhdx_ev, sensor.lhdx_oda_<area>_guc ...) → the real sensors."""
+    if v in OLD_IDS:
+        return OLD_IDS[v]
+    if v.startswith("sensor.lhdx_oda_"):
+        if v.endswith("_guc"):
+            return "sensor.lhd_oda_" + v[16:-4] + "_power"
+        if v.endswith("_bugun"):
+            return "sensor.lhd_oda_" + v[16:-6] + "_energy"
+    return v
+
+
+def migrate_ids(x: Any) -> Any:
+    """Every string in the tabs that names a former value, renamed (lists and dicts walked)."""
+    if isinstance(x, str):
+        return new_id(x)
+    if isinstance(x, list):
+        return [migrate_ids(v) for v in x]
+    if isinstance(x, dict):
+        return {k: migrate_ids(v) for k, v in x.items()}
+    return x
+
+
+def home_power(states: Any, settings: dict, ests: dict) -> float | None:
+    """The home's power now, as the dashboard's cards show it: the home meter (no solar or battery), a whole-home
+    sensor, the flow (grid + solar - battery charge), otherwise the devices together."""
+    e = settings.get("energy") if isinstance(settings, dict) else None
+    e = e if isinstance(e, dict) else {}
+    w = lambda x: watts_of(states.get(x)) if x and states is not None else None   # noqa: E731
+    s, m = solar_cfg(settings), meter_cfg(settings)
+    sun = (bool(s.get("sun")) and s.get("on") is not False) if "sun" in s else bool(s.get("on") and s.get("prod"))
+    bat = (bool(s.get("bat")) and s.get("on") is not False) if "bat" in s else bool(s.get("on") and (s.get("bat_power") or s.get("soc")))
+    if m.get("power") and not sun and not bat:
+        v = w(m["power"])
+        if v is not None:
+            return max(0.0, -v if m.get("inv") else v)
+    if e.get("total"):
+        v = w(e["total"])
+        if v is not None:
+            return max(0.0, v)
+    if sun or bat:
+        gm = "meter" if m.get("power") else (s.get("grid_mode") if s.get("grid_mode") in ("two", "none") else "net")
+        grid = None
+        if gm == "meter":
+            grid = w(m["power"])
+            if grid is not None and m.get("inv"):
+                grid = -grid
+        elif gm == "two":
+            a, b = w(s.get("grid_in")), w(s.get("grid_out"))
+            if a is not None or b is not None:
+                grid = (a or 0) - (b or 0)
+        elif gm == "net":
+            grid = w(s.get("grid"))
+            if grid is not None and s.get("grid_inv"):
+                grid = -grid
+        prod = w(s.get("prod")) if sun else None
+        b = w(s.get("bat_power")) if bat else None
+        if b is not None and s.get("bat_inv"):
+            b = -b
+        known = grid is not None and (prod is not None or not sun or not s.get("prod")) and (b is not None or not bat or not (s.get("bat_power") or s.get("soc")))
+        if known:
+            return max(0.0, (grid or 0) + (prod or 0) - (b or 0))
+    tot = None
+    for eid, est in ests.items():
+        v = w(member_power_entity(eid, est, ests))
+        if v is not None and v > 0:
+            tot = (tot or 0.0) + v
+    return tot
+
+
+def home_follow(settings: dict, ests: dict) -> list[str]:
+    e = settings.get("energy") if isinstance(settings, dict) else None
+    e = e if isinstance(e, dict) else {}
+    s, m = solar_cfg(settings), meter_cfg(settings)
+    ids = [m.get("power"), e.get("total"), s.get("prod"), s.get("grid"), s.get("grid_in"), s.get("grid_out"), s.get("bat_power")]
+    ids += [member_power_entity(k, v, ests) for k, v in ests.items()]
+    return [x for x in ids if x]
 
 
 def needs_power_sensor(est: dict) -> bool:

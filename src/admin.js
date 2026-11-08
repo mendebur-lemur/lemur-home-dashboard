@@ -93,6 +93,7 @@ const ADM = {
     enImpWhat: 'Aktarınca Enerji ayarlarındaki {n} eski giriş çıkarılır, panelin sensörleri eklenir.', enImpAgain: 'Yeniden tara', enImpGo: '{n} cihazı aktar', enImpGoQ: 'Emin misin? Aktar',
     enDevN: '{n} cihaz ({m} ölçen, {v} sanal) · şu an ~{w}', enFoundP: '+{n} bulundu', enCatN: '{n} kategori · {u} kategorisiz', enSolN: 'Üretim şu an {w}', enSolNoS: 'Sensör seçilmedi', enOff: 'Kapalı',
     enSyncOn: 'Enerji ayarlarıyla eşleniyor', enSyncOff: 'Eşleme kapalı', enSrcT2: 'Kartlar panelin cihaz ve kategorilerinden dolar. Panel bunları Home Assistant Enerji ayarlarına da ekler; senin eklediğin diğer girişlere dokunmaz.', enSync: 'Enerji ayarlarıyla eşle', enSyncT: 'Cihazlar, kategoriler ve güneş üretimi Home Assistant\'ın Enerji panosunda da görünsün',
+    enDvN: 'Takip edilen', enDvW: 'Şu an toplam', enDvMT: 'Ölçülen / tahmini', enDvC: 'Kontrol edilecek', enDvQ: 'Cihaz ara', enDvGR: 'Odaya göre', enDvGC: 'Kategoriye göre', enDvAddL: 'Işık ekle', enDvNoL: 'Eklenmemiş ışık yok', enDvAddM: 'Ölçen cihaz ekle', enDvNoM: 'Bulunan yeni ölçen cihaz yok', enDvAddO: 'Başka cihaz', enDvFL: 'Işıklar', enDvFE: 'Tahminiler', enDvFC: 'Kontrol et', enDvFR: 'Odası yok', enDvNoRoom: 'Odası seçilmemiş', enTgM: 'Ölçülüyor', enTgR: 'Öğreniliyor', enTgO: 'Öğrenildi', enTgL: 'Hazır tablo', enTgE: 'Tahmini', enTgC: 'Kontrol et', enDvInPlug: 'prizin içinde', enDvGN: '{n} cihaz', enDvNone: 'Bu süzgece uyan cihaz yok.', enDvEmpty: 'Henüz cihaz yok. Işık ekle ya da ölçen cihaz ekle ile başla.', enDvRoomT: 'Oda, Home Assistant\'ta cihaza seçilen alandan gelir. Odası seçilmeyen cihazlar oda toplamlarına girmez; alanı HA\'nın cihaz sayfasından seçebilirsin.', enDvAddLT: 'Panelin takip etmediği {n} ışık, odalarına göre', enDvAddMT: 'Güç ölçen ama eklenmemiş {n} cihaz, odalarına göre', enDvSelAll: 'Hepsini seç', enDvSelNone: 'Hiçbirini seçme', enDvAddLH: 'Işıklar Işıklar kategorisine eklenir. "Hazır tablo" olanlar başka evlerde ölçülmüş değerle gelir; "Tahmini" olanları sonra bir ölçüm prizine takıp öğretebilirsin.', enDvAddMH: 'Kendi güç sensörüyle eklenir, enerji sensörü bulunursa o da. Kategorisini sonra seçersin.', enDvAddN: '{n} cihazı ekle', enDvLCat: 'Işıklar', enWSens: 'Güç sensörü yanıt vermiyor', enWSensT: 'Sensör Home Assistant\'ta yok ya da kullanılamıyor; cihaz 0 W sayılıyor. Prizin bağlantısını kontrol et ya da aşağıdan başka sensör seç.', enWNoEntT: 'Bağlı cihaz Home Assistant\'ta bulunamadı; cihaz tahmini değeriyle sayılıyor.', enDsWhat: 'Bu ne?', enDsRoom: 'Oda', enDsRoomT: 'Oda, HA\'da bu cihaza seçilen alandan gelir.', enDsHow: 'Gücünü nereden biliyoruz?', enDsRec: 'Önerilen', enDsVals: 'Değerler', enDsLutOwn: 'Bu ışık prizle ölçüldü; renk, beyaz ton ve efektlere göre ölçülen tablo kullanılıyor. Aşağıdaki değerler tablo yoksa kullanılır.', enDsLutLib: 'Bu ışık için başka evlerde ölçülmüş tablo kullanılıyor. Aşağıdaki değerler tablo yoksa kullanılır.', enDsAdv: 'Home Assistant sensörleri', enDsOwnE: 'Enerji kendi sensöründen: {e}', ekL_meas: 'Kendi ölçüyor', ekD_meas: 'Cihazın ya da prizin kendi güç sensörü var. En doğrusu.', ekL_light: 'Işık: parlaklığa göre', ekD_light: 'Parlaklık ve renge göre. Ölçülmüş tablo varsa o, yoksa en düşük ve en yüksek değerle.', ekL_states: 'Duruma göre', ekD_states: 'Oynatıyor, beklemede, soğutuyor gibi her durum için ayrı watt.', ekL_onoff: 'Açık / kapalı', ekD_onoff: 'Açıkken bir değer, kapalıyken bir değer.', ekL_fixed: 'Hep aynı', ekD_fixed: 'Hep aynı çeker (modem, kamera gibi).', ekL_year: 'Yıllık etiket', ekD_year: 'Etiketteki yıllık kWh, ortalama olarak (buzdolabı gibi).', ekL_cycle: 'Çevrimle', ekD_cycle: '100 çevrimde kWh ve haftada kaç kez (çamaşır, bulaşık makinesi).',
     enWNoEnt: 'Bu cihaz Home Assistant\'ta bulunamadı; adını kontrol et.', enWZero: 'Hiçbir duruma W yazılmadı; cihaz 0 W sayılır.', enCSame: 'Bu adla bir kategori zaten var', enMUsed: 'Bu güç sensörü başka bir cihazda kullanılıyor', enAddAllQ: 'Emin misin? {n} cihaz eklenecek',
     enImpToDev: 'Cihazlara git', enGInv: 'İşaret ters', enGInvT: 'Sayaç şebekeye vermeyi artı gösteriyorsa aç',
     lrNoEnt: 'Önce durumunu okuyan cihazı seç ve kaydet', lrH: '{h} sa {m} dk', lrM: '{m} dk', lrTestOk: 'Prizde {a} → {b} değişti. Cihaz bu prizde.', lrTestNo: 'Prizin değeri değişmedi ({a}). Cihaz bu prize takılı mı?',
@@ -219,6 +220,7 @@ const ADM = {
     enImpWhat: 'Importing takes {n} old entries out of the Energy settings and adds the dashboard\'s sensors.', enImpAgain: 'Scan again', enImpGo: 'Import {n} devices', enImpGoQ: 'Sure? Import',
     enDevN: '{n} devices ({m} measured, {v} virtual) · ~{w} now', enFoundP: '+{n} found', enCatN: '{n} categories · {u} uncategorized', enSolN: 'Producing {w} now', enSolNoS: 'No sensor picked', enOff: 'Off',
     enSyncOn: 'Kept in step with the Energy settings', enSyncOff: 'Sync off', enSrcT2: 'The cards fill from the dashboard\'s devices and categories. The dashboard also adds them to Home Assistant\'s Energy settings and leaves your other entries alone.', enSync: 'Sync with the Energy settings', enSyncT: 'Devices, categories and solar production also show on Home Assistant\'s Energy dashboard',
+    enDvN: 'Tracked', enDvW: 'Now in total', enDvMT: 'Measured / estimated', enDvC: 'To check', enDvQ: 'Search devices', enDvGR: 'By room', enDvGC: 'By category', enDvAddL: 'Add lights', enDvNoL: 'No lights left to add', enDvAddM: 'Add measuring devices', enDvNoM: 'No new measuring device found', enDvAddO: 'Other device', enDvFL: 'Lights', enDvFE: 'Estimated', enDvFC: 'To check', enDvFR: 'No room', enDvNoRoom: 'No room set', enTgM: 'Measured', enTgR: 'Learning', enTgO: 'Learned', enTgL: 'Ready table', enTgE: 'Estimated', enTgC: 'Check', enDvInPlug: 'on the plug', enDvGN: '{n} devices', enDvNone: 'No device matches this filter.', enDvEmpty: 'No devices yet. Start with Add lights or Add measuring devices.', enDvRoomT: 'The room comes from the area set for the device in Home Assistant. Devices without one are left out of the room totals; set it on HA\'s device page.', enDvAddLT: '{n} lights the dashboard does not track, by room', enDvAddMT: '{n} devices that measure power but are not added, by room', enDvSelAll: 'Select all', enDvSelNone: 'Select none', enDvAddLH: 'Lights go in the Lights category. "Ready table" ones come with values measured in other homes; "Estimated" ones you can teach later with a measuring plug.', enDvAddMH: 'Added with their own power sensor, and their energy sensor if one is found. Pick the category later.', enDvAddN: 'Add {n} devices', enDvLCat: 'Lights', enWSens: 'The power sensor does not respond', enWSensT: 'The sensor is missing or unavailable in Home Assistant; the device counts as 0 W. Check the plug or pick another sensor below.', enWNoEntT: 'The linked device was not found in Home Assistant; it counts with its estimate.', enDsWhat: 'What is it?', enDsRoom: 'Room', enDsRoomT: 'The room comes from the area set for this device in HA.', enDsHow: 'Where does its power come from?', enDsRec: 'Suggested', enDsVals: 'Values', enDsLutOwn: 'This light was measured with a plug; the table for colours, white tones and effects is used. The values below are used only without a table.', enDsLutLib: 'A table measured in other homes is used for this light. The values below are used only without a table.', enDsAdv: 'Home Assistant sensors', enDsOwnE: 'Energy from its own sensor: {e}', ekL_meas: 'Measures itself', ekD_meas: 'The device or its plug has its own power sensor. The most accurate.', ekL_light: 'Light: by brightness', ekD_light: 'By brightness and colour. A measured table if there is one, otherwise the lowest and highest values.', ekL_states: 'By state', ekD_states: 'A watt value for each state, like playing, idle or cooling.', ekL_onoff: 'On / off', ekD_onoff: 'One value when on, one when off.', ekL_fixed: 'Always the same', ekD_fixed: 'Always draws the same (a modem, a camera).', ekL_year: 'Yearly label', ekD_year: 'The label\'s kWh per year, as an average (a fridge).', ekL_cycle: 'By cycles', ekD_cycle: 'kWh per 100 cycles and cycles per week (a washer, a dishwasher).',
     enWNoEnt: 'This device was not found in Home Assistant; check its id.', enWZero: 'No state has a W value; the device counts as 0 W.', enCSame: 'A category with this name already exists', enMUsed: 'This power sensor is already used by another device', enAddAllQ: 'Sure? {n} devices will be added',
     enImpToDev: 'Go to devices', enGInv: 'Reversed sign', enGInvT: 'Turn on if the meter shows sending to the grid as plus',
     lrNoEnt: 'Pick the device that gives the state and save first', lrH: '{h} h {m} min', lrM: '{m} min', lrTestOk: 'The plug went {a} → {b}. The device is on this plug.', lrTestNo: 'The plug did not change ({a}). Is the device plugged into it?',
@@ -1081,7 +1083,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
-    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf', 'data-enst', 'data-encf'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf', 'data-enst', 'data-encf', 'data-enq'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
     const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     // LEC kuruluysa bir kez: efektlerin nerede olduğunu anlatan bilgi kutusu ("Tamam" deyince kaybolur)
     const st0 = this._settings();
@@ -1800,8 +1802,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const par = {}; dc.forEach((d) => { if (d.included_in_stat) par[d.included_in_stat] = 1; });
     dc.forEach((d) => { if (par[d.stat_consumption]) { const pw = lpEnPowOf(this._hass, d.stat_consumption, d.stat_rate); if (pw) used[pw] = 1; } });
     const names = {}; Object.keys(E).forEach((k) => { names[String(E[k].name || '').toLocaleLowerCase('tr')] = 1; });
-    const skip = /grid|şebeke|sebeke|solar|güneş|gunes|\bpv\b|inverter|invertör|invertor|battery|batarya|\bak[uü]\b|total|toplam|standby|bekleme|import|export|_kat_/i;
-    return Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(S[id]) && !used[id] && id.indexOf('sensor.lhd_') !== 0 && S[id].state !== 'unavailable' &&
+    const skip = /grid|şebeke|sebeke|solar|güneş|gunes|\bpv\b|inverter|invertör|invertor|battery|batarya|\bak[uü]\b|total|toplam|standby|bekleme|import|export|lhd_kat_/i;   // lhd_kat_: panelin kendi kategori sensörleri (yalnız "_kat_" olsaydı "ust_kat_pc" gibi kat adlı cihazlar da elenirdi)
+    // sensor.lhdx_: panelin kendi enerji değerleri (Ev şu an...), cihaz değil: eklenirse evin toplamı kendine eklenir
+    return Object.keys(S).filter((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(S[id]) && !used[id] && id.indexOf('sensor.lhd_') !== 0 && !lpEnIsVirt(id) && S[id].state !== 'unavailable' &&
       !(R[id] && /^(lemur_home_dashboard|powercalc)$/.test(String(R[id].platform || ''))) && !skip.test(id + ' ' + this._ename(id)) && !names[this._enMeasName(id).toLocaleLowerCase('tr')])
       .sort((a, b) => (lpEnW(S, b) || 0) - (lpEnW(S, a) || 0));
   }
@@ -1851,63 +1854,180 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     f.inside = Array.isArray(f.inside) ? f.inside.slice() : []; f.rest = f.rest || '';
     this._enE = { id: e ? id : null, f: f, ask: false };
   }
-  _enDev() {
-    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), C = this._enCats(), S = this._hass.states, F = this._enF || 'all';
-    const catN = (id) => (C.filter((c) => c.id === id)[0] || {}).name || '';
-    const sub = (e, id) => this._t('ek_' + e.kind) + (e.cat && catN(e.cat) ? ' · ' + catN(e.cat) : ' · ' + this._t('enNoCat')) + (lpEnInside(id, e, E).length ? ' · ' + this._t('enInTag', { n: lpEnInside(id, e, E).length }) : '');
-    let h = '<h3 class="enh">' + t('en_dev') + '</h3><p class="enlead">' + t('enDevT') + '</p>';
-    const ids = Object.keys(E).filter((id) => F === 'all' || (F === 'meas' ? E[id].kind === 'meas' : E[id].kind !== 'meas'));
-    const nAll = Object.keys(E).length, nM = Object.keys(E).filter((id) => E[id].kind === 'meas').length;
-    h += '<div class="enbar2"><div class="seg">' + [['all', this._t('enAll') + ' ' + nAll], ['meas', this._t('enFMeas') + ' ' + nM], ['virt', this._t('enFVirt') + ' ' + (nAll - nM)]].map((o) => '<button data-enfil="' + o[0] + '"' + (F === o[0] ? ' class="on"' : '') + '>' + esc(o[1]) + '</button>').join('') + '</div>' +
-      '<button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enEAdd') + '</button></div>';
-    h += this._enEditor();
-    h += ids.length ? '<div class="ensl">' + ids.map((id) => { const e = E[id], w = this._enDevW(id, e), est = e.kind !== 'meas';
-      return '<button class="ensr' + (this._enE && this._enE.id === id ? ' on' : '') + '" data-enest="' + esc(id) + '"><ha-icon class="s16" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon><span><b>' + esc(e.name) + '</b><i>' + esc(sub(e, id) + (e.src === 'own' ? ' · ' + this._t('lrOwnTag') : e.lut ? ' · ' + this._t('lrTblTag') : '')) + '</i></span>' + this._lrnPill(id) + '<em class="enp' + (est ? ' est' : ' ok') + '">' + (w === null ? '…' : (est ? '~' : '') + esc(lpEnWs(w, this._lang))) + '</em></button>'; }).join('') + '</div>' : '<div class="hint">' + t(nAll ? 'enDNoF' : 'enENone') + '</div>';
-    // bulunan ölçen cihazlar
-    const fd = this._enFound();
-    if (fd.length) {
-      const more = this._enAllF ? fd : fd.slice(0, 8);
-      h += '<div class="ensec"><div class="ensh"><b>' + t('enFound', { n: fd.length }) + '</b><span>' + t('enFoundT') + '</span><button class="btn sm' + (this._enAskAll ? ' ask' : '') + '" data-a="enaddall">' + (this._enAskAll ? t('enAddAllQ', { n: fd.length }) : t('enAddAll', { n: fd.length })) + '</button></div><div class="ensl">' +
-        more.map((id) => '<div class="ensr"><ha-icon class="s16" icon="mdi:gauge"></ha-icon><span><b>' + esc(this._enMeasName(id)) + '</b><i>' + esc(id) + '</i></span><em class="enp ok">' + esc(lpEnWs(lpEnW(S, id), this._lang)) + '</em><button class="btn sm" data-enadd="' + esc(id) + '">' + t('enAdd1') + '</button></div>').join('') + '</div>' +
-        (fd.length > more.length ? '<div class="acts"><button class="btn sm" data-a="enfoundall">' + t('enShowAll', { n: fd.length }) + '</button></div>' : '') + '</div>';
+  // ---- Enerji → Cihazlar (v0.28.5): odaya ya da kategoriye göre gruplu liste, durum etiketleri, sağdan açılan düzenleme, toplu ekleme ----
+  // cihazın odası: bağlı varlığın ya da güç sensörünün HA'daki alanı, yoksa o varlığın cihazının alanı
+  _enRoom(id, e) {
+    const R = this._hass.entities || {}, D = this._hass.devices || {};
+    const L = [e.entity, e.sensor, e.kind === 'meas' ? null : 'sensor.lhd_' + id + '_power'];
+    for (let i = 0; i < L.length; i++) {
+      const r = L[i] && R[L[i]]; if (!r) continue;
+      if (r.area_id) return r.area_id;
+      const d = r.device_id && D[r.device_id]; if (d && d.area_id) return d.area_id;
     }
+    return '';
+  }
+  _enAreaN(a) { const A = (this._hass.areas || {})[a]; return (A && A.name) || a; }
+  // satırın durumu: meas (ölçülüyor), run (öğreniliyor), own (öğrenildi), lib (hazır tablo), est (tahmini), chk (kontrol et) ve uyarısı
+  _enStat(id, e) {
+    const S = this._hass.states, bad = (x) => !S[x] || ['unavailable', 'unknown'].indexOf(String(S[x].state)) >= 0;
+    if (e.kind === 'meas') return bad(e.sensor) ? { s: 'chk', w: this._t('enWSens') } : { s: 'meas' };
+    if (['light', 'states', 'onoff'].indexOf(e.kind) >= 0 && (!e.entity || !S[e.entity])) return { s: 'chk', w: this._t('enWNoEnt') };
+    const run = this._lrnRun(id); if (run && run.phase !== 'done') return { s: 'run' };
+    if (e.src === 'own') return { s: 'own' };
+    if (e.lut && (e.src === 'pool' || e.src === 'library' || e.src === 'import')) return { s: 'lib' };
+    return { s: 'est' };
+  }
+  _enDev() {
+    const t = (k, v) => esc(this._t(k, v)), E = this._enEsts(), C = this._enCats(), F = this._enF || 'all', G = this._enG === 'cat' ? 'cat' : 'room', Q = String(this._enQ || '').toLocaleLowerCase('tr');
+    const catN = (id) => (C.filter((c) => c.id === id)[0] || {}).name || '';
+    const ids = Object.keys(E), owner = {};
+    ids.forEach((k) => lpEnInside(k, E[k], E).forEach((x) => { owner[x] = k; }));
+    const I = {}; ids.forEach((k) => { const e = E[k], st = this._enStat(k, e), room = this._enRoom(k, e); I[k] = { e: e, st: st, room: room, w: this._enDevNetW(k, e), wAll: this._enDevW(k, e), ins: lpEnInside(k, e, E) }; });
+    const FL = { all: () => true, light: (k) => I[k].e.kind === 'light', meas: (k) => I[k].e.kind === 'meas', est: (k) => ['est', 'lib'].indexOf(I[k].st.s) >= 0, chk: (k) => I[k].st.s === 'chk', noroom: (k) => !I[k].room };
+    const tot = ids.reduce((a, k) => a + (I[k].w || 0), 0), nM = ids.filter(FL.meas).length, nC = ids.filter(FL.chk).length;
+    let h = '<div class="endv"><div class="endsum"><div><small>' + t('enDvN') + '</small><b>' + ids.length + '</b></div><div><small>' + t('enDvW') + '</small><b>' + esc(lpEnWs(tot, this._lang)) + '</b></div><div><small>' + t('enDvMT') + '</small><b>' + nM + ' / ' + (ids.length - nM) + '</b></div><div class="' + (nC ? 'w' : '') + '"><small>' + t('enDvC') + '</small><b>' + nC + '</b></div></div>';
+    const nf = this._enFound().length, nl = this._enNewLights().length;
+    h += '<div class="endbar"><input class="inp endq" data-enq value="' + esc(this._enQ || '') + '" placeholder="' + t('enDvQ') + '" aria-label="' + t('enDvQ') + '">' +
+      '<div class="seg"><button data-eng="room"' + (G === 'room' ? ' class="on"' : '') + '>' + t('enDvGR') + '</button><button data-eng="cat"' + (G === 'cat' ? ' class="on"' : '') + '>' + t('enDvGC') + '</button></div>' +
+      '<button class="btn pri" data-a="enaddl"' + (nl ? '' : ' disabled title="' + t('enDvNoL') + '"') + '><ha-icon class="s16" icon="mdi:lightbulb-on-outline"></ha-icon>' + t('enDvAddL') + (nl ? ' <i class="cnt">' + nl + '</i>' : '') + '</button>' +
+      '<button class="btn" data-a="enaddm"' + (nf ? '' : ' disabled title="' + t('enDvNoM') + '"') + '><ha-icon class="s16" icon="mdi:gauge"></ha-icon>' + t('enDvAddM') + (nf ? ' <i class="cnt">' + nf + '</i>' : '') + '</button>' +
+      '<button class="btn" data-a="enenew"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('enDvAddO') + '</button></div>';
+    const FN = [['all', 'enAll'], ['light', 'enDvFL'], ['meas', 'enFMeas'], ['est', 'enDvFE'], ['chk', 'enDvFC'], ['noroom', 'enDvFR']];
+    h += '<div class="endchips">' + FN.map((x) => { const n = ids.filter(FL[x[0]]).length; return (n || x[0] === 'all' || F === x[0]) ? '<button class="chip' + (F === x[0] ? ' on' : '') + (x[0] === 'chk' && n ? ' warn' : '') + '" data-enfil="' + x[0] + '">' + t(x[1]) + ' <i>' + n + '</i></button>' : ''; }).join('') + '</div>';
+    const vis = ids.filter((k) => FL[F] && FL[F](k) && (!Q || String(I[k].e.name).toLocaleLowerCase('tr').indexOf(Q) >= 0));
+    const visSet = {}; vis.forEach((k) => { visSet[k] = 1; });
+    const top = vis.filter((k) => !(owner[k] && visSet[owner[k]]));   // prize bağlı olanlar prizin altında
+    const gKey = (k) => (G === 'room' ? I[k].room : I[k].e.cat && catN(I[k].e.cat) ? I[k].e.cat : '');
+    const gName = (g) => (G === 'room' ? (g ? this._enAreaN(g) : this._t('enDvNoRoom')) : (g ? catN(g) : this._t('enNoCat')));
+    const GR = {}; top.forEach((k) => { const g = gKey(k); (GR[g] = GR[g] || []).push(k); });
+    const tag = { meas: ['t-meas', 'enTgM'], run: ['t-run', 'enTgR'], own: ['t-lrn', 'enTgO'], lib: ['t-lrn', 'enTgL'], est: ['t-est', 'enTgE'], chk: ['t-chk', 'enTgC'] };
+    const row = (k, sub) => {
+      const x = I[k], e = x.e, tg = tag[x.st.s], on = this._enE && this._enE.id === k;
+      const other = G === 'room' ? (e.cat && catN(e.cat) ? catN(e.cat) : this._t('enNoCat')) : (x.room ? this._enAreaN(x.room) : this._t('enDvNoRoom'));
+      const line = x.st.w || [other, this._t('ek_' + e.kind)].concat(x.ins.length ? [this._t('enInTag', { n: x.ins.length })] : []).concat(sub ? [this._t('enDvInPlug')] : []).join(' · ');
+      const wv = x.ins.length ? x.w : x.wAll;
+      return '<button class="endr' + (sub ? ' sub' : '') + (on ? ' on' : '') + '" data-enest="' + esc(k) + '"><span class="ic"><ha-icon class="s18" icon="' + esc(e.icon || this._enKindIc(e.kind)) + '"></ha-icon></span><span class="nm"><b>' + esc(e.name) + '</b><small' + (x.st.w ? ' class="wn"' : '') + '>' + esc(line) + '</small></span><span class="etg ' + tg[0] + '">' + t(tg[1]) + '</span><span class="wv">' + (wv === null ? '–' : esc(lpEnWs(wv, this._lang))) + '</span></button>';
+    };
+    const keys = Object.keys(GR).sort((a, b) => (!a ? 1 : !b ? -1 : gName(a).localeCompare(gName(b), this._lang)));
+    h += keys.length ? keys.map((g) => {
+      const L = GR[g].sort((a, b) => (I[b].w || 0) - (I[a].w || 0)), gw = L.reduce((a, k) => a + (I[k].w || 0) + I[k].ins.reduce((s, c) => s + (I[c] ? I[c].w || 0 : 0), 0), 0);
+      return '<div class="endg"><div class="endgh"><b>' + esc(gName(g)) + '</b><span>' + t('enDvGN', { n: L.length }) + '</span><em>' + esc(lpEnWs(gw, this._lang)) + '</em></div><div class="endl">' +
+        L.map((k) => row(k, false) + I[k].ins.filter((c) => visSet[c]).map((c) => row(c, true)).join('')).join('') + '</div></div>';
+    }).join('') : '<div class="endempty">' + (ids.length ? t('enDvNone') : t('enDvEmpty')) + '</div>';
+    if (!this._enG && ids.some((k) => !I[k].room)) h += '<div class="hint">' + t('enDvRoomT') + '</div>';
+    h += '</div>';
+    // sağdan açılan düzenleme ve toplu ekleme pencereleri
+    if (this._enE) h += '<div class="endscrim" data-a="eneclose"></div><aside class="enddr" role="dialog" aria-label="' + t(this._enE.id ? 'enEEdit' : 'enENew') + '">' + this._enEditor() + '</aside>';
+    if (this._enAddM) h += this._enAddHtml();
     return h;
+  }
+  // HA'daki, panelde takip edilmeyen ışıklar (gruplar ve ışık odaları hariç)
+  _enNewLights() {
+    const S = this._hass.states, E = this._enEsts(), R = this._hass.entities || {}, used = {};
+    Object.keys(E).forEach((k) => { if (E[k].entity) used[E[k].entity] = 1; });
+    return Object.keys(S).filter((x) => x.indexOf('light.') === 0 && !used[x] && !(R[x] && (R[x].hidden || R[x].entity_category)) && !Array.isArray(S[x].attributes.entity_id) && !S[x].attributes.is_hue_group &&
+      !(R[x] && R[x].platform === 'group'));
+  }
+  _enAddHtml() {
+    const t = (k, v) => esc(this._t(k, v)), M = this._enAddM, S = this._hass.states, sel = M.sel || {};
+    const lights = M.kind === 'lights', L = lights ? this._enNewLights() : this._enFound();
+    const room = (x) => { const r = (this._hass.entities || {})[x], d = r && r.device_id && (this._hass.devices || {})[r.device_id]; return (r && r.area_id) || (d && d.area_id) || ''; };
+    const G = {}; L.forEach((x) => { const g = room(x); (G[g] = G[g] || []).push(x); });
+    const nm = (x) => (lights ? this._enPanelNames()[x] || this._ename(x) : this._enMeasName(x));
+    const lib = M.lib || {};
+    const tg = (x) => (!lights ? '<span class="etg t-meas">' + esc(lpEnWs(lpEnW(S, x), this._lang)) + '</span>' : lib[x] === undefined ? '<span class="etg t-est">…</span>' : lib[x] ? '<span class="etg t-lrn">' + t('enTgL') + '</span>' : '<span class="etg t-est">' + t('enTgE') + '</span>');
+    const n = L.filter((x) => sel[x] !== false).length;
+    const keys = Object.keys(G).sort((a, b) => (!a ? 1 : !b ? -1 : this._enAreaN(a).localeCompare(this._enAreaN(b), this._lang)));
+    return '<div class="endscrim" data-a="enaddx"></div><div class="endmod" role="dialog" aria-label="' + t(lights ? 'enDvAddL' : 'enDvAddM') + '"><div class="endmh"><div><b>' + t(lights ? 'enDvAddL' : 'enDvAddM') + '</b><small>' + t(lights ? 'enDvAddLT' : 'enDvAddMT', { n: L.length }) + '</small></div><button class="btn ic sm" data-a="enaddx" aria-label="' + t('close') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="endmb">' +
+      '<div class="endall"><button class="btn sm" data-a="enaddsall">' + t('enDvSelAll') + '</button><button class="btn sm" data-a="enaddsnone">' + t('enDvSelNone') + '</button></div>' +
+      keys.map((g) => '<div class="endmr">' + esc(g ? this._enAreaN(g) : this._t('enDvNoRoom')) + '</div>' + G[g].sort((a, b) => nm(a).localeCompare(nm(b), this._lang)).map((x) => '<button class="endml' + (sel[x] !== false ? ' on' : '') + '" data-enaddt="' + esc(x) + '"><span class="ck"></span><span class="nm"><b>' + esc(nm(x)) + '</b><small>' + esc(x) + '</small></span>' + tg(x) + '</button>').join('')).join('') +
+      '<div class="hint">' + t(lights ? 'enDvAddLH' : 'enDvAddMH') + '</div></div><div class="endmf"><button class="btn" data-a="enaddx">' + t('cancel') + '</button><span class="grow"></span><button class="btn pri" data-a="enaddgo"' + (n && !M.busy ? '' : ' disabled') + '>' + t('enDvAddN', { n: n }) + '</button></div></div>';
+  }
+  // ışıkların ölçülmüş tablosu var mı (paylaşılan havuz ya da kütüphane): pencere açılınca sırayla sorulur
+  _enAddLib() {
+    const M = this._enAddM; if (!M || M.kind !== 'lights') return;
+    M.lib = M.lib || {};
+    const L = this._enNewLights().filter((x) => M.lib[x] === undefined), conn = this._hass.connection;
+    const next = (i) => {
+      if (this._enAddM !== M || i >= L.length) return;
+      const d = this._lrnDev(L[i]);
+      if (!d.man || !(d.model || d.model_id)) { M.lib[L[i]] = null; this._render(); return next(i + 1); }
+      conn.sendMessagePromise({ type: 'lemur_home_dashboard/pool_lookup', manufacturer: d.man, model: d.model, model_id: d.model_id })
+        .then((r) => { M.lib[L[i]] = r && r.lut && !r.per_m ? r : null; }, () => { M.lib[L[i]] = null; }).then(() => { if (this._enAddM === M) this._render(); next(i + 1); });
+    };
+    next(0);
+  }
+  // seçilenleri ekle: ışıklar Işıklar kategorisine (yoksa açılır), ölçülmüş tablo varsa onunla; ölçenler kendi sensörleriyle
+  async _enAddGo() {
+    const M = this._enAddM; if (!M) return;
+    const sel = M.sel || {}, L = (M.kind === 'lights' ? this._enNewLights() : this._enFound()).filter((x) => sel[x] !== false);
+    if (!L.length) return;
+    if (M.kind !== 'lights') { this._enAddM = null; return this._enAddMeas(L); }
+    M.busy = true; this._render();
+    let C = this._enCats(), cat = C.filter((c) => /ışık|isik|light|aydınlat|lamba/i.test(String(c.name).toLocaleLowerCase('tr')))[0];
+    if (!cat) { const cid = this._enSlug(this._t('enDvLCat'), null, ''); cat = { id: cid, name: this._t('enDvLCat'), color: '#FFC94A', icon: 'mdi:lightbulb-group' }; C = C.concat([cat]); }
+    const E = lhdClone(this._enEsts()), P = this._enPanelNames();
+    L.forEach((x) => {
+      const name = String(P[x] || this._ename(x)).slice(0, 60), id = this._enSlug(name, E), r = (M.lib || {})[x];
+      const e = { name: name, kind: 'light', entity: x, idle: 0.5, max: 9, cat: cat.id };
+      if (r && r.lut) { e.lut = r.lut; e.src = r.source === 'pool' ? 'pool' : 'library'; e.idle = Math.round((r.standby || 0) * 100) / 100; e.min = r.min; e.max = r.cap_w > 0 ? Math.min(r.max, r.cap_w) : r.max; }
+      E[id] = e;
+    });
+    try {
+      if (C !== this._enCats()) await this._commit('ecats', C);
+      await this._commit('estimates', E);
+      this._toast(this._t('enDAdded', { n: L.length }));
+    } catch (err) { this._toast(String((err && err.message) || err)); }
+    this._enAddM = null; LP_EN.at = 0; lpEnEnsure(this._hass); this._render();
   }
   _enEditor() {
     const t = (k, v) => esc(this._t(k, v)), D = this._enE; if (!D) return '';
-    const S = this._hass.states, f = D.f, n = (k) => lpEnNumOf(f[k]), C = this._enCats();
-    const kinds = ['meas', 'light', 'states', 'onoff', 'fixed', 'year', 'cycle'];
+    const S = this._hass.states, f = D.f, C = this._enCats(), E0 = this._enEsts();
     const fld = (key, label, step, dl, ph, wide) => '<div class="fld' + (wide ? ' wide' : '') + '"><label title="' + label + '">' + label + '</label><input class="inp" ' + (step ? 'type="number" min="0" step="' + step + '"' : 'spellcheck="false"' + (dl ? ' list="' + dl + '"' : '')) + ' data-enf="' + key + '" value="' + esc(f[key] || '') + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '></div>';
     const sel = (key, label, list, none) => '<div class="fld"><label>' + label + '</label><select class="inp" data-enf="' + key + '">' + (none ? '<option value="">' + esc(none) + '</option>' : '') +
       list.map((id) => '<option value="' + esc(id) + '"' + (f[key] === id ? ' selected' : '') + '>' + esc(this._ename(id)) + '</option>').join('') + (f[key] && list.indexOf(f[key]) < 0 ? '<option value="' + esc(f[key]) + '" selected>' + esc(f[key]) + '</option>' : '') + '</select></div>';
-    let h = '<div class="ened"><div class="ensh"><b>' + t(D.id ? 'enEEdit' : 'enENew') + '</b><button class="btn ic sm" data-a="eneclose" style="margin-left:auto"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="engrid g2">' + (D.id ? '' : this._enPickHtml()) + fld('name', t('enEName'), '', '', '', !!D.id) + '</div>' +
-      '<div class="fld"><label>' + t('enEKind') + '</label><div class="enkinds">' + kinds.map((k) => '<button class="' + (f.kind === k ? 'on' : '') + '" data-enk="' + k + '" title="' + t('ek_' + k + 'T') + '"><ha-icon class="s16" icon="' + this._enKindIc(k) + '"></ha-icon><b>' + t('ek_' + k) + '</b></button>').join('') + '</div><div class="enkh">' + t('ek_' + f.kind + 'T') + '</div></div><div class="engrid ' + ({ light: 'g3', onoff: 'g2', cycle: 'g2', meas: 'g2' }[f.kind] || 'g1') + '">';
-    const ids = Object.keys(S).sort();
+    const ids = Object.keys(S).sort(), st = f.entity ? S[f.entity] : null, dom = String(f.entity || '').split('.')[0];
+    const room = D.id && E0[D.id] ? this._enRoom(D.id, E0[D.id]) : (f.entity && this._enRoom('', { entity: f.entity, kind: f.kind })) || '';
+    const stat = D.id && E0[D.id] ? this._enStat(D.id, E0[D.id]) : null;
+    // başlık
+    let h = '<div class="ened"><div class="enddh"><span class="ic"><ha-icon icon="' + esc(f.icon || this._enKindIc(f.kind)) + '"></ha-icon></span><div class="nm"><b>' + (D.id ? esc(f.name || '') : t('enENew')) + '</b><small>' + esc((room ? this._enAreaN(room) : this._t('enDvNoRoom')) + (f.cat && f.cat !== '__new' ? ' · ' + ((C.filter((c) => c.id === f.cat)[0] || {}).name || '') : '')) + '</small></div>' +
+      '<button class="btn ic sm" data-a="eneclose" aria-label="' + t('close') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="enddb">';
+    if (stat && stat.w) h += '<div class="enddw"><b>' + esc(stat.w) + '</b><span>' + t(stat.s === 'chk' && f.kind === 'meas' ? 'enWSensT' : 'enWNoEntT') + '</span></div>';
+    // 1. bu ne?
+    h += '<section><h4>' + t('enDsWhat') + '</h4><div class="engrid g2">' + (D.id ? '' : this._enPickHtml()) + fld('name', t('enEName'), '', '', '', !!D.id) +
+      '<div class="fld"><label>' + t('enECat') + '</label><select class="inp" data-enf="cat"><option value="">' + t('enNoCat') + '</option>' + C.map((c) => '<option value="' + esc(c.id) + '"' + (f.cat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') +
+      '<option value="__new"' + (f.cat === '__new' ? ' selected' : '') + '>' + t('enNewCat') + '</option></select></div>' + (f.cat === '__new' ? fld('newcat', t('enNewCatN')) : '') +
+      '<div class="fld"><label>' + t('enDsRoom') + '</label><div class="endro">' + esc(room ? this._enAreaN(room) : this._t('enDvNoRoom')) + '</div></div></div><div class="hint">' + t('enDsRoomT') + '</div></section>';
+    // 2. gücünü nereden biliyoruz? cihaza uyan yöntemler, önerilen işaretli
+    const rec = f.kind === 'meas' && f.sensor ? 'meas' : dom === 'light' ? 'light' : /^(media_player|climate|vacuum|water_heater|select|input_select|humidifier|fan)$/.test(dom) ? 'states' : /^(switch|input_boolean|remote)$/.test(dom) ? 'onoff' : '';
+    const ok = (k) => k === f.kind || k === 'meas' || k === 'fixed' || k === 'year' || k === 'cycle' || (k === 'light' ? !f.entity || dom === 'light' : !f.entity || dom !== 'light' || k === 'onoff');
+    const kinds = ['meas', 'light', 'states', 'onoff', 'fixed', 'year', 'cycle'].filter(ok);
+    if (rec) kinds.sort((a, b) => (a === rec ? -1 : b === rec ? 1 : 0));
+    h += '<section><h4>' + t('enDsHow') + '</h4><div class="endhow">' + kinds.map((k) => '<button class="' + (f.kind === k ? 'on' : '') + '" data-enk="' + k + '"><span class="dot"></span><span><b>' + t('ekL_' + k) + (k === rec ? ' <em>' + t('enDsRec') + '</em>' : '') + '</b><small>' + t('ekD_' + k) + '</small></span></button>').join('') + '</div></section>';
+    // 3. değerler
+    h += '<section><h4>' + t('enDsVals') + '</h4><div class="engrid ' + ({ light: 'g3', onoff: 'g2', cycle: 'g2', meas: 'g2' }[f.kind] || 'g1') + '">';
     if (f.kind === 'meas') {
-      const E0 = this._enEsts(), sol = lpEnSolar(), taken = {};
+      const sol = lpEnSolar(), taken = {};
       Object.keys(E0).forEach((k) => { if (k !== D.id && E0[k].sensor) taken[E0[k].sensor] = 1; });
       [sol.prod, sol.grid, sol.grid_in, sol.grid_out, sol.bat_power].forEach((x) => { if (x) taken[x] = 1; });
-      const pw = ids.filter((x) => x.indexOf('sensor.') === 0 && lpEnIsPow(S[x]) && x.indexOf('sensor.lhd_') !== 0 && !taken[x]);
-      const en = ids.filter((x) => x.indexOf('sensor.') === 0 && x.indexOf('sensor.lhd_') !== 0 && S[x].attributes.state_class && (S[x].attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(S[x].attributes.unit_of_measurement || ''))));
+      const pw = ids.filter((x) => x.indexOf('sensor.') === 0 && lpEnIsPow(S[x]) && x.indexOf('sensor.lhd_') !== 0 && !lpEnIsVirt(x) && !taken[x]);
+      const en = ids.filter((x) => x.indexOf('sensor.') === 0 && x.indexOf('sensor.lhd_') !== 0 && !lpEnIsVirt(x) && S[x].attributes.state_class && (S[x].attributes.device_class === 'energy' || /^(kWh|Wh)$/.test(String(S[x].attributes.unit_of_measurement || ''))));
       h += sel('sensor', t('enMSensor'), pw, this._t('enPick')) + sel('energy', t('enMEnergy'), en, this._t('enMCalc'));
     }
-    if (f.kind === 'light') h += fld('entity', t('enEEnt'), '', 'enlights', '', true) + fld('idle', t('enEIdle'), '0.1') + fld('min', t('enEMin'), '0.1', '', this._t('enMinPh')) + fld('max', t('enEMax'), '1');
+    if (f.kind === 'light') h += (D.id ? '' : fld('entity', t('enEEnt'), '', 'enlights', '', true)) + fld('idle', t('enEIdle'), '0.1') + fld('min', t('enEMin'), '0.1', '', this._t('enMinPh')) + fld('max', t('enEMax'), '1');
     if (f.kind === 'onoff') h += fld('entity', t('enEEnt'), '', 'enents', '', true) + fld('off', t('enEOff'), '0.1') + fld('on', t('enEOn'), '1');
     if (f.kind === 'states') h += fld('entity', t('enEEnt'), '', 'enents', '', true);
     if (f.kind === 'fixed') h += fld('w', t('enEW'), '0.1');
     if (f.kind === 'year') h += fld('year', t('enEYear'), '1');
     if (f.kind === 'cycle') h += fld('k100', t('enEK100'), '1') + fld('week', t('enEWeek'), '1');
     if (f.kind === 'light' && D.lib) h += '<div class="hint enlib wide' + (D.lib.lut ? ' ok' : '') + '">' + (D.lib.busy ? t('enLibBusy') : D.lib.lut ? t('enLibOk', { n: D.lib.name || '' }) : D.lib.strip ? t('enLibStrip') : t('enLibNone')) + '</div>';
-    h += '<div class="fld wide"><label>' + t('enECat') + '</label><select class="inp" data-enf="cat"><option value="">' + t('enNoCat') + '</option>' + C.map((c) => '<option value="' + esc(c.id) + '"' + (f.cat === c.id ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') +
-      '<option value="__new"' + (f.cat === '__new' ? ' selected' : '') + '>' + t('enNewCat') + '</option></select></div>' + (f.cat === '__new' ? fld('newcat', t('enNewCatN')) : '') + '</div>';
-    // duruma göre güç: her durum için W
-    const st = f.entity ? S[f.entity] : null;
+    if (f.kind === 'light' && f.lut) h += '<div class="hint wide">' + t(f.src === 'own' ? 'enDsLutOwn' : 'enDsLutLib') + '</div>';
+    h += '</div>';
     if (f.kind === 'states') {
       const L = this._enStatesOf(f.entity); Object.keys(f.st).forEach((x) => { if (L.indexOf(x) < 0) L.push(x); });
       h += f.entity ? '<div class="enst"><div class="ensh"><b>' + t('enStT') + '</b><span>' + t('enStH') + '</span></div>' + L.map((x) => '<div class="enstr' + (st && st.state === x ? ' on' : '') + '"><span>' + esc(this._enStLab(st, x)) + (st && st.state === x ? ' <em class="enp ok">' + t('enENow') + '</em>' : '') + '</span><span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-enst="' + esc(x) + '" value="' + esc(f.st[x] !== undefined ? f.st[x] : '') + '" placeholder="' + esc(f.other || '0') + '"><i>W</i></span></div>').join('') +
         '<div class="enstr"><span>' + t('enStOther') + '</span><span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-enf="other" value="' + esc(f.other || '') + '"><i>W</i></span></div></div>' : '<div class="hint">' + t('enStPick') + '</div>';
     }
-    // hesap
     const e = this._enRec(f);
     const now = f.kind === 'meas' ? lpEnW(S, f.sensor) : lpEnEstW(e, st);
     let calc = '';
@@ -1920,10 +2040,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     h += '<div class="hint enwarn">' + warn + '</div>' + this._lrnBox();
     if (f.kind === 'year') h += '<div class="hint">' + t('enEYearT') + '</div>';
     const sid = D.id || this._enSlug(f.name);
-    h += (f.kind === 'meas' ? (f.energy ? '' : '<div class="hint">' + t('enMCalcT', { e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') : '<div class="hint">' + t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' }) + '</div>') +
+    h += '<details class="endadv"><summary>' + t('enDsAdv') + '</summary><div class="hint">' + (f.kind === 'meas' ? (f.energy ? t('enDsOwnE', { e: f.energy }) : t('enMCalcT', { e: 'sensor.lhd_' + sid + '_energy' })) : t('enEEnts', { p: 'sensor.lhd_' + sid + '_power', e: 'sensor.lhd_' + sid + '_energy' })) + '</div></details></section></div>' +
       (this._enErr ? '<div class="imerr">' + esc(this._enErr) + '</div>' : '') +
-      '<div class="acts">' + (D.id ? '<button class="btn dan' + (D.ask ? ' ask' : '') + '" data-a="enedel"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (D.ask ? t('enEDelQ') : t('enEDel')) + '</button>' : '') + '<span class="grow"></span>' +
-      '<button class="btn pri" data-a="enesave"' + (this._enBusy ? ' disabled' : '') + '>' + t('enESave') + '</button></div></div>';
+      '<div class="enddf">' + (D.id ? '<button class="btn dan' + (D.ask ? ' ask' : '') + '" data-a="enedel"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + (D.ask ? t('enEDelQ') : t('enEDel')) + '</button>' : '') + '<span class="grow"></span>' +
+      '<button class="btn" data-a="eneclose">' + t('cancel') + '</button><button class="btn pri" data-a="enesave"' + (this._enBusy ? ' disabled' : '') + '>' + t('enESave') + '</button></div></div>';
     h += '<datalist id="enlights">' + ids.filter((x) => x.indexOf('light.') === 0).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>' +
       '<datalist id="enents">' + ids.filter((x) => /^(light|switch|media_player|fan|climate|input_boolean|binary_sensor|vacuum|humidifier|water_heater|select|input_select|remote|lock|cover)\./.test(x)).map((x) => '<option value="' + esc(x) + '">' + esc(this._ename(x)) + '</option>').join('') + '</datalist>';
     return h;
@@ -2444,7 +2564,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     });
     const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
     const q = this._q.toLowerCase().trim();
-    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)) && (pf !== 'energy' || lpEnIsVirt(id) || /^sensor\.lhd_kat_.*_power$/.test(id)))
+    const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)) && (pf !== 'energy' || lpEnIsVal(id) || /^sensor\.lhd_kat_.*_power$/.test(id)) && (pf === 'energy' || !lpEnIsVirt(id)))
       .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
     const lecHtml = pf === 'all' || pf === 'scenes' ? this._lecGroups(sec, have, q) : '';
     if (!ids.length) return lecHtml || '<div class="empty">' + esc(this._t('nothing')) + '</div>';
@@ -2695,6 +2815,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'lragain' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { L0.step = 'prep'; L0.tested = 0; L0.testMsg = ''; this._render(); }); }
       if (act === 'lrsave' && this._lrn) return this._lrnSave();
       if (act === 'eneclose') { this._enE = null; this._enErr = ''; return this._render(); }
+      if (act === 'enaddl' || act === 'enaddm') { this._enE = null; this._enAddM = { kind: act === 'enaddl' ? 'lights' : 'meas', sel: {} }; this._render(); return this._enAddLib(); }
+      if (act === 'enaddx') { this._enAddM = null; return this._render(); }
+      if (act === 'enaddsall' || act === 'enaddsnone') { if (this._enAddM) this._enAddM.sel = act === 'enaddsall' ? {} : (this._enAddM.kind === 'lights' ? this._enNewLights() : this._enFound()).reduce((o, x) => { o[x] = false; return o; }, {}); return this._render(); }
+      if (act === 'enaddgo') return this._enAddGo();
       if (act === 'enaddall') { if (!this._enAskAll) { this._enAskAll = true; return this._render(); } this._enAskAll = false; return this._enAddMeas(this._enFound()); }
       if (act === 'enfoundall') { this._enAllF = true; return this._render(); }
       if (act === 'encnew') { this._enCDraft(null); this._enErr = ''; this._render(); return this._enTop(); }
@@ -2705,6 +2829,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'enimpscan') { this._enImp = null; return this._enImpRun(false); }
       if (act === 'enimpgo') return this._enImpRun(true);
       if (act === 'entipsreset') { try { localStorage.removeItem('lhd-en-tips-off'); } catch (e2) {} return this._setting('energy.tips_off', null); }
+      const eat = g('[data-enaddt]');
+      if (eat && this._enAddM) { const x = eat.getAttribute('data-enaddt'), S0 = this._enAddM.sel = this._enAddM.sel || {}; S0[x] = S0[x] === false; return this._render(); }
+      const eng = g('[data-eng]');
+      if (eng) { this._enG = eng.getAttribute('data-eng'); return this._render(); }
       const enad = g('[data-enadd]');
       if (enad) return this._enAddMeas([enad.getAttribute('data-enadd')]);
       const enfil = g('[data-enfil]');
@@ -2817,7 +2945,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
                 color: LHD_COLORS[nBtn() % LHD_COLORS.length], action: { service: sv, target: id } });
               return;
             }
-            if (lpEnIsVirt(id)) { const lk = this._enFit(S); S.entities.push(lk ? { entity: id, look: lk } : id); return; }   // enerji değeri bölüme uyan görünümle
+            if (lpEnIsVal(id)) { const lk = this._enFit(S); S.entities.push(lk ? { entity: id, look: lk } : id); return; }   // enerji değeri bölüme uyan görünümle
             S.entities.push(d === 'climate' ? this._climateItem(id) : id);
           });
         });
@@ -3166,6 +3294,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     app.addEventListener('input', (e) => {
       const el = e.target;
       if (el.hasAttribute && el.hasAttribute('data-iq')) { this._iq = el.value; this._refreshIcons(); return; }
+      if (el.hasAttribute && el.hasAttribute('data-enq')) { this._enQ = el.value; return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-cpq')) { this._cpq = el.value; const l = R.querySelector('.cplist'); if (l) { const tmp = document.createElement('div'); tmp.innerHTML = this._cpHtml(); const nl = tmp.querySelector('.cplist'); if (nl) l.innerHTML = nl.innerHTML; } return; }
       if (el.hasAttribute && el.hasAttribute('data-ceyaml')) { if (this._ce) { this._ce.yaml = el.value; clearTimeout(this._ce.yT); const C = this._ce; C.yT = setTimeout(() => { try { const c = lhdYamlParse(C.yaml); if (c && c.type) { C.cfg = c; this._cePreview(); } } catch (e) {} }, 500); } return; }
       if (el.hasAttribute && el.hasAttribute('data-imsr')) { if (this._im) { const p = el.getAttribute('data-imsr').split(':'); this._im.f.scRows[+p[0]][+p[1]] = el.value; } return; }
@@ -3251,9 +3380,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const h = this._hass, S = (h && h.states) || {}, tab = this._curTab(this._work()), area = tab && tab.area, out = [];
     const fmt = (st) => { if (!st || st.state === 'unavailable') return '–'; const n = parseFloat(st.state), u = st.attributes.unit_of_measurement; return (isNaN(n) ? st.state : n.toLocaleString(this._lang === 'tr' ? 'tr-TR' : 'en-GB', { maximumFractionDigits: 2 })) + (u ? ' ' + u : ''); };
     const push = (id, room) => { const st = S[id]; if (st) out.push({ id: id, name: st.attributes.friendly_name || id, icon: st.attributes.icon || 'mdi:flash', val: fmt(st), room: room }); };
-    if (area) ['guc', 'bugun'].forEach((k) => push(lpEnRoomId(area, k), true));
+    if (area) ['power', 'energy'].forEach((k) => push(lpEnRoomId(area, k), true));
+    ['sensor.lhd_ev_power', 'sensor.lhd_ev_energy'].forEach((id) => push(id, false));
     LP_EN_VIRT.forEach((x) => push('sensor.lhdx_' + x[0], false));
-    Object.keys(S).filter((id) => id.indexOf('sensor.lhdx_oda_') === 0 && !(area && S[id].attributes.lhd_area === area)).sort().forEach((id) => push(id, true));
+    Object.keys(S).filter((id) => /^sensor\.lhd_oda_.+_(power|energy)$/.test(id) && !(area && S[id].attributes.area === area)).sort().forEach((id) => push(id, true));
     return out;
   }
   // küçük resimler için öğelerin simge ve adları (en çok 3)
@@ -3416,7 +3546,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
         : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
           : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
-      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo' || lpEnIsVirt(it.entity)) : lks;
+      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo' || lpEnIsVal(it.entity)) : lks;
       if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2.map((x) => [x[0], this._t(x[1]), '', lhdThLook('i' + x[1].slice(3), thMe)])));
       const L0 = f.look || '';
       const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');

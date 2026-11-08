@@ -765,3 +765,74 @@ div.ensr:hover { background: var(--s1); }
 .eninb.on .ck { background: var(--ac); border-color: var(--ac); }
 .eninb.on .ck::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--actx); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
 .eninside .encalc { margin: 0; }
+
+/* Enerji → Cihazlar (v0.28.5) */
+.endv { display: flex; flex-direction: column; gap: 12px; }
+.endsum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.endsum > div { background: var(--s1); border: 1px solid var(--ln); border-radius: 12px; padding: 9px 12px; min-width: 0; }
+.endsum small { display: block; font-size: 11.5px; color: var(--tx2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.endsum b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.endsum .w b { color: var(--ac); }
+.endbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.endbar .endq { flex: 1 1 200px; min-width: 0; }
+.endbar .btn .cnt { font-style: normal; font-size: 11.5px; background: rgba(0,0,0,.25); border-radius: 999px; padding: 0 7px; margin-left: 2px; }
+.endchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.endchips .chip { border: 1px solid var(--ln2); background: transparent; color: var(--tx2); border-radius: 999px; padding: 5px 11px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.endchips .chip i { font-style: normal; color: var(--mu); margin-left: 2px; }
+.endchips .chip.on { background: var(--acs); border-color: var(--ac); color: var(--tx); }
+.endchips .chip.warn:not(.on) { border-color: rgba(242,169,59,.5); color: var(--ac); }
+.endg { display: flex; flex-direction: column; gap: 6px; }
+.endgh { display: flex; align-items: baseline; gap: 10px; padding: 0 4px; }
+.endgh b { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); }
+.endgh span { font-size: 12px; color: var(--mu); }
+.endgh em { margin-left: auto; font-style: normal; font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+.endl { background: var(--s1); border: 1px solid var(--ln); border-radius: 13px; overflow: hidden; }
+.endr { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto 72px; gap: 12px; align-items: center; width: 100%; text-align: left; border: none; border-top: 1px solid var(--ln); background: none; color: var(--tx); padding: 9px 12px; font: inherit; cursor: pointer; }
+.endr:first-child { border-top: none; }
+.endr:hover { background: rgba(255,255,255,.03); }
+.endr.on { background: var(--acs); }
+.endr.sub { padding-left: 34px; }
+.endr .ic { width: 32px; height: 32px; border-radius: 9px; background: rgba(255,255,255,.06); display: grid; place-items: center; color: var(--tx2); }
+.endr .nm { min-width: 0; display: flex; flex-direction: column; }
+.endr .nm b { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.endr .nm small { font-size: 12.5px; color: var(--tx2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.endr .nm small.wn { color: var(--ac); }
+.endr .wv { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 13.5px; }
+.etg { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+.etg.t-meas { background: rgba(70,190,120,.14); color: #5FD08F; }
+.etg.t-lrn, .etg.t-run { background: rgba(91,141,239,.15); color: #93B4F6; }
+.etg.t-est { background: rgba(255,255,255,.07); color: var(--tx2); }
+.etg.t-chk { background: rgba(242,169,59,.16); color: var(--ac); }
+.endempty { padding: 26px; text-align: center; color: var(--tx2); background: var(--s1); border: 1px dashed var(--ln2); border-radius: 13px; }
+@media (max-width: 640px) { .endsum { grid-template-columns: repeat(2, minmax(0, 1fr)); } .endr { grid-template-columns: 28px minmax(0, 1fr) 62px; } .endr .etg { display: none; } }
+.endscrim { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 60; }
+.enddr { position: fixed; top: 0; right: 0; bottom: 0; width: min(480px, 100%); z-index: 61; background: var(--s1); border-left: 1px solid var(--ln2); box-shadow: -18px 0 40px rgba(0,0,0,.45); display: flex; flex-direction: column; }
+.enddr .ened { margin: 0; padding: 0; border: none; border-radius: 0; background: none; display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.enddh { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--ln); }
+.enddh .ic { width: 40px; height: 40px; border-radius: 11px; background: var(--acs); color: var(--ac); display: grid; place-items: center; flex: none; }
+.enddh .nm { flex: 1; min-width: 0; } .enddh .nm b { display: block; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .enddh .nm small { color: var(--tx2); font-size: 12.5px; }
+.enddb { flex: 1; overflow: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 18px; }
+.enddb section h4 { margin: 0 0 8px; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); }
+.enddb .engrid { margin: 0; }
+.enddw { padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(242,169,59,.5); background: rgba(242,169,59,.08); } .enddw b { color: var(--ac); display: block; } .enddw span { font-size: 12.5px; color: var(--tx2); }
+.endro { padding: 8px 10px; border-radius: 10px; border: 1px dashed var(--ln2); color: var(--tx2); font-size: 13.5px; }
+.endhow { display: flex; flex-direction: column; gap: 6px; }
+.endhow button { display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx); border-radius: 12px; padding: 9px 12px; font: inherit; cursor: pointer; }
+.endhow button .dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--ln3); flex: none; margin-top: 2px; box-sizing: border-box; }
+.endhow button b { display: block; font-weight: 600; font-size: 13.5px; } .endhow button b em { font-style: normal; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ac); margin-left: 6px; }
+.endhow button small { display: block; color: var(--tx2); font-size: 12.5px; }
+.endhow button.on { border-color: var(--ac); background: var(--acs); } .endhow button.on .dot { border-color: var(--ac); background: radial-gradient(var(--ac) 42%, transparent 48%); }
+.endadv summary { cursor: pointer; color: var(--tx2); font-size: 12.5px; margin-top: 8px; }
+.enddf { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--ln); align-items: center; }
+.enddr .imerr { margin: 0 16px; }
+.endmod { position: fixed; z-index: 61; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(620px, calc(100% - 24px)); max-height: min(86vh, 760px); background: var(--s1); border: 1px solid var(--ln2); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.55); display: flex; flex-direction: column; }
+.endmh { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--ln); } .endmh > div { flex: 1; min-width: 0; } .endmh b { display: block; font-size: 16px; } .endmh small { color: var(--tx2); font-size: 12.5px; }
+.endmb { overflow: auto; padding: 8px 16px 12px; }
+.endall { display: flex; gap: 6px; margin: 6px 0 4px; }
+.endmr { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); margin: 12px 0 4px; }
+.endml { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; text-align: left; border: none; border-top: 1px solid var(--ln); background: none; color: var(--tx); padding: 8px 4px; font: inherit; cursor: pointer; }
+.endml .ck { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--ln3); display: grid; place-items: center; box-sizing: border-box; }
+.endml.on .ck { background: var(--ac); border-color: var(--ac); } .endml.on .ck::after { content: ""; width: 8px; height: 4px; border: 2px solid var(--actx); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.endml .nm { min-width: 0; } .endml .nm b { display: block; font-weight: 600; font-size: 13.5px; } .endml .nm small { display: block; color: var(--mu); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.endmf { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--ln); }
+.enddr .engrid .fld label { white-space: normal; overflow: visible; }

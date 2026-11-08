@@ -671,7 +671,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       vals.push(it);
       const ic = lpIsLecIcon(it.icon) ? lpIcon(it.icon) : '<span class="lic mdic"></span>';
       if (bar) return '<div class="bar val" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'bar', c)) + hidA(it) + mark(it._i) + '>' + ic + '<div class="bt"><div class="nm"></div><div class="pc"></div></div></div>';
-      return '<div class="tile val' + (lpEnIsVirt(it.entity) ? ' entl' : '') + (c && lpWide(it, c) ? ' wide" data-wide="1' : '') + '" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'val', c)) + hidA(it) + mark(it._i) + '>' + ic + '<div class="vl"></div><div class="nm"></div>' + (it.secondary ? '<div class="sl"></div>' : '') + '</div>';
+      return '<div class="tile val' + (lpEnIsVal(it.entity) ? ' entl' : '') + (c && lpWide(it, c) ? ' wide" data-wide="1' : '') + '" data-val="' + esc(it.entity) + '" data-vi="' + (vals.length - 1) + '"' + lpStyleA(lpItemStyle(it, 'val', c)) + hidA(it) + mark(it._i) + '>' + ic + '<div class="vl"></div><div class="nm"></div>' + (it.secondary ? '<div class="sl"></div>' : '') + '</div>';
     };
     const emb = (tag, cfg, id, i, it) => {
       if (!lpHas(tag)) { rows.push(id); return '<div class="row" data-row="' + esc(id) + '"' + mark(i) + '></div>'; }
@@ -805,7 +805,7 @@ class LemurHomeDashboardCard extends HTMLElement {
             const hc = { type: 'custom:lemur-hd-sensor-card', entity: x.entity };
             if (x.name) hc.name = x.name;
             if (x.icon && !lpIsLecIcon(x.icon)) hc.icon = x.icon;
-            if (lpEnIsVirt(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
+            if (lpEnIsVal(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
             const hcol = lpMapColor(x, S) || x.color;                       // sabit renk ya da duruma göre renk
             if (hcol) hc.color = LP_HALO_RGB[hcol] || hcol;
             return emb('lemur-hd-sensor-card', hc, x.entity, x._i, x);
@@ -1622,7 +1622,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const na = st.state === 'unavailable';
     // açık/kapalı durumu olanlar (ikili sensör, zamanlayıcı, kişi...) duruma göre renklenir; ölçüm gösterenler hep canlı
     const two = LP_VAL_ONOFF.indexOf(d) >= 0, on = two && LP_VAL_ON.indexOf(st.state) >= 0;
-    el.className = (el._bar ? 'bar' : 'tile') + ' val' + (lpEnIsVirt(st.entity_id) && !el._bar ? ' entl' : '') + (el._wide ? ' wide' : '') + (on ? ' on' : '') + (!two && !na ? ' live' : '') + (na ? ' na' : '');
+    el.className = (el._bar ? 'bar' : 'tile') + ' val' + (lpEnIsVal(st.entity_id) && !el._bar ? ' entl' : '') + (el._wide ? ' wide' : '') + (on ? ' on' : '') + (!two && !na ? ' live' : '') + (na ? ' na' : '');
     if (el._bar) el.style.setProperty('--p', '0%');
     el.style.removeProperty('--tile-rgb');
     const mono = this._colorize(el, it, st, on);

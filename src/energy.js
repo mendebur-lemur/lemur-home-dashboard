@@ -338,7 +338,8 @@ function lpEnInside(id, x, E) {
 function lpEnModelLemur(h, L, prefs) {
   const cats = L.C.map((c, i) => { const lk = lpEnLookOf(c.name, i); return { id: 'sensor.lhd_kat_' + c.id + '_energy', cid: c.id, name: c.name, icon: c.icon || lk[0], color: c.color || lk[1], e: 'sensor.lhd_kat_' + c.id + '_energy', p: 'sensor.lhd_kat_' + c.id + '_power', kids: [] }; });
   const by = {}; cats.forEach((c) => { by[c.cid] = c; });
-  const devs = Object.keys(L.E).map((id) => {
+  // panelin kendi enerji değerine (sensor.lhdx_) bağlanmış eski kayıt cihaz sayılmaz: evin toplamı kendine eklenirdi
+  const devs = Object.keys(L.E).filter((id) => !lpEnIsVirt((L.E[id] || {}).sensor) && !lpEnIsVirt((L.E[id] || {}).energy)).map((id) => {
     const x = L.E[id] || {}, c = by[x.cat], net = lpEnInside(id, x, L.E).length > 0;
     // paylaşımlı priz: kartlarda prizin toplamı yerine kalan pay (prizdeki işaretli cihazlar kendi satırlarında)
     const e = net ? 'sensor.lhd_' + id + '_net_energy' : lpEnDevE(id, x), p = net ? 'sensor.lhd_' + id + '_net_power' : lpEnDevP(id, x);
@@ -822,20 +823,23 @@ function lhdEnergyTab(lang, id) {
   if (lpEnSunOn(sol) || lpEnBatOn(sol)) t.sections[1] = { id: id + '-f', type: 'energy', title: T('flow'), col: 0, grow: 2, entities: [{ energy: 'flow' }] };
   return t;
 }
-// ---- enerji değerleri başka bölümlerde (v0.28.2): ışık karosu, senaryo düğmesi ya da değer satırı gibi durur ----
-// Panelin hesapladığı değerler sanal sensör olarak hass.states'e eklenir (sensor.lhdx_*); Home Assistant'ta yoktur.
-// Değerler öğesi gibi eklenir (Cihaz ekle → Değerler), bütün görünümleri (karo, düğme, satır, halo) ve boyutları kullanır.
+// ---- enerji değerleri başka bölümlerde (v0.28.2, v0.28.5) ----
+// Evin ve odaların gücü ve bugünkü kWh'ı entegrasyonun gerçek sensörleri: sensor.lhd_ev_power / _energy,
+// sensor.lhd_oda_<alan>_power / _energy (geçmişleri var, otomasyonda kullanılır). Para ve dönem değerleri panelin tarife
+// hesabına bağlı; bunlar yalnız panelde, sanal değer olarak hass.states'e eklenir (sensor.lhdx_*), Home Assistant'ta yoktur.
+// İkisi de bölümlere değer öğesi gibi eklenir (karo, düğme, satır, halo); hiçbiri cihaz listelerine girmez.
 const LP_EN_VIRT = [
-  ['ev', 'mdi:home-lightning-bolt-outline', 'power', 'W'], ['bugun', 'mdi:calendar-today', 'energy', 'kWh'], ['bugun_tl', 'mdi:cash', 'monetary', '$'],
-  ['ay_tl', 'mdi:cash-multiple', 'monetary', '$'], ['ay_kwh', 'mdi:counter', 'energy', 'kWh'], ['donem_sonu', 'mdi:calendar-end', 'monetary', '$'],
-  ['yil', 'mdi:gauge', null, '%'], ['olcmeyen', 'mdi:help-circle-outline', 'power', 'W']
+  ['bugun_tl', 'mdi:cash', 'monetary', '$'], ['ay_tl', 'mdi:cash-multiple', 'monetary', '$'], ['ay_kwh', 'mdi:counter', 'energy', 'kWh'],
+  ['donem_sonu', 'mdi:calendar-end', 'monetary', '$'], ['yil', 'mdi:gauge', null, '%'], ['olcmeyen', 'mdi:help-circle-outline', 'power', 'W']
 ];
 const LP_EN_VN = {
-  tr: { ev: 'Ev şu an', bugun: 'Bugün', bugun_tl: 'Bugünkü tutar', ay_tl: 'Bu ayın tutarı', ay_kwh: 'Bu dönem', donem_sonu: 'Dönem sonu tahmini', yil: 'Yıllık sınır', olcmeyen: 'Ölçülmeyen' },
-  en: { ev: 'Home now', bugun: 'Today', bugun_tl: 'Today\'s cost', ay_tl: 'This month\'s cost', ay_kwh: 'This period', donem_sonu: 'Period end estimate', yil: 'Yearly limit', olcmeyen: 'Not measured' }
+  tr: { bugun_tl: 'Bugünkü tutar', ay_tl: 'Bu ayın tutarı', ay_kwh: 'Bu dönem', donem_sonu: 'Dönem sonu tahmini', yil: 'Yıllık sınır', olcmeyen: 'Ölçülmeyen' },
+  en: { bugun_tl: 'Today\'s cost', ay_tl: 'This month\'s cost', ay_kwh: 'This period', donem_sonu: 'Period end estimate', yil: 'Yearly limit', olcmeyen: 'Not measured' }
 };
 const lpEnIsVirt = (id) => typeof id === 'string' && id.indexOf('sensor.lhdx_') === 0;
-// değerler (yüklü enerji verisinden); veri yoksa boş
+// enerji değeri mi (gerçek toplam sensörleri ya da panelin sanal değerleri): ışık karosu biçimi, Halo'nun alt kutuları, bölüme uyan görünüm
+const lpEnIsVal = (id) => typeof id === 'string' && (lpEnIsVirt(id) || /^sensor\.lhd_(ev|oda_[a-z0-9_]+)_(power|energy)$/.test(id));
+const lpEnRoomId = (a, k) => 'sensor.lhd_oda_' + a + '_' + (k === 'guc' || k === 'power' ? 'power' : 'energy');
 function lpEnVirtVals(h) {
   const M = LP_EN.m; if (!M || M.demo || !M.cats) return null;
   const S = (h && h.states) || {}, out = {}, N = M.days ? M.days.t.length : 0, price = lpEnUnit(M);
@@ -852,40 +856,18 @@ function lpEnVirtVals(h) {
   try { const C = lpElCtx(h, M, pickLang(h)); if (C.unt > 0) out.olcmeyen = Math.round(C.unt); } catch (e) {}
   return out;
 }
-// cihazın alanı (oda): bağlı varlığın ya da güç sensörünün alanı, yoksa cihazının alanı
-function lpEnAreaOf(h, d) {
-  const E = (h && h.entities) || {}, D = (h && h.devices) || {};
-  const ids = [d.link, d.p, d.e];
-  for (let i = 0; i < ids.length; i++) {
-    const r = ids[i] && E[ids[i]]; if (!r) continue;
-    if (r.area_id) return r.area_id;
-    const dv = r.device_id && D[r.device_id]; if (dv && dv.area_id) return dv.area_id;
-  }
-  return null;
-}
-// odaların enerjisi: şu anki güç (W) ve bugünkü tüketim (kWh, son 24 saatin kaydından gece yarısından beri)
-function lpEnRooms(h) {
-  const M = LP_EN.m; if (!M || M.demo || !M.devs || !M.devs.length) return {};
-  const S = (h && h.states) || {}, out = {}, H = M.hist, mid = new Date(); mid.setHours(0, 0, 0, 0);
-  M.devs.forEach((d) => {
-    const a = lpEnAreaOf(h, d); if (!a) return;
-    const o = out[a] || (out[a] = { w: null, kwh: null, n: 0 }); o.n++;
-    const w = lpEnWOf(S, d); if (w !== null) o.w = (o.w || 0) + w;
-    const ser = H && H.devs && H.devs[d.id];
-    if (ser) { let k = 0, any = false; ser.forEach((v, i) => { if (v !== null && v !== undefined && H.t0 + (i + 1) * H.step > mid.getTime()) { k += v * H.step / 3600000000; any = true; } }); if (any) o.kwh = (o.kwh || 0) + k; }
-  });
-  return out;
-}
 // Halo kartında enerji değerinin altındaki kutular (iklim kartının alt satırı gibi): ilgili öteki değerler
-const LP_EN_HX = { ev: ['bugun', 'bugun_tl', 'ay_tl'], bugun: ['bugun_tl', 'ay_kwh', 'ay_tl'], bugun_tl: ['bugun', 'ay_tl', 'donem_sonu'], ay_tl: ['ay_kwh', 'donem_sonu', 'yil'],
-  ay_kwh: ['ay_tl', 'donem_sonu', 'yil'], donem_sonu: ['ay_tl', 'ay_kwh', 'yil'], yil: ['ay_kwh', 'ay_tl', 'bugun'], olcmeyen: ['ev', 'bugun'] };
+const LP_EN_HX = {
+  'sensor.lhd_ev_power': ['sensor.lhd_ev_energy', 'sensor.lhdx_bugun_tl', 'sensor.lhdx_ay_tl'], 'sensor.lhd_ev_energy': ['sensor.lhdx_bugun_tl', 'sensor.lhdx_ay_kwh', 'sensor.lhdx_ay_tl'],
+  'sensor.lhdx_bugun_tl': ['sensor.lhd_ev_energy', 'sensor.lhdx_ay_tl', 'sensor.lhdx_donem_sonu'], 'sensor.lhdx_ay_tl': ['sensor.lhdx_ay_kwh', 'sensor.lhdx_donem_sonu', 'sensor.lhdx_yil'],
+  'sensor.lhdx_ay_kwh': ['sensor.lhdx_ay_tl', 'sensor.lhdx_donem_sonu', 'sensor.lhdx_yil'], 'sensor.lhdx_donem_sonu': ['sensor.lhdx_ay_tl', 'sensor.lhdx_ay_kwh', 'sensor.lhdx_yil'],
+  'sensor.lhdx_yil': ['sensor.lhdx_ay_kwh', 'sensor.lhdx_ay_tl', 'sensor.lhd_ev_energy'], 'sensor.lhdx_olcmeyen': ['sensor.lhd_ev_power', 'sensor.lhd_ev_energy'] };
 function lpEnHaloExtra(id, S) {
   const ok = (x) => S[x] && S[x].state !== 'unavailable' && S[x].state !== 'unknown';
-  const m = /^sensor\.lhdx_oda_(.+)_(guc|bugun)$/.exec(id);
-  if (m) return ['sensor.lhdx_oda_' + m[1] + '_' + (m[2] === 'guc' ? 'bugun' : 'guc'), 'sensor.lhdx_ev'].filter(ok);
-  return (LP_EN_HX[id.slice(12)] || []).map((k) => 'sensor.lhdx_' + k).filter(ok);
+  const m = /^sensor\.lhd_oda_(.+)_(power|energy)$/.exec(id);
+  if (m) return ['sensor.lhd_oda_' + m[1] + '_' + (m[2] === 'power' ? 'energy' : 'power'), 'sensor.lhd_ev_power'].filter(ok);
+  return (LP_EN_HX[id] || []).filter(ok);
 }
-const lpEnRoomId = (a, k) => 'sensor.lhdx_oda_' + String(a).replace(/[^a-z0-9_]/gi, '_').toLowerCase() + '_' + k;
 // hass'ın kopyası, sanal sensörlerle (aynı değer aynı nesne: panel boşuna yeniden çizmesin)
 function lpEnVirt(h) {
   if (!h || !h.states) return h;
@@ -897,18 +879,6 @@ function lpEnVirt(h) {
     if (x[2]) a.device_class = x[2];
     const now = new Date().toISOString();
     C[id] = add[id] = { entity_id: id, state: v, attributes: a, last_changed: now, last_updated: now, context: { id: '' }, _l: lang };
-  });
-  // odalar: her alan için şu an ve bugün
-  const R = lpEnRooms(h), AR = h.areas || {}, tr = lang === 'tr';
-  Object.keys(R).forEach((a) => {
-    const an = (AR[a] && AR[a].name) || a, r = R[a];
-    [['guc', r.w === null ? 'unavailable' : String(Math.round(r.w)), 'power', 'W', tr ? an + ' şu an' : an + ' now', 'mdi:lightning-bolt-outline'],
-      ['bugun', r.kwh === null ? 'unavailable' : String(Math.round(r.kwh * 100) / 100), 'energy', 'kWh', tr ? an + ' bugün' : an + ' today', 'mdi:calendar-today']].forEach((x) => {
-      const id = lpEnRoomId(a, x[0]), o = C[id];
-      if (o && o.state === x[1] && o._l === lang && o.attributes.friendly_name === x[4]) { add[id] = o; return; }
-      const now = new Date().toISOString();
-      C[id] = add[id] = { entity_id: id, state: x[1], attributes: { friendly_name: x[4], icon: x[5], unit_of_measurement: x[3], device_class: x[2], lhd_energy: true, lhd_area: a }, last_changed: now, last_updated: now, context: { id: '' }, _l: lang };
-    });
   });
   return Object.assign({}, h, { states: Object.assign({}, h.states, add) });
 }

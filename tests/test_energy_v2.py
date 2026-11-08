@@ -339,3 +339,65 @@ async def test_shared_plug_sensors(hass: HomeAssistant, hass_ws_client, setup_lh
     await hass.async_block_till_done()
     assert hass.states.get("sensor.lhd_masa_net_power") is None
     assert float(hass.states.get("sensor.lhd_kat_pc_power").state) == 180
+
+
+def test_virtual_value_is_not_a_device():
+    """sensor.lhdx_ (the dashboard's own values, only in the browser) cannot be a device's sensor."""
+    out = EST.ESTIMATES_SCHEMA({"ev": {"name": "Ev şu an", "kind": "meas", "sensor": "sensor.lhdx_ev"}, "p": {"name": "Priz", "kind": "meas", "sensor": "sensor.ust_kat_pc_power"}})
+    assert list(out) == ["p"]                      # dropped on save, the rest kept
+    assert EST.is_virtual({"kind": "meas", "sensor": "sensor.lhdx_ev"}) and not EST.is_virtual({"kind": "meas", "sensor": "sensor.x"})
+
+
+def test_old_value_ids_migrate():
+    tabs = [{"id": "t", "sections": [{"entities": [{"entity": "sensor.lhdx_ev", "look": "halo"}, "sensor.lhdx_oda_salon_guc", {"entity": "sensor.lhdx_oda_lemur_oda_bugun"}, {"entity": "sensor.lhdx_ay_tl"}, "light.x"]}]}]
+    out = EST.migrate_ids(tabs)
+    ents = out[0]["sections"][0]["entities"]
+    assert ents[0]["entity"] == "sensor.lhd_ev_power" and ents[1] == "sensor.lhd_oda_salon_power"
+    assert ents[2]["entity"] == "sensor.lhd_oda_lemur_oda_energy"
+    assert ents[3]["entity"] == "sensor.lhdx_ay_tl" and ents[4] == "light.x"          # money values stay in the panel
+
+
+def test_home_power_sources():
+    S = {"sensor.m": st("900", unit_of_measurement="W"), "sensor.a": st("100", unit_of_measurement="W"), "sensor.lhd_b_power": st("50")}
+    ests = {"a": {"name": "A", "kind": "meas", "sensor": "sensor.a"}, "b": {"name": "B", "kind": "fixed", "w": 50}}
+    assert EST.home_power(S, {}, ests) == 150                                                   # devices together
+    assert EST.home_power(S, {"energy": {"meter": {"power": "sensor.m"}}}, ests) == 900          # the meter
+    S["sensor.pv"] = st("400", unit_of_measurement="W")
+    st2 = {"energy": {"meter": {"power": "sensor.m"}, "solar": {"on": True, "sun": True, "prod": "sensor.pv"}}}
+    assert EST.home_power(S, st2, ests) == 1300                                                 # grid + solar
+
+
+async def test_room_and_home_totals(hass: HomeAssistant, hass_ws_client, setup_lhd):
+    from homeassistant.helpers import area_registry as ar
+    await async_setup_component(hass, "http", {})
+    area = ar.async_get(hass).async_create("Salon")
+    reg = er.async_get(hass)
+    e1 = reg.async_get_or_create("light", "test", "l1", suggested_object_id="tavan")
+    reg.async_update_entity(e1.entity_id, area_id=area.id)
+    hass.states.async_set(e1.entity_id, "on", {"brightness": 255})
+    e2 = reg.async_get_or_create("sensor", "test", "p1", suggested_object_id="priz_w")
+    assert e2.entity_id == "sensor.priz_w"
+    hass.states.async_set("sensor.priz_w", "40", {"unit_of_measurement": "W", "device_class": "power"})
+    ws = await hass_ws_client(hass)
+    est = {"tavan": {"name": "Tavan", "kind": "light", "entity": e1.entity_id, "idle": 0.5, "max": 10},
+           "priz": {"name": "Priz", "kind": "meas", "sensor": "sensor.priz_w"}}
+    await ws.send_json({"id": 1, "type": "lemur_home_dashboard/set", "key": "estimates", "value": est})
+    assert (await ws.receive_json())["success"]
+    for _ in range(4):
+        await hass.async_block_till_done()
+    assert float(hass.states.get(f"sensor.lhd_oda_{area.id}_power").state) == 10           # only the room's device
+    assert hass.states.get(f"sensor.lhd_oda_{area.id}_power").attributes["lhd_total"] is True
+    assert float(hass.states.get("sensor.lhd_ev_power").state) == 50                          # every device
+    assert hass.states.get(f"sensor.lhd_oda_{area.id}_energy") is not None
+    assert hass.states.get("sensor.lhd_ev_energy") is not None
+    # the priz moves into the room: the room sensor follows the registry
+    reg.async_update_entity(e2.entity_id, area_id=area.id)
+    hass.states.async_set("sensor.priz_w", "41", {"unit_of_measurement": "W", "device_class": "power"})
+    for _ in range(4):
+        await hass.async_block_till_done()
+    assert float(hass.states.get(f"sensor.lhd_oda_{area.id}_power").state) == 51
+    # a total someone put in the Energy settings is taken out on the next sync (the home would count twice)
+    prefs = {"energy_sources": [], "device_consumption": [{"stat_consumption": "sensor.lhd_ev_energy"}, {"stat_consumption": f"sensor.lhd_oda_{area.id}_energy"}]}
+    out = EST.build_prefs(prefs, est, [], {})
+    stats = [d["stat_consumption"] for d in out["device_consumption"]]
+    assert "sensor.lhd_ev_energy" not in stats and f"sensor.lhd_oda_{area.id}_energy" not in stats
