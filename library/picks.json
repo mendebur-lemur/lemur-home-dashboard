@@ -1,0 +1,764 @@
+{
+ "v": 1,
+ "updated": "2026-11-08",
+ "_note": "Önerilen ürünler (yönetim paneli → Önerilen ürünler). Pano bu dosyayı GitHub'dan 6 saatte bir okur; pakettekinden yeniyse onu kullanır. buy: mağaza linkleri (lemur.run kısa linkleri), img: docs/picks/<img>.webp (isteğe bağlı). energy: lut (ölçüm tablosu hazır), self (gücünü kendisi ölçer), wait (ölçülüyor), none (gerekmez).",
+ "items": [
+  {
+   "id": "govee-tree-lamp",
+   "cat": "light",
+   "icon": "mdi:floor-lamp-torchiere-variant",
+   "name": "Govee Tree Floor Lamp",
+   "kind": {
+    "tr": "Köşe lambası",
+    "en": "Floor lamp"
+   },
+   "what": {
+    "tr": "Üç başlı ayaklı lamba; her başlık ayrı renk, efektleri panelden seçilir.",
+    "en": "Floor lamp with three heads; each head its own colour, effects picked on the dashboard."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveetreelampamz"
+   }
+  },
+  {
+   "id": "govee-strip-s",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Govee Strip Light S",
+   "kind": {
+    "tr": "LED şerit",
+    "en": "LED strip"
+   },
+   "what": {
+    "tr": "Dolap, raf ya da TV arkası için renkli şerit; kesilebilir.",
+    "en": "Colour strip for cabinets, shelves or behind a TV; can be cut."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveestripsamz"
+   }
+  },
+  {
+   "id": "govee-flow-plus",
+   "cat": "light",
+   "icon": "mdi:lightbulb-variant-outline",
+   "name": "Govee Flow Plus",
+   "kind": {
+    "tr": "Işık çubukları",
+    "en": "Light bars"
+   },
+   "what": {
+    "tr": "Monitör ya da TV yanına iki ışık çubuğu; renkli, oyunla ve müzikle oynar.",
+    "en": "Two light bars beside a monitor or TV; colourful, react to games and music."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveeflowplusamz"
+   }
+  },
+  {
+   "id": "govee-sync-box",
+   "cat": "light",
+   "icon": "mdi:television-ambient-light",
+   "name": "Govee AI Sync Box 2",
+   "kind": {
+    "tr": "TV arkası ışık",
+    "en": "TV backlight"
+   },
+   "what": {
+    "tr": "TV görüntüsünü okuyup arkadaki ışıkları renklere uydurur.",
+    "en": "Reads the TV picture and matches the lights behind it."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveesyncboxamz"
+   }
+  },
+  {
+   "id": "govee-outdoor-wall",
+   "cat": "light",
+   "icon": "mdi:wall-sconce-round-variant",
+   "name": "Govee Outdoor Wall Light",
+   "kind": {
+    "tr": "Dış mekân aplik",
+    "en": "Outdoor wall light"
+   },
+   "what": {
+    "tr": "Bahçe, balkon ya da kapı yanı için renkli duvar lambası.",
+    "en": "Colour wall light for a garden, balcony or door."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveeoutdoorwallamz"
+   }
+  },
+  {
+   "id": "govee-kare-tavan",
+   "cat": "light",
+   "icon": "mdi:ceiling-light",
+   "name": "Govee Square Ceiling Light",
+   "kind": {
+    "tr": "Tavan lambası",
+    "en": "Ceiling light"
+   },
+   "what": {
+    "tr": "Kare tavan lambası; beyazı ayarlanır, kenarı renkli efekt yapar.",
+    "en": "Square ceiling light; adjustable white, colour effects on the edge."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveekaretavanamz"
+   }
+  },
+  {
+   "id": "govee-yuvarlak-tavan",
+   "cat": "light",
+   "icon": "mdi:ceiling-light-outline",
+   "name": "Govee Round Ceiling Light",
+   "kind": {
+    "tr": "Tavan lambası",
+    "en": "Ceiling light"
+   },
+   "what": {
+    "tr": "Yuvarlak tavan lambası; oda ışığı ve renkli efekt bir arada.",
+    "en": "Round ceiling light; room light and colour effects in one."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveeyuvarlaktavanamz"
+   }
+  },
+  {
+   "id": "govee-masa-lambasi",
+   "cat": "light",
+   "icon": "mdi:desk-lamp",
+   "name": "Govee Table Lamp Classic",
+   "kind": {
+    "tr": "Masa lambası",
+    "en": "Table lamp"
+   },
+   "what": {
+    "tr": "Şarjlı, kablosuz masa lambası; istediğin yere taşınır.",
+    "en": "Rechargeable cordless table lamp; goes anywhere."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveemasalambasiamz"
+   }
+  },
+  {
+   "id": "govee-lyra-pro",
+   "cat": "light",
+   "icon": "mdi:floor-lamp",
+   "name": "Govee Lyra Pro",
+   "kind": {
+    "tr": "Köşe lambası",
+    "en": "Corner lamp"
+   },
+   "what": {
+    "tr": "Köşeye dik duran renkli ışık; çok parlak, efektleri bol.",
+    "en": "Upright colour light for a corner; very bright, many effects."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN",
+    "Bluetooth",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/goveelyraproamz"
+   }
+  },
+  {
+   "id": "hue-play",
+   "cat": "light",
+   "icon": "mdi:television-ambient-light",
+   "name": "Philips Hue Play",
+   "kind": {
+    "tr": "Ortam ışığı",
+    "en": "Ambient light"
+   },
+   "what": {
+    "tr": "TV ya da monitör arkasına dolaylı ışık; köprüyle çok kararlı.",
+    "en": "Indirect light behind a TV or monitor; very stable with the bridge."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/hueplayamz"
+   }
+  },
+  {
+   "id": "hue-gradient-strip",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Philips Hue Play Gradient Lightstrip",
+   "kind": {
+    "tr": "TV şeridi",
+    "en": "TV strip"
+   },
+   "what": {
+    "tr": "TV'nin arkasına çok renkli şerit; Sync ile görüntüye uyar.",
+    "en": "Multicolour strip behind a TV; follows the picture with Sync."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/huegradientstripamz"
+   }
+  },
+  {
+   "id": "hue-outdoor-strip",
+   "cat": "light",
+   "icon": "mdi:led-strip",
+   "name": "Philips Hue Outdoor Lightstrip",
+   "kind": {
+    "tr": "Dış mekân şerit",
+    "en": "Outdoor strip"
+   },
+   "what": {
+    "tr": "Dış mekâna dayanıklı 5 m renkli şerit.",
+    "en": "5 m colour strip made for outdoors."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/hueoutdoorstripamz"
+   }
+  },
+  {
+   "id": "hue-signe",
+   "cat": "light",
+   "icon": "mdi:floor-lamp-outline",
+   "name": "Philips Hue Gradient Signe",
+   "kind": {
+    "tr": "Köşe lambası",
+    "en": "Floor lamp"
+   },
+   "what": {
+    "tr": "İnce, uzun ayaklı lamba; duvara renk geçişli ışık verir.",
+    "en": "Slim floor lamp that washes the wall in blended colours."
+   },
+   "proto": [
+    "Zigbee",
+    "Bluetooth"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/huesigneamz"
+   }
+  },
+  {
+   "id": "hue-bridge",
+   "cat": "hub",
+   "icon": "mdi:router-wireless",
+   "name": "Philips Hue Bridge",
+   "kind": {
+    "tr": "Köprü",
+    "en": "Bridge"
+   },
+   "what": {
+    "tr": "Hue ışıklarının köprüsü; Home Assistant'a yerel bağlanır.",
+    "en": "Bridge for Hue lights; connects to Home Assistant locally."
+   },
+   "proto": [
+    "Zigbee",
+    "Ethernet"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/huebridgeamz"
+   }
+  },
+  {
+   "id": "aqara-t1m",
+   "cat": "light",
+   "icon": "mdi:ceiling-light",
+   "name": "Aqara Ceiling Light T1M",
+   "kind": {
+    "tr": "Tavan lambası",
+    "en": "Ceiling light"
+   },
+   "what": {
+    "tr": "Hem tavan ışığı hem renkli halka; Zigbee ile çalışır.",
+    "en": "Ceiling light with a colour ring; works over Zigbee."
+   },
+   "proto": [
+    "Zigbee",
+    "Matter"
+   ],
+   "energy": "wait",
+   "buy": {
+    "amz": "https://lemur.run/aqarat1mamz"
+   }
+  },
+  {
+   "id": "sonoff-s60",
+   "cat": "plug",
+   "icon": "mdi:power-socket-de",
+   "name": "Sonoff S60 akıllı priz",
+   "kind": {
+    "tr": "Priz ve ölçüm",
+    "en": "Plug and metering"
+   },
+   "what": {
+    "tr": "PC, TV ve beyaz eşya gibi büyük yükleri ölçer. 2,5 W altını okumaz.",
+    "en": "Measures big loads like a PC, TV or appliances. Cannot read under 2.5 W."
+   },
+   "proto": [
+    "Wi-Fi",
+    "LAN"
+   ],
+   "energy": "self",
+   "buy": {
+    "amz": "https://lemur.run/sonoffs60amz"
+   }
+  },
+  {
+   "id": "shelly-1pm-mini",
+   "cat": "plug",
+   "icon": "mdi:electric-switch",
+   "name": "Shelly 1PM Mini",
+   "kind": {
+    "tr": "Röle ve ölçüm",
+    "en": "Relay and metering"
+   },
+   "what": {
+    "tr": "Duvar arkasına sığan röle; bağlı hattın gücünü de ölçer.",
+    "en": "Relay that fits behind a switch; also measures the line's power."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth",
+    "Local"
+   ],
+   "energy": "self",
+   "buy": {
+    "amz": "https://lemur.run/shelly1pmminiamz"
+   }
+  },
+  {
+   "id": "shelly-rgbw",
+   "cat": "light",
+   "icon": "mdi:led-strip-variant",
+   "name": "Shelly Plus RGBW PM",
+   "kind": {
+    "tr": "LED sürücü",
+    "en": "LED driver"
+   },
+   "what": {
+    "tr": "Sıradan 12–24 V şeritleri akıllı yapar; gücünü de ölçer.",
+    "en": "Makes plain 12–24 V strips smart; measures their power too."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth",
+    "Local"
+   ],
+   "energy": "self",
+   "buy": {
+    "amz": "https://lemur.run/shellyrgbwamz"
+   }
+  },
+  {
+   "id": "sonoff-mini-d",
+   "cat": "plug",
+   "icon": "mdi:electric-switch",
+   "name": "Sonoff MINI-D",
+   "kind": {
+    "tr": "Kuru kontak röle",
+    "en": "Dry-contact relay"
+   },
+   "what": {
+    "tr": "Kombi gibi cihazları kuru kontakla açıp kapatır.",
+    "en": "Switches devices like a boiler with a dry contact."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffminidamz"
+   }
+  },
+  {
+   "id": "sonoff-m5",
+   "cat": "switch",
+   "icon": "mdi:light-switch",
+   "name": "Sonoff M5 duvar anahtarı",
+   "kind": {
+    "tr": "Duvar anahtarı",
+    "en": "Wall switch"
+   },
+   "what": {
+    "tr": "Klasik anahtarın yerine geçer; tuşlar sahne de çalıştırır.",
+    "en": "Replaces a normal switch; buttons can run scenes."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffm5amz"
+   }
+  },
+  {
+   "id": "sonoff-t5",
+   "cat": "switch",
+   "icon": "mdi:gesture-tap-button",
+   "name": "Sonoff TX Ultimate T5",
+   "kind": {
+    "tr": "Dokunmatik anahtar",
+    "en": "Touch switch"
+   },
+   "what": {
+    "tr": "Cam yüzeyli dokunmatik anahtar; ışıklı ve kaydırmalı.",
+    "en": "Glass touch switch with lights and slide gestures."
+   },
+   "proto": [
+    "Wi-Fi"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonofft5amz"
+   }
+  },
+  {
+   "id": "sonoff-nspanel-pro",
+   "cat": "switch",
+   "icon": "mdi:tablet-dashboard",
+   "name": "Sonoff NSPanel Pro 120",
+   "kind": {
+    "tr": "Duvar paneli",
+    "en": "Wall panel"
+   },
+   "what": {
+    "tr": "Duvara takılan küçük ekran; ışıklar ve sahneler bir dokunuşta.",
+    "en": "Small wall screen; lights and scenes one tap away."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffnspanelproamz"
+   }
+  },
+  {
+   "id": "shelly-wall-xl",
+   "cat": "switch",
+   "icon": "mdi:tablet",
+   "name": "Shelly Wall Display XL",
+   "kind": {
+    "tr": "Duvar ekranı",
+    "en": "Wall display"
+   },
+   "what": {
+    "tr": "Duvara gömülü büyük ekran; bu panoyu duvarda açmak için ideal.",
+    "en": "Large in-wall screen; ideal for showing this dashboard on the wall."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Bluetooth"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/shellywallxlamz"
+   }
+  },
+  {
+   "id": "sonoff-r5",
+   "cat": "remote",
+   "icon": "mdi:remote",
+   "name": "Sonoff SwitchMan R5",
+   "kind": {
+    "tr": "Kumanda",
+    "en": "Remote"
+   },
+   "what": {
+    "tr": "Pilli 6 tuşlu sahne kumandası; duvara yapışır ya da elde gezer.",
+    "en": "Battery 6-button scene remote; sticks to a wall or stays in hand."
+   },
+   "proto": [
+    "RF"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffr5amz"
+   }
+  },
+  {
+   "id": "aqara-mini-anahtar",
+   "cat": "remote",
+   "icon": "mdi:gesture-tap",
+   "name": "Aqara kablosuz mini anahtar",
+   "kind": {
+    "tr": "Kumanda",
+    "en": "Remote"
+   },
+   "what": {
+    "tr": "Tek tuşlu küçük kablosuz düğme; tek, çift ve uzun basış ayrı.",
+    "en": "Small wireless button; single, double and long press differ."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqaraminianahtaramz"
+   }
+  },
+  {
+   "id": "aqara-p1",
+   "cat": "sensor",
+   "icon": "mdi:motion-sensor",
+   "name": "Aqara Motion Sensor P1",
+   "kind": {
+    "tr": "Hareket sensörü",
+    "en": "Motion sensor"
+   },
+   "what": {
+    "tr": "Hareketle ışık yakmak için; pili uzun gider.",
+    "en": "For turning lights on with motion; long battery life."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqarap1amz"
+   }
+  },
+  {
+   "id": "aqara-kapi-p2",
+   "cat": "sensor",
+   "icon": "mdi:door-open",
+   "name": "Aqara kapı/pencere sensörü P2",
+   "kind": {
+    "tr": "Kapı sensörü",
+    "en": "Door sensor"
+   },
+   "what": {
+    "tr": "Kapı ve pencere açılınca haber verir.",
+    "en": "Tells when a door or window opens."
+   },
+   "proto": [
+    "Thread",
+    "Matter"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqarakapip2amz"
+   }
+  },
+  {
+   "id": "aqara-titresim",
+   "cat": "sensor",
+   "icon": "mdi:vibrate",
+   "name": "Aqara titreşim sensörü",
+   "kind": {
+    "tr": "Titreşim sensörü",
+    "en": "Vibration sensor"
+   },
+   "what": {
+    "tr": "Makinenin bittiğini ya da bir şeyin sarsıldığını anlar.",
+    "en": "Notices a machine finishing or something being moved."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqaratitresimamz"
+   }
+  },
+  {
+   "id": "aqara-su-sizinti",
+   "cat": "sensor",
+   "icon": "mdi:water-alert",
+   "name": "Aqara su sızıntı sensörü",
+   "kind": {
+    "tr": "Su sızıntı",
+    "en": "Water leak"
+   },
+   "what": {
+    "tr": "Lavabo, makine ya da arıtma altına; su değince haber verir.",
+    "en": "Under a sink, machine or filter; alerts on water."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqarasusizintiamz"
+   }
+  },
+  {
+   "id": "hue-hareket",
+   "cat": "sensor",
+   "icon": "mdi:motion-sensor",
+   "name": "Philips Hue hareket sensörü",
+   "kind": {
+    "tr": "Hareket sensörü",
+    "en": "Motion sensor"
+   },
+   "what": {
+    "tr": "Hareket, ışık seviyesi ve sıcaklık; Hue köprüsüyle.",
+    "en": "Motion, light level and temperature; with the Hue bridge."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/huehareketamz"
+   }
+  },
+  {
+   "id": "sonoff-snzb02d",
+   "cat": "sensor",
+   "icon": "mdi:thermometer",
+   "name": "Sonoff SNZB-02D",
+   "kind": {
+    "tr": "Sıcaklık ve nem",
+    "en": "Temperature and humidity"
+   },
+   "what": {
+    "tr": "Ekranlı sıcaklık ve nem ölçer; odada da görünür.",
+    "en": "Temperature and humidity with a display you can read in the room."
+   },
+   "proto": [
+    "Zigbee"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffsnzb02damz"
+   }
+  },
+  {
+   "id": "aqara-m3",
+   "cat": "hub",
+   "icon": "mdi:hub",
+   "name": "Aqara Hub M3",
+   "kind": {
+    "tr": "Hub",
+    "en": "Hub"
+   },
+   "what": {
+    "tr": "Aqara cihazlarını Matter ile Home Assistant'a bağlar; Thread sınır yönlendirici.",
+    "en": "Brings Aqara devices to Home Assistant over Matter; a Thread border router."
+   },
+   "proto": [
+    "Zigbee",
+    "Thread",
+    "Matter",
+    "Ethernet"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/aqaram3amz"
+   }
+  },
+  {
+   "id": "sonoff-dongle",
+   "cat": "hub",
+   "icon": "mdi:usb",
+   "name": "Sonoff Zigbee Dongle Plus",
+   "kind": {
+    "tr": "Zigbee çubuğu",
+    "en": "Zigbee stick"
+   },
+   "what": {
+    "tr": "Home Assistant'ın Zigbee ağı için USB çubuk.",
+    "en": "USB stick for Home Assistant's Zigbee network."
+   },
+   "proto": [
+    "Zigbee",
+    "Thread"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/sonoffdongleamz"
+   }
+  },
+  {
+   "id": "asus-bq16",
+   "cat": "hub",
+   "icon": "mdi:router-network",
+   "name": "ASUS ZenWiFi BQ16",
+   "kind": {
+    "tr": "Mesh Wi-Fi",
+    "en": "Mesh Wi-Fi"
+   },
+   "what": {
+    "tr": "Çok sayıda akıllı cihazı rahat taşıyan Wi-Fi 7 mesh.",
+    "en": "Wi-Fi 7 mesh that carries many smart devices with ease."
+   },
+   "proto": [
+    "Wi-Fi",
+    "Ethernet"
+   ],
+   "energy": "none",
+   "buy": {
+    "amz": "https://lemur.run/asusbq16amz"
+   }
+  }
+ ]
+}

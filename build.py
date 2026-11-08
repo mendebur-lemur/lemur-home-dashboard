@@ -91,7 +91,19 @@ for _l, _n in (("tr", "REHBER.md"), ("en", "GUIDE.md")):
     _md = guide_md(_l)
     if not _p.exists() or _p.read_text(encoding="utf-8") != _md:
         _p.write_text(_md, encoding="utf-8")
-parts = ["const LHD_GUIDE = " + json.dumps(guide, ensure_ascii=False) + ";"] + [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "energy.js", "enlooks.js", "yaml.js", "help.js", "thumbs.js", "admin.js")]
+# Önerilen ürünler (library/picks.json): pakete ilk kopya olarak girer; panel GitHub'daki main kopyasını 6 saatte bir okur
+picks = json.loads((root / "library/picks.json").read_text(encoding="utf-8"))
+picks.pop("_note", None)
+if picks.get("v") != 1 or not isinstance(picks.get("items"), list):
+    raise SystemExit("library/picks.json: v=1 ve items listesi olmalı")
+for _it in picks["items"]:
+    for _k in ("id", "cat", "name"):
+        if not _it.get(_k):
+            raise SystemExit("library/picks.json: bir üründe '" + _k + "' yok")
+    for _u in (_it.get("buy") or {}).values():
+        if not str(_u).startswith("https://"):
+            raise SystemExit("library/picks.json: '" + _it["id"] + "' linki https değil")
+parts = ["const LHD_GUIDE = " + json.dumps(guide, ensure_ascii=False) + ";", "const LHD_PICKS = " + json.dumps(picks, ensure_ascii=False) + ";"] + [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "energy.js", "enlooks.js", "yaml.js", "help.js", "thumbs.js", "picks.js", "admin.js")]
 errlog = (src / "errlog.js").read_text(encoding="utf-8")
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{
