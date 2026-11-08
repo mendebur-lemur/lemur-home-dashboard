@@ -401,3 +401,11 @@ async def test_room_and_home_totals(hass: HomeAssistant, hass_ws_client, setup_l
     out = EST.build_prefs(prefs, est, [], {})
     stats = [d["stat_consumption"] for d in out["device_consumption"]]
     assert "sensor.lhd_ev_energy" not in stats and f"sensor.lhd_oda_{area.id}_energy" not in stats
+
+
+def test_strip_length_kept():
+    """v0.28.6: a light keeps whether it is a strip, its length and its adapter power."""
+    v = EST.ESTIMATES_SCHEMA({"serit": {"name": "Şerit", "kind": "light", "entity": "light.serit", "idle": 0, "max": 20, "strip": True, "len": "3.2", "cap": 72, "junk": 1}})
+    assert v["serit"]["strip"] is True and v["serit"]["len"] == 3.2 and v["serit"]["cap"] == 72 and "junk" not in v["serit"]
+    with pytest.raises(Exception):
+        EST.ESTIMATES_SCHEMA({"serit": {"name": "Şerit", "kind": "light", "len": 80}})

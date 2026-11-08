@@ -74,7 +74,7 @@ const ADM = {
     enDevT: 'Panelin takip ettiği cihazlar. Güç ölçen cihazlar doğrudan eklenir; ölçmeyenler için sanal ölçüm kurulur ve Home Assistant\'ta güç ve enerji sensörü oluşur. Hepsi Enerji ayarlarına seçtiğin kategorinin içinde eklenir.',
     enFMeas: 'Ölçen', enFVirt: 'Sanal', enNoCat: 'Kategorisiz', enDNoF: 'Bu filtrede cihaz yok.', enFound: 'Güç ölçen {n} cihaz bulundu', enFoundT: 'Home Assistant\'ta güç sensörü olan ama panelde olmayan cihazlar', enAddAll: 'Hepsini ekle ({n})', enAdd1: 'Ekle', enShowAll: 'Hepsini göster ({n})', enDAdded: '{n} cihaz eklendi',
     enEEdit: 'Cihazı düzenle', ek_meas: 'Ölçen', ek_measT: 'Kendi güç sensörü var', ek_states: 'Duruma göre', ek_statesT: 'Her durum için ayrı W',
-    enInT: 'Bu prize bağlı cihazlar', enInTag: '{n} cihaz bağlı', enInH: 'Prizde başka takip edilen cihazlar da varsa (ör. masadaki şerit LED) işaretle: güçleri prizin değerinden çıkar, kalan pay ayrı satır olur, hiçbiri iki kez sayılmaz.', enInNone: 'Bağlanabilecek başka cihaz yok. Önce prizdeki ışıkları ya da öteki cihazları ekle.', enInRest: 'Kalan payın adı (isteğe bağlı)', enInRestT: 'Kartlarda ve kategorilerde bu adla görünür; boş bırakırsan prizin adıyla. İki prizin kalanına aynı adı verme, kartta ayırt edilemez.', enInRestPh: 'Prizdeki öteki cihazlar', enInPlug: 'Prizin ölçtüğü', enInDevs: 'İşaretli {n} cihaz', enInHint: 'Kartlarda ve Home Assistant\'ın Enerji sayfasında prizin toplamı yerine kalan pay ve işaretli cihazlar ayrı ayrı görünür. Kalan pay bu cihazın kategorisine girer.', enMSensor: 'Güç sensörü (W)', enMEnergy: 'Enerji sensörü (kWh)', enPick: 'Seç', enMCalc: 'Panel hesaplasın', enMCalcT: 'Enerji sensörü seçilmezse panel güçten kWh hesaplar: {e}', enEMin: 'En düşük parlaklıkta W', enPick1: 'Panelden seç', enPick1N: 'Paneldeki cihazlar ({n})', enPickOther: 'Diğer cihazlar', enLibBusy: 'Ölçüm kütüphanesine bakılıyor…', enLibOk: 'Değerler ölçülmüş tablodan geldi: {n}', enLibStrip: 'Bu şerit havuzda metre başına; Öğren\'de uzunluğunu girince uyarlanır.', enLibNone: 'Bu model kütüphanede yok: değerleri gir ya da prizle öğret.', enMinPh: 'boş: bekleme',
+    enInT: 'Bu prize bağlı cihazlar', enInTag: '{n} cihaz bağlı', enInH: 'Prizde başka takip edilen cihazlar da varsa (ör. masadaki şerit LED) işaretle: güçleri prizin değerinden çıkar, kalan pay ayrı satır olur, hiçbiri iki kez sayılmaz.', enInNone: 'Bağlanabilecek başka cihaz yok. Önce prizdeki ışıkları ya da öteki cihazları ekle.', enInRest: 'Kalan payın adı (isteğe bağlı)', enInRestT: 'Kartlarda ve kategorilerde bu adla görünür; boş bırakırsan prizin adıyla. İki prizin kalanına aynı adı verme, kartta ayırt edilemez.', enInRestPh: 'Prizdeki öteki cihazlar', enInPlug: 'Prizin ölçtüğü', enInDevs: 'İşaretli {n} cihaz', enInHint: 'Kartlarda ve Home Assistant\'ın Enerji sayfasında prizin toplamı yerine kalan pay ve işaretli cihazlar ayrı ayrı görünür. Kalan pay bu cihazın kategorisine girer.', enMSensor: 'Güç sensörü (W)', enMEnergy: 'Enerji sensörü (kWh)', enPick: 'Seç', enMCalc: 'Panel hesaplasın', enMCalcT: 'Enerji sensörü seçilmezse panel güçten kWh hesaplar: {e}', enEMin: 'En düşük parlaklıkta W', enPick1: 'Panelden seç', enPick1N: 'Paneldeki cihazlar ({n})', enPickOther: 'Diğer cihazlar', enLibBusy: 'Ölçüm kütüphanesine bakılıyor…', enLibOk: 'Değerler ölçülmüş tablodan geldi: {n}', enLibStrip: 'Bu şerit havuzda metre başına; aşağıda uzunluğunu girince uyarlanır.', enSr: 'LED şerit', enSrT: 'Şeridin gücü uzunluğuyla değişir. Uzunluğu değiştirince tablo ve değerler ona göre ölçeklenir.', enSrLen: 'Uzunluk (m)', enSrCap: 'Adaptör gücü (W)', enSrCapPh: 'boş: sınır yok', enSrRef: 'Tablo kaç metrede ölçüldü', enSrRefT: 'Bu ışığın tablosu hangi uzunluktaki şeritte ölçüldüyse o. Boş bırakırsan tablo zaten bu uzunluğa göre sayılır.', enSrRefPh: 'boş: aynı', enSrNew: 'Kaydedince: {a} m → {b} m, en yüksek {w}.', enSrM: '{m} m şerit', enLibNone: 'Bu model kütüphanede yok: değerleri gir ya da prizle öğret.', enMinPh: 'boş: bekleme',
     enNewCat: '+ Yeni kategori', enNewCatN: 'Yeni kategorinin adı', enStT: 'Durumlara göre güç', enStH: 'Boş bırakılan durum "Diğer durumlar" değerini alır', enStOther: 'Diğer durumlar', enStPick: 'Önce durumunu okuyan cihazı seç; alabileceği durumlar burada listelenir.',
     enMNeed: 'Güç sensörünü seç', enCNeed: 'Kategoriye ad yaz',
     enCatT: 'Kategoriler kartlardaki karolardır. Her biri için Home Assistant\'ta toplam güç ve kWh sensörü oluşur ve Enerji ayarlarına eklenir; içindeki cihazlar onun altında görünür.', enCDevs: '{n} cihaz', enCNone: 'Henüz kategori yok. Kategorisiz cihazlar kartlarda "Kategorisiz" karosunda toplanır.', enCAdd: 'Kategori ekle', enCEdit: 'Kategoriyi düzenle', enCColor: 'Renk', enCMem: 'İçindeki cihazlar ({n})',
@@ -202,7 +202,7 @@ const ADM = {
     enDevT: 'The devices the dashboard tracks. Devices that measure power are added as they are; for the others a virtual measurement is set up and Home Assistant gets a power and an energy sensor. All are added to the Energy settings inside the category you pick.',
     enFMeas: 'Measured', enFVirt: 'Virtual', enNoCat: 'Uncategorized', enDNoF: 'No devices in this filter.', enFound: '{n} devices that measure power found', enFoundT: 'Devices with a power sensor in Home Assistant that are not on the dashboard yet', enAddAll: 'Add all ({n})', enAdd1: 'Add', enShowAll: 'Show all ({n})', enDAdded: '{n} devices added',
     enEEdit: 'Edit device', ek_meas: 'Measured', ek_measT: 'Has its own power sensor', ek_states: 'By state', ek_statesT: 'A W value for each state',
-    enInT: 'Devices on this plug', enInTag: '{n} devices on it', enInH: 'If other tracked devices are on this plug too (e.g. an LED strip on the desk), tick them: their power is taken off the plug, what is left gets a row of its own and nothing is counted twice.', enInNone: 'No other device to link. Add the lights or other devices on the plug first.', enInRest: 'Name of what is left (optional)', enInRestT: 'Shown with this name on the cards and in the categories; left empty, the plug\'s name is used. Do not give two plugs the same name, the card cannot tell them apart.', enInRestPh: 'Other devices on the plug', enInPlug: 'The plug measures', enInDevs: '{n} ticked devices', enInHint: 'On the cards and in Home Assistant\'s Energy page, the rest and the ticked devices show separately instead of the plug\'s total. The rest goes in this device\'s category.', enMSensor: 'Power sensor (W)', enMEnergy: 'Energy sensor (kWh)', enPick: 'Pick', enMCalc: 'Let the dashboard count', enMCalcT: 'Without an energy sensor the dashboard counts kWh from the power: {e}', enEMin: 'W at lowest brightness', enPick1: 'Pick from the dashboard', enPick1N: 'Devices on the dashboard ({n})', enPickOther: 'Other devices', enLibBusy: 'Checking the measurement library…', enLibOk: 'Values come from a measured table: {n}', enLibStrip: 'This strip is kept per meter in the pool; it is scaled once you enter its length in Learn.', enLibNone: 'This model is not in the library: enter values or learn them with a plug.', enMinPh: 'empty: standby',
+    enInT: 'Devices on this plug', enInTag: '{n} devices on it', enInH: 'If other tracked devices are on this plug too (e.g. an LED strip on the desk), tick them: their power is taken off the plug, what is left gets a row of its own and nothing is counted twice.', enInNone: 'No other device to link. Add the lights or other devices on the plug first.', enInRest: 'Name of what is left (optional)', enInRestT: 'Shown with this name on the cards and in the categories; left empty, the plug\'s name is used. Do not give two plugs the same name, the card cannot tell them apart.', enInRestPh: 'Other devices on the plug', enInPlug: 'The plug measures', enInDevs: '{n} ticked devices', enInHint: 'On the cards and in Home Assistant\'s Energy page, the rest and the ticked devices show separately instead of the plug\'s total. The rest goes in this device\'s category.', enMSensor: 'Power sensor (W)', enMEnergy: 'Energy sensor (kWh)', enPick: 'Pick', enMCalc: 'Let the dashboard count', enMCalcT: 'Without an energy sensor the dashboard counts kWh from the power: {e}', enEMin: 'W at lowest brightness', enPick1: 'Pick from the dashboard', enPick1N: 'Devices on the dashboard ({n})', enPickOther: 'Other devices', enLibBusy: 'Checking the measurement library…', enLibOk: 'Values come from a measured table: {n}', enLibStrip: 'This strip is kept per meter in the pool; it is scaled once you enter its length below.', enSr: 'LED strip', enSrT: 'A strip\'s power changes with its length. When you change the length, the table and values are scaled to it.', enSrLen: 'Length (m)', enSrCap: 'Adapter power (W)', enSrCapPh: 'empty: no limit', enSrRef: 'Table measured on (m)', enSrRefT: 'The length of the strip this light\'s table was measured on. Left empty, the table is taken as already fitting this length.', enSrRefPh: 'empty: same', enSrNew: 'On save: {a} m → {b} m, highest {w}.', enSrM: '{m} m strip', enLibNone: 'This model is not in the library: enter values or learn them with a plug.', enMinPh: 'empty: standby',
     enNewCat: '+ New category', enNewCatN: 'Name of the new category', enStT: 'Power by state', enStH: 'An empty state takes the "Other states" value', enStOther: 'Other states', enStPick: 'Pick the device that gives the state first; its states are listed here.',
     enMNeed: 'Pick the power sensor', enCNeed: 'Enter a category name',
     enCatT: 'Categories are the tiles on the cards. Each gets a total power and kWh sensor in Home Assistant and is added to the Energy settings, with its devices under it.', enCDevs: '{n} devices', enCNone: 'No categories yet. Devices without one are grouped in an "Uncategorized" tile.', enCAdd: 'Add category', enCEdit: 'Edit category', enCColor: 'Color', enCMem: 'Devices in it ({n})',
@@ -1502,7 +1502,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const kind = avgK ? 'avg' : ent.indexOf('light.') === 0 ? 'light' : 'states', run = this._lrnRun(id);
     this._lrn = { id: id, kind: kind, entity: ent, name: e.name || id, step: run ? 'run' : kind === 'light' ? 'pool' : 'prep', plug: (run && run.plug) || '', iv: 0, only: false, tested: 0, pool: null, share: false, apply: {} };
     if (kind === 'light') this._lrnSame(id, ent).forEach((x) => { this._lrn.apply[x] = true; });
-    this._lrn.strip = kind === 'light' && this._lrnIsStrip(ent); this._lrn.len = 0; this._lrn.lens = {};
+    this._lrn.strip = kind === 'light' && (!!e.strip || this._lrnIsStrip(ent)); this._lrn.len = lpEnNumOf(e.len) > 0 ? lpEnNumOf(e.len) : 0; this._lrn.lens = {}; if (lpEnNumOf(e.cap) > 0 && !(this._lrn.cap > 0)) this._lrn.cap = lpEnNumOf(e.cap);
+    if (this._lrn.strip) { const E0 = this._enEsts(); Object.keys(this._lrn.apply).forEach((x) => { const k = Object.keys(E0).filter((k2) => E0[k2].entity === x)[0]; if (k && E0[k].len > 0) this._lrn.lens[x] = String(E0[k].len); }); }
     this._lrnStartPoll();
     if (this._lrn.step === 'pool') this._lrnPool();
     this._render();
@@ -1563,13 +1564,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const cap = L.cap > 0 ? L.cap : r.cap_w > 0 ? r.cap_w : 0;
       if (usePool && (r.strip || L.strip) && L.len > 0 && (r.per_m || r.length_m > 0)) base = this._lrnScale(r.lut, sb, r.per_m ? L.len : L.len / r.length_m, cap);
       if (!usePool && L.strip && L.len > 0) baseLen = L.len;
-      const rec = (x, tb, len) => { const sp = this._lrnSpan(tb), o = Object.assign({}, x, { kind: 'light', idle: sb, min: Math.round(sp[0] * 100) / 100, max: Math.round(sp[1] * 100) / 100, lut: tb, src: src }); return o; };
-      E[L.id] = rec(Object.assign({}, cur, { entity: L.entity }), base);
+      const rec = (x, tb, len) => { const sp = this._lrnSpan(tb), o = Object.assign({}, x, { kind: 'light', idle: sb, min: Math.round(sp[0] * 100) / 100, max: Math.round(sp[1] * 100) / 100, lut: tb, src: src });
+        if (L.strip) { o.strip = true; if (len > 0) o.len = Math.round(len * 100) / 100; else delete o.len; if (cap > 0) o.cap = cap; } return o; };
+      E[L.id] = rec(Object.assign({}, cur, { entity: L.entity }), base, L.len);
       Object.keys(L.apply).filter((x) => L.apply[x]).forEach((x) => {
-        const ln = parseFloat(L.lens[x]), tb = L.strip && baseLen > 0 && ln > 0 ? this._lrnScale(base, sb, ln / baseLen, L.cap > 0 ? L.cap : 0) : base;
+        const ln = parseFloat(L.lens[x]), sc = L.strip && baseLen > 0 && ln > 0, tb = sc ? this._lrnScale(base, sb, ln / baseLen, L.cap > 0 ? L.cap : 0) : base, tl = sc ? ln : L.len;
         const k = Object.keys(E).filter((k2) => E[k2].entity === x)[0];
-        if (k) { if (E[k].kind === 'light' && (!E[k].lut || E[k].src !== 'own')) E[k] = rec(E[k], tb); }
-        else { const nid = this._enSlug(this._ename(x), E); E[nid] = rec({ name: String(this._ename(x)).slice(0, 60), entity: x, cat: E[L.id].cat }, tb); }
+        if (k) { if (E[k].kind === 'light' && (!E[k].lut || E[k].src !== 'own')) E[k] = rec(E[k], tb, tl); }
+        else { const nid = this._enSlug(this._ename(x), E); E[nid] = rec({ name: String(this._ename(x)).slice(0, 60), entity: x, cat: E[L.id].cat }, tb, tl); }
       });
     } else if (L.kind === 'avg') {
       if (!run || run.avg === null || run.avg === undefined) return;
@@ -1855,6 +1857,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     Object.keys(D0).forEach((k) => { f[k] = String(f[k] === undefined ? D0[k] : f[k]); });
     f.st = {}; (Array.isArray(f.states) ? f.states : []).forEach((x) => { if (x && x.s) f.st[x.s] = String(x.w); });
     f.inside = Array.isArray(f.inside) ? f.inside.slice() : []; f.rest = f.rest || '';
+    // şerit: kayıtlı uzunluk len0 tablonun şu anki uzunluğu; yoksa aynı tabloyu kullanan başka şeridin uzunluğu tahmin
+    f.strip = !!f.strip; f.len0 = e && e.len > 0 ? e.len : 0; f.len = f.len0 ? String(f.len0) : ''; f.cap = e && e.cap > 0 ? String(e.cap) : ''; f.lenref = '';
+    if (e && e.lut && !f.len0) { const js = JSON.stringify(e.lut), o = Object.keys(E).filter((k) => k !== id && E[k].len > 0 && E[k].lut && JSON.stringify(E[k].lut) === js)[0]; if (o) { f.lenref = String(E[o].len); f.strip = true; if (!f.cap && E[o].cap > 0) f.cap = String(E[o].cap); } }
     this._enE = { id: e ? id : null, f: f, ask: false };
   }
   // ---- Enerji → Cihazlar (v0.28.5): odaya ya da kategoriye göre gruplu liste, durum etiketleri, sağdan açılan düzenleme, toplu ekleme ----
@@ -1995,7 +2000,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const room = D.id && E0[D.id] ? this._enRoom(D.id, E0[D.id]) : (f.entity && this._enRoom('', { entity: f.entity, kind: f.kind })) || '';
     const stat = D.id && E0[D.id] ? this._enStat(D.id, E0[D.id]) : null;
     // başlık
-    let h = '<div class="ened"><div class="enddh"><span class="ic"><ha-icon icon="' + esc(f.icon || this._enKindIc(f.kind)) + '"></ha-icon></span><div class="nm"><b>' + (D.id ? esc(f.name || '') : t('enENew')) + '</b><small>' + esc((room ? this._enAreaN(room) : this._t('enDvNoRoom')) + (f.cat && f.cat !== '__new' ? ' · ' + ((C.filter((c) => c.id === f.cat)[0] || {}).name || '') : '')) + '</small></div>' +
+    let h = '<div class="ened"><div class="enddh"><span class="ic"><ha-icon icon="' + esc(f.icon || this._enKindIc(f.kind)) + '"></ha-icon></span><div class="nm"><b>' + (D.id ? esc(f.name || '') : t('enENew')) + '</b><small>' + esc((room ? this._enAreaN(room) : this._t('enDvNoRoom')) + (f.cat && f.cat !== '__new' ? ' · ' + ((C.filter((c) => c.id === f.cat)[0] || {}).name || '') : '') + (f.kind === 'light' && f.strip && f.len0 > 0 ? ' · ' + this._t('enSrM', { m: lpEnNum(f.len0, 2, this._lang) }) : '')) + '</small></div>' +
       '<button class="btn ic sm" data-a="eneclose" aria-label="' + t('close') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div><div class="enddb">';
     if (stat && stat.w) h += '<div class="enddw"><b>' + esc(stat.w) + '</b><span>' + t(stat.s === 'chk' && f.kind === 'meas' ? 'enWSensT' : 'enWNoEntT') + '</span></div>';
     // 1. bu ne?
@@ -2028,6 +2033,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (f.kind === 'light' && D.lib) h += '<div class="hint enlib wide' + (D.lib.lut ? ' ok' : '') + '">' + (D.lib.busy ? t('enLibBusy') : D.lib.lut ? t('enLibOk', { n: D.lib.name || '' }) : D.lib.strip ? t('enLibStrip') : t('enLibNone')) + '</div>';
     if (f.kind === 'light' && f.lut) h += '<div class="hint wide">' + t(f.src === 'own' ? 'enDsLutOwn' : 'enDsLutLib') + '</div>';
     h += '</div>';
+    if (f.kind === 'light') {
+      const K = this._enStripK(f);
+      h += '<div class="enstrip"><label class="enstc"><input type="checkbox" data-enstrip' + (f.strip ? ' checked' : '') + '><span><b>' + t('enSr') + '</b><i>' + t('enSrT') + '</i></span></label>';
+      if (f.strip) {
+        const num = (key, label, step, ph) => '<div class="fld"><label>' + label + '</label><input class="inp" type="number" min="0" step="' + step + '" data-enf="' + key + '" value="' + esc(f[key] || '') + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '></div>';
+        h += '<div class="engrid g3">' + num('len', t('enSrLen'), '0.1') + num('cap', t('enSrCap'), '1', this._t('enSrCapPh')) + (f.lut && !(f.len0 > 0) && !f._per ? num('lenref', t('enSrRef'), '0.1', this._t('enSrRefPh')) : '') + '</div>';
+        if (f.lut && !(f.len0 > 0) && !f._per) h += '<div class="hint">' + t('enSrRefT') + '</div>';
+        if (K && K.len && K.ref && K.k !== 1) h += '<div class="hint enlib ok">' + t('enSrNew', { a: lpEnNum(K.ref, 2, this._lang), b: lpEnNum(K.len, 2, this._lang), w: lpEnWs(this._enRec(f).max, this._lang) }) + '</div>';
+      }
+      h += '</div>';
+    }
     if (f.kind === 'states') {
       const L = this._enStatesOf(f.entity); Object.keys(f.st).forEach((x) => { if (L.indexOf(x) < 0) L.push(x); });
       h += f.entity ? '<div class="enst"><div class="ensh"><b>' + t('enStT') + '</b><span>' + t('enStH') + '</span></div>' + L.map((x) => '<div class="enstr' + (st && st.state === x ? ' on' : '') + '"><span>' + esc(this._enStLab(st, x)) + (st && st.state === x ? ' <em class="enp ok">' + t('enENow') + '</em>' : '') + '</span><span class="ennum"><input class="inp" type="number" min="0" step="0.1" data-enst="' + esc(x) + '" value="' + esc(f.st[x] !== undefined ? f.st[x] : '') + '" placeholder="' + esc(f.other || '0') + '"><i>W</i></span></div>').join('') +
@@ -2102,7 +2118,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     f.kind = dom === 'light' ? 'light' : /^(switch|input_boolean|fan|remote)$/.test(dom) ? 'onoff' : 'states';
     const want = { light: /ışık|isik|light|aydınlat|lamba/i, climate: /klima|iklim|climate|ısıt|isit/i, media_player: /medya|media|ekran|tv|müzik/i, vacuum: /süpürge|supurge|vacuum|robot/i }[dom];
     if (!f.cat || f.cat === f._autoCat) { const c = want ? this._enCats().filter((x) => want.test(String(x.name).toLocaleLowerCase('tr')))[0] : null; f.cat = c ? c.id : ''; f._autoCat = f.cat; }
-    delete f.lut; delete f.src; D.lib = null;
+    delete f.lut; delete f.src; delete f._per; D.lib = null;
     if (f.kind === 'light') this._enLib(ent);
   }
   _enLib(ent) {
@@ -2112,12 +2128,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/pool_lookup', manufacturer: d.man, model: d.model, model_id: d.model_id }).then((r) => {
       if (this._enE !== D || D.f.entity !== ent) return;
       if (!r || !r.lut) { D.lib = { none: true }; return this._render(); }
-      if (r.per_m) { D.lib = { strip: true }; return this._render(); }
+      if (r.per_m) { D.lib = { strip: true }; D.f._per = r; D.f.strip = true; if (r.cap_w > 0 && !D.f.cap) D.f.cap = String(r.cap_w); D.f.idle = String(Math.round((r.standby || 0) * 100) / 100); return this._render(); }
       const f = D.f; D.lib = r; f.lut = r.lut; f.src = r.source === 'pool' ? 'pool' : 'library';
       f.idle = String(Math.round((r.standby || 0) * 100) / 100); f.min = String(r.min); f.max = String(r.max);
       if (r.cap_w > 0) f.max = String(Math.min(r.max, r.cap_w));
       this._render();
     }, () => { if (this._enE === D) { D.lib = { none: true }; this._render(); } });
+  }
+  // şerit uzunluğu: tablo (ya da en düşük / en yüksek) eski uzunluktan yenisine ölçeklenir, adaptör gücünü geçmez
+  _enStripK(f) {
+    if (f.kind !== 'light' || !f.strip) return null;
+    const len = lpEnNumOf(f.len), cap = lpEnNumOf(f.cap), ref = f.len0 > 0 ? f.len0 : lpEnNumOf(f.lenref) > 0 ? lpEnNumOf(f.lenref) : len;
+    if (f._per && len > 0) return { len: len, cap: cap, k: len, per: true, ref: 0 };
+    return { len: len > 0 && len <= 50 ? len : 0, cap: cap > 0 && cap <= 2000 ? cap : 0, k: len > 0 && ref > 0 ? len / ref : 1, ref: ref };
   }
   _enRec(f) {
     const n = (k) => Math.min(50000, lpEnNumOf(f[k])), ent = String(f.entity || '').trim(), e = { name: String(f.name || '').trim().slice(0, 60), kind: f.kind };
@@ -2126,8 +2149,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const ins = (f.inside || []).filter((k) => this._enEsts()[k]).slice(0, 20);
       if (ins.length) { e.inside = ins; const r = String(f.rest || '').trim().slice(0, 60); if (r) e.rest = r; }
     }
-    if (f.kind === 'light') { Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent }); if (String(f.min).trim() !== '') e.min = n('min'); if (f.lut && typeof f.lut === 'object') e.lut = f.lut; }
-    if (f.src && (f.kind === 'light' || f.kind === 'fixed' || f.kind === 'states')) e.src = f.src;
+    if (f.kind === 'light') {
+      Object.assign(e, { idle: n('idle'), max: n('max'), entity: ent }); if (String(f.min).trim() !== '') e.min = n('min'); if (f.lut && typeof f.lut === 'object') e.lut = f.lut;
+      const K = this._enStripK(f);
+      if (K) {
+        e.strip = true; if (K.len) e.len = Math.round(K.len * 100) / 100; if (K.cap) e.cap = K.cap;
+        const sb = e.idle || 0, sc = (w) => { let v = sb + Math.max(0, w - sb) * K.k; if (K.cap > 0) v = Math.min(v, K.cap); return Math.round(v * 100) / 100; };
+        if (K.per) { e.lut = this._lrnScale(f._per.lut, f._per.standby || 0, K.len, K.cap); e.src = 'pool'; }
+        else if (e.lut && (K.k !== 1 || K.cap > 0)) e.lut = this._lrnScale(e.lut, sb, K.k, K.cap);
+        if (e.lut) { const sp = this._lrnSpan(e.lut); e.min = Math.round(sp[0] * 100) / 100; e.max = Math.round(sp[1] * 100) / 100; }
+        else if (K.k !== 1 || K.cap > 0) { e.max = sc(e.max); if (e.min !== undefined) e.min = sc(e.min); }
+      }
+    }
+    if (f.src && !e.src && (f.kind === 'light' || f.kind === 'fixed' || f.kind === 'states')) e.src = f.src;
     if (f.kind === 'onoff') Object.assign(e, { off: n('off'), on: n('on'), entity: ent });
     if (f.kind === 'states') { e.entity = ent; e.other = n('other'); e.states = Object.keys(f.st || {}).filter((x) => String(f.st[x]).trim() !== '').slice(0, 24).map((x) => ({ s: x.slice(0, 40), w: Math.min(50000, lpEnNumOf(f.st[x])) })); }
     if (f.kind === 'fixed') e.w = n('w');
@@ -3280,10 +3314,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); const en = sf.indexOf('energy.') === 0, sel = el.tagName === 'SELECT'; this._setting(sf, v, !en || !sel); if (en && !sel) this._enLater(); return; }   // enerji sayfasında hesaplar yenilensin (yazı alanında biraz sonra: basılan düğme kaybolmasın)   // enerji sayfasında hesaplar yenilensin
       // yazı ve sayı alanı: yalnız taslağa yazılır, hesap yerinde yenilenir (tam çizim, alandan çıkarken basılan düğmenin tıklamasını yutuyordu)
       if (el.hasAttribute && el.hasAttribute('data-enpick') && this._enE) { this._enErr = ''; if (el.value) this._enAuto(el.value); return this._render(); }
-      if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { const k = el.getAttribute('data-enf'); this._enE.f[k] = el.value; this._enErr = ''; if (el.tagName === 'SELECT') return this._render(); if (k === 'entity') { if (!this._enE.id && this._hass.states[el.value]) { this._enAuto(el.value); return this._render(); } return this._enLater(); } if (k === 'name') this._enE.f._auto = ''; return this._enCalc(); }
+      if (el.hasAttribute && el.hasAttribute('data-enf') && this._enE) { const k = el.getAttribute('data-enf'); this._enE.f[k] = el.value; this._enErr = ''; if (el.tagName === 'SELECT') return this._render(); if (k === 'entity') { if (!this._enE.id && this._hass.states[el.value]) { this._enAuto(el.value); return this._render(); } return this._enLater(); } if (k === 'name') this._enE.f._auto = ''; if (k === 'len' || k === 'cap' || k === 'lenref') this._enLater(); return this._enCalc(); }
       if (el.hasAttribute && el.hasAttribute('data-lrf') && this._lrn) { const k = el.getAttribute('data-lrf'); if (k === 'plug') { this._lrn.plug = el.value; this._lrn.ts = []; this._lrn.iv = 0; this._lrn.tested = 0; this._lrn.testMsg = ''; this._lrnWatch(); } else if (k === 'len' || k === 'cap') { const v = parseFloat(String(el.value).replace(',', '.')); this._lrn[k] = v > 0 && v <= (k === 'len' ? 50 : 2000) ? v : 0; } else this._lrn[k] = !!el.checked; return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-lrlen') && this._lrn) { this._lrn.lens[el.getAttribute('data-lrlen')] = String(el.value).replace(',', '.'); return; }
       if (el.hasAttribute && el.hasAttribute('data-lrap') && this._lrn) { this._lrn.apply[el.getAttribute('data-lrap')] = !!el.checked; return; }
+      if (el.hasAttribute && el.hasAttribute('data-enstrip') && this._enE) { this._enE.f.strip = !!el.checked; return this._render(); }
       if (el.hasAttribute && el.hasAttribute('data-enst') && this._enE) { this._enE.f.st[el.getAttribute('data-enst')] = el.value; this._enErr = ''; return this._enCalc(); }
       if (el.hasAttribute && el.hasAttribute('data-encf') && this._enC) { this._enC[el.getAttribute('data-encf')] = el.value; return; }
       if (el.hasAttribute && el.hasAttribute('data-encm') && this._enC) { this._enC.m[el.getAttribute('data-encm')] = el.checked; return this._render(); }

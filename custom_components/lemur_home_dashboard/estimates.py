@@ -64,6 +64,9 @@ ESTIMATE_SCHEMA = vol.Schema(
         vol.Optional("src"): vol.All(str, vol.Length(max=40)),   # where the table came from: own | pool | library | import
         vol.Optional("inside"): vol.All([vol.Match(r"^(?!kat_)[a-z0-9_]{1,40}$")], vol.Length(max=20)),   # meas: other devices on this plug
         vol.Optional("rest"): vol.All(str, vol.Length(max=60)),   # meas with inside: the name of what is left
+        vol.Optional("strip"): bool,   # light: an LED strip, its table follows its length
+        vol.Optional("len"): vol.All(vol.Coerce(float), vol.Range(min=0.1, max=50)),   # strip length (m) the table is scaled to
+        vol.Optional("cap"): vol.All(vol.Coerce(float), vol.Range(min=1, max=2000)),   # adapter power (W): the strip never draws more
     },
     extra=vol.REMOVE_EXTRA,
 )
