@@ -111,6 +111,12 @@ def _median_table(tabs: list[dict]) -> dict:
     return t0
 
 
+def _standby(subs: list) -> float:
+    """Median of the standbys a plug could read; 0.0 when none could (the dashboard then counts its own floor)."""
+    v = [s["standby"] for s in subs if isinstance(s.get("standby"), (int, float)) and s["standby"] >= 0.1]
+    return round(statistics.median(v), 3) if v else 0.0
+
+
 def rebuild() -> None:
     models = {}
     for k, m in _models().items():
@@ -124,7 +130,7 @@ def rebuild() -> None:
         caps = [s["adapter_w"] for s in subs if s.get("adapter_w")]
         models[s0.get("key") or k] = {"manufacturer": s0["manufacturer"], "model": s0["model_id"] or s0["model"], "aliases": sorted({x for s in subs for x in (s["model"], s["model_id"]) if x}),
                      "n": len(subs), "agree": round(agree, 3) if agree is not None else None, "updated": max(s.get("date", "") for s in subs),
-                     "standby": round(statistics.median(s["standby"] for s in subs), 3), "lut": _median_table(tabs), "mains_v": s0.get("mains_v", 230),
+                     "standby": _standby(subs), "lut": _median_table(tabs), "mains_v": s0.get("mains_v", 230),
                      "strip": bool(s0.get("strip")), "per_m": bool(s0.get("strip")), "cap_w": max(caps) if caps else None}
     out = {"v": 1, "updated": date.today().isoformat(), "note": "Lemur Home Dashboard shared light measurements. Each model: the median of reviewed submissions. Strips are per meter (per_m).", "models": models}
     (LIB / "library.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

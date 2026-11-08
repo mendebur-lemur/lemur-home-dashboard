@@ -244,6 +244,9 @@ function lrPow(lut, a) {
 }
 function lrCount(lut) { let n = 0; if (lut && lut.ct) n += lut.ct.k.length * lut.ct.b.length; if (lut && lut.hs) n += lut.hs.s.length * lut.hs.h.length * lut.hs.b.length; if (lut && lut.br) n += lut.br.b.length; if (lut && lut.fx && typeof lut.fx === 'object' && lut.fx.e) n += Object.keys(lut.fx.e).length; return n; }
 // tahmini cihazın gücü (yönetim panelindeki hesap; entegrasyondaki estimates.power ile aynı)
+// prizin okuyamadığı bekleme: ölçülmüş tablosu olan ışıkta 0,1 W'ın altı. Ağda kapalı duran akıllı ışık yine de biraz çeker
+const LP_SB_FLOOR = 0.4, LP_SB_MIN = 0.1;
+function lpEnSbUnm(e) { return !!e && e.kind === 'light' && !!e.lut && lpEnNumOf(e.idle) < LP_SB_MIN; }
 function lpEnEstW(e, st) {
   const n = (k) => lpEnNumOf(e[k]);
   if (e.kind === 'fixed') return n('w');
@@ -253,7 +256,7 @@ function lpEnEstW(e, st) {
   if (e.kind === 'states') { const sv = st ? String(st.state) : 'unavailable', r = (Array.isArray(e.states) ? e.states : []).filter((x) => x && String(x.s) === sv)[0]; return r ? lpEnNumOf(r.w) : n('other'); }
   const on = !!st && ['off', 'unavailable', 'unknown', 'standby', 'idle', 'closed', 'docked', 'none', ''].indexOf(String(st.state)) < 0;
   if (e.kind === 'light') {
-    if (!on) return n('idle');
+    if (!on) return lpEnSbUnm(e) && st && String(st.state) === 'off' ? LP_SB_FLOOR : n('idle');
     if (e.lut) { const v = lrPow(e.lut, st.attributes || {}); if (v !== null && isFinite(v)) return Math.max(0, v); }
     const lo = e.min !== undefined && e.min !== null && e.min !== '' ? n('min') : n('idle'), b = st.attributes.brightness;
     const f = b === undefined || b === null ? 1 : Math.max(0, Math.min(1, b / 255));

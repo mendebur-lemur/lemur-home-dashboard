@@ -359,3 +359,13 @@ test('shared plug: cards take the rest, the devices on it keep their own rows', 
   assert.strictEqual(d.plug, 'sensor.masa_w');
   assert.strictEqual(M.devs.filter((x) => x.lid === 'led')[0].p, 'sensor.lhd_led_power');
 });
+
+test('a measured light whose standby read 0 counts 0.4 W while off and reachable (v0.28.8)', () => {
+  const ctx2 = {}; vm.createContext(ctx2);
+  const lut = { br: { b: [1, 100], w: [0.5, 6] } };
+  const e = { kind: 'light', idle: 0, max: 6, lut: lut };
+  assert.strictEqual(E.lpEnEstW(e, { state: 'off', attributes: {} }), 0.4);
+  assert.strictEqual(E.lpEnEstW(e, { state: 'unavailable', attributes: {} }), 0);
+  assert.strictEqual(E.lpEnEstW(Object.assign({}, e, { idle: 0.3 }), { state: 'off', attributes: {} }), 0.3);
+  assert.strictEqual(E.lpEnEstW(Object.assign({}, e, { lut: null }), { state: 'off', attributes: {} }), 0);
+});

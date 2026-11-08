@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.28.8',
+    tr: ['Prizin okuyamadığı bekleme: öğrenilen bir ışığın beklemesi 0 W çıktıysa (çoğu priz 1 W\'ın altını okuyamıyor) ışık kapalıyken ağdaysa 0,4 W sayılıyor; havuzda aynı model için ölçülmüş bekleme varsa o kullanılıyor. Işık kullanılamıyorsa (elektriği kesik) 0 W. Havuza gönderilen ölçümde 0 yerine "ölçülemedi" gidiyor.'],
+    en: ['Standby a plug cannot read: if a learned light\'s standby read 0 W (most plugs cannot read under 1 W), it counts as 0.4 W while off and on the network; a standby measured for the same model in the pool is used if there is one. An unavailable light (power cut) is 0 W. Shared measurements send "not readable" instead of 0.'] },
   { v: '0.28.7',
     tr: ['Aynı köprüdeki ya da MQTT üzerinden bağlı ışıklar aynı anda öğrenilebiliyor (her biri kendi prizinde). Önceden biri bitmeden öteki başlatılamıyordu; aynı anda en çok 3 ışık.'],
     en: ['Lights on the same bridge or behind MQTT can learn at the same time (each on its own plug). Before, one had to finish first; up to 3 lights at once.'] },

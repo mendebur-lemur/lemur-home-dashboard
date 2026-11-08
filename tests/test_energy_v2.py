@@ -409,3 +409,14 @@ def test_strip_length_kept():
     assert v["serit"]["strip"] is True and v["serit"]["len"] == 3.2 and v["serit"]["cap"] == 72 and "junk" not in v["serit"]
     with pytest.raises(Exception):
         EST.ESTIMATES_SCHEMA({"serit": {"name": "Şerit", "kind": "light", "len": 80}})
+
+
+def test_standby_under_plug_floor():
+    """v0.28.8: a measured light whose standby read 0 counts SB_FLOOR while off and on the network, 0 when unreachable."""
+    lut = {"br": {"b": [1, 100], "w": [0.5, 6.0]}}
+    e = {"name": "Play", "kind": "light", "entity": "light.p", "idle": 0, "max": 6, "lut": lut}
+    off = SimpleNamespace(state="off", attributes={})
+    gone = SimpleNamespace(state="unavailable", attributes={})
+    assert EST.power(e, off) == EST.SB_FLOOR and EST.power(e, gone) == 0
+    assert EST.power({**e, "idle": 0.3}, off) == 0.3            # a readable standby stays
+    assert EST.power({**e, "lut": None}, off) == 0               # no measured table: what the user entered

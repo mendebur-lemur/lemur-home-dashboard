@@ -133,6 +133,23 @@ def watts_of(state: Any) -> float | None:
     return v * 1000 if unit == "kW" else v / 1000 if unit == "mW" else v
 
 
+# a smart light that is off but still on the network always draws a little; a plug that reads 0 is at its floor
+SB_FLOOR = 0.4
+SB_MIN = 0.1
+
+
+def sb_unmeasured(est: dict) -> bool:
+    """A measured table (own, pool, library) with a standby under what a plug can read."""
+    return est.get("kind") == "light" and bool(est.get("lut")) and _f(est, "idle") < SB_MIN
+
+
+def sb_floor(est: dict, state: Any = None) -> float:
+    """The light's power when off: its idle, or SB_FLOOR when the plug could not read it and the light is reachable."""
+    if sb_unmeasured(est) and state is not None and str(state.state) == "off":
+        return SB_FLOOR
+    return _f(est, "idle")
+
+
 def power(est: dict, state: Any = None) -> float:
     """Watts now. state: the linked entity's state object (or the device's own power sensor for 'meas')."""
     kind = est.get("kind")
@@ -155,7 +172,7 @@ def power(est: dict, state: Any = None) -> float:
     if kind == "light":
         idle, mx = _f(est, "idle"), _f(est, "max")
         if not on:
-            return idle
+            return sb_floor(est, state)
         if est.get("lut") and state is not None:
             w = LUT.power(est["lut"], dict(state.attributes or {}))
             if w is not None:
