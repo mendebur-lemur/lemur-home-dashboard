@@ -781,3 +781,12 @@
 .phone .box > .enc.enlook.en-battery, .phone .box > .enc.enlook.en-tips { height: 180px; }
 .phone .box > .enc.enlook.en-meter, .phone .box > .enc.enlook.en-tariff, .phone .box > .enc.enlook.en-week, .phone .box > .enc.enlook.en-day { height: 230px; }
 .phone .box > .enc.enlook.en-top, .phone .box > .enc.enlook.en-cats { height: 300px; }
+
+/* enerji değeri karosu ışık karosuyla aynı: simge aynı boyda, ad ışık adı gibi, değer altında ikinci satır */
+.tile.val.entl .lic { width: var(--lp-icw, 40%); }
+.tile.val.entl .nm { order: 2; margin-top: 8px; font-size: var(--lp-fs, 16px); line-height: calc(var(--lp-fs, 16px) * 1.2); color: var(--lp-text); }
+.tile.val.entl .vl { order: 3; margin-top: 2px; font-size: 12.5px; line-height: 15px; font-weight: 500; color: var(--lp-text2); }
+.tile.val.entl .sl { order: 4; }
+.phone .tile.val.entl .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
+.phone .tile.val.entl .vl { font-size: 10.5px; line-height: 13px; }
+.tile.val.entl.wide .nm, .tile.val.entl.wide .vl { order: 0; }

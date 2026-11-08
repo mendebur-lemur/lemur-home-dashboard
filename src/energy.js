@@ -867,6 +867,15 @@ function lpEnRooms(h) {
   });
   return out;
 }
+// Halo kartında enerji değerinin altındaki kutular (iklim kartının alt satırı gibi): ilgili öteki değerler
+const LP_EN_HX = { ev: ['bugun', 'bugun_tl', 'ay_tl'], bugun: ['bugun_tl', 'ay_kwh', 'ay_tl'], bugun_tl: ['bugun', 'ay_tl', 'donem_sonu'], ay_tl: ['ay_kwh', 'donem_sonu', 'yil'],
+  ay_kwh: ['ay_tl', 'donem_sonu', 'yil'], donem_sonu: ['ay_tl', 'ay_kwh', 'yil'], yil: ['ay_kwh', 'ay_tl', 'bugun'], olcmeyen: ['ev', 'bugun'] };
+function lpEnHaloExtra(id, S) {
+  const ok = (x) => S[x] && S[x].state !== 'unavailable' && S[x].state !== 'unknown';
+  const m = /^sensor\.lhdx_oda_(.+)_(guc|bugun)$/.exec(id);
+  if (m) return ['sensor.lhdx_oda_' + m[1] + '_' + (m[2] === 'guc' ? 'bugun' : 'guc'), 'sensor.lhdx_ev'].filter(ok);
+  return (LP_EN_HX[id.slice(12)] || []).map((k) => 'sensor.lhdx_' + k).filter(ok);
+}
 const lpEnRoomId = (a, k) => 'sensor.lhdx_oda_' + String(a).replace(/[^a-z0-9_]/gi, '_').toLowerCase() + '_' + k;
 // hass'ın kopyası, sanal sensörlerle (aynı değer aynı nesne: panel boşuna yeniden çizmesin)
 function lpEnVirt(h) {
