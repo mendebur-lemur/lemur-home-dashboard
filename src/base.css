@@ -401,6 +401,8 @@
 .cop.sel { background: rgba(255, 255, 255, 0.16); color: var(--clc) !important; font-weight: 700; }
 .box > .clr + .clr { margin-top: var(--lp-gap, 8px); }
 .phone .box.spread > .clr { flex: 0 0 100%; margin-bottom: 8px; }
+/* v0.28.9: satır kutudan taşmasın (uzun adlı süpürge satırı içeriği kadar genişleyip iklim satırlarından taşıyordu; ad artık … ile kısalır) */
+.box > .clr { min-width: 0; max-width: 100%; }
 /* kategori sayfasında oda ara başlığı (taslaktaki gibi küçük, sola dayalı) */
 .subt.csub { text-align: left; font-size: 12.5px; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 4px 0; }
 .subt.csub:first-child { padding-top: 2px; }
