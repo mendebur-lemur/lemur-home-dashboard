@@ -50,6 +50,14 @@ function lpBgOf(s) {
   return s.bg && s.bg.mode === 'dark' ? LP_DARK_BG : (s.bg && s.bg.mode ? (lpBgCss(s.bg) || LP_DARK_BG) : LP_DEFAULT_BG);
 }
 
+// zeminin ana (en koyu, en alttaki) rengi: üst bar gizliyken telefonun durum çubuğu bu renge boyanır (#11)
+function lpBgBase(s) {
+  const b = (s || {}).bg || {};
+  if (b.mode === 'img' || b.mode === 'black') return '#000000';
+  const c = String(lpBgOf(s)).match(/#[0-9a-fA-F]{6}\b/g);
+  return c ? c[c.length - 1] : '#0b0e15';
+}
+
 class LemurHomeDashboardStrategy extends HTMLElement {
   static async generate(config, hass) {
     const lang = pickLang(hass);
@@ -60,7 +68,8 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     }
     const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
     const settings = data.settings || {};
-    LemurScale.set(settings.canvas || null, settings.kiosk || null);
+    const bgSet = lpPhoneScreen() ? lpPhoneMerge(settings) : settings;
+    LemurScale.set(settings.canvas || null, settings.kiosk || null, lpBgBase(bgSet));
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
     const bg = lpBgOf(lpPhoneScreen() ? lpPhoneMerge(settings) : settings);   // telefonda telefona özel zemin
     window.__LHD_VIEWS = tabs.map((x) => x.id);   // kartın gezinmesi bilsin: hangi sekmelerin HA'da görünümü var

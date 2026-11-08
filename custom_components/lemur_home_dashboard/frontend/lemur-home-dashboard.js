@@ -2116,8 +2116,8 @@ function lhdRetryMsg(conn, msg, n) {
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
   { v: '0.28.9',
-    tr: ['Biten ama henüz kaydedilmemiş ışık öğrenimi Home Assistant yeniden başlayınca kaybolmuyor; sonuç Kaydet\'e basılana kadar bekliyor. Önceden bu sırada yeniden başlatılırsa ölçüm baştan yapılmak zorundaydı.', 'Gizli yan menü Android\'de de (Home Assistant uygulaması, Fully Kiosk, tarayıcı) sol kenardan sağa kaydırınca açılıyor; önceden yalnız iPhone ve iPad\'de açılıyordu. Menünün dışına dokununca yine gizleniyor.', 'Telefonda uzun adlı süpürge ve iklim satırları kutudan taşmıyor; ad … ile kısalıyor. Sade satırlar yenilendi: düğmeler büyük, kapalı süpürgede tek düğme (başlat ya da duraklat); açık süpürgede Başlat/Duraklat ve İstasyona dön büyük düğmeleri, altında eşit kutularda Durdur, Bul, Emiş; açık iklimde Güç, Mod, Fan, Salınım tek sırada, ayrıntılar düğmesi başlıkta. Salınım ve emiş değerleri Türkçe.', 'Enerji → Cihazlar: Öğreniliyor mor ve yanıp sönen noktalı, Öğrenildi turkuaz; ikisi aynı maviydi.'],
-    en: ['A light learning that finished but is not saved yet is no longer lost when Home Assistant restarts; the result waits for Save. Before, a restart at that point meant measuring again from the start.', 'The hidden sidebar opens with a swipe right from the left edge on Android too (Home Assistant app, Fully Kiosk, browsers); before, only on iPhone and iPad. A tap outside hides it again.', 'On a phone, vacuum and climate rows with a long name no longer run out of their box; the name is cut with …. Simple rows refreshed: bigger buttons, one button on a closed vacuum row (start or pause); an open vacuum gets big Start/Pause and Go to dock buttons with Stop, Locate and Suction in even boxes below; an open climate row shows Power, Mode, Fan and Swing in one row, details button in the header. Swing and suction values translated.', 'Energy → Devices: Learning is purple with a blinking dot, Learned is turquoise; both were the same blue.'] },
+    tr: ['Biten ama henüz kaydedilmemiş ışık öğrenimi Home Assistant yeniden başlayınca kaybolmuyor; sonuç Kaydet\'e basılana kadar bekliyor. Önceden bu sırada yeniden başlatılırsa ölçüm baştan yapılmak zorundaydı.', 'Gizli yan menü Android\'de de (Home Assistant uygulaması, Fully Kiosk, tarayıcı) sol kenardan sağa kaydırınca açılıyor; önceden yalnız iPhone ve iPad\'de açılıyordu. Menünün dışına dokununca yine gizleniyor.', 'Telefonda uzun adlı süpürge ve iklim satırları kutudan taşmıyor; ad … ile kısalıyor. Sade satırlar yenilendi: düğmeler büyük, kapalı süpürgede tek düğme (başlat ya da duraklat); açık süpürgede Başlat/Duraklat ve İstasyona dön büyük düğmeleri, altında eşit kutularda Durdur, Bul, Emiş; açık iklimde Güç, Mod, Fan, Salınım tek sırada, ayrıntılar düğmesi başlıkta. Salınım ve emiş değerleri Türkçe.', 'Enerji → Cihazlar: Öğreniliyor mor ve yanıp sönen noktalı, Öğrenildi turkuaz; ikisi aynı maviydi.', 'Üst bar gizliyken iPhone\'da pano saatin ve pilin altına kaymıyor; iPad\'de üstteki koyu şerit panonun zemin rengini alıyor.'],
+    en: ['A light learning that finished but is not saved yet is no longer lost when Home Assistant restarts; the result waits for Save. Before, a restart at that point meant measuring again from the start.', 'The hidden sidebar opens with a swipe right from the left edge on Android too (Home Assistant app, Fully Kiosk, browsers); before, only on iPhone and iPad. A tap outside hides it again.', 'On a phone, vacuum and climate rows with a long name no longer run out of their box; the name is cut with …. Simple rows refreshed: bigger buttons, one button on a closed vacuum row (start or pause); an open vacuum gets big Start/Pause and Go to dock buttons with Stop, Locate and Suction in even boxes below; an open climate row shows Power, Mode, Fan and Swing in one row, details button in the header. Swing and suction values translated.', 'Energy → Devices: Learning is purple with a blinking dot, Learned is turquoise; both were the same blue.', 'With the top bar hidden the dashboard no longer slides under the clock and battery on an iPhone; on an iPad the dark strip at the top takes the dashboard\'s background colour.'] },
   { v: '0.28.8',
     tr: ['Prizin okuyamadığı bekleme: öğrenilen bir ışığın beklemesi 0 W çıktıysa (çoğu priz 1 W\'ın altını okuyamıyor) ışık kapalıyken ağdaysa 0,4 W sayılıyor; havuzda aynı model için ölçülmüş bekleme varsa o kullanılıyor. Işık kullanılamıyorsa (elektriği kesik) 0 W. Havuza gönderilen ölçümde 0 yerine "ölçülemedi" gidiyor.', 'Birden çok ışığı birlikte süren karo (ışık grubu, ör. iki şeridi yakan tek düğme) watt rozetinde ışıklarının toplam gücünü gösteriyor.', 'Yıl tahmini 2 haftadan az kayıtla yapılmıyor (1 günlük kayıttan yılı 52 kWh gösteriyordu); o zamana kadar yalnız sayılan kWh ve fatura girme önerisi.', 'Ayarlar: üstte bölümlere atlama düğmeleri; telefonda Ayarlar ve yönetim paneli bütün olarak kayıyor (sekme düzenleyici ekranı kaplayıp altta küçük bir alan bırakıyordu); orta genişlikte üst şerit sığıyor; Kanvas kutuları yan yana; oda düğmesi hizalama seçenekleri kısa adlı. Uzun açıklamalar iki satır, dokununca tamamı açılıyor.', 'Işığa basılı tutunca açılan pencere Ayarlar\'dan Stil seç\'e, ışık görünümünün yanına taşındı. Enerji\'de Görünüm ve Veri kaynağı tek sayfa: Görünüm ve veri.'],
     en: ['Standby a plug cannot read: if a learned light\'s standby read 0 W (most plugs cannot read under 1 W), it counts as 0.4 W while off and on the network; a standby measured for the same model in the pool is used if there is one. An unavailable light (power cut) is 0 W. Shared measurements send "not readable" instead of 0.', 'A tile that drives a light group (e.g. one button for two strips) shows the total power of its lights in the watt badge.', 'The year estimate is not made from under 2 weeks of records (one day showed the year as 52 kWh); until then only the counted kWh and a hint to enter a bill.', 'Settings: buttons at the top jump to each part; on a phone Settings and the admin page scroll as a whole (the tab editor filled the screen and left a small area below); the top bar fits on mid-size screens; the Canvas boxes sit side by side; shorter names for the room button align choices. Long descriptions show two lines and open in full on a tap.', 'The window a long press on a light opens moved from Settings to Choose a style, next to the light look. In Energy, Look and Data source are one page: Look and data.'] },
@@ -3353,6 +3353,16 @@ const LemurScale = (() => {
     if (!st) { st = document.createElement('style'); st.id = id; host.appendChild(st); }
     if (st.textContent !== css) st.textContent = css;
   }
+  // Üst bar gizliyken iOS uygulaması durum çubuğunu (saat, pil) sayfanın theme-color rengine boyar; HA bunu kendi üst barının
+  // rengine ayarlıyor, bar gizlenince tabletin üstünde panoya uymayan koyu bir şerit kalıyordu (#11). Pano açıkken zeminin
+  // ana rengi yazılır, pano kapanınca HA'nınki geri konur.
+  let tcOrig = null;
+  function themeColor(c) {
+    const m = document.querySelector && document.querySelector('meta[name=theme-color]');
+    if (!m) return;
+    if (c) { if (tcOrig === null) tcOrig = m.getAttribute('content') || ''; if (m.getAttribute('content') !== c) m.setAttribute('content', c); }
+    else if (tcOrig !== null) { m.setAttribute('content', tcOrig); tcOrig = null; }
+  }
   function apply(canvas, kiosk) {
     const m = mainRoot(); if (!m) return;
     const r = root(m);
@@ -3365,7 +3375,11 @@ const LemurScale = (() => {
     hidden = sideOff;
     style(m, KID, sideOff && !peek ? ':host{--ha-sidebar-width:0px !important;--ha-top-app-bar-width:100% !important}ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
     if (!sr) return;
-    style(sr, KID, active && lpKioskOn(k.hide_header) ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
+    // üst bar gizliyken içerik telefonun durum çubuğunun altına kaymasın: HA'nın kendi boşluğu (--safe-area-inset-top) bırakılır,
+    // zemin yine ekranın en üstüne kadar uzanır (#11)
+    const headOff = active && lpKioskOn(k.hide_header);
+    style(sr, KID, headOff ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) !important;min-height:100vh !important;box-sizing:border-box !important}' : '');
+    themeColor(headOff ? bgc : null);
     if (!active) { style(sr, ID, ''); return; }
     // telefon: ölçekleme yok, pano kendi telefon düzenini çizer (panel-card lpIsPhone ile aynı eşik)
     if (lpPhoneScreen()) { style(sr, ID, 'hui-view{min-height:0 !important;}'); return; }
@@ -3373,7 +3387,8 @@ const LemurScale = (() => {
     const kap = sr.querySelector('hui-view-container') || r;
     const g = kap.getBoundingClientRect().width;
     const bas = sr.querySelector('.header');
-    const top = bas && bas.offsetHeight ? bas.getBoundingClientRect().bottom : Math.max(0, kap.getBoundingClientRect().top);
+    let top = bas && bas.offsetHeight ? bas.getBoundingClientRect().bottom : Math.max(0, kap.getBoundingClientRect().top);
+    if (!(bas && bas.offsetHeight)) { const pt = parseFloat(getComputedStyle(kap).paddingTop) || 0; top += pt; }   // gizli barda durum çubuğu boşluğu
     const y = window.innerHeight - top;
     if (!g || !y) return;
     let gen = Math.max(W, Math.floor(g / y * H));
@@ -3384,7 +3399,7 @@ const LemurScale = (() => {
     const lh = Math.floor(y / z);
     style(sr, ID, 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}');
   }
-  let canvas = null, kiosk = null, hidden = false, peek = false;
+  let canvas = null, kiosk = null, bgc = null, hidden = false, peek = false;
   // son kiosk ayarı tarayıcıda saklı: sayfa yenilenince menü ayar gelene kadar görünüp kaybolmasın
   try { const sv = JSON.parse(localStorage.getItem('lhd-kiosk') || 'null'); if (sv && typeof sv === 'object') kiosk = sv; } catch (e) {}
   const run = () => apply(canvas, kiosk);
@@ -3426,7 +3441,7 @@ const LemurScale = (() => {
   setInterval(run, 1000);
   // açılışta sık bak: pano yüklenir yüklenmez gizlensin (ilk 5 saniye)
   let fast = 0; const fi = setInterval(() => { run(); if (++fast >= 50) clearInterval(fi); }, 100);
-  return { set(c, k) { canvas = c; kiosk = k || null; try { localStorage.setItem('lhd-kiosk', JSON.stringify(kiosk)); } catch (e) {} run(); }, run: run };
+  return { set(c, k, b) { canvas = c; kiosk = k || null; if (b) bgc = b; try { localStorage.setItem('lhd-kiosk', JSON.stringify(kiosk)); } catch (e) {} run(); }, run: run };
 })();
 
 // Pano stratejisi: `strategy: { type: custom:lemur-home-dashboard }` yazılan pano bu sınıfla üretilir.
@@ -3481,6 +3496,14 @@ function lpBgOf(s) {
   return s.bg && s.bg.mode === 'dark' ? LP_DARK_BG : (s.bg && s.bg.mode ? (lpBgCss(s.bg) || LP_DARK_BG) : LP_DEFAULT_BG);
 }
 
+// zeminin ana (en koyu, en alttaki) rengi: üst bar gizliyken telefonun durum çubuğu bu renge boyanır (#11)
+function lpBgBase(s) {
+  const b = (s || {}).bg || {};
+  if (b.mode === 'img' || b.mode === 'black') return '#000000';
+  const c = String(lpBgOf(s)).match(/#[0-9a-fA-F]{6}\b/g);
+  return c ? c[c.length - 1] : '#0b0e15';
+}
+
 class LemurHomeDashboardStrategy extends HTMLElement {
   static async generate(config, hass) {
     const lang = pickLang(hass);
@@ -3491,7 +3514,8 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     }
     const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
     const settings = data.settings || {};
-    LemurScale.set(settings.canvas || null, settings.kiosk || null);
+    const bgSet = lpPhoneScreen() ? lpPhoneMerge(settings) : settings;
+    LemurScale.set(settings.canvas || null, settings.kiosk || null, lpBgBase(bgSet));
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
     const bg = lpBgOf(lpPhoneScreen() ? lpPhoneMerge(settings) : settings);   // telefonda telefona özel zemin
     window.__LHD_VIEWS = tabs.map((x) => x.id);   // kartın gezinmesi bilsin: hangi sekmelerin HA'da görünümü var
@@ -4088,7 +4112,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
       this._def = null;
       const st = (d && d.settings) || {};
-      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
+      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null, lpBgBase(lpPhoneScreen() ? lpPhoneMerge(st) : st));   // ölçek ve kiosk ayarı canlı değişsin
       this._render();
     });
     if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
@@ -5110,7 +5134,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (el._menu === 'fan') { opts = fans; curO = a.fan_mode; }
       if (el._menu === 'swing') { opts = sw; curO = a.swing_mode; }
     }
-    if (el._open && !na) right = '<button class="cib" data-c="info" title="' + esc(t(lang, 'cl_more')) + '"><ha-icon icon="mdi:dots-horizontal"></ha-icon></button>';   // açıkken ayrıntılar başlıkta
+    if (el._open && !na) right = '<button class="cib" data-c="info" title="' + esc(t(lang, 'cl_more')) + '"><ha-icon icon="mdi:information-outline"></ha-icon></button>';   // açıkken ayrıntılar başlıkta
     let h = '<div class="cl1"><span class="cli">' + lpIcon(lpEntIcon(st, it.icon)) + '</span><div class="ct" data-c="tog"><b>' + name + '</b><span>' + sub + '</span></div><div class="crt">' + right + '</div>' +
       (na ? '' : '<span class="chev"><ha-icon icon="mdi:chevron-' + (el._open ? 'up' : 'down') + '"></ha-icon></span>') + '</div>';
     if (el._open && !na) {

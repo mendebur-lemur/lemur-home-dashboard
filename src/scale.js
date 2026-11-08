@@ -34,6 +34,16 @@ const LemurScale = (() => {
     if (!st) { st = document.createElement('style'); st.id = id; host.appendChild(st); }
     if (st.textContent !== css) st.textContent = css;
   }
+  // Üst bar gizliyken iOS uygulaması durum çubuğunu (saat, pil) sayfanın theme-color rengine boyar; HA bunu kendi üst barının
+  // rengine ayarlıyor, bar gizlenince tabletin üstünde panoya uymayan koyu bir şerit kalıyordu (#11). Pano açıkken zeminin
+  // ana rengi yazılır, pano kapanınca HA'nınki geri konur.
+  let tcOrig = null;
+  function themeColor(c) {
+    const m = document.querySelector && document.querySelector('meta[name=theme-color]');
+    if (!m) return;
+    if (c) { if (tcOrig === null) tcOrig = m.getAttribute('content') || ''; if (m.getAttribute('content') !== c) m.setAttribute('content', c); }
+    else if (tcOrig !== null) { m.setAttribute('content', tcOrig); tcOrig = null; }
+  }
   function apply(canvas, kiosk) {
     const m = mainRoot(); if (!m) return;
     const r = root(m);
@@ -46,7 +56,11 @@ const LemurScale = (() => {
     hidden = sideOff;
     style(m, KID, sideOff && !peek ? ':host{--ha-sidebar-width:0px !important;--ha-top-app-bar-width:100% !important}ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
     if (!sr) return;
-    style(sr, KID, active && lpKioskOn(k.hide_header) ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:0 !important;min-height:100vh !important}' : '');
+    // üst bar gizliyken içerik telefonun durum çubuğunun altına kaymasın: HA'nın kendi boşluğu (--safe-area-inset-top) bırakılır,
+    // zemin yine ekranın en üstüne kadar uzanır (#11)
+    const headOff = active && lpKioskOn(k.hide_header);
+    style(sr, KID, headOff ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) !important;min-height:100vh !important;box-sizing:border-box !important}' : '');
+    themeColor(headOff ? bgc : null);
     if (!active) { style(sr, ID, ''); return; }
     // telefon: ölçekleme yok, pano kendi telefon düzenini çizer (panel-card lpIsPhone ile aynı eşik)
     if (lpPhoneScreen()) { style(sr, ID, 'hui-view{min-height:0 !important;}'); return; }
@@ -54,7 +68,8 @@ const LemurScale = (() => {
     const kap = sr.querySelector('hui-view-container') || r;
     const g = kap.getBoundingClientRect().width;
     const bas = sr.querySelector('.header');
-    const top = bas && bas.offsetHeight ? bas.getBoundingClientRect().bottom : Math.max(0, kap.getBoundingClientRect().top);
+    let top = bas && bas.offsetHeight ? bas.getBoundingClientRect().bottom : Math.max(0, kap.getBoundingClientRect().top);
+    if (!(bas && bas.offsetHeight)) { const pt = parseFloat(getComputedStyle(kap).paddingTop) || 0; top += pt; }   // gizli barda durum çubuğu boşluğu
     const y = window.innerHeight - top;
     if (!g || !y) return;
     let gen = Math.max(W, Math.floor(g / y * H));
@@ -65,7 +80,7 @@ const LemurScale = (() => {
     const lh = Math.floor(y / z);
     style(sr, ID, 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}');
   }
-  let canvas = null, kiosk = null, hidden = false, peek = false;
+  let canvas = null, kiosk = null, bgc = null, hidden = false, peek = false;
   // son kiosk ayarı tarayıcıda saklı: sayfa yenilenince menü ayar gelene kadar görünüp kaybolmasın
   try { const sv = JSON.parse(localStorage.getItem('lhd-kiosk') || 'null'); if (sv && typeof sv === 'object') kiosk = sv; } catch (e) {}
   const run = () => apply(canvas, kiosk);
@@ -107,5 +122,5 @@ const LemurScale = (() => {
   setInterval(run, 1000);
   // açılışta sık bak: pano yüklenir yüklenmez gizlensin (ilk 5 saniye)
   let fast = 0; const fi = setInterval(() => { run(); if (++fast >= 50) clearInterval(fi); }, 100);
-  return { set(c, k) { canvas = c; kiosk = k || null; try { localStorage.setItem('lhd-kiosk', JSON.stringify(kiosk)); } catch (e) {} run(); }, run: run };
+  return { set(c, k, b) { canvas = c; kiosk = k || null; if (b) bgc = b; try { localStorage.setItem('lhd-kiosk', JSON.stringify(kiosk)); } catch (e) {} run(); }, run: run };
 })();

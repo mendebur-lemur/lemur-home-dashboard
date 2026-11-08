@@ -552,7 +552,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
       this._def = null;
       const st = (d && d.settings) || {};
-      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null);   // ölçek ve kiosk ayarı canlı değişsin
+      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null, lpBgBase(lpPhoneScreen() ? lpPhoneMerge(st) : st));   // ölçek ve kiosk ayarı canlı değişsin
       this._render();
     });
     if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
@@ -1574,7 +1574,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (el._menu === 'fan') { opts = fans; curO = a.fan_mode; }
       if (el._menu === 'swing') { opts = sw; curO = a.swing_mode; }
     }
-    if (el._open && !na) right = '<button class="cib" data-c="info" title="' + esc(t(lang, 'cl_more')) + '"><ha-icon icon="mdi:dots-horizontal"></ha-icon></button>';   // açıkken ayrıntılar başlıkta
+    if (el._open && !na) right = '<button class="cib" data-c="info" title="' + esc(t(lang, 'cl_more')) + '"><ha-icon icon="mdi:information-outline"></ha-icon></button>';   // açıkken ayrıntılar başlıkta
     let h = '<div class="cl1"><span class="cli">' + lpIcon(lpEntIcon(st, it.icon)) + '</span><div class="ct" data-c="tog"><b>' + name + '</b><span>' + sub + '</span></div><div class="crt">' + right + '</div>' +
       (na ? '' : '<span class="chev"><ha-icon icon="mdi:chevron-' + (el._open ? 'up' : 'down') + '"></ha-icon></span>') + '</div>';
     if (el._open && !na) {
