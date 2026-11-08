@@ -980,7 +980,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const lecLights = [];
     this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
     this._watched = tiles.concat(rows, clrW, lecLights, cams.map((x) => x.entity), vals.concat(ents, ssItems).map((x) => x.entity).filter((x) => x && tiles.indexOf(x) < 0), visW);
-    this._badges.forEach((el) => { if (this._watched.indexOf(el._pw) < 0) this._watched.push(el._pw); });
+    this._badges.forEach((el) => [].concat(el._pw).forEach((x) => { if (this._watched.indexOf(x) < 0) this._watched.push(x); }));
     if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
     this._lang = lang;
@@ -1897,7 +1897,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     (this._pets || []).forEach((el) => lpPetPaint(el, lang, Date.now()));
     (this._badges || []).forEach((el) => {
-      const w = lpEnW(S, el._pw), lst = S[el.getAttribute('data-light')], on = !!lst && LP_ON.indexOf(lst.state) >= 0;
+      const w = lpEnWSum(S, el._pw), lst = S[el.getAttribute('data-light')], on = !!lst && LP_ON.indexOf(lst.state) >= 0;
       let b = el.querySelector('.enb');
       if (w === null || !(on || lpEnBadge() === 'always')) { if (b) b.parentNode.removeChild(b); return; }
       if (!b) { b = document.createElement('span'); b.className = 'enb'; el.appendChild(b); }

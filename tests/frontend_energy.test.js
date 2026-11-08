@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
+vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -368,4 +368,18 @@ test('a measured light whose standby read 0 counts 0.4 W while off and reachable
   assert.strictEqual(E.lpEnEstW(e, { state: 'unavailable', attributes: {} }), 0);
   assert.strictEqual(E.lpEnEstW(Object.assign({}, e, { idle: 0.3 }), { state: 'off', attributes: {} }), 0.3);
   assert.strictEqual(E.lpEnEstW(Object.assign({}, e, { lut: null }), { state: 'off', attributes: {} }), 0);
+});
+
+test('a light group tile sums its members\' power (v0.28.8)', () => {
+  E.LP_EN.tp = {};
+  const h = { states: {
+    'light.tavan_serit': { state: 'on', attributes: { entity_id: ['light.salon_serit', 'light.mutfak_serit'] } },
+    'light.salon_serit': { state: 'on', attributes: {} }, 'light.mutfak_serit': { state: 'on', attributes: {} },
+    'sensor.salon_serit_power': pw(42.3), 'sensor.mutfak_serit_power': pw(38.5)
+  }, entities: {} };
+  const p = E.lpEnTileP(h, 'light.tavan_serit');
+  assert.deepStrictEqual(Array.from(p), ['sensor.salon_serit_power', 'sensor.mutfak_serit_power']);
+  assert.strictEqual(Math.round(E.lpEnWSum(h.states, p) * 10) / 10, 80.8);
+  assert.strictEqual(E.lpEnWSum(h.states, 'sensor.salon_serit_power'), 42.3);
+  E.LP_EN.tp = {};
 });

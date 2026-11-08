@@ -2116,8 +2116,8 @@ function lhdRetryMsg(conn, msg, n) {
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
   { v: '0.28.8',
-    tr: ['Prizin okuyamadığı bekleme: öğrenilen bir ışığın beklemesi 0 W çıktıysa (çoğu priz 1 W\'ın altını okuyamıyor) ışık kapalıyken ağdaysa 0,4 W sayılıyor; havuzda aynı model için ölçülmüş bekleme varsa o kullanılıyor. Işık kullanılamıyorsa (elektriği kesik) 0 W. Havuza gönderilen ölçümde 0 yerine "ölçülemedi" gidiyor.'],
-    en: ['Standby a plug cannot read: if a learned light\'s standby read 0 W (most plugs cannot read under 1 W), it counts as 0.4 W while off and on the network; a standby measured for the same model in the pool is used if there is one. An unavailable light (power cut) is 0 W. Shared measurements send "not readable" instead of 0.'] },
+    tr: ['Prizin okuyamadığı bekleme: öğrenilen bir ışığın beklemesi 0 W çıktıysa (çoğu priz 1 W\'ın altını okuyamıyor) ışık kapalıyken ağdaysa 0,4 W sayılıyor; havuzda aynı model için ölçülmüş bekleme varsa o kullanılıyor. Işık kullanılamıyorsa (elektriği kesik) 0 W. Havuza gönderilen ölçümde 0 yerine "ölçülemedi" gidiyor.', 'Birden çok ışığı birlikte süren karo (ışık grubu, ör. iki şeridi yakan tek düğme) watt rozetinde ışıklarının toplam gücünü gösteriyor.'],
+    en: ['Standby a plug cannot read: if a learned light\'s standby read 0 W (most plugs cannot read under 1 W), it counts as 0.4 W while off and on the network; a standby measured for the same model in the pool is used if there is one. An unavailable light (power cut) is 0 W. Shared measurements send "not readable" instead of 0.', 'A tile that drives a light group (e.g. one button for two strips) shows the total power of its lights in the watt badge.'] },
   { v: '0.28.7',
     tr: ['Aynı köprüdeki ya da MQTT üzerinden bağlı ışıklar aynı anda öğrenilebiliyor (her biri kendi prizinde). Önceden biri bitmeden öteki başlatılamıyordu; aynı anda en çok 3 ışık.'],
     en: ['Lights on the same bridge or behind MQTT can learn at the same time (each on its own plug). Before, one had to finish first; up to 3 lights at once.'] },
@@ -4486,7 +4486,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const lecLights = [];
     this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
     this._watched = tiles.concat(rows, clrW, lecLights, cams.map((x) => x.entity), vals.concat(ents, ssItems).map((x) => x.entity).filter((x) => x && tiles.indexOf(x) < 0), visW);
-    this._badges.forEach((el) => { if (this._watched.indexOf(el._pw) < 0) this._watched.push(el._pw); });
+    this._badges.forEach((el) => [].concat(el._pw).forEach((x) => { if (this._watched.indexOf(x) < 0) this._watched.push(x); }));
     if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
     this._lang = lang;
@@ -5403,7 +5403,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     });
     (this._pets || []).forEach((el) => lpPetPaint(el, lang, Date.now()));
     (this._badges || []).forEach((el) => {
-      const w = lpEnW(S, el._pw), lst = S[el.getAttribute('data-light')], on = !!lst && LP_ON.indexOf(lst.state) >= 0;
+      const w = lpEnWSum(S, el._pw), lst = S[el.getAttribute('data-light')], on = !!lst && LP_ON.indexOf(lst.state) >= 0;
       let b = el.querySelector('.enb');
       if (w === null || !(on || lpEnBadge() === 'always')) { if (b) b.parentNode.removeChild(b); return; }
       if (!b) { b = document.createElement('span'); b.className = 'enb'; el.appendChild(b); }
@@ -6652,6 +6652,12 @@ function lpEnFlowNow(S) {
 }
 function lpEnBadge() { const b = lpEnCfg().badge; return b === 'on' || b === 'always' ? b : ''; }
 const lpEnIsPow = (st) => !!st && (st.attributes.device_class === 'power' || /^(W|kW)$/.test(String(st.attributes.unit_of_measurement || '')));
+// karonun gücü: tek sensör ya da grubun üyelerinin toplamı (okunamayanlar atlanır; hiçbiri okunmazsa null)
+function lpEnWSum(S, p) {
+  if (!Array.isArray(p)) return lpEnW(S, p);
+  let t = null; p.forEach((x) => { const w = lpEnW(S, x); if (w !== null) t = (t || 0) + w; });
+  return t;
+}
 function lpEnW(S, id) {
   const st = id && S[id]; if (!st) return null;
   const v = parseFloat(st.state); if (!isFinite(v)) return null;
@@ -7157,7 +7163,7 @@ function lpEnPopHtml(h, M, catId, lang) {
     '</div><div class="enpf">' + esc(lpEnT(lang, 'devs', { n: L.length })) + '</div></div></div>';
 }
 // ışık / priz karosunun güç sensörü (karoda watt rozeti için): aynı cihazın güç sensörü ya da sensor.<ad>_power
-function lpEnTileP(h, id) {
+function lpEnTileP(h, id, dep) {
   if (Object.prototype.hasOwnProperty.call(LP_EN.tp, id)) return LP_EN.tp[id];
   const S = h.states || {}, E = h.entities || {}, obj = id.split('.')[1];
   let p = null;
@@ -7166,6 +7172,12 @@ function lpEnTileP(h, id) {
   ['sensor.' + obj + '_power', 'sensor.' + obj + '_guc'].forEach((x) => { if (!p && lpEnIsPow(S[x])) p = x; });
   const dv = E[id] && E[id].device_id;
   if (!p && dv) { const L = Object.keys(E).filter((x) => E[x].device_id === dv && x.indexOf('sensor.') === 0 && lpEnIsPow(S[x]) && !/standby|bekleme/.test(x)); if (L.length) p = L.sort((a, b) => a.length - b.length)[0]; }
+  // ışık grubu (birden çok ışığı birlikte süren karo): kendi sensörü yoksa üyelerinin güç sensörleri, karoda toplamları
+  const mem = S[id] && S[id].attributes && S[id].attributes.entity_id;
+  if (!p && Array.isArray(mem) && mem.length && (dep || 0) < 3) {
+    const L = []; mem.forEach((m) => { if (m === id || !S[m]) return; const q = lpEnTileP(h, m, (dep || 0) + 1); [].concat(q || []).forEach((x) => { if (L.indexOf(x) < 0) L.push(x); }); });
+    if (L.length) p = L.length === 1 ? L[0] : L;
+  }
   if (S[id]) LP_EN.tp[id] = p;   // cihaz henüz yüklenmediyse sonra yeniden bakılır
   return p;
 }

@@ -294,6 +294,12 @@ function lpEnFlowNow(S) {
 }
 function lpEnBadge() { const b = lpEnCfg().badge; return b === 'on' || b === 'always' ? b : ''; }
 const lpEnIsPow = (st) => !!st && (st.attributes.device_class === 'power' || /^(W|kW)$/.test(String(st.attributes.unit_of_measurement || '')));
+// karonun gücü: tek sensör ya da grubun üyelerinin toplamı (okunamayanlar atlanır; hiçbiri okunmazsa null)
+function lpEnWSum(S, p) {
+  if (!Array.isArray(p)) return lpEnW(S, p);
+  let t = null; p.forEach((x) => { const w = lpEnW(S, x); if (w !== null) t = (t || 0) + w; });
+  return t;
+}
 function lpEnW(S, id) {
   const st = id && S[id]; if (!st) return null;
   const v = parseFloat(st.state); if (!isFinite(v)) return null;
@@ -799,7 +805,7 @@ function lpEnPopHtml(h, M, catId, lang) {
     '</div><div class="enpf">' + esc(lpEnT(lang, 'devs', { n: L.length })) + '</div></div></div>';
 }
 // ışık / priz karosunun güç sensörü (karoda watt rozeti için): aynı cihazın güç sensörü ya da sensor.<ad>_power
-function lpEnTileP(h, id) {
+function lpEnTileP(h, id, dep) {
   if (Object.prototype.hasOwnProperty.call(LP_EN.tp, id)) return LP_EN.tp[id];
   const S = h.states || {}, E = h.entities || {}, obj = id.split('.')[1];
   let p = null;
@@ -808,6 +814,12 @@ function lpEnTileP(h, id) {
   ['sensor.' + obj + '_power', 'sensor.' + obj + '_guc'].forEach((x) => { if (!p && lpEnIsPow(S[x])) p = x; });
   const dv = E[id] && E[id].device_id;
   if (!p && dv) { const L = Object.keys(E).filter((x) => E[x].device_id === dv && x.indexOf('sensor.') === 0 && lpEnIsPow(S[x]) && !/standby|bekleme/.test(x)); if (L.length) p = L.sort((a, b) => a.length - b.length)[0]; }
+  // ışık grubu (birden çok ışığı birlikte süren karo): kendi sensörü yoksa üyelerinin güç sensörleri, karoda toplamları
+  const mem = S[id] && S[id].attributes && S[id].attributes.entity_id;
+  if (!p && Array.isArray(mem) && mem.length && (dep || 0) < 3) {
+    const L = []; mem.forEach((m) => { if (m === id || !S[m]) return; const q = lpEnTileP(h, m, (dep || 0) + 1); [].concat(q || []).forEach((x) => { if (L.indexOf(x) < 0) L.push(x); }); });
+    if (L.length) p = L.length === 1 ? L[0] : L;
+  }
   if (S[id]) LP_EN.tp[id] = p;   // cihaz henüz yüklenmediyse sonra yeniden bakılır
   return p;
 }
