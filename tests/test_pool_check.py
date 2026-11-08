@@ -35,3 +35,22 @@ def test_strip_per_meter_scales_effect_table():
          "lut": {"br": {"b": [1, 100], "w": [1.0, 10.0]}, "fx": {"e": {"Fire": 4.0}, "avg": 4.0, "b": [10, 100], "r": [0.5, 1.0]}}}
     t = common.per_meter(c)
     assert t["fx"]["e"]["Fire"] == 2.0 and t["fx"]["avg"] == 2.0 and t["fx"]["r"] == [0.5, 1.0]
+
+
+def _hs(rows):
+    return {"hs": {"h": [0, 120, 240], "s": [100], "b": [1, 5, 10, 25, 40, 60, 80, 100], "w": [rows]}}
+
+
+def test_stuck_plug_row_rejected():
+    ok = [6.3, 7.7, 8.7, 10.5, 12.5, 14.8, 17.6, 20.5]
+    errs, _ = common.check(_sub(lut=_hs([ok, [7.3] * 8, ok])))   # #13: the plug stopped sending, a row kept one value
+    assert any("takılmış" in e for e in errs)
+    errs, _ = common.check(_sub(lut=_hs([ok, [6, 7, 9, 11, 12.8, 12.8, 12.8, 12.8], ok])))   # stops well under the others
+    assert any("takılmış" in e for e in errs)
+    errs, _ = common.check(_sub(lut=_hs([ok, [6, 7, 9, 11, 19.5, 19.5, 19.5, 19.5], ok])))   # a real cap near the others: fine
+    assert errs == []
+
+
+def test_zero_watts_rejected():
+    errs, _ = common.check(_sub(lut={"ct": {"k": [2200, 6500], "b": [1, 50, 100], "w": [[0.0, 3.0, 7.0], [0.6, 3.2, 7.4]]}}))   # #14
+    assert any("0 W" in e for e in errs)

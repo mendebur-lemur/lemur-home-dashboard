@@ -36,6 +36,9 @@ NO_FX = ("", "none", "None", "off", "Off", "solid", "Solid")
 ACTIVE = ("start", "standby", "probe", "run", "fx", "paused", "listen")
 SETTLE_PCT = 0.03       # three readings within 3% (or 0.15 W) count as settled
 SETTLE_ABS = 0.15
+FLOOR_W = 0.05          # a lit light read at or below this: the plug cannot measure that low (v0.28.11), filled in at the end
+DROP_BACK = 120.0       # steps finished this many seconds before the plug dropped out are measured again (it went quiet first)
+CHECK_MAX = 60          # the check pass after the colors measures at most this many odd-looking cells again
 
 
 class _Base:
@@ -87,10 +90,26 @@ class LightLearn(_Base):
         self.resumed = False
         self.started_steps = 0
         self.t_steps = 0.0   # seconds spent on measured steps since start/resume (for the time left)
+        self.rechecked = 0   # cells measured again (after a plug dropout or in the check pass)
+        self.floor_n = 0     # cells below what the plug can read, filled in from the brightness curve
+        self.checked = False   # the check pass after the colors is done
+        self._done: list[tuple[float, int]] = []   # (monotonic time, step) of finished color steps: a dropout looks back at them
+        self._drops: list[float] = []
+        self._unsub_plug = None
 
     # ---- control ----
     def start(self) -> None:
         self._task = self.hass.async_create_background_task(self._run(), f"lhd_learn_{self.id}")
+
+        @callback
+        def plug_changed(ev) -> None:
+            ns = ev.data.get("new_state")
+            if ns is None or ns.state in ("unavailable", "unknown"):
+                self._drops.append(time.monotonic())
+        try:
+            self._unsub_plug = async_track_state_change_event(self.hass, [self.plug], plug_changed)
+        except Exception:  # noqa: BLE001 - only the dropout check is lost
+            self._unsub_plug = None
 
     async def pause(self) -> None:
         if self.phase in ("run", "probe", "standby", "fx"):
@@ -129,11 +148,12 @@ class LightLearn(_Base):
         eta_fx = n_fx * (fxw + 3)
         st.update(i=self.i, n=n, cur=self.cur, w=self.last_w, standby=self.standby, probe=self.probe, plan=self.plan, res=self.res,
                   repeats=self.repeats, eta=round(eta_col + eta_fx if left > 0 else 0), eta_col=round(eta_col), eta_fx=round(eta_fx), n_col=n_col, n_fx=n_fx,
-                  every=self._interval_seen(), resumed=self.resumed, result=self.result, fx_n=len(self.fx_names), skip_fx=self.skip_fx)
+                  every=self._interval_seen(), resumed=self.resumed, result=self.result, fx_n=len(self.fx_names), skip_fx=self.skip_fx,
+                  rechecked=self.rechecked, floor_n=self.floor_n)
         return st
 
     # ---- saved form (goes on after a restart) ----
-    KEEP = ("interval", "prev", "steps", "i", "standby", "probe", "plan", "res", "repeats", "settle_s", "fx_names", "skip_fx", "bridge", "started")
+    KEEP = ("interval", "prev", "steps", "i", "standby", "probe", "plan", "res", "repeats", "settle_s", "fx_names", "skip_fx", "bridge", "started", "rechecked", "floor_n", "checked")
 
     def to_dict(self) -> dict:
         d = {k: getattr(self, k) for k in self.KEEP}
@@ -173,20 +193,45 @@ class LightLearn(_Base):
             return None, None
         return EST.watts_of(st), getattr(st, "last_reported", None) or st.last_updated
 
-    async def _settle(self) -> float:
-        """Wait until the plug's watts settle after a change and return them."""
+    async def _refresh(self) -> bool:
+        """Ask the plug for a reading now (Home Assistant's update_entity: Shelly, Tasmota and most plugs read again).
+        A plug that only sends changes stays quiet when the watts barely change; a quiet plug can also be one that is
+        dropping away (it stops sending first, Home Assistant marks it unavailable a minute or so later). A fresh reading
+        tells the two apart. False: the service is not there (then the old way: the last reading counts)."""
+        if not self.hass.services.has_service("homeassistant", "update_entity"):
+            return False
+        try:
+            await asyncio.wait_for(self.hass.services.async_call("homeassistant", "update_entity", {"entity_id": self.plug}, blocking=True), 10)
+        except Exception:  # noqa: BLE001 - a plug that does not answer stays quiet and the step is tried again
+            pass
+        return True
+
+    def _plug_down(self) -> bool:
+        st = self.hass.states.get(self.plug)
+        return st is None or st.state in ("unavailable", "unknown")
+
+    async def _settle(self, since: Any = None) -> float:
+        """Wait until the plug's watts settle after a change and return them.
+        Only readings sent after the command count (since): a plug that went quiet does not hand over its old number
+        (v0.28.11; before, a plug dropping away gave the same watts to a row of steps). When nothing new comes, the plug
+        is asked for a reading; a plug that does not answer, or goes unavailable, fails the step (tried again later)."""
         await asyncio.sleep(self.first_wait if self.first_wait is not None else min(3.0, 1.0 + self.interval / 2))
         t0 = time.monotonic()
         vals: list[float] = []
         seen = None
         last_new = t0
+        asked = 0
         quiet = self.quiet if self.quiet is not None else max(8.0, self.interval * 3)
         limit = max(quiet * 2, max(60.0, self.interval * 8) if self.quiet is None else quiet * 4)
         while True:
             await self._go.wait()
+            if self._plug_down():
+                self._drops.append(time.monotonic())
+                raise RuntimeError("plug_drop")
             w, ts = self._reading()
             now = time.monotonic()
-            if w is not None and ts != seen:
+            fresh = since is None or ts is None or ts > since
+            if w is not None and fresh and ts != seen:
                 seen = ts
                 if not vals or abs(w - vals[-1]) > 1e-9:
                     last_new = now
@@ -197,13 +242,26 @@ class LightLearn(_Base):
                 if max(tail) - min(tail) <= max(SETTLE_ABS, m * SETTLE_PCT):
                     self.settle_s.append(now - t0)
                     return round(sorted(tail)[1], 2)
-            if vals and now - last_new >= quiet:     # a plug that only reports changes: the same value for long
-                self.settle_s.append(now - t0)
-                return round(vals[-1], 2)
+            if now - last_new >= quiet:     # nothing new for a while: the watts did not change, or the plug went quiet
+                if asked < 4 and await self._refresh():
+                    asked += 1
+                    last_new = time.monotonic() - quiet + min(2.0, quiet)   # look again shortly
+                    continue
+                if asked >= 4 and len(vals) >= 2 and abs(vals[-1] - vals[-2]) <= max(SETTLE_ABS, vals[-1] * SETTLE_PCT):
+                    self.settle_s.append(now - t0)
+                    return round(vals[-1], 2)
+                if asked == 0 and vals:      # no update_entity (tests, very old setups): the last fresh reading
+                    self.settle_s.append(now - t0)
+                    return round(vals[-1], 2)
+                if asked == 0 and not vals and since is not None:
+                    w0 = self._reading()[0]
+                    if w0 is not None:
+                        self.settle_s.append(now - t0)
+                        return round(w0, 2)
             if now - t0 >= limit:
                 self.repeats += 1
-                if vals:
-                    return round(vals[-1], 2)
+                if len(vals) >= 2:
+                    return round(sorted(vals[-3:])[len(vals[-3:]) // 2], 2)
                 raise RuntimeError("plug_silent")
             await asyncio.sleep(self.poll)
 
@@ -296,6 +354,8 @@ class LightLearn(_Base):
             self.res["fxc"].setdefault(q["e"], {})[str(q["b"])] = w
             return
         bi = LUT.BRI.index(q["b"])
+        if w is not None and w <= FLOOR_W:
+            w = None     # lit but below what the plug reads: filled in from the row at the end (_fill_floor)
         if q["t"] == "ct":
             self.res["ct"]["w"][self.plan["k"].index(q["k"])][bi] = w
         elif q["t"] == "hs":
@@ -312,8 +372,9 @@ class LightLearn(_Base):
         elif q["t"] in ("fx", "fxb"):
             data["effect"] = q["e"]
         p0 = self._pauses
+        since = dt_util.utcnow()
         await self._light(True, **data)
-        w = await (self._average(self._fxw()) if q["t"] in ("fx", "fxb") else self._settle())
+        w = await (self._average(self._fxw()) if q["t"] in ("fx", "fxb") else self._settle(since))
         if self._pauses != p0:   # paused in between: the light was put back, measure this step again
             return await self._step(q)
         st = self.hass.states.get(self.entity)
@@ -340,14 +401,23 @@ class LightLearn(_Base):
     async def _step_safe(self, q: dict) -> float:
         """A step that rides out a short outage: the light or plug dropping away, or a light that reports late.
         Tried up to three times; only then the run stops (and can go on from this step later)."""
-        for n in range(3):
+        n = plug_n = 0
+        while True:
             try:
                 return await self._step(q)
             except asyncio.CancelledError:
                 raise
-            except Exception:  # noqa: BLE001 - retried below
-                if n == 2:
-                    raise
+            except Exception as err:  # noqa: BLE001 - retried below
+                if str(err) in ("plug_drop", "plug_silent"):
+                    # the plug went quiet or away (v0.28.11): the steps just before are measured again once it is back
+                    self._drops.append(time.monotonic())
+                    plug_n += 1
+                    if plug_n >= 10:
+                        raise
+                else:
+                    n += 1
+                    if n >= 3:
+                        raise
                 if self.msg == "external":
                     # turned off from elsewhere, or the light reported "on" late: look again in a moment
                     await asyncio.sleep(self.late_wait)
@@ -357,7 +427,6 @@ class LightLearn(_Base):
                     self.msg = ""
                 if not await self._wait_ready(600):
                     raise
-        raise RuntimeError("step")
 
     async def _run(self) -> None:
         if self.resumed and not await self._wait_ready():
@@ -375,8 +444,9 @@ class LightLearn(_Base):
                      "hs_color": list(a.get("hs_color")) if a.get("hs_color") else None, "effect": a.get("effect")}
         try:
             self.phase = "standby"
+            since = dt_util.utcnow()
             await self._light(False)
-            self.standby = await self._settle()
+            self.standby = await self._settle(since)
             self.last_w = self.standby
             self.phase = "probe"
             modes = set(a.get("supported_color_modes") or [])
@@ -385,8 +455,9 @@ class LightLearn(_Base):
                 probe += [("red", {"hs_color": [0, 100]}), ("green", {"hs_color": [120, 100]}), ("blue", {"hs_color": [240, 100]})]
             for name, extra in probe:
                 self.cur = {"t": "probe", "c": name}
+                since = dt_util.utcnow()
                 await self._light(True, brightness_pct=100, **extra)
-                w = await self._settle()
+                w = await self._settle(since)
                 self.last_w = w
                 self.probe.append({"c": name, "w": w})
             ws = [p["w"] for p in self.probe]
@@ -425,7 +496,12 @@ class LightLearn(_Base):
                     self.t_steps += time.monotonic() - t0
                 self.last_w = w
                 self._put(q, w)
+                if q["t"] not in ("fx", "fxb"):
+                    self._done.append((time.monotonic(), self.i))
                 self.i += 1
+                await self._after_drop()
+                if not self.checked and q["t"] not in ("fx", "fxb") and (self.i == len(self.steps) or self.steps[self.i]["t"] in ("fx", "fxb")):
+                    await self._check_pass()
                 if self.on_step:
                     self.on_step()
                 if self.i == len(self.steps) and self.res.get("fxl") and not any(x["t"] == "fxb" for x in self.steps) and not self.skip_fx:
@@ -433,6 +509,9 @@ class LightLearn(_Base):
                     order = sorted(self.res["fxl"], key=lambda e: self.res["fxl"][e])
                     pick = list(dict.fromkeys([order[-1], order[0], order[len(order) // 2]]))
                     self.steps += [{"t": "fxb", "e": e, "b": b} for e in pick for b in FX_CURVE]
+            if not self.checked:
+                await self._check_pass()
+            self._fill_floor()
             table = {k: v for k, v in self.res.items() if k in ("ct", "hs", "br")}
             fx = self._fx_table()
             if fx:
@@ -440,7 +519,8 @@ class LightLearn(_Base):
             tb = LUT.valid_lut(table)
             lo, hi = LUT.span(tb)
             self.result = {"lut": tb, "standby": self.standby, "min": round(lo, 2), "max": round(hi, 2), "n": LUT.count(tb),
-                           "settle": round(sum(self.settle_s) / len(self.settle_s), 1) if self.settle_s else None, "repeats": self.repeats}
+                           "settle": round(sum(self.settle_s) / len(self.settle_s), 1) if self.settle_s else None, "repeats": self.repeats,
+                           "rechecked": self.rechecked, "floor": self.floor_n}
             self.phase = "done"
             self.cur = None
         except asyncio.CancelledError:
@@ -453,9 +533,103 @@ class LightLearn(_Base):
         finally:
             if self.phase != "paused":
                 await self._restore()
+            if self.phase in ("done", "error", "stopped") and self._unsub_plug:
+                self._unsub_plug()
+                self._unsub_plug = None
             if self.on_step and self.phase in ("done", "error"):
                 self.on_step()   # bitti: kayıttan düşer
 
+
+    # ---- consistency (v0.28.11) ----
+    def _rows(self) -> list[tuple[list, list[dict]]]:
+        """Every brightness row of the table with the step behind each cell."""
+        out = []
+        r = self.res
+        if r.get("ct"):
+            for k, row in zip(self.plan["k"], r["ct"]["w"]):
+                out.append((row, [{"t": "ct", "k": k, "b": b} for b in LUT.BRI]))
+        if r.get("hs"):
+            for s, rows in zip(self.plan["s"], r["hs"]["w"]):
+                for h, row in zip(self.plan["h"], rows):
+                    out.append((row, [{"t": "hs", "h": h, "s": s, "b": b} for b in LUT.BRI]))
+        if r.get("br"):
+            out.append((r["br"]["w"], [{"t": "br", "b": b} for b in LUT.BRI]))
+        return out
+
+    @staticmethod
+    def _odd(row: list) -> set[int]:
+        """Cells of a row that look wrong: the same watts at three or more brightness steps in a row (a plug that stopped
+        sending), or a step that falls well below the one before it while brightness rises."""
+        bad: set[int] = set()
+        v = [x if isinstance(x, (int, float)) else None for x in row]
+        run = 1
+        for j in range(1, len(v) + 1):
+            if j < len(v) and v[j] is not None and v[j - 1] is not None and v[j] > 0.5 and abs(v[j] - v[j - 1]) < 0.05:
+                run += 1
+                continue
+            if run >= 3:
+                bad.update(range(j - run, j))
+            run = 1
+        for j in range(1, len(v)):
+            if v[j] is not None and v[j - 1] is not None and v[j] < v[j - 1] * 0.85 - 0.2:
+                bad.update((j - 1, j))
+        return bad
+
+    async def _remeasure(self, q: dict, old: float | None) -> None:
+        w = await self._step_safe(q)
+        self.rechecked += 1
+        if old is not None and abs(w - old) > max(0.3, old * 0.05):
+            w3 = await self._step_safe(q)   # the two disagree: a third one decides
+            self.rechecked += 1
+            w = sorted([old, w, w3])[1]
+        self._put(q, w)
+
+    async def _after_drop(self) -> None:
+        """The plug dropped out: it went quiet before Home Assistant marked it, so the steps just before are measured again."""
+        if not self._drops:
+            return
+        d = min(self._drops)
+        self._drops.clear()
+        redo = [i for t, i in self._done if t >= d - DROP_BACK]
+        self._done = [(t, i) for t, i in self._done if t < d - DROP_BACK]
+        if not redo:
+            return
+        if not await self._wait_ready(600):
+            raise RuntimeError("plug_silent")
+        for i in sorted(set(redo)):
+            q = self.steps[i]
+            self.cur = q
+            self._put(q, await self._step_safe(q))
+            self.rechecked += 1
+
+    async def _check_pass(self) -> None:
+        """After the colors: cells that look wrong are measured again (twice when the new reading disagrees)."""
+        self.checked = True
+        todo = []
+        for row, qs in self._rows():
+            for j in sorted(self._odd(row)):
+                todo.append((qs[j], row[j]))
+        for q, old in todo[:CHECK_MAX]:
+            self.cur = q
+            await self._remeasure(q, old)
+            await self._after_drop()
+
+    def _fill_floor(self) -> None:
+        """Cells below what the plug reads (None): scaled down from the first readable brightness in the same row."""
+        n = 0
+        for row, _ in self._rows():
+            j0 = next((j for j, x in enumerate(row) if isinstance(x, (int, float)) and x > FLOOR_W), None)
+            for j, x in enumerate(row):
+                if x is None:
+                    n += 1
+                    if j0 is not None and j < j0:
+                        row[j] = round(row[j0] * LUT.BRI[j] / LUT.BRI[j0], 2)
+                    elif j0 is not None:
+                        prev = next((row[k] for k in range(j - 1, -1, -1) if isinstance(row[k], (int, float))), row[j0])
+                        row[j] = prev
+                    else:
+                        row[j] = 0.0
+        self.floor_n += n
 
     def _fx_table(self) -> dict | None:
         e = dict(self.res.get("fxl") or {})

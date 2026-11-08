@@ -4,6 +4,9 @@
 // Telefon düzeni (ölçekleme yok, bölümler alt alta, sayfa kayar): dar ekran (700 px altı), yatay telefon (yükseklik 500 px altı)
 // ve dikey tutulan tablet (genişlik 1100 px altı, yükseklik genişlikten fazla). Yoksa 1280 px kanvas ekrana sığdırılır;
 // yatay telefonda yazılar okunamayacak kadar küçülüyor, dikey tablette karolar uzun ince oluyordu.
+// gizli yan menüyü açan kaydırmanın başlayabileceği sol kenar şeridi (CSS piksel). Android'in hareketli gezinmesi en kenardaki
+// ~30 pikseli geri hareketine ayırır, oradan başlayan dokunuş sayfaya hiç gelmez; şerit bu yüzden geniş (v0.28.11: 48 → 72).
+const LP_EDGE = 72;
 function lpPhoneScreen() {
   const w = window.innerWidth || 1280, h = window.innerHeight || 800;
   return w < 700 || (h < 500 && w < 1100) || (h > w && w < 1100);
@@ -53,7 +56,7 @@ const LemurScale = (() => {
     // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde. Yeni HA (2025.x+) menü genişliğini
     // --ha-sidebar-width ile verir; sadece menüyü gizlemek solda boş şerit bırakıyordu, genişlik de sıfırlanır.
     const k = kiosk || {}, sideOff = active && lpKioskOn(k.hide_sidebar);
-    hidden = sideOff;
+    hidden = sideOff; onDash = active;
     style(m, KID, sideOff && !peek ? ':host{--ha-sidebar-width:0px !important;--ha-top-app-bar-width:100% !important}ha-sidebar{display:none !important}ha-drawer{--mdc-drawer-width:0px !important}' : '');
     if (!sr) return;
     // üst bar gizliyken içerik telefonun durum çubuğunun altına kaymasın: HA'nın kendi boşluğu (--safe-area-inset-top) bırakılır,
@@ -80,7 +83,7 @@ const LemurScale = (() => {
     const lh = Math.floor(y / z);
     style(sr, ID, 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}');
   }
-  let canvas = null, kiosk = null, bgc = null, hidden = false, peek = false;
+  let canvas = null, kiosk = null, bgc = null, hidden = false, peek = false, onDash = false;
   // son kiosk ayarı tarayıcıda saklı: sayfa yenilenince menü ayar gelene kadar görünüp kaybolmasın
   try { const sv = JSON.parse(localStorage.getItem('lhd-kiosk') || 'null'); if (sv && typeof sv === 'object') kiosk = sv; } catch (e) {}
   const run = () => apply(canvas, kiosk);
@@ -91,7 +94,7 @@ const LemurScale = (() => {
     else if (peek && e.clientX > 300) { peek = false; run(); }
   }, { passive: true });
   // dokunmatikte gizli yan menü: sol kenardan sağa kaydırınca açılır. iOS uygulaması bunu kendisi yapıyor; Android uygulaması,
-  // Fully Kiosk ve tarayıcılar yapmıyordu (v0.28.9). Android'in geri hareketi en kenarı tuttuğu için kenardan 48 piksele kadar başlayan kaydırma sayılır.
+  // Fully Kiosk ve tarayıcılar yapmıyordu (v0.28.9). Android'in geri hareketi en kenarı tuttuğu için kenardan LP_EDGE piksele kadar başlayan kaydırma sayılır.
   const nv = typeof navigator !== 'undefined' ? navigator : {}, iosApp = /iPad|iPhone|iPod/.test(nv.userAgent || '') || (nv.platform === 'MacIntel' && nv.maxTouchPoints > 1);
   const mainEl = () => { try { return document.querySelector('home-assistant').shadowRoot.querySelector('home-assistant-main'); } catch (e) { return null; } };
   const drawer = () => { const m = mainRoot(); return m ? m.querySelector('ha-drawer') : null; };
@@ -102,7 +105,9 @@ const LemurScale = (() => {
       tx = -1;
       // açık menünün dışına dokununca yine gizlenir (dar ekranda HA'nın kendi çekmecesi kapanınca)
       if (peek) { const d = drawer(); if (p.clientX > 320 && !(d && d.open)) { peek = false; run(); } return; }
-      if (hidden && p.clientX <= 48) { tx = p.clientX; ty = p.clientY; }
+      // gizli menü ya da dar ekran (telefon: menü HA'nın çekmecesi, üst bar gizliyken açacak düğme yok). iOS uygulaması bunu kendisi yapar.
+      const me = (hidden || p.clientX > LP_EDGE) ? null : mainEl();
+      if (p.clientX <= LP_EDGE && (hidden || (onDash && me && me.narrow))) { tx = p.clientX; ty = p.clientY; }
     }, { passive: true, capture: true });
     window.addEventListener('touchmove', (e) => {
       if (tx < 0) return;
@@ -110,7 +115,7 @@ const LemurScale = (() => {
       const dx = p.clientX - tx, dy = Math.abs(p.clientY - ty);
       if (dy > 40) { tx = -1; return; }
       if (dx > 60 && dy < dx * 0.6) {
-        tx = -1; peek = true; run();
+        tx = -1; if (hidden) { peek = true; run(); }
         // dar ekranda (telefon) menü HA'nın çekmecesi: açılması için HA'ya söylenir; genişte yalnız gizlemeyi kaldırmak yeter
         const me = mainEl();
         if (me && me.narrow) setTimeout(() => { const d = drawer(); if (!(d && d.open)) me.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true, detail: { open: true } })); }, 30);

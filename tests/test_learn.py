@@ -142,8 +142,8 @@ async def test_light_learn_dimmer_pause_and_external(hass: HomeAssistant, fast):
     assert await _until(lambda: r2.phase == "run")
     orig = r2._settle
 
-    async def settle_then_off():
-        v = await orig()
+    async def settle_then_off(since=None):
+        v = await orig(since)
         hass.states.async_set("light.x", "off", {"supported_color_modes": ["brightness"]})
         return v
     r2._settle = settle_then_off
@@ -338,3 +338,86 @@ async def test_light_learn_waits_for_a_late_light_and_goes_on(hass: HomeAssistan
     await L2.control("x", "continue")
     assert await _until(lambda: r2.phase in ("done", "error")), r2.status()
     assert r2.phase == "done" and saved["runs"]["x"]["phase"] == "done"   # waits for Save
+
+
+async def _plug_poll(hass, watts, state):
+    """homeassistant.update_entity for the plug: reads the light again (like a Shelly poll), unless the plug is frozen."""
+    async def upd(call):
+        if state.get("frozen"):
+            return
+        hass.states.async_set("sensor.p", str(watts(dict(hass.states.get("light.x").attributes)) if hass.states.get("light.x").state == "on" else 0.3),
+                              {"unit_of_measurement": "W", "device_class": "power"})
+    hass.services.async_register("homeassistant", "update_entity", upd)
+
+
+async def test_light_learn_plug_freezes_then_drops(hass: HomeAssistant, fast):
+    """v0.28.11 (#13): the plug stops sending, then goes unavailable; the frozen steps must not keep its old watts."""
+    def w(a):
+        return round(1 + 19 * a.get("brightness", 255) / 255, 2)
+    state = {"n": 0}
+    calls = await _fake_light(hass, ["brightness"], w)
+    real_on = hass.services._services["light"]["turn_on"].job.target
+
+    async def on(call):
+        state["n"] += 1
+        if state["n"] == 3 and not state.get("t"):   # from the third step the plug sends nothing for a while,
+            state["frozen"] = True                    # then Home Assistant marks it unavailable, and it comes back
+            state["t"] = 1
+
+            async def drop():
+                await asyncio.sleep(0.15)
+                hass.states.async_set("sensor.p", "unavailable", {})
+                await asyncio.sleep(0.05)
+                state["frozen"] = False
+                hass.states.async_set("sensor.p", str(w(dict(hass.states.get("light.x").attributes))), {"unit_of_measurement": "W", "device_class": "power"})
+            hass.async_create_task(drop())
+        if state.get("frozen"):
+            a = dict(hass.states.get("light.x").attributes)
+            a["brightness"] = round(call.data["brightness_pct"] * 2.55)
+            hass.states.async_set("light.x", "on", a)
+            return
+        await real_on(call)
+    hass.services.async_register("light", "turn_on", on)
+    await _plug_poll(hass, w, state)
+    r = LRN.Learning(hass).start("f", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.phase in ("done", "error"), 8000), r.status()
+    assert r.phase == "done", r.status()
+    row = r.result["lut"]["br"]["w"]
+    want = [round(1 + 19 * round(b * 2.55) / 255, 2) for b in LUT.BRI]
+    assert row == want, (row, want)
+    assert r.result["rechecked"] >= 1
+
+
+async def test_light_learn_below_plug_floor(hass: HomeAssistant, fast):
+    """v0.28.11 (#14): the plug reads 0 W at low brightness; the cells are filled from the row, not left at 0."""
+    def w(a):
+        b = a.get("brightness", 255) / 255 * 100
+        return 0.0 if b < 20 else round(b * 0.2, 2)
+    await _fake_light(hass, ["brightness"], w)
+    r = LRN.Learning(hass).start("g", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.phase in ("done", "error")), r.status()
+    assert r.phase == "done", r.status()
+    row = r.result["lut"]["br"]["w"]
+    assert all(x > 0 for x in row), row
+    assert row[:3] == sorted(row[:3]) and r.result["floor"] == 3, (row, r.result)
+
+
+async def test_light_learn_check_pass_fixes_a_glitch(hass: HomeAssistant, fast):
+    """A one-off wrong reading (a dip) is measured again after the colors and replaced."""
+    def w(a):
+        return round(1 + 19 * a.get("brightness", 255) / 255, 2)
+    state = {"n": 0}
+    await _fake_light(hass, ["brightness"], w)
+    real_on = hass.services._services["light"]["turn_on"].job.target
+
+    async def on(call):
+        state["n"] += 1
+        await real_on(call)
+        if state["n"] == 9:   # the 60% step reads far too low once
+            hass.states.async_set("sensor.p", "2.0", {"unit_of_measurement": "W", "device_class": "power"})
+    hass.services.async_register("light", "turn_on", on)
+    r = LRN.Learning(hass).start("h", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.phase in ("done", "error")), r.status()
+    row = r.result["lut"]["br"]["w"]
+    assert row == sorted(row) and min(row[4:]) > 5, row
+    assert r.result["rechecked"] >= 1

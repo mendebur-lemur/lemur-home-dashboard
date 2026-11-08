@@ -299,10 +299,11 @@ function lpNavCfg() {
 }
 // Saatte parlaklık (ayar bright, isteğe bağlı, varsayılan kapalı): üst şeritte saatin olduğu alan kaydırılınca sekmenin
 // odasındaki açık ışıkların hepsi aynı parlaklığa gelir. look: yok = gizli (yalnız saat, kaydırınca belirir), 'box' = oda
-// düğmesi gibi kutu; icon: true = solda ampul simgesi; value: 'always' = dolgu ve yüzde hep görünür (yoksa yalnız kaydırırken).
+// düğmesi gibi kutu; icon: true = solda ampul simgesi; value: 'always' = dolgu ve yüzde hep görünür (yoksa yalnız kaydırırken);
+// phone: false = telefon düzeninde (telefon, dikey tablet) sayfa adı + saat satırı kaydırılmaz (varsayılan kaydırılır).
 function lpBrightCfg() {
   const s = lpSettings(), b = lhdIsObj(s.bright) ? s.bright : {};
-  return { on: b.on === true, box: b.look === 'box', icon: b.icon === true, always: b.value === 'always' };
+  return { on: b.on === true, box: b.look === 'box', icon: b.icon === true, always: b.value === 'always', phone: b.phone !== false };
 }
 
 // telefon seçenekleri (ayar phone), her biri ayrı açılır:
@@ -851,6 +852,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     const clock0 = '<div class="clock">' + this._time() + '</div>';
     const bbc = lpBrightCfg();
     this._bbTab = tab;
+    // telefon düzeninde (telefon, dikey tablet) saatte parlaklık: üstteki sayfa adı + saat satırı kaydırılır (v0.28.11)
+    const bbPh = bbc.on && bbc.phone && phone && !edit;
+    const phd = (name) => bbPh
+      ? '<div class="phd bbar' + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div><b>' + esc(name) + '</b><span class="bbv"></span>' + clock0 + '</div>'
+      : '<div class="phd"><b>' + esc(name) + '</b>' + clock0 + '</div>';
     const clock = bbc.on && !phone ? '<div class="bbar' + (bbc.box ? ' bbbox' : '') + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div>' +
       (bbc.icon ? lpIcon('lhd:bulb-bright', 'bbi') : '') + clock0 + '<span class="bbv"></span></div>' : clock0;
     const nc = lpNavCfg(), nst = (nc.w ? '--lp-nav-w:' + nc.w + 'px;' : '') + (nc.h ? '--lp-nav-h:' + nc.h + 'px;' : '');
@@ -883,11 +889,12 @@ class LemurHomeDashboardCard extends HTMLElement {
       const fxI = lpLecNav(h) ? '<div class="pbi fxb" data-navfx>' + lpIcon('mdi:creation') + '<span>' + esc(t(lang, 'effects')) + '</span></div>' : '';
       if (cv) {
         pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
-        pHead = '<div class="phd"><b>' + esc(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') + '</b>' + clock0 + '</div>' +
+        if (cvPage) { const rt = cv.rooms.filter((T) => T.id === cv.room)[0]; this._bbTab = cv.cat === 'lights' ? (rt || null) : tab; }   // Işıklar: seçili oda (Hepsi: sayfadaki ışıklar)
+        pHead = phd(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') +
           (cvPage && cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
-        pHead = '<div class="phd"><b>' + esc(tab.name || '') + '</b>' + clock0 + '</div>';
+        pHead = phd(tab.name || '');
       }
       pBar = '<div class="pbar">' + pBar + '</div>';
     }
@@ -1087,8 +1094,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (cvw && cvw.rooms.length && wrapEl) {
       let sx = null, sy = 0;
       wrapEl.addEventListener('touchstart', (e) => {
-        const tg = e.target && e.target.closest ? e.target.closest('.bar, .ppills, .pbar, .emb') : null;   // parlaklık çubuğu, oda şeridi ve kartlar kendi kaydırmasını kullanır
-        sx = tg ? null : e.touches[0].clientX; sy = e.touches[0].clientY;
+        const tg = e.target && e.target.closest ? e.target.closest('.bar, .ppills, .pbar, .emb, [data-bbar]') : null;   // parlaklık çubuğu, saatte parlaklık, oda şeridi ve kartlar kendi kaydırmasını kullanır
+        sx = tg || e.touches[0].clientX <= LP_EDGE ? null : e.touches[0].clientX; sy = e.touches[0].clientY;   // sol kenar: yan menünün kaydırması (src/scale.js)
       }, { passive: true });
       wrapEl.addEventListener('touchend', (e) => {
         if (sx === null) return;

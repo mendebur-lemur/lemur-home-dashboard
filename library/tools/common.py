@@ -39,6 +39,23 @@ def key(p: dict) -> str:
     return (re.sub(r"[^a-z0-9]", "", _s(m.get("manufacturer")).casefold()) + "|" + re.sub(r"[^a-z0-9]", "", (_s(m.get("model_id")) or _s(m.get("model"))).casefold()))
 
 
+def _stuck(r: list, rows: list) -> bool:
+    """Four or more brightness steps in a row with the same watts. A run that ends the row can be a real cap (some lights
+    stop getting brighter); it counts only when it stays well under what the other rows reach, or covers the whole row."""
+    tops = sorted(max(x) for x in rows if x)
+    med = tops[len(tops) // 2] if tops else 0
+    j = 1
+    while j < len(r):
+        k = j
+        while k < len(r) and r[k] > 0.5 and abs(r[k] - r[k - 1]) < 0.05:
+            k += 1
+        if k - j + 1 >= 4:
+            if k < len(r) or j - 1 == 0 or r[k - 1] < med * 0.7:
+                return True
+        j = k + 1
+    return False
+
+
 def check(p: dict) -> tuple[list[str], dict]:
     """Problems (empty: format is fine) and the cleaned submission."""
     errs: list[str] = []
@@ -90,6 +107,14 @@ def check(p: dict) -> tuple[list[str], dict]:
     flat = len({round(x, 2) for r in rows for x in r})
     if rows and flat <= 2:
         errs.append("tablo düz / the table is flat")
+    # v0.28.11: priz ölçüm sırasında takıldıysa (yeni değer göndermeyi bırakıp sonra koptuysa) bir satırda aynı watt art arda
+    # tekrar eder (#13); düşük gücü okuyamayan priz yanık ışığa 0 W yazar (#14). Yeni öğrenme ikisini de kendisi düzeltiyor.
+    stuck = sum(1 for r in rows if _stuck(r, rows))
+    if stuck:
+        errs.append(f"{stuck} satırda aynı değer art arda tekrarlıyor, priz ölçüm sırasında takılmış / {stuck} rows repeat the same watts, the plug got stuck while measuring")
+    zeros = sum(1 for r in rows for x in r if x <= 0.05)
+    if zeros:
+        errs.append(f"{zeros} hücrede 0 W: priz bu düşük gücü okuyamamış / {zeros} cells read 0 W: the plug could not read that low")
     caps = p.get("caps") if isinstance(p.get("caps"), dict) else {}
     clean = {"key": key(p), "manufacturer": man, "model": mod, "model_id": mid, "integration": _s((m or {}).get("integration"), 40),
              "caps": {"color_modes": [x for x in caps.get("color_modes") or [] if isinstance(x, str)][:8], "kelvin": [x for x in (caps.get("kelvin") or [])[:2] if isinstance(x, (int, float))],
@@ -97,7 +122,7 @@ def check(p: dict) -> tuple[list[str], dict]:
              "mains_v": p.get("mains_v") if p.get("mains_v") in (120, 230) else 230, "standby": float(sb), "lut": tb, "strip": strip,
              "length_m": float(ln) if strip and isinstance(ln, (int, float)) else None, "adapter_w": float(cap) if isinstance(cap, (int, float)) and not isinstance(cap, bool) else None,
              "plug": {k: _s(v, 60) for k, v in (p.get("plug") or {}).items() if k in ("manufacturer", "model")} if isinstance(p.get("plug"), dict) else {},
-             "samples": {k: v for k, v in (p.get("samples") or {}).items() if k in ("n", "settle_s", "repeats", "diff") and isinstance(v, (int, float))} if isinstance(p.get("samples"), dict) else {},
+             "samples": {k: v for k, v in (p.get("samples") or {}).items() if k in ("n", "settle_s", "repeats", "diff", "rechecked", "floor") and isinstance(v, (int, float))} if isinstance(p.get("samples"), dict) else {},
              "hi": round(hi, 2), "lo": round(lo, 2)}
     return errs, clean
 

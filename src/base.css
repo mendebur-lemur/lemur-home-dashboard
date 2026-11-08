@@ -422,7 +422,7 @@
 
 /* Saatte parlaklık (ayar bright, isteğe bağlı): saatin olduğu alan kaydırılınca odadaki açık ışıklar birlikte değişir.
    Gizli (varsayılan): yalnız saat görünür, kaydırınca kutu, dolgu ve yüzde belirir. Kutu: oda düğmesi gibi zemin. */
-.bbar { position: relative; flex: 1 0 150px; align-self: stretch; height: var(--lp-nav-h, 155px); margin-left: 8px; min-width: 0; box-sizing: border-box; border-radius: 15px; border: 2px solid transparent; overflow: hidden; display: flex; align-items: center; padding: 0 24px; cursor: ew-resize; user-select: none; -webkit-user-select: none; touch-action: pan-y; transition: border-color .35s, background-color .35s; }
+.bbar { position: relative; flex: 1 0 320px; align-self: stretch; height: var(--lp-nav-h, 155px); margin-left: 8px; min-width: 0; box-sizing: border-box; border-radius: 15px; border: 2px solid transparent; overflow: hidden; display: flex; align-items: center; padding: 0 24px; cursor: ew-resize; user-select: none; -webkit-user-select: none; touch-action: pan-y; transition: border-color .35s, background-color .35s; }
 .nav.navr > .bbar:first-child { margin-left: 0; }
 .bbar.bbbox { background: var(--lp-card); }
 .bbar .clock { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; flex: none; pointer-events: none; }
@@ -437,6 +437,12 @@
 .bbar .bbv { position: relative; margin-left: auto; font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; transition: opacity .35s; pointer-events: none; }
 .bbar.bbdrag .bbv, .bbar.bbal.bbon .bbv { opacity: 1; }
 .edit .bbar { cursor: default; }
+/* telefon düzeni: sayfa adı + saat satırı (v0.28.11) */
+.phone .phd.bbar { flex: none; align-self: auto; height: auto; min-height: 44px; margin: 6px 0 12px; padding: 4px 12px; border-radius: 12px; gap: 10px; justify-content: flex-start; }
+.phone .phd.bbar > b, .phone .phd.bbar > .clock { position: relative; }
+.phone .phd.bbar .clock { left: auto; top: auto; transform: none; margin-left: auto; }
+.phone .phd.bbar .bbv { margin-left: 0; font-size: 18px; line-height: 32px; }
+.phone .phd.bbar .bbv:empty { display: none; }
 /* kameralar (2026-11-05): 16:9 anlık görüntü karosu, adı sol altta; çevrimdışıysa sade yüz */
 .cams { display: grid; grid-gap: 8px; flex: 0 0 auto; align-self: stretch; width: 100%; box-sizing: border-box; }
 .cam { position: relative; padding-top: 56.25%; border-radius: 18px; overflow: hidden; background: var(--lp-embed-bg); cursor: pointer; -webkit-tap-highlight-color: transparent; }
