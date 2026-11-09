@@ -858,7 +858,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       let b = bodyOf(s);
       (s._folds || []).forEach((F) => {   // katlanır grup: başlık çubuğu (ışık çubuğu boyunda) ve altında öğeleri; açık/kapalı localStorage'da
         const fb = bodyOf(F); if (!fb) return;
-        const FE = (F.entities || []).filter((x) => { const e = lpEnt(x); return !e || !!S[e.entity]; });   // HA'da olmayan cihaz sayılmaz
+        const FE = (F.entities || []).filter((x) => { const e = lpEnt(x); if (e && !S[e.entity]) return false; return !(x && typeof x === 'object' && x.visible && !lpVisible(x.visible, S)); });   // HA'da olmayan ya da koşulu yüzünden gizli öğe sayılmaz
         const ids = FE.map((x) => (typeof x === 'string' ? x : x && x.entity)).filter(Boolean), op = lpFoldOpen(F._fk);
         const fh = '<div class="fh' + (op ? ' open' : '') + '" data-fold="' + esc(F._fk) + '">' + lpIcon(F._foldIcon || 'mdi:chevron-down-box-outline') + '<b>' + esc(F._foldName || t(lang, 'fold_more')) + '</b>' +
           '<span class="fc" data-fn="' + FE.length + '" data-fcnt="' + esc(ids.join(',')) + '">' + esc(t(lang, 'fold_n', { n: FE.length })) + '</span><span class="fch"><ha-icon icon="mdi:chevron-down"></ha-icon></span></div>' +
