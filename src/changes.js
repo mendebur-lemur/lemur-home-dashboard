@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.29.6',
+    tr: ['Yönetim panelinde telefon önizlemesine "Grupları göster" düğmesi: katlanır gruplar telefondaki gibi görünür. Kapalıyken gruptaki öğeler yerinde durur, sıralamak için kapat.', 'Düzeltme: senaryo bölümünde katlanır grup varken telefonda kalan senaryo düğmeleri daralıp yazıları kesiliyordu.'],
+    en: ['"Show groups" button in the admin panel\'s phone preview: collapsible groups look as on the phone. When off, grouped items stay in place; turn it off to reorder them.', 'Fix: with a collapsible group in a scenes section, the remaining scene buttons on phones were squeezed and their names cut off.'] },
   { v: '0.29.5',
     tr: ['Enerji sekmesi çok daha hızlı açılıyor: grafikler Home Assistant\'ın 5 dakikalık özetinden çiziliyor (evde 7 MB yerine 0,13 MB), kartlar ve anlık değerler veriyi beklemeden geliyor, son veri bu tarayıcıda saklandığı için sonraki açılışlar anında.', 'Panonun güç sensörleri (cihaz, kategori, oda ve ev toplamı) en sık 5 saniyede bir yazılıyor; açma ve kapama gibi belirgin değişimler hemen. Home Assistant\'ın veritabanı daha yavaş büyüyor.'],
     en: ['The Energy tab opens much faster: charts are drawn from Home Assistant\'s 5-minute statistics (0.13 MB instead of 7 MB at home), cards and live values show without waiting for the data, and the last data is kept in this browser so later openings are instant.', 'The dashboard\'s power sensors (device, category, room and home totals) are written at most every 5 seconds; clear changes like turning on or off right away. Home Assistant\'s database grows more slowly.'] },

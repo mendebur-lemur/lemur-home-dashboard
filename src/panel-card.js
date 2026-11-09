@@ -390,7 +390,7 @@ function lpFoldMap() { try { const v = JSON.parse(localStorage.getItem('lhd-fold
 function lpFoldOpen(id) { return lpFoldMap()[id] === 1; }
 function lpFoldSet(id, o) { const m = lpFoldMap(); if (o) m[id] = 1; else delete m[id]; try { localStorage.setItem('lhd-fold', JSON.stringify(m)); } catch (e) {} }
 function lpPhoneOv() { const p = lpSettings().phone; return lhdIsObj(p) ? p : {}; }
-function lpPhoneTab(T, edit) {
+function lpPhoneTab(T, edit, folds) {
   if (!T) return T;
   const P = lpPhoneOv(), SO = lhdIsObj(P.secs) ? P.secs : {}, OR = lhdIsObj(P.order) ? P.order : {};
   const ord = Array.isArray(OR[T.id]) && OR[T.id].length ? OR[T.id] : null;
@@ -409,7 +409,7 @@ function lpPhoneTab(T, edit) {
     if (hi.length) { if (edit) c._phHide = hi; else c.entities = (c.entities || []).filter((x) => hi.indexOf(lhdItemKey(x)) < 0); }
     // katlanır gruplar (v0.29): her grubun öğeleri bölümün sonunda, dokununca açılan bir satırda. Düzenleme önizlemesinde öğeler yerinde kalır
     const FL = Array.isArray(o.folds) ? o.folds.filter((g) => lhdIsObj(g) && Array.isArray(g.items) && g.items.length) : [];
-    if (FL.length && !edit) {
+    if (FL.length && (!edit || folds)) {   // düzenlemede de "Grupları göster" açıksa (v0.29.6)
       c._folds = [];
       FL.forEach((g, gj) => {
         const inG = (x) => g.items.indexOf(lhdItemKey(x)) >= 0, fe = (c.entities || []).filter(inG);
@@ -642,7 +642,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (lpIsPhone(this._config)) {
       const ed = !!(this._config && this._config.edit), PT = lhdIsObj(lpPhoneOv().tabs) ? lpPhoneOv().tabs : {};
       const NM = lhdIsObj(PT.names) ? PT.names : {}, IC = lhdIsObj(PT.icons) ? PT.icons : {}, HD = lhdIsObj(PT.hide) ? PT.hide : {};
-      allTabs = tabs.map((T) => { let x = lpPhoneTab(T, ed); if ((typeof NM[T.id] === 'string' && NM[T.id]) || (typeof IC[T.id] === 'string' && IC[T.id])) x = Object.assign({}, x, NM[T.id] ? { name: NM[T.id] } : {}, IC[T.id] ? { icon: IC[T.id] } : {}); return x; });
+      allTabs = tabs.map((T) => { let x = lpPhoneTab(T, ed, !!(this._config && this._config.folds)); if ((typeof NM[T.id] === 'string' && NM[T.id]) || (typeof IC[T.id] === 'string' && IC[T.id])) x = Object.assign({}, x, NM[T.id] ? { name: NM[T.id] } : {}, IC[T.id] ? { icon: IC[T.id] } : {}); return x; });
       const vis = lhdOrderBy(allTabs.filter((T) => !HD[T.id]), PT.order);
       tabs = vis.length ? vis : allTabs;
     }
@@ -863,7 +863,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         const fh = '<div class="fh' + (op ? ' open' : '') + '" data-fold="' + esc(F._fk) + '">' + lpIcon(F._foldIcon || 'mdi:chevron-down-box-outline') + '<b>' + esc(F._foldName || t(lang, 'fold_more')) + '</b>' +
           '<span class="fc" data-fn="' + FE.length + '" data-fcnt="' + esc(ids.join(',')) + '">' + esc(t(lang, 'fold_n', { n: FE.length })) + '</span><span class="fch"><ha-icon icon="mdi:chevron-down"></ha-icon></span></div>' +
           '<div class="fbd"' + (op ? '' : ' hidden') + '>' + fb.html + '</div>';
-        b = b ? Object.assign({}, b, { html: b.html + fh, mix: true, fit: b.fit || fb.fit }) : Object.assign({}, fb, { html: fh, mix: true });
+        // senaryo kutusu (spread) yayılı kalır; karo kutusu karışık olur (v0.29.6: senaryolarda grup açılınca kalan düğmeler daralıyordu)
+        b = b ? Object.assign({}, b, { html: b.html + fh, mix: b.spread ? b.mix : true, fit: b.fit || fb.fit }) : Object.assign({}, fb, { html: fh, mix: fb.spread ? fb.mix : true });
       });
       if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
       if (!b) return;

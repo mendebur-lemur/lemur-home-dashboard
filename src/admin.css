@@ -939,3 +939,5 @@ div.ensr:hover { background: var(--s1); }
 /* v0.29.1 özel ekran çözünürlüğü */
 .scrc { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; font-size: 12px; color: var(--t2, #9aa3b5); }
 .scrc .inp { width: 66px; height: 28px; padding: 0 6px; font-size: 12px; }
+.pvh .pvfold { height: 28px; flex: none; }
+.pvh .pvfold.on { background: var(--acs); color: var(--ac); border-color: var(--acl); }
