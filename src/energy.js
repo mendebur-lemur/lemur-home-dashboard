@@ -155,15 +155,25 @@ function lpEnYearIds(M) {
   const ids = []; (M ? M.cats : []).forEach((c) => (c.e ? [c.e] : (c.es || [])).forEach((x) => { if (x && ids.indexOf(x) < 0) ids.push(x); }));
   return { src: 'panel', ids: ids };
 }
+// günlük kWh tek istekte: son 35 gün (grafik) ve yılbaşından bu yana (yıl hesabı) aynı sensörlerse ikinci kez sorulmaz
+function lpEnDayFrom() { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (LP_EN_DAYS - 1)); return Math.min(d.getTime(), new Date(new Date().getFullYear(), 0, 1).getTime()); }
+function lpEnDayQ(conn, ids) {
+  const from = lpEnDayFrom(), Q = LP_EN.dq;
+  if (Q && Q.from === from && Date.now() - Q.at < 60000 && ids.every((x) => Q.ids.indexOf(x) >= 0)) return Q.p;
+  const p = conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(from).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } });
+  LP_EN.dq = { from: from, ids: ids.slice(), at: Date.now(), p: p };
+  p.catch(() => { if (LP_EN.dq && LP_EN.dq.p === p) LP_EN.dq = null; });
+  return p;
+}
 function lpEnYearFetch(conn, M) {
   const Y = LP_EN.yr, q = lpEnYearIds(M), key = q.src + q.ids.join(',');
   if (!q.ids.length || (Y && Y.key === key && Date.now() - Y.at < 1800000)) return Promise.resolve();
   const y = new Date().getFullYear(), a = new Date(y, 0, 1), p0 = new Date(y - 1, 0, 1), sum = (L) => { let t = 0; (L || []).forEach((x) => { if (isFinite(x.change)) t += Math.max(0, x.change); }); return t; };
   const st = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
   const ask = (from, to, period) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), end_time: to ? to.toISOString() : undefined, period: period, statistic_ids: q.ids, types: ['change'], units: { energy: 'kWh' } });
-  return Promise.all([ask(a, null, 'day'), ask(p0, a, 'month')]).then((r) => {
+  return Promise.all([lpEnDayQ(conn, q.ids), ask(p0, a, 'month')]).then((r) => {
     const days = {}; let first = 0;
-    q.ids.forEach((id) => ((r[0] && r[0][id]) || []).forEach((x) => { const t = st(x); if (!isFinite(x.change)) return; days[t] = (days[t] || 0) + Math.max(0, x.change); if (!first || t < first) first = t; }));
+    q.ids.forEach((id) => ((r[0] && r[0][id]) || []).forEach((x) => { const t = st(x); if (!isFinite(x.change) || t < a.getTime() - 43200000) return; days[t] = (days[t] || 0) + Math.max(0, x.change); if (!first || t < first) first = t; }));
     let prev = 0, pfirst = 0; q.ids.forEach((id) => { const L = (r[1] && r[1][id]) || []; prev += sum(L); L.forEach((x) => { const t = st(x); if (!pfirst || t < pfirst) pfirst = t; }); });
     LP_EN.yr = { key: key, at: Date.now(), y: y, src: q.src, days: days, first: first, prev: prev, pfull: !!pfirst && pfirst <= p0.getTime() + 2 * 86400000 };
   }).catch(() => {});
@@ -389,8 +399,11 @@ function lpEnModel(h, prefs) {
 }
 // güç geçmişi: zaman ağırlıklı ortalama, n dilim
 function lpEnBin(L, t0, step, n, f) {
+  return lpEnBinPts((L || []).map((p) => ({ t: p.lu !== undefined ? p.lu * 1000 : Date.parse(p.last_updated || p.last_changed || ''), v: parseFloat(p.s !== undefined ? p.s : p.state) })).filter((p) => isFinite(p.t)), t0, step, n, f);
+}
+// noktalar [{t: ms, v}]: her değer bir sonraki noktaya (sonuncusu şimdiye) kadar geçerli; dilimlerin zaman ağırlıklı ortalaması
+function lpEnBinPts(pts, t0, step, n, f) {
   const acc = []; for (let i = 0; i < n; i++) acc.push([0, 0]);
-  const pts = (L || []).map((p) => ({ t: p.lu !== undefined ? p.lu * 1000 : Date.parse(p.last_updated || p.last_changed || ''), v: parseFloat(p.s !== undefined ? p.s : p.state) })).filter((p) => isFinite(p.t));
   const end = Math.min(t0 + step * n, Date.now());
   for (let i = 0; i < pts.length; i++) {
     const a = Math.max(pts[i].t, t0), b = Math.min(i + 1 < pts.length ? pts[i + 1].t : end, end);
@@ -407,18 +420,37 @@ function lpEnHist(conn, S, M) {
   const add = (x) => { if (x && ids.indexOf(x) < 0) ids.push(x); };
   M.cats.forEach((c) => { if (c.p) add(c.p); else c.kids.forEach((k) => add(k.p)); });
   const tot = lpEnCfg().total; if (tot) add(tot);
-  M.devs.slice(0, 120).forEach((d) => add(d.p));   // ipuçları için (uzun süre açık kalan cihaz)
+  // ipuçları için (uzun süre açık kalan cihaz): yalnız şu an eşiğin üstünde çekenler; ötekiler o ipucuna giremez
+  const tc = lpEnTipCfg(), lw = parseFloat(tc.left_w) > 0 ? parseFloat(tc.left_w) : 300;
+  if (tc.on !== false) M.devs.forEach((d) => { const w = lpEnWOf(S, d); if (w !== null && w >= lw) add(d.p); });
   const sol = lpEnSolar(), gm = lpEnGridMode(sol);
   const mt = lpEnMeter(); if (mt && mt.power) add(mt.power);
   if (lpEnSunOn(sol) || lpEnBatOn(sol)) [lpEnSunOn(sol) ? sol.prod : null, mt && mt.power ? null : gm === 'net' ? sol.grid : null, mt && mt.power ? null : gm === 'two' ? sol.grid_in : null, mt && mt.power ? null : gm === 'two' ? sol.grid_out : null, lpEnBatOn(sol) ? sol.bat_power : null].forEach(add);
   if (!ids.length) return Promise.resolve();
-  return conn.sendMessagePromise({ type: 'history/history_during_period', start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(), entity_ids: ids, minimal_response: true, no_attributes: true, significant_changes_only: false })
-    .then((r) => {
+  // v0.29.4: önce Home Assistant'ın 5 dakikalık özeti (her sensör için 288 nokta; ham geçmiş evde 39 sensörde 7 MB, 2 sn sürüyordu).
+  // Özeti olmayan sensörler için ham geçmiş. Özetin son birkaç dakikası henüz yazılmamış olabilir: oradan şimdiye kadar anlık değer.
+  const kw = (id) => (S[id] && String(S[id].attributes.unit_of_measurement || '') === 'kW' ? 1000 : 1);
+  const stT = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
+  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(t0).toISOString(), period: '5minute', statistic_ids: ids, types: ['mean'], units: { power: 'W' } }).catch(() => ({}))
+    .then((st) => {
+      const miss = ids.filter((id) => !(st && st[id] && st[id].length));
+      const hp = miss.length ? conn.sendMessagePromise({ type: 'history/history_during_period', start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(), entity_ids: miss, minimal_response: true, no_attributes: true, significant_changes_only: false }).catch(() => ({})) : Promise.resolve({});
+      return hp.then((hr) => ({ st: st || {}, hr: hr || {} }));
+    })
+    .then((R) => {
       const ser = {};
-      ids.forEach((id) => { const u = S[id] ? String(S[id].attributes.unit_of_measurement || '') : ''; ser[id] = lpEnBin((r && r[id]) || [], t0, step, LP_EN_BINS, u === 'kW' ? 1000 : 1); });
+      ids.forEach((id) => {
+        const L = R.st[id];
+        if (L && L.length) {
+          const pts = L.filter((x) => isFinite(x.mean)).map((x) => ({ t: stT(x), v: x.mean })).filter((p) => isFinite(p.t)).sort((a, b) => a.t - b.t);
+          const cur = S[id] ? parseFloat(S[id].state) : NaN;
+          if (pts.length) pts.push({ t: pts[pts.length - 1].t + 300000, v: isFinite(cur) ? cur * kw(id) : pts[pts.length - 1].v });
+          ser[id] = lpEnBinPts(pts, t0, step, LP_EN_BINS, 1);
+        } else ser[id] = lpEnBin(R.hr[id] || [], t0, step, LP_EN_BINS, kw(id));
+      });
       const cats = {};
       M.cats.forEach((c) => { cats[c.id] = c.p ? ser[c.p] : lpEnSum(c.kids.map((k) => ser[k.p]), LP_EN_BINS); });
-      const devs = {}; M.devs.forEach((d) => { if (ser[d.p]) devs[d.id] = ser[d.p]; });
+      const devs = {}; M.devs.forEach((d) => { if (ser[d.p] && ids.indexOf(d.p) >= 0) devs[d.id] = ser[d.p]; });
       let total = tot && ser[tot] ? ser[tot] : lpEnSum(M.cats.map((c) => cats[c.id]), LP_EN_BINS);
       // güneşli evde sayaçtan: ev = şebeke + üretim - batarya şarjı (anlık akıştaki hesap)
       const g = mt && mt.power && ser[mt.power] ? ser[mt.power].map((v) => (v === null ? null : mt.inv ? -v : v)) : gm === 'net' && ser[sol.grid] ? ser[sol.grid].map((v) => (v === null ? null : sol.grid_inv ? -v : v))
@@ -437,7 +469,7 @@ function lpEnDays(conn, M) {
   if (!ids.length) return Promise.resolve();
   const d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const days = []; for (let i = LP_EN_DAYS - 1; i >= 0; i--) { const d = new Date(d0.getTime()); d.setDate(d.getDate() - i); days.push(d.getTime()); }
-  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(days[0]).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } })
+  return lpEnDayQ(conn, ids)
     .then((r) => {
       const cats = {};
       ids.forEach((id) => {
@@ -482,6 +514,16 @@ function lpEnBatGain() {
 }
 function lpEnSub(fn) { LP_EN.subs.push(fn); return () => { const i = LP_EN.subs.indexOf(fn); if (i >= 0) LP_EN.subs.splice(i, 1); }; }
 function lpEnFire() { LP_EN.subs.slice().forEach((f) => { try { f(); } catch (e) {} }); }
+// son yüklenen veri bu tarayıcıda (localStorage lhd-en-cache, 12 saat, ayar anahtarı aynıysa); ilk açılış beklemesin
+const LP_EN_CACHE_MS = 43200000;
+function lpEnCacheGet(key) {
+  try { const C = JSON.parse(localStorage.getItem('lhd-en-cache') || 'null'); if (C && C.v === 1 && C.key === key && Date.now() - C.at < LP_EN_CACHE_MS && C.m && Array.isArray(C.m.cats)) return C; } catch (e) {}
+  return null;
+}
+function lpEnCachePut(key, M) {
+  if (!M || M.demo) return;
+  try { const s = JSON.stringify({ v: 1, at: Date.now(), key: key, m: M, yr: LP_EN.yr || null, tou: LP_EN.tou || null, prefs: LP_EN.prefs || null }); if (s.length < 1500000) localStorage.setItem('lhd-en-cache', s); } catch (e) {}
+}
 // veriyi yükle (ilk kez, 5 dakikada bir ya da enerji ayarı değişince)
 function lpEnEnsure(h) {
   if (!h || LP_EN.busy) return;
@@ -490,11 +532,20 @@ function lpEnEnsure(h) {
   if (LP_EN.m && LP_EN.key === key && Date.now() - LP_EN.at < 300000) return;
   const conn = h.connection; if (!conn || !conn.sendMessagePromise) return;
   LP_EN.busy = true; LP_EN.key = key;
-  conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => null).then((prefs) => {
-    const M = lpEnModel(h, prefs);
+  // v0.29.4: ilk açılışta son kayıtlı veri hemen (bu tarayıcıda saklanan), arkadan yenilenir
+  if (!LP_EN.m) { const C = lpEnCacheGet(key); if (C) { LP_EN.m = C.m; if (C.yr) LP_EN.yr = C.yr; if (C.tou) LP_EN.tou = C.tou; if (C.prefs) LP_EN.prefs = C.prefs; setTimeout(lpEnFire, 0); } }
+  const pp = conn.sendMessagePromise({ type: 'energy/get_prefs' }).catch(() => null);
+  // v0.29.5: panelin kendi cihaz listesi varsa model enerji ayarını beklemez; 24 saat ve günlük grafik hemen istenir
+  const M0 = LM ? lpEnModel(h, null) : null;
+  const early = M0 && M0.cats.length ? Promise.all([lpEnHist(conn, h.states || {}, M0), lpEnDays(conn, M0)]) : null;
+  pp.then((prefs) => {
     LP_EN.prefs = prefs || null;   // yönetim panelinde bulunan cihazlar için (grup toplamları hariç tutulur)
+    const M = M0 || lpEnModel(h, prefs);
+    if (M0) M.price = lpEnModel(h, prefs).price;
+    if (!LP_EN.m) { M.partial = true; LP_EN.m = M; lpEnFire(); }   // kartlar ve anlık değerler hemen; grafikler gelince dolar
+    if (early) return Promise.all([early, lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => M);
     return M.cats.length || lpEnSunE() || lpEnYearIds(M).ids.length ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M), lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => M) : M;
-  }).then((M) => { LP_EN.m = M; LP_EN.at = Date.now(); LP_EN.busy = false; lpEnFire(); },
+  }).then((M) => { M.partial = false; LP_EN.m = M; LP_EN.at = Date.now(); LP_EN.busy = false; lpEnCachePut(key, M); lpEnFire(); },
     () => { LP_EN.busy = false; LP_EN.at = Date.now(); if (!LP_EN.m) LP_EN.m = { cats: [], devs: [], price: 0 }; lpEnFire(); });
 }
 // hayali ev (Otomatik kur önizlemesi, rehber görselleri): sabit örnek veri
@@ -669,7 +720,7 @@ function lpEnCard(h, M, it, lang, phone) {
       '<i class="erl"><i style="width:' + Math.max(2, x.w / mx * 100).toFixed(1) + '%"></i></i></div><b class="erw' + (lpEnTil(x.d) ? ' est' : '') + '">' + lpEnTil(x.d) + esc(lpEnWs(x.w, lang)) + '</b></div>').join('') + '</div>';
   }
   if (k === 'week') {
-    if (!M.days) return '<div class="enmsg"><span>' + esc(lpEnT(lang, 'noHist')) + '</span></div>';
+    if (!M.days) return '<div class="enmsg"><span>' + esc(lpEnT(lang, M.partial ? 'loading' : 'noHist')) + '</span></div>';
     const n = +it.days === 30 ? 30 : 7, cost = it.unit === 'cost' && price > 0, f = cost ? price : 1;
     const idx = []; for (let i = N - n; i < N; i++) idx.push(i);
     const tot = idx.map((i) => M.cats.reduce((a, c) => a + (M.days.cats[c.id][i] || 0), 0) * f);
@@ -688,7 +739,7 @@ function lpEnCard(h, M, it, lang, phone) {
     return '<div class="enhd"><span>' + (cost ? esc(lpEnMoney(h, sum, lang)) : esc(lpEnNum(sum, sum < 10 ? 1 : 0, lang)) + ' kWh') + '</span></div><svg class="ench2" viewBox="0 0 ' + W + ' ' + H + '">' + s + '</svg>' + lpEnLegend(M);
   }
   if (k === 'day') {
-    if (!M.hist) return '<div class="enmsg"><span>' + esc(lpEnT(lang, 'noHist')) + '</span></div>';
+    if (!M.hist) return '<div class="enmsg"><span>' + esc(lpEnT(lang, M.partial ? 'loading' : 'noHist')) + '</span></div>';
     const tot = it.mode === 'total', series = tot ? [{ a: M.hist.total, c: '#5B8DEF' }] : M.cats.map((c) => ({ a: M.hist.cats[c.id], c: c.color }));
     const all = []; series.forEach((x) => (x.a || []).forEach((v) => { if (v !== null) all.push(v); }));
     if (!all.length) return '<div class="enmsg"><span>' + esc(lpEnT(lang, 'noHist')) + '</span></div>';

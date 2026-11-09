@@ -8,9 +8,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
 from custom_components.lemur_home_dashboard import estimates as EST
+
+
+async def _flush(hass):
+    """Güç sensörleri en sık 5 sn'de bir yazar (v0.29.4): bekleyen yazımları ileri sararak tamamla."""
+    for k in range(1, 5):
+        async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=6 * k))
+        await hass.async_block_till_done()
 
 DOMAIN = "lemur_home_dashboard"
 
@@ -81,6 +88,7 @@ async def test_categories_meas_and_sync(hass: HomeAssistant, hass_ws_client, set
     hass.states.async_set("media_player.tv", "paused", {})
     await hass.async_block_till_done()
     await hass.async_block_till_done()   # the category follows the device sensor one step later
+    await _flush(hass)
     assert float(hass.states.get("sensor.lhd_kat_medya_power").state) == 110
     # category kWh follows its devices' counters
     ce = [x for x in hass.data["sensor"].entities if x.entity_id == "sensor.lhd_kat_medya_energy"][0]
@@ -331,6 +339,7 @@ async def test_shared_plug_sensors(hass: HomeAssistant, hass_ws_client, setup_lh
     assert float(hass.states.get("sensor.lhd_kat_isik_power").state) == 20
     hass.states.async_set("light.led", "on", {"brightness": 0})
     await hass.async_block_till_done(); await hass.async_block_till_done(); await hass.async_block_till_done()
+    await _flush(hass)
     assert float(hass.states.get("sensor.lhd_masa_net_power").state) == 178
     # the plug no longer shared: its rest sensors go
     est["masa"].pop("inside")

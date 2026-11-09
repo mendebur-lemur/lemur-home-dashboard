@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.29.5',
+    tr: ['Enerji sekmesi çok daha hızlı açılıyor: grafikler Home Assistant\'ın 5 dakikalık özetinden çiziliyor (evde 7 MB yerine 0,13 MB), kartlar ve anlık değerler veriyi beklemeden geliyor, son veri bu tarayıcıda saklandığı için sonraki açılışlar anında.', 'Panonun güç sensörleri (cihaz, kategori, oda ve ev toplamı) en sık 5 saniyede bir yazılıyor; açma ve kapama gibi belirgin değişimler hemen. Home Assistant\'ın veritabanı daha yavaş büyüyor.'],
+    en: ['The Energy tab opens much faster: charts are drawn from Home Assistant\'s 5-minute statistics (0.13 MB instead of 7 MB at home), cards and live values show without waiting for the data, and the last data is kept in this browser so later openings are instant.', 'The dashboard\'s power sensors (device, category, room and home totals) are written at most every 5 seconds; clear changes like turning on or off right away. Home Assistant\'s database grows more slowly.'] },
   { v: '0.29.3',
     tr: ['Katlanır grubun başlığındaki sayı, koşulu yüzünden o an gizli olan öğeleri artık saymıyor (ör. içeride 3 ışık görünüyorsa "3 öğe").'],
     en: ['The count in a collapsible group\'s header no longer includes items hidden by their condition right now (e.g. "3 items" when 3 lights show).'] },

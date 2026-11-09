@@ -3,6 +3,7 @@ and the sensors of the energy devices, categories and solar production (estimate
 from __future__ import annotations
 
 import math
+import time
 
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.const import UnitOfEnergy, UnitOfPower
@@ -11,7 +12,7 @@ from homeassistant.helpers import area_registry as ar
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
-from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 from homeassistant.util import dt as dt_util
 
 from . import estimates as EST
@@ -143,6 +144,45 @@ class _Base:
         if self._unsub_link:
             self._unsub_link()
             self._unsub_link = None
+        p = getattr(self, "_tw_pending", None)
+        if p:
+            p()
+            self._tw_pending = None
+
+    # Güç sensörleri (v0.29.4): bağlı prizler saniyede birkaç kez değişebiliyor; ev ve oda toplamı günde 38 bin satır
+    # yazıyordu. En sık THROTTLE_S saniyede bir yazılır; belirgin değişim (açma, kapama) hemen yazılır, aradaki son değer kaybolmaz.
+    THROTTLE_S = 5.0
+
+    def _write_soon(self) -> None:
+        if not self.hass:
+            return
+        if getattr(self, "_tw_pending", None):
+            return
+        now = time.monotonic()
+        last = getattr(self, "_tw_last", 0.0)
+        try:
+            v = self.native_value
+        except Exception:  # noqa: BLE001 - değer hesaplanamazsa hemen yaz, HA kendi hatasını gösterir
+            v = None
+        lv = getattr(self, "_tw_val", None)
+        big = v is None or lv is None or (abs(v - lv) > 5 and abs(v - lv) > 0.2 * max(abs(lv), 1.0))
+        if big or now - last >= self.THROTTLE_S:
+            self._tw_last, self._tw_val = now, v
+            self.async_write_ha_state()
+            return
+        self._tw_pending = async_call_later(self.hass, self.THROTTLE_S - (now - last), self._tw_fire)
+
+    @callback
+    def _tw_fire(self, _now) -> None:
+        self._tw_pending = None
+        if not self.hass:
+            return
+        self._tw_last = time.monotonic()
+        try:
+            self._tw_val = self.native_value
+        except Exception:  # noqa: BLE001
+            self._tw_val = None
+        self.async_write_ha_state()
 
 
 class _Device(_Base):
@@ -194,7 +234,7 @@ class EstimatePowerSensor(_Device, SensorEntity):
 
     @callback
     def _linked_changed(self, _event) -> None:
-        self.async_write_ha_state()
+        self._write_soon()
 
     @callback
     def async_est_changed(self) -> None:
@@ -336,7 +376,7 @@ class NetPowerSensor(_Net, SensorEntity):
 
     @callback
     def _changed(self, _event) -> None:
-        self.async_write_ha_state()
+        self._write_soon()
 
     @callback
     def async_est_changed(self) -> None:
@@ -399,7 +439,7 @@ class CategoryPowerSensor(_Cat, SensorEntity):
 
     @callback
     def _changed(self, _event) -> None:
-        self.async_write_ha_state()
+        self._write_soon()
 
     @callback
     def async_est_changed(self) -> None:
