@@ -197,9 +197,11 @@ function lpExPopHtml(h, M, P, lang, ph, arm, back) {
   const bk = back ? '<button class="enx exbk" data-enback><ha-icon icon="mdi:arrow-left"></ha-icon></button>' : '';
   let inner = '';
   if (P.k === 'dev') { const d = M.devs.filter((x) => x.id === P.id)[0]; if (!d) return ''; inner = lpExDevHtml(h, M, d, lang, ph, arm, bk); }
+  else if (P.k === 'ana') inner = lpExAnaHtml(h, M, P, lang, ph);   // src/enrep.js
+  else if (P.k === 'rep') inner = lpExRepHtml(h, M, P, lang, ph);
   else inner = lpExCatHtml(h, M, P.id, lang);
   if (!inner) return '';
-  return '<div class="enpd expd">' + (ph ? '<div class="exgrab"></div>' : '') + inner + '</div>';
+  return '<div class="enpd expd' + (P.k === 'ana' || P.k === 'rep' ? ' exwide' : '') + '">' + (ph ? '<div class="exgrab"></div>' : '') + inner + '</div>';
 }
 // son 24 saat grafiğinde dokunulan an: saat, evin gücü, o an en çok çeken kategoriler
 function lpExDayTip(svg, clientX, M, lang) {
@@ -220,6 +222,25 @@ function lpExDayTip(svg, clientX, M, lang) {
   clearTimeout(LP_EX.tt); LP_EX.tt = setTimeout(() => { if (tip.parentNode) tip.parentNode.removeChild(tip); if (ln.parentNode) ln.parentNode.removeChild(ln); }, 6000);
 }
 
+// olağandışı: ölçülen cihazların bugünkü gidişi son günlerin ortalamasıyla (kart ve Analiz karosundaki uyarı sayısı)
+function lpExOddData(h, M, meas) {
+  return M.demo ? { L: [{ d: M.devs[1].id, up: true, ratio: 2.1, today: 1.9, avg: 0.9, proj: 1.9 }] } : !meas.length ? { L: [] } : lpExGet(h, 'odd', 1800000, (conn) => {
+      const d0 = lpExDay0();
+      return lpExSt(conn, meas.map((d) => d.e), d0 - 8 * LP_EX_D, 'day', ['change'], { energy: 'kWh' }).then((r) => {
+        const hrs = Math.floor((Date.now() - d0) / LP_EX_H), L = [];
+        meas.forEach((d) => {
+          const A = ((r[d.e]) || []).filter((x) => isFinite(x.change)).map((x) => ({ t: lpExT0(x), v: Math.max(0, x.change) }));
+          const prev = A.filter((x) => x.t < d0 - 12 * LP_EX_H), td = A.filter((x) => x.t >= d0 - 12 * LP_EX_H);
+          if (prev.length < 4 || hrs < 6) return;
+          const avg = prev.reduce((a, x) => a + x.v, 0) / prev.length, today = td.length ? td[td.length - 1].v : 0, proj = today * 24 / hrs;
+          if (avg < 0.15) return;
+          if (proj / avg >= 1.8) L.push({ d: d.id, up: true, ratio: proj / avg, today: today, avg: avg, proj: proj });
+          else if (proj / avg <= 0.25 && avg >= 0.4) L.push({ d: d.id, up: false, ratio: proj / avg, today: today, avg: avg, proj: proj });
+        });
+        return { L: L };
+      });
+    });
+}
 // ---- yeni kartlar ----
 function lpExCard(h, M, it, lang, phone) {
   const k = it.energy; if (!LP_EX_CARDS[k]) return null;
@@ -298,22 +319,7 @@ const LP_EX_CARDS = {
   odd: (h, M, it, lang) => {
     const meas = M.devs.filter((d) => !lpEnIsEst(d) && d.e);
     const left = M.demo ? lpEnDemoTips(M, lang) : lpEnTips(h, M, lang).filter((x) => /^left:/.test(x.k));
-    const D = M.demo ? { L: [{ d: M.devs[1].id, up: true, ratio: 2.1, today: 1.9, avg: 0.9, proj: 1.9 }] } : !meas.length ? { L: [] } : lpExGet(h, 'odd', 1800000, (conn) => {
-      const d0 = lpExDay0();
-      return lpExSt(conn, meas.map((d) => d.e), d0 - 8 * LP_EX_D, 'day', ['change'], { energy: 'kWh' }).then((r) => {
-        const hrs = Math.floor((Date.now() - d0) / LP_EX_H), L = [];
-        meas.forEach((d) => {
-          const A = ((r[d.e]) || []).filter((x) => isFinite(x.change)).map((x) => ({ t: lpExT0(x), v: Math.max(0, x.change) }));
-          const prev = A.filter((x) => x.t < d0 - 12 * LP_EX_H), td = A.filter((x) => x.t >= d0 - 12 * LP_EX_H);
-          if (prev.length < 4 || hrs < 6) return;
-          const avg = prev.reduce((a, x) => a + x.v, 0) / prev.length, today = td.length ? td[td.length - 1].v : 0, proj = today * 24 / hrs;
-          if (avg < 0.15) return;
-          if (proj / avg >= 1.8) L.push({ d: d.id, up: true, ratio: proj / avg, today: today, avg: avg, proj: proj });
-          else if (proj / avg <= 0.25 && avg >= 0.4) L.push({ d: d.id, up: false, ratio: proj / avg, today: today, avg: avg, proj: proj });
-        });
-        return { L: L };
-      });
-    });
+    const D = lpExOddData(h, M, meas);
     if (D === undefined) return lpExLoading(lang);
     const dm = (id) => M.devs.filter((x) => x.id === id)[0] || {};
     const al = (ic, col, b, s, at) => '<div class="exal"' + (at || '') + ' style="--c:' + col + '"><span class="eci"><ha-icon icon="' + ic + '"></ha-icon></span><div class="exn"><b>' + esc(b) + '</b><span>' + esc(s) + '</span></div></div>';

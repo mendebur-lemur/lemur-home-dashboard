@@ -886,6 +886,7 @@ function lhdEnergyTab(lang, id) {
     { id: id + '-b', type: 'energy', title: T('standby'), col: 0, entities: [{ energy: 'standby' }] },
     { id: id + '-c', type: 'energy', title: T('cats'), col: 1, grow: 3, entities: [{ energy: 'cats' }] },
     { id: id + '-w', type: 'energy', title: T('week'), col: 1, grow: 2, entities: [{ energy: 'week' }] },
+    { id: id + '-n', type: 'energy', title: '', col: 2, grow: 1, entities: [{ energy: 'nav' }] },   // Analiz ve Raporlar (v0.31)
     { id: id + '-t', type: 'energy', title: T('top'), col: 2, grow: 3, entities: [{ energy: 'top' }] },
     { id: id + '-d', type: 'energy', title: T('day'), col: 2, grow: 2, entities: [{ energy: 'day' }] }
   ] };

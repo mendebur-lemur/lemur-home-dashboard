@@ -1883,6 +1883,13 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (tip) { if (held) { held = false; return; } const te = tip.getAttribute('data-tipent'); if (te && !this._config.demo) lpFire(this, 'hass-more-info', { entityId: te }); return; }
       // v0.30: cihaza, kategoriye ve halkaya dokununca panonun kendi penceresi; grafikte dokunulan saatin değeri
       const dv = tg.closest('[data-endev]'); if (dv) { this._enOpen({ k: 'dev', id: dv.getAttribute('data-endev') }); return; }
+      const pg = tg.closest('[data-enpg]');   // v0.31: Analiz ve Raporlar pencereleri
+      if (pg) {
+        const now = new Date();
+        if (pg.getAttribute('data-enpg') === 'rep') this._enOpen({ k: 'rep', mode: 'm', y: now.getFullYear(), m: now.getMonth() });
+        else { let show = null; try { show = JSON.parse(decodeURIComponent(pg.getAttribute('data-enshow') || '')); } catch (x) {} this._enOpen({ k: 'ana', show: show }); }
+        return;
+      }
       const dy = tg.closest('[data-enday]'); if (dy) { lpExDayTip(dy, e.clientX, lpEnGet(this._hass, this._lang), this._lang); return; }
       const cat = tg.closest('[data-encat]'), more = tg.closest('[data-enmore]');
       if (cat) { this._enPop(cat.getAttribute('data-encat')); return; }
@@ -1899,7 +1906,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   // Tablette ortada, telefonda alttan açılır. Listeden cihaza geçince Geri ile önceki pencereye dönülür.
   _enClose() {
     const P = this._enP; this._enP = null; if (!P) return;
-    if (P.unsub) P.unsub(); clearTimeout(P.armT);
+    if (P.unsub) P.unsub(); clearTimeout(P.armT); clearTimeout(P.idleT);
     if (P.el && P.el.parentNode) P.el.parentNode.removeChild(P.el);
   }
   _enOpen(V, keep) {
@@ -1921,11 +1928,29 @@ class LemurHomeDashboardCard extends HTMLElement {
     };
     S.unsub = lpEnSub(S.draw);
     S.draw();
+    // tablette 2 dakika dokunulmazsa pencere kapanır, ekran canlı görünüme döner
+    if (!ph) { const idle = () => { clearTimeout(S.idleT); S.idleT = setTimeout(() => { if (this._enP === S) this._enClose(); }, 120000); }; idle(); ['pointerdown', 'touchstart', 'wheel'].forEach((ev) => pop.addEventListener(ev, idle, { passive: true })); }
     pop.addEventListener('click', (e) => {
       const t0 = e.target, c = (q) => (t0.closest ? t0.closest(q) : null);
       if (t0 === pop || c('[data-enclose]')) { this._enClose(); return; }
       if (c('[data-enback]')) { const st = S.stack.slice(), prev = st.pop(); this._enOpen(prev); if (this._enP) this._enP.stack = st; if (this._enP) this._enP.draw(); return; }
       const dv = c('[data-endev]'); if (dv) { this._enOpen({ k: 'dev', id: dv.getAttribute('data-endev') }, true); return; }
+      const ct = c('[data-encat]'); if (ct) { this._enOpen({ k: 'cat', id: ct.getAttribute('data-encat') }, true); return; }
+      const rp = c('[data-enrep]');
+      if (rp && S.P.k === 'rep') {   // rapor: ay / yıl, önceki / sonraki dönem
+        const a = rp.getAttribute('data-enrep'), Q = Object.assign({}, S.P), now = new Date();
+        if (a === 'mode:m') { Q.mode = 'm'; if (Q.y === now.getFullYear()) Q.m = now.getMonth(); else Q.m = 11; }
+        else if (a === 'mode:y') Q.mode = 'y';
+        else if (Q.mode === 'y') Q.y += a === 'next' ? 1 : -1;
+        else { const d = new Date(Q.y, Q.m + (a === 'next' ? 1 : -1), 1); Q.y = d.getFullYear(); Q.m = d.getMonth(); }
+        if (Q.mode === 'y' ? Q.y > now.getFullYear() : (Q.y > now.getFullYear() || (Q.y === now.getFullYear() && Q.m > now.getMonth()))) return;
+        S.P = Q; S.draw(); return;
+      }
+      if (c('[data-encsv]') && S.P.k === 'rep') {
+        const f = lpErCsv(this._hass, lpEnGet(this._hass, this._lang), S.P, this._lang); if (!f) return;
+        try { const u = URL.createObjectURL(new Blob([f.text], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a'); a.href = u; a.download = f.name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 1000); } catch (x) {}
+        return;
+      }
       const ac = c('[data-enact]');
       if (ac) {
         const id = ac.getAttribute('data-enact'), st = this._hass.states[id], dom = id.split('.')[0];

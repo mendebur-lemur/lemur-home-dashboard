@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enlooks.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enplus.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enlooks.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enplus.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enrep.js'), 'utf8');
 const SET = { s: {} };
 const ctx = {
   window: {}, SET: SET, STORE: { data: {} },
@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook, lpExCard, lpExPopHtml, LP_EX, LP_EX_CARDS };', ctx);
+vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook, lpExCard, lpExPopHtml, LP_EX, LP_EX_CARDS, lpErCsv };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -139,10 +139,26 @@ test('v0.30: new cards and the device and category windows draw from demo data',
   assert.ok(E.lpExCard({ states: {} }, { cats: [{ id: 'a', kids: [], p: 'sensor.x' }], devs: [] }, { energy: 'night' }, 'tr', false).indexOf('Yükleniyor') >= 0);
 });
 
+test('v0.31: analysis and reports card, windows and CSV from demo data', () => {
+  const M = E.lpEnDemo('tr'), h = { states: {}, lhdEnDemo: true, config: {} };
+  assert.strictEqual(E.LP_EN_TYPES[0], 'nav');
+  const nav = E.lpEnCard(h, M, { energy: 'nav' }, 'tr', false);
+  assert.ok(nav.indexOf('data-enpg="ana"') >= 0 && nav.indexOf('data-enpg="rep"') >= 0 && nav.indexOf('exdot') >= 0, 'two tiles, alert dot');
+  const ana = E.lpExPopHtml(h, M, { k: 'ana', show: ['night', 'heat'] }, 'tr', false, false, false);
+  assert.ok(ana.indexOf('exwide') >= 0 && ana.indexOf('en-night') >= 0 && ana.indexOf('en-heat') >= 0 && ana.indexOf('en-cmp') < 0, 'analysis shows the chosen cards');
+  const now = new Date();
+  const mo = E.lpExPopHtml(h, M, { k: 'rep', mode: 'm', y: now.getFullYear(), m: now.getMonth() }, 'tr', false, false, false);
+  assert.ok(mo.indexOf('data-enrep="prev"') >= 0 && mo.indexOf('<svg') >= 0 && mo.indexOf('data-encsv') >= 0, 'month report');
+  const yr = E.lpExPopHtml(h, M, { k: 'rep', mode: 'y', y: now.getFullYear() }, 'en', true, false, false);
+  assert.ok(yr.indexOf('Monthly kWh') >= 0 && yr.indexOf('data-encsv') < 0, 'year report, no CSV on phones');
+  const csv = E.lpErCsv(h, M, { k: 'rep', mode: 'm', y: now.getFullYear(), m: now.getMonth() }, 'tr');
+  assert.ok(csv && /^\ufeffTarih;/.test(csv.text) && csv.text.split('\r\n').length > 28, 'csv rows');
+});
+
 test('energy tab and tile power sensor', () => {
   const T = E.lhdEnergyTab('tr', 'enerji');
   assert.strictEqual(T.id, 'enerji');
-  assert.strictEqual(T.sections.map((s) => s.entities[0].energy).join(','), 'halo,standby,cats,week,top,day');
+  assert.strictEqual(T.sections.map((s) => s.entities[0].energy).join(','), 'halo,standby,cats,week,nav,top,day');
   assert.ok(T.sections.every((s) => s.type === 'energy'));
   const h = hass();
   assert.strictEqual(E.lpEnTileP(h, 'light.tavan'), 'sensor.tavan_power');

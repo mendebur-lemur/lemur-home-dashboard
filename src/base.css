@@ -911,3 +911,40 @@
 .exhm .dd { white-space: nowrap; overflow: hidden; }
 .exlg { justify-content: center; margin-top: 8px; }
 .exlg i.pk { background: transparent; box-shadow: inset 0 0 0 1px rgba(255, 145, 66, 0.8); }
+/* v0.31 enerji: Analiz ve raporlar kartı, Analiz ve Raporlar pencereleri */
+.exnav .exnv { position: relative; cursor: pointer; }
+.exnav .exnvs { font-size: 15px; line-height: 20px; margin-top: 4px; color: var(--lp-text2); font-weight: 600; }
+.exdot { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: #FF5A5A; box-shadow: 0 0 0 3px rgba(255, 90, 90, 0.22); }
+.expop .expd.exwide { max-width: 1180px; width: 100%; }
+.exana { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-gap: 10px; margin-top: 12px; }
+.exana.ph { grid-template-columns: minmax(0, 1fr); }
+.exac { display: flex; flex-direction: column; min-height: 220px; }
+.exac > .enc { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.exrh { flex-wrap: wrap; }
+.exrh .eci { margin-right: 12px; }
+.exseg { display: inline-flex; background: var(--lp-card); border-radius: 12px; padding: 3px; margin-right: 12px; }
+.exseg button, .exper button { background: transparent; border: 0 none; color: var(--lp-text2); font: inherit; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 9px; cursor: pointer; }
+.exseg button.on { background: rgba(242, 169, 59, 0.16); color: #F2A93B; }
+.exper { display: inline-flex; align-items: center; flex: 1 1 auto; min-width: 0; }
+.exper button { padding: 6px; display: flex; }
+.exper button[disabled] { opacity: 0.25; cursor: default; }
+.exper ha-icon { --mdc-icon-size: 22px; }
+.exper b { font-size: 18px; line-height: 24px; margin: 0 6px; white-space: nowrap; }
+.exper b i { font-style: normal; font-size: 12px; font-weight: 600; color: #F2A93B; margin-left: 4px; }
+.exkp { margin-top: 14px; }
+.exk span { font-size: 12px; }
+.exk b { font-size: 21px; line-height: 27px; font-weight: 700; }
+.exk .up { color: #FF5A5A; } .exk .dn { color: #3DDC84; }
+.exrg { display: grid; grid-template-columns: 1.5fr 1fr; grid-gap: 8px; margin-bottom: 8px; }
+.expop.ph .exrg { grid-template-columns: minmax(0, 1fr); }
+.exrg .exbox { display: flex; flex-direction: column; }
+.exrows .erw small { font-weight: 500; color: var(--lp-text2); }
+.exrk { flex: 0 0 18px; font-size: 12px; color: var(--lp-text2); text-align: center; margin-right: 6px; }
+.exwk > div { display: flex; align-items: center; font-size: 13px; margin: 6px 0; }
+.exwk span { flex: 0 0 80px; color: var(--lp-text2); }
+.exwk > div > i { flex: 1 1 auto; height: 8px; border-radius: 5px; background: rgba(255, 255, 255, 0.07); overflow: hidden; margin: 0 10px; }
+.exwk > div > i > i { display: block; height: 100%; border-radius: 5px; }
+.exwk b { flex: 0 0 auto; font-variant-numeric: tabular-nums; }
+.exins { display: flex; flex-direction: column; margin-top: 10px; }
+.exrf { display: flex; align-items: center; font-size: 12px; color: var(--lp-text2); margin-top: 6px; }
+.exrf span { flex: 1 1 auto; }

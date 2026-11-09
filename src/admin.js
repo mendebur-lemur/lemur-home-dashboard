@@ -3641,6 +3641,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (ty === 'top') { if (f.enCount) it.count = +f.enCount; if (f.enCat) it.cat = f.enCat; if (f.enIdle) it.hide_idle = true; }
     if (ty === 'week') { if (f.enDays === '30') it.days = 30; if (f.enUnit === 'cost') it.unit = 'cost'; }
     if (ty === 'day' && f.enMode === 'total') it.mode = 'total';
+    if (ty === 'nav') { const sh = LP_ER_ANA.filter((x) => f['enA_' + x] !== false); if (sh.length && sh.length < LP_ER_ANA.length) it.show = sh; }
     return it;
   }
   _imOpen(idx, raw, isNew) {
@@ -3685,6 +3686,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (it.card) f.card = lhdYamlDump(it.card);
     if (typeof it.energy === 'string') Object.assign(f, { enK: it.energy, enCols: it.cols ? String(it.cols) : '', enChart: it.chart || '', enCount: it.count ? String(it.count) : '', enCat: it.cat || '',
       enIdle: !!it.hide_idle, enDays: +it.days === 30 ? '30' : '', enUnit: it.unit === 'cost' ? 'cost' : '', enMode: it.mode === 'total' ? 'total' : '', enChips: it.chips !== false, enBars: it.bars !== false, enLook: it.look || '', enSort: it.sort === 'w' ? 'w' : '', enLoose: it.loose !== false });
+    if (it.energy === 'nav') LP_ER_ANA.forEach((x) => { f['enA_' + x] = !Array.isArray(it.show) || it.show.indexOf(x) >= 0; });
     if (Object.prototype.hasOwnProperty.call(it, 'pet')) {
       const P = ((STORE.data && STORE.data.pets) || {})[it.pet] || {}, fd = P.feeder || {};
       Object.assign(f, { pName: P.name || '', pKind: P.kind || 'cat', pIcon: P.icon || '', pMode: P.mode === 'times' ? 'times' : 'interval', pEvery: String(P.every_h || 12),
@@ -3756,6 +3758,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (K === 'week') body += fld(t('enDays'), sgE('enDays', [['', '7'], ['30', '30']])) + fld(t('enUnit'), sgE('enUnit', [['', this._t('enKwh')], ['cost', this._t('enCost')]])) + (f.enUnit === 'cost' && !lpEnPrice() ? '<div class="hint">' + t('enCostT') + '</div>' : '');
       if (K === 'day') body += fld(t('enMode'), sgE('enMode', [['', this._t('enModeCats')], ['total', this._t('enModeTot')]]));
       if (K === 'standby') body += '<div class="hint">' + t('enSbT') + '</div>';
+      if (K === 'nav') { LP_ER_ANA.forEach((x) => { if (f['enA_' + x] === undefined) f['enA_' + x] = true; }); body += fld(lpErT(this._lang, 'show'), LP_ER_ANA.map((x) => tgE('enA_' + x, esc(lpEnT(this._lang, 'k_' + x)), esc(lpEnT(this._lang, 'd_' + x)))).join('')); }
       body += '<div class="hint">' + t('enSrcT') + '</div>';
     }
     else if (k !== 'pet') {
@@ -3905,6 +3908,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (ty === 'top') { if (f.enCount) it.count = +f.enCount; if (f.enCat) it.cat = f.enCat; if (f.enIdle) it.hide_idle = true; }
         if (ty === 'week') { if (f.enDays === '30') it.days = 30; if (f.enUnit === 'cost') it.unit = 'cost'; }
         if (ty === 'day' && f.enMode === 'total') it.mode = 'total';
+        if (ty === 'nav') { const sh = LP_ER_ANA.filter((x) => f['enA_' + x] !== false); if (sh.length && sh.length < LP_ER_ANA.length) it.show = sh; }
         if (f.enLook && (LP_EL_LOOKS[ty] || []).indexOf(f.enLook) > 0) it.look = f.enLook;
       }
       if (k === 'card') {
