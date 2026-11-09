@@ -648,6 +648,7 @@ function lpEnEmpty(M, lang, big) {
 }
 function lpEnCard(h, M, it, lang, phone) {
   const S = (h && h.states) || {}, k = it.energy;
+  const ex = lpExCard(h, M, it, lang, phone); if (ex !== null) return ex;   // v0.30 kartları (src/enplus.js)
   if (M) { const lk = lpEnLook(h, M, it, lang, phone); if (lk) return lk; }   // seçilen görünüm (enlooks.js)
   if (M && k === 'flow') return lpEnFlowCard(h, M, it, lang);
   if (M && k === 'battery') return lpEnBatCard(h, M, it, lang);
@@ -674,7 +675,7 @@ function lpEnCard(h, M, it, lang, phone) {
     if (it.bars !== false && yk) bars += bar(lpEnT(lang, 'yearL'), lpEnNum(Math.round(yk), 0, lang) + ' / ' + lpEnNum(yl, 0, lang) + ' kWh', yk / yl, yk / yl > 0.85 ? '#FFC94A' : '#4DD0E1');
     const chips2 = chips + (bars ? '<div class="enbars">' + bars + '</div>' : '');
     const len = (deg / 360 * 540.35).toFixed(1);
-    return '<div class="enhalo"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="15"/>' +
+    return '<div class="enhalo" data-enall><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="15"/>' +
       '<circle cx="100" cy="100" r="86" fill="none" stroke="' + col + '" stroke-width="15" stroke-linecap="round" stroke-dasharray="' + len + ' 600" transform="rotate(-90 100 100)" style="filter:drop-shadow(0 0 6px ' + col + ')"/>' +
       '<circle cx="100" cy="100" r="72" fill="#121419"/></svg><div class="enin">' +
       '<div class="enw">' + esc(wp[0]) + '<small>' + wp[1] + '</small></div><div class="enlv" style="color:' + col + '">' + esc(lpEnT(lang, 'lvl' + lvl)) + '</div></div></div>' + (it.tips === false ? '' : lpEnTipsHtml(h, M, lang)) + chips2;
@@ -754,7 +755,7 @@ function lpEnCard(h, M, it, lang, phone) {
       s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + x.c + '" stroke-width="2" stroke-linejoin="round"/>';
     });
     for (let q = 0; q <= 4; q++) { const tt = new Date(M.hist.t0 + q * 6 * 3600000); s += '<text x="' + X(q * (n - 1) / 4).toFixed(1) + '" y="' + (H - 5) + '" text-anchor="' + (q === 0 ? 'start' : q === 4 ? 'end' : 'middle') + '">' + ('0' + tt.getHours()).slice(-2) + ':' + ('0' + tt.getMinutes()).slice(-2) + '</text>'; }
-    return '<svg class="ench2" viewBox="0 0 ' + W + ' ' + H + '">' + s + '</svg>' + (tot ? '' : lpEnLegend(M));
+    return '<div class="exday"><svg class="ench2" data-enday viewBox="0 0 ' + W + ' ' + H + '">' + s + '</svg></div>' + (tot ? '' : lpEnLegend(M));   // dokununca o saatin değeri (v0.30)
   }
   if (k === 'standby') {
     const sb = !M.demo && lpEnCfg().standby;

@@ -595,6 +595,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
     if (this._enUnsub) { this._enUnsub(); this._enUnsub = null; }
+    this._enClose();
     clearTimeout(this._enT); this._enT = null;
     clearInterval(this._tipT); this._tipT = null;
     clearInterval(this._clock); this._clock = null;
@@ -1837,6 +1838,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (el._html !== html) { el._html = html; el.innerHTML = html; }
     });
     this._tipShow();
+    if (this._enP && this._enP.draw) this._enP.draw();   // açık enerji penceresi de güncel kalsın
     // ipuçları birden fazlaysa 6 sn'de bir sıradakine geçilir (yeniden çizmeden)
     const many = this._ens.some((el) => el.querySelectorAll('.entip').length > 1);
     if (many && !this._tipT) this._tipT = setInterval(() => { this._tipI = (this._tipI || 0) + 1; this._tipShow(); }, 6000);
@@ -1879,22 +1881,63 @@ class LemurHomeDashboardCard extends HTMLElement {
       const tg = e.target && e.target.closest ? e.target : null; if (!tg) return;
       const tip = tg.closest('[data-entip]');
       if (tip) { if (held) { held = false; return; } const te = tip.getAttribute('data-tipent'); if (te && !this._config.demo) lpFire(this, 'hass-more-info', { entityId: te }); return; }
+      // v0.30: cihaza, kategoriye ve halkaya dokununca panonun kendi penceresi; grafikte dokunulan saatin değeri
+      const dv = tg.closest('[data-endev]'); if (dv) { this._enOpen({ k: 'dev', id: dv.getAttribute('data-endev') }); return; }
+      const dy = tg.closest('[data-enday]'); if (dy) { lpExDayTip(dy, e.clientX, lpEnGet(this._hass, this._lang), this._lang); return; }
       const cat = tg.closest('[data-encat]'), more = tg.closest('[data-enmore]');
       if (cat) { this._enPop(cat.getAttribute('data-encat')); return; }
-      if (more && more.getAttribute('data-enmore') && !this._config.demo) lpFire(this, 'hass-more-info', { entityId: more.getAttribute('data-enmore') });
+      if (tg.closest('[data-enall]') && !more) { this._enPop('__all'); return; }
+      if (more && more.getAttribute('data-enmore')) {
+        const v = more.getAttribute('data-enmore'), M = lpEnGet(this._hass, this._lang), d = M && M.devs ? M.devs.filter((x) => x.p === v)[0] : null;
+        if (d) { this._enOpen({ k: 'dev', id: d.id }); return; }
+        if (!this._config.demo) lpFire(this, 'hass-more-info', { entityId: v });
+      }
     });
   }
-  _enPop(catId) {
-    const R = this.shadowRoot, M = lpEnGet(this._hass, this._lang); if (!R || !M) return;
-    const old = R.querySelector('.enpop'); if (old) old.parentNode.removeChild(old);
-    const box = document.createElement('div'); box.innerHTML = lpEnPopHtml(this._hass, M, catId, this._lang);
-    const pop = box.firstChild; if (!pop) return;
+  _enPop(catId) { this._enOpen({ k: 'cat', id: catId }); }
+  // enerji penceresi (v0.30): kategori, cihaz ya da "şu an çekenler"; veri gelince ve değerler değişince yeniden çizilir.
+  // Tablette ortada, telefonda alttan açılır. Listeden cihaza geçince Geri ile önceki pencereye dönülür.
+  _enClose() {
+    const P = this._enP; this._enP = null; if (!P) return;
+    if (P.unsub) P.unsub(); clearTimeout(P.armT);
+    if (P.el && P.el.parentNode) P.el.parentNode.removeChild(P.el);
+  }
+  _enOpen(V, keep) {
+    const R = this.shadowRoot; if (!R) return;
+    const M0 = lpEnGet(this._hass, this._lang); if (!M0) return;
+    const stack = keep && this._enP ? this._enP.stack.concat([this._enP.P]) : [];
+    this._enClose();
+    const ph = lpIsPhone(this._config), pop = document.createElement('div');
+    pop.className = 'enpop expop' + (ph ? ' ph' : '');
     R.appendChild(pop);
+    const S = { el: pop, P: V, stack: stack, arm: false };
+    this._enP = S;
+    S.draw = () => {
+      if (this._enP !== S) return;
+      const M = lpEnGet(this._hass, this._lang); if (!M) return;
+      const html = lpExPopHtml(this._hass, M, S.P, this._lang, ph, S.arm, S.stack.length > 0);
+      if (!html) { this._enClose(); return; }
+      if (pop._h !== html) { const sc = pop.firstChild ? pop.firstChild.scrollTop : 0; pop._h = html; pop.innerHTML = html; if (pop.firstChild) pop.firstChild.scrollTop = sc; }
+    };
+    S.unsub = lpEnSub(S.draw);
+    S.draw();
     pop.addEventListener('click', (e) => {
-      const t0 = e.target;
-      const more = t0.closest ? t0.closest('[data-enmore]') : null;
-      if (more && more.getAttribute('data-enmore') && !this._config.demo) { lpFire(this, 'hass-more-info', { entityId: more.getAttribute('data-enmore') }); return; }
-      if (t0 === pop || (t0.closest && t0.closest('.enx'))) pop.parentNode.removeChild(pop);
+      const t0 = e.target, c = (q) => (t0.closest ? t0.closest(q) : null);
+      if (t0 === pop || c('[data-enclose]')) { this._enClose(); return; }
+      if (c('[data-enback]')) { const st = S.stack.slice(), prev = st.pop(); this._enOpen(prev); if (this._enP) this._enP.stack = st; if (this._enP) this._enP.draw(); return; }
+      const dv = c('[data-endev]'); if (dv) { this._enOpen({ k: 'dev', id: dv.getAttribute('data-endev') }, true); return; }
+      const ac = c('[data-enact]');
+      if (ac) {
+        const id = ac.getAttribute('data-enact'), st = this._hass.states[id], dom = id.split('.')[0];
+        if (this._config.demo || !st) return;
+        // priz ya da anahtar kapatmak iki dokunuş ister (bilgisayar gibi bir cihaz yanlışlıkla kapanmasın); ışık tek dokunuş
+        if (dom !== 'light' && st.state === 'on' && !S.arm) { S.arm = true; S.draw(); clearTimeout(S.armT); S.armT = setTimeout(() => { S.arm = false; S.draw(); }, 4000); return; }
+        S.arm = false; clearTimeout(S.armT);
+        this._hass.callService(dom, 'toggle', { entity_id: id });
+        return;
+      }
+      const more = c('[data-enmore]');
+      if (more && more.getAttribute('data-enmore') && !this._config.demo) { lpFire(this, 'hass-more-info', { entityId: more.getAttribute('data-enmore') }); }
     });
   }
   _update() {

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enlooks.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '../src/energy.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enlooks.js'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname, '../src/enplus.js'), 'utf8');
 const SET = { s: {} };
 const ctx = {
   window: {}, SET: SET, STORE: { data: {} },
@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook };', ctx);
+vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook, lpExCard, lpExPopHtml, LP_EX, LP_EX_CARDS };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -118,6 +118,25 @@ test('demo data draws every card with charts', () => {
   assert.ok(E.lpEnCard(h, M, { energy: 'week', days: 30, unit: 'cost' }, 'en', true).indexOf('<rect') >= 0);
   assert.ok(E.lpEnCard(h, M, { energy: 'day', mode: 'total' }, 'en', false).indexOf('<polygon') >= 0);
   assert.ok(E.lpEnCard(h, M, { energy: 'standby' }, 'en', false).indexOf('a year') >= 0);
+});
+
+test('v0.30: new cards and the device and category windows draw from demo data', () => {
+  const M = E.lpEnDemo('tr'), h = { states: {}, lhdEnDemo: true, config: {} };
+  ['night', 'heat', 'cmp', 'odd', 'period'].forEach((k) => {
+    assert.ok(E.LP_EN_TYPES.indexOf(k) >= 0, k + ' listed');
+    const html = E.lpEnCard(h, M, { energy: k }, 'tr', false);
+    assert.ok(html && html.indexOf('Yükleniyor') < 0, k + ' drew');
+  });
+  assert.ok(E.lpEnCard(h, M, { energy: 'heat' }, 'tr', false).indexOf('class="exhm"') >= 0);
+  assert.ok(E.lpEnCard(h, M, { energy: 'night' }, 'tr', false).indexOf('data-endev') >= 0);
+  const dev = E.lpExPopHtml(h, M, { k: 'dev', id: M.devs[0].id }, 'tr', false, false, false);
+  assert.ok(dev.indexOf(M.devs[0].name) >= 0 && dev.indexOf('<svg') >= 0, 'device window');
+  const cat = E.lpExPopHtml(h, M, { k: 'cat', id: M.cats[0].id }, 'tr', true, false, false);
+  assert.ok(cat.indexOf('data-endev') >= 0 && cat.indexOf('exgrab') >= 0, 'category window on phone');
+  const all = E.lpExPopHtml(h, M, { k: 'cat', id: '__all' }, 'tr', false, false, false);
+  assert.ok(all.indexOf('Şu an çekenler') >= 0);
+  // real data: nothing fetched without a connection, the card says it is loading instead of breaking
+  assert.ok(E.lpExCard({ states: {} }, { cats: [{ id: 'a', kids: [], p: 'sensor.x' }], devs: [] }, { energy: 'night' }, 'tr', false).indexOf('Yükleniyor') >= 0);
 });
 
 test('energy tab and tile power sensor', () => {
