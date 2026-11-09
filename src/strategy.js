@@ -30,7 +30,7 @@ function lpFxSwatch(hues) {
 function lpBgCss(b) {
   if (!b || !b.mode || b.mode === 'dark') return null;
   if (b.mode === 'black') return '#000000';
-  if (b.mode === 'color') return 'linear-gradient(rgba(0,0,0,0) 35%, rgba(0,0,0,0.25)) fixed, ' + (b.color || '#0e1726');
+  if (b.mode === 'color') return 'linear-gradient(rgba(0,0,0,0) 35%, rgba(0,0,0,0.25)) fixed, ' + (/^#[0-9a-fA-F]{3,8}$/.test(String(b.color || '')) ? b.color : '#0e1726');   // yalnız renk kodu (yedekten gelen başka değer dışarıdan adres yükletemesin)
   if (b.mode === 'img') return b.url ? "center / cover no-repeat fixed url('" + String(b.url).replace(/'/g, '') + "')" : null;
   if (b.mode === 'fx') {
     const hs = lpFxHues(b.fx), h = hs.length === 1 ? [hs[0], (hs[0] + 22) % 360] : hs;
@@ -51,6 +51,8 @@ function lpBgOf(s) {
 }
 
 // zeminin ana (en koyu, en alttaki) rengi: üst bar gizliyken telefonun durum çubuğu bu renge boyanır (#11)
+// odaya özel zemin (v0.29.2): sekmenin bg'si ({mode: 'dark'|'black'|'color'|'fx', ...}); yoksa null
+function lpTabBg(tab) { const b = tab && tab.bg; if (!b || typeof b !== 'object' || !b.mode) return null; return b.mode === 'dark' ? LP_DARK_BG : lpBgCss(b); }
 function lpBgBase(s) {
   const b = (s || {}).bg || {};
   if (b.mode === 'img' || b.mode === 'black') return '#000000';
@@ -80,7 +82,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
           path: tab.id,
           icon: tab.icon,
           type: 'panel',
-          background: bg,
+          background: (lpPhoneScreen() && settings.phone && settings.phone.style && settings.phone.style.bg) ? bg : (lpTabBg(tab) || bg),   // telefona özel zemin önce, sonra odanın kendi zemini
           cards: [{ type: 'custom:lemur-home-dashboard-card', tab: tab.id }]
         };
         if (settings.theme_name) v.theme = settings.theme_name;

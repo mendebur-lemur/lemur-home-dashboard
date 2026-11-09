@@ -95,8 +95,8 @@
       "hHa",
       "hLec"
      ],
-     "tr": "Işık karosuna basılı tutunca ne açılsın (Ayarlar).",
-     "en": "What opens on a long press of a light tile (Settings)."
+     "tr": "Işık karosuna basılı tutunca ne açılsın (Stil seç → Tablet).",
+     "en": "What opens on a long press of a light tile (Choose a style → Tablet)."
     },
     {
      "k": "phSheet",
@@ -160,14 +160,14 @@
     "Senaryo düğmeleri bir betiği, sahneyi ya da otomasyonu tek dokunuşla çalıştırır; her birinin kendi rengi ve simgesi var.",
     "İklim kartlarında klima ve petekler: aç/kapat, hedef sıcaklık, mod ve fan. **Mevsim** ayarına göre yazın klimalar, kışın petekler görünür.",
     "Medya bölümünde TV ve hoparlörler; dokununca cihaz penceresi açılır.",
-    "Süpürge kartı başlatır, durdurur, istasyona gönderir. Stil seç'te **Halo** (büyük halkalı kartlar) ya da **Sade** (her cihaz tek satır, dokununca genişler) seçilir."
+    "Süpürge kartı başlatır, duraklatır, istasyona gönderir. Stil seç'te **Halo** (büyük halkalı kartlar) ya da **Sade** (her cihaz tek satır, dokununca genişler) seçilir. Açık Sade satırda düğmeler büyük: süpürgede Başlat/Duraklat ve İstasyona dön, altında Durdur, Bul, Emiş; iklimde Güç, Mod, Fan, Salınım."
    ],
    "en": [
     "Scenes, climate, vacuum and media",
     "Scene buttons run a script, scene or automation with one tap; each has its own colour and icon.",
     "Climate cards hold air conditioners and radiators: on/off, target temperature, mode and fan. Depending on the **Season** setting, air conditioners show in summer and radiators in winter.",
     "The media section holds TVs and speakers; a tap opens the device window.",
-    "The vacuum card starts, stops and sends it to the dock. In Choose a style pick **Halo** (big ring cards) or **Simple** (one row per device that expands when tapped)."
+    "The vacuum card starts, pauses and sends it to the dock. In Choose a style pick **Halo** (big ring cards) or **Simple** (one row per device that expands when tapped). An open Simple row has big buttons: for a vacuum Start/Pause and Back to dock, with Stop, Locate and Suction below; for climate Power, Mode, Fan and Swing."
    ],
    "opts": [
     {
@@ -346,8 +346,8 @@
     },
     {
      "k": "petFeeder",
-     "tr": "\"Besledim\"e basınca bir servis de çalışır (ör. yemlik düğmesi).",
-     "en": "Runs a service when you log a feeding (e.g. a feeder button)."
+     "tr": "(Gelişmiş) \"Besledim\"e basınca bir servis de çalışır (ör. yemlik düğmesi).",
+     "en": "(Advanced) Runs a service when you log a feeding (e.g. a feeder button)."
     }
    ]
   },
@@ -356,18 +356,20 @@
    "group": "use",
    "tr": [
     "Enerji",
-    "Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede; güneş enerjisi olan evde enerji akışı ve batarya. Cihazlar ve kategoriler panelin Enerji sayfasından gelir (yoksa Home Assistant'ın Enerji ayarlarındaki \"Cihaz tüketimi\" listesinden); grafikler Home Assistant'ın kendi kayıtlarından.",
+    "Evin anlık gücü, kategoriler, şu an en çok çeken cihazlar, günlük tüketim ve son 24 saat tek sekmede; güneş enerjisi ya da batarya olan evde enerji akışı ve batarya. Cihazlar ve kategoriler panelin Enerji sayfasından gelir (yoksa Home Assistant'ın Enerji ayarlarındaki \"Cihaz tüketimi\" listesinden); grafikler Home Assistant'ın kendi kayıtlarından.",
     "Halo halkası tüketime göre yeşilden kırmızıya döner. Kategori karosuna dokununca o kategorinin cihazları, cihaz satırına dokununca cihaz penceresi açılır. Bekleme kartı hiçbir şey kullanılmıyorken evin çektiği gücü ve yıllık karşılığını gösterir.",
-    "**+ Sekme → Enerji sekmesi** hazır bir sekme kurar; kartlar tek tek de bölüme **Enerji kartı** olarak eklenir. Fiyat, faturalar ve tahmini cihazlar üst çubuktaki **Enerji** sayfasında (sonraki adım).",
-    "Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm → Işık karosunda watt).",
+    "**+ Sekme → Enerji sekmesi** hazır bir sekme kurar. Kartlar bir bölüme **Enerji kartı** ile tek tek de eklenir. Her kartın beş görünümü var; seçerken her biri senin verinle küçük önizleme olarak çizilir. Kutu küçülünce kart sadeleşir.",
+    "Enerji değerleri her bölüme eklenebilir: evin şu anki gücü, bugünkü tüketim, bugünün ve bu ayın tutarı, dönem sonu tahmini, yılın toplamı, ölçülmeyen pay, her odanın gücü ve bugünkü tüketimi. Enerji kartı menüsünün üstünde ya da Cihaz ekle → Enerji'de. Bölüme uyan görünümle gelir: ışıkların yanında karo, senaryoların yanında düğme, iklim kartlarının yanında Halo.",
+    "Evin ve odaların toplamı Home Assistant'ta gerçek sensördür (sensor.lhd_ev_power, sensor.lhd_oda_<oda>_power ve _energy); otomasyonlarda kullanılır. Işık ve priz karolarının köşesinde anlık watt da gösterilebilir (Enerji → Görünüm ve veri → Işık karosunda watt); ışık grubunda bu, gruptaki ışıkların toplamıdır.",
     "**İpuçları** bildirim göndermez: Halo'nun altında tek satırda sırayla döner (ör. \"Klima 3 saattir açık\"), ilgili cihazın satırının kenarı turuncu olur. Dokununca cihaz açılır, basılı tutunca o ipucu o ekranda bir daha görünmez."
    ],
    "en": [
     "Energy",
-    "Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab; with solar, the energy flow and the battery. Devices and categories come from the dashboard's Energy page (or, without them, from \"Individual devices\" in Home Assistant's Energy settings); the charts from Home Assistant's own history.",
+    "Home power now, categories, the devices drawing the most right now, daily usage and the last 24 hours in one tab; with solar or a battery, the energy flow and the battery. Devices and categories come from the dashboard's Energy page (or, without them, from \"Individual devices\" in Home Assistant's Energy settings); the charts from Home Assistant's own history.",
     "The Halo ring turns from green to red with usage. Tap a category tile for that category's devices, tap a device row for its more-info window. The standby card shows what the home draws when nothing is in use, and what that adds up to in a year.",
-    "**+ Tab → Energy tab** sets up a ready tab; cards can also be added one by one to a section as an **Energy card**. Price, bills and estimated devices are on the **Energy** page in the top bar (next step).",
-    "Light and plug tiles can also show live watts in their corner (Energy → Look → Watts on light tiles).",
+    "**+ Tab → Energy tab** sets up a ready tab. Cards can also be added one by one to a section with **Energy card**. Every card has five looks; while choosing, each is drawn as a small preview with your data. When the box gets small the card shows less.",
+    "Energy values can go into any section: home power now, today's usage, today's and this month's cost, the period-end estimate, the year's total, the share not measured, and each room's power and usage today. Find them at the top of the Energy card menu or in Add device → Energy. They come in the look that fits the section: a tile next to lights, a button next to scenes, a Halo next to climate cards.",
+    "The home and room totals are real sensors in Home Assistant (sensor.lhd_ev_power, sensor.lhd_oda_<room>_power and _energy) that automations can use. Light and plug tiles can also show live watts in their corner (Energy → Look and data → Watts on light tiles); for a light group it is the sum of its lights.",
     "**Tips** send no notifications: they rotate in one line under the Halo (e.g. \"AC on for 3 hours\") and the related device's row gets an orange edge. Tap to open the device; hold and that tip won't show again on that screen."
    ],
    "opts": [
@@ -381,10 +383,18 @@
       "=Son 24 saat|Last 24 hours",
       "=Bekleme tüketimi|Standby usage",
       "=Güneş ve şebeke akışı|Solar and grid flow",
-      "=Batarya|Battery"
+      "=Batarya|Battery",
+      "=Bu ay ve tarife|This month and tariff",
+      "=Ev sayacı|Home meter",
+      "=İpuçları|Tips"
      ],
-     "tr": "Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir.",
-     "en": "Added to a section as an Energy card; change its kind with the item ⚙."
+     "tr": "Bölüme Enerji kartı olarak eklenir; öğe ⚙ ile türü değişir. Akış ve batarya kartları Enerji sayfasında güneş ya da batarya açılınca dolar.",
+     "en": "Added to a section as an Energy card; change its kind with the item ⚙. The flow and battery cards fill once solar or a battery is turned on on the Energy page."
+    },
+    {
+     "k": "enLook",
+     "tr": "Her kartta beş görünüm (ör. Evin anlık gücü: halka, gösterge, dağılım halkası, sayı ve eğri, seviye çubuğu). İlki kartın varsayılan çizimi.",
+     "en": "Five looks per card (e.g. Home power now: ring, gauge, breakdown ring, number and curve, level bar). The first is the card's default."
     },
     {
      "k": "enChips",
@@ -399,22 +409,37 @@
     {
      "k": "enCols",
      "v": [
+      "phColsAuto",
       "=2",
       "=3",
       "=4"
      ],
-     "tr": "Kategori karolarında satırdaki karo (telefonda 2).",
-     "en": "Category tiles per row (2 on phones)."
+     "tr": "Kategori karolarında satırdaki karo. Oto, kategori sayısına uyar (2 yan yana, 4 ikiye iki, 6 üçe iki).",
+     "en": "Category tiles per row. Auto follows the number of categories (2 side by side, 4 two by two, 6 three by two)."
+    },
+    {
+     "k": "enSort",
+     "v": [
+      "enSortFix",
+      "enSortW"
+     ],
+     "tr": "Kategori karolarının sırası: Enerji → Kategoriler'deki sıra ya da en çok çekene göre.",
+     "en": "The order of category tiles: as in Energy → Categories, or highest first."
+    },
+    {
+     "k": "enLoose",
+     "tr": "Kategoriye konmamış cihazların toplamı; hep sonda durur, kapatılabilir.",
+     "en": "The total of devices without a category; always last, can be turned off."
     },
     {
      "k": "enChart",
      "v": [
       "enC24",
       "enC7",
-      "enCNone"
+      "enChNone"
      ],
-     "tr": "Kategori karosundaki küçük grafik.",
-     "en": "The small chart on a category tile."
+     "tr": "Kategori karosundaki küçük grafik; bütün kategoriler aynı ölçekte.",
+     "en": "The small chart on a category tile; all categories share one scale."
     },
     {
      "k": "enCount",
@@ -466,6 +491,11 @@
      "en": "Last 24 hours as category lines or one total."
     },
     {
+     "k": "addEnVals",
+     "tr": "Enerji kartı menüsünün üstünde: seçilen değer bölüme uyan görünümle, öteki öğelerle aynı boyda eklenir.",
+     "en": "At the top of the Energy card menu: the chosen value is added in the look that fits the section, the same size as the other items."
+    },
+    {
      "k": "enTab",
      "tr": "+ Sekme menüsünde: hazır Enerji sekmesi.",
      "en": "In the + Tab menu: a ready Energy tab."
@@ -495,8 +525,8 @@
     },
     {
      "k": "navFx",
-     "tr": "Oda düğmeleri kolona hizalıyken Efektler de hizalı alanda dursun (Ayarlar).",
-     "en": "Keep Effects inside the aligned area when room buttons are aligned to a column (Settings)."
+     "tr": "(Gelişmiş) Oda düğmeleri kolona hizalıyken Efektler de hizalı alanda dursun (Ayarlar).",
+     "en": "(Advanced) Keep Effects inside the aligned area when room buttons are aligned to a column (Settings)."
     },
     {
      "k": "lecOpen",
@@ -510,8 +540,8 @@
     },
     {
      "k": "hLec",
-     "tr": "Işığa basılı tutunca doğrudan efekt ekranı (Ayarlar → Işığa basılı tutunca).",
-     "en": "A long press on a light opens the effect screen directly (Settings → Holding a light)."
+     "tr": "Işığa basılı tutunca doğrudan efekt ekranı (Stil seç → Tablet → Işığa basılı tutunca).",
+     "en": "A long press on a light opens the effect screen directly (Choose a style → Tablet → Holding a light)."
     }
    ]
   },
@@ -520,17 +550,19 @@
    "group": "use",
    "tr": [
     "Telefonda",
-    "Aynı pano telefonda kendiliğinden telefon düzenine geçer; ayrı bir pano gerekmez.",
-    "Gezinme altta kategorilerle (Işıklar, İklim, Senaryolar, Kameralar), altta odalarla ya da üstte odalarla olabilir. Işıklar karo ya da tek sıra; ışık penceresi alttan açılır.",
-    "Işıklar kategorisinde üstteki oda şeridinde sağa sola kaydırarak odalar arasında geçilir; **Tümü** bütün evin ışıklarıdır.",
-    "Hepsi **Stil seç → Telefon**'dan seçilir; tablet hiçbirinden etkilenmez."
+    "Aynı pano telefonda kendiliğinden telefon düzenine geçer; ayrı bir pano gerekmez. Dikey tablette de aynı düzen kullanılır.",
+    "Gezinme altta kategorilerle (Işıklar, İklim, Senaryolar, Kameralar, Enerji), altta odalarla ya da üstte odalarla olabilir. Işıklar karo ya da tek sıra; bölüm bölüm ikili sıra da seçilir. Işık penceresi alttan açılır.",
+    "Telefonda bölüm kutularının çerçevesi ince, ışıklara ve düğmelere daha çok yer kalır. İstersen bölümler çerçevesiz olur: kutular çizilmez, başlıklar küçük etiket olur.",
+    "Işıklar kategorisinde üstteki oda şeridinde sağa sola kaydırarak odalar arasında geçilir; **Tümü** bütün evin ışıklarıdır. Saatte parlaklık açıksa üstteki sayfa adı ile saatin olduğu satır sağa sola kaydırılır; bu satırda kaydırınca oda değişmez.",
+    "Gezinme, ışıklar ve ışık penceresi **Stil seç → Telefon**'da; çerçevesiz bölümler yönetim panelinde **Düzenlenen: Telefon → Telefon görünümü**'nde. Tablet hiçbirinden etkilenmez."
    ],
    "en": [
     "On phones",
-    "The same dashboard switches to a phone layout by itself; no second dashboard needed.",
-    "Navigation can be categories at the bottom (Lights, Climate, Scenes, Cameras), rooms at the bottom or rooms at the top. Lights as tiles or one per row; the light window slides up from the bottom.",
-    "In the Lights category swipe the room strip on top to move between rooms; **All** shows every light in the home.",
-    "All of it is in **Choose a style → Phone**; the tablet is not affected."
+    "The same dashboard switches to a phone layout by itself; no second dashboard needed. Upright tablets use the same layout.",
+    "Navigation can be categories at the bottom (Lights, Climate, Scenes, Cameras, Energy), rooms at the bottom or rooms at the top. Lights as tiles or one per row; section by section also two per row. The light window slides up from the bottom.",
+    "On phones the section boxes have thin frames, which leaves more room for lights and buttons. Sections can also be frameless: no boxes are drawn and titles become small labels.",
+    "In the Lights category swipe the room strip on top to move between rooms; **All** shows every light in the home. With brightness on the clock on, swipe the row with the page name and the clock; swiping there does not change the room.",
+    "Navigation, lights and the light window are in **Choose a style → Phone**; frameless sections are in the admin panel under **Editing: Phone → Phone look**. The tablet is not affected."
    ],
    "opts": [
     {
@@ -555,8 +587,22 @@
     },
     {
      "k": "phSheet",
-     "tr": "Işık ve perde penceresi alttan açılır.",
-     "en": "The light and cover windows slide up from the bottom."
+     "tr": "Işık ve perde penceresi alttan açılır, aşağı çekince kapanır.",
+     "en": "The light and cover windows slide up from the bottom and close when pulled down."
+    },
+    {
+     "k": "phFlat",
+     "v": [
+      "phFlat0",
+      "phFlat1"
+     ],
+     "tr": "Çerçevesiz: telefonda bölüm kutuları çizilmez, başlıklar küçük etiket olur; ışıklara daha çok yer kalır (Telefon görünümü).",
+     "en": "Frameless: on phones section boxes are not drawn and titles become small labels; more room for lights (Phone look)."
+    },
+    {
+     "k": "bbPh",
+     "tr": "Saatte parlaklık telefonda ve dikey tablette de çalışsın (Ayarlar).",
+     "en": "Brightness on the clock works on phones and upright tablets too (Settings)."
     }
    ]
   },
@@ -566,25 +612,27 @@
    "tr": [
     "Yönetim paneli",
     "Sol menüdeki **Lemur Home Dashboard** (yalnız yöneticiler görür). Üstte sekmeler, solda canlı önizleme, sağda seçili sekmenin bölümleri.",
-    "İlk değişiklikte otomatik düzen kaydedilir, sonra her şey buradan düzenlenir. Her değişiklik geri alınabilir (düğme ya da Ctrl+Z).",
-    "**Basit** modda yalnız temel ayarlar görünür; **Gelişmiş** boyut, renk, koşul ve kart ayarlarını da açar. Karmaşık ayarların yanındaki **?** örnekle anlatır."
+    "Üst şeritte: Yıldız ver, Önerilen ürünler, Basit/Gelişmiş, Stil seç, Enerji, Ayarlar ve ⋯ (Rehber, Otomatik kur, Stil seç, Otomatik düzene dön). **Geri al** önizlemenin başlığında, ekran seçiminin yanında; Ctrl+Z de çalışır.",
+    "İlk değişiklikte otomatik düzen kaydedilir, sonra her şey buradan düzenlenir.",
+    "**Basit** modda günlük düzen için gerekenler görünür; **Gelişmiş** ince ayarları da açar. Gelişmiş bir ayar kullanıldıysa basit modda da görünür; gizlendiği için hiçbir ayar kaybolmaz ya da değişmez. Karmaşık ayarların yanındaki **?** örnekle anlatır."
    ],
    "en": [
     "Admin panel",
     "**Lemur Home Dashboard** in the sidebar (admins only). Tabs at the top, a live preview on the left, the selected tab's sections on the right.",
-    "Your first change saves the automatic layout; from then on everything is edited here. Every change can be undone (button or Ctrl+Z).",
-    "**Simple** mode shows only the basics; **Advanced** also opens size, colour, condition and card settings. The **?** next to harder settings explains them with an example."
+    "The top bar has Star, Recommended, Simple/Advanced, Choose a style, Energy, Settings and ⋯ (Guide, Auto setup, Choose a style, Back to automatic layout). **Undo** is in the preview's header next to the screen choice; Ctrl+Z works too.",
+    "Your first change saves the automatic layout; from then on everything is edited here.",
+    "**Simple** mode shows what everyday layout needs; **Advanced** also opens the fine tuning. An advanced setting that is in use still shows in simple mode; nothing is lost or changed by being hidden. The **?** next to harder settings explains them with an example."
    ],
    "opts": [
     {
      "k": "modeSimple",
-     "tr": "Temel ayarlar: sekme, bölüm, cihaz, ad, simge, görünüm, dokununca.",
-     "en": "The basics: tabs, sections, devices, name, icon, look, on tap."
+     "tr": "Sekme adı, simgesi, alanı, kolon sayısı (boş kolonu kaldırma dahil); bölüm, cihaz, ad, simge, görünüm, dokununca; telefonda gezinme, ışıklar, çerçeveli/çerçevesiz, ışık penceresi, bölüm ve öğe gizleme, bölümün telefon görünümü (ikili sıra dahil), katlanır gruplar, oda düğmesini gizleme; Stil seç, simge stili, saatte parlaklığı açma ve telefonda kullanma, tema, üst bar ve yan menü.",
+     "en": "Tab name, icon, area, number of columns (removing an empty column too); sections, devices, name, icon, look, on tap; on phones navigation, lights, framed/frameless, light window, hiding sections and items, a section's phone look (two per row too), collapsible groups, hiding a room button; Choose a style, icon style, turning on brightness on the clock and using it on phones, theme, top bar and sidebar."
     },
     {
      "k": "modeAdv",
-     "tr": "Boyut, renk, koşul, özel eylem, kart ve yerleşim ayarlarını da açar; hiçbir ayar silinmez.",
-     "en": "Also opens size, colour, condition, custom action, card and layout settings; nothing is deleted."
+     "tr": "Ayrıca: serbest ızgara, kolon içi sütunlar, odanın arka planı, öğe boyutu, renk, koşul, özel eylem ve kart ayarları, boş karo ve alt başlık; telefona özel oda adı ve simgesi, telefonda satırdaki karo, telefona özel simge stili, iklim kartı ve zemin; oda düğmelerini kolona hizalama ve boyutu; saatte parlaklığın kutu, simge ve hep göster seçenekleri; kanvas genişliği; duvar anahtarları; özel önizleme ekranı. Hiçbir ayar silinmez.",
+     "en": "Also: free grid, columns inside a column, room background, item size, colour, condition, custom action and card settings, empty tiles and subtitles; phone-only room name and icon, tiles per row on phones, phone-only icon style, climate card and background; aligning room buttons to a column and their size; the box, icon and always-show options of brightness on the clock; canvas width; wall switches; the custom preview screen. Nothing is deleted."
     },
     {
      "k": "preview",
@@ -592,11 +640,13 @@
       "scr_tab16",
       "scr_tab43",
       "scr_wide",
+      "scr_tabp",
       "scr_phone",
+      "scr_custom",
       "scr_here"
      ],
-     "tr": "Önizleme ekranı.",
-     "en": "The preview screen."
+     "tr": "Önizleme ekranı. Büyük dikey, gerçek dikey tablet gibi telefon düzeninde çizilir. **Özel** (gelişmiş): cihazının çözünürlüğünü yaz, önizleme o oranla çizilir; tablette çözünürlük olduğu gibi (ör. 2560 × 1600), telefonda tarayıcının gördüğü genişlik (ör. 412 × 915). Değer bu tarayıcıda hatırlanır.",
+     "en": "The preview screen. Large portrait is drawn in the phone layout, like a real upright tablet. **Custom** (advanced): type your device resolution and the preview uses that ratio; on tablets the resolution as is (e.g. 2560 × 1600), on phones the width the browser sees (e.g. 412 × 915). This browser remembers it."
     },
     {
      "k": "edMode",
@@ -609,8 +659,18 @@
     },
     {
      "k": "undo",
-     "tr": "Her değişiklik geri alınır (Ctrl+Z).",
-     "en": "Every change can be undone (Ctrl+Z)."
+     "tr": "Her değişiklik geri alınır: önizlemenin başlığındaki düğme, değişiklikten sonra çıkan bildirim ya da Ctrl+Z.",
+     "en": "Every change can be undone: the button in the preview's header, the notice after a change, or Ctrl+Z."
+    },
+    {
+     "k": "starB",
+     "tr": "Panoyu beğendiysen projenin GitHub sayfasını açar; hatırlatma ya da sayım yok.",
+     "en": "If you like the dashboard, opens the project's GitHub page; no reminders or counting."
+    },
+    {
+     "k": "picksB",
+     "tr": "Önerilen ürünler penceresini açar (Daha fazlası → Önerilen ürünler).",
+     "en": "Opens the recommended products window (More → Recommended products)."
     }
    ]
   },
@@ -644,6 +704,14 @@
      "en": "The tab's room: the effect screen and brightness on the clock use it."
     },
     {
+     "k": "tabBg",
+     "v": [
+      "tabBgSame"
+     ],
+     "tr": "(Gelişmiş) Bu sekmeye özel arka plan: renk ya da efekt. **Genel** Stil seç'teki zemini kullanır. Telefona özel zemin seçildiyse telefonda o geçerli.",
+     "en": "(Advanced) A background for this tab only: a colour or an effect. **General** uses the background from Choose a style. A phone-only background wins on phones."
+    },
+    {
      "k": "refill",
      "tr": "Seçili alanın cihazlarıyla sekmeyi baştan kurar.",
      "en": "Rebuilds the tab from the devices of the chosen area."
@@ -654,13 +722,32 @@
       "layCols",
       "layGrid"
      ],
-     "tr": "Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; Ekrana sığdır ya da Kaydırılabilir. Büyük dikey ekranda 6 sütun.",
-     "en": "In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; Fit the screen or Scrollable. 6 columns on a large portrait screen."
+     "tr": "(Gelişmiş) Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; ötekiler yer açar. Sütunlar'a dönünce eski düzen yerinde. Bölüm listesinde kolon yerine kutunun boyu yazar.",
+     "en": "(Advanced) In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; the others make room. Back in Columns the old layout is still there. The section list shows the box size instead of the column."
+    },
+    {
+     "k": "gFit",
+     "v": [
+      "gFit",
+      "gScr"
+     ],
+     "tr": "(Serbest ızgara) Ekrana sığdır: düzen ekranı tam kaplar, kaydırma yok; satır sayısı 8-20 arası seçilir. Kaydırılabilir: satır yüksekliği sabit, sayfa aşağı uzar.",
+     "en": "(Free grid) Fit the screen: the layout fills the screen, no scrolling; pick 8 to 20 rows. Scrollable: fixed row height, the page grows downwards."
+    },
+    {
+     "k": "gFill",
+     "tr": "(Serbest ızgara) Kutular sağa ve aşağı uzayıp boş hücreleri kapatır.",
+     "en": "(Free grid) Boxes grow right and down to close empty cells."
+    },
+    {
+     "k": "gmAuto",
+     "tr": "(Serbest ızgara) Büyük dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur. Bu düğme onu siler, geniş düzenden yeniden türetir.",
+     "en": "(Free grid) On a large portrait screen the layout drops to 6 columns by itself; change it there and that screen gets its own layout. This button removes it and derives it from the wide layout again."
     },
     {
      "k": "cols",
-     "tr": "1 ile 6 arası kolon; genişlikler önizlemedeki çizgilerden sürüklenir.",
-     "en": "1 to 6 columns; drag the lines in the preview for widths."
+     "tr": "1 ile 6 arası kolon; − ve + son kolonu kaldırır ya da ekler, genişlikler önizlemedeki çizgilerden sürüklenir. Boş kolon panoda çizilmez; düzenlemede içindeki **Bu kolonu kaldır** ortadaki boş kolonu da kaldırır, öbür kolonlar yerinde kalır.",
+     "en": "1 to 6 columns; − and + remove or add the last column, drag the lines in the preview for widths. An empty column is not drawn on the dashboard; while editing, **Remove this column** inside it removes it, even in the middle, and the other columns stay."
     },
     {
      "k": "colTab",
@@ -668,8 +755,8 @@
       "colTab",
       "colEq"
      ],
-     "tr": "Hazır kolon oranları.",
-     "en": "Ready column ratios."
+     "tr": "Hazır kolon oranları; Tablet düzeni yalnız 3 kolonda.",
+     "en": "Ready column ratios; Tablet layout only with 3 columns."
     },
     {
      "k": "splits",
@@ -681,7 +768,8 @@
      "v": [
       "emptyTab",
       "fromArea",
-      "camTab"
+      "camTab",
+      "enTab"
      ],
      "tr": "Yeni sekme.",
      "en": "A new tab."
@@ -730,10 +818,11 @@
       "akC",
       "akV",
       "akM",
-      "akK"
+      "akK",
+      "akE"
      ],
-     "tr": "Sekmelere hangi bölümler girsin.",
-     "en": "Which sections go into the tabs."
+     "tr": "Sekmelere hangi bölümler girsin; Enerji seçilirse sonda bir Enerji sekmesi açılır.",
+     "en": "Which sections go into the tabs; with Energy an Energy tab is added at the end."
     },
     {
      "k": "akLook",
@@ -753,6 +842,16 @@
      ],
      "tr": "İklim ve süpürge kartları.",
      "en": "Climate and vacuum cards."
+    },
+    {
+     "k": "hold",
+     "v": [
+      "hPop",
+      "hHa",
+      "hLec"
+     ],
+     "tr": "Işık karosuna basılı tutunca açılan pencere.",
+     "en": "The window a long press on a light tile opens."
     },
     {
      "k": "akPhone",
@@ -799,15 +898,15 @@
    "group": "edit",
    "tr": [
     "Cihaz eklemek",
-    "Bölümde **Ekle**'ye bas. Seçicide evdeki bütün cihazlar listelenir; üstteki süzgeçle (Işık ve anahtar, Senaryolar, Değerler, İklim, Süpürge, Medya, Kameralar) daraltılır.",
+    "Bölümde **Ekle**'ye bas. Seçicide evdeki bütün cihazlar listelenir; üstteki süzgeçle (Işık ve anahtar, Senaryolar, Değerler, Enerji, İklim, Süpürge, Medya, Kameralar) daraltılır.",
     "Birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli düğme olur; sensörler değer karosu.",
-    "**Kart** düğmesi Halo kartlarını, Home Assistant kartlarını ve kurulu özel kartları listeler."
+    "**Kart** düğmesi Halo kartlarını, Home Assistant kartlarını ve kurulu özel kartları listeler. **Enerji kartı** enerji kartlarını ve bölüme uyan enerji değerlerini açar."
    ],
    "en": [
     "Adding devices",
-    "Press **Add** in a section. The picker lists every device in the home; the filter on top (Lights and switches, Scenes, Values, Climate, Vacuum, Media, Cameras) narrows it.",
+    "Press **Add** in a section. The picker lists every device in the home; the filter on top (Lights and switches, Scenes, Values, Energy, Climate, Vacuum, Media, Cameras) narrows it.",
     "Add several at once. Scripts, scenes and automations become coloured buttons; sensors become value tiles.",
-    "The **Card** button lists Halo cards, Home Assistant cards and installed custom cards."
+    "The **Card** button lists Halo cards, Home Assistant cards and installed custom cards. **Energy card** opens the energy cards and the energy values that fit the section."
    ],
    "opts": [
     {
@@ -817,13 +916,14 @@
       "pfTile",
       "t_scenes",
       "t_values",
+      "pfEnergy",
       "t_climate",
       "t_vacuum",
       "t_media",
       "t_camera"
      ],
-     "tr": "Seçicideki süzgeç.",
-     "en": "The picker's filter."
+     "tr": "Seçicideki süzgeç. Enerji: evin ve odaların gücü, bugünkü tüketim, tutarlar, yılın toplamı, ölçülmeyen pay.",
+     "en": "The picker's filter. Energy: home and room power, today's usage, costs, the year's total, the share not measured."
     },
     {
      "k": "addDev",
@@ -841,9 +941,14 @@
      "en": "A feeding card."
     },
     {
+     "k": "addEn",
+     "tr": "Enerji kartı ya da bölüme uyan bir enerji değeri; menü önizlemeli.",
+     "en": "An energy card or an energy value that fits the section; the menu has previews."
+    },
+    {
      "k": "addSub",
-     "tr": "Bölümün içinde küçük bir ara başlık.",
-     "en": "A small heading inside the section."
+     "tr": "(Gelişmiş) Bölümün içinde küçük bir ara başlık.",
+     "en": "(Advanced) A small heading inside the section."
     },
     {
      "k": "addPh",
@@ -851,8 +956,8 @@
       "addPh",
       "addScPh"
      ],
-     "tr": "Yer tutan boş karo ya da düğme (sonra ⚙ ile eylem verilir).",
-     "en": "A placeholder tile or button (give it an action in ⚙)."
+     "tr": "(Gelişmiş) Yer tutan boş karo ya da düğme (sonra ⚙ ile eylem verilir).",
+     "en": "(Advanced) A placeholder tile or button (give it an action in ⚙)."
     }
    ]
   },
@@ -932,46 +1037,53 @@
    "group": "edit",
    "tr": [
     "Enerji sayfası",
-    "Üst çubuktaki **Enerji** düğmesi cihazları, kategorileri, ev sayacını, güneşi, fiyatı, faturaları ve ipuçlarını kendi sayfasında açar. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.",
-    "**Cihazlar:** güç ölçen cihazlar bulunur ve **Ekle** ile doğrudan gelir. Ölçmeyenler **Panelden seç** ile eklenir: ad paneldekinden, tür ve kategori kendiliğinden, ölçülmüş ışıkların değerleri kütüphaneden gelir. Sanal ölçüm türleri: ışık (bekleme, en düşük ve en çok W, parlaklıkla), duruma göre (her durum için ayrı W; ör. TV oynatırken 95, duraklatınca 70 W), aç/kapa, sabit, yıllık tüketim (etiketteki kWh/yıl) ya da çevrim. Her biri için Home Assistant'ta güç ve enerji sensörü oluşur; kartlarda \"~\" ile görünür.",
-    "**Öğren:** ölçmeyen akıllı bir cihaz bir kez güç ölçen prize takılıp öğretilir. Işıkta önce ortak havuza bakılır; yoksa bütün beyaz tonlar, renkler ve parlaklıklar sırayla ölçülür (arka planda sürer). Efektler de ölçülür. TV gibi cihazlarda her durumun ortalaması kullanırken toplanır; buzdolabı gibi sürekli açık cihazlarda prizin günlerce ortalaması alınır. Farklı prizlerle birkaç öğrenme birlikte sürer. Ortak havuzda şimdilik yalnız projenin kendi ölçtüğü ışıklar var; şerit LED'ler metre başına tutulur.",
-    "**Kategoriler:** ad, renk ve içindeki cihazlar. Her kategori için toplam güç ve kWh sensörü oluşur; cihazlar ve kategoriler Home Assistant Enerji ayarlarına kendiliğinden eklenir (Veri kaynağı → Enerji ayarlarıyla eşle).",
-    "**Ev sayacı:** evin tamamını ölçen cihaz kendiliğinden bulunur, **Evin sayacı yap** ile seçilir; ev ölçülen değerle, ölçülmeyen pay faturasız, yılın toplamı sayaçtan. **Güneş ve batarya:** **Güneş enerjisi var** ve **Batarya var** anahtarları; yalnızca açtığının ayarları görünür, akış ve batarya kartları bunlarla dolar. **Aktar:** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterip panele aktarır.",
-    "**Fiyat ve tarife**, **Faturalar** (gerçek birim fiyat, ölçülmeyen pay, yıllık sınır) ve **İpuçları** (eşikler, sekmede nokta, gizlenenleri geri getir) aynı sayfada."
+    "Üst çubuktaki **Enerji** kendi sayfasında açılır: Özet, Cihazlar, Kategoriler, Ev sayacı, Güneş ve batarya, Fiyat ve tarife, Faturalar, İpuçları, Aktar, Görünüm ve veri. **Özet** her bölümün bugünkü durumunu gösterir; satıra dokununca o bölüm açılır.",
+    "**Cihazlar:** odaya ya da kategoriye göre gruplu, her grubun toplamı yanında; üstte arama ve süzgeçler. Her satırda bir durum etiketi var: Ölçülüyor, Öğreniliyor, Öğrenildi, Hazır tablo, Tahmini ya da Kontrol et. Oda, Home Assistant'ta cihaza seçilen alandan gelir.",
+    "**Işık ekle** takip edilmeyen ışıkları odalarına göre listeler, toplu eklenir; **Ölçen cihaz ekle** güç ölçen cihazları getirir; **Başka cihaz** elle eklenir. Cihaza dokununca düzenleme sağdan açılır: **Bu ne?**, **Gücünü nereden biliyoruz?** ve **Değerler**. Ölçmeyen her cihaz için Home Assistant'ta bir güç ve bir enerji sensörü oluşur; kartlarda \"~\" ile görünür. Gerçek değeri **Öğren** ile prizle ölçülür (sonraki adım).",
+    "**Paylaşımlı priz:** bir prizde birden çok cihaz varsa prizin ayarında **Bu prize bağlı cihazlar**'ı işaretle. Onların gücü prizden çıkar, kalan pay ayrı satır olur; hiçbiri iki kez sayılmaz.",
+    "**Kategoriler:** ad, renk, sıra ve içindeki cihazlar; her biri için toplam güç ve kWh sensörü oluşur, Home Assistant'ın Enerji ayarlarına kendiliğinden eklenir. **Ev sayacı:** evin tamamını ölçen cihaz (Shelly Pro EM gibi) kendiliğinden bulunur; ev ölçülen değerle gösterilir, ölçülmeyen pay fatura girmeden bulunur. **Güneş ve batarya:** yalnız açtığının ayarları görünür; şebeke kesilip ev bataryadan beslenince akış kartı kesintiyi gösterir.",
+    "**Fiyat ve tarife** üç adım: faturandaki tarife, 1 kWh'in fiyatı ve yılın gidişi (bu yılın toplamı, bu hızla yıl sonu, yıllık sınırı geçeceğin gün, son kaynak fiyatının başlayacağı gün). Fatura girmeden çalışır: yılın toplamı Home Assistant'ın kayıtlarından gelir; 2 haftadan az kayıt varsa yıl sonu tahmini yapılmaz. **Faturalar** hesabı kesinleştirir. **Aktar** başka bir eklentiyle kurulmuş sanal cihazları ve grupları önce gösterir, onaylayınca panele getirir."
    ],
    "en": [
     "Energy page",
-    "The **Energy** button in the top bar opens devices, categories, the home meter, solar, price, bills and tips on their own page. **Summary** shows where each part stands today; tap a row to open that part.",
-    "**Devices:** devices that measure power are found and come in with **Add**. The others are added with **Pick from the dashboard**: the name comes from the dashboard, the kind and category are filled in, and measured lights get their values from the library. Virtual measurement kinds: light (standby, lowest and highest W, by brightness), by state (a W value per state; e.g. a TV at 95 W playing, 70 W paused), on/off, fixed, yearly usage (the label's kWh/year) or cycles. Each gets a power and an energy sensor in Home Assistant; cards show them with \"~\".",
-    "**Learn:** a smart device that does not measure power is plugged into a plug that does, once. For a light the shared pool is checked first; otherwise every white tone, color and brightness is measured in turn (it runs in the background). Effects are measured too. Devices like a TV collect an average per state while used; always-on devices like a fridge take the plug's average over days. Several learns run together on different plugs. For now the shared pool holds only lights measured by the project itself; LED strips are kept per meter.",
-    "**Categories:** name, color and the devices in it. Each category gets a total power and kWh sensor; devices and categories are added to Home Assistant's Energy settings by themselves (Data source → Sync with the Energy settings).",
-    "**Home meter:** a device measuring the whole home is found by itself and picked with **Use as home meter**; the home is measured, the untracked share needs no bills, the year's total comes from the meter. **Solar and battery:** the **I have solar** and **I have a battery** switches; only what you turn on shows its settings, and the flow and battery cards fill from them. **Import:** shows, then brings in virtual devices and groups set up with another add-on.",
-    "**Price and tariff**, **Bills** (real unit price, the share not measured, yearly limit) and **Tips** (thresholds, dot on the tab, bring back hidden tips) are on the same page."
+    "**Energy** in the top bar opens its own page: Summary, Devices, Categories, Home meter, Solar and battery, Price and tariff, Bills, Tips, Import, Look and data. **Summary** shows where each part stands today; tap a row to open that part.",
+    "**Devices:** grouped by room or category with each group's total; search and filters on top. Every row has a status label: Measured, Learning, Learned, Ready table, Estimated or Check. The room comes from the area set for the device in Home Assistant.",
+    "**Add lights** lists untracked lights by room to add in one go; **Add measuring devices** brings in devices that measure power; **Other device** is added by hand. Tap a device and the editor opens on the right: **What is it?**, **Where does its power come from?** and **Values**. Every device that does not measure gets a power and an energy sensor in Home Assistant; cards show it with \"~\". Its real values are measured once with a plug using **Learn** (next step).",
+    "**Shared plug:** if one plug feeds several devices, tick them under **Devices on this plug** in the plug's settings. Their power is taken off the plug's, the rest becomes its own row; nothing is counted twice.",
+    "**Categories:** name, colour, order and the devices in it; each gets a total power and kWh sensor and is added to Home Assistant's Energy settings by itself. **Home meter:** a device measuring the whole home (like a Shelly Pro EM) is found by itself; the home shows the measured value and the untracked share needs no bills. **Solar and battery:** only what you turn on shows its settings; when the grid is down and the home runs on the battery, the flow card shows the outage.",
+    "**Price and tariff** in three steps: the tariff on your bill, what 1 kWh costs, and how the year is going (this year's total, the year end at this rate, the day you cross the yearly limit, the day the last-resort price starts). It works without bills: the year's total comes from Home Assistant's records; with less than 2 weeks of records there is no year-end estimate. **Bills** make it exact. **Import** shows virtual devices and groups set up with another add-on, then brings them in when you confirm."
    ],
    "opts": [
     {
-     "k": "enPrMode",
+     "k": "enTarQ1",
      "v": [
-      "enPrBill",
-      "enPrSingle",
-      "enPrTier"
+      "enChTier",
+      "enChTou",
+      "enChSktt",
+      "enChBill",
+      "enChSingle"
      ],
-     "tr": "Kartlardaki para nereden hesaplansın. Faturadan: son faturanın tutarı ÷ kWh.",
-     "en": "Where the cost on the cards comes from. From the bill: the last bill's amount ÷ kWh."
+     "tr": "Kademeli: günde ortalama 8 kWh'e kadar ucuz, üstü pahalı. Üç zamanlı: gündüz 06-17, puant 17-22, gece 22-06. Son kaynak: yıllık sınırı geçtiysen. Bilmiyorum: birim fiyat son faturadan. Sabit fiyat: her kWh aynı.",
+     "en": "Tiered: cheaper up to an average 8 kWh a day, dearer above. Time of use: day 06-17, peak 17-22, night 22-06. Last resort: if you passed the yearly limit. Not sure: the unit price comes from the last bill. Fixed price: every kWh the same."
     },
     {
-     "k": "enDaily",
-     "tr": "Kademede günlük ortalama sınır (varsayılan 8 kWh); bu ayın sınırı bununla hesaplanır.",
-     "en": "The daily average limit for tiers (default 8 kWh); this month's limit is worked out from it."
+     "k": "enFill",
+     "tr": "Kademede ve üç zamanlıda EPDK 4 Nisan 2026 tarifesini vergiler dahil yazar. Tarife değişince güncellemen gerekir.",
+     "en": "For tiered and time of use, enters the EPDK tariff of 4 April 2026 with taxes. Update it when the tariff changes."
     },
     {
-     "k": "enYear",
+     "k": "enMoreExact",
+     "tr": "1 Ocak'tan son faturaya kadarki kWh ve geçen yılın toplamı; boşsa Home Assistant'ın kayıtları kullanılır.",
+     "en": "kWh from 1 January to the end of the last bill and last year's total; empty uses Home Assistant's records."
+    },
+    {
+     "k": "enYLim",
      "v": [
       "=Yıla göre|By year",
       "enYMan"
      ],
-     "tr": "Sınırın yüzde 85'ini geçince Halo'daki çubuk sarıya döner.",
-     "en": "Past 85% of the limit the bar under the Halo turns yellow."
+     "tr": "Daha kesin olsun'da. Yıla göre 3.000 kWh (EPDK 30 Ekim 2026 kararı). Geçilirse geçildiği ayı izleyen 3. ayın 1'inden yıl sonuna kadar son kaynak fiyatı. Elle: ticarethane ya da farklı bir sınır.",
+     "en": "Under More exact. By year 3,000 kWh (EPDK decision of 30 October 2026). Once crossed, the last-resort price applies from the 1st of the third month after, until the year end. Manual: for a business or a different limit."
     },
     {
      "k": "enBAdd",
@@ -979,23 +1091,44 @@
      "en": "Period start and end, kWh and the total amount."
     },
     {
-     "k": "enL12",
-     "tr": "Faturanın arkasındaki grafikten.",
-     "en": "From the chart on the back of the bill."
+     "l": {
+      "tr": "Süzgeçler",
+      "en": "Filters"
+     },
+     "v": [
+      "enAll",
+      "enDvFL",
+      "enFMeas",
+      "enDvFE",
+      "enDvFC",
+      "enDvFR"
+     ],
+     "tr": "Cihazlar listesini daraltır. Odası yok: oda toplamlarına girmeyen cihazlar.",
+     "en": "Narrows the device list. No room: devices left out of room totals."
     },
     {
-     "k": "enEKind",
+     "k": "enDvAddL",
+     "tr": "Takip edilmeyen ışıklar odalarına göre; hazır tablosu olanlar ölçülmüş değerle gelir.",
+     "en": "Untracked lights by room; those with a ready table come with measured values."
+    },
+    {
+     "k": "enDvAddM",
+     "tr": "Güç ölçen ama eklenmemiş cihazlar; enerji sensörü bulunursa o da gelir.",
+     "en": "Devices that measure power but are not added yet; their energy sensor too if found."
+    },
+    {
+     "k": "enDsHow",
      "v": [
-      "ek_meas",
-      "ek_light",
-      "ek_states",
-      "ek_onoff",
-      "ek_fixed",
-      "ek_year",
-      "ek_cycle"
+      "ekL_meas",
+      "ekL_light",
+      "ekL_states",
+      "ekL_onoff",
+      "ekL_fixed",
+      "ekL_year",
+      "ekL_cycle"
      ],
-     "tr": "Cihazın hesap şekli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.",
-     "en": "How the device is worked out. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W."
+     "tr": "Cihazın gücünün hesap yolu; cihaza uyanlar listelenir, önerilen işaretli. Örnek: 2-60 W ışık %30 parlaklıkta 19,4 W; 250 kWh/yıl buzdolabı ortalama 28,5 W.",
+     "en": "How the device's power is worked out; methods that fit the device are listed, the recommended one marked. Example: a 2-60 W light at 30% is 19.4 W; a 250 kWh/year fridge averages 28.5 W."
     },
     {
      "k": "enECat",
@@ -1003,9 +1136,29 @@
      "en": "The device's category; a new one can be made from here."
     },
     {
-     "k": "lrStrip",
-     "tr": "Öğren sonucunda: şeritte uzunluk ve adaptör gücü; havuzdan alınan tablo buna göre uyarlanır.",
-     "en": "In the Learn result: a strip's length and adapter power; a table from the pool is scaled to them."
+     "k": "enInT",
+     "tr": "Paylaşımlı prizdeki öteki takip edilen cihazlar. Kalan payın adı isteğe bağlı; boşsa prizin adıyla görünür.",
+     "en": "The other tracked devices on a shared plug. Naming the rest is optional; empty uses the plug's name."
+    },
+    {
+     "k": "enSr",
+     "tr": "Işığın düzenlemesinde: uzunluk ve adaptör gücü. Uzunluk değişince tablo orantılı ölçeklenir, adaptör gücünü geçmez.",
+     "en": "In a light's editor: length and adapter power. A new length scales the table, never above the adapter power."
+    },
+    {
+     "k": "enMeterUse",
+     "tr": "Güç, alınan ve verilen kWh ve gerilim aynı cihazdan. Sayaç Enerji ayarlarına şebeke kaynağı olarak eklenir; orada zaten bir şebeke sayacı varsa dokunulmaz.",
+     "en": "Power, imported and exported kWh and voltage from the same device. It is added to the Energy settings as the grid source; an existing grid meter there is left alone."
+    },
+    {
+     "k": "enSunOn",
+     "tr": "Üretim ve şebeke sensörleri; üretim Enerji ayarlarına güneş kaynağı olarak eklenir.",
+     "en": "Production and grid sensors; production is added to the Energy settings as a solar source."
+    },
+    {
+     "k": "enBatOn",
+     "tr": "Batarya sensörleri; güneş olmadan da çalışır.",
+     "en": "Battery sensors; works without solar too."
     },
     {
      "k": "enGNet",
@@ -1033,30 +1186,38 @@
      "en": "A small dot on the Energy tab button while there are tips (off by default)."
     },
     {
+     "l": {
+      "tr": "Gizlenenleri geri getir",
+      "en": "Bring back hidden tips"
+     },
+     "tr": "Basılı tutarak gizlediğin ipuçlarını geri getirir.",
+     "en": "Brings back the tips you hid with a long press."
+    },
+    {
      "k": "enSync",
-     "tr": "Veri kaynağı: cihazlar, kategoriler ve güneş Home Assistant'ın Enerji panosunda da görünsün.",
-     "en": "Data source: devices, categories and solar also show on Home Assistant's Energy dashboard."
+     "tr": "Görünüm ve veri: cihazlar, kategoriler ve güneş Home Assistant'ın Enerji panosunda da görünsün.",
+     "en": "Look and data: devices, categories and solar also show on Home Assistant's Energy dashboard."
     },
     {
      "k": "enTotal",
      "v": [
       "enAuto"
      ],
-     "tr": "Veri kaynağı: Halo'nun gösterdiği toplam güç.",
-     "en": "Data source: the total power Halo shows."
+     "tr": "Görünüm ve veri: Halo'nun gösterdiği toplam güç.",
+     "en": "Look and data: the total power Halo shows."
     },
     {
      "k": "enSb",
      "v": [
       "enSbAuto"
      ],
-     "tr": "Veri kaynağı: bekleme kartının gücü.",
-     "en": "Data source: the standby card's power."
+     "tr": "Görünüm ve veri: bekleme kartının gücü.",
+     "en": "Look and data: the standby card's power."
     },
     {
      "k": "enLim",
-     "tr": "Görünüm: Halo'nun yeşil, sarı ve turuncu sınırları (varsayılan 300 / 800 / 1800 W).",
-     "en": "Look: Halo's green, yellow and orange limits (default 300 / 800 / 1800 W)."
+     "tr": "Görünüm ve veri: Halo'nun yeşil, sarı ve turuncu sınırları (varsayılan 300 / 800 / 1800 W).",
+     "en": "Look and data: Halo's green, yellow and orange limits (default 300 / 800 / 1800 W)."
     },
     {
      "k": "enBadge",
@@ -1065,18 +1226,96 @@
       "enB_on",
       "enB_always"
      ],
-     "tr": "Görünüm: güç ölçen ya da tahmini değeri olan ışık ve prizlerin karosunda anlık watt.",
-     "en": "Look: live watts on tiles of lights and plugs that measure power or have an estimate."
+     "tr": "Görünüm ve veri: güç ölçen ya da tahmini değeri olan ışık ve prizlerin karosunda anlık watt.",
+     "en": "Look and data: live watts on tiles of lights and plugs that measure power or have an estimate."
     },
     {
      "k": "enTilde",
-     "tr": "Görünüm: tahmini watt \"~\" ile ve morla.",
-     "en": "Look: estimated watts with \"~\" in purple."
+     "tr": "Görünüm ve veri: tahmini watt \"~\" ile ve morla.",
+     "en": "Look and data: estimated watts with \"~\" in purple."
     },
     {
      "k": "enUntL",
-     "tr": "Görünüm: ölçülmeyen pay kategori karolarında.",
-     "en": "Look: the share not measured as a category tile."
+     "tr": "Görünüm ve veri: ölçülmeyen pay kategori karolarında.",
+     "en": "Look and data: the share not measured as a category tile."
+    }
+   ]
+  },
+  {
+   "id": "learn",
+   "group": "edit",
+   "tr": [
+    "Öğren",
+    "Güç ölçmeyen akıllı bir cihazın gerçek değeri bir kez güç ölçen bir prizle (ya da 1PM tipi bir röleyle) öğretilir; sonra priz başka cihaza taşınır. Enerji → Cihazlar → cihaz → **Öğren**.",
+    "Başlamadan üç kontrol: prizi seç, **Prizde yalnız bu cihaz var**'ı işaretle ve **Dene**'ye bas. Cihaz bir kez açılıp kapanır, prizin değeri değişmeli. Eksik adım düğmenin yanında yazar.",
+    "Işıkta önce ortak havuza bakılır. Yoksa bekleme, kısa bir renk yoklaması, ardından bütün beyaz tonlar ve renkler her birinde 8 parlaklıkla ölçülür; sonra ışığın efektleri (atlanabilir). Ölçüm Home Assistant'ın içinde, arka planda sürer. Duraklatılabilir; ışık başka yerden değiştirilirse durur; sonunda ışık eski durumuna döner.",
+    "Tutarlılık için yalnız komuttan sonra gelen okumalar sayılır; lamba rengi ve parlaklığı almadıysa komut yeniden gönderilir. Priz koparsa ondan hemen önceki adımlar, tuhaf görünen hücreler (art arda aynı değer, parlaklık artarken düşen güç) yeniden ölçülür. Prizin okuyamadığı düşük güçler 0 W yazılmaz, satırdan hesaplanır; okunamayan bekleme, ağdaki ışıkta 0,4 W sayılır.",
+    "Bitince sonucu görüp **Kaydet**; aynı modeldeki öteki ışıklara tek dokunuşla uygulanır. Home Assistant yeniden başlarsa yarım kalan öğrenim kaldığı adımdan sürer; biten ama kaydedilmemiş sonuç da kaybolmaz.",
+    "TV, klima gibi durumu olan cihazlarda her durumun ortalaması sen cihazı kullanırken toplanır. Buzdolabı gibi hep açık cihazlarda prizin günlerce ortalaması alınır; **Bitir ve kaydet** ile cihaz o watt ile Sabit olur. Aynı anda en çok 3 ışık öğrenilir, bir priz tek cihazı ölçer. Ortak havuzda yalnız projenin kendi ölçtüğü ışıklar var; dışarıdan gönderim şimdilik kapalı."
+   ],
+   "en": [
+    "Learn",
+    "A smart device that does not measure power is taught its real values once with a plug that does (or a 1PM-type relay); then the plug moves on. Energy → Devices → device → **Learn**.",
+    "Three checks first: pick the plug, tick **Only this device is on the plug** and press **Try**. The device turns on and off once and the plug's reading must change. The missing step is written next to the button.",
+    "For a light the shared pool is checked first. Otherwise standby, a short colour probe, then every white tone and colour at 8 brightness steps each are measured; then the light's effects (can be skipped). It runs inside Home Assistant in the background. It can be paused, stops if the light is changed from elsewhere, and puts the light back at the end.",
+    "For consistency only readings after a command count; if the lamp did not take the colour and brightness, the command is sent again. If the plug drops out, the steps just before it are measured again, and so are odd cells (the same value in a row, power falling as brightness rises). Low power the plug cannot read is not written as 0 W but worked out from the row; unreadable standby counts as 0.4 W for a light on the network.",
+    "When it is done, check the result and **Save**; one tap applies it to other lights of the same model. If Home Assistant restarts, an unfinished learn goes on from its step, and a finished but unsaved result is kept.",
+    "Devices with states, like a TV or AC, collect an average per state while you use them. Always-on devices like a fridge take the plug's average over days; **Finish and save** makes the device Fixed at that wattage. At most 3 lights learn at once and a plug measures one device. The shared pool holds only lights the project measured itself; sending your own is closed for now."
+   ],
+   "opts": [
+    {
+     "k": "lrPlug",
+     "tr": "Güç ölçen priz ya da röle; yeni değer gönderme sıklığı yanında yazar (süreyi o belirler).",
+     "en": "A plug or relay that measures power; how often it sends a new value is shown (it sets the duration)."
+    },
+    {
+     "k": "lrC2",
+     "tr": "Prizde başka bir şey varsa ölçüm yanlış çıkar.",
+     "en": "Anything else on the plug makes the measurement wrong."
+    },
+    {
+     "k": "lrTest",
+     "tr": "Cihazı bir kez açıp kapatır; prizin değiştiği görülmeli.",
+     "en": "Turns the device on and off once; the plug's reading must change."
+    },
+    {
+     "k": "lrStartL",
+     "tr": "Tam ölçümü başlatır; adım sayısı ve yaklaşık süre önce yazar.",
+     "en": "Starts the full measurement; the number of steps and rough time are shown first."
+    },
+    {
+     "k": "lrSkipFx",
+     "tr": "Ölçülen efektler kalır, kalanlar ortalamayla hesaplanır.",
+     "en": "Measured effects are kept, the rest use the average."
+    },
+    {
+     "k": "lrCont",
+     "v": [
+      "lrCont",
+      "lrAgainZero"
+     ],
+     "tr": "Durmuş ya da hata vermiş ölçümde: ölçülen adımlar korunarak sürer ya da baştan başlar.",
+     "en": "For a stopped or failed measurement: go on keeping the measured steps, or start over."
+    },
+    {
+     "k": "lrRecheck",
+     "tr": "Sonuçta yeniden ölçülen hücre sayısı.",
+     "en": "In the result: how many cells were measured again."
+    },
+    {
+     "k": "lrFloor",
+     "tr": "Sonuçta prizin okuyamadığı hücre sayısı; bunlar satırdaki değerlerden hesaplanır.",
+     "en": "In the result: how many cells were below what the plug can read; they are worked out from the row."
+    },
+    {
+     "k": "lrStrip",
+     "tr": "Şeritte uzunluk ve adaptör gücü; tablo uzunluğa göre uyarlanır, adaptör gücünü geçmez.",
+     "en": "For a strip, length and adapter power; the table is scaled to the length, never above the adapter power."
+    },
+    {
+     "k": "lrSaveGo",
+     "tr": "Yeni cihaz eklerken öğrenmeyi hemen başlatır.",
+     "en": "Starts learning right away when adding a new device."
     }
    ]
   },
@@ -1267,13 +1506,13 @@
    "tr": [
     "Stil seç",
     "Üst çubuktaki **Stil seç**. Solda önizleme, sağda büyük seçenekler; her seçim önizlemede anında görünür, **Uygula** hepsini birden kaydeder.",
-    "**Tablet:** ışıklar karo ya da çubuk; iklim kartları Halo ya da Sade. **Telefon:** gezinme, ışıklar, ışık penceresi.",
+    "**Tablet:** ışıklar karo ya da çubuk; iklim ve süpürge kartları Halo ya da Sade; ışığa basılı tutunca açılan pencere (seçince önizlemede denenir). **Telefon:** gezinme, ışıklar, ışık penceresi.",
     "**Arka plan:** 30 efekt renk, koyu, siyah, istediğin renk ya da kendi resmin."
    ],
    "en": [
     "Choose a style",
     "**Choose a style** in the top bar. Preview on the left, big options on the right; each choice shows in the preview at once and **Apply** saves them together.",
-    "**Tablet:** lights as tiles or sliders; climate cards Halo or Simple. **Phone:** navigation, lights, light window.",
+    "**Tablet:** lights as tiles or sliders; climate and vacuum cards Halo or Simple; the window a long press on a light opens (try it in the preview). **Phone:** navigation, lights, light window.",
     "**Background:** 30 effect colours, dark, black, any colour or your own picture."
    ],
    "opts": [
@@ -1303,6 +1542,16 @@
      ],
      "tr": "Tablette iklim ve süpürge kartları.",
      "en": "Climate and vacuum cards on the tablet."
+    },
+    {
+     "k": "hold",
+     "v": [
+      "hPop",
+      "hHa",
+      "hLec"
+     ],
+     "tr": "Işığa basılı tutunca açılan pencere; seçince önizlemede denenir.",
+     "en": "The window a long press on a light opens; try it in the preview."
     },
     {
      "k": "phNav",
@@ -1349,14 +1598,14 @@
    "tr": [
     "Telefona özel düzen",
     "Yönetim panelinde **Düzenlenen: Telefon**'a geç: önizleme telefona döner ve değişiklikler yalnız telefona yazılır, tablet aynı kalır.",
-    "Telefonda oda düğmelerinin, bölümlerin ve öğelerin sırası ve görünürlüğü; bölümlerin görünümü; simge stili, iklim kartları ve zemin ayrı ayarlanır.",
-    "Değişen her yerde \"telefona özel\" yazar. **Telefonu tabletle aynı yap** telefona özel her şeyi siler (önce sorar)."
+    "Telefonda oda düğmelerinin, bölümlerin ve öğelerin sırası ve görünürlüğü; bölümlerin görünümü (ikili sıra dahil) ve katlanır gruplar ayrı ayarlanır. **Telefon görünümü** kartında gezinme, ışıklar, çerçeveli/çerçevesiz bölümler ve ışık penceresi; gelişmiş modda simge stili, iklim kartları ve zemin.",
+    "Değişen her yerde \"telefona özel\" yazar. Bölümün adı, kolonu ve içindeki cihazlar tabletle ortak; bunlar için Tablet'e geçilir. **Telefonu tabletle aynı yap** telefona özel her şeyi siler (önce sorar)."
    ],
    "en": [
     "Phone-only layout",
     "Switch to **Editing: Phone** in the admin panel: the preview becomes a phone and changes apply to phones only; the tablet stays the same.",
-    "On phones set the order and visibility of room buttons, sections and items, the look of sections, the icon style, climate cards and background.",
-    "Everything you change says \"phone only\". **Make the phone match the tablet** removes all phone-only settings (it asks first)."
+    "On phones set the order and visibility of room buttons, sections and items, the look of sections (two per row too) and collapsible groups. The **Phone look** card has navigation, lights, framed/frameless sections and the light window; in advanced mode also icon style, climate cards and background.",
+    "Everything you change says \"phone only\". A section's name, column and devices are shared with the tablet; switch to Tablet for those. **Make the phone match the tablet** removes all phone-only settings (it asks first)."
    ],
    "opts": [
     {
@@ -1373,10 +1622,11 @@
      "v": [
       "phLookSame",
       "phLookTiles",
-      "phLookRows"
+      "phLookRows",
+      "phLookRows2"
      ],
-     "tr": "Bölümün telefondaki görünümü.",
-     "en": "A section's look on phones."
+     "tr": "Karolu bölümün telefondaki görünümü. **Tek sıra:** her ışık bir satır. **İkili sıra:** iki kaydırma çubuğu yan yana (dokun aç/kapat, kaydır parlaklık).",
+     "en": "A tile section's look on phones. **One per row:** one light per row. **Two per row:** two sliders side by side (tap on/off, slide for brightness)."
     },
     {
      "k": "phCols",
@@ -1387,13 +1637,30 @@
       "=4",
       "=5"
      ],
-     "tr": "Telefonda satırdaki karo.",
-     "en": "Tiles per row on phones."
+     "tr": "(Gelişmiş) Telefonda satırdaki karo.",
+     "en": "(Advanced) Tiles per row on phones."
+    },
+    {
+     "k": "phFlat",
+     "v": [
+      "phFlat0",
+      "phFlat1"
+     ],
+     "tr": "Telefon görünümü: Çerçevesiz seçilince telefonda bölüm kutuları çizilmez, başlıklar küçük etiket olur. Çerçeveli bölümler de telefonda ince çerçevelidir.",
+     "en": "Phone look: with Frameless no section boxes are drawn on phones and titles become small labels. Framed sections also have thin frames on phones."
     },
     {
      "k": "phItems",
      "tr": "Öğeleri tek tek telefonda gizle; önizlemede sürükleyerek sırala.",
      "en": "Hide single items on phones; drag them in the preview to reorder."
+    },
+    {
+     "k": "phFolds",
+     "v": [
+      "phFoldAdd"
+     ],
+     "tr": "Bölümü seç → **Katlanır grup ekle**, adını ve simgesini ver, içine alınacak öğeleri işaretle. Gruptakiler bölümün sonunda ışık çubuğu boyunda tek satırda toplanır; satırda kaç öğe ve kaçının açık olduğu yazar (ör. 12 öğe · 3 açık), dokununca açılır. Açık ya da kapalı kalması tarayıcıda hatırlanır. Bir öğe tek grupta olur; bir bölümde birden çok grup olabilir.",
+     "en": "Select the section → **Add collapsible group**, give it a name and icon, tick the items to put in it. They gather in one row, as tall as a light bar, at the end of the section; the row says how many items and how many are on (e.g. 12 items · 3 on) and opens on tap. The browser remembers whether it is open. An item can be in one group; a section can have several groups."
     },
     {
      "k": "phTabName",
@@ -1402,8 +1669,8 @@
       "phTabIcon",
       "phTabShow"
      ],
-     "tr": "Oda düğmesinin telefondaki adı, simgesi ve görünürlüğü.",
-     "en": "A room button's name, icon and visibility on phones."
+     "tr": "Oda düğmesini telefonda gizle (sekme yine açılabilir); telefona özel adı ve simgesi gelişmiş modda. Telefondaki sıra üstteki şeritte sürüklenerek değişir.",
+     "en": "Hide a room button on phones (the tab can still be opened); its phone-only name and icon in advanced mode. Drag the strip on top to change the order on phones."
     },
     {
      "k": "phIcons",
@@ -1412,8 +1679,8 @@
       "phClim",
       "phBg"
      ],
-     "tr": "Telefon görünümü kartında telefona ayrı stil.",
-     "en": "A separate style for phones in the Phone look card."
+     "tr": "(Gelişmiş) Telefon görünümü kartında telefona ayrı stil.",
+     "en": "(Advanced) A separate style for phones in the Phone look card."
     },
     {
      "k": "phReset",
@@ -1432,14 +1699,16 @@
    "group": "more",
    "tr": [
     "Ayarlar",
-    "Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır: dil, mevsim, simge stili, üst şerit, saatte parlaklık, HA teması.",
-    "**Üst barı gizle / Yan menüyü gizle** yalnız bu panoda Home Assistant'ın başlığını ve menüsünü kapatır; tablette kiosk gibi kullanılır.",
+    "Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. En üstteki düğmelerle bölümlere atlanır: Sürüm, Pano, Görünüm, Ekran, Efektler, Anahtarlar (gelişmiş), Enerji, Yardım, Yedek.",
+    "**Pano:** dil, mevsim, Önerilen ürünler. **Görünüm:** Stil seç'e giden kart, simge stili, oda düğmeleri (gelişmiş), saatte parlaklık, HA teması. **Ekran:** üst bar ve yan menü (bkz. Tablette tam ekran), kanvas (gelişmiş).",
+    "**Saatte parlaklık:** saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık bütün ışıkların parlaklığı birlikte değişir; en sola çekince kapanırlar, hepsi kapalıyken kaydırınca en son kapatılanlar açılır. Telefonda ve dikey tablette sayfa adı ile saatin olduğu satır kaydırılır.",
     "En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar."
    ],
    "en": [
     "Settings",
-    "**Settings** at the top right apply to every tablet in the home: language, season, icon style, top bar, brightness on the clock, HA theme.",
-    "**Hide the top bar / Hide the sidebar** turn off Home Assistant's top bar and menu on this dashboard only, for kiosk use on a tablet.",
+    "**Settings** at the top right apply to every tablet in the home. The buttons on top jump to a part: Version, Dashboard, Appearance, Screen, Effects, Switches (advanced), Energy, Help, Backup.",
+    "**Dashboard:** language, season, Recommended products. **Appearance:** a card that opens Choose a style, icon style, room buttons (advanced), brightness on the clock, HA theme. **Screen:** top bar and sidebar (see Full screen on a tablet), canvas (advanced).",
+    "**Brightness on the clock:** swipe the clock area left or right and every light that is on in that tab's room changes brightness together; all the way left turns them off, and swiping while all are off turns the last ones back on. On phones and upright tablets swipe the row with the page name and the clock.",
     "Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue."
    ],
    "opts": [
@@ -1459,6 +1728,25 @@
      "en": "The dashboard's language."
     },
     {
+     "k": "season",
+     "v": [
+      "sAuto",
+      "sSum",
+      "sWin"
+     ],
+     "tr": "İklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz.",
+     "en": "Air conditioners in summer, radiators in winter. Automatic: May to September is summer."
+    },
+    {
+     "k": "picksSet",
+     "v": [
+      "pkShow",
+      "pkHide"
+     ],
+     "tr": "Üst şeritteki Önerilen ürünler düğmesini gösterir ya da gizler.",
+     "en": "Shows or hides the Recommended button in the top bar."
+    },
+    {
      "k": "icStyle",
      "v": [
       "icAuto",
@@ -1475,23 +1763,38 @@
      "en": "In Single colour, a light that is on keeps its own colour."
     },
     {
-     "k": "navSz",
-     "tr": "Oda düğmelerinin genişliği ve yüksekliği (varsayılan 235 × 155).",
-     "en": "Width and height of room buttons (default 235 × 155)."
+     "k": "navAl",
+     "tr": "(Gelişmiş) Oda düğmeleri seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır.",
+     "en": "(Advanced) Room buttons end at the chosen column's right edge and share the space evenly."
     },
     {
-     "k": "navAl",
-     "tr": "Oda düğmeleri seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır.",
-     "en": "Room buttons end at the chosen column's right edge and share the space evenly."
+     "k": "navSz",
+     "tr": "(Gelişmiş) Oda düğmelerinin genişliği ve yüksekliği (varsayılan 235 × 155).",
+     "en": "(Advanced) Width and height of room buttons (default 235 × 155)."
     },
     {
      "k": "bb",
+     "tr": "Saatin olduğu alanı kaydırınca odadaki açık ışıkların parlaklığı birlikte değişir.",
+     "en": "Swiping the clock area changes the brightness of every light that is on in the room."
+    },
+    {
+     "k": "bbLook",
      "v": [
       "bbHidden",
       "bbBox"
      ],
-     "tr": "Saatin olduğu alanı kaydırınca odadaki açık ışıkların parlaklığı birlikte değişir.",
-     "en": "Swiping the clock area changes the brightness of every light that is on in the room."
+     "tr": "(Gelişmiş) Gizli: yalnız saat görünür, kaydırınca belirir. Kutu: oda düğmeleri gibi bir kutu.",
+     "en": "(Advanced) Hidden: only the clock shows, it appears while swiping. Box: a box like the room buttons."
+    },
+    {
+     "k": "bbPh",
+     "tr": "Telefonda ve dikey tablette saatin olduğu satır kaydırılır; kapatınca bu satır kaydırılamaz.",
+     "en": "On phones and upright tablets the clock row is swiped; turn it off and that row cannot be swiped."
+    },
+    {
+     "k": "bbIcon",
+     "tr": "(Gelişmiş) Solda ampul simgesi.",
+     "en": "(Advanced) A bulb icon on the left."
     },
     {
      "k": "bbVal",
@@ -1499,8 +1802,8 @@
       "bbDrag",
       "bbAlways"
      ],
-     "tr": "Parlaklık göstergesi ne zaman görünsün.",
-     "en": "When the brightness indicator shows."
+     "tr": "(Gelişmiş) Parlaklık göstergesi yalnız kaydırırken ya da açık ışık varken hep görünür.",
+     "en": "(Advanced) The brightness indicator shows only while swiping, or always while a light is on."
     },
     {
      "k": "theme",
@@ -1510,26 +1813,27 @@
     {
      "k": "kHeader",
      "v": [
-      "kHeader",
-      "kSide"
+      "kNo",
+      "kTouch",
+      "kAll"
      ],
-     "tr": "Bu panoda HA'nın üst barı ve sol menüsü gizlenir (kiosk).",
-     "en": "Hides HA's top bar and sidebar on this dashboard (kiosk)."
+     "tr": "HA'nın başlık çubuğu bu panoda gizlenir (Tablette tam ekran).",
+     "en": "Hides HA's top bar on this dashboard (Full screen on a tablet)."
+    },
+    {
+     "k": "kSide",
+     "v": [
+      "kNo",
+      "kTouch",
+      "kAll"
+     ],
+     "tr": "HA'nın sol menüsü bu panoda gizlenir; kenardan kaydırınca açılır.",
+     "en": "Hides HA's sidebar on this dashboard; swipe from the edge to open it."
     },
     {
      "k": "canvas",
      "tr": "Tasarım genişliği ve referans yüksekliği; pano ekrana bu oranla ölçeklenir (gelişmiş).",
      "en": "Design width and reference height; the dashboard scales to the screen with it (advanced)."
-    },
-    {
-     "k": "hold",
-     "v": [
-      "hPop",
-      "hHa",
-      "hLec"
-     ],
-     "tr": "Işığa basılı tutunca açılan pencere.",
-     "en": "The window a long press on a light opens."
     },
     {
      "k": "repT",
@@ -1544,6 +1848,46 @@
      ],
      "tr": "Sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada; geri yüklemeden önce sorar.",
      "en": "Tabs, sections, settings and pets in one file; restoring asks first."
+    }
+   ]
+  },
+  {
+   "id": "kiosk",
+   "group": "more",
+   "tr": [
+    "Tablette tam ekran",
+    "Ayarlar → Ekran'daki **Üst barı gizle** ve **Yan menüyü gizle** Home Assistant'ın başlığını ve sol menüsünü yalnız bu panoda kapatır. Duvardaki tablet tam ekran pano olur.",
+    "İkisi de üç seçenekli: **Gizleme**, **Telefon ve tablette** (bilgisayarda görünür kalır) ya da **Her yerde**.",
+    "Gizli yan menü bilgisayarda fare ekranın sol kenarına gidince açılır. Telefonda ve tablette sol kenardan sağa kaydır: iPhone ve iPad'de bunu Home Assistant uygulaması, Android'de (HA uygulaması, Fully Kiosk, tarayıcı) pano yapar. Android'in geri hareketi en kenarı kullandığı için kaydırmaya biraz içeriden başla. Menünün dışına dokununca yine gizlenir.",
+    "Üst bar gizliyken iPhone'da pano saat ve pil şeridinin altından başlar; iPad'de üstteki şerit panonun zemin rengini alır."
+   ],
+   "en": [
+    "Full screen on a tablet",
+    "**Hide the top bar** and **Hide the sidebar** in Settings → Screen turn off Home Assistant's top bar and sidebar on this dashboard only. A wall tablet becomes a full-screen dashboard.",
+    "Both have three options: **Don't hide**, **Phone and tablet** (still shown on a computer) or **Everywhere**.",
+    "On a computer the hidden sidebar opens when the mouse reaches the left edge of the screen. On phones and tablets swipe right from the left edge: on iPhone and iPad the Home Assistant app does this, on Android (HA app, Fully Kiosk, browser) the dashboard does. Android's back gesture uses the very edge, so start the swipe a little further in. Tap outside the menu to hide it again.",
+    "With the top bar hidden, on iPhone the dashboard starts below the clock and battery strip; on iPad the strip on top takes the dashboard's background colour."
+   ],
+   "opts": [
+    {
+     "k": "kHeader",
+     "v": [
+      "kNo",
+      "kTouch",
+      "kAll"
+     ],
+     "tr": "HA'nın başlık çubuğu.",
+     "en": "HA's top bar."
+    },
+    {
+     "k": "kSide",
+     "v": [
+      "kNo",
+      "kTouch",
+      "kAll"
+     ],
+     "tr": "HA'nın sol menüsü; gizliyken kenardan kaydırınca açılır.",
+     "en": "HA's sidebar; when hidden, swipe from the edge to open it."
     }
    ]
   },
@@ -1624,6 +1968,78 @@
      ],
      "tr": "Yalnız sinyal veren röle bir lambaya bağlanır; açarken parlaklık ve kelvin verilebilir (Ayarlar, gelişmiş).",
      "en": "A signal-only relay is bound to a lamp; brightness and kelvin can be set for turning on (Settings, advanced)."
+    }
+   ]
+  },
+  {
+   "id": "picks",
+   "group": "more",
+   "tr": [
+    "Önerilen ürünler",
+    "Yönetim panelinin üst şeridindeki **Önerilen ürünler**: geliştiricinin kendi evinde kullandığı ve panelle denediği ürünler. Başlığın altında **Tanıtım** etiketi var.",
+    "Kategoriler, arama, bağlantı türü (Wi-Fi, Zigbee, Matter…) ve **Ölçümü hazır** süzgeci. Her kartta ne işe yaradığı, bağlantı türleri ve panelde gücünün hazır olup olmadığı yazar.",
+    "Mağaza düğmeleri ortaklık bağlantısıdır; fiyat değişmez. Telefon ve tablette ürün mağaza uygulamasında açılır. Bilgisayarda Amazon doğrudan açılır; Hepsiburada linki Home Assistant uygulaması üzerinden telefonuna bildirim olarak gider. Uygulama yoksa telefonla okutulacak kod ve **Bu bilgisayarda aç** çıkar.",
+    "Liste GitHub'dan güncellenir; yeni ürün için panel güncellemesi gerekmez. İstemezsen Ayarlar → Pano → Önerilen ürünler: Gizle."
+   ],
+   "en": [
+    "Recommended products",
+    "**Recommended** in the admin panel's top bar: products the developer uses at home and has tried with the dashboard. A **Promoted** label sits under the title.",
+    "Categories, search, connection type (Wi-Fi, Zigbee, Matter…) and a **Measurement ready** filter. Every card says what the product does, its connection types and whether the dashboard already knows its power.",
+    "Store buttons are affiliate links; the price does not change. On phones and tablets the product opens in the store's app. On a computer Amazon opens directly; a Hepsiburada link goes to your phone as a notification through the Home Assistant app. Without the app, a code to scan with the phone and **Open on this computer** show up.",
+    "The list updates from GitHub; new products need no dashboard update. If you do not want it: Settings → Dashboard → Recommended products: Hide."
+   ],
+   "opts": [
+    {
+     "l": {
+      "tr": "Kategori",
+      "en": "Category"
+     },
+     "v": [
+      "pkCat_all",
+      "pkCat_light",
+      "pkCat_plug",
+      "pkCat_switch",
+      "pkCat_remote",
+      "pkCat_sensor",
+      "pkCat_climate",
+      "pkCat_hub",
+      "pkCat_other"
+     ],
+     "tr": "Ürün kategorileri.",
+     "en": "Product categories."
+    },
+    {
+     "k": "pkReady",
+     "tr": "Yalnız panelde gücü hazır olanlar: ölçüm tablosu olan ya da gücünü kendisi ölçen ürünler.",
+     "en": "Only products whose power the dashboard already knows: a measured table or a device that measures itself."
+    },
+    {
+     "l": {
+      "tr": "Panelde güç",
+      "en": "Power on the dashboard"
+     },
+     "v": [
+      "pkE_lut",
+      "pkE_self",
+      "pkE_wait",
+      "pkE_none"
+     ],
+     "tr": "Kartta ürünün gücünün panelde nasıl bilindiği.",
+     "en": "On the card: how the dashboard knows the product's power."
+    },
+    {
+     "k": "pkSend",
+     "tr": "Bilgisayarda Hepsiburada linkini telefona bildirim olarak gönderir; birden çok telefonun varsa ilk seferde sorar.",
+     "en": "On a computer, sends the Hepsiburada link to your phone as a notification; with several phones it asks the first time."
+    },
+    {
+     "k": "picksSet",
+     "v": [
+      "pkShow",
+      "pkHide"
+     ],
+     "tr": "Ayarlar → Pano: üst şeritteki düğmeyi gösterir ya da gizler.",
+     "en": "Settings → Dashboard: shows or hides the button in the top bar."
     }
    ]
   },
