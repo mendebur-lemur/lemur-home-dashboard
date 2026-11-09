@@ -63,6 +63,7 @@ class LightLearn(_Base):
     ready_wait = 5.0    # after a restart: seconds to let the light settle once it answers
     ready_poll = 1.0
     late_wait = 10.0    # a light that looks off after a step: look again after this
+    apply_wait: float | None = None   # seconds to wait for the light to report a step (default 8)
 
     def __init__(self, hass: HomeAssistant, rid: str, entity: str, plug: str, interval: float = 2.0) -> None:
         super().__init__(hass, rid, entity, plug)
@@ -96,6 +97,7 @@ class LightLearn(_Base):
         self._done: list[tuple[float, int]] = []   # (monotonic time, step) of finished color steps: a dropout looks back at them
         self._drops: list[float] = []
         self._unsub_plug = None
+        self._miss = 0   # steps in a row whose values the light did not report back (_applied)
 
     # ---- control ----
     def start(self) -> None:
@@ -374,6 +376,11 @@ class LightLearn(_Base):
         p0 = self._pauses
         since = dt_util.utcnow()
         await self._light(True, **data)
+        if q["t"] in ("ct", "hs", "br") and self._miss < 3 and not await self._applied(q):
+            await self._light(True, **data)   # the light did not take it (some drop a command right after a color change): once more
+            since = dt_util.utcnow()
+            # a light that never reports these values exactly: after three misses in a row the check is left out for this run
+            self._miss = 0 if await self._applied(q) else self._miss + 1
         w = await (self._average(self._fxw()) if q["t"] in ("fx", "fxb") else self._settle(since))
         if self._pauses != p0:   # paused in between: the light was put back, measure this step again
             return await self._step(q)
@@ -382,6 +389,28 @@ class LightLearn(_Base):
             self.msg = "external"
             raise RuntimeError("external")
         return w
+
+    async def _applied(self, q: dict) -> bool:
+        """The light reports the brightness (and color or white tone) of the step, within a little; up to apply_wait seconds.
+        A light whose state is only what was sent passes at once; that is fine, the check pass after the colors catches the rest."""
+        end = time.monotonic() + (self.apply_wait if self.apply_wait is not None else 8.0)
+        while True:
+            a = self._attrs()
+            b = a.get("brightness")
+            ok = isinstance(b, (int, float)) and abs(b / 2.55 - q["b"]) <= max(3, q["b"] * 0.1)
+            if ok and q["t"] == "ct":
+                k = a.get("color_temp_kelvin")
+                ok = not isinstance(k, (int, float)) or abs(k - q["k"]) <= max(150, q["k"] * 0.05)
+            if ok and q["t"] == "hs":
+                hs = a.get("hs_color")
+                if isinstance(hs, (list, tuple)) and len(hs) == 2 and isinstance(hs[0], (int, float)):
+                    dh = abs((hs[0] - q["h"] + 180) % 360 - 180)
+                    ok = dh <= 12 or (hs[1] is not None and hs[1] < 5)
+            if ok:
+                return True
+            if time.monotonic() >= end:
+                return False
+            await asyncio.sleep(max(self.poll, 0.25) if self.apply_wait is None else self.poll)
 
     def _ready(self) -> bool:
         """The light answers (not unavailable) and the plug sends a number."""
@@ -570,9 +599,15 @@ class LightLearn(_Base):
             if run >= 3:
                 bad.update(range(j - run, j))
             run = 1
-        for j in range(1, len(v)):
-            if v[j] is not None and v[j - 1] is not None and v[j] < v[j - 1] * 0.85 - 0.2:
-                bad.update((j - 1, j))
+        # düşüş: boş (prizin okuyamadığı) hücreler atlanır, bir önceki dolu hücreyle karşılaştırılır (v0.28.12; 8,2 · boş · 1,3
+        # gibi bir satırda düşüş görülmüyordu). Renk değişiminden sonraki ilk adım lambanın eski gücünü alabiliyor.
+        prev = None
+        for j in range(len(v)):
+            if v[j] is None:
+                continue
+            if prev is not None and v[j] < v[prev] * 0.85 - 0.2:
+                bad.update((prev, j))
+            prev = j
         return bad
 
     async def _remeasure(self, q: dict, old: float | None) -> None:

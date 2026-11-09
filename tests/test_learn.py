@@ -421,3 +421,38 @@ async def test_light_learn_check_pass_fixes_a_glitch(hass: HomeAssistant, fast):
     row = r.result["lut"]["br"]["w"]
     assert row == sorted(row) and min(row[4:]) > 5, row
     assert r.result["rechecked"] >= 1
+
+
+async def test_light_learn_lagging_light_after_color_change(hass: HomeAssistant, fast, monkeypatch):
+    """v0.28.12: right after a color change the light ignores the first command; the step must not keep the old watts."""
+    monkeypatch.setattr(LRN.LightLearn, "apply_wait", 0.05)
+    def w(a):
+        b = a.get("brightness", 255) / 255
+        if a.get("color_mode") == "hs":
+            return round(1 + 15 * b * (0.6 + 0.4 * a["hs_color"][0] / 360), 2)
+        return round(1 + 19 * b, 2)
+    await _fake_light(hass, ["color_temp", "hs"], w)
+    real_on = hass.services._services["light"]["turn_on"].job.target
+    state = {"h": None}
+
+    async def on(call):
+        hs = call.data.get("hs_color")
+        if hs and state["h"] != hs[0] and call.data.get("brightness_pct") == 1 and not state.get(("skip", hs[0])):
+            state[("skip", hs[0])] = True   # the first 1% command of a new hue is dropped
+            state["h"] = hs[0]
+            return
+        if hs:
+            state["h"] = hs[0]
+        await real_on(call)
+    hass.services.async_register("light", "turn_on", on)
+    r = LRN.Learning(hass).start("j", "light", "light.x", "sensor.p", 1)
+    assert await _until(lambda: r.phase in ("done", "error"), 8000), r.status()
+    assert r.phase == "done", r.status()
+    hs = r.result["lut"]["hs"]
+    for rows in hs["w"]:
+        for row in rows:
+            assert row[0] < row[-1] * 0.5, row   # %1 is never the previous color's 100%
+
+
+def test_odd_skips_empty_cells():
+    assert {0, 2} <= LRN.LightLearn._odd([8.2, None, 1.3, 1.9, 2.5, 3.6, 4.4, 6.2])
