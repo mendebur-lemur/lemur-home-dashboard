@@ -467,6 +467,19 @@ i.phb { font-style: normal; color: #7fb9ff; font-size: 11px; text-transform: non
 .phit span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .phit.off { opacity: .55; border-color: rgba(90, 169, 255, .45); }
 .phit.off span { text-decoration: line-through; }
+.phit .phgt { font-style: normal; font-size: 11px; padding: 1px 6px; border-radius: 6px; background: rgba(199, 125, 255, .18); color: #d6a8ff; white-space: nowrap; }
+.phfg { border: 1px solid rgba(199, 125, 255, .35); background: rgba(199, 125, 255, .06); border-radius: 12px; padding: 10px; margin: 0 0 10px; }
+.phfgh { display: flex; align-items: center; gap: 8px; }
+.phfgh .inp { flex: 1 1 auto; min-width: 0; }
+.phfgs { font-size: 12px; color: var(--t2, #9aa3b5); margin: 10px 0 6px; }
+.phfgl { display: flex; flex-wrap: wrap; gap: 6px; }
+.phfi { display: inline-flex; align-items: center; gap: 6px; background: var(--s4); color: inherit; border: 1.5px solid transparent; border-radius: 10px; padding: 6px 9px; font: inherit; font-size: 12.5px; cursor: pointer; max-width: 100%; }
+.phfi span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phfi .ck { color: var(--t2, #9aa3b5); flex: 0 0 auto; }
+.phfi.on { border-color: rgba(199, 125, 255, .7); background: rgba(199, 125, 255, .16); }
+.phfi.on .ck { color: #c77dff; }
+.phfi.dis { opacity: .4; cursor: default; }
+.phfi i { font-style: normal; font-size: 11px; color: var(--t2, #9aa3b5); }
 .rooms.phl .rb.phoff { opacity: .45; text-decoration: line-through; }
 .rpanel.phr { border-color: rgba(90, 169, 255, .45); }
 details.phlook { background: var(--s2); border: 1px solid rgba(90, 169, 255, .35); border-radius: 16px; padding: 10px 12px; margin: 0 0 12px; }

@@ -149,7 +149,7 @@
 /* üst şeritte Efektler (LEC): oda düğmesi gibi, simgesi renkli */
 .navb.fxb .ni ha-icon { color: #FF6FAE; }
 /* --- telefon görünümü (dar ekran): ölçek yok, üst şerit kayar, bölümler alt alta --- */
-.wrap.phone { display: block; height: auto; min-height: 0; padding: 8px 8px 24px; }
+.wrap.phone { display: block; height: auto; min-height: 0; padding: 8px 6px 24px; }
 .phone .nav { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 0 10px; padding-bottom: 2px; }
 .phone .nav::-webkit-scrollbar { display: none; }
 .phone .navb { flex: 0 0 84px; height: 84px; border-radius: 16px; padding: 8px 0 6px; }
@@ -157,11 +157,34 @@
 .phone .ni { width: 46%; }
 .phone .nn { font-size: 12px; line-height: 15px; }
 .phone .clock { display: none; }
-.phone .pcol > .box { margin: 0 0 10px; padding: 14px; min-height: 0; }
+.phone .pcol > .box { margin: 0 0 10px; padding: 8px 6px 6px; min-height: 0; }   /* v0.29 ince çerçeve: içerik kenara 6 px */
 .phone .title { font-size: 15px; padding: 6px 8px 12px; }
 .phone .title.hd { padding: 6px 0 12px; }
 .phone .tile .nm { font-size: 12px; line-height: 15px; margin-top: 6px; }
-.phone .bars { flex: 0 0 auto; grid-auto-rows: 58px; }
+.phone .bars { flex: 0 0 auto; grid-auto-rows: 58px; grid-gap: var(--lp-gapg, 6px); }
+/* v0.29 çerçevesiz bölümler (ayar phone.flat): kutu çizilmez, başlık sola yaslı küçük etiket */
+.phone.flat .pcol > .box { background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; margin: 0 0 14px; overflow: visible; }
+.phone.flat .pcol > .box > .title { text-align: left; justify-content: flex-start; font-size: 12px; line-height: 15px; letter-spacing: 0.07em; color: var(--lp-text2); padding: 4px 4px 8px; }
+.phone.flat .pcol > .box > .title .lic { width: 16px; height: 16px; margin-right: 6px; vertical-align: -3px; }
+/* v0.29 katlanır grup: başlığı bir ışık çubuğu boyunda ve köşesinde */
+.box > .fh { flex: 0 0 auto; box-sizing: border-box; display: flex; align-items: center; height: 72px; padding: 0 16px 0 0; border-radius: 18px; background: var(--lp-card); border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; user-select: none; -webkit-user-select: none; min-width: 0; }
+.phone .box > .fh { height: 58px; border-radius: 16px; padding-right: 12px; }
+.box > .fh .lic { flex: 0 0 auto; width: 34px; height: 34px; margin: 0 14px 0 18px; color: var(--lp-text2); }
+.phone .box > .fh .lic { width: 24px; height: 24px; margin: 0 10px 0 12px; }
+.box > .fh b { font-size: 14px; line-height: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.box > .fh .fc { margin-left: 8px; font-size: 12px; color: var(--lp-text2); white-space: nowrap; }
+.box > .fh .fc.on { color: var(--lp-on-icon, #FFC24A); }
+.box > .fh .fch { margin-left: auto; padding-left: 8px; display: flex; color: var(--lp-text2); transition: transform 0.2s; }
+.box > .fh .fch ha-icon { --mdc-icon-size: 22px; }
+.box > .fh.open .fch { transform: rotate(180deg); }
+.box > .fbd[hidden] { display: none; }
+.box > .fbd { flex: 0 0 auto; min-width: 0; }
+.box > .fbd > * + * { margin-top: var(--lp-gap, 8px); }
+.phone .box.spread > .fh, .phone .box.spread > .fbd { flex: 0 0 100%; margin-bottom: 8px; }
+.phone .box.spread > .fbd { display: flex; flex-wrap: wrap; justify-content: space-between; }
+.phone .box.spread > .fbd[hidden] { display: none; }
+.phone .box.spread > .fbd > .scene { flex: 0 0 calc(50% - 4px); height: 64px; min-height: 0; margin: 0 0 8px; border-radius: 18px; }
+
 .phone .bar { border-radius: 16px; }
 .phone .bar ha-state-icon, .phone .bar > ha-icon { width: 24px; height: 24px; --mdc-icon-size: 24px; margin: 0 10px 0 12px; }
 .phone .bar .nm { font-size: 14px; line-height: 18px; }

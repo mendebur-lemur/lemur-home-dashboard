@@ -310,9 +310,10 @@ function lpBrightCfg() {
 //   nav: 'cats' (v0.17 varsayılan: altta kategoriler: Işıklar, İklim, Senaryolar...) | 'rooms' (odalar altta) | 'top' (oda düğmeleri üstte, eski düzen)
 //   lights: 'auto' (bölüm ayarındaki gibi, varsayılan) | 'tiles' (karo) | 'rows' (tek sıra, kaydırarak parlaklık)
 //   sheet: ışık penceresi ekranın altından açılır (varsayılan açık; kapatılınca false saklanır)
+//   flat: çerçevesiz bölümler (v0.29): telefonda bölüm kutusu çizilmez, başlık küçük etiket olur (varsayılan kapalı)
 function lpPhoneCfg() {
   const st = lpSettings(), p = lhdIsObj(st.phone) ? st.phone : {};
-  return { nav: p.nav === 'rooms' || p.nav === 'top' ? p.nav : 'cats', lights: p.lights === 'tiles' || p.lights === 'rows' ? p.lights : 'auto', sheet: p.sheet !== false };
+  return { nav: p.nav === 'rooms' || p.nav === 'top' ? p.nav : 'cats', lights: p.lights === 'tiles' || p.lights === 'rows' ? p.lights : 'auto', sheet: p.sheet !== false, flat: p.flat === true };
 }
 // iklim kartlarının stili (ayar climate_style): 'halo' (varsayılan, Halo iklim kartı) ya da 'rows' (sade satır: durum, hedef, mod, fan, salınım)
 function lpClimStyle() { const st = lpSettings(); return st.climate_style === 'rows' ? 'rows' : 'halo'; }
@@ -376,12 +377,17 @@ function lpCatView(tabs, cur) {
 }
 
 // Telefona özel ayarlar (v0.22). Sekmeler ve cihazlar tablet ile ortak; telefonda çizilirken sekmenin bir kopyası kurulur:
-//   settings.phone.secs[bölüm] = { hide: true, look: 'tiles' | 'rows', cols: 2-6, hide_items: [öğe anahtarı (lhdItemKey)], item_order: [öğe anahtarları] }
+//   settings.phone.secs[bölüm] = { hide: true, look: 'tiles' | 'rows' | 'rows2', cols: 2-6, hide_items: [öğe anahtarı (lhdItemKey)], item_order: [öğe anahtarları],
+//                                  folds: [{ name, icon, items: [öğe anahtarları] }] (katlanır gruplar, bölümün sonunda sırayla) }
 //   settings.phone.tabs = { order: [sekme], hide: { sekme: true }, names: { sekme: ad }, icons: { sekme: simge } }   (oda düğmeleri)
 //   settings.phone.style = { icon_style, icon_tint, climate_style, bg, background }   (lpPhoneMerge)
 //   settings.phone.order[sekme] = [bölüm kimlikleri]   (telefondaki sıra; yoksa kolon kolon)
 // Kopyada bütün bölümler tek kolonda (telefon zaten alt alta dizer), gizli bölümler yok. Düzenleme önizlemesinde gizli öğeler
 // soluk görünür (sıra numaraları bozulmasın diye listede kalır), normal panoda hiç çizilmez. _ph işaretli kopya kaydedilmez.
+// katlanır grupların açık/kapalı durumu bu tarayıcıda (localStorage lhd-fold)
+function lpFoldMap() { try { const v = JSON.parse(localStorage.getItem('lhd-fold') || '{}'); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } }
+function lpFoldOpen(id) { return lpFoldMap()[id] === 1; }
+function lpFoldSet(id, o) { const m = lpFoldMap(); if (o) m[id] = 1; else delete m[id]; try { localStorage.setItem('lhd-fold', JSON.stringify(m)); } catch (e) {} }
 function lpPhoneOv() { const p = lpSettings().phone; return lhdIsObj(p) ? p : {}; }
 function lpPhoneTab(T, edit) {
   if (!T) return T;
@@ -396,9 +402,20 @@ function lpPhoneTab(T, edit) {
     const c = Object.assign({}, s, { col: 0, sub: 0 });
     if (Array.isArray(o.item_order) && o.item_order.length) c.entities = lhdOrderBy(s.entities || [], o.item_order, lhdItemKey);   // telefona özel öğe sırası
     if (o.look === 'tiles' || o.look === 'rows') c._phLook = o.look;
+    if (o.look === 'rows2') { c._phLook = 'rows'; c._phBc = 2; }   // ikili sıra: iki çubuk yan yana (v0.29)
     const n = parseInt(o.cols, 10); if (n >= 2 && n <= 6) c._phCols = n;
     const hi = Array.isArray(o.hide_items) ? o.hide_items.filter((x) => typeof x === 'string') : [];
     if (hi.length) { if (edit) c._phHide = hi; else c.entities = (c.entities || []).filter((x) => hi.indexOf(lhdItemKey(x)) < 0); }
+    // katlanır gruplar (v0.29): her grubun öğeleri bölümün sonunda, dokununca açılan bir satırda. Düzenleme önizlemesinde öğeler yerinde kalır
+    const FL = Array.isArray(o.folds) ? o.folds.filter((g) => lhdIsObj(g) && Array.isArray(g.items) && g.items.length) : [];
+    if (FL.length && !edit) {
+      c._folds = [];
+      FL.forEach((g, gj) => {
+        const inG = (x) => g.items.indexOf(lhdItemKey(x)) >= 0, fe = (c.entities || []).filter(inG);
+        c.entities = (c.entities || []).filter((x) => !inG(x));
+        if (fe.length) c._folds.push(Object.assign({}, c, { title: '', entities: fe, _folds: null, _fk: s.id + '#' + gj, _foldName: typeof g.name === 'string' ? g.name : '', _foldIcon: typeof g.icon === 'string' ? g.icon : '' }));
+      });
+    }
     out.push(c);
   });
   return Object.assign({}, N, { v: 2, sections: out, _ph: true });
@@ -710,7 +727,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       // telefon seçeneği Işıklar: Tek sıra (her öğe bir satır, kaydırarak parlaklık) ya da Karo; yoksa bölümün ayarı
       const pl = phone ? (s._phLook || lpPhoneCfg().lights) : 'auto';   // bölümün telefona özel görünümü önce gelir
       if (pl === 'rows' || (pl !== 'tiles' && (s.look === 'bar' || (s.look === 'phone' && phone)))) {
-        const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = pl === 'rows' ? 1 : phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
+        const want = s.bar_columns || (items.length > 12 ? 3 : 2), bc = pl === 'rows' ? (s._phBc || 1) : phone ? Math.min(want, 2) : Math.max(1, Math.min(want, Math.floor((inner + 8) / 158)));
         // tablette satırlar kutuyu doldurur ama bir çubuk kutunun altıda birinden uzun olmaz; telefonda ya da başka öğelerle birlikteyken sabit yükseklik
         const br = Math.max(6, lpGridRows(items, bc)), fillB = only && !phone;
         const dense = items.some((x) => x.size) ? ';grid-auto-flow:row dense' : '';
@@ -837,6 +854,14 @@ class LemurHomeDashboardCard extends HTMLElement {
       const ci = Math.max(0, Math.min(cols.length - 1, s.col || 0)), sj = Math.max(0, Math.min(splits[ci] - 1, s.sub || 0));
       curSec = s.id;
       let b = bodyOf(s);
+      (s._folds || []).forEach((F) => {   // katlanır grup: başlık çubuğu (ışık çubuğu boyunda) ve altında öğeleri; açık/kapalı localStorage'da
+        const fb = bodyOf(F); if (!fb) return;
+        const ids = (F.entities || []).map((x) => (typeof x === 'string' ? x : x && x.entity)).filter(Boolean), op = lpFoldOpen(F._fk);
+        const fh = '<div class="fh' + (op ? ' open' : '') + '" data-fold="' + esc(F._fk) + '">' + lpIcon(F._foldIcon || 'mdi:chevron-down-box-outline') + '<b>' + esc(F._foldName || t(lang, 'fold_more')) + '</b>' +
+          '<span class="fc" data-fn="' + (F.entities || []).length + '" data-fcnt="' + esc(ids.join(',')) + '">' + esc(t(lang, 'fold_n', { n: (F.entities || []).length })) + '</span><span class="fch"><ha-icon icon="mdi:chevron-down"></ha-icon></span></div>' +
+          '<div class="fbd"' + (op ? '' : ' hidden') + '>' + fb.html + '</div>';
+        b = b ? Object.assign({}, b, { html: b.html + fh, mix: true, fit: b.fit || fb.fit }) : Object.assign({}, fb, { html: fh, mix: true });
+      });
       if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
       if (!b) return;
       cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id], grow: parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1, gap: typeof s.gap === 'number' ? s.gap : null,
@@ -942,7 +967,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' : '') + (pbOn ? ' pb' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + (pbOn ? pHead : nav) + body + pBar + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' + (lpPhoneCfg().flat ? ' flat' : '') : '') + (pbOn ? ' pb' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + (pbOn ? pHead : nav) + body + pBar + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -1084,6 +1109,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._act(it.action, it.entity);
     }), (() => { const it0 = sceneItem(b); return it0 && it0.hold ? () => this._act(it0.hold, it0.entity) : null; })()));
     R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter')));
+    R.querySelectorAll('[data-fold]').forEach((b) => lpPress(b, () => { const o = !b.classList.contains('open'); b.classList.toggle('open', o); const bd = b.nextElementSibling; if (bd) bd.hidden = !o; lpFoldSet(b.getAttribute('data-fold'), o); }));
     R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => { if (this._config.demo) return; LEC.open(this._hass, tab.area); }));
     // telefon kategorileri: alttaki kategori, üstteki oda; ışıklarda sağa sola kaydırınca sonraki / önceki oda
     const goCat = (c, room) => { LP_PH.cat = c; LP_PH.room = room; this._sig = null; this._render(); try { window.scrollTo(0, 0); } catch (e) {} };
@@ -1866,6 +1892,8 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
+    const RF = this.shadowRoot;   // katlanır grubun başlığında kaç öğe, kaçı açık
+    if (RF) RF.querySelectorAll('[data-fcnt]').forEach((el) => { const n = +el.getAttribute('data-fn') || 0, on = el.getAttribute('data-fcnt').split(',').filter((id) => id && S[id] && LP_ON.indexOf(S[id].state) >= 0).length; const tx = t(lang, on ? 'fold_on' : 'fold_n', { n: n, on: on }); if (el.textContent !== tx) el.textContent = tx; el.classList.toggle('on', on > 0); });
     // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor
     if (this._lecRooms && this._lecRooms.length && !this._config.edit) {
       const seen = {};
