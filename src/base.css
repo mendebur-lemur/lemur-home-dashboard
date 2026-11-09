@@ -132,6 +132,7 @@
   border: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 16px; font-size: 15px; }
 .box.colempty { align-items: center; justify-content: center; text-align: center; color: var(--lp-text2); background: transparent;
   border: 2px dashed rgba(242, 169, 59, 0.35); font-size: 15px; padding: 20px; cursor: default; }
+.addsec.coldel { margin-top: 8px; border-color: rgba(229, 72, 77, 0.45); background: rgba(229, 72, 77, 0.1); color: #ff9592; }
 .addsec { margin-top: 14px; padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(242, 169, 59, 0.5); background: rgba(242, 169, 59, 0.12);
   color: #F2A93B; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
 .addsec:hover { background: rgba(242, 169, 59, 0.22); }

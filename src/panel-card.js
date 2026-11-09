@@ -933,7 +933,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       b.html + '</div>';   // spread: başlık da dahil hepsi kutuya eşit aralıkla dağılır (tablet panosundaki justify-content: space-between)
     const subHtml = (i, j, boxes) => '<div class="sub" data-col="' + i + '" data-sub="' + j + '">' +
       (boxes.length ? boxes.map((b) => boxHtml(b, boxes.length > 1)).join('')
-        : '<div class="box colempty"><span>' + esc(t(lang, 'col_empty')) + '</span><button class="addsec" data-addsec="' + i + ':' + j + '">+ ' + esc(t(lang, 'add_section')) + '</button></div>') + '</div>';
+        : '<div class="box colempty"><span>' + esc(t(lang, 'col_empty')) + '</span><button class="addsec" data-addsec="' + i + ':' + j + '">+ ' + esc(t(lang, 'add_section')) + '</button>' +
+          (j === 0 && widths.length > 1 && cols[i].every((x) => !x.length) ? '<button class="addsec coldel" data-coldel="' + i + '">− ' + esc(t(lang, 'col_del')) + '</button>' : '') + '</div>') + '</div>';
     let grid, body;
     if (phone) {
       // telefon: kolonlar soldan sağa, sütunlar sırayla alt alta; boş sütun yer kaplamaz
@@ -1408,6 +1409,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     // tıklama: bölümü seç (sürüklemeden sonra gelen tıklama sayılmaz); boş sütundaki "+ Bölüm ekle" panelin menüsünü açar
     wrap.addEventListener('click', (e) => {
       if (this._dragged) return;
+      const cd = e.target.closest ? e.target.closest('[data-coldel]') : null;
+      if (cd) return lpFire(this, 'lhd-coldel', { col: +cd.getAttribute('data-coldel') });
       const ad = e.target.closest ? e.target.closest('[data-addsec]') : null;
       if (ad) { const p = ad.getAttribute('data-addsec').split(':'); return lpFire(this, 'lhd-addsec', { col: +p[0], sub: +p[1], x: e.clientX, y: e.clientY }); }
       const bx = e.target.closest ? e.target.closest('.box[data-secs]') : null; if (!bx) return;

@@ -8,7 +8,7 @@ const ADM = {
   tr: {
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
     undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}',
-    layout: 'Düzen', layCols: 'Sütunlar', layGrid: 'Serbest ızgara', layGridT: 'Kutuyu ⠿ ile taşı, sağ alt köşesinden büyüt; ötekiler yer açar. Dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur.', gFit: 'Ekrana sığdır', gScr: 'Kaydırılabilir', gmAuto: 'Dikey düzeni otomatiğe döndür', gPos: '{w}×{h}', gFill: 'Boşlukları doldur', gFillT: 'Kutular sağa ve aşağı uzayıp boş hücreleri kapatır', gRowsT: 'Ekranın kaç satıra bölüneceği: çok kutu varsa artır', gmAutoT: 'Dikey ekrandaki elle yapılan düzen silinir, geniş düzenden yeniden türetilir', tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
+    layout: 'Düzen', layCols: 'Sütunlar', layGrid: 'Serbest ızgara', layGridT: 'Kutuyu ⠿ ile taşı, sağ alt köşesinden büyüt; ötekiler yer açar. Dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur.', gFit: 'Ekrana sığdır', gScr: 'Kaydırılabilir', gmAuto: 'Dikey düzeni otomatiğe döndür', gPos: '{w}×{h}', gFill: 'Boşlukları doldur', gFillT: 'Kutular sağa ve aşağı uzayıp boş hücreleri kapatır', gRowsT: 'Ekranın kaç satıra bölüneceği: çok kutu varsa artır', gmAutoT: 'Dikey ekrandaki elle yapılan düzen silinir, geniş düzenden yeniden türetilir', tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', scr_custom: 'Özel', scrCustT: 'Cihazının çözünürlüğü (genişlik × yükseklik). Tablette oran önemli, çözünürlüğü olduğu gibi yazabilirsin (ör. 2560 × 1600). Telefonda tarayıcının gördüğü genişliği yaz (ör. 412 × 915).', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
     refill: 'Alandan yeniden doldur', refillT: 'Bu sekmenin bölümleri seçili alanın cihazlarıyla baştan kurulur.', addTab: 'Sekme', newTab: 'Yeni sekme', emptyTab: 'Boş sekme', fromArea: 'Alandan sekme',
     preview: 'Önizleme', pvHint: 'Kutuyu ⠿ tutamağından, öğeyi kendisinden sürükle · çizgilerden boyutlandır', splits: 'Kolon içi sütun', splitsT: 'Bir kolonu eşit genişlikte 2-3 sütuna böler (ör. yan yana iki senaryo bölümü). Kolon dar ise yer açmak için kendiliğinden genişler.', splitNarrow: 'Bu kadar sütun ekrana sığmaz: önce kolon sayısını azalt', sub: 'Sütun', sections: 'Bölümler', addSec: 'Bölüm ekle', noSec: 'Bu sekmede bölüm yok.',
     secTitle: 'Başlık', column: 'Kolon', colL: 'Sol', colM: 'Orta', colR: 'Sağ', tileCols: 'Satırdaki karo', look: 'Görünüm', lookTile: 'Karo', lookBar: 'Kaydırmalı', lookPhone: 'Telefonda otomatik', lookTileT: 'Kare karolar: dokun aç/kapat, basılı tut pencere', lookBarT: 'Yatay çubuklar: dokun aç/kapat, sağa-sola kaydır parlaklık, basılı tut pencere', lookPhoneT: 'Tablette karo, telefonda kaydırmalı çubuk', barCols: 'Satırdaki çubuk', delSec: 'Bölümü sil',
@@ -136,7 +136,7 @@ const ADM = {
   en: {
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
     undo: 'Undo', undoK: 'Undo (Ctrl+Z)', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}',
-    layout: 'Layout', layCols: 'Columns', layGrid: 'Free grid', layGridT: 'Move a box by its ⠿ handle, resize it from its lower right corner; the others make room. In portrait the layout drops to 6 columns by itself; change it there and that screen gets its own layout.', gFit: 'Fit the screen', gScr: 'Scrollable', gmAuto: 'Reset portrait layout', gPos: '{w}×{h}', gFill: 'Fill gaps', gFillT: 'Boxes grow right and down to close empty cells', gRowsT: 'How many rows the screen is split into: raise it for many boxes', gmAutoT: 'Drops the hand-made portrait layout and derives it from the wide one again', tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
+    layout: 'Layout', layCols: 'Columns', layGrid: 'Free grid', layGridT: 'Move a box by its ⠿ handle, resize it from its lower right corner; the others make room. In portrait the layout drops to 6 columns by itself; change it there and that screen gets its own layout.', gFit: 'Fit the screen', gScr: 'Scrollable', gmAuto: 'Reset portrait layout', gPos: '{w}×{h}', gFill: 'Fill gaps', gFillT: 'Boxes grow right and down to close empty cells', gRowsT: 'How many rows the screen is split into: raise it for many boxes', gmAutoT: 'Drops the hand-made portrait layout and derives it from the wide one again', tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', scr_custom: 'Custom', scrCustT: 'Your device resolution (width × height). On tablets only the ratio matters, so the resolution as is works (e.g. 2560 × 1600). On phones type the width the browser sees (e.g. 412 × 915).', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
     refill: 'Refill from area', refillT: 'Rebuilds this tab\'s sections from the devices of the chosen area.', addTab: 'Tab', newTab: 'New tab', emptyTab: 'Empty tab', fromArea: 'Tab from area',
     preview: 'Preview', pvHint: 'Drag boxes by their ⠿ handle, items by themselves · drag lines to resize', splits: 'Columns inside', splitsT: 'Splits a column into 2-3 equal sub-columns (e.g. two scene sections side by side).', splitNarrow: 'This many sub-columns will not fit: use fewer columns first', sub: 'Sub-column', sections: 'Sections', addSec: 'Add section', noSec: 'This tab has no sections.',
     secTitle: 'Title', column: 'Column', colL: 'Left', colM: 'Middle', colR: 'Right', tileCols: 'Tiles per row', look: 'Look', lookTile: 'Tiles', lookBar: 'Sliders', lookPhone: 'Auto on phone', lookTileT: 'Square tiles: tap to toggle, hold for the window', lookBarT: 'Horizontal bars: tap to toggle, swipe sideways for brightness, hold for the window', lookPhoneT: 'Tiles on a tablet, slider bars on a phone', barCols: 'Sliders per row', delSec: 'Delete section',
@@ -306,7 +306,11 @@ const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate'
 // Sahibin tarayıcısında localStorage lhd-pool-share = '1' ise görünür.
 const LHD_POOL_OPEN = false;
 function lhdPoolShare() { if (LHD_POOL_OPEN) return true; try { return localStorage.getItem('lhd-pool-share') === '1'; } catch (e) { return false; } }
-const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['tabp', 800, 1280], ['phone', 390, 844], ['here', 0, 0]];
+const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['tabp', 800, 1280], ['phone', 390, 844], ['custom', 0, 0], ['here', 0, 0]];
+// Özel ekran (v0.29.1): kullanıcının girdiği çözünürlük (localStorage lhd-preview-custom = 'GxY'). Tablette yalnız oran önemli,
+// telefon kuralı lpPhoneScreen ile aynı (dar, alçak ya da dikey ve 1100'den dar)
+function lhdCustomScr() { let v = ''; try { v = localStorage.getItem('lhd-preview-custom') || ''; } catch (e) {} const m = /^(\d{3,5})x(\d{3,5})$/.exec(v); return m ? [+m[1], +m[2]] : [1280, 800]; }
+function lhdScrIsPh(w, h) { return w < 700 || (h < 500 && w < 1100) || (h > w && w < 1100); }
 const LHD_MAXCOLS = 6;
 const LHD_COLORS = ['#5B8DEF', '#8E7CFF', '#4FD1C5', '#FF6FAE', '#6BC46B', '#E5484D', '#F2B33D', '#FFB86B'];
 const lhdClone = (x) => JSON.parse(JSON.stringify(x));
@@ -464,7 +468,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _settings() { return (STORE.data && STORE.data.settings) || {}; }
   // telefona özel düzenleme: önizleme Telefon'dayken (ya da 'Bu ekran' bir telefonken) sağdaki düzenleyici telefona yazar
   // telefon düzeninde çizilen önizleme ekranları: Telefon, Büyük dikey (dikey tablet panoda da telefon düzenine geçer) ve dar/dikey Bu ekran
-  _scrPh(k) { return k === 'phone' || k === 'tabp' || (k === 'here' && lpPhoneScreen()); }
+  _scrPh(k) { if (k === 'custom') { const c = lhdCustomScr(); return lhdScrIsPh(c[0], c[1]); } return k === 'phone' || k === 'tabp' || (k === 'here' && lpPhoneScreen()); }
   _phEd() { return this._scrPh(this._screenKey()); }
   _phOv() { const p = this._settings().phone; return lhdIsObj(p) ? p : {}; }
   _phSec(id) { const S = this._phOv().secs; return lhdIsObj(S) && lhdIsObj(S[id]) ? S[id] : {}; }
@@ -1168,6 +1172,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const scr = this._screenKey();
     const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span class="pvhint">· ' + t('pvHint') + '</span>' +
       '<div class="seg">' + LHD_SCREENS.map((x) => '<button data-scr="' + x[0] + '"' + (x[0] === scr ? ' class="on"' : '') + '>' + t('scr_' + x[0]) + '</button>').join('') + '</div>' +
+      (scr === 'custom' ? (() => { const c = lhdCustomScr(); return '<span class="scrc" title="' + t('scrCustT') + '"><input class="inp" type="number" min="200" max="8000" data-scrw value="' + c[0] + '">×<input class="inp" type="number" min="200" max="8000" data-scrh value="' + c[1] + '"></span>'; })() : '') +
       '<button class="btn ic pvundo" data-a="undo" title="' + t('undoK') + '"' + (this._undo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:undo"></ha-icon></button></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
@@ -2870,6 +2875,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       this._pv.addEventListener('lhd-select', (e) => { this._sec = e.detail.section; this._ask = null; this._render(); });
       this._pv.addEventListener('lhd-tab', (e) => { this._tab = e.detail.tab; this._sec = null; this._ask = null; this._render(); });
       // önizlemede sürükle-bırak ya da boyutlandırma: kart yeni sekme ayarını verir, burada kaydedilir (geri alınabilir)
+      this._pv.addEventListener('lhd-coldel', (e) => {   // önizlemede boş kolonun 'Kolonu kaldır' düğmesi (v0.29.1)
+        const i = e.detail.col, tabs0 = this._work(), tb = this._curTab(tabs0), tid = tb && tb.id; if (!tid) return;
+        this._edit((T) => { const x = T.filter((y) => y.id === tid)[0]; if (!x) return; const w = lpWeights(x), n = w.length; if (n < 2 || i < 0 || i >= n) return;
+          if ((x.sections || []).some((s) => Math.min(s.col || 0, n - 1) === i)) return;   // kolon boş değilse dokunma
+          const sum = w.reduce((a, b) => a + b, 0), keep = w.filter((v, j) => j !== i), ks = keep.reduce((a, b) => a + b, 0);
+          const sp = lpSplits(x, n); x.columns = keep.map((v) => Math.round(v * sum / ks * 100) / 100);
+          (x.sections || []).forEach((s) => { if ((s.col || 0) > i) s.col = (s.col || 0) - 1; });
+          if (x.splits) x.splits = sp.filter((v, j) => j !== i); lhdFitCols(x, this._cw()); lhdFitSplits(x, this._cw()); });
+      });
       this._pv.addEventListener('lhd-addsec', (e) => {
         // tıklama olayı panele ulaştıktan sonra aç (yoksa "dışarı tıklandı" sayılıp hemen kapanır)
         const d = e.detail; setTimeout(() => { const rr = this.shadowRoot.querySelector('.app').getBoundingClientRect(); this._menu = { kind: 'addsec', x: Math.max(8, Math.min(d.x - rr.left, rr.width - 280)), y: Math.min(d.y - rr.top + 8, rr.height - 320), target: { col: d.col, sub: d.sub } }; this._render(); }, 0);
@@ -2893,6 +2907,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       this._pv.addEventListener('lhd-change', (e) => { const nt = e.detail.tab; this._edit((T) => { const i = T.map((x) => x.id).indexOf(nt.id); if (i >= 0) { lhdFitSplits(nt, this._cw()); T[i] = nt; } }); });
     }
     const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '', phone: this._scrPh(this._screenKey()) };
+    this._pvPh = cfg.phone;   // önizleme hangi düzende çizildi (özel ekranda telefon/tablet değişince yeniden çizmek için)
     if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
     box.appendChild(this._pv);
     this._pv.hass = this._hass;
@@ -2911,7 +2926,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // gerçek ölçeklemeyle aynı hesap: kanvas en az W geniş, ekranın oranına göre genişler, yüksekliği ekrana göre
     const cv = this._settings().canvas || {}, W = cv.width || 1280, H = cv.ref_height || 1075;
     const sc = LHD_SCREENS.filter((x) => x[0] === this._screenKey())[0];
-    const sw = sc[1] || window.innerWidth, sh = sc[2] || window.innerHeight;
+    const cs = sc[0] === 'custom' ? lhdCustomScr() : null, sw = cs ? cs[0] : sc[1] || window.innerWidth, sh = cs ? cs[1] : sc[2] || window.innerHeight;
     const ph = this._scrPh(sc[0]);
     // telefon: pano ölçeklenmez, ekranın kendi genişliğinde çizilir ve aşağı kayar
     const cw = ph ? sw : Math.max(W, Math.floor(sw / sh * H)), ch = ph ? sh : Math.floor(sh * cw / sw);
@@ -3412,6 +3427,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         const isN = el.hasAttribute('data-phtn'), id = el.getAttribute(isN ? 'data-phtn' : 'data-phti'), v = el.value.trim();
         if (!isN && v && !/^[a-z]+:[a-z0-9-]+$/.test(v)) { el.value = ''; return; }
         return this._phEdit((p) => { const m = isN ? p.tabs.names : p.tabs.icons; if (v) m[id] = isN ? v.slice(0, 40) : v; else delete m[id]; });
+      }
+      if (el.hasAttribute && (el.hasAttribute('data-scrw') || el.hasAttribute('data-scrh'))) {   // özel ekran çözünürlüğü
+        const R0 = this.shadowRoot, wI = R0.querySelector('[data-scrw]'), hI = R0.querySelector('[data-scrh]'), w = Math.round(+(wI && wI.value) || 0), hh = Math.round(+(hI && hI.value) || 0);
+        if (w >= 200 && hh >= 200 && w <= 8000 && hh <= 8000) { try { localStorage.setItem('lhd-preview-custom', w + 'x' + hh); } catch (x) {} }
+        // telefon/tablet değişmediyse yalnız ölçekle; değiştiyse yeniden çiz ve odağı kullanıcının geçtiği kutuya geri ver
+        setTimeout(() => { const R1 = this.shadowRoot; if (!R1) return; const a = R1.activeElement, k = a && a.hasAttribute ? (a.hasAttribute('data-scrw') ? 'data-scrw' : a.hasAttribute('data-scrh') ? 'data-scrh' : '') : '';
+          if (this._pvPh === this._scrPh('custom')) { this._fit(); return; }
+          this._render(); if (k) { const n = this.shadowRoot.querySelector('[' + k + ']'); if (n) { n.focus(); try { n.select(); } catch (x) {} } } }, 0);
+        return;
       }
       if (el.hasAttribute && el.hasAttribute('data-phgn')) {   // katlanır grubun adı
         const j = +el.getAttribute('data-phgn'), v = el.value.trim().slice(0, 40), tb = this._curTab(this._work()), sc = this._curSec(tb), sid = sc && sc.id; if (!sid) return;
