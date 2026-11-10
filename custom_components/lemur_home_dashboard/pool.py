@@ -8,12 +8,13 @@ Only numbers are read; everything is validated with the same schema as a local m
 """
 from __future__ import annotations
 
-import gzip
 import json
 import logging
 import time
+import zlib
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -28,6 +29,27 @@ POOL_URL_MAIN = "https://raw.githubusercontent.com/mendebur-lemur/lemur-home-das
 FAIL_TTL = 600   # a download that failed is tried again after 10 minutes, not after the full ttl
 LIB_BASE = "https://raw.githubusercontent.com/bramstroker/homeassistant-powercalc/master/profile_library/"
 MAX_BYTES = 8 * 1024 * 1024
+MAX_UNZIPPED = 4 * 1024 * 1024   # a table is a few hundred kB; a file that opens to more is not a table (v0.32.1)
+
+
+def gunzip(data: bytes, limit: int = MAX_UNZIPPED) -> str:
+    """A downloaded .gz as text, opened only up to limit: a small file that unpacks to gigabytes must not fill the memory."""
+    d = zlib.decompressobj(16 + zlib.MAX_WBITS)
+    try:
+        out = d.decompress(data, limit + 1)
+    except zlib.error as err:
+        raise ValueError(str(err)) from err
+    if len(out) > limit or d.unconsumed_tail:
+        raise ValueError("unpacked file too large")
+    return out.decode("utf-8")
+
+
+def _seg(v: Any) -> str | None:
+    """One folder name of the open library for an address: no path parts, nothing that could leave the library."""
+    s = str(v or "")
+    if not s or len(s) > 120 or s in (".", "..") or "/" in s or "\\" in s or any(ord(c) < 32 for c in s):
+        return None
+    return quote(s, safe="")
 _CACHE: dict[str, tuple[float, Any]] = {}
 
 
@@ -133,14 +155,17 @@ async def lookup(hass: HomeAssistant, man: str, model: str, model_id: str = "") 
     dirn, md = m
     if str(md.get("calculation_strategy") or "") != "lut":
         return None
-    base = f"{LIB_BASE}{dirn}/{md.get('id')}/"
+    d1, d2 = _seg(dirn), _seg(md.get("id"))
+    if not d1 or not d2:
+        return None
+    base = f"{LIB_BASE}{d1}/{d2}/"
     out: dict = {}
     for kind, name in (("ct", "color_temp.csv.gz"), ("hs", "hs.csv.gz"), ("br", "brightness.csv.gz")):
         raw = await _get(hass, base + name, 24 * 3600, binary=True)
         if not raw:
             continue
         try:
-            rows = await hass.async_add_executor_job(lambda b=raw: LUT.parse_csv(gzip.decompress(b).decode("utf-8")))
+            rows = await hass.async_add_executor_job(lambda b=raw: LUT.parse_csv(gunzip(b)))
         except (OSError, EOFError, ValueError):
             continue
         t = LUT.from_csv(kind, rows)
@@ -151,7 +176,7 @@ async def lookup(hass: HomeAssistant, man: str, model: str, model_id: str = "") 
     raw = await _get(hass, base + "effect.csv.gz", 24 * 3600, binary=True)
     if raw:
         try:
-            fx = await hass.async_add_executor_job(lambda b=raw: LUT.from_effect_csv(gzip.decompress(b).decode("utf-8")))
+            fx = await hass.async_add_executor_job(lambda b=raw: LUT.from_effect_csv(gunzip(b)))
             if fx:
                 out["fx"] = fx
         except (OSError, EOFError, ValueError):

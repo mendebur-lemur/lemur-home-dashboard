@@ -39,6 +39,13 @@ def _s(v, n=80) -> str:
     return str(v)[:n] if isinstance(v, (str, int, float)) and not isinstance(v, bool) else ""
 
 
+def _name(v, n=80) -> str:
+    """A brand, model or integration name as it goes into the pool and into the reply on the issue: letters, digits,
+    spaces and a few signs only (no @mentions, links or markup), v0.32.1."""
+    s = "".join(ch for ch in _s(v, n) if ch.isalnum() or ch in " ._-+/()&,'")
+    return re.sub(r"\s+", " ", s).strip()
+
+
 def key(p: dict) -> str:
     m = p.get("model") or {}
     return (re.sub(r"[^a-z0-9]", "", _s(m.get("manufacturer")).casefold()) + "|" + re.sub(r"[^a-z0-9]", "", (_s(m.get("model_id")) or _s(m.get("model"))).casefold()))
@@ -73,7 +80,7 @@ def check(p: dict, strict: bool = False, blocked: list | None = None) -> tuple[l
     if not isinstance(p, dict) or p.get("v") != 1:
         return ["biçim sürümü yok / no format version"], {}
     m = p.get("model") if isinstance(p.get("model"), dict) else {}
-    man, mod, mid = _s(m.get("manufacturer")), _s(m.get("model")), _s(m.get("model_id"))
+    man, mod, mid = _name(m.get("manufacturer")), _name(m.get("model")), _name(m.get("model_id"))
     if not man or not (mod or mid):
         errs.append("marka ya da model yok / brand or model missing")
     if (mod and GENERIC.match(mod.strip())) and not mid:
@@ -143,12 +150,12 @@ def check(p: dict, strict: bool = False, blocked: list | None = None) -> tuple[l
     if blocked and plug_key(p) in blocked:
         errs.append("bu priz modeli sürekli hatalı ölçüm verdiği için kabul edilmiyor / this plug model keeps giving bad measurements and is not accepted")
     caps = p.get("caps") if isinstance(p.get("caps"), dict) else {}
-    clean = {"key": key(p), "manufacturer": man, "model": mod, "model_id": mid, "integration": _s((m or {}).get("integration"), 40),
-             "caps": {"color_modes": [x for x in caps.get("color_modes") or [] if isinstance(x, str)][:8], "kelvin": [x for x in (caps.get("kelvin") or [])[:2] if isinstance(x, (int, float))],
+    clean = {"key": key(p), "manufacturer": man, "model": mod, "model_id": mid, "integration": _name((m or {}).get("integration"), 40),
+             "caps": {"color_modes": [x for x in caps.get("color_modes") or [] if isinstance(x, str) and re.match(r"^[a-z_]{1,20}$", x)][:8], "kelvin": [x for x in (caps.get("kelvin") or [])[:2] if isinstance(x, (int, float))],
                       "effects": caps.get("effects") if isinstance(caps.get("effects"), int) else None, "sw": _s(caps.get("sw"), 40)},
              "mains_v": p.get("mains_v") if p.get("mains_v") in (120, 230) else 230, "standby": float(sb), "lut": tb, "strip": strip,
              "length_m": float(ln) if strip and isinstance(ln, (int, float)) else None, "adapter_w": float(cap) if isinstance(cap, (int, float)) and not isinstance(cap, bool) else None,
-             "plug": {k: _s(v, 60) for k, v in (p.get("plug") or {}).items() if k in ("manufacturer", "model")} if isinstance(p.get("plug"), dict) else {},
+             "plug": {k: _name(v, 60) for k, v in (p.get("plug") or {}).items() if k in ("manufacturer", "model")} if isinstance(p.get("plug"), dict) else {},
              "samples": {k: v for k, v in (p.get("samples") or {}).items() if k in ("n", "settle_s", "repeats", "diff", "rechecked", "floor") and isinstance(v, (int, float))} if isinstance(p.get("samples"), dict) else {},
              "hi": round(hi, 2), "lo": round(lo, 2), "plug_key": plug_key(p)}
     return errs, clean

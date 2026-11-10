@@ -193,7 +193,8 @@ function lpErYear(h, M, D, lang, ph) {
 function lpErCsv(h, M, P, lang) {
   const D = lpErData(h, M, P); if (!D || !D.rows) return null;
   const sep = lang === 'tr' ? ';' : ',', num = (v) => (lang === 'tr' ? String(Math.round(v * 1000) / 1000).replace('.', ',') : String(Math.round(v * 1000) / 1000));
-  const head = [lang === 'tr' ? 'Tarih' : 'Date'].concat(M.cats.map((c) => c.name), [lang === 'tr' ? 'Toplam kWh' : 'Total kWh']);
+  const txt = (x) => (/^[=+\-@\t\r]/.test(String(x)) ? "'" + x : String(x));   // kategori adı = + - @ ile başlarsa tablo programı formül saymasın (v0.32.1)
+  const head = [lang === 'tr' ? 'Tarih' : 'Date'].concat(M.cats.map((c) => txt(c.name)), [lang === 'tr' ? 'Toplam kWh' : 'Total kWh']);
   const rows = D.rows.map((r) => { const d = new Date(r.t); return [P.mode === 'y' ? d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) : d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2)].concat(M.cats.map((c) => num(r.c[c.id] || 0)), [num(r.tot)]); });
   const q = (x) => (/[";,\n]/.test(x) ? '"' + String(x).replace(/"/g, '""') + '"' : x);
   return { name: (lang === 'tr' ? 'enerji-' : 'energy-') + (P.mode === 'y' ? P.y : P.y + '-' + ('0' + (P.m + 1)).slice(-2)) + '.csv', text: '﻿' + [head].concat(rows).map((r) => r.map(q).join(sep)).join('\r\n') };

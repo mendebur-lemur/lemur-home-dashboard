@@ -53,8 +53,37 @@ def by_hash(login: str) -> str:
     return hashlib.sha256(("lhd|" + str(login or "?").casefold()).encode()).hexdigest()[:12]
 
 
+CELL_MED = 0.10    # iki tablonun ortak hücrelerinde ortanca fark (en yüksek güce oranla) en çok bu kadar
+CELL_FAR = 0.30    # bu kadardan fazla ayrılan hücre "uzak" sayılır
+FAR_SHARE = 0.10   # uzak hücreler ortak hücrelerin en çok bu kadarı olabilir
+CELLS_MIN = 12     # karşılaştırmak için en az bu kadar ortak hücre gerekir
+
+
+def _cells(t: dict) -> dict:
+    """Every cell of a table by where it sits: {(mode, color, brightness): watts}."""
+    out = {}
+    c = t.get("ct")
+    if c:
+        for i, k in enumerate(c["k"]):
+            for j, b in enumerate(c["b"]):
+                out[("ct", k, b)] = c["w"][i][j]
+    h = t.get("hs")
+    if h:
+        for si, s in enumerate(h["s"]):
+            for hi, hue in enumerate(h["h"]):
+                for j, b in enumerate(h["b"]):
+                    out[("hs", s, hue, b)] = h["w"][si][hi][j]
+    r = t.get("br")
+    if r:
+        for j, b in enumerate(r["b"]):
+            out[("br", b)] = r["w"][j]
+    return out
+
+
 def agrees(a: dict, b: dict) -> tuple[bool, str]:
-    """Two submissions of one model: same color modes and integration, highest power within AGREE."""
+    """Two submissions of one model: same color modes and integration, highest power within AGREE, and (v0.32.1) the
+    tables close to each other cell by cell. Only the highest power was compared before: a made-up table with the right
+    peak joined by itself and moved the model's values for everyone."""
     ca, cb = (a.get("caps") or {}).get("color_modes"), (b.get("caps") or {}).get("color_modes")
     if ca and cb and sorted(ca) != sorted(cb):
         return False, "renk modları farklı"
@@ -62,7 +91,19 @@ def agrees(a: dict, b: dict) -> tuple[bool, str]:
         return False, f"entegrasyon farklı ({a['integration']} / {b['integration']})"
     ha, hb = max(_vals(per_meter(a))), max(_vals(per_meter(b)))
     dev = abs(ha - hb) / max(ha, hb) if max(ha, hb) else 0
-    return dev <= AGREE, f"en yüksek {ha:.1f} W / {hb:.1f} W (%{dev * 100:.0f} fark)"
+    if dev > AGREE:
+        return False, f"en yüksek {ha:.1f} W / {hb:.1f} W (%{dev * 100:.0f} fark)"
+    ca2, cb2 = _cells(per_meter(a)), _cells(per_meter(b))
+    common = [k for k in ca2 if k in cb2]
+    if len(common) < CELLS_MIN:
+        return False, f"tablolar aynı adımlarla ölçülmemiş ({len(common)} ortak hücre), hücre hücre karşılaştırılamadı"
+    top = max(ha, hb) or 1.0
+    diffs = sorted(abs(ca2[k] - cb2[k]) / top for k in common)
+    med = diffs[len(diffs) // 2]
+    far = sum(1 for d in diffs if d > CELL_FAR) / len(diffs)
+    if med > CELL_MED or far > FAR_SHARE:
+        return False, f"tablolar birbirini tutmuyor (ortanca fark %{med * 100:.0f}, uzak hücre %{far * 100:.0f})"
+    return True, f"en yüksek {ha:.1f} W / {hb:.1f} W (%{dev * 100:.0f} fark), {len(common)} hücrede ortanca fark %{med * 100:.0f}"
 
 
 def add_sub(c: dict, n, by: str = "") -> None:

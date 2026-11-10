@@ -1,5 +1,8 @@
 name: Validate
 on: [push, pull_request]
+# the checks only read the repository (v0.32.1)
+permissions:
+  contents: read
 jobs:
   hassfest:
     runs-on: ubuntu-latest

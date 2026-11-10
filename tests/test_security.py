@@ -173,3 +173,28 @@ async def test_old_feed_record_still_feeds(hass, setup_lhd):
     d.data["pets"] = {"pamuk": {"name": "Pamuk"}}
     d.data["feed"] = {"pamuk": {"last": (dt_util.now() - timedelta(minutes=5)).isoformat(), "log": []}}
     assert await d.async_feed("pamuk", "t")
+
+
+# ---- v0.32.1: downloads from the open library ----
+def test_gunzip_stops_at_the_limit():
+    import gzip
+
+    import pytest
+
+    from custom_components.lemur_home_dashboard import pool as POOL
+
+    assert POOL.gunzip(gzip.compress(b"bri,watt\n1,0.5\n")) == "bri,watt\n1,0.5\n"
+    bomb = gzip.compress(b"0" * (POOL.MAX_UNZIPPED * 3))   # a few kB that open to 12 MB
+    assert len(bomb) < 100_000
+    with pytest.raises(ValueError):
+        POOL.gunzip(bomb)
+    with pytest.raises(ValueError):
+        POOL.gunzip(b"not a gzip file")
+
+
+def test_library_folder_names_cannot_leave_the_library():
+    from custom_components.lemur_home_dashboard import pool as POOL
+
+    assert POOL._seg("signify") == "signify" and POOL._seg("LED 1545 G12") == "LED%201545%20G12"
+    for bad in ("..", ".", "a/b", "../../x/y/main", "a\\b", "", None, "x" * 200, "a\nb"):
+        assert POOL._seg(bad) is None

@@ -175,3 +175,47 @@ def test_owner_newer_measurement_replaces_owners_older(tmp_path):
     assert CK.owner_replace(c["key"], 17, "own")
     subs = json.loads((tmp_path / "models" / (RV._fname(c["key"]) + ".json")).read_text())["subs"]
     assert [x["issue"] for x in subs] == [12, 17]
+
+
+# ---- v0.32.1: güvenlik ----
+def test_names_lose_markup_and_mentions():
+    p = _sub(model={"manufacturer": "Acme @someone [x](https://evil.example)", "model": "L1 <b>", "model_id": "", "integration": "mqtt`"})
+    errs, clean = common.check(p)
+    assert errs == []
+    for v in (clean["manufacturer"], clean["model"], clean["integration"]):
+        assert not any(ch in v for ch in "@[]<>`:*#")
+    assert clean["manufacturer"].startswith("Acme someone")
+
+
+def test_usual_names_unchanged():
+    _, clean = common.check(_sub())
+    assert clean["manufacturer"] == "Signify Netherlands B.V." and clean["model_id"] == "440400982842"
+
+
+def test_color_modes_only_plain_words():
+    _, clean = common.check(_sub(caps={"color_modes": ["color_temp", "hs", "<img src=x>", "x" * 500]}))
+    assert clean["caps"]["color_modes"] == ["color_temp", "hs"]
+
+
+def _grid(f):
+    ks, bs = [2000, 2700, 4000, 6500], [1, 10, 25, 50, 75, 100]
+    return {"key": "acme|l1", "integration": "mqtt", "caps": {"color_modes": ["color_temp"]}, "strip": False,
+            "lut": {"ct": {"k": ks, "b": bs, "w": [[round(f(i, j), 2) for j in range(len(bs))] for i in range(len(ks))]}}}
+
+
+def test_agrees_compares_the_whole_table():
+    import review
+    real = _grid(lambda i, j: 1.0 + j * 3.8 + i * 0.2)
+    near = _grid(lambda i, j: (1.0 + j * 3.8 + i * 0.2) * (1.05 if (i + j) % 2 else 0.96))
+    fake = _grid(lambda i, j: 20.6 if (i, j) == (3, 5) else 1.0 + j * 0.4)   # the same highest power, nothing else alike
+    assert review.agrees(real, near)[0]
+    ok, why = review.agrees(real, fake)
+    assert not ok and "tutmuyor" in why
+
+
+def test_agrees_needs_common_cells():
+    import review
+    a = _grid(lambda i, j: 1.0 + j * 3.8)
+    b = dict(a, lut={"ct": {"k": [2100, 3000], "b": [3, 100], "w": [[1.0, 20.0], [1.0, 20.0]]}})
+    ok, why = review.agrees(a, b)
+    assert not ok and "ortak" in why
