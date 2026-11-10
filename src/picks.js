@@ -5,29 +5,40 @@
 // ortaklığı yalnız uygulamada sayıldığı için link Home Assistant uygulaması üzerinden kişinin telefonuna bildirim olarak gider,
 // uygulama yoksa küçük kutuda telefonla okutulacak kod ve "Bu bilgisayarda aç" çıkar.
 const LHD_PICKS_URL = 'https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/library/picks.json';
+// "Ölçüm hazır" (v0.32): ürünün havuz anahtarı (picks.json'da pool) ortak havuzun model listesinde varsa kendiliğinden hazır görünür
+const LHD_POOL_IDX = 'https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/havuz/library/index.json';
 const LHD_PICKS_IMG = 'https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/docs/picks/';
 const LHD_PICK_CATS = [['all', 'mdi:view-grid-outline'], ['light', 'mdi:lightbulb-outline'], ['plug', 'mdi:power-plug-outline'], ['switch', 'mdi:light-switch'], ['remote', 'mdi:remote'], ['sensor', 'mdi:motion-sensor'], ['climate', 'mdi:thermometer'], ['hub', 'mdi:router-wireless'], ['other', 'mdi:dots-horizontal']];
 const LHD_PICK_STORES = [['hb', 'Hepsiburada'], ['amz', 'Amazon']];
 function lhdPicksOk(d) { return !!d && typeof d === 'object' && d.v === 1 && Array.isArray(d.items); }
 function lhdHttps(u) { return typeof u === 'string' && /^https:\/\/[^\s"'<>\\]+$/.test(u) ? u : ''; }
 const LHDPicks = (() => {
-  let data = (typeof LHD_PICKS !== 'undefined' && lhdPicksOk(LHD_PICKS)) ? LHD_PICKS : { v: 1, items: [] }, at = 0, busy = false;
+  let data = (typeof LHD_PICKS !== 'undefined' && lhdPicksOk(LHD_PICKS)) ? LHD_PICKS : { v: 1, items: [] }, at = 0, busy = false, pool = Object.create(null);
   try {
     const c = JSON.parse(localStorage.getItem('lhd-picks') || 'null');
     if (c && lhdPicksOk(c.d) && String(c.d.updated || '') >= String(data.updated || '')) { data = c.d; at = +c.t || 0; }
+    if (c && Array.isArray(c.p)) c.p.forEach((k) => { if (typeof k === 'string') pool[k] = 1; });
   } catch (e) {}
   return {
     get() { return data; },
+    // ürünün enerji durumu: lut (ölçüm hazır) | self | wait | none. Havuzda modeli olan ürün listede "wait" yazsa da hazırdır
+    en(x) { const e = x && typeof x.pool === 'string' && pool[x.pool] ? 'lut' : x && x.energy; return ['lut', 'self', 'wait'].indexOf(e) >= 0 ? e : 'none'; },
     // GitHub'dan yenisi: 6 saatte bir (açılışta), bitince cb (liste değiştiyse)
     load(cb) {
       if (busy || Date.now() - at < 6 * 3600 * 1000) return;
       busy = true;
-      fetch(LHD_PICKS_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      const j = (u) => fetch(u, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      Promise.all([j(LHD_PICKS_URL), j(LHD_POOL_IDX)]).then((R) => {
         busy = false; at = Date.now();
-        if (!lhdPicksOk(d)) return;
-        const changed = JSON.stringify(d) !== JSON.stringify(data);
-        data = d;
-        try { localStorage.setItem('lhd-picks', JSON.stringify({ t: at, d: d })); } catch (e) {}
+        const d = R[0], ix = R[1];
+        let changed = false;
+        if (lhdPicksOk(d)) { changed = JSON.stringify(d) !== JSON.stringify(data); data = d; }
+        if (ix && ix.v === 1 && Array.isArray(ix.models)) {
+          const p = Object.create(null); ix.models.slice(0, 5000).forEach((k) => { if (typeof k === 'string') p[k] = 1; });
+          if (Object.keys(p).sort().join('\n') !== Object.keys(pool).sort().join('\n')) changed = true;
+          pool = p;
+        }
+        try { localStorage.setItem('lhd-picks', JSON.stringify({ t: at, d: data, p: Object.keys(pool) })); } catch (e) {}
         if (changed && cb) cb();
       }).catch(() => { busy = false; at = Date.now(); });
     }

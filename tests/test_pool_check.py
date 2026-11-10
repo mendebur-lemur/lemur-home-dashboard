@@ -108,7 +108,7 @@ def _lib(tmp_path):
 def test_owner_added_at_once(tmp_path):
     _lib(tmp_path)
     _, c = common.check(_q())
-    add, _ = CK.decide(c, 5, True, "aa", [])
+    add, _ = CK.decide(c, 5, True, "aa")
     assert [x[0] for x in add] == [5]
 
 
@@ -116,22 +116,47 @@ def test_agrees_with_pool_or_waits(tmp_path):
     _lib(tmp_path)
     _, c = common.check(_q())
     RV.add_sub(c, 1, "owner")
-    assert [x[0] for x in CK.decide(c, 2, False, "bb", [])[0]] == [2]          # same table: agrees
+    assert [x[0] for x in CK.decide(c, 2, False, "bb")[0]] == [2]          # same table: agrees
     far = json.loads(json.dumps(c)); far["lut"]["ct"]["w"] = [[x * 1.5 for x in r] for r in far["lut"]["ct"]["w"]]
-    assert CK.decide(far, 3, False, "cc", [])[0] == []                          # 50% off: waits
-    assert CK.decide(c, 4, False, "owner", [])[0] == []                         # same account again: waits
+    assert CK.decide(far, 3, False, "cc")[0] == []                          # 50% off: waits
+    assert CK.decide(c, 4, False, "owner")[0] == []                         # same account again: waits
 
 
-def test_two_accounts_pair_up(tmp_path, monkeypatch):
+def test_first_measurement_of_a_model_always_waits(tmp_path):
     _lib(tmp_path)
-    p = _q()
-    other = {"number": 7, "body": "```json\n" + json.dumps(p) + "\n```", "user": {"login": "someone"}, "author_association": "NONE"}
-    monkeypatch.setattr(CK, "pending", lambda n: [other])
-    _, c = common.check(p, strict=True)
-    add, note = CK.decide(c, 8, False, RV.by_hash("another"), [])
-    assert sorted(x[0] for x in add) == [7, 8] and "#7" in note
-    add, _ = CK.decide(c, 8, False, RV.by_hash("someone"), [])                  # the same account twice does not pair
-    assert add == []
+    _, c = common.check(_q(), strict=True)
+    add, note = CK.decide(c, 8, False, RV.by_hash("someone"))                # two accounts can no longer pair up
+    assert add == [] and "ilk ölçümü" in note
+
+
+def _event(tmp_path, action, assoc, sender, label=None, n=30):
+    ev = {"action": action, "issue": {"number": n, "body": "```json\n" + json.dumps(_q()) + "\n```", "user": {"login": "someone"}, "author_association": assoc},
+          "sender": {"login": sender}, "repository": {"owner": {"login": "boss"}}}
+    if label:
+        ev["label"] = {"name": label}
+    f = tmp_path / "ev.json"
+    f.write_text(json.dumps(ev), encoding="utf-8")
+    return str(f)
+
+
+def _run(monkeypatch, tmp_path, *a):
+    lib = tmp_path / "lib"
+    (lib / "models").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(sys, "argv", ["check.py", "--event", _event(tmp_path, *a), "--lib", str(lib)])
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    CK.main()
+    f = lib / "models" / "signifynetherlandsbv__440400982842.json"
+    return json.loads(f.read_text())["subs"] if f.exists() else []
+
+
+def test_owner_label_accepts_a_waiting_measurement(tmp_path, monkeypatch):
+    assert _run(monkeypatch, tmp_path, "opened", "NONE", "someone") == []                       # waits
+    assert _run(monkeypatch, tmp_path, "labeled", "NONE", "someone", "onay") == []              # not the owner's label
+    assert _run(monkeypatch, tmp_path, "labeled", "NONE", "boss", "olcum") == []                # another label
+    subs = _run(monkeypatch, tmp_path, "labeled", "NONE", "boss", "onay")
+    assert [x["issue"] for x in subs] == [30] and subs[0]["by"] == RV.by_hash("someone")
+    idx = json.loads((tmp_path / "lib" / "index.json").read_text())
+    assert idx["models"] == ["signifynetherlandsbv|440400982842"]
 
 
 def test_filled_low_cells_are_not_zeros():

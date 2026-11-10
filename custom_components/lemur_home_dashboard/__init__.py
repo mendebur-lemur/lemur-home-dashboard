@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from typing import Any
 
 import voluptuous as vol
@@ -57,6 +58,11 @@ _LOGGER = logging.getLogger(__name__)
 # energy_solar_src: the solar statistic the dashboard put into the energy settings; learn_avg: long averages running (learn.py)
 DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "energy_grid_src": "", "learn_avg": {}}
 PLATFORMS = ["sensor", "button"]
+# v0.32: what the screens get. learn_avg (the running measurements, with every step) stays on the server: the admin page
+# asks for it with learn_status. revs: a counter per key, so a save made on an older copy is turned down (ws_set).
+PRIVATE_KEYS = ("learn_avg",)
+SET_KEYS = ("settings", "tabs", "profiles", "pets", "twins", "walls", "estimates", "ecats")
+LEARN_SAVE_S = 60.0   # a running light measurement is written to disk at most this often (it was every step)
 
 
 class PanelData:
@@ -70,6 +76,15 @@ class PanelData:
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
         self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (light runs and long averages go on after a restart)
         self._prefs_unsub = None
+        self.revs: dict[str, int] = {}          # key → how many times it changed since the start (in memory)
+        self._learn_saved = 0.0                  # time.monotonic() of the last save asked for the learning runs
+        self._learn_shape: tuple = ()
+
+    def view(self) -> dict:
+        """The stored data as the screens get it."""
+        out = {k: v for k, v in self.data.items() if k not in PRIVATE_KEYS}
+        out["revs"] = dict(self.revs)
+        return out
 
     @callback
     def _fallback_used(self, eid: str, when: str) -> None:
@@ -98,14 +113,26 @@ class PanelData:
         self.learning.resume_saved()   # yeniden başlatmayla kesilen ışık ölçümü kaldığı yerden sürer
 
     def _save_learn(self, runs: dict) -> None:
-        if runs != self.data.get("learn_avg"):
-            self.data["learn_avg"] = runs
+        """Every step of a light measurement comes here. The whole store was written to disk each time (hundreds of
+        writes per measurement); now a run that starts, ends or finishes is saved at once, steps at most every minute.
+        A restart in between goes on from the last saved step and measures the few after it again."""
+        if runs == self.data.get("learn_avg"):
+            return
+        self.data["learn_avg"] = runs
+        shape = tuple(sorted((k, str(v.get("phase") or "")) for k, v in runs.items() if isinstance(v, dict)))
+        now = time.monotonic()
+        if shape != self._learn_shape or now - self._learn_saved >= LEARN_SAVE_S:
+            self._learn_shape, self._learn_saved = shape, now
             self.store.async_delay_save(lambda: self.data, 1.0)
 
     @callback
-    def changed(self) -> None:
+    def changed(self, *keys: str) -> None:
+        """Save and tell the screens. keys: what changed (their counters go up and only they are sent to screens that
+        take parts); none: everything."""
+        for k in keys or SET_KEYS:
+            self.revs[k] = self.revs.get(k, 0) + 1
         self.store.async_delay_save(lambda: self.data, 1.0)
-        async_dispatcher_send(self.hass, SIGNAL_UPDATE, self.data)
+        async_dispatcher_send(self.hass, SIGNAL_UPDATE, self.view(), tuple(keys))
 
     # ---- feeding reminders ----
     def pets(self) -> dict:
@@ -271,7 +298,7 @@ class PanelData:
             except Exception as err:  # noqa: BLE001 - one broken pet must not stop the others
                 _LOGGER.warning("Pet %s: %s", pid, err)
         if dirty:
-            self.changed()
+            self.changed("feed")
         async_dispatcher_send(self.hass, SIGNAL_TICK)
 
     async def _tick_pet(self, pid: str, pet: dict, now, tr: bool) -> bool:
@@ -396,7 +423,7 @@ def ws_get(hass, connection, msg):
     if data is None:
         connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
         return
-    out = _for_user(connection, data.data)
+    out = _for_user(connection, data.view())
     out = dict(out, fallback=dict(data.twins.fallback))   # last backup use per light (in memory)
     connection.send_result(msg["id"], out)
 
@@ -412,8 +439,9 @@ def _for_user(connection, payload: dict) -> dict:
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "lemur_home_dashboard/set",
-        vol.Required("key"): vol.In(["settings", "tabs", "profiles", "pets", "twins", "walls", "estimates", "ecats"]),
+        vol.Required("key"): vol.In(list(SET_KEYS)),
         vol.Required("value"): vol.Any(list, dict),
+        vol.Optional("rev"): int,   # the key's counter the change was made on; left out: not checked (older pages)
     }
 )
 @callback
@@ -426,6 +454,11 @@ def ws_set(hass, connection, msg):
         connection.send_error(msg["id"], "unauthorized", "Only administrators can change the panel")
         return
     key, value = msg["key"], msg["value"]
+    if "rev" in msg and msg["rev"] != data.revs.get(key, 0):
+        # someone else (another admin page, the import, a wall tablet's season switch) changed this key meanwhile:
+        # saving would silently undo their change. The page reloads and says so.
+        connection.send_error(msg["id"], "conflict", f"{key} was changed elsewhere")
+        return
     if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
         connection.send_error(msg["id"], "invalid", f"{key}: wrong type or too large")
         return
@@ -463,8 +496,8 @@ def ws_set(hass, connection, msg):
     if key in ("estimates", "ecats") or (key == "settings" and energy_changed):
         async_dispatcher_send(hass, SIGNAL_EST)
         data.schedule_prefs()
-    data.changed()
-    connection.send_result(msg["id"], data.data)
+    data.changed(*((key, "feed") if key == "pets" else (key,)))   # pets: the next feedings were worked out again
+    connection.send_result(msg["id"], _for_user(connection, data.view()))
 
 
 @websocket_api.websocket_command(
@@ -504,16 +537,26 @@ def ws_season(hass, connection, msg):
     settings = dict(data.data.get("settings") or {})
     settings["season"] = msg["season"]
     data.data["settings"] = settings
-    data.changed()
+    data.changed("settings")
     connection.send_result(msg["id"], {"season": msg["season"]})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "lemur_home_dashboard/subscribe", vol.Optional("parts", default=False): bool})
 @callback
 def ws_subscribe(hass, connection, msg):
+    """Changes as they happen. parts (v0.32 pages): only the keys that changed come, as {"__part": {key: value}, "revs"};
+    a yaz / kış tap no longer sends every table to every screen. Older pages still get everything."""
+    parts = msg["parts"]
+
     @callback
-    def _forward(payload):
-        connection.send_message(websocket_api.event_message(msg["id"], payload if ("__feed" in payload or "__fb" in payload) else _for_user(connection, payload)))
+    def _forward(payload, keys=()):
+        if "__feed" in payload or "__fb" in payload:
+            out = payload
+        else:
+            out = _for_user(connection, payload)
+            if parts and keys:
+                out = {"__part": {k: out.get(k) for k in keys}, "revs": out.get("revs") or {}}
+        connection.send_message(websocket_api.event_message(msg["id"], out))
 
     connection.subscriptions[msg["id"]] = async_dispatcher_connect(hass, SIGNAL_UPDATE, _forward)
     connection.send_result(msg["id"])
@@ -592,7 +635,7 @@ async def ws_energy_import(hass, connection, msg):
         return
     data.data["estimates"] = ests
     data.data["ecats"] = ecats
-    data.changed()
+    data.changed("estimates", "ecats")
     async_dispatcher_send(hass, SIGNAL_EST)
     synced = await data.async_sync_prefs(set(p["drop"]))
     connection.send_result(msg["id"], dict(p, applied=True, synced=synced))

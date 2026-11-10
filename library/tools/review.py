@@ -168,6 +168,8 @@ def rebuild() -> None:
                      "strip": bool(s0.get("strip")), "per_m": bool(s0.get("strip")), "cap_w": max(caps) if caps else None}
     out = {"v": 1, "updated": date.today().isoformat(), "note": "Lemur Home Dashboard shared light measurements. Each model: the median of reviewed submissions. Strips are per meter (per_m).", "models": models}
     (LIB / "library.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    # index.json: only which models are in the pool (Önerilen ürünler shows "measurement ready" from it, src/picks.js)
+    (LIB / "index.json").write_text(json.dumps({"v": 1, "updated": out["updated"], "models": sorted(models)}, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def main() -> None:

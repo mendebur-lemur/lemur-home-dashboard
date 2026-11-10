@@ -372,7 +372,7 @@ Tutarlılık için yalnız komuttan sonra gelen okumalar sayılır; lamba rengi 
 
 Bitince sonucu görüp **Kaydet**; aynı modeldeki öteki ışıklara tek dokunuşla uygulanır. Home Assistant yeniden başlarsa yarım kalan öğrenim kaldığı adımdan sürer; biten ama kaydedilmemiş sonuç da kaybolmaz.
 
-TV, klima gibi durumu olan cihazlarda her durumun ortalaması sen cihazı kullanırken toplanır. Buzdolabı gibi hep açık cihazlarda prizin günlerce ortalaması alınır; **Bitir ve kaydet** ile cihaz o watt ile Sabit olur. Aynı anda en çok 3 ışık öğrenilir, bir priz tek cihazı ölçer. Ortak havuzda yalnız projenin kendi ölçtüğü ışıklar var; dışarıdan gönderim şimdilik kapalı.
+TV, klima gibi durumu olan cihazlarda her durumun ortalaması sen cihazı kullanırken toplanır. Buzdolabı gibi hep açık cihazlarda prizin günlerce ortalaması alınır; **Bitir ve kaydet** ile cihaz o watt ile Sabit olur. Aynı anda en çok 3 ışık öğrenilir, bir priz tek cihazı ölçer. Ölçümünü ortak havuza gönderebilirsin: otomatik kontrol edilir (0 W hücre, takılan ya da yavaş priz, okunamayan düşük güçler); model havuzdaysa ve ölçümün tutarlıysa kendiliğinden eklenir, bir modelin ilk ölçümü onay bekler.
 
 **Seçenekler**
 

@@ -27,3 +27,14 @@ async def setup_lhd(hass):
         assert await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
         yield entry
+
+
+@pytest.fixture(autouse=True)
+def _no_waiting(monkeypatch):
+    """v0.32 waits before writing: kWh sensors (ENERGY_WRITE_S), registry sync (REG_SYNC_S), the learning runs' save
+    (LEARN_SAVE_S). The tests read the result right after a change; the waits have their own tests."""
+    import custom_components.lemur_home_dashboard as pkg
+    from custom_components.lemur_home_dashboard import sensor
+    monkeypatch.setattr(sensor, "ENERGY_WRITE_S", 0.0)
+    monkeypatch.setattr(sensor, "REG_SYNC_S", 0.0)
+    monkeypatch.setattr(pkg, "LEARN_SAVE_S", 0.0)

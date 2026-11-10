@@ -372,7 +372,7 @@ For consistency only readings after a command count; if the lamp did not take th
 
 When it is done, check the result and **Save**; one tap applies it to other lights of the same model. If Home Assistant restarts, an unfinished learn goes on from its step, and a finished but unsaved result is kept.
 
-Devices with states, like a TV or AC, collect an average per state while you use them. Always-on devices like a fridge take the plug's average over days; **Finish and save** makes the device Fixed at that wattage. At most 3 lights learn at once and a plug measures one device. The shared pool holds only lights the project measured itself; sending your own is closed for now.
+Devices with states, like a TV or AC, collect an average per state while you use them. Always-on devices like a fridge take the plug's average over days; **Finish and save** makes the device Fixed at that wattage. At most 3 lights learn at once and a plug measures one device. You can send your measurement to the shared pool: it is checked automatically (0 W cells, a stuck or slow plug, low powers the plug could not read); if the model is in the pool and yours agrees it joins by itself, a model's first measurement waits for approval.
 
 **Options**
 

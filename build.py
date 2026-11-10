@@ -4,6 +4,23 @@ import json, pathlib, re
 root = pathlib.Path(__file__).parent
 src = root / "src"
 
+# ---- paket kaynakla aynı mı (v0.32) ----
+# Derleme sonunda kaynakların özeti src/build.stamp'a yazılır. "python build.py --check" hiçbir şey yazmadan özeti yeniden
+# hesaplar; kaynak değişip paket yeniden derlenmediyse 3 ile çıkar (push.bat göndermeden önce bunu çalıştırır).
+# Satır sonları sayılmaz: Windows'ta da aynı özet çıkar. Paketin kendisi yalnız Linux'ta derlenir (satır sonları).
+import hashlib, sys
+STAMP = src / "build.stamp"
+def _stamp():
+    h = hashlib.sha256()
+    files = sorted(p for p in src.iterdir() if p.is_file() and p.name != STAMP.name) + [root / "library/picks.json", root / "custom_components/lemur_home_dashboard/manifest.json"]
+    for p in files:
+        h.update(p.name.encode("utf-8")); h.update(b"\0"); h.update(p.read_bytes().replace(b"\r\n", b"\n")); h.update(b"\0")
+    return h.hexdigest()
+if "--check" in sys.argv:
+    _ok = STAMP.exists() and STAMP.read_text(encoding="utf-8").strip() == _stamp()
+    print("Paket guncel." if _ok else "PAKET GUNCEL DEGIL: kaynak degisti ama build.py calistirilmadi.")
+    raise SystemExit(0 if _ok else 3)   # 3: güncel değil (1 = Python hatası olabilir)
+
 # ---- renkli simgeler ----
 # Lemur ailesinin bütün renkli simgelerinin ana kopyası ../lemur-icons klasöründe (geliştirici bilgisayarında, git'e girmez).
 # Klasör varsa oradaki dosyalar depodaki kopyaların yerine konur; yoksa depodaki son kopyalarla derlenir.
@@ -161,3 +178,4 @@ ldst = root / "custom_components/lemur_home_dashboard/frontend/lemur-home-dashbo
 if not ldst.exists() or ldst.read_text(encoding="utf-8") != loader:
     ldst.write_text(loader, encoding="utf-8")
 print(ldst, len(loader.encode()))
+STAMP.write_bytes((_stamp() + "\n").encode("utf-8"))

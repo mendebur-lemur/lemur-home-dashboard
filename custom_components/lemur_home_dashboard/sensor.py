@@ -20,6 +20,9 @@ from . import pets as P
 from ._petent import is_tr, setup_pet_entities
 from .const import DOMAIN, SIGNAL_EST, SIGNAL_TICK
 
+ENERGY_WRITE_S = 30.0   # kWh sensors: the value is kept exact, written to the state machine at most this often
+REG_SYNC_S = 2.0        # registry events (devices, areas): one sync this long after the last one
+
 
 async def async_setup_entry(hass, entry, async_add_entities):
     setup_pet_entities(hass, entry, async_add_entities, "sensor", PetFeedingSensor, "feeding")
@@ -86,8 +89,33 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
 
     sync()
     entry.async_on_unload(async_dispatcher_connect(hass, SIGNAL_EST, sync))
-    # a device moved to another room, a room added or removed: the room sensors follow
-    reg_sync = callback(lambda _e: sync())
+    # a device moved to another room, a room added or removed: the room sensors follow. Registry events come in bursts
+    # (an integration reloading, a device deleted with its 20 entities) and each one rebuilt every sensor's links;
+    # v0.32: one sync, REG_SYNC_S after the last event.
+    pending: dict = {"unsub": None}
+
+    @callback
+    def _run(_now) -> None:
+        pending["unsub"] = None
+        sync()
+
+    @callback
+    def reg_sync(_event) -> None:
+        if pending["unsub"]:
+            pending["unsub"]()
+            pending["unsub"] = None
+        if REG_SYNC_S <= 0:
+            sync()
+            return
+        pending["unsub"] = async_call_later(hass, REG_SYNC_S, _run)
+
+    @callback
+    def _cancel() -> None:
+        if pending["unsub"]:
+            pending["unsub"]()
+            pending["unsub"] = None
+
+    entry.async_on_unload(_cancel)
     for ev in (er.EVENT_ENTITY_REGISTRY_UPDATED, dr.EVENT_DEVICE_REGISTRY_UPDATED, ar.EVENT_AREA_REGISTRY_UPDATED):
         entry.async_on_unload(hass.bus.async_listen(ev, reg_sync))
 
@@ -260,6 +288,7 @@ class _Integrating(RestoreSensor):
         self._kwh = 0.0
         self._t = None
         self._w = 0.0
+        self._ew_last = 0.0
 
     async def async_added_to_hass(self) -> None:
         last = await self.async_get_last_sensor_data()
@@ -287,12 +316,18 @@ class _Integrating(RestoreSensor):
 
     @callback
     def _linked_changed(self, _event) -> None:
+        # v0.32: every change is counted, but the state is written at most every ENERGY_WRITE_S (and on the minute
+        # tick). A plug that reports every second made the kWh sensor write a row every second.
         self._step()
-        self.async_write_ha_state()
+        now = time.monotonic()
+        if now - self._ew_last >= ENERGY_WRITE_S:
+            self._ew_last = now
+            self.async_write_ha_state()
 
     @callback
     def _tick(self) -> None:
         self._step()
+        self._ew_last = time.monotonic()
         self.async_write_ha_state()
 
     @callback
@@ -475,6 +510,8 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
         self._kwh = 0.0
         self._last: dict[str, float] = {}
         self._held: dict[str, float] = {}   # a counter that went back: decided on its next reading
+        self._ew_last = 0.0
+        self._ew_unsub = None
         self._init_cat(data, cid, "energy")
 
     def _follow(self) -> list[str]:
@@ -513,6 +550,7 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
         self._baseline()
         self._relink(self._changed)
         self.async_on_remove(self._unlink)
+        self.async_on_remove(self._ew_cancel)
 
     @callback
     def _changed(self, event) -> None:
@@ -534,7 +572,28 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
             d = v - prev
         if 0 < d <= self.MAX_STEP:
             self._kwh += d
+            self._write_energy()
+
+    def _write_energy(self) -> None:
+        """Written at most every ENERGY_WRITE_S; the last value is never left unwritten (a timer writes it)."""
+        now = time.monotonic()
+        if now - getattr(self, "_ew_last", 0.0) >= ENERGY_WRITE_S:
+            self._ew_last = now
             self.async_write_ha_state()
+        elif not getattr(self, "_ew_unsub", None) and self.hass:
+            self._ew_unsub = async_call_later(self.hass, ENERGY_WRITE_S - (now - self._ew_last), self._ew_fire)
+
+    @callback
+    def _ew_fire(self, _now) -> None:
+        self._ew_unsub = None
+        if self.hass:
+            self._ew_last = time.monotonic()
+            self.async_write_ha_state()
+
+    def _ew_cancel(self) -> None:
+        if getattr(self, "_ew_unsub", None):
+            self._ew_unsub()
+            self._ew_unsub = None
 
     @callback
     def async_est_changed(self) -> None:

@@ -3,7 +3,7 @@
 name: Ölçüm kontrolü
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, labeled]
 permissions:
   issues: write
   contents: write
@@ -12,7 +12,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   check:
-    if: startsWith(github.event.issue.title, 'Ölçüm:') || contains(github.event.issue.labels.*.name, 'olcum')
+    # labeled: only the owner's 'onay' label (accepts a waiting measurement); the template's own 'olcum' label is skipped
+    if: (startsWith(github.event.issue.title, 'Ölçüm:') || contains(github.event.issue.labels.*.name, 'olcum')) && (github.event.action != 'labeled' || github.event.label.name == 'onay')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
