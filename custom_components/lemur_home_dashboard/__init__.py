@@ -77,6 +77,7 @@ class PanelData:
         self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (light runs and long averages go on after a restart)
         self._prefs_unsub = None
         self.revs: dict[str, int] = {}          # key → how many times it changed since the start (in memory)
+        self._est_cache: tuple | None = None   # estimates(): (stored table, its size, cleaned copy)
         self._learn_saved = 0.0                  # time.monotonic() of the last save asked for the learning runs
         self._learn_shape: tuple = ()
 
@@ -201,10 +202,17 @@ class PanelData:
             return False
 
     def estimates(self) -> dict:
+        """The devices, without broken or virtual records. Kept until the stored table is replaced (v0.33): the sensors ask
+        about 20 times per light change and the list was rebuilt every time."""
         est = self.data.get("estimates")
         if not isinstance(est, dict):
             return {}
-        return {k: v for k, v in est.items() if isinstance(k, str) and isinstance(v, dict) and not EST.is_virtual(v)}
+        hit = self._est_cache
+        if hit is not None and hit[0] is est and hit[1] == len(est):
+            return hit[2]
+        out = {k: v for k, v in est.items() if isinstance(k, str) and isinstance(v, dict) and not EST.is_virtual(v)}
+        self._est_cache = (est, len(est), out)
+        return out
 
     def rec(self, pid: str) -> dict:
         feed = self.data.get("feed")

@@ -325,7 +325,7 @@ class LemurLightPopup {
         sl.querySelector('.fill').style.width = pct + '%';
         sl.querySelector('.tx span').textContent = pct ? pct + '%' : this._t('off');
         if (Date.now() - last > 300) send();
-      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); send(); });
+      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); sl._settle = { v: pct, until: Date.now() + 3000 }; send(); });
     });
     // renk çemberi
     const wh = R.querySelector('.wh');
@@ -341,7 +341,7 @@ class LemurLightPopup {
         hs = [Math.round((Math.atan2(y, x) * 180 / Math.PI + 360) % 360), Math.round(d * 100)];
         const dot = wh.querySelector('.dot'); dot.style.left = (50 + x / rad * 50) + '%'; dot.style.top = (50 + y / rad * 50) + '%';
         if (Date.now() - last > 220) send();
-      }, () => { this._dragging = false; this._seen = null; setTimeout(send, 120); });
+      }, () => { this._dragging = false; this._seen = null; if (hs) wh._settle = { hs: hs, until: Date.now() + 3000 }; setTimeout(send, 120); });
     }
   }
   _paintWheel(cv) {
@@ -379,7 +379,9 @@ class LemurLightPopup {
     Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
       const st = S[sl.getAttribute('data-sl')];
       const on = !!st && st.state === 'on', a = (st && st.attributes) || {};
-      const pct = on ? (typeof a.brightness === 'number' ? Math.max(1, Math.round(a.brightness / 2.55)) : 100) : 0;
+      let pct = on ? (typeof a.brightness === 'number' ? Math.max(1, Math.round(a.brightness / 2.55)) : 100) : 0;
+      // bırakılan değer, ışığın yeni durumu gelene kadar tutulur: HA yavaşken dolgu ara değerlere geri zıplıyordu (v0.33)
+      if (sl._settle) { if (Date.now() < sl._settle.until && Math.abs(sl._settle.v - pct) > 1) pct = sl._settle.v; else sl._settle = null; }
       const rgb = on && a.rgb_color && (a.rgb_color[0] + a.rgb_color[1] + a.rgb_color[2]) > 12 ? 'rgb(' + a.rgb_color.join(',') + ')' : '';
       sl.classList.toggle('on', on);
       if (rgb) sl.style.setProperty('--lc', rgb); else sl.style.removeProperty('--lc');
@@ -394,7 +396,10 @@ class LemurLightPopup {
     // seçili renk: çemberdeki nokta, kelvin düğmesi, efekt
     const tgt = S[this._target()], ta = (tgt && tgt.attributes) || {};
     const dot = R.querySelector('.wh .dot');
-    if (dot && ta.hs_color && tgt.state === 'on') {
+    const whS = dot && dot.parentNode._settle;   // bırakılan renk gelene kadar nokta yerinde kalır
+    const whHold = !!whS && Date.now() < whS.until && !!ta.hs_color && (Math.min(Math.abs(ta.hs_color[0] - whS.hs[0]), 360 - Math.abs(ta.hs_color[0] - whS.hs[0])) > 4 || Math.abs(ta.hs_color[1] - whS.hs[1]) > 4);
+    if (whS && !whHold) dot.parentNode._settle = null;
+    if (dot && ta.hs_color && tgt.state === 'on' && !whHold) {
       const a = ta.hs_color[0] * Math.PI / 180, r = ta.hs_color[1] / 100;
       dot.style.left = (50 + Math.cos(a) * r * 50) + '%'; dot.style.top = (50 + Math.sin(a) * r * 50) + '%';
     }

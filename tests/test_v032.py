@@ -138,3 +138,51 @@ async def test_registry_events_end_in_one_sync(hass, hass_ws_client, setup_lhd, 
     async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=3))
     await hass.async_block_till_done()
     assert len(calls) == 1
+
+
+# ---- v0.33: less work, fewer rows ----
+async def test_estimates_list_is_kept_until_the_table_is_replaced(hass, setup_lhd):
+    d = hass.data[DOMAIN]
+    d.data["estimates"] = {"a": {"name": "A", "kind": "fixed", "w": 5}}
+    one = d.estimates()
+    assert d.estimates() is one                       # same table: not rebuilt
+    d.data["estimates"] = {"a": {"name": "A", "kind": "fixed", "w": 5}, "b": {"name": "B", "kind": "fixed", "w": 7}}
+    two = d.estimates()
+    assert two is not one and set(two) == {"a", "b"}  # replaced: rebuilt
+    d.data["estimates"]["c"] = {"name": "C", "kind": "fixed", "w": 1}
+    assert set(d.estimates()) == {"a", "b", "c"}      # grown in place: rebuilt too
+
+
+async def test_idle_kwh_sensor_is_not_written_every_minute(hass, setup_lhd, monkeypatch):
+    from custom_components.lemur_home_dashboard import sensor as S
+
+    class Fake(S._Integrating):
+        def __init__(self):
+            self._init_int()
+            self.writes = 0
+            self.w = 0.2
+
+        def _watts(self):
+            return self.w
+
+        def async_write_ha_state(self):
+            self.writes += 1
+
+    f = Fake()
+    f.hass = hass
+    f._t = dt_util.utcnow()
+    f._w = 0.2
+    monkeypatch.setattr(S, "ENERGY_IDLE_S", 300.0)
+    f._tick()
+    assert f.writes == 1                              # the first tick writes
+    for _ in range(3):                                # 0.2 W for three minutes: the 3rd decimal does not move
+        f._t = dt_util.utcnow() - timedelta(seconds=60)
+        f._tick()
+    assert f.writes == 1
+    assert f._kwh > 0                                  # still counted
+    f._t = dt_util.utcnow() - timedelta(hours=6)       # 0.2 W for six hours: 0.0012 kWh, the shown value moved
+    f._tick()
+    assert f.writes == 2
+    f._ew_last -= 301                                  # five minutes without a write: written even if unchanged
+    f._tick()
+    assert f.writes == 3

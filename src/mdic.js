@@ -6,6 +6,36 @@
 // Griler ve tonlar CSS ile yapılır (base.css: .ic-auto / .ic-mono / .ic-tint).
 const LP_MDIC_URL = '/lemur_home_dashboard/mdi-color.json';
 const LP_MDIC = window.__LEMUR_HD_MDIC || (window.__LEMUR_HD_MDIC = { map: null, loading: null, subs: [], near: {} });
+// Simge önbelleği (v0.33): set 1,8 MB; bir pano bunun 30-50 simgesini kullanır. Kullanılanlar bu tarayıcıda saklanır
+// (localStorage lhd-ic), sonraki açılışta pano simgeleriyle birlikte çizilir, set arkadan yüklenir. Önbellekteki her
+// cevap setin vereceği cevabın aynısıdır: k = istenen ad → setteki anahtar (0: yok), s = anahtar → SVG, f = HA'nın düz
+// simgesiyle çizilenler. Önbellek setin içerik özetine (LP_ICON_HASH) bağlıdır; set değişince atılır.
+const LP_MDIC_SEED_KEY = 'lhd-ic';
+function lpMdicSeed() {
+  if (LP_MDIC.seed !== undefined) return LP_MDIC.seed;
+  LP_MDIC.seed = null;
+  try {
+    const c = JSON.parse(localStorage.getItem(LP_MDIC_SEED_KEY) || 'null');
+    if (c && c.h === LP_ICON_HASH && lhdIsObj(c.k) && lhdIsObj(c.s)) LP_MDIC.seed = { k: c.k, s: lhdSafeIcons(c.s, /^(mdi|lhd):[a-z0-9-]+$/), f: lhdIsObj(c.f) ? c.f : {} };
+  } catch (e) {}
+  return LP_MDIC.seed;
+}
+// set yüklüyken verilen her cevap not edilir; birkaç saniye sonra saklanır (en çok 160 simge)
+function lpMdicNote(kind, name, val) {
+  const R = LP_MDIC.rec || (LP_MDIC.rec = { k: {}, s: {}, f: {}, n: 0 });
+  if (R[kind][name] === val) return;
+  if (kind === 's') { if (R.n >= 160) return; R.n++; }
+  R[kind][name] = val;
+  clearTimeout(LP_MDIC.recT);
+  LP_MDIC.recT = setTimeout(() => { try { localStorage.setItem(LP_MDIC_SEED_KEY, JSON.stringify({ h: LP_ICON_HASH, k: R.k, s: R.s, f: R.f })); } catch (e) {} }, 3000);
+}
+// anahtarın ham çizimi: setten; set yüklenmediyse önbellekten (yoksa '' ve "eksik" işareti: set gelince baştan çizilir)
+function lpMdicRaw(k) {
+  if (LP_MDIC.map) { const v = LP_MDIC.map[k] || ''; if (v) lpMdicNote('s', k, v); return v; }
+  const sd = lpMdicSeed(), v = (sd && sd.s[k]) || '';
+  if (v) lpMdicNote('s', k, v); else LP_MDIC.miss = true;   // kullanılan cevap yeniden not edilir: önbellek her açılışta kullanılanlarla yenilenir
+  return v;
+}
 const lpIsLhdIcon = (i) => typeof i === 'string' && i.indexOf('lhd:') === 0;
 const LP_MDIC_FALLBACK = 'mdi:circle-medium';
 // eski panolarda geçip sette birebir olmayanlar: en yakın simge
@@ -27,20 +57,25 @@ function lpIconTintLight() { const s = lpSettings(); return s.icon_tint_light !=
 function lpMono(k) {
   const C = LP_MDIC.mono || (LP_MDIC.mono = {});
   if (C[k] !== undefined) return C[k];
-  const svg = (LP_MDIC.map && LP_MDIC.map[k]) || '';
+  const svg = lpMdicRaw(k);
+  if (!svg) return '';
   return (C[k] = svg.replace(/<defs>[\s\S]*?<\/defs>/g, '')
     .replace(/(stroke|fill)="#[Ff]{6}"/g, '$1="#10141c"')
     .replace(/(stroke|fill)="(url\(#[^)]+\)|#[0-9A-Fa-f]{6})"/g, '$1="currentColor"'));
 }
 // stile göre simgenin çizimi (Tek renkte tek renk hali)
-function lpMdicGet(k) { return lpIconMode() === 'tint' ? lpMono(k) : (LP_MDIC.map[k] || ''); }
+function lpMdicGet(k) { return lpIconMode() === 'tint' ? lpMono(k) : lpMdicRaw(k); }
 function lpMdicOn() { return true; }
 function lpMdicLoad() {
   if (LP_MDIC.map) return Promise.resolve(LP_MDIC.map);
   if (!LP_MDIC.loading) {
-    LP_MDIC.loading = fetch(LP_MDIC_URL + '?v=' + PANEL_VERSION).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
+    // adres setin içerik özetiyle: sürüm değişse de set aynıysa yeniden inmez (v0.33)
+    LP_MDIC.loading = fetch(LP_MDIC_URL + '?v=' + LP_ICON_HASH).then((r) => (r.ok ? r.json() : {})).catch(() => ({})).then((m) => {
       LP_MDIC.map = lhdSafeIcons(m, /^(mdi|lhd):[a-z0-9-]+$/);   // yalnız temiz SVG'ler (src/safe.js)
-      LP_MDIC.subs.slice().forEach((f) => { try { f(); } catch (e) {} });
+      // set gelene kadar önbellekte olmayan bir simge istendiyse (ya da önbellek hiç yoksa) panolar baştan çizilir
+      const full = !!LP_MDIC.miss || !lpMdicSeed();
+      if (full) LP_MDIC.gen = (LP_MDIC.gen || 0) + 1;
+      LP_MDIC.subs.slice().forEach((f) => { try { f(full); } catch (e) {} });
       return LP_MDIC.map;
     });
   }
@@ -72,7 +107,19 @@ function lpMdicNear(name) {
 // simgenin setteki anahtarı: kendisi, eşleme, -outline'sız hali, en yakını (set yüklenmediyse ya da bulunamazsa null)
 function lpMdicKey(icon) {
   const M = LP_MDIC.map;
-  if (!M || typeof icon !== 'string') return null;
+  if (typeof icon !== 'string') return null;
+  if (!M) {   // set yüklenmedi: önbellekteki cevap (yoksa "eksik")
+    const sd = lpMdicSeed();
+    if (sd && Object.prototype.hasOwnProperty.call(sd.k, icon)) { lpMdicNote('k', icon, sd.k[icon] || 0); return sd.k[icon] || null; }
+    LP_MDIC.miss = true;
+    return null;
+  }
+  const k = lpMdicKey0(icon);
+  lpMdicNote('k', icon, k || 0);
+  return k;
+}
+function lpMdicKey0(icon) {
+  const M = LP_MDIC.map;
   if (M[icon]) return icon;
   if (lpIsLhdIcon(icon)) return null;
   if (icon.indexOf('mdi:') !== 0) return null;
@@ -93,10 +140,22 @@ function lpMdicStrict(icon) {
   return null;
 }
 // sette karşılığı olmayan simge HA'nın kendi çizimiyle gösterilsin mi (mdi:, hass: ya da başka bir simge paketi; lhd:/lec: hariç)
-const lpIconFlat = (icon) => typeof icon === 'string' && /^[a-z][a-z0-9_-]*:[a-z0-9-]+$/.test(icon) && !lpIsLhdIcon(icon) && icon.indexOf('lec:') !== 0 && !!LP_MDIC.map && !lpMdicStrict(icon);
+const lpIconFlat = (icon) => {
+  if (typeof icon !== 'string' || !/^[a-z][a-z0-9_-]*:[a-z0-9-]+$/.test(icon) || lpIsLhdIcon(icon) || icon.indexOf('lec:') === 0) return false;
+  if (!LP_MDIC.map) { const sd = lpMdicSeed(), y = !!(sd && sd.f[icon] === 1); if (y) lpMdicNote('f', icon, 1); return y; }   // set yüklenmedi: önbellekteki cevap
+  const flat = !lpMdicStrict(icon);
+  if (flat) lpMdicNote('f', icon, 1);
+  return flat;
+};
 // simgenin SVG'si (bulunamazsa yedek simge); set henüz yüklenmediyse yüklemeyi başlatır ve null döner
 function lpMdicSvg(icon) {
-  if (!LP_MDIC.map) { lpMdicLoad(); return null; }
+  if (!LP_MDIC.map) {
+    lpMdicLoad();
+    const sd = lpMdicSeed();   // önbellekte varsa set gelmeden çizilir
+    if (!sd || !Object.prototype.hasOwnProperty.call(sd.k, icon)) { LP_MDIC.miss = true; return null; }
+    lpMdicNote('k', icon, sd.k[icon] || 0);
+    return lpMdicGet(sd.k[icon] || LP_MDIC_FALLBACK) || null;
+  }
   const k = lpMdicKey(icon);
   return lpMdicGet(k || LP_MDIC_FALLBACK);
 }

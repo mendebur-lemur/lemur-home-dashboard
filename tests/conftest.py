@@ -36,5 +36,6 @@ def _no_waiting(monkeypatch):
     import custom_components.lemur_home_dashboard as pkg
     from custom_components.lemur_home_dashboard import sensor
     monkeypatch.setattr(sensor, "ENERGY_WRITE_S", 0.0)
+    monkeypatch.setattr(sensor, "ENERGY_IDLE_S", 0.0)   # v0.33: the minute tick writes every time in the tests
     monkeypatch.setattr(sensor, "REG_SYNC_S", 0.0)
     monkeypatch.setattr(pkg, "LEARN_SAVE_S", 0.0)

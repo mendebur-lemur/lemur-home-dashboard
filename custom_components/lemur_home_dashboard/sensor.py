@@ -21,6 +21,7 @@ from ._petent import is_tr, setup_pet_entities
 from .const import DOMAIN, SIGNAL_EST, SIGNAL_TICK
 
 ENERGY_WRITE_S = 30.0   # kWh sensors: the value is kept exact, written to the state machine at most this often
+ENERGY_IDLE_S = 300   # a kWh sensor whose shown value did not move is still written this often
 REG_SYNC_S = 2.0        # registry events (devices, areas): one sync this long after the last one
 
 
@@ -326,8 +327,16 @@ class _Integrating(RestoreSensor):
 
     @callback
     def _tick(self) -> None:
+        # v0.33: the minute tick still counts, but writes only when the shown value (3 decimals) moved or ENERGY_IDLE_S
+        # passed. Every device drawing a little power changed its 4th decimal each minute and wrote a row (and its
+        # category, room and home total followed): about 47 rows a minute in a home where nothing was happening.
         self._step()
-        self._ew_last = time.monotonic()
+        now = time.monotonic()
+        shown = round(self._kwh, 3)
+        if shown == getattr(self, "_ew_shown", None) and now - self._ew_last < ENERGY_IDLE_S:
+            return
+        self._ew_shown = shown
+        self._ew_last = now
         self.async_write_ha_state()
 
     @callback

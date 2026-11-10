@@ -30,6 +30,7 @@ if "--check" in sys.argv:
 import gzip
 ICONS = root.parent / "lemur-icons"
 FE = root / "custom_components/lemur_home_dashboard/frontend"
+ICON_HASH = {}
 for master_name, repo_name in (("mdi.json", "mdi-color.json"), ("efektler.json", "lec-icons.json")):
     repo_file = FE / repo_name
     cur = json.loads(repo_file.read_text(encoding="utf-8")) if repo_file.exists() else {}
@@ -49,6 +50,7 @@ for master_name, repo_name in (("mdi.json", "mdi-color.json"), ("efektler.json",
     gz = repo_file.with_name(repo_name + ".gz")
     if not gz.exists() or gzip.decompress(gz.read_bytes()).decode("utf-8") != data:
         gz.write_bytes(gzip.compress(data.encode("utf-8"), 9, mtime=0))
+    ICON_HASH[repo_name] = hashlib.sha256(data.encode("utf-8")).hexdigest()[:10]   # adres ve tarayıcı önbelleği buna bağlı (v0.33)
 
 version = json.loads((root / "custom_components/lemur_home_dashboard/manifest.json").read_text())["version"]
 # Yenilikler penceresi yalnız ilk kayıt paketin sürümüyle aynıysa çıkar (2026-11-04: 0.17.6'da kalmıştı)
@@ -127,6 +129,7 @@ out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 {errlog}
 if (customElements.get('lemur-home-dashboard-card')) return;
 const PANEL_VERSION = '{version}';
+const LP_ICON_HASH = '{ICON_HASH["mdi-color.json"]}', LP_LECI_HASH = '{ICON_HASH["lec-icons.json"]}';
 const CSS = {json.dumps(css, ensure_ascii=False)};
 const ADMIN_CSS = {json.dumps(admin_css, ensure_ascii=False)};
 {chr(10).join(parts)}
