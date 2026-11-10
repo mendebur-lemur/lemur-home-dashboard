@@ -112,7 +112,7 @@ const ADM = {
     lrPlan: 'Renk farkı %{d}; plan: {n} ölçüm.', lrPaused: 'Duraklatıldı; ışık eski durumunda. Devam edince kaldığı yerden sürer.', lrDone: 'Ölçülen', lrLeft: 'Kalan', lrStandby: 'Bekleme', lrRepeats: 'Tekrarlanan adım', lrRecheck: 'Yeniden ölçülen', lrFloor: 'Prizin okuyamadığı',
     lrBgNote: 'Pencereyi kapatsan da ölçüm sürer; cihaz satırında ilerleme görünür. Işık başka yerden değiştirilirse ölçüm durur.', lrCancel: 'Vazgeç', lrResume: 'Devam et', lrPause: 'Duraklat', lrBg: 'Arka planda sürsün',
     lrV100w: '%100 soğuk beyaz', lrV50w: '%50 sıcak beyaz', lrV100r: '%100 kırmızı', lrV100b: '%100 mavi', lrV100: '%100', lrPoints: 'Nokta',
-    lrSame: 'Aynı modeldeki {n} ışığa da uygula', lrShare: 'Ölçümü ortak havuza gönder', lrShareT: 'İsteğe bağlı. Kaydedince GitHub\'da hazır doldurulmuş bir gönderim sayfası açılır; haftalık incelemeden sonra havuza girer.', lrShareNo: 'Home Assistant bu ışığın marka ve modelini bildirmediği için gönderilemez.',
+    lrSame: 'Aynı modeldeki {n} ışığa da uygula', lrShare: 'Ölçümü ortak havuza gönder', lrShareT: 'İsteğe bağlı. Kaydedince GitHub\'da hazır doldurulmuş bir gönderim sayfası açılır. Otomatik kontrol edilir; aynı modelin havuzdaki ölçümüyle ya da başka birinin ölçümüyle tutarlıysa havuza kendiliğinden girer.', lrShareSlow: 'Priz değerini yavaş gönderiyor (adım başına {s} sn); havuz için en çok 15 sn olmalı. Ölçüm kendi panonda kullanılır.', lrShareFloor: 'Priz bu ışığın düşük güçlerinin çoğunu okuyamadı; havuz için daha hassas bir ölçer gerekir. Ölçüm kendi panonda kullanılır.', lrShareNo: 'Home Assistant bu ışığın marka ve modelini bildirmediği için gönderilemez.',
     lrSent: 'Gönderilen', lrSent1: 'Marka ve model ({m})', lrSent2: 'Işığın özellikleri: entegrasyon, renk modları, sıcaklık aralığı, efekt sayısı, yazılım sürümü', lrSent3: 'Ölçüm tablosu ({n} nokta) ve bekleme', lrSent4: 'Ölçüm özeti ve ölçen prizin modeli', lrSent5: 'Şebeke gerilimi ({v} V)',
     lrNotSent: 'Gönderilmeyen', lrNot1: 'Ev, oda ve cihaz adları', lrNot2: 'Konum, IP ve kullanıcı bilgisi', lrNot3: 'Başka hiçbir Home Assistant verisi', lrBack: 'Işık eski durumuna döndü. Prizi başka cihaza takabilirsin.', lrSaveShare: 'Kaydet ve gönder',
     lrNowState: 'Şu an: {s}', lrState: 'Durum', lrGot: 'Toplanan', lrAvg: 'Ortalama', lrStHint: 'Görülmeyen durumlar "Diğer durumlar" değerini alır. En az 1 dakika verisi olan durumlar kaydedilir.', lrFinish: 'Bitir ve kaydet',
@@ -240,7 +240,7 @@ const ADM = {
     lrPlan: 'Color difference {d}%; plan: {n} measurements.', lrPaused: 'Paused; the light is back as it was. Resuming continues where it stopped.', lrDone: 'Measured', lrLeft: 'Left', lrStandby: 'Standby', lrRepeats: 'Repeated steps', lrRecheck: 'Measured again', lrFloor: 'Below the plug',
     lrBgNote: 'Measuring continues if you close this window; the device row shows the progress. It stops if the light is changed from elsewhere.', lrCancel: 'Cancel', lrResume: 'Resume', lrPause: 'Pause', lrBg: 'Keep going in the background',
     lrV100w: '100% cool white', lrV50w: '50% warm white', lrV100r: '100% red', lrV100b: '100% blue', lrV100: '100%', lrPoints: 'Points',
-    lrSame: 'Also apply to {n} lights of the same model', lrShare: 'Send the measurement to the shared pool', lrShareT: 'Optional. Saving opens a pre-filled submission page on GitHub; it joins the pool after the weekly review.', lrShareNo: 'Home Assistant does not report this light\'s brand and model, so it cannot be sent.',
+    lrSame: 'Also apply to {n} lights of the same model', lrShare: 'Send the measurement to the shared pool', lrShareT: 'Optional. Saving opens a pre-filled submission page on GitHub. It is checked automatically and joins the pool by itself when it agrees with the pool\'s measurement of the model or with someone else\'s.', lrShareSlow: 'The plug reports slowly ({s} s per step); the pool needs at most 15 s. The measurement is used on your own dashboard.', lrShareFloor: 'The plug could not read most of this light\'s low powers; the pool needs a more sensitive meter. The measurement is used on your own dashboard.', lrShareNo: 'Home Assistant does not report this light\'s brand and model, so it cannot be sent.',
     lrSent: 'Sent', lrSent1: 'Brand and model ({m})', lrSent2: 'The light\'s features: integration, color modes, temperature range, effect count, firmware', lrSent3: 'The table ({n} points) and standby', lrSent4: 'A measurement summary and the plug\'s model', lrSent5: 'Mains voltage ({v} V)',
     lrNotSent: 'Not sent', lrNot1: 'Home, room and device names', lrNot2: 'Location, IP and user details', lrNot3: 'Any other Home Assistant data', lrBack: 'The light is back as it was. You can move the plug to another device.', lrSaveShare: 'Save and send',
     lrNowState: 'Now: {s}', lrState: 'State', lrGot: 'Collected', lrAvg: 'Average', lrStHint: 'States not seen take the "Other states" value. States with at least a minute of data are saved.', lrFinish: 'Finish and save',
@@ -301,10 +301,21 @@ const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', camera: 't_camera', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs', energy: 't_energy' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
-// Ortak havuza gönderim şimdilik kapalı (v0.28.11): ölçümler tutarsız geldi, havuzda yalnız proje sahibinin ölçtüğü ışıklar var.
-// Herkes kendi ışığını öğretmeye ve kendi panosunda kullanmaya devam eder; yalnız "ortak havuza gönder" seçeneği görünmez.
-// Sahibin tarayıcısında localStorage lhd-pool-share = '1' ise görünür.
-const LHD_POOL_OPEN = false;
+// Ortak havuza gönderim (v0.32 yeniden açık): priz modeli değil ölçümün kendisi denetlenir (library/tools/common.py ile aynı sınırlar).
+// Prizi yavaş olan ya da düşük güçleri okuyamayan ölçümde gönder seçeneği kapalı, nedeni yazılı.
+const LHD_POOL_OPEN = true;
+const LHD_POOL_SETTLE = 15, LHD_POOL_FLOOR = 0.6;
+function lhdPoolWhy(r) {
+  if (!r) return '';
+  if (r.settle > LHD_POOL_SETTLE) return 'lrShareSlow';
+  let n = 0;
+  const L = r.lut || {};
+  if (L.ct) L.ct.w.forEach((row) => { n += row.length; });
+  if (L.hs) L.hs.w.forEach((sat) => sat.forEach((row) => { n += row.length; }));
+  if (L.br) n += L.br.w.length;
+  if (n && (r.floor || 0) / n > LHD_POOL_FLOOR) return 'lrShareFloor';
+  return '';
+}
 function lhdPoolShare() { if (LHD_POOL_OPEN) return true; try { return localStorage.getItem('lhd-pool-share') === '1'; } catch (e) { return false; } }
 const LHD_SCREENS = [['tab16', 1600, 1000], ['tab43', 1024, 768], ['wide', 1920, 1080], ['tabp', 800, 1280], ['phone', 390, 844], ['custom', 0, 0], ['here', 0, 0]];
 // Özel ekran (v0.29.1): kullanıcının girdiği çözünürlük (localStorage lhd-preview-custom = 'GxY'). Tablette yalnız oran önemli,
@@ -1710,7 +1721,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       E[L.id] = Object.assign({}, cur, { kind: 'states', entity: L.entity, states: rows.slice(0, 24), other: off.length ? Math.min.apply(null, off) : old && old.other !== undefined ? old.other : lpEnNumOf(cur.off), src: 'own' });
       delete E[L.id].on; delete E[L.id].off;
     }
-    if (L.share && lhdPoolShare() && !(L.strip && !(L.len > 0)) && !(L.pool && L.pool.use)) this._lrnShare();
+    if (L.share && lhdPoolShare() && !lhdPoolWhy(run && run.result) && !(L.strip && !(L.len > 0)) && !(L.pool && L.pool.use)) this._lrnShare();
     await this._commit('estimates', E);
     await this._hass.connection.sendMessagePromise({ type: 'lemur_home_dashboard/learn_ctl', device: L.id, action: 'clear' }).catch(() => {});
     this._lrnJ = ''; this._lrn = null; this._enE = null;
@@ -1849,8 +1860,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<label class="lrlen">' + t('lrCapMine') + ' <input class="inp" type="number" min="1" max="2000" step="1" data-lrf="cap" value="' + (L.cap > 0 ? L.cap : '') + '"> W</label><span class="hint">' + t('lrCapT') + '</span>' : '') + '</div>';
     if (same.length) h += '<div class="lrsend"><b>' + t('lrSame', { n: same.length }) + '</b>' + (L.strip ? '<i class="hint">' + t('lrSameStrip') + '</i>' : '') + same.map((x) => '<label><input type="checkbox" data-lrap="' + esc(x) + '"' + (L.apply[x] ? ' checked' : '') + '><span>' + esc(this._ename(x)) + '</span>' +
       (L.strip ? '<input class="inp lrlenin" type="number" min="0.1" max="50" step="0.1" data-lrlen="' + esc(x) + '" value="' + esc(L.lens[x] || (L.len > 0 ? L.len : '')) + '"> m' : '') + '</label>').join('') + '</div>';
-    const shareOk = canShare && !(L.strip && !(L.len > 0));
-    if (lhdPoolShare()) h += '<div class="lrsend"><label><input type="checkbox" data-lrf="share"' + (L.share && shareOk ? ' checked' : '') + (shareOk ? '' : ' disabled') + '><span><b>' + t('lrShare') + '</b><i>' + t(!canShare ? 'lrShareNo' : !shareOk ? 'lrShareLen' : 'lrShareT') + '</i></span></label>' +
+    const why = lhdPoolWhy(r), shareOk = canShare && !why && !(L.strip && !(L.len > 0));
+    if (lhdPoolShare()) h += '<div class="lrsend"><label><input type="checkbox" data-lrf="share"' + (L.share && shareOk ? ' checked' : '') + (shareOk ? '' : ' disabled') + '><span><b>' + t('lrShare') + '</b><i>' + t(!canShare ? 'lrShareNo' : why ? why : !shareOk ? 'lrShareLen' : 'lrShareT', { s: lpEnNum(r.settle || 0, 0, this._lang) }) + '</i></span></label>' +
       (L.share ? '<div class="lrcols"><div><b>' + t('lrSent') + '</b><ul><li>' + t('lrSent1', { m: [P.model.manufacturer, P.model.model_id || P.model.model].join(' ') }) + '</li><li>' + t('lrSent2') + '</li><li>' + t('lrSent3', { n: r.n }) + '</li><li>' + t('lrSent4') + '</li><li>' + t('lrSent5', { v: P.mains_v }) + '</li>' + (L.strip ? '<li>' + t('lrSent6', { m: lpEnNum(L.len, 1, this._lang) }) + (L.cap > 0 ? ', ' + t('lrSent7', { w: L.cap }) : '') + '</li>' : '') + '</ul></div><div><b>' + t('lrNotSent') + '</b><ul><li>' + t('lrNot1') + '</li><li>' + t('lrNot2') + '</li><li>' + t('lrNot3') + '</li></ul></div></div><pre class="lrjs">' + esc(JSON.stringify(P, null, 1).slice(0, 1500)) + '</pre>' : '') + '</div>';
     h += '<div class="acts"><span class="hint" style="flex:1">' + t('lrBack') + '</span><button class="btn" data-a="lragain">' + t('lrAgain') + '</button><button class="btn pri" data-a="lrsave">' + t(L.share && lhdPoolShare() ? 'lrSaveShare' : 'enESave') + '</button></div>';
     return h;

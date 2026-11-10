@@ -22,7 +22,10 @@ from . import energy_import as EI
 from . import lut as LUT
 
 _LOGGER = logging.getLogger(__name__)
-POOL_URL = "https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/library/library.json"
+# v0.32: the pool lives on the 'havuz' branch (the submission check adds to it); main has the copy that came with the code
+POOL_URL = "https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/havuz/library/library.json"
+POOL_URL_MAIN = "https://raw.githubusercontent.com/mendebur-lemur/lemur-home-dashboard/main/library/library.json"
+FAIL_TTL = 600   # a download that failed is tried again after 10 minutes, not after the full ttl
 LIB_BASE = "https://raw.githubusercontent.com/bramstroker/homeassistant-powercalc/master/profile_library/"
 MAX_BYTES = 8 * 1024 * 1024
 _CACHE: dict[str, tuple[float, Any]] = {}
@@ -34,7 +37,7 @@ def norm(s: Any) -> str:
 
 async def _get(hass: HomeAssistant, url: str, ttl: float, binary: bool = False) -> Any:
     hit = _CACHE.get(url)
-    if hit and time.time() - hit[0] < ttl:
+    if hit and time.time() - hit[0] < (ttl if hit[1] is not None else min(ttl, FAIL_TTL)):
         return hit[1]
     sess = async_get_clientsession(hass)
     try:
@@ -45,6 +48,7 @@ async def _get(hass: HomeAssistant, url: str, ttl: float, binary: bool = False) 
             data = await r.content.read(MAX_BYTES + 1)
     except Exception as err:  # noqa: BLE001 - offline: no pool, the page says so
         _LOGGER.debug("Pool download failed %s: %s", url, err)
+        _CACHE[url] = (time.time(), None)
         return None
     if len(data) > MAX_BYTES:
         return None
@@ -92,7 +96,10 @@ async def lookup(hass: HomeAssistant, man: str, model: str, model_id: str = "") 
     if not man or not keys:
         return None
     # 1. own pool
-    e = _match_pool(await _get(hass, POOL_URL, 6 * 3600), man, keys)
+    lib = await _get(hass, POOL_URL, 6 * 3600)
+    if not isinstance(lib, dict):
+        lib = await _get(hass, POOL_URL_MAIN, 6 * 3600)
+    e = _match_pool(lib, man, keys)
     if e:
         try:
             tb = LUT.valid_lut(e.get("lut"))

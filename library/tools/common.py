@@ -14,6 +14,11 @@ import lut as LUT  # noqa: E402  (no Home Assistant needed)
 
 GENERIC = re.compile(r"^(extended color light|color light|dimmable light|color temperature light|on/off light|light|lamp|bulb|led|strip|rgb|rgbw|rgbww|unknown|generic)$", re.I)
 MAX_BY_FORM = {"bulb": 40.0, "spot": 25.0, "strip_per_m": 30.0, "other": 300.0}
+# v0.32: havuz herkese açık; priz modeli değil ölçümün kendisi denetlenir
+SETTLE_MAX = 15.0    # bir adımda prizin değeri ortalama bu kadar saniyede oturmalı (ESPHome'un 60 sn'lik prizleri elenir)
+FLOOR_MAX = 0.6      # prizin okuyamayıp alttan doldurulan hücrelerin en çok payı
+AGREE = 0.15         # aynı modelin iki ölçümü: en yüksek güç bu oranda tutarlı olmalı
+BLOCK_MIN, BLOCK_RATIO = 5, 0.7   # bir priz modeli en az 5 gönderimin %70'inde reddedildiyse engellenir
 
 
 def parse(body: str) -> dict | None:
@@ -39,6 +44,11 @@ def key(p: dict) -> str:
     return (re.sub(r"[^a-z0-9]", "", _s(m.get("manufacturer")).casefold()) + "|" + re.sub(r"[^a-z0-9]", "", (_s(m.get("model_id")) or _s(m.get("model"))).casefold()))
 
 
+def plug_key(p: dict) -> str:
+    g = p.get("plug") if isinstance(p, dict) and isinstance(p.get("plug"), dict) else {}
+    return (re.sub(r"[^a-z0-9]", "", _s(g.get("manufacturer")).casefold()) + "|" + re.sub(r"[^a-z0-9]", "", _s(g.get("model")).casefold()))
+
+
 def _stuck(r: list, rows: list) -> bool:
     """Four or more brightness steps in a row with the same watts. A run that ends the row can be a real cap (some lights
     stop getting brighter); it counts only when it stays well under what the other rows reach, or covers the whole row."""
@@ -56,8 +66,9 @@ def _stuck(r: list, rows: list) -> bool:
     return False
 
 
-def check(p: dict) -> tuple[list[str], dict]:
-    """Problems (empty: format is fine) and the cleaned submission."""
+def check(p: dict, strict: bool = False, blocked: list | None = None) -> tuple[list[str], dict]:
+    """Problems (empty: format is fine) and the cleaned submission. strict: a submission from anyone but the owner
+    (the plug's speed and the share of cells it could not read must be in it); blocked: plug keys that keep failing."""
     errs: list[str] = []
     if not isinstance(p, dict) or p.get("v") != 1:
         return ["biçim sürümü yok / no format version"], {}
@@ -115,6 +126,20 @@ def check(p: dict) -> tuple[list[str], dict]:
     zeros = sum(1 for r in rows for x in r if x <= 0.05)
     if zeros:
         errs.append(f"{zeros} hücrede 0 W: priz bu düşük gücü okuyamamış / {zeros} cells read 0 W: the plug could not read that low")
+    # v0.32: prizin hızı ve okuyamadığı hücreler (öğrenme ikisini de kaydediyor)
+    smp = p.get("samples") if isinstance(p.get("samples"), dict) else {}
+    st = smp.get("settle_s")
+    if isinstance(st, (int, float)) and not isinstance(st, bool):
+        if st > SETTLE_MAX:
+            errs.append(f"priz değeri çok yavaş gönderiyor (adım başına {st:.0f} sn, en çok {SETTLE_MAX:.0f}) / the plug reports too slowly ({st:.0f} s per step, at most {SETTLE_MAX:.0f})")
+    elif strict:
+        errs.append("prizin hızı ölçümde yok, panelin yeni sürümüyle yeniden ölç / the plug's speed is missing, measure again with the current dashboard")
+    cells = sum(len(r) for r in rows)
+    fl = smp.get("floor")
+    if cells and isinstance(fl, (int, float)) and not isinstance(fl, bool) and fl / cells > FLOOR_MAX:
+        errs.append(f"prizin okuyamadığı hücre çok (%{fl / cells * 100:.0f}), daha hassas bir ölçerle ölç / too many cells below what the plug reads ({fl / cells * 100:.0f}%)")
+    if blocked and plug_key(p) in blocked:
+        errs.append("bu priz modeli sürekli hatalı ölçüm verdiği için kabul edilmiyor / this plug model keeps giving bad measurements and is not accepted")
     caps = p.get("caps") if isinstance(p.get("caps"), dict) else {}
     clean = {"key": key(p), "manufacturer": man, "model": mod, "model_id": mid, "integration": _s((m or {}).get("integration"), 40),
              "caps": {"color_modes": [x for x in caps.get("color_modes") or [] if isinstance(x, str)][:8], "kelvin": [x for x in (caps.get("kelvin") or [])[:2] if isinstance(x, (int, float))],
@@ -123,7 +148,7 @@ def check(p: dict) -> tuple[list[str], dict]:
              "length_m": float(ln) if strip and isinstance(ln, (int, float)) else None, "adapter_w": float(cap) if isinstance(cap, (int, float)) and not isinstance(cap, bool) else None,
              "plug": {k: _s(v, 60) for k, v in (p.get("plug") or {}).items() if k in ("manufacturer", "model")} if isinstance(p.get("plug"), dict) else {},
              "samples": {k: v for k, v in (p.get("samples") or {}).items() if k in ("n", "settle_s", "repeats", "diff", "rechecked", "floor") and isinstance(v, (int, float))} if isinstance(p.get("samples"), dict) else {},
-             "hi": round(hi, 2), "lo": round(lo, 2)}
+             "hi": round(hi, 2), "lo": round(lo, 2), "plug_key": plug_key(p)}
     return errs, clean
 
 

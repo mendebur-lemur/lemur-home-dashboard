@@ -1,28 +1,48 @@
-# Ortak havuza gelen ölçüm: yalnız biçim kontrolü. Havuza hiçbir şey otomatik eklenmez (haftalık inceleme: library/tools/review.py).
+# Ortak havuza gelen ölçüm (v0.32: herkese açık). Kontrol: library/tools/check.py. Havuz 'havuz' dalında tutulur
+# (library/library.json, models/, plugs.json); main'deki library/ kodla gelen ilk kopyadır.
 name: Ölçüm kontrolü
 on:
   issues:
     types: [opened, edited]
 permissions:
   issues: write
-  contents: read
+  contents: write
+concurrency:
+  group: olcum-havuz
+  cancel-in-progress: false
 jobs:
   check:
-    # gönderim şimdilik kapalı (v0.28.11): yalnız depo sahibinin ölçümleri kontrol edilir
-    if: (startsWith(github.event.issue.title, 'Ölçüm:') || contains(github.event.issue.labels.*.name, 'olcum')) && github.event.issue.author_association == 'OWNER'
+    if: startsWith(github.event.issue.title, 'Ölçüm:') || contains(github.event.issue.labels.*.name, 'olcum')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            library/tools
-            custom_components/lemur_home_dashboard/lut.py
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install voluptuous==0.15.2
+      # havuz dalı ayrı klasörde; yoksa main'deki library/ ile başlar
+      - name: Havuz dalı
+        run: |
+          if git ls-remote --exit-code --heads origin havuz >/dev/null; then
+            git worktree add pool origin/havuz
+          else
+            git worktree add -b havuz pool HEAD
+          fi
       # gönderimin metni yalnız olay dosyasından okunur; komut satırına hiç girmez
-      - run: python library/tools/check.py --event "$GITHUB_EVENT_PATH" --post
+      - id: chk
+        run: python library/tools/check.py --event "$GITHUB_EVENT_PATH" --lib pool/library --post
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+      - name: Havuzu kaydet
+        if: steps.chk.outputs.changed == 'true'
+        working-directory: pool
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898499+github-actions[bot]@users.noreply.github.com"
+          git add library
+          git diff --cached --quiet && exit 0
+          git commit -m "Havuz: ölçüm #${{ github.event.issue.number }}"
+          git push origin HEAD:havuz

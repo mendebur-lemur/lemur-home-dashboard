@@ -11,13 +11,14 @@ submitters (one account sending many models, two identical tables). Only numbers
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import statistics
 import sys
 from datetime import date
 from pathlib import Path
 
-from common import ROOT, check, parse, per_meter
+from common import AGREE, ROOT, check, parse, per_meter
 
 LIB = ROOT / "library"
 
@@ -45,6 +46,39 @@ def _models() -> dict:
 
 def _fname(k: str) -> str:
     return k.replace("|", "__") or "x"
+
+
+def by_hash(login: str) -> str:
+    """Who sent it, without keeping the account name in the pool: the same account gives the same short code."""
+    return hashlib.sha256(("lhd|" + str(login or "?").casefold()).encode()).hexdigest()[:12]
+
+
+def agrees(a: dict, b: dict) -> tuple[bool, str]:
+    """Two submissions of one model: same color modes and integration, highest power within AGREE."""
+    ca, cb = (a.get("caps") or {}).get("color_modes"), (b.get("caps") or {}).get("color_modes")
+    if ca and cb and sorted(ca) != sorted(cb):
+        return False, "renk modları farklı"
+    if a.get("integration") and b.get("integration") and a["integration"] != b["integration"]:
+        return False, f"entegrasyon farklı ({a['integration']} / {b['integration']})"
+    ha, hb = max(_vals(per_meter(a))), max(_vals(per_meter(b)))
+    dev = abs(ha - hb) / max(ha, hb) if max(ha, hb) else 0
+    return dev <= AGREE, f"en yüksek {ha:.1f} W / {hb:.1f} W (%{dev * 100:.0f} fark)"
+
+
+def add_sub(c: dict, n, by: str = "") -> None:
+    """Writes one accepted submission into library/models (the same issue replaces its earlier copy); rebuild() after."""
+    c = dict(c, issue=n, date=date.today().isoformat())
+    if by:
+        c["by"] = by
+    f = _fname(c["key"])
+    path = LIB / "models" / (f + ".json")
+    try:
+        m = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        m = {"subs": []}
+    m["subs"] = [s for s in m.get("subs") or [] if s.get("issue") != n] + [c]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(m, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
 def review(pending: list) -> list[dict]:
@@ -140,21 +174,19 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pending")
     ap.add_argument("--accept", default="")
+    ap.add_argument("--lib", default="", help="library folder (default: this checkout's library/)")
     a = ap.parse_args()
+    if a.lib:
+        global LIB
+        LIB = Path(a.lib)
     rows = review(json.load(open(a.pending, encoding="utf-8")))
     print(report(rows))
     acc = {int(x) for x in a.accept.split(",") if x.strip().isdigit()}
     if not acc:
         return
-    have = _models()
     for r in rows:
         if r["n"] in acc and r["c"] and not r["errs"]:
-            c = dict(r["c"], issue=r["n"], date=date.today().isoformat())
-            f = _fname(c["key"])
-            m = have.get(f, {"subs": []})
-            m["subs"] = [s for s in m["subs"] if s.get("issue") != r["n"]] + [c]
-            (LIB / "models" / (f + ".json")).write_text(json.dumps(m, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-            have[f] = m
+            add_sub(r["c"], r["n"], by_hash(r["author"]))
     rebuild()
     print(f"\n{len(acc)} gönderim eklendi; library.json yenilendi.", file=sys.stderr)
 
