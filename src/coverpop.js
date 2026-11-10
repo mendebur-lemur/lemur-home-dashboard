@@ -49,6 +49,11 @@ const LP_COV_CSS = `
 .lbl b { color: #ECEDEF; letter-spacing: 0; text-transform: none; font-size: 12.5px; }
 .hd .nm i { font-style: normal; color: #8A8F96; font-size: 13px; margin-left: auto; padding-left: 10px; white-space: nowrap; }
 .hd .nm i.mv { color: #FFC107; }
+.cvna .win { -webkit-filter: grayscale(1); filter: grayscale(1); opacity: 0.35; pointer-events: none; }
+.cvna .win .pct { display: none; }
+.cvna .tri > div, .cvna .tpre div { opacity: 0.35; pointer-events: none; }
+.cvna .hd .nm i { color: #E0A458; }
+@media (max-height: 480px) and (orientation: landscape) { .win { height: calc(100vh - 262px); min-height: 84px; } .tri > div { height: 56px; } }
 `;
 
 // perdenin tasarımı: öğede seçildiyse o, yoksa cihaz sınıfından
@@ -263,6 +268,7 @@ class LemurCoverPopup extends LemurLightPopup {
     const p0 = this._pos(st), hd = this._hold && Date.now() < this._hold.until && Math.abs(p0 - this._hold.v) > 1 ? this._hold.v : null;
     const p = hd === null ? p0 : hd, t = this._tilt(), s = st ? st.state : '';
     if (!this._dragging) this._paint(p, t);
+    R.classList.toggle('cvna', !st || s === 'unavailable');   // ulaşılamıyor: çizim soluk, düğmeler kapalı (v0.32)
     const sub = R.querySelector('[data-sub]');
     if (sub) {
       sub.textContent = !st || s === 'unavailable' ? this._t('unav') : s === 'opening' ? this._t('opening') : s === 'closing' ? this._t('closing')

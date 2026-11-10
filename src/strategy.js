@@ -53,6 +53,13 @@ function lpBgOf(s) {
 // zeminin ana (en koyu, en alttaki) rengi: üst bar gizliyken telefonun durum çubuğu bu renge boyanır (#11)
 // odaya özel zemin (v0.29.2): sekmenin bg'si ({mode: 'dark'|'black'|'color'|'fx', ...}); yoksa null
 function lpTabBg(tab) { const b = tab && tab.bg; if (!b || typeof b !== 'object' || !b.mode) return null; return b.mode === 'dark' ? LP_DARK_BG : lpBgCss(b); }
+// zemin açık renk mi (yalnız düz renk seçiminde): üstteki yazılar koyuya döner (v0.32)
+function lpBgLight(s, tab) {
+  const b = (tab && tab.bg && tab.bg.mode ? tab.bg : (s || {}).bg) || {};
+  if (b.mode !== 'color' || !/^#[0-9a-fA-F]{6}$/.test(b.color || '')) return false;
+  const n = parseInt(b.color.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, bl = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * bl) > 150;
+}
 function lpBgBase(s) {
   const b = (s || {}).bg || {};
   if (b.mode === 'img' || b.mode === 'black') return '#000000';

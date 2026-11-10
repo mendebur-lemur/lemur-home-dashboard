@@ -584,7 +584,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._enUnsub) this._enUnsub = lpEnSub(() => { if (this._ens && this._ens.length) this._enPaint(true); this._enDot(); });   // enerji verisi yüklendi
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
-    if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } }; window.addEventListener('resize', this._rsz); }
+    if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } else this._postSoon(); }; window.addEventListener('resize', this._rsz); }
     this._phone = lpPhoneKey(this, this._config);
     if (this._hass) this._render();
   }
@@ -663,7 +663,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (x && x.visible) vis.push(lpVisible(x.visible, S));   // koşullu öğe: koşul değişince iskelet yeniden kurulur
       if (x && x.state_colors) vis.push(lpMapColor(x, S));      // duruma göre renk (Halo kartı yeniden kurulur)
     }));
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon]), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), !!LP_MDIC.map, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge()]);
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), !!LP_MDIC.map, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge()]);
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
   }
@@ -884,9 +884,10 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._bbTab = tab;
     // telefon düzeninde (telefon, dikey tablet) saatte parlaklık: üstteki sayfa adı + saat satırı kaydırılır (v0.28.11)
     const bbPh = bbc.on && bbc.phone && phone && !edit;
-    const phd = (name) => bbPh
-      ? '<div class="phd bbar' + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div><b>' + esc(name) + '</b><span class="bbv"></span>' + clock0 + '</div>'
-      : '<div class="phd"><b>' + esc(name) + '</b>' + clock0 + '</div>';
+    // telefonda İklim sayfası: bölüm başlığı yok, yaz / kış geçişi sayfa adının kendisi; simge yalnız dokununca kısa süre görünür (v0.32)
+    const phd = (name, ssn) => { const b = '<b' + (ssn ? ' class="pssn' + (this._ssnT && Date.now() - this._ssnT < 1500 ? ' show' : '') + '" data-season="1"' : '') + '>' + esc(name) + (ssn ? lpIcon(season === 'winter' ? 'mdi:snowflake' : 'mdi:white-balance-sunny', 'season') : '') + '</b>'; return bbPh
+      ? '<div class="phd bbar' + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div>' + b + '<span class="bbv"></span>' + clock0 + '</div>'
+      : '<div class="phd">' + b + clock0 + '</div>'; };
     const clock = bbc.on && !phone ? '<div class="bbar' + (bbc.box ? ' bbbox' : '') + (bbc.always ? ' bbal' : '') + '" data-bbar><div class="bbf"></div>' +
       (bbc.icon ? lpIcon('lhd:bulb-bright', 'bbi') : '') + clock0 + '<span class="bbv"></span></div>' : clock0;
     const nc = lpNavCfg(), nst = (nc.w ? '--lp-nav-w:' + nc.w + 'px;' : '') + (nc.h ? '--lp-nav-h:' + nc.h + 'px;' : '');
@@ -920,7 +921,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (cv) {
         pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
         if (cvPage) { const rt = cv.rooms.filter((T) => T.id === cv.room)[0]; this._bbTab = cv.cat === 'lights' ? (rt || null) : tab; }   // Işıklar: seçili oda (Hepsi: sayfadaki ışıklar)
-        pHead = phd(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '') +
+        pHead = phd(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '', cvPage && cv.cat === 'climate' && cols.some((c) => c.some((u) => u.some((b) => b.season)))) +
           (cvPage && cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
@@ -973,7 +974,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       body = '<div class="col" style="grid-area:c0"><div class="subs"><div class="sub"><div class="box empty">' + esc(t(lang, 'empty')) + '</div></div></div></div>';
     }
     const R = this.shadowRoot;
-    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' + (lpPhoneCfg().flat ? ' flat' : '') : '') + (pbOn ? ' pb' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + (pbOn ? pHead : nav) + body + pBar + '</div>';
+    R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' + (lpPhoneCfg().flat ? ' flat' : '') : '') + (pbOn ? ' pb' : '') + (lpBgLight(phone ? lpPhoneMerge(lpSettings()) : lpSettings(), phone && ((lpSettings().phone || {}).style || {}).bg ? null : tab) ? ' bglight' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + (pbOn ? pHead : nav) + body + pBar + '</div>';
 
     // gömülü kartlar
     this._embeds = [];
@@ -1005,6 +1006,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     clearInterval(this._camT); this._camT = this._cams.length ? setInterval(() => this._camTick(), 1000) : null;
     this._ents = []; R.querySelectorAll('[data-ent]').forEach((el) => { el._item = ents[+el.getAttribute('data-ei')]; this._ents.push(el); });
     this._vals = []; R.querySelectorAll('[data-val]').forEach((el) => { el._item = vals[+el.getAttribute('data-vi')]; el._bar = el.classList.contains('bar'); el._wide = el.hasAttribute('data-wide'); this._vals.push(el); });
+    this._postSoon();
     this._tiles = []; R.querySelectorAll('[data-light]').forEach((el) => { el._item = tileItems[+el.getAttribute('data-ti')]; el._bar = el.classList.contains('bar'); el._wide = el.hasAttribute('data-wide'); this._tiles.push(el); });
     // ışık / priz karosunda watt rozeti (Enerji sayfası → Görünüm): karonun güç sensörü izlenir
     this._badges = [];
@@ -1115,7 +1117,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       // servis: hedef varlık kimliği, liste ya da { area_id, entity_id... } olabilir; data ile birleşir (_act)
       this._act(it.action, it.entity);
     }), (() => { const it0 = sceneItem(b); return it0 && it0.hold ? () => this._act(it0.hold, it0.entity) : null; })()));
-    R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter')));
+    R.querySelectorAll('[data-season]').forEach((b) => lpPress(b, () => { this._ssnT = Date.now(); STORE.season(lpSeason() === 'winter' ? 'summer' : 'winter'); }));
     R.querySelectorAll('[data-fold]').forEach((b) => lpPress(b, () => { const o = !b.classList.contains('open'); b.classList.toggle('open', o); const bd = b.nextElementSibling; if (bd) bd.hidden = !o; lpFoldSet(b.getAttribute('data-fold'), o); }));
     R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => { if (this._config.demo) return; LEC.open(this._hass, tab.area); }));
     // telefon kategorileri: alttaki kategori, üstteki oda; ışıklarda sağa sola kaydırınca sonraki / önceki oda
@@ -1751,6 +1753,35 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
   // göreli kaydırma (panodaki çubuklar gibi): yatay hareket 8 px'i geçince başlar, dikey hareket sayfayı kaydırır;
   // bırakınca tek komut: %0 ise kapat, değilse brightness_pct. Gönderilen değer 3 sn ekranda kalır.
+  // çizimden sonra ölçüye bakan düzeltmeler (v0.32): yassı karo yan yana dizilir, kayan kutuda "aşağıda daha var" izi
+  _postSoon() {
+    if (this._postT) return;
+    const run = () => { this._postT = 0; try { this._post(); } catch (e) {} };
+    this._postT = window.requestAnimationFrame ? requestAnimationFrame(run) : setTimeout(run, 30);
+    setTimeout(() => { try { this._post(); } catch (e) {} }, 500);   // simgeler ve yazı tipi yerleşince bir kez daha
+  }
+  _post() {
+    const R = this.shadowRoot; if (!R) return;
+    // karo, simge + ad üst üste sığmayacak kadar yassıysa (çok geniş ekran, çok satır) geniş karo düzenine geçer
+    const hb = this.getBoundingClientRect(), ultra = hb.height > 0 && hb.width / hb.height > 2;   // yalnız çok geniş ekran (21:9 ve üstü)
+    Array.prototype.forEach.call(R.querySelectorAll('.grid > .tile'), (el) => {
+      if (el.hasAttribute('data-wide')) return;
+      const w = el.offsetWidth, h = el.offsetHeight; if (!w || !h) return;
+      const flat = ultra && h < w * 0.48 + 30;
+      if (flat !== el.classList.contains('autow')) { el.classList.toggle('autow', flat); el.classList.toggle('wide', flat); }
+    });
+    // grafik küçük çizildiğinde eksen yazıları okunur kalsın (en çok 1,6 kat)
+    Array.prototype.forEach.call(R.querySelectorAll('svg.ench2'), (sv) => {
+      const vb = (sv.getAttribute('viewBox') || '').split(' '), w = sv.getBoundingClientRect().width, k = w && +vb[2] ? +vb[2] / w : 1;
+      sv.style.setProperty('--ts', String(Math.max(1, Math.min(1.6, k)).toFixed(2)));
+    });
+    Array.prototype.forEach.call(R.querySelectorAll('.sub, .box'), (el) => {
+      const chk = () => { const more = el.scrollHeight - el.clientHeight > 8, st = getComputedStyle(el).overflowY; const sc = more && (st === 'auto' || st === 'scroll');
+        el.classList.toggle('more', sc && el.scrollHeight - el.clientHeight - el.scrollTop > 8); };
+      if (!el._moreB) { el._moreB = true; el.addEventListener('scroll', chk, { passive: true }); }
+      chk();
+    });
+  }
   _bbBind(el) {
     let down = false, mode = null, sx = 0, sy = 0, sv = 0, w = 1, pid = null;
     el.addEventListener('pointerdown', (e) => {

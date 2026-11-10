@@ -941,3 +941,16 @@ div.ensr:hover { background: var(--s1); }
 .scrc .inp { width: 66px; height: 28px; padding: 0 6px; font-size: 12px; }
 .pvh .pvfold { height: 28px; flex: none; }
 .pvh .pvfold.on { background: var(--acs); color: var(--ac); border-color: var(--acl); }
+/* ---- v0.32 ---- */
+/* Ayarlar: önizlemenin yanında ama tam boy (oda bloğunun üstüne uzanır) */
+.app.docked:not(.narrowv) > .main { padding-right: 472px; }
+.app.docked:not(.narrowv) > .rblock { margin-right: 472px; }
+.app:not(.narrowv) > .main > .dlg.dock { position: absolute; top: 68px; right: 16px; bottom: 16px; width: 460px; z-index: 6; box-shadow: -18px 0 40px rgba(0, 0, 0, .55); }
+/* dar ekranda önizleme çubuğu iki satıra iner; Geri al düğmesi yerinde kalır */
+.pvh { flex-wrap: wrap; row-gap: 6px; }
+.pvh .seg { flex: 0 1 auto; flex-wrap: wrap; }
+/* dokunma hedefleri: ? ve tutamaç */
+.hlp { position: relative; }
+.hlp::after { content: ''; position: absolute; left: -11px; top: -11px; right: -11px; bottom: -11px; }
+[data-handle] { position: relative; }
+[data-handle]::after { content: ''; position: absolute; left: -10px; top: -12px; right: -10px; bottom: -12px; }

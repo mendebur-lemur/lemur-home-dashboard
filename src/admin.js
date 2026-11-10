@@ -1250,12 +1250,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     let modal = this._modalHtml(tabs, tab, sec), dock = '';
     const OV = '<div class="ov" data-ovl><div class="dlg sm sset">';
     if (this._modal === 'settings' && modal.indexOf(OV) === 0) { dock = '<div class="dlg sm sset dock">' + modal.slice(OV.length, modal.length - 6); modal = ''; }
-    R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + (this._narrow ? ' hanarrow' : '') + '">' + top + lecInfo +
+    R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + (dock ? ' docked' : '') + (this._narrow ? ' hanarrow' : '') + '">' + top + lecInfo +
       '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + (dock || ins) + '</div>' +
       this._menuHtml() + modal + this._helpHtml() +
       '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
 
     Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
+    // menü ekranın altından taşmasın: sığmıyorsa yukarı kayar, yine sığmazsa kendi içinde kayar (v0.32)
+    Array.prototype.forEach.call(R.querySelectorAll('.menu'), (m) => {
+      const vh = window.innerHeight, need = Math.min(m.scrollHeight + 2, vh - 16), b = m.getBoundingClientRect();
+      m.style.maxHeight = need + 'px';
+      if (b.top + need > vh - 8) m.style.top = Math.max(8, (parseFloat(m.style.top) || 0) - (b.top + need - (vh - 8))) + 'px';
+    });
     this._mountPreview(tab, sec);
     this._histSync();
     if (this._modal === 'auto') this._akMount();
