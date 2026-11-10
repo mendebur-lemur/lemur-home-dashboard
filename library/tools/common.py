@@ -15,8 +15,8 @@ import lut as LUT  # noqa: E402  (no Home Assistant needed)
 GENERIC = re.compile(r"^(extended color light|color light|dimmable light|color temperature light|on/off light|light|lamp|bulb|led|strip|rgb|rgbw|rgbww|unknown|generic)$", re.I)
 MAX_BY_FORM = {"bulb": 40.0, "spot": 25.0, "strip_per_m": 30.0, "other": 300.0}
 # v0.32: havuz herkese açık; priz modeli değil ölçümün kendisi denetlenir
-SETTLE_MAX = 15.0    # bir adımda prizin değeri ortalama bu kadar saniyede oturmalı (ESPHome'un 60 sn'lik prizleri elenir)
-FLOOR_MAX = 0.6      # prizin okuyamayıp alttan doldurulan hücrelerin en çok payı
+SETTLE_MAX = 30.0    # bir adımda prizin değeri ortalama bu kadar saniyede oturmalı (ESPHome'un 60 sn'lik prizleri elenir; Hue Play 1PM Mini ile 14,6 sn)
+FLOOR_MAX = 0.75     # prizin okuyamayıp alttan doldurulan hücrelerin en çok payı (Hue Play 1PM Mini ile %60)
 AGREE = 0.15         # aynı modelin iki ölçümü: en yüksek güç bu oranda tutarlı olmalı
 BLOCK_MIN, BLOCK_RATIO = 5, 0.7   # bir priz modeli en az 5 gönderimin %70'inde reddedildiyse engellenir
 
@@ -123,7 +123,9 @@ def check(p: dict, strict: bool = False, blocked: list | None = None) -> tuple[l
     stuck = sum(1 for r in rows if _stuck(r, rows))
     if stuck:
         errs.append(f"{stuck} satırda aynı değer art arda tekrarlıyor, priz ölçüm sırasında takılmış / {stuck} rows repeat the same watts, the plug got stuck while measuring")
-    zeros = sum(1 for r in rows for x in r if x <= 0.05)
+    # v0.32: öğrenme okunamayan hücreyi satırdan doldurur (samples.floor); o küçük değerler gerçek, yalnız tam 0 hatadır
+    zero_at = 0.0 if isinstance((p.get("samples") or {}).get("floor") if isinstance(p.get("samples"), dict) else None, (int, float)) else 0.05
+    zeros = sum(1 for r in rows for x in r if x <= zero_at)
     if zeros:
         errs.append(f"{zeros} hücrede 0 W: priz bu düşük gücü okuyamamış / {zeros} cells read 0 W: the plug could not read that low")
     # v0.32: prizin hızı ve okuyamadığı hücreler (öğrenme ikisini de kaydediyor)

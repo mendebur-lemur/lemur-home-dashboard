@@ -73,7 +73,7 @@ def _q(**smp):
 def test_slow_plug_rejected():
     errs, _ = common.check(_q(settle_s=60))
     assert any("yavaş" in e for e in errs)
-    assert common.check(_q(settle_s=9))[0] == []
+    assert common.check(_q(settle_s=14.6))[0] == []   # Hue Play on a 1PM Mini
 
 
 def test_speed_required_from_others_not_owner():
@@ -83,7 +83,7 @@ def test_speed_required_from_others_not_owner():
 
 
 def test_too_many_unread_cells_rejected():
-    assert any("okuyamadığı" in e for e in common.check(_q(floor=12))[0])   # 12 of 16
+    assert any("okuyamadığı" in e for e in common.check(_q(floor=13))[0])   # 13 of 16
     assert common.check(_q(floor=8))[0] == []                              # half: fine
 
 
@@ -132,3 +132,10 @@ def test_two_accounts_pair_up(tmp_path, monkeypatch):
     assert sorted(x[0] for x in add) == [7, 8] and "#7" in note
     add, _ = CK.decide(c, 8, False, RV.by_hash("someone"), [])                  # the same account twice does not pair
     assert add == []
+
+
+def test_filled_low_cells_are_not_zeros():
+    lut = {"ct": {"k": [2200, 6500], "b": [1, 5, 10, 25, 40, 60, 80, 100], "w": [[0.03, 0.17, 0.35, 0.88, 1.4, 2.9, 4.8, 7.5]] * 2}}
+    assert common.check(_sub(lut=lut, samples={"settle_s": 14.6, "floor": 6}))[0] == []      # filled from the row: fine
+    lut["ct"]["w"] = [[0.0, 0.17, 0.35, 0.88, 1.4, 2.9, 4.8, 7.5]] * 2
+    assert any("0 W" in e for e in common.check(_sub(lut=lut, samples={"settle_s": 5, "floor": 0}))[0])

@@ -7,7 +7,7 @@ Güncel havuz `havuz` dalında durur (gönderim kontrolü oraya ekler). Bu klas�
 - `library.json`: panelin okuduğu dosya. Her model kabul edilen ölçümlerin orta değeri (medyan). Şerit LED'ler metre başına (`per_m`), adaptör sınırı `cap_w`.
 - `models/`: kabul edilen ölçümler, her model bir dosya. Gönderenin hesap adı tutulmaz, yalnız kısa bir kod (`by`).
 - `plugs.json`: her priz modelinin geçen ve reddedilen gönderim sayısı; sürekli hatalı ölçüm verenler `block` listesinde.
-- `tools/check.py`: her gönderimin kontrolü (GitHub Actions). Priz modeline değil ölçümün kendisine bakar: 0 W hücre, takılan satır, parlaklıkla düşen güç, yavaş priz (adım başına 15 sn'den uzun), prizin okuyamadığı düşük güçler (%60'tan fazla). Geçen ölçüm, modelin havuzdaki ölçümüyle ya da başka bir hesabın aynı model ölçümüyle tutarlıysa (en yüksek güç %15 içinde) kendiliğinden eklenir; değilse proje sahibini bekler. Proje sahibinin ölçümleri hemen eklenir.
+- `tools/check.py`: her gönderimin kontrolü (GitHub Actions). Priz modeline değil ölçümün kendisine bakar: 0 W hücre, takılan satır, parlaklıkla düşen güç, yavaş priz (adım başına 30 sn'den uzun), prizin okuyamadığı düşük güçler (%75'ten fazla). Geçen ölçüm, modelin havuzdaki ölçümüyle ya da başka bir hesabın aynı model ölçümüyle tutarlıysa (en yüksek güç %15 içinde) kendiliğinden eklenir; değilse proje sahibini bekler. Proje sahibinin ölçümleri hemen eklenir.
 - `tools/review.py`: bekleyenlerin elle incelenmesi ve onayı (`--accept`).
 
 Gönderimde yalnız marka, model, ışığın özellikleri, ölçüm tablosu, ölçen prizin modeli, şebeke gerilimi ve şeritlerde uzunluk ile adaptör gücü bulunur. Ev, oda ve cihaz adları, konum ya da başka bir Home Assistant verisi gönderilmez.
