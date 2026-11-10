@@ -6,7 +6,7 @@ const LP_ER_TXT = {
     anaT: 'Enerji analizi', show: 'Analiz penceresinde', month: 'Ay', year: 'Yıl', running: 'sürüyor', use: 'Tüketim', cost: 'Tutar', avg: 'Günlük ortalama', peak: 'en yoğun: {d} · {k} kWh',
     tier: 'Kademe ({l} kWh)', tierOk: 'aşılmadı', tierOver: 'aşıldı', tierNo: 'tarife kademesiz', vsPrev: '{p} {m}\'e göre', vsLy: 'geçen yıl aynı ay {k} kWh', noPrev: 'önceki ay kaydı yok',
     daily: 'Günlük kWh', cats: 'Kategoriler', topM: 'Dönemin en çok tüketenleri', wk: 'Hafta içi · hafta sonu', wkd: 'hafta içi', wke: 'hafta sonu', perDay: 'günlük ortalama',
-    sbT: 'Bekleme ~{c} tuttu', sbTk: 'Bekleme ~{k} kWh', sbS: 'Gece tabanı ortalama {w}; dönemin {p}\'i hiçbir şey kullanılmıyorken gitti.',
+    sbT: 'Bekleme ~{c} tuttu', sbTk: 'Bekleme ~{k} kWh', sbS: 'Gece tabanı ortalama {w}; dönemin {p} kadarı hiçbir şey kullanılmıyorken gitti.',
     topT: '{n} tek başına {p}', topS: '{k} kWh{c}', none: 'Bu dönem için kayıt yok', noneS: 'Home Assistant bu dönemde bu sensörlerin istatistiğini tutmamış.',
     ytd: 'Bu yıl şimdiye kadar', ytdAll: 'Yıl toplamı', yEnd: 'Yıl sonu tahmini', yLim: 'Yıllık sınır ({l} kWh)', left: 'kalan {k} kWh', under: 'sınırın altında', over: 'sınırı aşıyor',
     vsLyY: '{p} geçen yılın aynı dönemine göre', monthly: 'Aylık kWh', legend: 'gri: {a} · renkli: {b}', bestM: 'En yüksek ay {m}', bestS: '{k} kWh{c}', topY: 'Yılın en çok tüketenleri',
@@ -196,5 +196,5 @@ function lpErCsv(h, M, P, lang) {
   const head = [lang === 'tr' ? 'Tarih' : 'Date'].concat(M.cats.map((c) => c.name), [lang === 'tr' ? 'Toplam kWh' : 'Total kWh']);
   const rows = D.rows.map((r) => { const d = new Date(r.t); return [P.mode === 'y' ? d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) : d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2)].concat(M.cats.map((c) => num(r.c[c.id] || 0)), [num(r.tot)]); });
   const q = (x) => (/[";,\n]/.test(x) ? '"' + String(x).replace(/"/g, '""') + '"' : x);
-  return { name: 'enerji-' + (P.mode === 'y' ? P.y : P.y + '-' + ('0' + (P.m + 1)).slice(-2)) + '.csv', text: '﻿' + [head].concat(rows).map((r) => r.map(q).join(sep)).join('\r\n') };
+  return { name: (lang === 'tr' ? 'enerji-' : 'energy-') + (P.mode === 'y' ? P.y : P.y + '-' + ('0' + (P.m + 1)).slice(-2)) + '.csv', text: '﻿' + [head].concat(rows).map((r) => r.map(q).join(sep)).join('\r\n') };
 }

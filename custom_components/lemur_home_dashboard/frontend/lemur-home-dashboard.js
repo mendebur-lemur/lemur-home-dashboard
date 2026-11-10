@@ -1975,7 +1975,7 @@ const TXT = {
   tr: { home: 'Ev', other: 'Diğer', lights: 'IŞIKLAR', room_lights: '{area} IŞIKLARI', scenes: 'SENARYOLAR', shortcuts: 'KISAYOLLAR',
     control: 'EV KONTROL', other_control: 'DİĞER CİHAZLAR', media: 'MEDYA',
     empty: 'Bu sekmede gösterilecek cihaz yok. Yönetim panelinden ekleyebilirsin.',
-    cam_off: 'Kamera çevrimdışı', drag_size: 'Sürükleyerek büyüt ya da küçült', cam_nopic: 'Görüntü alınamıyor', edit_empty: 'Boş bölüm · sağdan "Cihaz ekle" ya da başka bölümden bir öğeyi buraya sürükle', col_empty: 'Boş sütun · bir kutuyu ⠿ tutamağından tutup buraya sürükle ya da', add_section: 'Bölüm ekle', effects: 'Efektler', c_lights: 'Işıklar', c_climate: 'İklim', c_scenes: 'Senaryolar', c_other: 'Diğer', c_camera: 'Kameralar', c_energy: 'Enerji', cameras: 'Kameralar', c_all: 'Tümü', cl_mode: 'Mod', cl_fan: 'Fan', cl_swing: 'Salınım', cl_now: 'şu an', cl_power: 'Güç', cl_vac: 'Süpürge', cl_stop: 'Durdur', cl_start: 'Başlat', cl_pause: 'Duraklat', cl_dock: 'İstasyona dön', cl_more: 'Ayrıntılar', cl_find: 'Bul', cl_suction: 'Emiş', too_full: 'Ekrana sığmıyor', drag_box: 'Kutuyu taşımak için tut ve sürükle',
+    cam_off: 'Kamera çevrimdışı', drag_size: 'Sürükleyerek büyüt ya da küçült', cam_nopic: 'Görüntü alınamıyor', edit_empty: 'Boş bölüm · sağdan "Ekle" ya da başka bölümden bir öğeyi buraya sürükle', col_empty: 'Boş sütun · bir kutuyu ⠿ tutamağından tutup buraya sürükle ya da', add_section: 'Bölüm ekle', effects: 'Efektler', c_lights: 'Işıklar', c_climate: 'İklim', c_scenes: 'Senaryolar', c_other: 'Diğer', c_camera: 'Kameralar', c_energy: 'Enerji', cameras: 'Kameralar', c_all: 'Tümü', cl_mode: 'Mod', cl_fan: 'Fan', cl_swing: 'Salınım', cl_now: 'şu an', cl_power: 'Güç', cl_vac: 'Süpürge', cl_stop: 'Durdur', cl_start: 'Başlat', cl_pause: 'Duraklat', cl_dock: 'İstasyona dön', cl_more: 'Ayrıntılar', cl_find: 'Bul', cl_suction: 'Emiş', too_full: 'Ekrana sığmıyor', drag_box: 'Kutuyu taşımak için tut ve sürükle',
     fb: 'Yedek yoldan kontrol edildi: {t}', fold_more: 'Diğer', col_del: 'Bu kolonu kaldır', fold_n: '{n} öğe', fold_on: '{n} öğe · {on} açık', heat: 'Isıtıyor', cool: 'Soğutuyor', idle: 'Beklemede', off: 'Kapalı', on: 'Açık', playing: 'Çalıyor', paused: 'Duraklatıldı', unavailable: 'Ulaşılamıyor', open: 'Açık', closed: 'Kapalı', opening: 'Açılıyor', closing: 'Kapanıyor',
     admin_title: 'Lemur Home Dashboard', admin_intro: 'Panonun sekmeleri, bölümleri ve boyutları burada düzenlenecek. (Yapım aşamasında)',
     reset: 'Varsayılana dön', save: 'Kaydet', saved: 'Kaydedildi', not_loaded: 'Lemur Home Dashboard entegrasyonu yüklü değil.',
@@ -1983,7 +1983,7 @@ const TXT = {
   en: { home: 'Home', other: 'Other', lights: 'LIGHTS', room_lights: '{area} LIGHTS', scenes: 'SCENES', shortcuts: 'SHORTCUTS',
     control: 'CONTROLS', other_control: 'OTHER DEVICES', media: 'MEDIA',
     empty: 'Nothing to show on this tab yet. Add devices from the admin panel.',
-    cam_off: 'Camera offline', drag_size: 'Drag to resize', cam_nopic: 'No picture', edit_empty: 'Empty section · use "Add device" on the right or drag an item here from another section', col_empty: 'Empty sub-column · drag a box here by its ⠿ handle, or', add_section: 'Add section', effects: 'Effects', c_lights: 'Lights', c_climate: 'Climate', c_scenes: 'Scenes', c_other: 'Other', c_camera: 'Cameras', c_energy: 'Energy', cameras: 'Cameras', c_all: 'All', cl_mode: 'Mode', cl_fan: 'Fan', cl_swing: 'Swing', cl_now: 'now', cl_power: 'Power', cl_vac: 'Vacuum', cl_stop: 'Stop', cl_start: 'Start', cl_pause: 'Pause', cl_dock: 'Go to dock', cl_more: 'Details', cl_find: 'Locate', cl_suction: 'Suction', too_full: "Doesn't fit the screen", drag_box: 'Hold and drag to move the box',
+    cam_off: 'Camera offline', drag_size: 'Drag to resize', cam_nopic: 'No picture', edit_empty: 'Empty section · use "Add" on the right or drag an item here from another section', col_empty: 'Empty sub-column · drag a box here by its ⠿ handle, or', add_section: 'Add section', effects: 'Effects', c_lights: 'Lights', c_climate: 'Climate', c_scenes: 'Scenes', c_other: 'Other', c_camera: 'Cameras', c_energy: 'Energy', cameras: 'Cameras', c_all: 'All', cl_mode: 'Mode', cl_fan: 'Fan', cl_swing: 'Swing', cl_now: 'now', cl_power: 'Power', cl_vac: 'Vacuum', cl_stop: 'Stop', cl_start: 'Start', cl_pause: 'Pause', cl_dock: 'Go to dock', cl_more: 'Details', cl_find: 'Locate', cl_suction: 'Suction', too_full: "Doesn't fit the screen", drag_box: 'Hold and drag to move the box',
     fb: 'Controlled through the backup: {t}', fold_more: 'More', col_del: 'Remove this column', fold_n: '{n} items', fold_on: '{n} items · {on} on', heat: 'Heating', cool: 'Cooling', idle: 'Idle', off: 'Off', on: 'On', playing: 'Playing', paused: 'Paused', unavailable: 'Unavailable', open: 'Open', closed: 'Closed', opening: 'Opening', closing: 'Closing',
     admin_title: 'Lemur Home Dashboard', admin_intro: 'Tabs, sections and sizes of the dashboard will be edited here. (Work in progress)',
     reset: 'Reset to defaults', save: 'Save', saved: 'Saved', not_loaded: 'The Lemur Home Dashboard integration is not loaded.',
@@ -5172,6 +5172,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (a === 'more-info') { if (id) lpFire(this, 'hass-more-info', { entityId: id }); return; }
       if (a === 'toggle') {
         if (!id) return;
+        // v0.32: ulaşılamayan cihaza komut gitmez (kapalı ışık gibi görünüp dokununca boşa komut gidiyordu); yedeği olan lamba hariç
+        if (h.states[id] && h.states[id].state === 'unavailable' && !lpTwinOf(id)) return;
         this._optTap(id);
         // yedek kontrolü olan lamba: entegrasyon önce hızlı yoldan dener, cevap gelmezse yedekten gönderir (twins.py)
         if (lpTwinOf(id)) h.callService('lemur_home_dashboard', 'control', { entity_id: id, action: 'toggle' });
@@ -5560,6 +5562,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     };
     S.unsub = lpEnSub(S.draw);
     S.draw();
+    // v0.32 telefonda: tutamaç vardı ama aşağı çekince kapanmıyordu. İçerik en üstteyken aşağı çekince kapanır (grafikler hariç)
+    if (ph) {
+      let sy = null;
+      pop.addEventListener('touchstart', (e) => { const pd = pop.firstChild, t1 = e.target && e.target.closest ? e.target.closest('svg, [data-enday]') : null; sy = pd && !t1 && pd.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+      pop.addEventListener('touchmove', (e) => { if (sy === null || !pop.firstChild) return; const dy = e.touches[0].clientY - sy; if (dy > 0) { pop.firstChild.style.transition = 'none'; pop.firstChild.style.transform = 'translateY(' + dy + 'px)'; } }, { passive: true });
+      pop.addEventListener('touchend', (e) => { if (sy === null) return; const dy = e.changedTouches[0].clientY - sy; sy = null; if (pop.firstChild) { pop.firstChild.style.transition = ''; pop.firstChild.style.transform = ''; } if (dy > 90) this._enClose(); }, { passive: true });
+    }
     // tablette 2 dakika dokunulmazsa pencere kapanır, ekran canlı görünüme döner
     if (!ph) { const idle = () => { clearTimeout(S.idleT); S.idleT = setTimeout(() => { if (this._enP === S) this._enClose(); }, 120000); }; idle(); ['pointerdown', 'touchstart', 'wheel'].forEach((ev) => pop.addEventListener(ev, idle, { passive: true })); }
     pop.addEventListener('click', (e) => {
@@ -6679,7 +6688,8 @@ function lpEnBills() {
 function lpEnLastBill() { const L = lpEnBills(); return L.length ? L[L.length - 1] : null; }
 // fiyat düzeni: seçilmediyse fatura varsa faturadan, yoksa tek fiyat
 function lpEnMode() {
-  const m = lpEnCfg().price_mode;
+  // v0.32: tarife hiç seçilmediyse sihirbaz Kademeli'yi seçili gösterir; hesap da öyle saysın (özet "Tek fiyat" yazıyordu)
+  const m = lpEnCfg().price_mode || (lpEnLastBill() ? 'bill' : 'tier');
   if (lpEnCfg().sktt_on && lpEnNumOf(lpEnCfg().sktt_price)) return 'sktt';   // son kaynak tarifesinde: kademe yok, her kWh bu fiyattan
   if (m === 'bill' && lpEnLastBill()) return 'bill';
   if (m === 'tier' && lpEnNumOf(lpEnCfg().low) && lpEnNumOf(lpEnCfg().high)) return 'tier';
@@ -8346,7 +8356,7 @@ const LP_ER_TXT = {
     anaT: 'Enerji analizi', show: 'Analiz penceresinde', month: 'Ay', year: 'Yıl', running: 'sürüyor', use: 'Tüketim', cost: 'Tutar', avg: 'Günlük ortalama', peak: 'en yoğun: {d} · {k} kWh',
     tier: 'Kademe ({l} kWh)', tierOk: 'aşılmadı', tierOver: 'aşıldı', tierNo: 'tarife kademesiz', vsPrev: '{p} {m}\'e göre', vsLy: 'geçen yıl aynı ay {k} kWh', noPrev: 'önceki ay kaydı yok',
     daily: 'Günlük kWh', cats: 'Kategoriler', topM: 'Dönemin en çok tüketenleri', wk: 'Hafta içi · hafta sonu', wkd: 'hafta içi', wke: 'hafta sonu', perDay: 'günlük ortalama',
-    sbT: 'Bekleme ~{c} tuttu', sbTk: 'Bekleme ~{k} kWh', sbS: 'Gece tabanı ortalama {w}; dönemin {p}\'i hiçbir şey kullanılmıyorken gitti.',
+    sbT: 'Bekleme ~{c} tuttu', sbTk: 'Bekleme ~{k} kWh', sbS: 'Gece tabanı ortalama {w}; dönemin {p} kadarı hiçbir şey kullanılmıyorken gitti.',
     topT: '{n} tek başına {p}', topS: '{k} kWh{c}', none: 'Bu dönem için kayıt yok', noneS: 'Home Assistant bu dönemde bu sensörlerin istatistiğini tutmamış.',
     ytd: 'Bu yıl şimdiye kadar', ytdAll: 'Yıl toplamı', yEnd: 'Yıl sonu tahmini', yLim: 'Yıllık sınır ({l} kWh)', left: 'kalan {k} kWh', under: 'sınırın altında', over: 'sınırı aşıyor',
     vsLyY: '{p} geçen yılın aynı dönemine göre', monthly: 'Aylık kWh', legend: 'gri: {a} · renkli: {b}', bestM: 'En yüksek ay {m}', bestS: '{k} kWh{c}', topY: 'Yılın en çok tüketenleri',
@@ -8536,7 +8546,7 @@ function lpErCsv(h, M, P, lang) {
   const head = [lang === 'tr' ? 'Tarih' : 'Date'].concat(M.cats.map((c) => c.name), [lang === 'tr' ? 'Toplam kWh' : 'Total kWh']);
   const rows = D.rows.map((r) => { const d = new Date(r.t); return [P.mode === 'y' ? d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) : d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2)].concat(M.cats.map((c) => num(r.c[c.id] || 0)), [num(r.tot)]); });
   const q = (x) => (/[";,\n]/.test(x) ? '"' + String(x).replace(/"/g, '""') + '"' : x);
-  return { name: 'enerji-' + (P.mode === 'y' ? P.y : P.y + '-' + ('0' + (P.m + 1)).slice(-2)) + '.csv', text: '﻿' + [head].concat(rows).map((r) => r.map(q).join(sep)).join('\r\n') };
+  return { name: (lang === 'tr' ? 'enerji-' : 'energy-') + (P.mode === 'y' ? P.y : P.y + '-' + ('0' + (P.m + 1)).slice(-2)) + '.csv', text: '﻿' + [head].concat(rows).map((r) => r.map(q).join(sep)).join('\r\n') };
 }
 
 // Küçük YAML okuyucu/yazıcı: yönetim panelinde "Kart (YAML)" ve "Pencerede kart aç" kutuları için.
@@ -11371,7 +11381,7 @@ const ADM = {
     ek_light: 'Işık', ek_lightT: 'Bekleme ve en çok W, parlaklıkla', ek_onoff: 'Aç / kapa', ek_onoffT: 'Kapalıyken ve açıkken W', ek_fixed: 'Sabit', ek_fixedT: 'Hep aynı W', ek_year: 'Yıllık tüketim', ek_yearT: 'Etiketteki kWh/yıl', ek_cycle: 'Çevrim', ek_cycleT: 'kWh/100 çevrim, haftada kaç kez',
     enEIdle: 'Kapalıyken (bekleme) W', enEMax: '%100 parlaklıkta W', enEOff: 'Kapalıyken W', enEOn: 'Açıkken W', enEW: 'Güç (W)', enEYear: 'Etiketteki yıllık tüketim (kWh)', enEK100: 'Etiketteki tüketim (kWh/100 çevrim)', enEWeek: 'Haftada kaç çevrim', enEEnt: 'Durumunu okuyan cihaz', enECat: 'Kategori', enECatNone: 'Kendi kategorisi',
     enENow: 'Şu an', enEAvg: 'Ortalama', enEDay: 'günde {k} kWh, yılda {y} kWh', enEBri: '%{p} parlaklıkta', enEYearT: 'Kompresörlü cihazlar anlık 0 ile 120 W arasında gider gelir; ortalama yıllık toplamda doğru çıkar.', enEEnts: 'Home Assistant\'ta oluşur: {p} ve {e}', enESave: 'Kaydet', enEDel: 'Sil',
-    enESaved: 'Kaydedildi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
+    enESaved: 'Kaydedildi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enEDirty: 'Yazdıkların kaydedilmedi. Kapatmak için yeniden dokun ya da Kaydet\'e bas.', enENaN: 'Buraya sayı yaz', enENeg: 'Değer eksi olamaz', enEBig: 'Değer çok büyük (en çok {n})', enEOnOff: 'Açıkken çektiği güç kapalıyken çektiğinden küçük olamaz', enEMaxMin: 'En yüksek güç, en düşük ve bekleme gücünden küçük olamaz', enEDup: 'Bu adda bir cihaz zaten var', enBLong: 'Fatura dönemi en çok 100 gün olabilir; tarihleri kontrol et', enBUpd: 'Aynı dönemin faturası güncellendi', enTierOrder: 'Düşük kademe fiyatı yüksek kademeden pahalı görünüyor; kontrol et', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
     enTilde: 'Tahmini değerleri ayır', enTildeT: 'Tahmini watt kartlarda "~" ile ve morla yazılır', enUntL: 'Ölçülmeyen karo', enUntLT: 'Son faturaya göre ölçülmeyen pay kategori karolarında', enBars: 'Kademe ve yıllık sınır çubukları', enBarsT: 'Halo\'nun altında, ayarlandıysa',
     en_dev: 'Cihazlar', en_cat: 'Kategoriler', en_solar: 'Güneş ve batarya', en_tips: 'İpuçları', en_imp: 'Aktar',
     enDevT: 'Panelin takip ettiği cihazlar. Güç ölçen cihazlar doğrudan eklenir; ölçmeyenler için sanal ölçüm kurulur ve Home Assistant\'ta güç ve enerji sensörü oluşur. Hepsi Enerji ayarlarına seçtiğin kategorinin içinde eklenir.',
@@ -11499,7 +11509,7 @@ const ADM = {
     ek_light: 'Light', ek_lightT: 'Standby and max W, by brightness', ek_onoff: 'On / off', ek_onoffT: 'W when off and when on', ek_fixed: 'Fixed', ek_fixedT: 'Always the same W', ek_year: 'Yearly usage', ek_yearT: 'The label\'s kWh/year', ek_cycle: 'Cycles', ek_cycleT: 'kWh/100 cycles, cycles per week',
     enEIdle: 'Off (standby) W', enEMax: 'At 100% brightness W', enEOff: 'Off W', enEOn: 'On W', enEW: 'Power (W)', enEYear: 'Yearly usage on the label (kWh)', enEK100: 'Usage on the label (kWh/100 cycles)', enEWeek: 'Cycles per week', enEEnt: 'Device that gives the state', enECat: 'Category', enECatNone: 'Its own category',
     enENow: 'Now', enEAvg: 'Average', enEDay: '{k} kWh a day, {y} kWh a year', enEBri: 'at {p}% brightness', enEYearT: 'Appliances with a compressor swing between 0 and 120 W; the average adds up right over a year.', enEEnts: 'Home Assistant gets: {p} and {e}', enESave: 'Save', enEDel: 'Delete',
-    enESaved: 'Saved', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
+    enESaved: 'Saved', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enEDirty: 'What you typed is not saved. Tap again to close, or press Save.', enENaN: 'Enter a number here', enENeg: 'The value cannot be negative', enEBig: 'The value is too large (at most {n})', enEOnOff: 'Power when on cannot be lower than power when off', enEMaxMin: 'The highest power cannot be below the lowest or the standby power', enEDup: 'A device with this name already exists', enBLong: 'A billing period can be at most 100 days; check the dates', enBUpd: 'The bill for this period was updated', enTierOrder: 'The low tier price looks higher than the high tier; please check', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
     enTilde: 'Mark estimated values', enTildeT: 'Estimated watts show with "~" in purple on the cards', enUntL: 'Not measured tile', enUntLT: 'The share not measured, from the last bill, as a category tile', enBars: 'Tier and yearly limit bars', enBarsT: 'Under the Halo, when set up',
     en_dev: 'Devices', en_cat: 'Categories', en_solar: 'Solar and battery', en_tips: 'Tips', en_imp: 'Import',
     enDevT: 'The devices the dashboard tracks. Devices that measure power are added as they are; for the others a virtual measurement is set up and Home Assistant gets a power and an energy sensor. All are added to the Energy settings inside the category you pick.',
@@ -11745,6 +11755,34 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (!this._modal) this._render();
     });
   }
+  _histSync() {
+    const open = !!this._modal;
+    if (open && !this._hp) { try { history.pushState(Object.assign({}, history.state, { lhdAdm: 1 }), ''); this._hp = true; } catch (e) {} }
+    else if (!open && this._hp) { this._hp = false; try { history.back(); } catch (e) {} }
+    this._hpNav = false;
+  }
+  // Esc: yalnız en üstteki katman kapanır (v0.32: yardım açıkken alttaki pencereyi kapatıp yazılanı siliyordu)
+  _esc() {
+    if (this._help) { this._help = null; return this._render(); }
+    if (this._menu) { this._menu = null; return this._render(); }
+    if (this._modal === 'icon' && this._ip && this._ip.kind === 'im' && this._im) { this._ip = null; this._modal = 'item'; return this._render(); }
+    if (this._modal === 'cardedit' && this._ce && this._ce.im) { this._im = this._ce.im; this._ce = null; this._modal = 'item'; return this._render(); }
+    if (this._modal === 'energy') {
+      if (this._lrn) { this._lrn = null; return this._render(); }
+      if (this._enAddM) { this._enAddM = null; return this._render(); }
+      if (this._enE) return this._enEClose(false);
+    }
+    if (this._modal === 'news') return this._newsClose();
+    if (this._modal === 'guide') return this._guideClose();
+    this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; this._ce = null; this._render();
+  }
+  // cihaz formu: yazılan bir şey varsa dışarı dokunma ya da Esc ilk seferde kapatmaz, uyarır (İptal ve × hemen kapatır)
+  _enEClose(sure) {
+    const D = this._enE; if (!D) return;
+    const dirty = D.f0 !== undefined && JSON.stringify(D.f) !== D.f0;
+    if (!sure && dirty && !D.warned) { D.warned = true; this._enErr = this._t('enEDirty'); return this._render(); }
+    this._enE = null; this._enErr = ''; this._render();
+  }
   set narrow(v) { this._narrow = v; const a = this.shadowRoot && this.shadowRoot.querySelector('.app'); if (a) a.classList.toggle('hanarrow', !!v); }   // HA'nın dar modu: Yıldız ver yalnız simge
   set panel(p) { this._panelCfg = p; }
   connectedCallback() {
@@ -11752,10 +11790,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       this._key = (e) => {
         const typing = e.composedPath && e.composedPath()[0] && /INPUT|SELECT|TEXTAREA/.test(e.composedPath()[0].tagName || '');
         if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !typing && this._undo.length) { e.preventDefault(); this._undoIt(); }
-        if (e.key === 'Escape' && (this._modal || this._menu)) { this._modal = null; this._menu = null; this._render(); }
+        if (e.key === 'Escape' && (this._modal || this._menu || this._help)) { e.preventDefault(); this._esc(); }
       };
     }
     window.addEventListener('keydown', this._key);
+    // v0.32: bir pencere açıkken tarayıcının Geri'si pencereyi kapatır (panelden çıkarıyordu); pano pencereleriyle aynı yol
+    if (!this._pop) this._pop = () => { if (this._hp) { this._hp = false; this._hpNav = true; this._help = null; this._menu = null; this._lrn = null; this._enAddM = null; this._enE = null; this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; this._ce = null; this._render(); } };
+    window.addEventListener('popstate', this._pop);
     if (!this._nw) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }   // yeni sürüm uyarısı (src/store.js)
     if (!this._ro && window.ResizeObserver) this._ro = new ResizeObserver(() => this._fit());
     if (!this._leciUnsub) this._leciUnsub = lpLecIconsSub(() => { if (this._hass && STORE.data) this._render(); });
@@ -11764,6 +11805,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   disconnectedCallback() {
     window.removeEventListener('keydown', this._key);
+    if (this._pop) window.removeEventListener('popstate', this._pop);
     if (this._nw) { this._nw = 0; lhdNewerUse(false); }
     if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
@@ -12513,7 +12555,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const lecInfo = LEC.installed(this._hass) && !st0.lec_seen ? '<div class="lecinfo" data-lecinfo><ha-icon icon="mdi:creation"></ha-icon><div class="t"><b>' + t('lecInfoT') + '</b><span>' + t('lecInfo') + '</span></div>' +
       '<button class="btn sm" data-a="settings">' + t('settings') + '</button><button class="btn sm pri" data-a="lecok">' + t('ok') + '</button></div>' : '';
     // yeniden çizimde kaydırma yerleri korunsun (ayarlarda bir şey değişince pencere başa atlamasın)
-    const SCR = ['.akr2', '.enm', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
+    const SCR = ['.app', '.akr2', '.enm', '.enddb', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
+    // cihaz formunda yazılmakta olan alan henüz taslağa geçmediyse (change gelmedi) yeniden çizimde silinmesin
+    if (act && act.hasAttribute && act.hasAttribute('data-enf') && this._enE && act.tagName !== 'SELECT') this._enE.f[act.getAttribute('data-enf')] = act.value;
     SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
     // Ayarlar önizlemenin üstünü kapatmaz: sağdaki panelin yerinde açılır, önizleme değişiklikleri canlı gösterir
     let modal = this._modalHtml(tabs, tab, sec), dock = '';
@@ -12526,6 +12570,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
     Object.keys(scrKeep).forEach((q) => { const el = R.querySelector(q); if (el) { el.scrollTop = scrKeep[q][0]; el.scrollLeft = scrKeep[q][1]; } });
     this._mountPreview(tab, sec);
+    this._histSync();
     if (this._modal === 'auto') this._akMount();
     this._ceMount();
     this._bind(tabs, tab, sec);
@@ -12544,7 +12589,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="phsw' + (bgk === 'dark' ? ' on' : '') + '" data-phbg="dark" style="background:#0b0e15" title="' + t('phDark') + '"></button>' +
       '<button class="phsw' + (bgk === 'black' ? ' on' : '') + '" data-phbg="black" style="background:#000" title="' + t('phBlack') + '"></button>' +
       LP_BG_FX.map((f) => '<button class="phsw' + (bgk === 'fx:' + f[0] ? ' on' : '') + '" data-phbg="fx:' + f[0] + '" style="background:' + lpFxSwatch(f[3]) + '" title="' + esc(this._lang === 'tr' ? f[1] : f[2]) + '"></button>').join('') + '</div>';
-    const P0 = this._phOv(), any = ['secs', 'order', 'tabs', 'style'].some((k) => lhdIsObj(P0[k]) && Object.keys(P0[k]).length) || P0.lights === 'tiles' || P0.lights === 'rows';
+    const P0 = this._phOv(), any = ['secs', 'order', 'tabs', 'style'].some((k) => lhdIsObj(P0[k]) && Object.keys(P0[k]).length) || P0.lights === 'tiles' || P0.lights === 'rows' || P0.flat === true;
     // normalde sağında "Aynı yap" düğmesi; basınca soru ve iki açık düğme: Evet, sil / Vazgeç
     const same = this._ask === 'phresall'
       ? '<div class="phsame ask"><ha-icon icon="mdi:alert-outline"></ha-icon><span><b>' + t('phSameAsk') + '</b><i>' + t('phSameT') + '</i>' +
@@ -12863,11 +12908,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const from = v('enbf'), to = v('enbt'), kwh = parseFloat(v('enbk').replace(',', '.')), tl = parseFloat(v('enbl').replace(',', '.'));
     this._enErr = '';
     if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to) || from > to || !(kwh > 0) || !(tl > 0)) { this._enErr = this._t('enBBad'); return this._render(); }
+    // v0.32: bir fatura bir dönemdir (en çok 100 gün); yıllar süren tek fatura birim fiyatı ve payları bozuyordu
+    if ((new Date(to).getTime() - new Date(from).getTime()) / 86400000 > 100) { this._enErr = this._t('enBLong'); return this._render(); }
+    const had = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).some((x) => x && x.from === from && x.to === to);
     this._enBusy = true; this._render();
     const panel = await lpEnPeriodKwh(this._hass, from, to);
     this._enBusy = false;
     const L = (Array.isArray(lpEnCfg().bills) ? lpEnCfg().bills : []).filter((x) => !(x && x.from === from && x.to === to)).concat([{ from: from, to: to, kwh: kwh, tl: tl, panel: panel }]);
     this._setting('energy.bills', L.slice(-36));
+    if (had) this._toast(this._t('enBUpd'));
   }
   // ---- cihazlar (data.estimates): ölçen (kendi güç sensörü) ve sanal (tahmini). Taslak this._enE = { id, f }, kaydedilmeden saklanmaz ----
   // cihaz düzenleyicide hesap ve uyarılar yerinde yenilenir
@@ -13305,6 +13354,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     f.strip = !!f.strip; f.len0 = e && e.len > 0 ? e.len : 0; f.len = f.len0 ? String(f.len0) : ''; f.cap = e && e.cap > 0 ? String(e.cap) : ''; f.lenref = '';
     if (e && e.lut && !f.len0) { const js = JSON.stringify(e.lut), o = Object.keys(E).filter((k) => k !== id && E[k].len > 0 && E[k].lut && JSON.stringify(E[k].lut) === js)[0]; if (o) { f.lenref = String(E[o].len); f.strip = true; if (!f.cap && E[o].cap > 0) f.cap = String(E[o].cap); } }
     this._enE = { id: e ? id : null, f: f, ask: false };
+    this._enE.f0 = JSON.stringify(f);
   }
   // ---- Enerji → Cihazlar (v0.28.5): odaya ya da kategoriye göre gruplu liste, durum etiketleri, sağdan açılan düzenleme, toplu ekleme ----
   // cihazın odası: bağlı varlığın ya da güç sensörünün HA'daki alanı, yoksa o varlığın cihazının alanı
@@ -13387,7 +13437,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const lights = M.kind === 'lights', L = lights ? this._enNewLights() : this._enFound();
     const room = (x) => { const r = (this._hass.entities || {})[x], d = r && r.device_id && (this._hass.devices || {})[r.device_id]; return (r && r.area_id) || (d && d.area_id) || ''; };
     const G = {}; L.forEach((x) => { const g = room(x); (G[g] = G[g] || []).push(x); });
-    const nm = (x) => (lights ? this._enPanelNames()[x] || this._ename(x) : this._enMeasName(x));
+    // v0.32: adlar bir kez çıkarılır (sıralamanın her karşılaştırmasında bütün sekmeler geziliyordu: pencere 5-7 sn donuyordu)
+    const PN = lights ? this._enPanelNames() : null, NM = {};
+    const nm = (x) => (NM[x] !== undefined ? NM[x] : (NM[x] = lights ? PN[x] || this._ename(x) : this._enMeasName(x)));
     const lib = M.lib || {};
     const tg = (x) => (!lights ? '<span class="etg t-meas">' + esc(lpEnWs(lpEnW(S, x), this._lang)) + '</span>' : lib[x] === undefined ? '<span class="etg t-est">…</span>' : lib[x] ? '<span class="etg t-lrn">' + t('enTgL') + '</span>' : '<span class="etg t-est">' + t('enTgE') + '</span>');
     const n = L.filter((x) => sel[x] !== false).length;
@@ -13402,12 +13454,14 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const M = this._enAddM; if (!M || M.kind !== 'lights') return;
     M.lib = M.lib || {};
     const L = this._enNewLights().filter((x) => M.lib[x] === undefined), conn = this._hass.connection;
+    // her cevapta bütün panel yeniden çiziliyordu (ışık sayısı kadar çizim); cevaplar 250 ms'de bir toplu çizilir
+    const later = () => { if (M.rt) return; M.rt = setTimeout(() => { M.rt = null; if (this._enAddM === M) this._render(); }, 250); };
     const next = (i) => {
       if (this._enAddM !== M || i >= L.length) return;
       const d = this._lrnDev(L[i]);
-      if (!d.man || !(d.model || d.model_id)) { M.lib[L[i]] = null; this._render(); return next(i + 1); }
+      if (!d.man || !(d.model || d.model_id)) { M.lib[L[i]] = null; later(); return next(i + 1); }
       conn.sendMessagePromise({ type: 'lemur_home_dashboard/pool_lookup', manufacturer: d.man, model: d.model, model_id: d.model_id })
-        .then((r) => { M.lib[L[i]] = r && r.lut && !r.per_m ? r : null; }, () => { M.lib[L[i]] = null; }).then(() => { if (this._enAddM === M) this._render(); next(i + 1); });
+        .then((r) => { M.lib[L[i]] = r && r.lut && !r.per_m ? r : null; }, () => { M.lib[L[i]] = null; }).then(() => { later(); next(i + 1); });
     };
     next(0);
   }
@@ -13623,6 +13677,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return id;
   }
   _enColor(i) { const P = ['#5B8DEF', '#FFC94A', '#4DD0E1', '#FF7AA2', '#3DDC84', '#B388FF', '#FF9142', '#90A4AE', '#7BD83A', '#E5484D']; return P[i % P.length]; }
+  _enBadNum(f) {
+    const raw = (v) => String(v === undefined || v === null ? '' : v).trim().replace(',', '.'), num = (v) => { const s = raw(v); return s === '' ? null : /^-?\d*\.?\d+(e[+-]?\d+)?$/i.test(s) ? parseFloat(s) : NaN; };
+    const keys = { light: ['idle', 'min', 'max'], onoff: ['off', 'on'], states: ['other'], fixed: ['w'], year: ['year'], cycle: ['k100', 'week'] }[f.kind] || [];
+    const lim = { year: 100000, k100: 10000, week: 100 };
+    const vals = keys.map((k) => [k, num(f[k]), lim[k] || 50000]).concat(f.kind === 'states' ? Object.keys(f.st || {}).map((s) => ['st', num(f.st[s]), 50000]) : []);
+    for (let i = 0; i < vals.length; i++) { const v = vals[i][1]; if (v === null) continue; if (v !== v) return this._t('enENaN'); if (!(v >= 0)) return this._t('enENeg'); if (v > vals[i][2]) return this._t('enEBig', { n: this._enNum(vals[i][2]) }); }
+    const g = (k) => { const v = num(f[k]); return v === null ? null : v; };
+    if (f.kind === 'onoff' && g('on') !== null && g('off') !== null && g('on') < g('off')) return this._t('enEOnOff');
+    if (f.kind === 'light' && !f.lut && g('max') !== null && ((g('min') !== null && g('max') < g('min')) || (g('idle') !== null && g('max') < g('idle')))) return this._t('enEMaxMin');
+    return '';
+  }
   async _enSave() {
     const D = this._enE; if (!D) return;
     const f = D.f, e = this._enRec(f);
@@ -13631,6 +13696,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (e.kind === 'meas' && !e.sensor) { this._enErr = this._t('enMNeed'); return this._render(); }
     if (e.kind === 'meas' && Object.keys(this._enEsts()).some((k) => k !== D.id && this._enEsts()[k].sensor === e.sensor)) { this._enErr = this._t('enMUsed'); return this._render(); }
     if ((e.kind === 'light' || e.kind === 'onoff' || e.kind === 'states') && !/^[a-z0-9_]+\.[a-z0-9_]+$/.test(e.entity)) { this._enErr = this._t('enENeedEnt'); return this._render(); }
+    // v0.32: sayılar sessizce düzeltilmez (eksi değer 0, çok büyük değer 50000 oluyordu); neyin yanlış olduğu yazılır
+    const bad = this._enBadNum(f); if (bad) { this._enErr = bad; return this._render(); }
+    if (Object.keys(this._enEsts()).some((k) => k !== D.id && String(this._enEsts()[k].name || '').toLocaleLowerCase('tr') === e.name.toLocaleLowerCase('tr'))) { this._enErr = this._t('enEDup'); return this._render(); }
     let C = this._enCats();
     if (f.cat === '__new') {
       const nm = String(f.newcat || '').trim(); if (!nm) { this._enErr = this._t('enCNeed'); return this._render(); }
@@ -14337,7 +14405,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'lrcont' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('continue').then(() => { L0.step = 'run'; this._render(); }); }
       if (act === 'lragain' && this._lrn) { const L0 = this._lrn; return this._lrnCtl('clear').then(() => { L0.step = 'prep'; L0.tested = 0; L0.testMsg = ''; this._render(); }); }
       if (act === 'lrsave' && this._lrn) return this._lrnSave();
-      if (act === 'eneclose') { this._enE = null; this._enErr = ''; return this._render(); }
+      if (act === 'eneclose') return this._enEClose(!(a.classList && a.classList.contains('endscrim')));
       if (act === 'enaddl' || act === 'enaddm') { this._enE = null; this._enAddM = { kind: act === 'enaddl' ? 'lights' : 'meas', sel: {} }; this._render(); return this._enAddLib(); }
       if (act === 'enaddx') { this._enAddM = null; return this._render(); }
       if (act === 'enaddsall' || act === 'enaddsnone') { if (this._enAddM) this._enAddM.sel = act === 'enaddsall' ? {} : (this._enAddM.kind === 'lights' ? this._enNewLights() : this._enFound()).reduce((o, x) => { o[x] = false; return o; }, {}); return this._render(); }
@@ -14595,7 +14663,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'phresall') {
         if (this._ask !== 'phresall') { this._ask = 'phresall'; return this._render(); }
         this._ask = null;
-        return this._phEdit((p) => { p.secs = {}; p.order = {}; p.tabs = { order: [], hide: {}, names: {}, icons: {} }; p.style = {}; delete p.lights; });
+        return this._phEdit((p) => { p.secs = {}; p.order = {}; p.tabs = { order: [], hide: {}, names: {}, icons: {} }; p.style = {}; delete p.lights; delete p.flat; });   // v0.32: çerçevesiz bölümler de tabletten farktır
       }
       if (act === 'phrestab' && tabId) return this._phEdit((p) => { delete p.tabs.hide[tabId]; delete p.tabs.names[tabId]; delete p.tabs.icons[tabId]; });
       if (g('[data-phlk]')) { this._phLookOpen = !(g('details.phlook') && g('details.phlook').open); if (hadAsk && !this._ask) setTimeout(() => this._render(), 0); return; }   // açık/kapalı yeniden çizimde korunur; soru açıksa kapanır
@@ -14825,6 +14893,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');
       if (sf === 'energy.meter.power' && el.value && !(lpEnMeter() && lpEnMeter().energy)) return this._enSetMany({ meter: this._enMeterAuto(el.value) });
+      if (sf && sf.indexOf('energy.') === 0 && el.type === 'number' && parseFloat(String(el.value).replace(',', '.')) < 0) { this._toast(this._t('enENeg'), false); return this._render(); }
+      if (sf === 'energy.low' || sf === 'energy.high') { const o = sf === 'energy.low' ? lpEnNumOf(lpEnCfg().high) : lpEnNumOf(lpEnCfg().low), v2 = parseFloat(String(el.value).replace(',', '.')); if (o > 0 && v2 > 0 && (sf === 'energy.low' ? v2 > o : v2 < o)) this._toast(this._t('enTierOrder'), false); }
       if (sf) { const v = el.type === 'number' ? (el.hasAttribute('data-dec') ? (parseFloat(String(el.value).replace(',', '.')) || null) : (parseInt(el.value, 10) || null)) : el.value.trim(); const en = sf.indexOf('energy.') === 0, sel = el.tagName === 'SELECT'; this._setting(sf, v, !en || !sel); if (en && !sel) this._enLater(); return; }   // enerji sayfasında hesaplar yenilensin (yazı alanında biraz sonra: basılan düğme kaybolmasın)   // enerji sayfasında hesaplar yenilensin
       // yazı ve sayı alanı: yalnız taslağa yazılır, hesap yerinde yenilenir (tam çizim, alandan çıkarken basılan düğmenin tıklamasını yutuyordu)
       if (el.hasAttribute && el.hasAttribute('data-enpick') && this._enE) { this._enErr = ''; if (el.value) this._enAuto(el.value); return this._render(); }

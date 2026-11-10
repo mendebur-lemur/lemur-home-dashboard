@@ -1540,6 +1540,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (a === 'more-info') { if (id) lpFire(this, 'hass-more-info', { entityId: id }); return; }
       if (a === 'toggle') {
         if (!id) return;
+        // v0.32: ulaşılamayan cihaza komut gitmez (kapalı ışık gibi görünüp dokununca boşa komut gidiyordu); yedeği olan lamba hariç
+        if (h.states[id] && h.states[id].state === 'unavailable' && !lpTwinOf(id)) return;
         this._optTap(id);
         // yedek kontrolü olan lamba: entegrasyon önce hızlı yoldan dener, cevap gelmezse yedekten gönderir (twins.py)
         if (lpTwinOf(id)) h.callService('lemur_home_dashboard', 'control', { entity_id: id, action: 'toggle' });
@@ -1928,6 +1930,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     };
     S.unsub = lpEnSub(S.draw);
     S.draw();
+    // v0.32 telefonda: tutamaç vardı ama aşağı çekince kapanmıyordu. İçerik en üstteyken aşağı çekince kapanır (grafikler hariç)
+    if (ph) {
+      let sy = null;
+      pop.addEventListener('touchstart', (e) => { const pd = pop.firstChild, t1 = e.target && e.target.closest ? e.target.closest('svg, [data-enday]') : null; sy = pd && !t1 && pd.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+      pop.addEventListener('touchmove', (e) => { if (sy === null || !pop.firstChild) return; const dy = e.touches[0].clientY - sy; if (dy > 0) { pop.firstChild.style.transition = 'none'; pop.firstChild.style.transform = 'translateY(' + dy + 'px)'; } }, { passive: true });
+      pop.addEventListener('touchend', (e) => { if (sy === null) return; const dy = e.changedTouches[0].clientY - sy; sy = null; if (pop.firstChild) { pop.firstChild.style.transition = ''; pop.firstChild.style.transform = ''; } if (dy > 90) this._enClose(); }, { passive: true });
+    }
     // tablette 2 dakika dokunulmazsa pencere kapanır, ekran canlı görünüme döner
     if (!ph) { const idle = () => { clearTimeout(S.idleT); S.idleT = setTimeout(() => { if (this._enP === S) this._enClose(); }, 120000); }; idle(); ['pointerdown', 'touchstart', 'wheel'].forEach((ev) => pop.addEventListener(ev, idle, { passive: true })); }
     pop.addEventListener('click', (e) => {

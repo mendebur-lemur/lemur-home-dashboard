@@ -80,7 +80,8 @@ function lpEnBills() {
 function lpEnLastBill() { const L = lpEnBills(); return L.length ? L[L.length - 1] : null; }
 // fiyat düzeni: seçilmediyse fatura varsa faturadan, yoksa tek fiyat
 function lpEnMode() {
-  const m = lpEnCfg().price_mode;
+  // v0.32: tarife hiç seçilmediyse sihirbaz Kademeli'yi seçili gösterir; hesap da öyle saysın (özet "Tek fiyat" yazıyordu)
+  const m = lpEnCfg().price_mode || (lpEnLastBill() ? 'bill' : 'tier');
   if (lpEnCfg().sktt_on && lpEnNumOf(lpEnCfg().sktt_price)) return 'sktt';   // son kaynak tarifesinde: kademe yok, her kWh bu fiyattan
   if (m === 'bill' && lpEnLastBill()) return 'bill';
   if (m === 'tier' && lpEnNumOf(lpEnCfg().low) && lpEnNumOf(lpEnCfg().high)) return 'tier';
