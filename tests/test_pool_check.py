@@ -139,3 +139,14 @@ def test_filled_low_cells_are_not_zeros():
     assert common.check(_sub(lut=lut, samples={"settle_s": 14.6, "floor": 6}))[0] == []      # filled from the row: fine
     lut["ct"]["w"] = [[0.0, 0.17, 0.35, 0.88, 1.4, 2.9, 4.8, 7.5]] * 2
     assert any("0 W" in e for e in common.check(_sub(lut=lut, samples={"settle_s": 5, "floor": 0}))[0])
+
+
+def test_owner_newer_measurement_replaces_owners_older(tmp_path):
+    _lib(tmp_path)
+    _, c = common.check(_q())
+    RV.add_sub(c, 9)                       # an old owner entry (no 'by')
+    RV.add_sub(c, 12, "someone")           # another account's
+    RV.add_sub(c, 17, "own")
+    assert CK.owner_replace(c["key"], 17, "own")
+    subs = json.loads((tmp_path / "models" / (RV._fname(c["key"]) + ".json")).read_text())["subs"]
+    assert [x["issue"] for x in subs] == [12, 17]

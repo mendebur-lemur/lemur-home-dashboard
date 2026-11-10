@@ -3,7 +3,7 @@
 v0.32: the pool is open to everyone; the measurement itself is checked, not who sent it or with which plug.
   - format and quality (common.check): zeros, stuck rows, power falling with brightness, a slow plug, too many cells
     the plug could not read, a plug model that keeps failing (library/plugs.json)
-  - the owner's submissions join the pool at once
+  - the owner's submissions join the pool at once and replace the owner's earlier measurement of that model
   - anyone else's: joins when the model is already in the pool and the highest power agrees (AGREE), or when another
     account sent the same model and the two agree; otherwise it waits for the owner ('bekliyor')
 Each plug model's passed / failed count is kept in library/plugs.json; one that fails most of the time is blocked.
@@ -85,6 +85,23 @@ def decide(clean: dict, n, owner: bool, by: str, blocked: list) -> tuple[list, s
     return [], "bu modelin ilk ölçümü; ikinci bir hesaptan tutarlı ölçüm gelince ya da proje sahibi onaylayınca havuza girer"
 
 
+def owner_replace(key: str, n, by: str) -> bool:
+    """The owner's newer measurement of a model replaces the owner's earlier ones (older entries carry no 'by': all were the
+    owner's); other accounts' submissions stay. True when something was dropped."""
+    path = R.LIB / "models" / (R._fname(key) + ".json")
+    try:
+        m = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    subs = m.get("subs") or []
+    keep = [x for x in subs if x.get("issue") == n or (x.get("by") and x.get("by") != by)]
+    if len(keep) == len(subs) or not keep:
+        return False
+    m["subs"] = keep
+    path.write_text(json.dumps(m, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    return True
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--event", required=True)
@@ -111,6 +128,9 @@ def main() -> None:
         msg = "Bu gönderim kontrolden geçmedi:\n\n" + "\n".join(f"- {e}" for e in errs) + "\n\nPanelde yeniden ölçüp tekrar gönderebilirsin.\n\nThis submission did not pass the check; you can measure again and resend."
         posts.append((n, msg, ["olcum", "gecersiz"], "not_planned"))
     elif already:
+        if owner and owner_replace(clean["key"], n, by):
+            R.rebuild()
+            changed = True
         posts.append((n, f"{OK_TR}. / Already in the pool.", ["olcum", "eklendi"], "completed"))
     else:
         add, note = decide(clean, n, owner, by, plugs["block"])
@@ -118,6 +138,8 @@ def main() -> None:
         if add:
             for num, c, b in add:
                 R.add_sub(c, num, b)
+            if owner:
+                owner_replace(clean["key"], n, by)
             R.rebuild()
             changed = True
             for num, _c, _b in add:
