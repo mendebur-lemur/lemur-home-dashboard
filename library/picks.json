@@ -124,7 +124,7 @@
     "LAN",
     "Bluetooth"
    ],
-   "energy": "wait",
+   "energy": "lut",
    "buy": {
     "hb": "https://lemur.run/goveeoutdoorwallhb",
     "amz": "https://lemur.run/goveeoutdoorwallamz"
@@ -846,7 +846,7 @@
     "Bluetooth",
     "Matter"
    ],
-   "energy": "wait",
+   "energy": "lut",
    "buy": {
     "hb": "https://lemur.run/goveeultratavanhb"
    },
