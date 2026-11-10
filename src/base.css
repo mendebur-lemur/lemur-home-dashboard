@@ -948,3 +948,12 @@
 .exins { display: flex; flex-direction: column; margin-top: 10px; }
 .exrf { display: flex; align-items: center; font-size: 12px; color: var(--lp-text2); margin-top: 6px; }
 .exrf span { flex: 1 1 auto; }
+/* ---- v0.32 ---- */
+/* ulaşılamayan cihaz: kapalı ışıktan ayırt edilsin, dokunulamaz görünsün */
+.tile.na { cursor: default; background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 6px, transparent 6px 12px); }
+.tile.na .nm { opacity: 0.55; }
+.tile.na[data-na]::after { content: attr(data-na); position: absolute; left: 4px; right: 4px; bottom: 6%; font-size: 13px; line-height: 15px; color: var(--lp-na); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* senaryo çalışınca kısa bir parlama */
+.scene.ran { animation: lpran 0.9s ease-out; }
+@keyframes lpran { 0% { box-shadow: 0 0 0 0 var(--sc, rgba(255, 255, 255, 0.55)), inset 0 0 0 2px var(--sc, rgba(255, 255, 255, 0.7)); } 100% { box-shadow: 0 0 0 14px transparent, inset 0 0 0 2px transparent; } }
+@media (prefers-reduced-motion: reduce) { .scene.ran { animation: none; outline: 2px solid var(--sc, rgba(255, 255, 255, 0.7)); } }

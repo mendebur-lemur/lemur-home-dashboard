@@ -1098,6 +1098,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._vals.forEach((b) => { const id = b.getAttribute('data-val'), it = b._item || {}; lpPress(b, () => this._confirm(it, () => this._act(it.tap, id, 'more-info')), () => this._act(it.hold, id, 'more-info')); });
     const sceneItem = (b) => { const v = b.getAttribute('data-scene'), k = v.lastIndexOf(':'), p = [v.slice(0, k), v.slice(k + 1)]; let s = (tab.sections || []).filter((x) => x.id === p[0])[0]; (tab.sections || []).forEach((x) => (x._folds || []).forEach((F) => { if (F._fk === p[0]) s = F; })); const it = s && s.entities && s.entities[+p[1]]; return typeof it === 'string' ? { entity: it } : it; };
     R.querySelectorAll('[data-scene]').forEach((b) => lpPress(b, () => this._confirm(sceneItem(b), () => {
+      b.classList.remove('ran'); void b.offsetWidth; b.classList.add('ran'); setTimeout(() => b.classList.remove('ran'), 900);   // v0.32: çalıştığı görünsün
       const it = sceneItem(b);
       if (it && it.tap) { this._act(it.tap, it.entity); return; }   // öğede dokunma eylemi verildiyse o
       if (it && it.entity && !it.action) {   // düğme olarak eklenmiş betik, sahne, otomasyon, buton
@@ -1999,6 +2000,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const mono = this._colorize(el, it, st, on);
       this._icSwap(el, st, it, 0, undefined, mono);
       el.querySelector('.nm').textContent = this._tx(it.name) || a.friendly_name || id;
+      if (st.state === 'unavailable') el.setAttribute('data-na', t(lang, 'unavailable')); else el.removeAttribute('data-na');
       const s2 = el.querySelector('.sl'); if (s2) s2.textContent = this._sec2(it, st) || '';
     });
     (this._rows || []).forEach((el) => {
