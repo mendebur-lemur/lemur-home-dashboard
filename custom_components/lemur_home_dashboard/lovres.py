@@ -53,6 +53,18 @@ def _collection(hass: HomeAssistant):
     return res
 
 
+def _local_served(hass: HomeAssistant):
+    """True/False: is /local served in this run (read from Home Assistant's routes). None: could not be read.
+
+    The frontend registers /local only if the www folder exists while it is set up. A folder created later (by us or
+    by Lemur Light Effect Card in the same run) is not served until the next restart, so the folder alone says nothing.
+    """
+    try:
+        return any(getattr(r, "canonical", None) == "/local" for r in hass.http.app.router.resources())
+    except Exception:  # noqa: BLE001  (no http, or the router changed)
+        return None
+
+
 async def _loaded(res) -> None:
     if getattr(res, "loaded", True) is False and callable(getattr(res, "async_load", None)):
         await res.async_load()
@@ -102,7 +114,8 @@ async def async_register(hass: HomeAssistant) -> str:
             return "skipped"
         await _loaded(res)
         mine = [it for it in (res.async_items() or []) if _is_ours(it)]
-        if copied == "new" and not mine:
+        served = _local_served(hass)
+        if not mine and (served is False or (served is None and copied == "new")):
             # Home Assistant serves /local only when the www folder existed at start: until the next restart the
             # address would answer "not found" on every page. The row is added at the next start.
             return "next-start"

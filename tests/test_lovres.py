@@ -2,6 +2,8 @@
 import os
 from unittest.mock import patch
 
+import pytest
+
 from homeassistant.setup import async_setup_component
 
 from custom_components.lemur_home_dashboard import lovres as LR
@@ -23,6 +25,16 @@ async def _lovelace(hass, tmp_path, items=None, www=True):
     for url in items or []:
         await res.async_create_item({"res_type": "module", "url": url})
     return res
+
+
+@pytest.fixture(autouse=True)
+def local_served(request):
+    """Most tests: /local is served in this run (the www folder existed at start). Tests marked real_local read the routes."""
+    if request.node.get_closest_marker("real_local"):
+        yield None
+        return
+    with patch.object(LR, "_local_served", return_value=True) as m:
+        yield m
 
 
 def _urls(res):
@@ -70,7 +82,8 @@ async def test_wrong_type_is_fixed(hass, tmp_path):
     assert [(it["url"], it["type"]) for it in res.async_items()] == [(URL, "module")]
 
 
-async def test_www_missing_waits_for_next_start(hass, tmp_path):
+async def test_www_missing_waits_for_next_start(hass, tmp_path, local_served):
+    local_served.return_value = None                             # routes unreadable: the folder rule decides
     res = await _lovelace(hass, tmp_path, [OTHER], www=False)
     assert await REGISTER(hass) == "next-start"         # /local is not served until Home Assistant restarts
     assert _urls(res) == [OTHER]
@@ -128,3 +141,68 @@ async def test_removed_with_the_integration_only(hass, tmp_path, setup_lhd):
     assert _urls(res) == [OTHER, LEC]
     assert not copy.exists() and not copy.parent.exists()
     assert (tmp_path / "www" / "keep.txt").exists()
+
+
+# ---- /local served or not: read from Home Assistant's routes (v0.34.1, with Lemur Light Effect Card v1.8.3) ----
+async def test_www_created_by_someone_else_in_the_same_run(hass, tmp_path, local_served):
+    """www did not exist at start; another integration created it before us. /local is not served: no row."""
+    local_served.return_value = False
+    res = await _lovelace(hass, tmp_path, [OTHER], www=True)      # the folder is there, but only since this run
+    assert await REGISTER(hass) == "next-start"
+    assert _urls(res) == [OTHER]
+    assert (tmp_path / "www" / "lemur_home_dashboard" / LOADER_FILE).exists()
+    local_served.return_value = True                             # next start: Home Assistant serves /local
+    assert await REGISTER(hass) == "created"
+    assert _urls(res) == [OTHER, URL]
+
+
+async def test_not_served_keeps_an_existing_row(hass, tmp_path, local_served):
+    """Our row from an earlier run is left as it is (only adding is held back)."""
+    local_served.return_value = False
+    res = await _lovelace(hass, tmp_path, [URL, LEC])
+    assert await REGISTER(hass) == "same"
+    assert _urls(res) == [URL, LEC]
+
+
+async def test_routes_unreadable_falls_back_to_the_folder_rule(hass, tmp_path, local_served):
+    local_served.return_value = None
+    res = await _lovelace(hass, tmp_path, [OTHER], www=True)
+    assert await REGISTER(hass) == "created"
+    assert _urls(res) == [OTHER, URL]
+
+
+@pytest.mark.real_local
+def test_local_served_never_raises():
+    class H:
+        http = None
+    assert LR._local_served(H()) is None
+    assert LR._local_served(object()) is None
+
+
+async def _frontend(hass, tmp_path, www):
+    hass.config.config_dir = str(tmp_path)
+    if www:
+        os.makedirs(tmp_path / "www")
+    assert await async_setup_component(hass, "frontend", {})
+    await hass.async_block_till_done()
+
+
+@pytest.mark.real_local
+async def test_real_frontend_www_at_start(hass, tmp_path):
+    await _frontend(hass, tmp_path, www=True)
+    assert LR._local_served(hass) is True
+    res = hass.data["lovelace"].resources
+    assert await REGISTER(hass) == "created"
+    assert _urls(res) == [URL]
+
+
+@pytest.mark.real_local
+async def test_real_frontend_www_created_later(hass, tmp_path):
+    await _frontend(hass, tmp_path, www=False)
+    assert LR._local_served(hass) is False
+    os.makedirs(tmp_path / "www" / "lemur_light_effects")       # e.g. Lemur Light Effect Card created it in this run
+    assert LR._local_served(hass) is False                       # still not served until Home Assistant restarts
+    res = hass.data["lovelace"].resources
+    assert await REGISTER(hass) == "next-start"
+    assert _urls(res) == []
+    assert (tmp_path / "www" / "lemur_home_dashboard" / LOADER_FILE).exists()
