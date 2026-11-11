@@ -11,10 +11,13 @@ const LP_POP_ACCENT = '#F0A93B';
 const LP_POP_CSS = `
 :host { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 9000; display: block; font-family: var(--paper-font-body1_-_font-family, Roboto, Noto, sans-serif);
   -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
-.bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.18s; }
+.bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.12s; }
 .pan { position: absolute; left: 50%; top: 50%; width: 560px; max-width: calc(100vw - 16px); max-height: calc(100vh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch;
   box-sizing: border-box; padding: 18px; border-radius: 30px; background: #131416; color: #ECEDEF; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-  transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.2s ease-out, opacity 0.18s; }
+  transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.12s ease-out, opacity 0.12s; }
+/* basılı durum: düğmeler dokunulduğu anda tepki verir (v0.33) */
+.x, .pw, .sw div, .fx div, [data-k], [data-tab], [data-seg], [data-cv], [data-ta] { transition: transform 0.06s ease-out; }
+.x:active, .pw:active, .sw div:active, .fx div:active, [data-k]:active, [data-tab]:active, [data-seg]:active, [data-cv]:active, [data-ta]:active { -webkit-transform: scale(0.94); transform: scale(0.94); }
 :host(.in) .bg { opacity: 1; }
 :host(.in) .pan { transform: translate(-50%, -50%); opacity: 1; }
 .box { background: #1E2024; border-radius: 18px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55); }
@@ -75,7 +78,7 @@ const LP_POP_CSS = `
 .grab { display: none; }
 /* telefon seçeneği: pencere ekranın altından açılır, aşağı çekince kapanır */
 :host(.sheet) .pan { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-width: 100%; max-height: 90vh; border-radius: 28px 28px 0 0;
-  padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); opacity: 1; transition: transform 0.26s ease-out; }
+  padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); opacity: 1; transition: transform 0.2s ease-out; }
 :host(.sheet.in) .pan { transform: translateY(0); }
 :host(.sheet) .grab { display: block; width: 44px; height: 5px; border-radius: 9px; background: #3A3F4A; margin: 2px auto 12px; }
 /* v0.17 panonun genel stili (base.css ile aynı ölçüler): pencere bölüm kutusu gibi cam, içindekiler karo gibi;
@@ -199,12 +202,14 @@ class LemurLightPopup {
     else try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
     (this._mount || document.body).appendChild(this._host);
     this._render();
+    if (!this._mount && typeof lpPauseUnder === 'function') lpPauseUnder(true);
     requestAnimationFrame(() => requestAnimationFrame(() => this._host.classList.add('in')));
   }
   close(fromNav) {
     if (this._closed) return;
     this._closed = true;
     if (LP_POP.cur === this) LP_POP.cur = null;
+    if (!this._mount && typeof lpPauseUnder === 'function') lpPauseUnder(false);
     window.removeEventListener('keydown', this._key, true);
     window.removeEventListener('popstate', this._pop);
     if (this._pushed && !fromNav) { try { history.back(); } catch (e) {} }
@@ -304,6 +309,7 @@ class LemurLightPopup {
     }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-seg]'), (el) => el.addEventListener('click', () => { this._seg = +el.getAttribute('data-seg'); this._render(); }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => el.addEventListener('click', () => {
+      this._kHold = { k: +el.getAttribute('data-k'), until: Date.now() + 3000 }; this._seen = null; this._sync();   // seçim hemen görünür (v0.33)
       this._call('turn_on', this._target(), { color_temp_kelvin: +el.getAttribute('data-k') });
     }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-rgb]'), (el) => el.addEventListener('click', () => {
@@ -359,7 +365,20 @@ class LemurLightPopup {
     if (d !== 'light') { this._h.callService('homeassistant', svc === 'turn_off' ? 'turn_off' : 'turn_on', { entity_id: id }); return; }
     this._h.callService('light', svc, Object.assign({ entity_id: id }, data));
   }
-  _toggle(id) { this._h.callService(id.split('.')[0] === 'light' ? 'light' : 'homeassistant', 'toggle', { entity_id: id }); }
+  _toggle(id) {
+    // beklenen durum hemen gösterilir, Home Assistant'ın cevabı gelince (ya da 5 sn sonra) gerçeğine döner (v0.33; düğme cevap gelene kadar hiç kıpırdamıyordu)
+    const st = this._h.states[id];
+    if (st && (st.state === 'on' || st.state === 'off')) { (this._opt || (this._opt = {}))[id] = { on: st.state !== 'on', from: st.state, until: Date.now() + 5000 }; this._seen = null; this._sync(); }
+    const pr = this._h.callService(id.split('.')[0] === 'light' ? 'light' : 'homeassistant', 'toggle', { entity_id: id });
+    if (pr && pr.catch) pr.catch(() => { if (this._opt) delete this._opt[id]; this._seen = null; if (!this._closed) this._sync(); });
+  }
+  // çizimde kullanılacak durum: cevap beklenirken beklenen aç / kapat
+  _eff(id) {
+    const st = this._h.states[id], o = this._opt && this._opt[id];
+    if (!o) return st;
+    if (!st || st.state !== o.from || Date.now() > o.until) { delete this._opt[id]; return st; }
+    return Object.assign({}, st, { state: o.on ? 'on' : 'off' });
+  }
   _openLec() {
     const room = this._lecRoom();
     this.close();
@@ -377,7 +396,7 @@ class LemurLightPopup {
     if (onlyIfChanged && L && L.length === seen.length && seen.every((x, i) => x === L[i])) return;
     this._seen = seen;
     Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
-      const st = S[sl.getAttribute('data-sl')];
+      const st = this._eff(sl.getAttribute('data-sl'));
       const on = !!st && st.state === 'on', a = (st && st.attributes) || {};
       let pct = on ? (typeof a.brightness === 'number' ? Math.max(1, Math.round(a.brightness / 2.55)) : 100) : 0;
       // bırakılan değer, ışığın yeni durumu gelene kadar tutulur: HA yavaşken dolgu ara değerlere geri zıplıyordu (v0.33)
@@ -388,9 +407,9 @@ class LemurLightPopup {
       sl.querySelector('.fill').style.width = pct + '%';
       sl.querySelector('.tx span').textContent = !st || st.state === 'unavailable' ? this._t('unav') : (on ? (this._caps(sl.getAttribute('data-sl')).dim ? pct + '%' : this._t('on')) : this._t('off'));
     });
-    const pw = R.querySelector('[data-pw]'), st = S[this._id];
+    const pw = R.querySelector('[data-pw]'), st = this._eff(this._id);
     if (pw) pw.classList.toggle('on', !!st && st.state === 'on');
-    const pws = R.querySelector('[data-pws]'), ts = S[this._target()];
+    const pws = R.querySelector('[data-pws]'), ts = this._eff(this._target());
     if (pws) pws.classList.toggle('on', !!ts && ts.state === 'on');
     Array.prototype.forEach.call(R.querySelectorAll('ha-state-icon'), (el) => { el.hass = this._h; el.stateObj = st; });
     // seçili renk: çemberdeki nokta, kelvin düğmesi, efekt
@@ -403,8 +422,11 @@ class LemurLightPopup {
       const a = ta.hs_color[0] * Math.PI / 180, r = ta.hs_color[1] / 100;
       dot.style.left = (50 + Math.cos(a) * r * 50) + '%'; dot.style.top = (50 + Math.sin(a) * r * 50) + '%';
     }
+    const kReal = !!tgt && tgt.state === 'on' && ta.color_mode === 'color_temp' ? (ta.color_temp_kelvin || 0) : 0;
+    let kH = this._kHold;   // dokunulan beyaz tonu, ışık onu bildirene kadar seçili kalır
+    if (kH && (Date.now() > kH.until || Math.abs(kReal - kH.k) < 120)) kH = this._kHold = null;
     Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => {
-      el.classList.toggle('on', !!tgt && tgt.state === 'on' && ta.color_mode === 'color_temp' && Math.abs((ta.color_temp_kelvin || 0) - +el.getAttribute('data-k')) < 120);
+      el.classList.toggle('on', kH ? +el.getAttribute('data-k') === kH.k : kReal > 0 && Math.abs(kReal - +el.getAttribute('data-k')) < 120);
     });
     const ef = st && st.state === 'on' ? String(st.attributes.effect || '') : '';
     Array.prototype.forEach.call(R.querySelectorAll('[data-fx]'), (el) => el.classList.toggle('on', !!ef && el.getAttribute('data-fx') === ef));

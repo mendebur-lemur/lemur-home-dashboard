@@ -985,3 +985,12 @@
 .encat.bgc > .esp { height: min(55%, calc(100% - 64px)); }
 /* açık renkli zemin: zeminin üstündeki yazılar koyu */
 .bglight .phd b, .bglight .phd .clock, .bglight .nav > .clock, .bglight .bbar > .clock, .bglight .pp:not(.sel) { color: #15181d; }
+/* ---- v0.33: hissiyat ---- */
+/* basış hızlı (0,06 sn), bırakış eski yumuşaklığında */
+.tile.down, .scene.down, .navb.down, .bar.down, .row.down, .pp.down, .pbi.down, .petc.down { transition-duration: 0.06s; }
+/* basılı durumu olmayan düğmeler */
+.encat, .enrk, .clr button, .enx, .exb { transition: transform 0.06s ease-out; }
+.encat:active, .enrk:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
+.clr button:active, .exb:active { -webkit-transform: scale(0.92); transform: scale(0.92); }
+/* pencere açıkken alttaki sonsuz animasyonlar durur */
+.wrap.paused, .wrap.paused * { -webkit-animation-play-state: paused !important; animation-play-state: paused !important; }

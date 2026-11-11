@@ -6,9 +6,32 @@
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 // yazı yalnız değiştiyse yazılır: aynı yazıyı yeniden yazmak da yerleşimi baştan hesaplatır (parlaklık güncellemesi başına bir yerleşim, v0.33)
 const lpTxt = (el, s) => { if (el && el.textContent !== s) el.textContent = s; };
-const LP_HOLD_MS = 500;
+const LP_HOLD_MS = 400;
 
 // Dokun / basılı tut. Parmak kayarsa (kaydırma) hiçbir şey yapmaz.
+// açık panolar (pencere açılınca animasyonları durdurmak için)
+const LP_CARDS = window.__LEMUR_HD_CARDS || (window.__LEMUR_HD_CARDS = []);
+// Pencere açıkken alttaki panoların sonsuz animasyonları durur (iklim kartlarının parlaması, efekt çerçeveleri): arkada
+// bulanık görünen şey için her karede boyama yapılmasın, pencerenin içi akıcı kalsın. Kapanınca devam eder (v0.33).
+function lpPauseUnder(on) {
+  LP_CARDS.forEach((c) => {
+    const R = c.shadowRoot, w = R && R.querySelector('.wrap'); if (!w) return;
+    w.classList.toggle('paused', !!on);
+    Array.prototype.forEach.call(w.querySelectorAll('*'), (e) => {   // gömülü kartlar (kendi gölge kökleri)
+      const sr = e.shadowRoot; if (!sr) return;
+      const old = sr.querySelector('style[data-lhd-pause]');
+      if (on && !old) { const st = document.createElement('style'); st.setAttribute('data-lhd-pause', ''); st.textContent = '*, *::before, *::after { animation-play-state: paused !important; }'; sr.appendChild(st); }
+      if (!on && old) sr.removeChild(old);
+    });
+  });
+}
+// dokunulan düğme hemen seçili görünür (kardeşlerinden seçili işareti kalkar); asıl geçiş bir kare sonra yapılır
+function lpSelNow(R, b) {
+  const p = b.parentNode; if (!p) return;
+  Array.prototype.forEach.call(p.children, (x) => { if (x !== b && x.classList.contains('sel') && !x.hasAttribute('data-navfx')) x.classList.remove('sel'); });
+  b.classList.add('sel');
+}
+function lpNextFrame(f) { if (window.requestAnimationFrame) requestAnimationFrame(() => setTimeout(f, 0)); else setTimeout(f, 16); }
 function lpPress(el, tap, hold) {
   let timer = null, held = false, moved = false, sx = 0, sy = 0, touched = false;
   const start = (x, y) => {
@@ -568,6 +591,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     for (let i = 0; i < m.length; i++) if (h.states[m[i]]) { this._render(); return; }
   }
   connectedCallback() {
+    if (LP_CARDS.indexOf(this) < 0) LP_CARDS.push(this);
     // yeni sürüm uyarısı (src/store.js): yalnız gerçek pano sayar, yönetim panelindeki önizleme kartı saymaz
     if (!this._nw && !(this._config && this._config.demo)) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
@@ -593,6 +617,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._hass) this._render();
   }
   disconnectedCallback() {
+    const ci = LP_CARDS.indexOf(this); if (ci >= 0) LP_CARDS.splice(ci, 1);
     if (this._nw) { this._nw = 0; lhdNewerUse(false); }
     if (this._unsub) { this._unsub(); this._unsub = null; }
     if (this._lecUnsub) { this._lecUnsub(); this._lecUnsub = null; }
@@ -1041,12 +1066,15 @@ class LemurHomeDashboardCard extends HTMLElement {
     R.querySelectorAll('[data-nav]').forEach((b) => lpPress(b, () => {
       const id = b.getAttribute('data-nav');
       if (id === tab.id) return;
-      if (this._config.demo) { this._config = Object.assign({}, this._config, { tab: id }); this._sig = null; this._render(); return; }
-      const base = location.pathname.split('/').slice(0, 2).join('/');
-      // pano açıkken eklenen sekmenin HA'da henüz görünümü yok: sayfa baştan yüklenir, pano yeniden üretilir
-      if (window.__LHD_VIEWS && window.__LHD_VIEWS.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
-      history.pushState(null, '', base + '/' + id);
-      lpFire(window, 'location-changed', { replace: false });
+      lpSelNow(R, b);   // seçili işareti hemen; yeni sayfa çizilene kadar boş bakılmaz (v0.33)
+      lpNextFrame(() => {
+        if (this._config.demo) { this._config = Object.assign({}, this._config, { tab: id }); this._sig = null; this._render(); return; }
+        const base = location.pathname.split('/').slice(0, 2).join('/');
+        // pano açıkken eklenen sekmenin HA'da henüz görünümü yok: sayfa baştan yüklenir, pano yeniden üretilir
+        if (window.__LHD_VIEWS && window.__LHD_VIEWS.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
+        history.pushState(null, '', base + '/' + id);
+        lpFire(window, 'location-changed', { replace: false });
+      });
     }));
     const more = (id) => { if (!this._config.demo) lpFire(this, 'hass-more-info', { entityId: id }); };
     this._tiles.forEach((b) => {
@@ -1127,8 +1155,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     R.querySelectorAll('[data-navfx]').forEach((b) => lpPress(b, () => { if (this._config.demo) return; LEC.open(this._hass, tab.area); }));
     // telefon kategorileri: alttaki kategori, üstteki oda; ışıklarda sağa sola kaydırınca sonraki / önceki oda
     const goCat = (c, room) => { LP_PH.cat = c; LP_PH.room = room; this._sig = null; this._render(); try { window.scrollTo(0, 0); } catch (e) {} };
-    R.querySelectorAll('[data-cat]').forEach((b) => lpPress(b, () => goCat(b.getAttribute('data-cat'), LP_PH.room)));
-    R.querySelectorAll('[data-room]').forEach((b) => lpPress(b, () => goCat(LP_PH.cat || 'lights', b.getAttribute('data-room'))));
+    R.querySelectorAll('[data-cat]').forEach((b) => lpPress(b, () => { lpSelNow(R, b); lpNextFrame(() => goCat(b.getAttribute('data-cat'), LP_PH.room)); }));
+    R.querySelectorAll('[data-room]').forEach((b) => lpPress(b, () => { lpSelNow(R, b); lpNextFrame(() => goCat(LP_PH.cat || 'lights', b.getAttribute('data-room'))); }));
     this._ppScroll = true;   // seçili oda hapı çizim bitince ortaya kaydırılır (_post; çizimin ortasında yerleşim hesaplatıyordu)
     const cvw = this._cat, wrapEl = R.querySelector('.wrap');
     if (cvw && cvw.rooms.length && wrapEl) {
@@ -1958,6 +1986,7 @@ class LemurHomeDashboardCard extends HTMLElement {
   // Tablette ortada, telefonda alttan açılır. Listeden cihaza geçince Geri ile önceki pencereye dönülür.
   _enClose() {
     const P = this._enP; this._enP = null; if (!P) return;
+    lpPauseUnder(false);
     if (P.unsub) P.unsub(); clearTimeout(P.armT); clearTimeout(P.idleT);
     if (P.el && P.el.parentNode) P.el.parentNode.removeChild(P.el);
   }
@@ -1971,6 +2000,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     R.appendChild(pop);
     const S = { el: pop, P: V, stack: stack, arm: false };
     this._enP = S;
+    lpPauseUnder(true);
     const popDn = () => { S.down = Date.now(); };
     pop.addEventListener('touchstart', popDn, { passive: true }); pop.addEventListener('mousedown', popDn);
     S.draw = () => {

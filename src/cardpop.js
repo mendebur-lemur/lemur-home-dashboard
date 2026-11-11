@@ -48,7 +48,9 @@ const LP_CPOP_CSS = `
 .bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.18s; }
 .pan { position: absolute; left: 50%; top: 50%; width: 640px; max-width: calc(100vw - 16px); max-height: calc(100vh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch;
   box-sizing: border-box; padding: 18px; border-radius: 30px; background: #131416; color: #ECEDEF; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-  transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.2s ease-out, opacity 0.18s; }
+  transform: translate(-50%, -46%) scale(0.98); opacity: 0; transition: transform 0.12s ease-out, opacity 0.12s; }
+.x, .cfm > div { transition: transform 0.06s ease-out; }
+.x:active, .cfm > div:active { -webkit-transform: scale(0.94); transform: scale(0.94); }
 /* geniş pencere (kameranın canlı görüntüsü): ekrana sığan en büyük boy; yükseklik başlık ve kenar boşluklarıyla birlikte ekrana sığar (3:2'ye göre) */
 .pan.wide { width: calc(100vw - 32px); width: min(calc(100vw - 32px), calc((100vh - 140px) * 1.5)); max-width: none; max-height: calc(100vh - 16px); padding: 14px; }
 .pan.wide .hd { margin-bottom: 10px; }
