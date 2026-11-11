@@ -36,7 +36,7 @@ const LP_EN_LOOK = [
 const LP_EN_PAL = ['#5B8DEF', '#FF6FAE', '#F2B33D', '#4FD1C5', '#8E7CFF', '#6BC46B', '#FF8A4A', '#E5484D'];
 const LP_EN_TXT = {
   tr: { lvl0: 'Düşük tüketim', lvl1: 'Orta tüketim', lvl2: 'Yüksek tüketim', lvl3: 'Çok yüksek tüketim', today: 'kWh bugün', costToday: 'bugün', month: 'kWh/ay bu hızla',
-    none: 'Enerji verisi yok', noneT: 'Home Assistant\'ta Ayarlar → Panolar → Enerji → "Cihaz tüketimi"ne cihaz ya da grup ekle; kartlar oradan dolar.', loading: 'Yükleniyor…',
+    none: 'Enerji verisi yok', noneT: 'Yönetim panelinde Enerji → Cihazlar\'dan cihaz ekle; kartlar oradan dolar.', loading: 'Yükleniyor…',
     sbT: 'Hiçbir şey kullanılmıyorken evin çektiği güç', sbMin: 'Son 24 saatin en düşüğü', year: 'Yılda ~{k} kWh', yearC: 'Yılda ~{k} kWh · ~{c}',
     wd: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'], todayD: 'Bugün', noHist: 'Geçmiş kaydı yok', noDev: 'Güç sensörü olan cihaz yok', devs: '{n} cihaz', close: 'Kapat', total: 'Toplam',
     costMonth: 'bu ay', tierLo: 'Bu ay düşük kademe', tierHi: 'Bu ay yüksek kademede', yearL: 'Bu yıl · yıllık sınır', untracked: 'Ölçülmeyen', untrackedM: 'Ev sayacına göre', untrackedT: 'Son faturaya göre',
@@ -49,7 +49,7 @@ const LP_EN_TXT = {
     tLeft: '{n} {h} saattir açık · {w}', tSb: 'Gece bekleme tüketimi yüksek: ~{w}', tDay: 'Bugün {k} kWh, günlük hedef {d} kWh', tYear: 'Yıllık sınırın %{p}\'ine gelindi',
     tSun: 'Güneş fazlası {w}: çamaşır için iyi an', tHide: 'Basılı tut: bunu gösterme', h: 'sa', m: 'dk' },
   en: { lvl0: 'Low usage', lvl1: 'Medium usage', lvl2: 'High usage', lvl3: 'Very high usage', today: 'kWh today', costToday: 'today', month: 'kWh/mo at this rate',
-    none: 'No energy data', noneT: 'In Home Assistant go to Settings → Dashboards → Energy → "Individual devices" and add devices or groups; the cards fill from there.', loading: 'Loading…',
+    none: 'No energy data', noneT: 'Add devices in the admin panel under Energy → Devices; the cards fill from there.', loading: 'Loading…',
     sbT: 'What the home draws when nothing is in use', sbMin: 'Lowest of the last 24 hours', year: '~{k} kWh a year', yearC: '~{k} kWh a year · ~{c}',
     wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], todayD: 'Today', noHist: 'No history yet', noDev: 'No device with a power sensor', devs: '{n} devices', close: 'Close', total: 'Total',
     costMonth: 'this month', tierLo: 'This month, lower tier', tierHi: 'This month, upper tier', yearL: 'This year · yearly limit', untracked: 'Not measured', untrackedM: 'From the home meter', untrackedT: 'From the last bill',
@@ -684,7 +684,9 @@ function lpEnMini(arr, color, H, top) {   // 7 günlük küçük çubuklar
 // kartın gövdesi (data yoksa ipucu)
 function lpEnEmpty(M, lang, big) {
   if (!M) return '<div class="enmsg">' + esc(lpEnT(lang, 'loading')) + '</div>';
-  return '<div class="enmsg"><ha-icon icon="mdi:lightning-bolt-outline"></ha-icon><b>' + esc(lpEnT(lang, 'none')) + '</b>' + (big ? '<span>' + esc(lpEnT(lang, 'noneT')) + '</span>' : '') + '</div>';
+  // veri yokken mesaj yalnız ana kartta; öteki kartlar soluk bir simgeyle boş durur (7 kartta aynı yazı tekrarlanıyordu)
+  if (!big) return '<div class="enmsg quiet"><ha-icon icon="mdi:lightning-bolt-outline"></ha-icon></div>';
+  return '<div class="enmsg"><ha-icon icon="mdi:lightning-bolt-outline"></ha-icon><b>' + esc(lpEnT(lang, 'none')) + '</b><span>' + esc(lpEnT(lang, 'noneT')) + '</span></div>';
 }
 function lpEnCard(h, M, it, lang, phone) {
   const S = (h && h.states) || {}, k = it.energy;
@@ -693,7 +695,7 @@ function lpEnCard(h, M, it, lang, phone) {
   if (M && k === 'flow') return lpEnFlowCard(h, M, it, lang);
   if (M && k === 'battery') return lpEnBatCard(h, M, it, lang);
   const F0 = M && !M.cats.length && k === 'halo' ? lpEnFlowNow(S) : null;   // cihaz yok ama güneş/şebeke sayacı var: Halo yine evin gücünü gösterir
-  if (!M || (!M.cats.length && !(F0 && F0.gridKnown))) return lpEnEmpty(M, lang, k === 'halo' || k === 'cats');
+  if (!M || (!M.cats.length && !(F0 && F0.gridKnown))) return lpEnEmpty(M, lang, k === 'halo');
   const price = lpEnUnit(M), N = M.days ? M.days.t.length : 0;
   const total = lpEnTotal(S, M);
   const todayKwh = M.days ? lpEnDayTot(M, N - 1) : null;

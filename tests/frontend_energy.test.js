@@ -106,7 +106,8 @@ test('cards render with data, show a hint without it, and escape names', () => {
   assert.ok(halo.indexOf('1,3') >= 0 && halo.indexOf('kW') >= 0);
   assert.ok(E.lpEnCard(h, M, { energy: 'halo', chips: false }, 'tr', false).indexOf('enchs') < 0);
   assert.ok(E.lpEnCard(h, null, { energy: 'halo' }, 'tr', false).indexOf('Yükleniyor') >= 0);
-  assert.ok(E.lpEnCard(h, { cats: [], devs: [] }, { energy: 'cats' }, 'en', false).indexOf('Individual devices') >= 0);
+  assert.ok(E.lpEnCard(h, { cats: [], devs: [] }, { energy: 'halo' }, 'en', false).indexOf('Energy → Devices') >= 0);   // veri yok: mesaj yalnız ana kartta
+  assert.ok(E.lpEnCard(h, { cats: [], devs: [] }, { energy: 'cats' }, 'en', false).indexOf('enmsg quiet') >= 0);
   assert.ok(E.lpEnPopHtml(h, M, 'sensor.enerji_isiklar_energy', 'tr').indexOf('2 cihaz') >= 0);
 });
 

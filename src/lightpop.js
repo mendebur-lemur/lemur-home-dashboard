@@ -262,6 +262,7 @@ class LemurLightPopup {
     }
     if (this._tab) h += '<div class="box pane" style="margin-top:14px">' + this._paneHtml() + '</div>';
     this._pan.innerHTML = h;
+    this._pan.style.minHeight = this._keepH ? this._keepH + 'px' : '';
     this._bind();
     this._sync();
   }
@@ -305,6 +306,8 @@ class LemurLightPopup {
       const k = el.getAttribute('data-tab');
       // tablet panosundaki gibi: Efekt sekmesi, LEC kuruluysa ve ışığın listesi yoksa doğrudan efekt ekranını açar
       if (k === 'effect' && this._lecRoom() && !this._caps(this._id).fx) { this._openLec(); return; }
+      // pencere, sekme değişince küçülüp yer değiştirmesin: en yüksek hali korunur (Renk → Efekt geçişinde sekmeler parmağın altından kaçıyordu)
+      this._keepH = Math.max(this._keepH || 0, this._pan.offsetHeight);
       this._tab = k; this._render();
     }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-seg]'), (el) => el.addEventListener('click', () => { this._seg = +el.getAttribute('data-seg'); this._render(); }));

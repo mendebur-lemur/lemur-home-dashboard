@@ -994,3 +994,5 @@
 .clr button:active, .exb:active { -webkit-transform: scale(0.92); transform: scale(0.92); }
 /* pencere açıkken alttaki sonsuz animasyonlar durur */
 .wrap.paused, .wrap.paused * { -webkit-animation-play-state: paused !important; animation-play-state: paused !important; }
+/* veri yokken mesajı olmayan enerji kartı: yalnız soluk bir simge */
+.enmsg.quiet ha-icon { color: var(--lp-text2); opacity: 0.25; margin-bottom: 0; width: 26px; height: 26px; --mdc-icon-size: 26px; }
