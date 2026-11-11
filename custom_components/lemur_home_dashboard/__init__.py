@@ -27,6 +27,7 @@ from datetime import timedelta
 from . import energy_import as EI
 from . import estimates as EST
 from . import learn as LRN
+from . import lovres as LOVRES
 from . import pool as POOL
 from . import pets as P
 from . import safety as SF
@@ -357,6 +358,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
+        # A page opened while Home Assistant is still starting has neither of the two above; the loader is also a
+        # dashboard resource, served from /local (GitHub #21). Never stops the setup.
+        _LOGGER.debug("Loader as dashboard resource: %s", await LOVRES.async_register(hass))
         for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
@@ -418,6 +422,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.pop(DOMAIN, None)
     async_remove_panel(hass, PANEL_URL)
     return True
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """The integration is removed (not a reload): take our dashboard resource and the copied loader with it."""
+    await LOVRES.async_unregister(hass)
 
 
 def _data(hass: HomeAssistant) -> PanelData | None:

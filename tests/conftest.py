@@ -13,6 +13,13 @@ def auto_enable_custom_integrations(enable_custom_integrations):
     yield
 
 
+@pytest.fixture(autouse=True)
+def no_dashboard_resource():
+    """Setting the integration up does not copy the loader into the test config folder (tests/test_lovres.py calls the real one)."""
+    with patch("custom_components.lemur_home_dashboard.LOVRES.async_register", return_value="skipped"):
+        yield
+
+
 @pytest.fixture
 async def setup_lhd(hass):
     """Set up the integration; returns its config entry."""

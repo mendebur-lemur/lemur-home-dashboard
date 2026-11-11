@@ -5,10 +5,19 @@
 // Bu dosya strateji elemanını hemen tanımlar; ana dosyayı arkada yükler. HA generate() çağırınca
 // ana dosyanın yüklenmesi beklenir ve iş asıl stratejiye devredilir.
 (function () {
+  var W = window;
+  // Bu dosya sayfaya iki yoldan gelebilir (add_extra_js_url ve Lovelace kaynağı); ikincisi hiçbir şey yapmaz.
+  if (W.__LEMUR_HD_LOADER) return;
+  W.__LEMUR_HD_LOADER = '__VERSION__';
   var NAME = 'll-strategy-dashboard-lemur-home-dashboard';
   var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=__VERSION__';
-  var W = window;
+  // Ana dosya inemezse yeniden denenir: ilk 40 sn 3 sn'de bir (ilki 1,5 sn sonra), 2. dakikaya kadar 5 sn'de bir,
+  // 5. dakikaya kadar 15 sn'de bir, sonra dakikada bir; 10 dakika sonra bırakılır.
+  // Home Assistant açılırken eklenti kurulana kadar ana dosyanın adresi "bulunamadı" döner (evde ~14 sn, yavaş sistemde daha uzun).
+  var MAX_MS = 600000;
+  function wait(k, ms) { return k === 0 ? 1500 : ms < 40000 ? 3000 : ms < 120000 ? 5000 : ms < 300000 ? 15000 : 60000; }
   var loading = null;
+  var seq = 0;   // tarayıcı başarısız modül adresini sayfa boyunca hatırlar: her deneme başka adresle yapılır
 
   function ready() {
     return !!W.__LEMUR_HD_STRATEGY;
@@ -18,27 +27,31 @@
     if (ready()) return Promise.resolve();
     if (loading) return loading;
     loading = new Promise(function (resolve, reject) {
-      var tries = 0;
+      var t0 = Date.now(), k = 0;
       function attempt() {
+        if (ready()) { resolve(); return; }
         var s = document.createElement('script');
         // Modül olarak yüklenir (eskiden de HA bunu modül olarak yüklüyordu): üst düzey adlar genel alana
         // taşmaz, katı kip korunur, yönetim paneli de aynı adresi modül olarak yüklediği için dosya bir kez çalışır.
         // Modül desteklemeyen eski tarayıcıda klasik betik olarak yüklenir.
         if ('noModule' in HTMLScriptElement.prototype) s.type = 'module';
         else s.charset = 'utf-8';
-        s.src = MAIN + (tries ? '&r=' + tries : '');
+        s.src = MAIN + (seq ? '&r=' + seq : '');
+        seq += 1;
         s.async = true;
         s.onload = function () {
           if (ready()) resolve();
-          else retry(new Error('Lemur Home Dashboard yüklendi ama tanımlanmadı'));
+          else retry(s, new Error('Lemur Home Dashboard yüklendi ama tanımlanmadı'));
         };
-        s.onerror = function () { retry(new Error('Lemur Home Dashboard indirilemedi')); };
+        s.onerror = function () { retry(s, new Error('Lemur Home Dashboard indirilemedi')); };
         document.head.appendChild(s);
       }
-      function retry(err) {
-        tries += 1;
-        if (tries > 3) { loading = null; reject(err); return; }
-        setTimeout(attempt, 1500 * tries);
+      function retry(s, err) {
+        try { if (s.parentNode) s.parentNode.removeChild(s); } catch (e) { /* önemsiz */ }
+        var ms = Date.now() - t0;
+        if (ms > MAX_MS) { loading = null; reject(err); return; }
+        setTimeout(attempt, wait(k, ms));
+        k += 1;
       }
       attempt();
     });
@@ -58,13 +71,15 @@
     } catch (e) { /* zaten tanımlı */ }
   }
 
-  // ---- kendini onarma (v0.33.1, GitHub #21) ----
-  // Home Assistant pano stratejisini birkaç saniye bekler. Bu dosya o sürede gelmezse (ilk açılış, yavaş ağ) ya da ana dosya
-  // inemezse HA bir hata sayfası üretir ve öyle bırakır; kullanıcı sayfayı yenileyene kadar pano gelmez. Bu dosya eninde
-  // sonunda yüklenir: pano bizim stratejimizi kullandığı halde üretilen sayfada kartımız yoksa HA'ya panoyu yeniden
-  // ürettirir. En çok 3 kez dener; HA'nın işlevi yoksa sayfayı bir kez yeniler (dakikada en çok bir).
+  // ---- kendini onarma (v0.33.1, GitHub #21; v0.34.0'da sayfa yenileme kaldırıldı) ----
+  // Home Assistant pano stratejisini birkaç saniye bekler. Bu dosya o sürede gelmezse (ilk açılış, yavaş ağ) HA bir hata
+  // sayfası üretir ve öyle bırakır; kullanıcı sayfayı yenileyene kadar pano gelmez. Bu dosya eninde sonunda yüklenir: pano
+  // bizim stratejimizi kullandığı halde üretilen sayfada kartımız yoksa HA'ya panoyu yeniden ürettirir.
+  // Sayfa hiçbir durumda kendiliğinden yenilenmez. Denemeler seyrekleşir: 2. sn, sonra 5, 15, 30 sn arayla, sonra dakikada
+  // bir; 14 denemeden sonra bırakılır. Sayfa geçişinde ve ağ geri gelince yeniden başlar.
   var STRAT = 'custom:lemur-home-dashboard', CARD = 'custom:lemur-home-dashboard-card';
-  var heals = 0, healing = false;
+  var GAPS = [5, 15, 30, 60], HEAL_MAX = 14;
+  var healN = 0, healing = false, healNext = Date.now() + 2000;
   function panel() {
     try {
       var ha = document.querySelector('home-assistant'), m = ha && ha.shadowRoot && ha.shadowRoot.querySelector('home-assistant-main');
@@ -80,37 +95,35 @@
     }
     return true;
   }
-  function reloadOnce() {
-    try {
-      var last = +(W.sessionStorage.getItem('lhd-heal') || 0);
-      if (Date.now() - last < 60000) return;
-      W.sessionStorage.setItem('lhd-heal', String(Date.now()));
-      W.location.reload();
-    } catch (e) { /* depolama kapalıysa yenileme döngüsüne girmemek için hiçbir şey yapılmaz */ }
-  }
   function heal() {
-    if (healing || heals >= 3) return;
+    if (healing || healN >= HEAL_MAX || Date.now() < healNext) return;
     var p = panel();
     if (!broken(p)) return;
-    healing = true; heals += 1;
+    healing = true;
+    healNext = Date.now() + 1000 * (healN < GAPS.length ? GAPS[healN] : 60);
+    healN += 1;
     loadMain().then(function () {
       if (!broken(p)) return null;   // bu arada kendiliğinden düzeldi
       if (typeof p._regenerateStrategyConfig === 'function') return p._regenerateStrategyConfig();
       if (typeof p._fetchConfig === 'function') return p._fetchConfig(true);
-      reloadOnce();
       return null;
-    }).catch(function () { /* ana dosya hâlâ inemiyor: sonraki denemede */ }).then(function () {
-      healing = false;
-      // yeniden üretim işe yaramadıysa son çare: sayfayı bir kez yenile
-      if (heals >= 3) setTimeout(function () { if (broken(panel())) reloadOnce(); }, 3000);
-    });
+    }).catch(function () { /* ana dosya hâlâ inemiyor: sonraki denemede */ }).then(function () { healing = false; });
   }
 
   define();
   // bazı eklentiler window.customElements'i sonradan değiştiriyor; ilk 30 sn tanımı yenile (ana dosyadaki gibi)
   var n = 0;
-  var timer = setInterval(function () { define(); if (n % 15 === 14) heal(); if (++n > 600) clearInterval(timer); }, 100);   // onarma: 1,5 sn'de bir, bir dakika boyunca
-  W.addEventListener('location-changed', function () { define(); setTimeout(heal, 1500); });
+  var timer = setInterval(function () { define(); if (++n > 300) clearInterval(timer); }, 100);
+  // onarma: saniyede bir bakılır, 12 dakika sonra bırakılır; sayfa geçişinde yeniden başlar
+  var hn = 0;
+  var htimer = setInterval(function () { heal(); if (++hn > 720) clearInterval(htimer); }, 1000);
+  function again() {
+    if (!healing) { healN = 0; healNext = Date.now() + 1500; }
+    if (hn > 720) { hn = 0; htimer = setInterval(function () { heal(); if (++hn > 720) clearInterval(htimer); }, 1000); }
+    setTimeout(heal, 1600);
+  }
+  W.addEventListener('location-changed', function () { define(); again(); });
+  W.addEventListener('online', again);
   // kart ve diğer panolar da ana dosyaya ihtiyaç duyuyor: hemen yüklemeye başla
   loadMain().catch(function (e) { console.warn(e && e.message); });
 })();
