@@ -66,3 +66,33 @@ test('pets: feeder domains and notify target', () => {
   assert.ok(!S.lhdSafeFeederSvc('homeassistant.stop'));
   assert.ok(S.lhdSafeNotify('notify.mobile_app_x'));
 });
+
+// ---- v0.33: süzgeci aşan dört örnek (Light Effect Card oturumunda tarayıcıda kod çalıştırdığı görüldü) ----
+test('olay özniteliği boşluksuz ya da / ile yazılsa da geçmez', () => {
+  [
+    '<svg viewBox="0 0 24 24"><g/onpointerenter=alert(1)><path d="M0 0h24v24H0z"/></g></svg>',
+    '<svg viewBox="0 0 24 24"onload=alert(1)><path d="M0 0h24v24H0z"/></svg>',
+    '<svg viewBox="0 0 24 24"><animate/onbegin=alert(1) attributeName="x" dur="1s"/></svg>',
+    '<svg viewBox="0 0 24 24"><style>@import url(https://example.com/x.css);</style></svg>',
+    "<svg viewBox='0 0 24 24'onclick=alert(1)><path d='M0 0'/></svg>",
+    '<svg><set attributeName="x" to="1"/></svg>', '<svg><a/href="https://x"><path d="M0 0"/></a></svg>',
+    '<svg><path d="M0 0" style="fill:url(https://x/y)"/></svg>', '<svg><path d="M0 0" fill="&#x75;rl(x)"/></svg>',
+    '<svg><use href=https://x#a /></svg>', '<svg><img src=x></svg>',
+  ].forEach((v) => assert.ok(!S.lhdSafeSvg(v), v));
+});
+test('olağan simgeler yeni kuraldan geçer', () => {
+  [
+    '<svg viewBox="0 0 24 24"><path d="M0 0h24"/></svg>',
+    '<svg><defs><linearGradient id="g"><stop offset="0" stop-color="#fff"/></linearGradient></defs><path fill="url(#g)"/></svg>',
+    '<svg><defs><path id="p" d="M0 0"/></defs><use href="#p"/><use xlink:href="#p"/></svg>',
+    '<svg viewBox="0 0 24 24"><path d="M1 1" stroke-linejoin="round" opacity=".5"/></svg>',
+  ].forEach((v) => assert.ok(S.lhdSafeSvg(v), v));
+});
+test('paketteki bütün simgeler süzgeçten geçer', () => {
+  const dir = path.join(__dirname, '..', 'custom_components', 'lemur_home_dashboard', 'frontend');
+  ['mdi-color.json', 'lec-icons.json'].forEach((f) => {
+    const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    const bad = Object.keys(d).filter((k) => !S.lhdSafeSvg(d[k]));
+    assert.deepEqual(bad, [], f);
+  });
+});

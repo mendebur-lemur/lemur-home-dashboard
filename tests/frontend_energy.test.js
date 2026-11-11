@@ -18,7 +18,7 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook, lpExCard, lpExPopHtml, LP_EX, LP_EX_CARDS, lpErCsv };', ctx);
+vm.runInContext(src + '\nthis.E = { lpEnInside, lpEnModelLemur, LP_EN, LP_EN_TYPES, lpEnModel, lpEnPowOf, lpEnBin, lpEnCard, lpEnTotal, lpEnCatW, lpEnDemo, lpEnLim, lpEnWs, lpEnTileP, lpEnWSum, lhdEnergyTab, lpEnIds, lpEnPopHtml, lpEnMode, lpEnMonthCost, lpEnUnit, lpEnUntracked, lpEnYearLimit, lpEnYear, lpEnYtd, lpEnYearPlan, lpEnYtdInfo, lpEnPrev, lpEnLimitOf, lpEnMonthDays, lpEnBatGain, lpEnBand, lpEnMeter, lpEnMeterUnt, lpEnSunOn, lpEnBatOn, lpEnEstW, lpEnIsEst, lpEnModel: lpEnModel, STORE, lpEnFlowNow, lpEnTips, lpEnTipHide, lpEnSunE, lpEnDur, lrPow, lrCount, LP_EL_LOOKS, LP_EL, lpEnLook, lpElNames, lpEnIsLook, lpExCard, lpExPopHtml, LP_EX, LP_EX_CARDS, lpErCsv, lpEnCutStart, lpEnMergeStats, lpEnDayQ, lpEn5m, lpEnDayFrom };', ctx);
 const E = ctx.E;
 
 const pw = (v, u) => ({ state: String(v), attributes: { device_class: 'power', unit_of_measurement: u || 'W' } });
@@ -429,4 +429,58 @@ test('under two weeks of records the year is not extrapolated (v0.28.8)', () => 
   E.LP_EN.yr = { key: 'x', at: now, y: y, src: 'grid', days: { [now - 20 * 86400000]: 120 }, first: now - 20 * 86400000, prev: 0, pfull: false };
   assert.strictEqual(E.lpEnYtdInfo(null).est, true);
   E.LP_EN.yr = null;
+});
+
+// ---- v0.33: yalnız son kısım yenilenir ----
+test('kesme noktası eldeki dilim başlangıçlarından seçilir', () => {
+  const d = { a: [{ start: 100 }, { start: 200 }, { start: 300 }, { start: 400 }], b: [{ start: 300 }, { start: 500 }] };
+  assert.equal(E.lpEnCutStart(d, ['a', 'b'], 2), 300);   // 100 200 300 400 500: sondan 2 öncesi
+  assert.equal(E.lpEnCutStart(d, ['b'], 2), null);        // yeterli dilim yok: baştan indirilir
+  assert.equal(E.lpEnCutStart({}, ['a'], 0), null);
+});
+test('eski kısım + yeni kısım, tam indirmenin aynısını verir', () => {
+  const full1 = { a: [{ start: 100, change: 1 }, { start: 200, change: 2 }, { start: 300, change: 3 }], b: [{ start: 200, change: 5 }] };
+  const full2 = { a: [{ start: 100, change: 1 }, { start: 200, change: 2 }, { start: 300, change: 3.5 }, { start: 400, change: 0.2 }], b: [{ start: 200, change: 5 }, { start: 400, change: 1 }], c: [{ start: 400, change: 9 }] };
+  const inc = { a: [{ start: 300, change: 3.5 }, { start: 400, change: 0.2 }], b: [{ start: 400, change: 1 }], c: [{ start: 400, change: 9 }] };
+  assert.deepEqual(JSON.parse(JSON.stringify(E.lpEnMergeStats(full1, inc, ['a', 'b', 'c'], 300, 0))), full2);
+  // drop: pencereden çıkan eski dilimler atılır
+  assert.deepEqual(JSON.parse(JSON.stringify(E.lpEnMergeStats(full1, inc, ['a'], 300, 200))), { a: [{ start: 200, change: 2 }, { start: 300, change: 3.5 }, { start: 400, change: 0.2 }] });
+  // ISO tarihli başlangıçlar da çalışır
+  const o = { a: [{ start: '2026-01-01T00:00:00Z', change: 1 }, { start: '2026-01-02T00:00:00Z', change: 2 }] };
+  assert.equal(E.lpEnMergeStats(o, { a: [{ start: '2026-01-02T00:00:00Z', change: 7 }] }, ['a'], Date.parse('2026-01-02T00:00:00Z'), 0).a[1].change, 7);
+});
+test('günlük veri: ilk istek baştan, sonraki yalnız son günler; sonuç aynı', async () => {
+  const day = 86400000, from = E.lpEnDayFrom(), calls = [];
+  const mk = (n, last) => { const L = []; for (let i = 0; i < n; i++) L.push({ start: from + i * day, change: i === n - 1 ? last : 1 }); return L; };
+  let now = { 'sensor.a': mk(10, 0.4) };
+  const conn = { sendMessagePromise: (m) => { calls.push(m.start_time); const s = Date.parse(m.start_time), o = {}; m.statistic_ids.forEach((id) => { o[id] = (now[id] || []).filter((x) => x.start >= s); }); return Promise.resolve(o); } };
+  E.LP_EN.dq = null; E.LP_EN.dk = null;
+  const r1 = await E.lpEnDayQ(conn, ['sensor.a']);
+  assert.equal(r1['sensor.a'].length, 10);
+  assert.equal(Date.parse(calls[0]), from);
+  now = { 'sensor.a': mk(10, 0.9) };            // bugünün değeri arttı
+  E.LP_EN.dq = null;                              // bir dakikalık bekleme geçmiş sayılır
+  const r2 = await E.lpEnDayQ(conn, ['sensor.a']);
+  assert.equal(Date.parse(calls[1]), from + 7 * day);   // yalnız son 3 gün istendi
+  assert.deepEqual(JSON.parse(JSON.stringify(r2)), JSON.parse(JSON.stringify(now)));
+  E.LP_EN.dq = null;
+  await E.lpEnDayQ(conn, ['sensor.a', 'sensor.b']);       // yeni bir sensör: baştan
+  assert.equal(Date.parse(calls[2]), from);
+  E.LP_EN.dq = null; E.LP_EN.dk = null;
+});
+test('5 dakikalık veri: sonraki istek yalnız son yarım saat; pencereden çıkanlar atılır', async () => {
+  const st = 300000, base = Math.floor(Date.now() / st) * st - 86400000, calls = [];
+  let n = 288;
+  const conn = { sendMessagePromise: (m) => { calls.push(Date.parse(m.start_time)); const s = Date.parse(m.start_time), o = {}; m.statistic_ids.forEach((id) => { const L = []; for (let i = 0; i < n; i++) { const t = base + i * st; if (t >= s) L.push({ start: t, mean: i }); } o[id] = L; }); return Promise.resolve(o); } };
+  E.LP_EN.h5 = null;
+  const r1 = await E.lpEn5m(conn, ['p'], base);
+  assert.equal(r1.p.length, 288);
+  n = 290;                                        // 10 dakika geçti
+  const t0 = base + 2 * st;
+  const r2 = await E.lpEn5m(conn, ['p'], t0);
+  assert.equal(calls[1], base + (288 - 1 - 5) * st);   // son 6 dilimden başlayarak istendi
+  assert.equal(r2.p[r2.p.length - 1].mean, 289);
+  assert.ok(r2.p.every((x, i) => i === 0 || x.start - r2.p[i - 1].start === st));   // boşluk ya da çift yok
+  assert.ok(r2.p[0].start >= t0 - 600000);
+  E.LP_EN.h5 = null;
 });

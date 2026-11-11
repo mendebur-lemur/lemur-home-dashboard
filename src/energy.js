@@ -158,13 +158,52 @@ function lpEnYearIds(M) {
 }
 // günlük kWh tek istekte: son 35 gün (grafik) ve yılbaşından bu yana (yıl hesabı) aynı sensörlerse ikinci kez sorulmaz
 function lpEnDayFrom() { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (LP_EN_DAYS - 1)); return Math.min(d.getTime(), new Date(new Date().getFullYear(), 0, 1).getTime()); }
+// ---- istatistiklerde yalnız son kısmı yenileme (v0.33) ----
+// Pano enerji verisini 5 dakikada bir yeniler. Günlük kWh (1 Ocak'tan bugüne) ve son 24 saatin 5 dakikalık ortalamaları her
+// seferinde baştan iniyordu (saatte birkaç MB); oysa eski dilimler değişmez. İlk tam indirmeden sonra yalnız son dilimler
+// istenir ve eldekinin üstüne eklenir. Güvenlik için tam indirme LP_EN_FULL_MS'de bir yinelenir.
+const LP_EN_FULL_MS = 6 * 3600000;
+const lpEnStT = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
+// kesme noktası: eldeki verideki dilim başlangıçlarından sondan `back` öncesi (Home Assistant'ın kendi dilim sınırı; gün
+// dilimleri HA'nın saat dilimine göre başlar, tarayıcınınkine göre hesaplanmaz). Yeterli dilim yoksa null: baştan indirilir
+function lpEnCutStart(data, ids, back) {
+  const seen = {};
+  ids.forEach((id) => ((data && data[id]) || []).forEach((x) => { const t = lpEnStT(x); if (isFinite(t)) seen[t] = 1; }));
+  const L = Object.keys(seen).map(Number).sort((a, b) => a - b);
+  return L.length > back ? L[L.length - 1 - back] : null;
+}
+// eldeki verinin kesme noktasından öncesi + yeni gelen (kesme noktasından sonrası); drop: bundan eski dilimler atılır
+function lpEnMergeStats(old, add, ids, cut, drop) {
+  const out = {};
+  ids.forEach((id) => {
+    const a = ((old && old[id]) || []).filter((x) => { const t = lpEnStT(x); return t < cut && !(drop && t < drop); });
+    const b = ((add && add[id]) || []).filter((x) => lpEnStT(x) >= cut);
+    if (a.length || b.length) out[id] = a.concat(b);
+  });
+  return out;
+}
 function lpEnDayQ(conn, ids) {
   const from = lpEnDayFrom(), Q = LP_EN.dq;
   if (Q && Q.from === from && Date.now() - Q.at < 60000 && ids.every((x) => Q.ids.indexOf(x) >= 0)) return Q.p;
-  const p = conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(from).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } });
+  const ask = (start) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } });
+  const K = LP_EN.dk, okK = K && K.from === from && Date.now() - K.full < LP_EN_FULL_MS && ids.every((x) => K.ids.indexOf(x) >= 0);
+  const cut = okK ? lpEnCutStart(K.data, ids, 2) : null;   // son 3 gün dilimi yeniden istenir (bugün, dün, önceki gün)
+  const p = cut !== null
+    ? ask(cut).then((r) => { const m = lpEnMergeStats(K.data, r || {}, ids, cut, 0); ids.forEach((id) => { if (m[id]) K.data[id] = m[id]; else delete K.data[id]; }); return m; })
+    : ask(from).then((r) => { LP_EN.dk = { from: from, ids: ids.slice(), data: Object.assign({}, r || {}), full: Date.now() }; return r; });
   LP_EN.dq = { from: from, ids: ids.slice(), at: Date.now(), p: p };
-  p.catch(() => { if (LP_EN.dq && LP_EN.dq.p === p) LP_EN.dq = null; });
+  p.catch(() => { if (LP_EN.dq && LP_EN.dq.p === p) LP_EN.dq = null; LP_EN.dk = null; });
   return p;
+}
+// son 24 saatin 5 dakikalık ortalamaları: ilk seferde tamamı, sonra yalnız son yarım saat (eldekinin üstüne)
+function lpEn5m(conn, ids, t0) {
+  const ask = (start) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), period: '5minute', statistic_ids: ids, types: ['mean'], units: { power: 'W' } });
+  const K = LP_EN.h5, okK = K && Date.now() - K.full < LP_EN_FULL_MS && ids.length === K.ids.length && ids.every((x) => K.ids.indexOf(x) >= 0);
+  const cut = okK ? lpEnCutStart(K.data, ids, 5) : null;   // son 6 dilim (yarım saat) yeniden istenir
+  if (cut !== null && cut > t0) {
+    return ask(cut).then((r) => { K.data = lpEnMergeStats(K.data, r || {}, ids, cut, t0 - 600000); return K.data; });
+  }
+  return ask(t0).then((r) => { LP_EN.h5 = { ids: ids.slice(), data: Object.assign({}, r || {}), full: Date.now() }; return r; });
 }
 function lpEnYearFetch(conn, M) {
   const Y = LP_EN.yr, q = lpEnYearIds(M), key = q.src + q.ids.join(',');
@@ -432,7 +471,7 @@ function lpEnHist(conn, S, M) {
   // Özeti olmayan sensörler için ham geçmiş. Özetin son birkaç dakikası henüz yazılmamış olabilir: oradan şimdiye kadar anlık değer.
   const kw = (id) => (S[id] && String(S[id].attributes.unit_of_measurement || '') === 'kW' ? 1000 : 1);
   const stT = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
-  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(t0).toISOString(), period: '5minute', statistic_ids: ids, types: ['mean'], units: { power: 'W' } }).catch(() => ({}))
+  return lpEn5m(conn, ids, t0).catch(() => { LP_EN.h5 = null; return {}; })
     .then((st) => {
       const miss = ids.filter((id) => !(st && st[id] && st[id].length));
       const hp = miss.length ? conn.sendMessagePromise({ type: 'history/history_during_period', start_time: new Date(t0).toISOString(), end_time: new Date(now).toISOString(), entity_ids: miss, minimal_response: true, no_attributes: true, significant_changes_only: false }).catch(() => ({})) : Promise.resolve({});

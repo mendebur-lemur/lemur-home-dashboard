@@ -1,6 +1,9 @@
 // Güvenlik denetimleri (Light Effect Card v1.6.1 ile aynı yaklaşım). Saf işlevler, DOM yok; tests/frontend_safe.test.js denetler.
 // SVG simgeler HTML olarak eklenir: yalnız tek <svg>…</svg>, betik / olay / dış bağlantı yok (lemur-icons/birlestir.py ile aynı kurallar).
-const LHD_ICON_BAD = /<script|<foreignObject|<iframe|<object|<embed|<image|<a[\s>]|<use[^>]*href\s*=\s*["'](?!#)|\son[a-z]+\s*=|javascript:|data:text|href\s*=\s*["'](?!#)|xlink:href\s*=\s*["'](?!#)|url\(\s*["']?(?!#)/i;
+// v0.33: kural sıkılaştırıldı. Eski kural şunları geçiriyordu ve kod çalışıyordu: <g/onpointerenter=...> (boşluk yerine /),
+// viewBox="0 0 24 24"onload=... (tırnaktan sonra boşluksuz), <animate/onbegin=...>. Light Effect Card (src/card.js ICON_BAD) ve
+// lemur-icons/birlestir.py (BAD) ile AYNI kural; birini değiştiren ötekileri de değiştirir.
+const LHD_ICON_BAD = /<script|<foreignObject|<iframe|<object|<embed|<image|<img|<style|<animate|<set[\s/>]|<a[\s/>]|[\s/"']on[a-z]+\s*=|javascript:|data:text|&#|@import|href\s*=\s*(?!["']#)|url\(\s*["']?(?!#)/i;
 const lhdSafeSvg = (v) => typeof v === 'string' && v.length < 60000 && /^\s*<svg[\s>][\s\S]*<\/svg>\s*$/i.test(v) && !LHD_ICON_BAD.test(v) && (v.match(/<svg[\s>]/gi) || []).length === 1;
 // simge seti dosyası: anahtar biçimi ve SVG'si temiz olanlar kalır
 function lhdSafeIcons(d, keyRe) {
