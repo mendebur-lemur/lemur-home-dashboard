@@ -179,7 +179,45 @@ def test_local_served_never_raises():
     assert LR._local_served(object()) is None
 
 
+async def _http_local(hass, tmp_path, www):
+    """What the frontend does at setup: /local is registered only if the www folder exists then.
+
+    pytest-homeassistant-custom-component does not install the frontend package (hass_frontend), so the frontend
+    component cannot be set up on GitHub; the route is registered by hand here, as the frontend registers it."""
+    from homeassistant.components.http import StaticPathConfig
+
+    hass.config.config_dir = str(tmp_path)
+    assert await async_setup_component(hass, "http", {})
+    assert await async_setup_component(hass, "lovelace", {})
+    if www:
+        os.makedirs(tmp_path / "www")
+        await hass.http.async_register_static_paths([StaticPathConfig("/local", str(tmp_path / "www"), True)])
+
+
+@pytest.mark.real_local
+async def test_routes_www_at_start(hass, tmp_path):
+    await _http_local(hass, tmp_path, www=True)
+    assert LR._local_served(hass) is True
+    res = hass.data["lovelace"].resources
+    assert await REGISTER(hass) == "created"
+    assert _urls(res) == [URL]
+
+
+@pytest.mark.real_local
+async def test_routes_www_created_later(hass, tmp_path):
+    await _http_local(hass, tmp_path, www=False)
+    assert LR._local_served(hass) is False
+    os.makedirs(tmp_path / "www" / "lemur_light_effects")       # e.g. Lemur Light Effect Card created it in this run
+    assert LR._local_served(hass) is False                       # still not served until Home Assistant restarts
+    res = hass.data["lovelace"].resources
+    assert await REGISTER(hass) == "next-start"
+    assert _urls(res) == []
+    assert (tmp_path / "www" / "lemur_home_dashboard" / LOADER_FILE).exists()
+
+
+# the real frontend component: only where its package is installed (not on GitHub)
 async def _frontend(hass, tmp_path, www):
+    pytest.importorskip("hass_frontend")
     hass.config.config_dir = str(tmp_path)
     if www:
         os.makedirs(tmp_path / "www")
@@ -200,9 +238,8 @@ async def test_real_frontend_www_at_start(hass, tmp_path):
 async def test_real_frontend_www_created_later(hass, tmp_path):
     await _frontend(hass, tmp_path, www=False)
     assert LR._local_served(hass) is False
-    os.makedirs(tmp_path / "www" / "lemur_light_effects")       # e.g. Lemur Light Effect Card created it in this run
-    assert LR._local_served(hass) is False                       # still not served until Home Assistant restarts
+    os.makedirs(tmp_path / "www" / "lemur_light_effects")
+    assert LR._local_served(hass) is False
     res = hass.data["lovelace"].resources
     assert await REGISTER(hass) == "next-start"
     assert _urls(res) == []
-    assert (tmp_path / "www" / "lemur_home_dashboard" / LOADER_FILE).exists()
