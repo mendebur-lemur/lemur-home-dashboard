@@ -1,6 +1,6 @@
 {
  "v": 1,
- "updated": "2026-11-10",
+ "updated": "2026-11-11",
  "note": "Lemur Home Dashboard shared light measurements. Each model: the median of reviewed submissions. Strips are per meter (per_m).",
  "models": {
   "govee|h6079": {
