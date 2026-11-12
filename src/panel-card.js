@@ -572,21 +572,11 @@ function lpValText(h, st, lang) {
   return a.unit_of_measurement ? s + ' ' + a.unit_of_measurement : s;
 }
 
-// saat biçimi Home Assistant'taki gibi (hass.locale.time_format): '12' → 12 saat, '24' → 24 saat,
-// 'language' / 'system' → HA'nın kendi denemesi (use_am_pm.ts): o dilde (ya da tarayıcıda) 22:00 "10" diye yazılıyorsa 12 saat.
-// Ayar yoksa (eski HA) eskisi gibi 24 saat. Sonuç dil + ayar değişmedikçe saklanır (her 15 sn'de yeniden denenmez)
-const LP_AMPM = { k: null, v: false };
+// saat biçimi: yalnız Home Assistant'ta açıkça 12 saat seçildiyse (hass.locale.time_format === '12') 12 saat; bunun dışında
+// ('24', dile göre, sisteme göre, ayar yok) her zaman 24 saat. Dile göre 12 saate geçmek panoda ÖÖ / ÖS eki çıkardığı için bırakıldı (v0.36.0b3)
 function lpAmPm(h) {
-  const lc = (h && h.locale) || {}, f = lc.time_format;
-  if (f === '12') return true;
-  if (f !== 'language' && f !== 'system') return false;
-  const k = f + '|' + (lc.language || '');
-  if (LP_AMPM.k !== k) {
-    let v = false;
-    try { v = new Date('January 1, 2023 22:00:00').toLocaleString(f === 'language' ? (lc.language || undefined) : undefined).indexOf('10') >= 0; } catch (e) {}
-    LP_AMPM.k = k; LP_AMPM.v = v;
-  }
-  return LP_AMPM.v;
+  const lc = (h && h.locale) || {};
+  return lc.time_format === '12';
 }
 // ÖÖ / ÖS (AM / PM) panonun dilinde; Intl yoksa AM / PM
 function lpDayPeriod(d, lang) {

@@ -9,16 +9,18 @@ const path = require('path');
 const vm = require('vm');
 const rd = (f) => fs.readFileSync(path.join(__dirname, '../src', f), 'utf8');
 
-test('saat: HA time_format (12 / 24 / dile göre); Türkçe varsayılan 24 saat kalır', () => {
+test('saat: yalnız HA\'da açıkça 12 saat seçilirse 12 saat; dile ya da sisteme göre ayarında 24 saat kalır', () => {
   const src = rd('panel-card.js');
-  const m = /const LP_AMPM = [\s\S]*?\nfunction lpDayPeriod[\s\S]*?\n\}\n/.exec(src);
+  const m = /function lpAmPm\(h\) \{[\s\S]*?\nfunction lpDayPeriod[\s\S]*?\n\}\n/.exec(src);
   assert.ok(m, 'lpAmPm / lpDayPeriod bulunamadı');
   const ctx = { Intl, Date };
   vm.createContext(ctx);
   vm.runInContext(m[0] + '; this.lpAmPm = lpAmPm; this.lpDayPeriod = lpDayPeriod;', ctx);
   const h = (f, l) => ({ locale: { language: l, time_format: f } });
   assert.strictEqual(ctx.lpAmPm(h('language', 'tr')), false);
-  assert.strictEqual(ctx.lpAmPm(h('language', 'en')), true);
+  assert.strictEqual(ctx.lpAmPm(h('language', 'en')), false);   // dile göre: İngilizce de 24 saat
+  assert.strictEqual(ctx.lpAmPm(h('system', 'en')), false);
+  assert.strictEqual(ctx.lpAmPm(h('12', 'en')), true);
   assert.strictEqual(ctx.lpAmPm(h('12', 'tr')), true);
   assert.strictEqual(ctx.lpAmPm(h('24', 'en')), false);
   assert.strictEqual(ctx.lpAmPm({}), false);                    // eski HA: ayar yok, 24 saat
