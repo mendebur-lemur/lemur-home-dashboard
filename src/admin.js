@@ -3758,7 +3758,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     f.secAttr = f.secK === 'attr' ? s2.slice(5) : ''; f.secTpl = f.secK === 'tpl' ? s2 : '';
     const sc = it.state_colors && typeof it.state_colors === 'object' ? it.state_colors : null;
     f.scOn = !!sc; f.scE = (sc && sc.entity) || '';
-    f.scRows = sc && sc.map ? Object.keys(sc.map).map((x) => [x, sc.map[x]]) : [];
+    f.scRows = sc && sc.map ? Object.keys(sc.map).map((x) => [x, lhdIsObj(sc.map[x]) ? (sc.map[x].color || '') : sc.map[x]]) : [];
+    f.scX = {}; if (sc && sc.map) Object.keys(sc.map).forEach((x) => { if (lhdIsObj(sc.map[x])) f.scX[x] = sc.map[x]; });   // renk dışındaki ayarlar (v0.35)
     while (f.scRows.length < 4) f.scRows.push(['', LHD_SC_DEF[f.scRows.length % LHD_SC_DEF.length]]);
     const z = it.zones && typeof it.zones === 'object' ? it.zones : null;
     f.zOn = !!z;
@@ -3928,6 +3929,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           (f.secK === 'tpl' ? inp('secTpl', "{{ states('sensor.x') }}") : ''));
         if (k === 'value' && (!L0 || L0 === 'tile')) body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>';
       }
+      // hâle görünümünde de ad/değer yer değiştirme (v0.35)
+      if (adv && k === 'value' && L0 === 'halo') body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>';
       if ((k === 'scene' || ((k === 'tile' || k === 'value') && it.entity)) && L0 !== 'halo') {
         body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('cfmL') + '</b><span>' + t('cfmT') + '</span></div><button class="tg' + (f.cfm ? ' on' : '') + '" data-imtg="cfm"></button></div>' +
           (f.cfm ? fld(t('cfmText'), inp('cfmText', '')) : '') + '</div>';
@@ -4041,7 +4044,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           setS('color', f.color); setS('color_on', f.color_on); setS('bg', f.bg);
           if (f.look === 'halo') { delete it.color_on; delete it.bg; delete it.zones; setS('height', f.height); } else delete it.height;
           const rows = f.scRows.filter((r) => String(r[0]).trim());
-          if (f.scOn && rows.length) { const m = {}; rows.forEach((r) => { m[String(r[0]).trim()] = r[1]; }); it.state_colors = { map: m }; if (String(f.scE || '').trim()) it.state_colors.entity = String(f.scE).trim(); } else delete it.state_colors;
+          if (f.scOn && rows.length) { const m = {}; rows.forEach((r) => { const k0 = String(r[0]).trim(), X = f.scX && f.scX[k0]; m[k0] = X ? Object.assign({}, X, { color: r[1] }) : r[1]; }); it.state_colors = { map: m }; if (String(f.scE || '').trim()) it.state_colors.entity = String(f.scE).trim(); } else delete it.state_colors;
           if (k === 'value' && f.zOn) {
             const tt = [0, 1, 2, 3].map((q) => { const v = parseFloat(String(f['zt' + q]).replace(',', '.')); return isNaN(v) ? null : v; });
             it.zones = { t: tt, c: [0, 1, 2, 3, 4].map((q) => f['zc' + q]) };

@@ -497,9 +497,24 @@ const LP_EMB_H = { 1: 96, 1.5: 144, 2: 192 };
 // Halo kartının yazı ve simge boyutu (öğenin text_size / icon_size), kartın içine eklenen stil
 function lpHaloStyle(it) {
   const T = { s: [13, 11], m: [16, 13.5], l: [20, 16] }[it.text_size], I = { s: [56, 32], m: [74, 44], l: [90, 54] }[it.icon_size];
-  let css = ':host{height:100%}ha-card{height:100%;box-sizing:border-box}.compact .top{height:100%;min-height:80px}';
+  // natural: kart kutuyu doldurmaz, kendi boyunda kalır (kart olarak eklenmiş Halo sensör kartlarıyla aynı görünüm, v0.35)
+  let css = it.natural ? '' : ':host{height:100%}ha-card{height:100%;box-sizing:border-box}.compact .top{height:100%;min-height:80px}';
   if (T) css += '.name{font-size:' + T[0] + 'px;line-height:' + Math.round(T[0] * 1.4) + 'px}.sec{font-size:' + T[1] + 'px;line-height:' + Math.round(T[1] * 1.35) + 'px;max-height:none}';
   if (I) css += '.ic{width:' + I[0] + 'px;height:' + I[0] + 'px;--mdc-icon-size:' + I[1] + 'px}.ic svg{width:' + I[1] + 'px;height:' + I[1] + 'px}.txt{left:' + (I[0] + 12) + 'px}';
+  // yüksek (1,5 ya da 2 satır) hâle kartı: simge ve yazı dikeyde ortada (büyük uyarı kartı gibi)
+  const HH = LP_EMB_H[it.height];
+  if (HH && +it.height >= 1.5) { const isz = I ? I[0] : 64; css += '.compact .top{height:' + HH + 'px}.ic{left:18px;top:' + Math.round((HH - isz) / 2) + 'px}.txt{left:' + (isz + 34) + 'px}.halo{left:' + Math.round(18 + isz / 2) + 'px;top:' + Math.round(HH / 2) + 'px}'; }
+  // ad ve değer yer değiştirir (swap): değer üstte, adın boyunda; ad altta küçük (ör. "6 sa 18 dk" / "Yem Saati")
+  if (it.swap) css += '.txt{display:flex;flex-direction:column-reverse}.txt .sec{font-size:' + (T ? T[0] : 14) + 'px;line-height:' + Math.round((T ? T[0] : 14) * 1.4) + 'px;font-weight:500;color:var(--primary-text-color);-webkit-line-clamp:1;max-height:none}' +
+    '.txt .name{font-size:' + (T ? T[1] : 12) + 'px;line-height:' + Math.round((T ? T[1] : 12) * 1.35) + 'px;font-weight:400;color:var(--secondary-text-color)}';
+  // çerçeve (state_colors frame): kartın kenarı ve zemini o durumun rengini alır; blink/pulse ile yanıp söner (dikkat çeksin)
+  if (it._frame) {
+    const c = String(it._frame), fx = it._frameFx, d = fx === 'blink' ? 1 : fx === 'pulse' ? 1.6 : 0;
+    css += 'ha-card{box-shadow:inset 0 0 0 2px ' + lpHexA(c, 0.95) + '}' +
+      'ha-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;background:' + lpHexA(c, 0.2) + ';box-shadow:inset 0 0 22px ' + lpHexA(c, 0.45) +
+      (d ? ';animation:lhdfr ' + d + 's ease-in-out infinite' : '') + '}' +
+      '@keyframes lhdfr{0%,100%{opacity:.25}50%{opacity:1}}@media (prefers-reduced-motion:reduce){ha-card::after{animation:none}}';
+  }
   return css;
 }
 // A4 öğe renkleri. zones: { t: [4 sınır], c: [5 renk] } (Halo kartlarındaki bölge mantığı): değer t[k]'ye eşit ya da büyükse bir üst bölge
@@ -511,12 +526,19 @@ function lpZone(it, st) {
   for (let k = 0; k < 4; k++) { const x = parseFloat(T[k]); if (!isNaN(x) && v >= x) i = k + 1; }
   return C[i] || null;
 }
-// duruma göre renk: state_colors = { entity (verilmezse öğenin varlığı), map: { durum: renk } }
-function lpMapColor(it, S) {
+// duruma göre görünüm: state_colors = { entity (verilmezse öğenin varlığı), map: { durum: renk | { color, effect, name, icon, frame } } }
+//   color  renk (#rrggbb ya da green, red...); effect  hâle hareketi: breathe, pulse, blink, still, none (yalnız hâle görünümü)
+//   name / icon  o durumda gösterilecek ad ve simge (hâle görünümü); frame  true: kartın çerçevesi de renklenir, blink/pulse ile yanıp söner
+function lpMapStyle(it, S) {
   const m = it && it.state_colors; if (!m || typeof m !== 'object' || !m.map) return null;
   const id = m.entity || it.entity, st = id && S ? S[id] : null;
-  return st ? (m.map[st.state] || null) : null;
+  if (!st) return null;
+  const v = m.map[st.state];
+  if (typeof v === 'string') return v ? { color: v } : null;
+  return lhdIsObj(v) ? v : null;
 }
+function lpMapColor(it, S) { const o = lpMapStyle(it, S); return o && typeof o.color === 'string' && o.color ? o.color : null; }
+const LP_HALO_FX = ['breathe', 'pulse', 'blink', 'still', 'none'];
 // Halo kartının hale rengi (Halo'nun kendi renk adlarıyla da verilebilir: green, blue...)
 const LP_HALO_RGB = { green: '#28BE64', blue: '#008CFF', ice: '#78D7FF', yellow: '#FFCD28', orange: '#FF8C1E', red: '#FF3737', purple: '#A064FF', grey: '#969696' };
 function lpHexA(c, a) { const m = /^#?([0-9a-f]{6})$/i.exec(String(c || '')); if (!m) return c; const n = parseInt(m[1], 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
@@ -690,7 +712,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     (view.sections || []).forEach((s) => allOf(s).forEach((x) => {
       const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity);
       if (x && x.visible) vis.push(lpVisible(x.visible, S));   // koşullu öğe: koşul değişince iskelet yeniden kurulur
-      if (x && x.state_colors) vis.push(lpMapColor(x, S));      // duruma göre renk (Halo kartı yeniden kurulur)
+      if (x && x.state_colors) vis.push(JSON.stringify(lpMapStyle(x, S)));      // duruma göre görünüm (Halo kartı yeniden kurulur)
     }));
     const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge()]);
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
@@ -853,12 +875,17 @@ class LemurHomeDashboardCard extends HTMLElement {
           if (x._k === 'ebtn') return entEl(x, 'button');
           if (x._k === 'halo') {
             const hc = { type: 'custom:lemur-hd-sensor-card', entity: x.entity };
-            if (x.name) hc.name = x.name;
-            if (x.icon && !lpIsLecIcon(x.icon)) hc.icon = x.icon;
+            const ms = lpMapStyle(x, S) || {};                              // duruma göre görünüm (renk, hareket, ad, simge, çerçeve)
+            const nm = typeof ms.name === 'string' && ms.name ? ms.name : x.name, icn = typeof ms.icon === 'string' && ms.icon ? ms.icon : x.icon;
+            if (nm) hc.name = nm;
+            if (icn && !lpIsLecIcon(icn)) hc.icon = icn;
             if (lpEnIsVal(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
             const hcol = lpMapColor(x, S) || x.color;                       // sabit renk ya da duruma göre renk
             if (hcol) hc.color = LP_HALO_RGB[hcol] || hcol;
-            return emb('lemur-hd-sensor-card', hc, x.entity, x._i, x);
+            const hfx = LP_HALO_FX.indexOf(ms.effect) >= 0 ? ms.effect : (LP_HALO_FX.indexOf(x.effect) >= 0 ? x.effect : '');
+            if (hfx) hc.effect = hfx;
+            const xi = ms.frame ? Object.assign({}, x, { _frame: hc.color || '#FF3737', _frameFx: hfx }) : x;
+            return emb('lemur-hd-sensor-card', hc, x.entity, x._i, xi);
           }
           if (x._k === 'energy') { ens.push(x); return '<div class="enc en-' + esc(x.energy) + (lpEnIsLook(x) ? ' enlook' : '') + '" data-en="' + (ens.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'card') { cards.push(x); return '<div class="emb hc' + (LP_EMB_H[x.height] ? ' hfix" style="min-height:' + LP_EMB_H[x.height] + 'px' : '') + '" data-hc="' + (cards.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
@@ -1016,6 +1043,13 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._embeds.push(el);
       if (spec.it) ph._item = spec.it;
       if (spec.it && spec.tag === 'lemur-hd-sensor-card' && el.shadowRoot) { const st = document.createElement('style'); st.textContent = lpHaloStyle(spec.it); el.shadowRoot.appendChild(st); }
+      // hâle görünümündeki öğenin dokun / basılı tut ayarı (v0.35): kartın kendi "ayrıntı penceresi" tıklaması yerine öğenin eylemi
+      const hit = spec.it;
+      if (!edit && hit && spec.tag === 'lemur-hd-sensor-card' && (hit.tap || hit.hold)) {
+        ph.classList.add('tapx');
+        ph.addEventListener('click', (e) => { e.stopPropagation(); }, true);
+        lpPress(ph, () => this._act(hit.tap, hit.entity, 'more-info'), () => this._act(hit.hold, hit.entity, 'more-info'));
+      }
     });
     // gömülü HA kartları (HA'nın kart yardımcısıyla; yüklenemezse kısa uyarı)
     R.querySelectorAll('[data-hc]').forEach((ph) => {
