@@ -317,6 +317,28 @@ label.btn { cursor: pointer; }
 .scr { display: flex; gap: 8px; align-items: center; }
 .scr .inp { flex: 1 1 auto; }
 .scr input[type=color] { width: 40px; height: 32px; padding: 0; border: none; background: none; cursor: pointer; }
+/* hâle görünümü: satırda hareket, çerçeve, ad/simge (v0.36); dar pencerede alt satıra kayar */
+.scrw { display: flex; flex-direction: column; gap: 6px; }
+.scr.scx { flex-wrap: wrap; row-gap: 6px; }
+.scr.scx > .inp:first-child { flex: 1 1 100px; }
+.scr.scx .scfx { flex: 0 1 175px; width: auto; padding: 0 4px 0 8px; font-size: 13px; }
+.scb.scm { width: 40px; padding: 0; justify-content: center; }
+.scb { display: inline-flex; align-items: center; gap: 5px; flex: none; height: 36px; padding: 0 10px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); color: var(--mu); font: inherit; font-size: 12.5px; white-space: nowrap; cursor: pointer; }
+.scb.on, .scb.has { color: var(--tx); }
+.scb.on, .scb.scm.has { border-color: var(--acl); }
+.scb.on { background: var(--acs); }
+.scb .lic { width: 18px; height: 18px; flex: none; }
+.scxm { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--ln); }
+.scxm .fld { margin: 0; }
+@media (max-width: 600px) {
+  .scr .inp, .scb { height: 40px; }
+  .scr input[type=color] { height: 40px; }
+  .scr.scx > .inp:first-child { flex-basis: calc(100% - 48px); }
+  .scr.scx .scfx { flex: 1 1 100px; }
+  .scb.scm { width: 40px; }
+  .scxm .inp, .scxm .btn, .btn[data-imscadd] { height: 40px; }
+  .scxm .btn.ic { width: 40px; }
+}
 /* basit / gelişmiş mod ve ? yardım */
 .modeseg { margin-right: 4px; }
 .hlp { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 6px; padding: 0; border-radius: 50%; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2);

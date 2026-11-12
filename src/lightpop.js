@@ -111,6 +111,13 @@ const LP_POP_CSS = `
 :host(.inbox.sheet) .pan { max-width: 100%; max-height: 90%; }
 :host(.inbox.ph) .col { grid-template-columns: 1fr; }
 :host(.inbox.ph:not(.sheet)) .pan { padding: 12px; border-radius: 24px; }
+/* ulaşılamayan lamba (perde penceresi gibi): kaydırıcı, güç, sekmeler ve renkler soluk ve dokunulmaz; başlıkta kısa not.
+   Yedeği olan lambada (karolardaki gibi) güç düğmesi açık kalır */
+.hd .nm i[data-na] { display: none; font-style: normal; color: #E0A458; font-size: 13px; margin-left: auto; padding-left: 10px; white-space: nowrap; }
+.lpna .hd .nm i[data-na] { display: inline; }
+.lpna .sl, .lpna .pw, .lpna .tabs, .lpna .pane { opacity: 0.35; pointer-events: none; }
+.lpna .pane { -webkit-filter: grayscale(1); filter: grayscale(1); }
+.lpna.lptw [data-pw] { opacity: 1; pointer-events: auto; }
 `;
 const LP_POP_TXT = {
   tr: { color: 'Renk', effect: 'Efekt', segment: 'Segment', off: 'Kapalı', on: 'Açık', lec: 'Efekt ekranını aç', noFx: 'Bu ışığın efekti yok', unav: 'Ulaşılamıyor', seg: 'Segment {n}' },
@@ -153,16 +160,24 @@ function lpDrag(el, onMove, onEnd) {
 }
 
 const LP_POP = { cur: null };
+// yeni pencere açılırken açık olanlar (ışık / perde / kart penceresi) kapanır; tarayıcı geçmişinde adımı olan varsa
+// yeni pencere o adımı devralır (true): yoksa her pencere bir adım daha ekliyor, Geri bir kez boşa basılıyordu (v0.36)
+function lpPopTake() {
+  const L = [LP_POP.cur, typeof LP_CPOP !== 'undefined' ? LP_CPOP.cur : null].filter((x) => x && !x._closed);
+  const adopt = L.some((x) => x._pushed);
+  L.forEach((x) => x.close(true));
+  return adopt;
+}
 class LemurLightPopup {
   // id: ışık; item: karodaki ad/simge; room: LEC odası (yoksa sekmenin alanı)
   // opts.mount: pencere bu kutunun içinde açılır (Otomatik kur / Stil seç önizlemesi); opts.sheet: alttan, opts.phone: telefon ölçüsü
   static open(hass, id, item, room, opts) {
-    if (LP_POP.cur) LP_POP.cur.close(true);
-    const p = new LemurLightPopup(hass, id, item || {}, room || null, opts);
+    const adopt = lpPopTake();
+    const p = new LemurLightPopup(hass, id, item || {}, room || null, Object.assign({}, opts, { adopt: adopt }));
     LP_POP.cur = p;
     return p;
   }
-  static update(hass) { if (LP_POP.cur) LP_POP.cur.hass = hass; }
+  static update(hass) { if (LP_POP.cur) { try { LP_POP.cur.hass = hass; } catch (e) {} } }   // pencerenin hatası panonun güncellemesini durdurmasın
 
   constructor(hass, id, item, room, opts) {
     opts = opts || {};
@@ -199,6 +214,7 @@ class LemurLightPopup {
     // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
     this._pop = () => this.close(true);
     if (this._mount) this._pushed = false;   // önizlemede tarayıcı geçmişine dokunulmaz
+    else if (opts.adopt) { this._pushed = true; window.addEventListener('popstate', this._pop); }   // kapanan pencerenin adımı
     else try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
     (this._mount || document.body).appendChild(this._host);
     this._render();
@@ -231,11 +247,11 @@ class LemurLightPopup {
     return v;
   }
   _caps(id) {
-    const st = this._h.states[id], a = (st && st.attributes) || {}, m = a.supported_color_modes || [];
+    const st = this._h.states[id], a = (st && st.attributes) || {}, m = Array.isArray(a.supported_color_modes) ? a.supported_color_modes : [];   // liste değilse yok sayılır
     const color = m.some((x) => ['hs', 'xy', 'rgb', 'rgbw', 'rgbww'].indexOf(x) >= 0);
     const ct = m.indexOf('color_temp') >= 0 || color;
     const dim = color || ct || m.indexOf('brightness') >= 0 || m.indexOf('white') >= 0;
-    return { color: color, ct: ct, dim: id.indexOf('light.') === 0 && dim, fx: (a.effect_list || []).filter((x) => x).length > 0 };
+    return { color: color, ct: ct, dim: id.indexOf('light.') === 0 && dim, fx: (Array.isArray(a.effect_list) ? a.effect_list : []).filter((x) => x).length > 0 };
   }
   _lecRoom() { return LEC.installed(this._h) ? (LEC.roomOf(this._id) || (LEC.hasRoom(this._room) ? this._room : null)) : null; }
   _tabs() {
@@ -254,8 +270,9 @@ class LemurLightPopup {
     // sınıf baştan yazılırken açılış sınıfı (in) korunur; yoksa sekme değişince pencere görünmez olur ama ekranı kaplamaya devam eder
     if (this._host) { const inn = this._host.classList.contains('in'); this._host.className = 'lemur-light-popup ic-' + lpIconMode() + (this._sheet ? ' sheet' : '') + (this._mount ? ' inbox' + (this._inPh ? ' ph' : '') : '') + (inn ? ' in' : ''); this._host.style.setProperty('--lp-ic-on', lpIconTint()); }
     const tabs = this._tabs();
+    this._tabK = tabs.join();   // çizilen sekmeler: cihazın özellikleri değişince (_sync) pencere yeniden kurulur
     if (tabs.indexOf(this._tab) < 0) this._tab = tabs[0] || null;
-    let h = (this._sheet ? '<div class="grab"></div>' : '') + '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
+    let h = (this._sheet ? '<div class="grab"></div>' : '') + '<div class="hd"><div class="box nm">' + icon + '<b>' + esc(name) + '</b><i data-na></i></div><div class="x" data-x><ha-icon icon="mdi:close"></ha-icon></div></div>' +
       '<div class="box row" style="margin-top:14px">' + this._sliderHtml(this._id, name, icon) + '<div class="pw" data-pw><ha-icon icon="mdi:power"></ha-icon></div></div>';
     if (tabs.length > 1 || (tabs.length === 1 && tabs[0] !== 'color')) {
       h += '<div class="box tabs" style="margin-top:14px">' + tabs.map((k) => '<div class="tab' + (k === this._tab ? ' on' : '') + '" data-tab="' + k + '">' + esc(this._t(k)) + '</div>').join('') + '</div>';
@@ -283,7 +300,7 @@ class LemurLightPopup {
     if (this._tab === 'color') return this._colorHtml(this._id);
     if (this._tab === 'effect') {
       const room = this._lecRoom();
-      const list = ((S[this._id] && S[this._id].attributes.effect_list) || []).filter((x) => x);
+      const el = S[this._id] && S[this._id].attributes.effect_list, list = (Array.isArray(el) ? el : []).filter((x) => x);
       return (room ? '<div class="lecb" data-lec><ha-icon icon="mdi:creation"></ha-icon>' + esc(this._t('lec')) + '</div>' : '') +
         (list.length ? '<div class="fx">' + list.map((x) => '<div data-fx="' + esc(x) + '">' + esc(x) + '</div>').join('') + '</div>' : (room ? '' : '<div class="empty">' + esc(this._t('noFx')) + '</div>'));
     }
@@ -300,8 +317,8 @@ class LemurLightPopup {
   _bind() {
     const R = this._pan, H = () => this._h;
     R.querySelector('[data-x]').addEventListener('click', () => this.close());
-    R.querySelector('[data-pw]').addEventListener('click', () => this._toggle(this._id));
-    const pws = R.querySelector('[data-pws]'); if (pws) pws.addEventListener('click', () => this._toggle(this._target()));
+    R.querySelector('[data-pw]').addEventListener('click', () => this._power(this._id));
+    const pws = R.querySelector('[data-pws]'); if (pws) pws.addEventListener('click', () => this._power(this._target()));
     Array.prototype.forEach.call(R.querySelectorAll('[data-tab]'), (el) => el.addEventListener('click', () => {
       const k = el.getAttribute('data-tab');
       // tablet panosundaki gibi: Efekt sekmesi, LEC kuruluysa ve ışığın listesi yoksa doğrudan efekt ekranını açar
@@ -366,16 +383,31 @@ class LemurLightPopup {
     }
     ctx.putImageData(img, 0, 0);
   }
+  // ulaşılamayan cihaza komut gitmez (karolar ve perde penceresi gibi; v0.36)
+  _live(id) { const st = this._h.states[id]; return !!st && st.state !== 'unavailable'; }
+  _twin(id) { return typeof lpTwinOf === 'function' ? lpTwinOf(id) : null; }
+  // güç düğmesi: ulaşılamayan lambada yalnız yedeği varsa entegrasyonun yedekli yolundan (karodaki gibi)
+  _power(id) {
+    if (this._live(id)) { this._toggle(id); return; }
+    if (this._twin(id)) this._h.callService('lemur_home_dashboard', 'control', { entity_id: id, action: 'toggle' });
+  }
   _call(svc, id, data) {
+    if (!this._live(id)) return;
     const d = id.split('.')[0];
     if (d !== 'light') { this._h.callService('homeassistant', svc === 'turn_off' ? 'turn_off' : 'turn_on', { entity_id: id }); return; }
     this._h.callService('light', svc, Object.assign({ entity_id: id }, data));
   }
   _toggle(id) {
     // beklenen durum hemen gösterilir, Home Assistant'ın cevabı gelince (ya da 5 sn sonra) gerçeğine döner (v0.33; düğme cevap gelene kadar hiç kıpırdamıyordu)
-    const st = this._h.states[id];
-    if (st && (st.state === 'on' || st.state === 'off')) { (this._opt || (this._opt = {}))[id] = { on: st.state !== 'on', from: st.state, until: Date.now() + 5000 }; this._seen = null; this._sync(); }
-    const pr = this._h.callService(id.split('.')[0] === 'light' ? 'light' : 'homeassistant', 'toggle', { entity_id: id });
+    // cevap beklenirken yeniden dokunulursa beklenen durumun tersi istenir (gerçek durum henüz eski); komut açık aç / kapat (v0.36)
+    const st = this._h.states[id], dom = id.split('.')[0] === 'light' ? 'light' : 'homeassistant';
+    let svc = 'toggle';
+    if (st && (st.state === 'on' || st.state === 'off')) {
+      const cur = this._eff(id), on = !(cur && cur.state === 'on');
+      (this._opt || (this._opt = {}))[id] = { on: on, from: st.state, until: Date.now() + 5000 }; this._seen = null; this._sync();
+      svc = on ? 'turn_on' : 'turn_off';
+    }
+    const pr = this._h.callService(dom, svc, { entity_id: id });
     if (pr && pr.catch) pr.catch(() => { if (this._opt) delete this._opt[id]; this._seen = null; if (!this._closed) this._sync(); });
   }
   // çizimde kullanılacak durum: cevap beklenirken beklenen aç / kapat
@@ -401,6 +433,12 @@ class LemurLightPopup {
     const seen = ids.map((i) => S[i]), L = this._seen;
     if (onlyIfChanged && L && L.length === seen.length && seen.every((x, i) => x === L[i])) return;
     this._seen = seen;
+    // ulaşılamıyor: pencere soluk, düğmeler kapalı; lamba dönünce kendiliğinden açılır (pencere açıkken düşerse kilitlenir)
+    const na = !this._live(this._id);
+    R.classList.toggle('lpna', na); R.classList.toggle('lptw', na && !!this._twin(this._id));
+    const nn = R.querySelector('[data-na]'); if (nn) nn.textContent = na ? this._t('unav') : '';
+    // sekmeler cihazın özelliklerinden: değiştiyse (ör. lamba renk özellikleriyle geri döndü) pencere yeniden kurulur
+    if (this._tabK !== undefined && this._tabs().join() !== this._tabK) { this._render(); return; }
     Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
       const st = this._eff(sl.getAttribute('data-sl'));
       const on = !!st && st.state === 'on', a = (st && st.attributes) || {};

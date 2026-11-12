@@ -19,3 +19,8 @@ function lpTpl(hass, tpl, onChange) {
   if (onChange && e.cbs.indexOf(onChange) < 0) e.cbs.push(onChange);
   return e.v;
 }
+// kart sökülünce: geri çağrısı bütün şablonlardan çıkarılır (abonelik kalır, kart geri takılınca sonucu hazırdır)
+function lpTplOff(onChange) {
+  if (!onChange) return;
+  Object.keys(LP_TPL.m).forEach((k) => { const c = LP_TPL.m[k].cbs, i = c.indexOf(onChange); if (i >= 0) c.splice(i, 1); });
+}

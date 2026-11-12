@@ -41,12 +41,14 @@ async def test_save_on_an_older_copy_is_turned_down(hass, hass_ws_client, setup_
     assert (await ws.receive_json())["success"]
 
 
-async def test_season_counts_as_a_settings_change(hass, hass_ws_client, setup_lhd):
+async def test_season_is_not_undone_by_a_save_on_an_older_copy(hass, hass_ws_client, setup_lhd):
+    # v0.36: the season switch no longer refuses the admin's save (tests/test_season_merge.py); it is not undone either
     ws = await hass_ws_client(hass)
     await ws.send_json({"id": 1, "type": f"{DOMAIN}/season", "season": "winter"})
     assert (await ws.receive_json())["success"]
-    await ws.send_json({"id": 2, "type": f"{DOMAIN}/set", "key": "settings", "value": {}, "rev": 0})   # would undo the season
-    assert (await ws.receive_json())["error"]["code"] == "conflict"
+    await ws.send_json({"id": 2, "type": f"{DOMAIN}/set", "key": "settings", "value": {}, "rev": 0, "ssn": None})
+    r = await ws.receive_json()
+    assert r["success"] and r["result"]["settings"] == {"season": "winter"}
 
 
 async def test_changes_come_in_parts_when_asked(hass, hass_ws_client, setup_lhd):
@@ -59,7 +61,7 @@ async def test_changes_come_in_parts_when_asked(hass, hass_ws_client, setup_lhd)
     msgs = [await new.receive_json(), await new.receive_json()]
     ev = next(m for m in msgs if m["type"] == "event")["event"]
     assert set(ev) == {"__part", "revs"} and list(ev["__part"]) == ["settings"] and ev["__part"]["settings"]["season"] == "winter"
-    assert ev["revs"]["settings"] == 1
+    assert ev["revs"]["season"] == 1 and "settings" not in ev["revs"]   # v0.36: its own counter
     full = (await old.receive_json())["event"]            # a page that did not ask: everything, as before
     assert "tabs" in full and full["settings"]["season"] == "winter" and "learn_avg" not in full
 

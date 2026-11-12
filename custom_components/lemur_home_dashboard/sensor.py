@@ -514,11 +514,12 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
     _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
     _attr_suggested_display_precision = 3
     MAX_STEP = 50.0   # kWh in one update: more than this is a wrong reading, not usage
+    HOLD_RISES = 5    # a counter that went back and then rose this many times without returning: a real reset
 
     def __init__(self, data, cid: str) -> None:
         self._kwh = 0.0
         self._last: dict[str, float] = {}
-        self._held: dict[str, float] = {}   # a counter that went back: decided on its next reading
+        self._held: dict[str, dict] = {}   # a counter that went back: {hi, lo, pend, n} until it is clear (glitch or reset)
         self._ew_last = 0.0
         self._ew_unsub = None
         self._init_cat(data, cid, "energy")
@@ -568,20 +569,40 @@ class CategoryEnergySensor(_Cat, RestoreSensor):
         if v is None:
             return
         prev = self._last.get(ent)
-        held = self._held.pop(ent, None)
         self._last[ent] = v
         if prev is None:
             return
-        if v < prev:   # a reset or a glitch (a plug reporting 0 once): decided on the next reading
-            self._held[ent] = prev if held is None else max(prev, held)
-            return
-        if held is not None:
-            d = v - held if v >= held else v   # back to the old counter: a glitch; otherwise a real reset
-        else:
+        h = self._held.get(ent)
+        if h is None:
+            if v < prev:   # a reset or a glitch (a plug reporting 0 for a few readings): decided later, nothing counted meanwhile
+                self._held[ent] = {"hi": prev, "lo": v, "pend": 0.0, "n": 0}
+                return
             d = v - prev
-        if 0 < d <= self.MAX_STEP:
-            self._kwh += d
-            self._write_energy()
+            if not 0 < d <= self.MAX_STEP:
+                return
+        elif v < prev:   # went down again while held
+            h["lo"] = min(h["lo"], v)
+            return
+        elif v >= h["hi"] and v - prev >= (h["hi"] - h["lo"]) / 2:
+            # jumped back to the old counter: it was a glitch; only what it gained above the old value counts
+            del self._held[ent]
+            d = v - h["hi"]
+            if not 0 < d <= self.MAX_STEP:
+                return
+        else:
+            # climbing from the low value: what a reset device used; counted once it is clear it is a reset
+            if 0 < v - prev <= self.MAX_STEP:
+                h["pend"] += v - prev
+                h["n"] += 1
+            if h["n"] < self.HOLD_RISES:
+                return
+            del self._held[ent]
+            # a reset goes to 0: the low reading itself was used after the reset (not when it only dipped a little)
+            d = h["pend"] + (h["lo"] if 0 < h["lo"] < h["hi"] - h["lo"] and h["lo"] <= self.MAX_STEP else 0.0)
+            if d <= 0:
+                return
+        self._kwh += d
+        self._write_energy()
 
     def _write_energy(self) -> None:
         """Written at most every ENERGY_WRITE_S; the last value is never left unwritten (a timer writes it)."""

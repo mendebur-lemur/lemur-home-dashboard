@@ -9,7 +9,7 @@ const vm = require('vm');
 const rd = (f) => fs.readFileSync(path.join(__dirname, '../src/' + f), 'utf8');
 
 function rekeyFn() {
-  const src = rd('admin.js'), a = src.indexOf('  _phRekey(sid, a, b) {'), b = src.indexOf('\n  }\n', a);
+  const src = rd('admin.js'), a = src.indexOf('  _phRekey(sid, a, b, keep) {'), b = src.indexOf('\n  }\n', a);
   assert.ok(a > 0 && b > a, '_phRekey bulunamadı');
   const ctx = {}; vm.createContext(ctx);
   vm.runInContext(rd('safe.js') + '\nconst lhdClone = (x) => JSON.parse(JSON.stringify(x));\nthis.f = function ' + src.slice(a + 2, b + 4).replace(/^_phRekey/, '') + ';\nthis.isObj = lhdIsObj;', ctx);

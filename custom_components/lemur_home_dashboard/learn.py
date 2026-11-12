@@ -36,6 +36,42 @@ NO_FX = ("", "none", "None", "off", "Off", "solid", "Solid")
 ACTIVE = ("start", "standby", "probe", "run", "fx", "paused", "listen")
 SETTLE_PCT = 0.03       # three readings within 3% (or 0.15 W) count as settled
 SETTLE_ABS = 0.15
+
+
+def _num(x: Any) -> float | None:
+    """A finite number from storage, else None (text, a list, true/false, NaN and inf are not numbers here)."""
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        return None
+    x = float(x)
+    return x if x == x and x not in (float("inf"), float("-inf")) else None
+
+
+# saved light run: what each kept value must be (None: may also be empty); a run that does not match is skipped
+_KEEP_TYPES: dict[str, tuple] = {
+    "steps": (list,), "i": (int,), "prev": (dict, type(None)), "standby": ("num", type(None)), "probe": (list,),
+    "plan": (dict, type(None)), "res": (dict, type(None)), "repeats": (int,), "settle_s": (list,), "fx_names": (list,),
+    "skip_fx": (bool,), "bridge": (str, type(None)), "started": ("num",), "rechecked": (int,), "floor_n": (int,), "checked": (bool,),
+}
+
+
+def _check_light(d: dict) -> None:
+    """ValueError when a saved light run is damaged (wrong types, steps that are not steps, a step number past the end)."""
+    for k, kinds in _KEEP_TYPES.items():
+        if k not in d:
+            continue
+        v = d[k]
+        ok = any((_num(v) is not None) if t == "num" else (isinstance(v, t) and not (t is int and isinstance(v, bool))) for t in kinds)
+        if not ok:
+            raise ValueError(f"{k} is {type(v).__name__}")
+    steps = d.get("steps") or []
+    if not all(isinstance(q, dict) and isinstance(q.get("t"), str) for q in steps):
+        raise ValueError("steps")
+    if not 0 <= int(d.get("i") or 0) <= len(steps):
+        raise ValueError("i")
+    if any(_num(x) is None for x in d.get("settle_s") or []):
+        raise ValueError("settle_s")
+    if "interval" in d and d["interval"] is not None and _num(d["interval"]) is None:
+        raise ValueError("interval")
 FLOOR_W = 0.05          # a lit light read at or below this: the plug cannot measure that low (v0.28.11), filled in at the end
 DROP_BACK = 120.0       # steps finished this many seconds before the plug dropped out are measured again (it went quiet first)
 CHECK_MAX = 60          # the check pass after the colors measures at most this many odd-looking cells again
@@ -166,6 +202,7 @@ class LightLearn(_Base):
 
     @classmethod
     def from_dict(cls, hass: HomeAssistant, rid: str, d: dict) -> "LightLearn":
+        _check_light(d)
         r = cls(hass, rid, str(d.get("entity") or ""), str(d.get("plug") or ""), float(d.get("interval") or 2.0))
         for k in cls.KEEP:
             if k in d and k != "interval":
@@ -848,13 +885,17 @@ class Learning:
         self.runs: dict[str, _Base] = {}
         self._save = save
         self._resume: list[LightLearn] = []
-        for rid, v in (saved or {}).items():
+        for rid, v in (saved if isinstance(saved, dict) else {}).items():
             if not isinstance(v, dict) or not v.get("plug"):
+                continue
+            if not isinstance(v.get("plug"), str) or not isinstance(v.get("entity") or "", str):
+                _LOGGER.warning("Saved learning run %s is damaged and was skipped (plug or device)", rid)
                 continue
             if v.get("kind") == "light":   # a light run cut by a restart goes on (started once Home Assistant is up)
                 try:
                     r = LightLearn.from_dict(hass, rid, v)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError, KeyError, AttributeError, OverflowError) as err:
+                    _LOGGER.warning("Saved learning run %s is damaged and was skipped: %s", rid, err)
                     continue
                 r.on_step = self._persist
                 if v.get("phase") == "done" and isinstance(v.get("result"), dict):
@@ -867,7 +908,13 @@ class Learning:
                 self.runs[rid] = r
                 self._resume.append(r)
             else:
-                self.runs[rid] = AvgLearn(hass, rid, str(v.get("entity") or ""), str(v["plug"]), float(v.get("started") or time.time()))
+                # bozuk başlangıç zamanı (yazı, liste, NaN, sonsuz, gelecekte) kurulumu durdurmasın: o ölçüm atlanır
+                started = v.get("started")
+                t = time.time() if started is None or started == 0 else _num(started)
+                if t is None or not 0 < t <= time.time() + 86400:
+                    _LOGGER.warning("Saved learning run %s is damaged and was skipped: started=%r", rid, started)
+                    continue
+                self.runs[rid] = AvgLearn(hass, rid, str(v.get("entity") or ""), v["plug"], t)
 
     def resume_saved(self) -> None:
         """Start the light runs that were cut by a restart."""

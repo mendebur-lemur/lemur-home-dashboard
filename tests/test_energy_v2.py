@@ -97,15 +97,12 @@ async def test_categories_meas_and_sync(hass: HomeAssistant, hass_ws_client, set
     tvE._tick(); await hass.async_block_till_done(); await hass.async_block_till_done()
     assert abs(float(hass.states.get("sensor.lhd_tv_energy").state) - 0.07) < 0.002
     assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.07) < 0.002
-    # counter reset of a member: decided on the next reading, then only what it gained after
-    hass.states.async_set("sensor.lhd_tv_energy", "0.01", {"unit_of_measurement": "kWh"})
-    await hass.async_block_till_done()
-    await hass.async_block_till_done()
-    assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.07) < 0.002
-    hass.states.async_set("sensor.lhd_tv_energy", "0.02", {"unit_of_measurement": "kWh"})
-    await hass.async_block_till_done()
-    await hass.async_block_till_done()
-    assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - 0.09) < 0.002
+    # counter reset of a member: held until it is clear (HOLD_RISES rises without coming back), then all it gained since the reset
+    for v, want in (("0.01", 0.07), ("0.02", 0.07), ("0.03", 0.07), ("0.04", 0.07), ("0.05", 0.07), ("0.06", 0.13), ("0.07", 0.14)):
+        hass.states.async_set("sensor.lhd_tv_energy", v, {"unit_of_measurement": "kWh"})
+        await hass.async_block_till_done()
+        await hass.async_block_till_done()
+        assert abs(float(hass.states.get("sensor.lhd_kat_medya_energy").state) - want) < 0.002, (v, want)
     # energy settings follow (debounced)
     d = hass.data[DOMAIN]
     assert await d.async_sync_prefs()

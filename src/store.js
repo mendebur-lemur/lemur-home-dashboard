@@ -41,6 +41,9 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
   // v0.32: revs = her anahtarın (tabs, settings, estimates...) sunucudaki değişiklik sayacı; kayıt bu sayaçla gider, başka bir
   // ekran arada değiştirdiyse sunucu kaydı geri çevirir (conflict) ve güncel veri yeniden alınır. pk = kaydı süren anahtarlar.
   revs: null, pk: {},
+  // ssn: sunucudan son gelen mevsim. settings kaydıyla gider: sayfa mevsime dokunmadıysa tabletin arada yaptığı yaz / kış kalır
+  ssn: null,
+  _ssnOf(d) { return d && lhdIsObj(d.settings) && typeof d.settings.season === 'string' ? d.settings.season : null; },
   load(hass) {
     if (this.data) return Promise.resolve(this.data);
     if (this.loading) return this.loading;
@@ -48,6 +51,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     this.loading = lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((d) => {   // HA açılırken entegrasyon henüz yoksa bekleyip yeniden dener
       this.data = d;
       this.revs = d && lhdIsObj(d.revs) ? Object.assign({}, d.revs) : null;
+      this.ssn = this._ssnOf(d);
       lhdVerCheck(this.conn);
       // kendi kaydımızın yankısı beklenirken gelen eski veri ekrandakini ezmesin
       // parts: yalnız değişen anahtar gelir (yaz / kış dokunuşu bütün tabloları her ekrana yollamasın); eski entegrasyon bunu tanımaz
@@ -59,6 +63,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
           Object.keys(P).forEach((k) => { if (this.pk[k]) return; o[k] = P[k]; any = true; });   // kendi kaydı süren anahtar: yankı ya da çakışma, sunucu karar verir
           if (this.revs) Object.keys(R).forEach((k) => { if (!this.pk[k]) this.revs[k] = R[k]; });
           if (!any) return;
+          if (o.settings !== undefined) this.ssn = this._ssnOf(o);
           this.data = Object.assign({}, this.data, o);
           const d2 = this.data; this.subs.forEach((f) => f(d2)); return;
         }
@@ -72,13 +77,13 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
           this.data = Object.assign({}, this.data, { feed: Object.assign({}, this.data.feed, msg.__feed) });
           const d = this.data; this.subs.forEach((f) => f(d)); return;
         }
-        if (this.pending) return; this.data = msg; if (msg && lhdIsObj(msg.revs)) this.revs = Object.assign({}, msg.revs); this.subs.forEach((f) => f(msg));
+        if (this.pending) return; this.data = msg; this.ssn = this._ssnOf(msg); if (msg && lhdIsObj(msg.revs)) this.revs = Object.assign({}, msg.revs); this.subs.forEach((f) => f(msg));
       }, () => {
         // bağlantı koparsa (HA yeniden başladı, tablet uyudu) dönüşte güncel ayarı al; o arada yapılan değişiklikler kaçmasın
         lhdVerCheck(this.conn);   // HA güncellemeyle yeniden başladıysa yeni sürüm uyarısı
         lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((n) => {
           if (n) this.revs = lhdIsObj(n.revs) ? Object.assign({}, n.revs) : null;   // HA yeniden başladıysa sayaçlar sıfırdan başlar
-          if (n && !this.pending) { this.data = n; this.subs.forEach((f) => f(n)); }
+          if (n && !this.pending) { this.data = n; this.ssn = this._ssnOf(n); this.subs.forEach((f) => f(n)); }
         }).catch(() => {});
       });
       return d;
@@ -91,7 +96,21 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     const msg = { type: 'lemur_home_dashboard/set', key: key, value: value };
     // sayaç gönderilir ve yerelde bir artar: art arda iki kendi kaydımız birbirine takılmaz
     if (this.revs) { msg.rev = this.revs[key] || 0; this.revs[key] = msg.rev + 1; }
-    return this.conn.sendMessagePromise(msg).then((r) => { done(); return r; }, (e) => {
+    if (key === 'settings' && this.revs) msg.ssn = this.ssn;   // sayaç bilen (v0.32+) sunucu; ssn'yi v0.36 tanır
+    return this.conn.sendMessagePromise(msg).then((r) => {
+      done();
+      // kayıt yoldayken gelen yaz / kış güncellemesi atlandı: mevsim, kaydın cevabındaki (sunucudaki) hâliyle alınır
+      if (key === 'settings' && r && lhdIsObj(r.settings)) {
+        const s = this._ssnOf(r); this.ssn = s;
+        if (!this.pk[key] && this.data && this._ssnOf(this.data) !== s) {
+          const st = Object.assign({}, this.data.settings);
+          if (s === null) delete st.season; else st.season = s;
+          this.data = Object.assign({}, this.data, { settings: st });
+          const d = this.data; this.subs.forEach((f) => f(d));
+        }
+      }
+      return r;
+    }, (e) => {
       done();
       if (e && e.code === 'conflict') this.refresh();
       // geri çevrilen kayıt sunucuda sayacı artırmadı: yereldeki artış geri alınır (arada başka kayıt gitmediyse)
@@ -102,7 +121,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
   // sunucudaki güncel veriyi al (çakışmadan sonra): bütün ekranlar yeniden çizer
   refresh() {
     return lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((n) => {
-      if (n) { this.data = n; this.revs = lhdIsObj(n.revs) ? Object.assign({}, n.revs) : null; this.subs.forEach((f) => f(n)); }
+      if (n) { this.data = n; this.ssn = this._ssnOf(n); this.revs = lhdIsObj(n.revs) ? Object.assign({}, n.revs) : null; this.subs.forEach((f) => f(n)); }
       return n;
     }).catch(() => null);
   },
@@ -110,6 +129,7 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
   season(value) {
     if (this.data) {
       this.data = Object.assign({}, this.data, { settings: Object.assign({}, this.data.settings, { season: value }) });
+      this.ssn = value;
       const d = this.data;
       this.subs.forEach((f) => f(d));
     }

@@ -102,6 +102,8 @@ class PanelData:
                 val = stored.get(key)
                 if isinstance(val, type(default)):
                     self.data[key] = val
+                elif val is not None:
+                    _LOGGER.warning("Stored %s is damaged (%s) and was reset", key, type(val).__name__)
         # v0.28.5: the former browser-only energy values became real sensors; panels and records follow
         tabs = self.data.get("tabs")
         if tabs:
@@ -360,12 +362,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        # A page opened while Home Assistant is still starting has neither of the two above; the loader is also a
-        # dashboard resource, served from /local (GitHub #21). Never stops the setup.
-        _LOGGER.debug("Loader as dashboard resource: %s", await LOVRES.async_register(hass))
         for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
+    # A page opened while Home Assistant is still starting has neither of the two above; the loader is also a
+    # dashboard resource, served from /local (GitHub #21). Never stops the setup. On every setup, not once per run:
+    # removed and added again without a restart, the row and the copy come back at once (nothing is written if unchanged).
+    _LOGGER.debug("Loader as dashboard resource: %s", await LOVRES.async_register(hass))
 
     async def _svc_feed(call) -> None:
         d = _data(hass)
@@ -461,6 +464,7 @@ def _for_user(connection, payload: dict) -> dict:
         vol.Required("key"): vol.In(list(SET_KEYS)),
         vol.Required("value"): vol.Any(list, dict),
         vol.Optional("rev"): int,   # the key's counter the change was made on; left out: not checked (older pages)
+        vol.Optional("ssn"): vol.Any(None, str),   # settings: the season the page last had from the server (ws_season)
     }
 )
 @callback
@@ -474,8 +478,8 @@ def ws_set(hass, connection, msg):
         return
     key, value = msg["key"], msg["value"]
     if "rev" in msg and msg["rev"] != data.revs.get(key, 0):
-        # someone else (another admin page, the import, a wall tablet's season switch) changed this key meanwhile:
-        # saving would silently undo their change. The page reloads and says so.
+        # someone else (another admin page, the import) changed this key meanwhile: saving would silently undo their
+        # change. The page reloads and says so. A wall tablet's season switch does not count here (ws_season, ssn below).
         connection.send_error(msg["id"], "conflict", f"{key} was changed elsewhere")
         return
     if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
@@ -501,6 +505,15 @@ def ws_set(hass, connection, msg):
         except vol.Invalid as err:
             connection.send_error(msg["id"], "invalid", f"{key}: {err}")
             return
+    if key == "settings" and "ssn" in msg:
+        cur = (data.data.get("settings") or {}).get("season")
+        if value.get("season") == msg["ssn"] and cur != msg["ssn"]:
+            # sayfa mevsime dokunmadı, arada bir tablet yaz / kış yaptı: tabletin seçimi kalır (yöneticinin değişikliği de)
+            value = dict(value)
+            if cur is None:
+                value.pop("season", None)
+            else:
+                value["season"] = cur
     # solar production or the sync switch changed: sensors and energy settings follow
     def _en(st: dict) -> tuple:
         e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
@@ -556,7 +569,11 @@ def ws_season(hass, connection, msg):
     settings = dict(data.data.get("settings") or {})
     settings["season"] = msg["season"]
     data.data["settings"] = settings
-    data.changed("settings")
+    # own counter, not the settings one: an admin's settings save on its way is not refused because of a tap here
+    # (ws_set keeps this season unless the admin page changed the season itself)
+    data.revs["season"] = data.revs.get("season", 0) + 1
+    data.store.async_delay_save(lambda: data.data, 1.0)
+    async_dispatcher_send(hass, SIGNAL_UPDATE, data.view(), ("settings",))
     connection.send_result(msg["id"], {"season": msg["season"]})
 
 

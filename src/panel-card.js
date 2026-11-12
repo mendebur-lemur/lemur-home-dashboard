@@ -572,6 +572,28 @@ function lpValText(h, st, lang) {
   return a.unit_of_measurement ? s + ' ' + a.unit_of_measurement : s;
 }
 
+// saat biçimi Home Assistant'taki gibi (hass.locale.time_format): '12' → 12 saat, '24' → 24 saat,
+// 'language' / 'system' → HA'nın kendi denemesi (use_am_pm.ts): o dilde (ya da tarayıcıda) 22:00 "10" diye yazılıyorsa 12 saat.
+// Ayar yoksa (eski HA) eskisi gibi 24 saat. Sonuç dil + ayar değişmedikçe saklanır (her 15 sn'de yeniden denenmez)
+const LP_AMPM = { k: null, v: false };
+function lpAmPm(h) {
+  const lc = (h && h.locale) || {}, f = lc.time_format;
+  if (f === '12') return true;
+  if (f !== 'language' && f !== 'system') return false;
+  const k = f + '|' + (lc.language || '');
+  if (LP_AMPM.k !== k) {
+    let v = false;
+    try { v = new Date('January 1, 2023 22:00:00').toLocaleString(f === 'language' ? (lc.language || undefined) : undefined).indexOf('10') >= 0; } catch (e) {}
+    LP_AMPM.k = k; LP_AMPM.v = v;
+  }
+  return LP_AMPM.v;
+}
+// ÖÖ / ÖS (AM / PM) panonun dilinde; Intl yoksa AM / PM
+function lpDayPeriod(d, lang) {
+  try { const p = new Intl.DateTimeFormat(lang, { hour: 'numeric', hour12: true }).formatToParts(d).filter((x) => x.type === 'dayPeriod')[0]; if (p && p.value) return p.value; } catch (e) {}
+  return d.getHours() < 12 ? 'AM' : 'PM';
+}
+
 class LemurHomeDashboardCard extends HTMLElement {
   setConfig(config) { this._config = config || {}; this._sig = null; if (this._hass) this._render(); }
   // ışık penceresi; önizlemede (demo) ekran yerine önizleme kutusunda, seçilen telefon/alttan ayarıyla açılır
@@ -662,6 +684,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._rsz) { window.removeEventListener('resize', this._rsz); this._rsz = null; }
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
+    lpTplOff(this._tplCb); clearTimeout(this._tplT); this._tplT = null;   // şablon geri çağrısı (geri takılınca _tx yeniden ekler)
     this._sig = null;   // geri takılınca baştan kurulsun (dinleyiciler yeniden bağlansın)
   }
 
@@ -673,7 +696,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     return this._def;
   }
   _tick() {
-    const c = this.shadowRoot && this.shadowRoot.querySelector('.clock'); if (c) c.textContent = this._time();
+    const c = this.shadowRoot && this.shadowRoot.querySelector('.clock'); if (c) c.innerHTML = this._time();
     (this._pets || []).forEach((el) => lpPetPaint(el, this._lang, Date.now()));   // "2 sa önce", durum rengi
     if (this._ticks % 4 === 0 && this._hasAgo) this._repaint();                       // "son değişim" ikinci satırları
     if (this._ticks % 4 === 3 && this._ens && this._ens.length) this._enPaint(true);  // enerji: dakikada bir (veri 5 dk'da bir tazelenir)
@@ -681,7 +704,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._ticks = (this._ticks || 0) + 1;
     if (this._ticks % 20 === 0 && this._def && this._hass) { this._def = null; this._render(); }   // otomatik düzen 5 dk'da bir tazelenir
   }
-  _time() { const d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  _time() {
+    const d = new Date(), mm = ('0' + d.getMinutes()).slice(-2);
+    if (!lpAmPm(this._hass)) return ('0' + d.getHours()).slice(-2) + ':' + mm;
+    // 12 saat: saat sıfırsız (HA gibi), ÖÖ/ÖS yanında yarım boyda (saat kutusu telefonda da taşmaz)
+    return (d.getHours() % 12 || 12) + ':' + mm + '<small style="font-size:0.45em;font-weight:600;margin-left:0.2em;opacity:0.75">' + esc(lpDayPeriod(d, pickLang(this._hass))) + '</small>';
+  }
 
   _render() {
     if (!this._hass) return;
@@ -717,11 +745,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     const present = [], vis = [];
     const allOf = (s) => (s.entities || []).concat.apply(s.entities || [], (s._folds || []).map((F) => F.entities || []));   // katlanır gruplardakiler de
     (view.sections || []).forEach((s) => allOf(s).forEach((x) => {
-      const e = lpEnt(x); if (e && S[e.entity]) present.push(e.entity);
+      const e = lpEnt(x); if (e && S[e.entity]) { present.push(e.entity); if (lhdKind(x) === 'scene') { const a = S[e.entity].attributes || {}; vis.push([a.friendly_name || '', a.icon || '']); } }   // düğmenin adı / simgesi HA'dan (iskelette yazılı)
       if (x && x.visible) vis.push(lpVisible(x.visible, S));   // koşullu öğe: koşul değişince iskelet yeniden kurulur
       if (x && x.state_colors) vis.push(JSON.stringify(lpMapStyle(x, S)));      // duruma göre görünüm (Halo kartı yeniden kurulur)
     }));
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge()]);
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
@@ -770,6 +798,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // eylem öğesi (düğme) karo ya da satır görünümünde: dokununca düğme gibi çalışır (data-scene)
     const actEl = (s, it, look, c) => {
       const st = it.entity ? S[it.entity] : null, cc = it.color || '#5B8DEF';
+      if (st && (!it.name || !it.icon) && visW.indexOf(it.entity) < 0) visW.push(it.entity);   // ad / simge HA'dan: değişince imza yeniden hesaplanır
       const name = it.name || (st ? st.attributes.friendly_name || it.entity : '');
       const icon = it.icon || (st && st.attributes.icon) || 'mdi:play';
       const ic = lpIcon(icon, 'acti', 'color:' + esc(cc));
@@ -827,6 +856,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         lec = ' data-lk="' + esc(k) + '" data-lroom="' + esc(room) + '" data-lfx="' + esc((it.action.data && it.action.data.effect) || '') + '"';
       }
       const st = it.entity ? S[it.entity] : null;
+      if (st && (!it.name || !it.icon) && visW.indexOf(it.entity) < 0) visW.push(it.entity);   // ad / simge HA'dan: değişince imza yeniden hesaplanır
       const name = it.name || (st ? st.attributes.friendly_name || it.entity : '');
       const icon = it.icon || (st && st.attributes.icon) || 'mdi:play';
       return '<div class="scene' + (k ? ' lec' + (lecOn ? '' : ' na') : '') + '" style="--sc:' + esc(c) + ';' + lpItemStyle(it, 'scene', 0) + '" data-scene="' + esc(s._fk || s.id) + ':' + i + '"' + lec + hidA(it) + mark(i) + '><div class="si">' + lpIcon(icon, '', 'color:' + esc(c)) + '</div>' +
@@ -1429,7 +1459,9 @@ class LemurHomeDashboardCard extends HTMLElement {
       let phItems = null;
       if (d.kind === 'item' && tab._ph && d.live) {
         const sid = d.el.getAttribute('data-sec'), S0 = secById(tab, sid), bxe = d.el.closest('.box[data-secs]');
-        if (S0 && bxe) phItems = { sec: sid, keys: arr(bxe.querySelectorAll('[data-idx][data-sec="' + sid + '"]')).map((x) => lhdItemKey((S0.entities || [])[+x.getAttribute('data-idx')])) };
+        // occ: aynı anahtarlı öğeler (ikizler) arasındaki sırası; yönetim paneli hangi ikizin sürüklendiğini bununla bulur
+        const E0 = S0 ? S0.entities || [] : [], ix = bxe ? arr(bxe.querySelectorAll('[data-idx][data-sec="' + sid + '"]')).map((x) => +x.getAttribute('data-idx')) : [];
+        if (S0 && bxe) phItems = { sec: sid, keys: ix.map((i) => lhdItemKey(E0[i])), occ: ix.map((i) => { let n = 0; for (let j = 0; j < i; j++) if (lhdItemKey(E0[j]) === lhdItemKey(E0[i])) n++; return n; }) };
       }
       // değişiklik olmazsa (ya da kaydedilmezse) öğe/kutu eski yerine döner; kaydedilirse pano zaten yeniden çizilir
       if (d.home && d.home.p) { try { d.home.p.insertBefore(d.el, d.home.n && d.home.n.parentNode === d.home.p ? d.home.n : null); } catch (e) {} }
@@ -1634,7 +1666,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (a.popup) { const pp = lhdIsObj(a.popup) ? a.popup : {}; LemurCardPopup.open(h, { title: pp.title, card: pp.card }, this._lang); return; }   // pencere içeriği yalnız kart
     const sv = a.service || a.perform_action;
     if (!sv && typeof a.action === 'string') {
-      if (a.action === 'navigate' && a.navigation_path) { history.pushState(null, '', a.navigation_path); lpFire(window, 'location-changed', { replace: false }); return; }
+      if (a.action === 'navigate') {
+        const np = a.navigation_path;
+        if (typeof np !== 'string' || !np || /^[a-z][a-z0-9+.-]*:/i.test(np) || /^[\\/][\\/]/.test(np)) return;
+        try { history.pushState(null, '', np); } catch (e) { return; }
+        lpFire(window, 'location-changed', { replace: false }); return;
+      }
       if (a.action === 'url' && lhdSafeUrl(a.url_path)) { window.open(a.url_path, '_blank', 'noopener'); return; }
       if (a.action === 'more-info' || a.action === 'toggle') this._act(a.action, a.entity || id); 
       return;

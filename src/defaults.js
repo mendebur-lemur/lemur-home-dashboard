@@ -5,10 +5,13 @@
 // - Her alan bir sekme (kat sırasına göre, sonra HA'daki alan sırası). Klima/medya yoksa ve 3'ten az ışık varsa küçük oda sayılır,
 //   ayrı sekme açılmaz (koridor, banyo gibi yerler üst şeridi kalabalıklaştırmasın).
 // - Küçük odaların ve alana atanmamış cihazların hepsi sondaki "Diğer" sekmesinde (en az bir oda sekmesi açıldıysa).
+// - Hiçbir cihaz kaybolmaz: oda ve "Diğer" sekmelerinde adet sınırı yok (bölüm sığmazsa kutusunda kayar); "Ev" özettir ama
+//   oda sekmesi hiç açılmadıysa (alanı olmayan ev) evin bütün cihazlarını gösterir; başka sekmeye girmeyen her şey "Diğer"de.
 // - Küçük ışık grubunun üyeleri ayrıca gösterilmez; odanın tamamını kapsayan büyük grupta üyeler de görünür.
 // - Şerit/lamba segmentleri, ışığı olan cihazın güç anahtarı ve tarayıcı eklentisi (browser_mod) varlıkları alınmaz.
 // - Parametre isteyen betikler senaryo düğmesi olmaz.
 // - Lemur Light Effect Card kuruluysa efekt ekranı üst şeritteki "Efektler" düğmesinden açılır (kart çizer, burada bir şey eklenmez).
+// - Tek odalı ev (bütün cihazlar o odada): oda sekmesi Ev'in aynısı olacağından açılmaz, Ev evin tamamını gösterir.
 // - En fazla 6 oda sekmesi; fazlası ve küçük odalar "Diğer"de (sekme sayısı 8'i geçmesin, oda kaybolmasın).
 // - Anahtarlardan (switch) sadece priz ve aydınlatma gibi görünenler alınır; ayar anahtarları ve gizli varlıklar alınmaz.
 // Eski Safari için ?. ve ?? yok.
@@ -88,7 +91,13 @@ function lhdNormTab(tab) {
 // Bölümdeki öğe türleri (yönetim panelindeki özet için): { tile: 7, scene: 2, ... }
 // Telefona özel ayarlar (v0.22) için öğenin kalıcı anahtarı: cihaz kimliği, yoksa türüne göre ad/simge.
 // Öğe listede yer değiştirse de anahtar aynı kalır (sıra numarası kullanılmaz).
+// v0.36: bölümde aynı anahtarlı iki öğe (adsız iki boş karo, başlıksız iki markdown kartı ...) telefonda ayrı ayarlanınca yönetim paneli
+// ikisine kalıcı bir pk verir (admin.js _phSplit); anahtar o zaman eski anahtar + '#' + pk. pk'siz öğenin anahtarı eskisi gibi.
 function lhdItemKey(x) {
+  const k = lhdItemBase(x);
+  return k && x && typeof x === 'object' && typeof x.pk === 'string' && x.pk ? k + '#' + x.pk : k;
+}
+function lhdItemBase(x) {
   if (typeof x === 'string') return x;
   if (!x || typeof x !== 'object') return '';
   if (x.entity) return String(x.entity);
@@ -259,15 +268,17 @@ function buildDefaultTabs(hass, lang, opts) {
 
   const tabs = [];
   const usedIds = { home: true, other: true };
-  if (opts.home !== false) tabs.push(tab({
+  // full: oda sekmesi yokken Ev evin tamamı (özet sınırları yok, perdeler ve bütün sahneler de girer)
+  const homeTab = (full) => tab({
     id: 'home', name: t(lang, 'home'), icon: 'mdi:home-outline',
-    lights: spread(lightList.filter((id) => lightRank(id) < 2), lightRank, 20),
-    scenes: (globalScenes.length ? globalScenes : scenes.slice().sort(byName)).slice(0, 6),
-    controls: spread(controls, null, 6),
-    vacuums: vacuums.slice().sort(byArea).slice(0, 3),
-    medias: medias.slice().sort(byArea).slice(0, 2),
+    lights: full ? spread(lightList, lightRank, Infinity).concat(covers.slice().sort(byArea)) : spread(lightList.filter((id) => lightRank(id) < 2), lightRank, 20),
+    scenes: full ? globalScenes.concat(scenes.filter((id) => areaOf(id)).sort(byArea)) : (globalScenes.length ? globalScenes : scenes.slice().sort(byName)).slice(0, 6),
+    controls: spread(controls, null, full ? Infinity : 6),
+    vacuums: vacuums.slice().sort(byArea).slice(0, full ? undefined : 3),
+    medias: medias.slice().sort(byArea).slice(0, full ? undefined : 2),
     lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'scenes'), controlTitle: t(lang, 'control')
-  }));
+  });
+  if (opts.home !== false) tabs.push(homeTab(false));
 
   const small = {};
   order.forEach((aid) => {
@@ -282,20 +293,30 @@ function buildDefaultTabs(hass, lang, opts) {
     const id = usedIds[aid] ? 'a-' + aid : aid; usedIds[id] = true;
     tabs.push(tab({
       id: id, name: aname, icon: icon, area: aid,
-      lights: L.slice(0, 25).concat(CV.slice(0, 6)), scenes: (sc.length ? sc : globalScenes).slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
+      lights: L.concat(CV), scenes: sc.length ? sc : globalScenes.slice(0, 6), controls: C, vacuums: V, medias: M,
       lightTitle: t(lang, 'room_lights', { area: upper(lang, aname) }), sceneTitle: t(lang, 'shortcuts'), controlTitle: upper(lang, aname)
     }));
   });
 
-  if (opts.other !== false && tabs.length > (opts.home === false ? 0 : 1)) {
-    const rest = (id) => { const a = areaOf(id); return !a || small[a] || !areas[a] || (pick && pick.indexOf(a) < 0); };
-    const L = lightList.filter(rest).sort(byArea).slice(0, 25).concat(covers.filter(rest).sort(byArea).slice(0, 6));
-    const C = controls.filter(rest).sort(byArea);
-    const M = medias.filter(rest).sort(byArea);
-    const V = vacuums.filter(rest).sort(byArea);
-    if (L.length || C.length || M.length || V.length) tabs.push(tab({
+  const rest = (id) => { const a = areaOf(id); return !a || small[a] || !areas[a] || (pick && pick.indexOf(a) < 0); };
+  const rooms = tabs.length - (opts.home === false ? 0 : 1);
+  // tek oda ve odasız/küçük odada cihaz yok: oda sekmesi Ev'in aynısı olurdu, açılmaz (elle seçilen alanlar hariç)
+  const same = !pick && rooms === 1 && ![lightList, covers, controls, medias, vacuums].some((l) => l.some(rest)) && !scenes.some((id) => areaOf(id) && rest(id));
+  if (opts.home !== false && (!rooms || same)) { tabs.length = 1; tabs[0] = homeTab(true); }   // oda sekmesi yok: Ev özet değil, evin tamamı
+  // başka hiçbir sekmeye girmemiş cihazlar (hiçbiri kaybolmasın diye "Diğer"e)
+  const placed = {};
+  tabs.forEach((T) => T.sections.forEach((s) => s.entities.forEach((e) => { const x = typeof e === 'string' ? e : (e.entity || (e.action && e.action.target)); if (x) placed[x] = true; })));
+  const left = (id) => rest(id) || !placed[id];
+  const lost = [lightList, covers, controls, medias, vacuums, scenes].some((l) => l.some((id) => !placed[id]));
+  if (opts.other !== false && (rooms || lost)) {
+    const L = lightList.filter(left).sort(byArea).concat(covers.filter(left).sort(byArea));
+    const C = controls.filter(left).sort(byArea);
+    const M = medias.filter(left).sort(byArea);
+    const V = vacuums.filter(left).sort(byArea);
+    const SC = globalScenes.concat(scenes.filter((id) => areaOf(id) && left(id)).sort(byArea));
+    if (L.length || C.length || M.length || V.length || lost) tabs.push(tab({
       id: 'other', name: t(lang, 'other'), icon: 'mdi:dots-horizontal-circle-outline',
-      lights: L, scenes: globalScenes.slice(0, 6), controls: C.slice(0, 4), vacuums: V.slice(0, 2), medias: M.slice(0, 3),
+      lights: L, scenes: SC, controls: C, vacuums: V, medias: M,
       lightTitle: t(lang, 'lights'), sceneTitle: t(lang, 'shortcuts'), controlTitle: t(lang, 'other_control')
     }));
   }

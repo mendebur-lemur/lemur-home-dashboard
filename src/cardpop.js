@@ -86,9 +86,11 @@ class LemurCardPopup {
   static _openHtml(hass, title, html, lang) { return LemurCardPopup._open(hass, { title: title, html: html }, lang); }
   // p.wide: ekrana sığan en büyük pencere (kamera)
   static _open(hass, p, lang) {
-    if (LP_CPOP.cur) LP_CPOP.cur.close(true);
-    if (typeof LP_POP !== 'undefined' && LP_POP.cur) LP_POP.cur.close(true);
-    const x = new LemurCardPopup(hass, p || {}, lang || pickLang(hass));
+    // açık pencereler kapanır; geçmişte adımı olan varsa yeni pencere onu devralır (Geri bir kez boşa basılmasın; v0.36)
+    const L = [LP_CPOP.cur, typeof LP_POP !== 'undefined' ? LP_POP.cur : null].filter((o) => o && !o._closed);
+    const adopt = L.some((o) => o._pushed);
+    L.forEach((o) => o.close(true));
+    const x = new LemurCardPopup(hass, p || {}, lang || pickLang(hass), adopt);
     LP_CPOP.cur = x;
     return x;
   }
@@ -111,7 +113,7 @@ class LemurCardPopup {
     });
     return p;
   }
-  constructor(hass, p, lang) {
+  constructor(hass, p, lang, adopt) {
     this._h = hass; this._els = [];
     this._host = document.createElement('div');
     this._host.className = 'lemur-card-popup';
@@ -127,7 +129,8 @@ class LemurCardPopup {
     window.addEventListener('keydown', this._key, true);
     // geri tuşu pencereyi kapatsın (Android tablet, tarayıcı)
     this._pop = () => this.close(true);
-    try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
+    if (adopt) { this._pushed = true; window.addEventListener('popstate', this._pop); }   // kapanan pencerenin adımı
+    else try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._pushed = true; window.addEventListener('popstate', this._pop); } catch (e) { this._pushed = false; }
     // Home Assistant'ın içine takılır, body'ye değil: HA'nın yeni kartları hass'ı sayfadaki <home-assistant>'tan "bağlam" (context)
     // olarak alıyor. Dışarıda kalan kart (ör. kameranın canlı görüntüsü, ha-camera-stream) hass'ı bulamayıp boş kalıyordu (2026-11-05).
     const haEl = document.querySelector('home-assistant');

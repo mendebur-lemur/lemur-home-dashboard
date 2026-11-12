@@ -126,8 +126,8 @@ function lpCovMini(style, dir) {
 
 class LemurCoverPopup extends LemurLightPopup {
   static open(hass, id, item, opts) {
-    if (LP_POP.cur) LP_POP.cur.close(true);
-    const p = new LemurCoverPopup(hass, id, item || {}, null, opts);
+    const adopt = lpPopTake();
+    const p = new LemurCoverPopup(hass, id, item || {}, null, Object.assign({}, opts, { adopt: adopt }));
     LP_POP.cur = p;
     return p;
   }

@@ -7,7 +7,8 @@ function lhdYamlScalar(s) {
   if (s === '' || s === '~' || s === 'null' || s === 'Null' || s === 'NULL') return null;
   if (s === 'true' || s === 'True' || s === 'TRUE') return true;
   if (s === 'false' || s === 'False' || s === 'FALSE') return false;
-  if (s[0] === '"') { try { return JSON.parse(s); } catch (e) { throw new Error('"' + s + '"'); } }
+  // YAML'da tırnak içinde düz sekme olabilir, JSON'da olmaz
+  if (s[0] === '"') { try { return JSON.parse(s.replace(/\t/g, '\\t')); } catch (e) { throw new Error('"' + s + '"'); } }
   if (s[0] === "'") { if (s[s.length - 1] !== "'") throw new Error(s); return s.slice(1, -1).replace(/''/g, "'"); }
   if (s[0] === '[' || s[0] === '{') return lhdYamlFlow(s);
   if (/^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s) && !/^0\d/.test(s)) return Number(s);
@@ -47,7 +48,7 @@ function lhdYamlStrip(l) {
   let q = null;
   for (let i = 0; i < l.length; i++) {
     const c = l[i];
-    if (q) { if (c === q) q = null; continue; }
+    if (q) { if (q === '"' && c === '\\') i++; else if (c === q) q = null; continue; }   // "a \" # b": kaçışlı tırnak metni bitirmez
     if (c === '"' || c === "'") { if (i === 0 || /[\s:[{,-]/.test(l[i - 1])) q = c; continue; }
     if (c === '#' && (i === 0 || /\s/.test(l[i - 1]))) return l.slice(0, i);
   }
@@ -62,7 +63,8 @@ function lhdYamlKey(t) {
   return null;
 }
 function lhdYamlParse(text) {
-  text = String(text || '').replace(/\r\n?/g, '\n').replace(/\t/g, '  ');
+  // sekme yalnız satır başındaki girintide iki boşluk sayılır; değerin içindeki sekme kalır
+  text = String(text || '').replace(/\r\n?/g, '\n').replace(/^[ \t]+/gm, (m) => m.replace(/\t/g, '  '));
   const tt = text.trim();
   if (!tt) return null;
   if (tt[0] === '{' || tt[0] === '[') { try { return JSON.parse(tt); } catch (e) { /* YAML akış biçimi olabilir */ } }
@@ -72,18 +74,19 @@ function lhdYamlParse(text) {
   let p = 0;
   const fail = (l) => { const e = new Error('YAML (' + l.n + ')'); e.line = l.n; throw e; };
   // | ve > çok satırlı metin: ham satırlardan okunur (yorum silinmez, boş satırlar korunur)
+  // |2 girinti göstergesi (ilk satırı boşlukla başlayan metin), |+ sondaki bütün satır sonları kalır, |- hiçbiri
   const block = (hdr, parentInd, startLine) => {
-    const out = [];
-    let i = startLine, ind = -1;
+    const out = [], dg = /[1-9]/.exec(hdr);
+    let i = startLine, ind = dg ? parentInd + +dg[0] : -1;
     while (i < raw.length) {
-      const r = raw[i].replace(/\t/g, '  ');
-      if (!r.trim()) { out.push(''); i++; continue; }
+      const r = raw[i];
+      if (!r.trim()) { out.push(ind >= 0 && r.length > ind ? r.slice(ind) : ''); i++; continue; }   // yalnız boşluklu satırın girinti fazlası metindir
       const ri = r.length - r.replace(/^ +/, '').length;
       if (ri <= parentInd) break;
       if (ind < 0) ind = ri;
       out.push(r.slice(Math.min(ind, ri))); i++;
     }
-    while (out.length && out[out.length - 1] === '') out.pop();
+    if (hdr.indexOf('+') < 0) while (out.length && out[out.length - 1] === '') out.pop();
     while (p < L.length && L[p].n <= i) p++;
     let s = hdr[0] === '>' ? out.join('\n').replace(/([^\n])\n(?=[^\n ])/g, '$1 ') : out.join('\n');
     if (hdr.indexOf('-') < 0) s += '\n';
@@ -91,7 +94,7 @@ function lhdYamlParse(text) {
   };
   const value = (rest, l, ind) => {
     rest = rest.trim();
-    if (/^[|>][-+]?$/.test(rest)) return block(rest, ind, l.n);
+    if (/^[|>]([1-9][-+]?|[-+][1-9]?)?$/.test(rest)) return block(rest, ind, l.n);
     if (rest !== '') return lhdYamlScalar(rest);
     if (p < L.length && L[p].ind > ind) return node(L[p].ind);
     if (p < L.length && L[p].ind === ind && /^-(\s|$)/.test(L[p].t)) return node(ind);   // "anahtar:" altındaki liste aynı girintide olabilir
@@ -137,10 +140,12 @@ function lhdYamlDump(v, ind) {
     if (x === null || x === undefined) return 'null';
     if (typeof x === 'number' || typeof x === 'boolean') return String(x);
     const s = String(x);
-    if (s === '' || /^[\s]|[\s]$|^[-?:,[\]{}#&*!|>'"%@`]|: | #|^(true|false|null|yes|no|on|off|~)$/i.test(s) || /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s)) return JSON.stringify(s);
+    if (s === '' || /^[\s]|[\s]$|^[-?:,[\]{}#&*!|>'"%@`]|: | #|:$|[\t\r\n]|^(true|false|null|yes|no|on|off|~)$/i.test(s) || /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s)) return JSON.stringify(s);
     return s;
   };
-  const multi = (s, i2) => typeof s === 'string' && s.indexOf('\n') >= 0 ? '|' + (/\n$/.test(s) ? '' : '-') + '\n' + s.replace(/\n$/, '').split('\n').map((x) => (x ? i2 + x : '')).join('\n') : null;
+  // çok satırlı metin | bloğu olarak (sekme ya da \r içeren JSON tırnağıyla, sc); ilk dolu satırı boşlukla başlıyorsa girinti göstergesi |2,
+  // sonda birden çok satır sonu varsa |+ (yoksa okurken girinti ve satır sonları kayboluyordu)
+  const multi = (s, i2) => typeof s === 'string' && s.indexOf('\n') >= 0 && !/[\t\r]/.test(s) ? '|' + (/^\n* /.test(s) ? '2' : '') + (/\n\n$/.test(s) ? '+' : /\n$/.test(s) ? '' : '-') + '\n' + s.replace(/\n$/, '').split('\n').map((x) => (x ? i2 + x : '')).join('\n') : null;
   if (Array.isArray(v)) {
     if (!v.length) return ind + '[]';
     return v.map((x) => {

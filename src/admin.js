@@ -31,6 +31,11 @@ const ADM = {
     modeSimple: 'Basit', modeAdv: 'Gelişmiş', modeT: 'Basit modda yalnız temel ayarlar görünür; gelişmiş ayarlar silinmez, çalışmaya devam eder.', advHas: 'Bu öğede gelişmiş ayarlar var (boyut, renk, koşul ya da özel eylem). Basit modda gizli ama çalışıyor.', advTag: 'gelişmiş', helpT: 'Yardım',
     gapL: 'Aralık', gapAuto: 'Otomatik', heightL: 'Yükseklik', h_rows: '{n} satır', addSub: 'Alt başlık', addSubT: 'Bölümün içinde küçük bir ara başlık (ör. karoların altında BAĞLANTI)', subItem: 'Alt başlık', subText: 'Yazı',
     scL: 'Duruma göre renk', scT: 'Bir varlığın durumuna göre renk (ör. yem durumu: aktif → yeşil, acil → kırmızı). Metin değerlerde de çalışır.', scE: 'Varlık (boşsa öğenin kendisi)', scState: 'Durum', scAdd: 'Satır ekle', cFixed: 'Sabit renk',
+    hfx_: 'Hareket: olağan', hfx_breathe: 'Yavaş nefes', hfx_pulse: 'Hızlı nabız', hfx_blink: 'Yanıp söner', hfx_still: 'Sabit', hfx_none: 'Hale yok', scFxL: 'Bu durumda hâle hareketi',
+    scFr: 'Çerçeve', scFrT: 'Dikkat çerçevesi: kartın kenarı ve zemini bu renge boyanır; hareket yanıp sönme ya da nabızsa çerçeve de onunla yanıp söner',
+    scMore: 'Ad, simge', scMoreT: 'Bu durumda kartta başka ad ve simge göster', scName: 'Bu durumdaki ad', scIcon: 'Bu durumdaki simge',
+    scHaloT: 'Her durum için hâlenin hareketi, dikkat çerçevesi ve "Ad, simge" ile (⋯ düğmesi) başka ad ve simge seçilebilir. Boş bırakılan her zamanki gibi kalır.',
+    natL: 'Kendi boyunda', natT: 'Kart bulunduğu kutuyu doldurmak için uzamaz, içeriği kadar yüksek kalır.',
     addPet: 'Evcil hayvan', addPetT: 'Besleme kartı: kedi, köpek, balık... için besleme hatırlatıcısı', t_pets: 'Besleme', petItem: 'Besleme kartı', petKind: 'Tür',
     pk_cat: 'Kedi', pk_dog: 'Köpek', pk_fish: 'Balık', pk_bird: 'Kuş', pk_rabbit: 'Tavşan', pk_turtle: 'Kaplumbağa', pk_other: 'Diğer',
     petSched: 'Ne zaman beslenir', pm_interval: 'Her N saatte bir', pm_times: 'Günün belli saatlerinde', petEvery: 'Kaç saatte bir', petTimes: 'Saatler (virgülle)',
@@ -159,6 +164,11 @@ const ADM = {
     modeSimple: 'Simple', modeAdv: 'Advanced', modeT: 'Simple mode shows only the basic settings; advanced settings are kept and keep working.', advHas: 'This item has advanced settings (size, colour, condition or a custom action). They are hidden in simple mode but still work.', advTag: 'advanced', helpT: 'Help',
     gapL: 'Spacing', gapAuto: 'Auto', heightL: 'Height', h_rows: '{n} rows', addSub: 'Subtitle', addSubT: 'A small heading inside the section (e.g. CONNECTION under the tiles)', subItem: 'Subtitle', subText: 'Text',
     scL: 'Colour by state', scT: 'Colour by an entity\'s state (e.g. feeding status: active → green, urgent → red). Works for text values too.', scE: 'Entity (empty: the item itself)', scState: 'State', scAdd: 'Add row', cFixed: 'Fixed colour',
+    hfx_: 'Motion: as usual', hfx_breathe: 'Slow breath', hfx_pulse: 'Fast pulse', hfx_blink: 'Blinking', hfx_still: 'Still', hfx_none: 'No halo', scFxL: 'Halo motion in this state',
+    scFr: 'Frame', scFrT: 'Attention frame: the card\'s border and background take this colour; with blinking or pulse motion the frame blinks too',
+    scMore: 'Name, icon', scMoreT: 'Show another name and icon on the card in this state', scName: 'Name in this state', scIcon: 'Icon in this state',
+    scHaloT: 'For each state you can pick the halo motion, an attention frame and, under "Name, icon" (the ⋯ button), another name and icon. Anything left empty stays as usual.',
+    natL: 'Natural height', natT: 'The card does not stretch to fill its box; it stays as tall as its content.',
     addPet: 'Pet', addPetT: 'Feeding card: a feeding reminder for a cat, dog, fish...', t_pets: 'Feeding', petItem: 'Feeding card', petKind: 'Kind',
     pk_cat: 'Cat', pk_dog: 'Dog', pk_fish: 'Fish', pk_bird: 'Bird', pk_rabbit: 'Rabbit', pk_turtle: 'Turtle', pk_other: 'Other',
     petSched: 'When to feed', pm_interval: 'Every N hours', pm_times: 'At set times of day', petEvery: 'Every how many hours', petTimes: 'Times (comma separated)',
@@ -298,6 +308,40 @@ const LHD_HA_CARDS = [
   ['area', 'Alan', 'Area', 'mdi:texture-box'], ['logbook', 'Kayıt defteri', 'Logbook', 'mdi:format-list-text'], ['iframe', 'Web sayfası', 'Webpage', 'mdi:web']
 ];
 const LHD_SC_DEF = ['#28BE64', '#FFCD28', '#FF8C1E', '#FF3737'];
+// duruma göre görünüm satırları (v0.36): state_colors.map → f.scRows [durum, renk] ve satır sırasıyla scfxN (hareket), scfrN (çerçeve),
+// scnameN (ad), sciconN (simge); f.scO asıl değerler (dokunulmayan satır olduğu gibi yazılsın)
+function lhdScLoad(f, sc) {
+  const map = sc && lhdIsObj(sc.map) ? sc.map : {};
+  f.scRows = []; f.scO = [];
+  Object.keys(map).forEach((x, q) => {
+    const v = map[x], o = lhdIsObj(v) ? v : null, s = (k) => (o && typeof o[k] === 'string' ? o[k] : '');
+    f.scRows.push([x, o ? s('color') : v]); f.scO.push(v);
+    f['scfx' + q] = s('effect'); f['scname' + q] = s('name'); f['scicon' + q] = s('icon'); f['scfr' + q] = !!(o && o.frame);
+  });
+}
+// bir satırın değeri: yalnız renk → düz yazı ("green"); ek ayar varsa { color, effect, name, icon, frame } (boşlar yazılmaz, bilinmeyen alanlar korunur)
+function lhdScBuild(col, fx, nm, ic, fr, O) {
+  const X = {}, tr = (v) => String(v || '').trim();
+  if (col) X.color = col;
+  if (tr(fx)) X.effect = tr(fx);
+  if (tr(nm)) X.name = tr(nm);
+  if (tr(ic)) X.icon = tr(ic);
+  if (fr) X.frame = true;
+  if (lhdIsObj(O)) Object.keys(O).forEach((k) => { if (['color', 'effect', 'name', 'icon', 'frame'].indexOf(k) < 0) X[k] = O[k]; });
+  const n = Object.keys(X).length;
+  return !n ? (col || '') : n === 1 && X.color ? X.color : X;
+}
+const lhdScCanon = (v) => JSON.stringify(lhdIsObj(v) ? Object.keys(v).sort().map((k) => [k, v[k]]) : v);
+function lhdScVal(f, q, col) {
+  const O = f.scO && q < f.scO.length ? f.scO[q] : undefined;
+  const X = lhdScBuild(col, f['scfx' + q], f['scname' + q], f['scicon' + q], f['scfr' + q], O);
+  if (O !== undefined) {
+    const o = lhdIsObj(O) ? O : null, s = (k) => (o && typeof o[k] === 'string' ? o[k] : '');
+    const N = o ? lhdScBuild(s('color'), s('effect'), s('name'), s('icon'), !!o.frame, O) : O;
+    if (lhdScCanon(N) === lhdScCanon(X)) return O;   // anlamca aynı: asıl hâliyle (bayt bayt aynı kalsın)
+  }
+  return X;
+}
 const LHD_ZONE_DEF = { t: [20, 40, 60, 80], c: ['#78D7FF', '#008CFF', '#28BE64', '#FFCD28', '#FF3737'] };
 const LHD_KIND_KEY = { tile: 't_lights', scene: 't_scenes', climate: 't_climate', vacuum: 't_vacuum', media: 't_media', camera: 't_camera', value: 't_values', card: 't_cards', pet: 't_pets', sub: 't_subs', energy: 't_energy' };
 // Önizleme ekranları: pano gerçekte ekranın oranına göre ölçeklenir (scale.js); önizleme seçilen ekranı aynı hesapla taklit eder.
@@ -343,7 +387,8 @@ const LHD_ICON_TR = { salon: 'sofa living couch', oturma: 'sofa couch', kanepe: 
   çocuk: 'teddy baby', cocuk: 'teddy baby', ofis: 'desk office monitor', çalışma: 'desk', calisma: 'desk', kapı: 'door', kapi: 'door', giriş: 'door', giris: 'door', merdiven: 'stairs', balkon: 'balcony',
   bahçe: 'flower tree garden', bahce: 'flower tree garden', garaj: 'garage car', ev: 'home house', kat: 'floor', ışık: 'lightbulb light lamp', isik: 'lightbulb light lamp', lamba: 'lamp lightbulb',
   ampul: 'lightbulb', tavan: 'ceiling', avize: 'chandelier', abajur: 'lamp', aplik: 'sconce', şerit: 'strip', serit: 'strip', spot: 'spot track', lambader: 'floor-lamp', masa: 'desk table',
-  perde: 'curtains blinds', panjur: 'blinds shutter', pencere: 'window', cam: 'window', tv: 'television', televizyon: 'television', ekran: 'monitor', klima: 'air-conditioner', petek: 'radiator',
+  perde: 'curtains blinds', panjur: 'blinds shutter', pencere: 'window', cam: 'window', tv: 'television', televizyon: 'television', ekran: 'monitor', klima: 'air-conditioner :ac- hvac', petek: 'radiator',
+  iklim: 'thermostat air-conditioner :ac- hvac heat-pump radiator', kombi: 'combi-boiler boiler radiator thermostat', termostat: 'thermostat', şofben: 'water-heater boiler', buzdolabı: 'fridge', nem: 'humidifier',
   ısıtma: 'heat radiator fire', soğutma: 'snowflake', süpürge: 'vacuum', supurge: 'vacuum', müzik: 'music', muzik: 'music', film: 'movie', sinema: 'movie', gece: 'night moon', gündüz: 'sun', gunduz: 'sun',
   güneş: 'sun', gunes: 'sun', parti: 'party', kitap: 'book', okuma: 'book', uyku: 'sleep', kahve: 'coffee', yemek: 'silverware food', kapat: 'power', güç: 'power', guc: 'power', priz: 'socket',
   fan: 'fan', vantilatör: 'fan', dolap: 'wardrobe cupboard', ayna: 'mirror', efekt: 'creation magic', renk: 'palette', yangın: 'fire', ateş: 'fire', kar: 'snowflake', kalp: 'heart', yıldız: 'star',
@@ -521,13 +566,42 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _phTabs() { const T = this._phOv().tabs; return lhdIsObj(T) ? T : {}; }
   _phStyle() { const T = this._phOv().style; return lhdIsObj(T) ? T : {}; }
   // öğenin anahtarı değişti (ad, simge, kart): telefon ayarlarında eski anahtar yenisiyle değiştirilir; _snap çağırmaz (değişikliğin kendi geri al adımı)
-  _phRekey(sid, a, b) {
+  // keep: bölümde eski anahtarlı başka öğe (ikiz) kaldı: onun ayarı da kalır, yeni anahtar yanına eklenir (ikizin ayarı kaybolmasın)
+  _phRekey(sid, a, b, keep) {
     if (!sid || !a || !b || a === b || !Object.keys(this._phSec(sid)).length) return;
-    const s = lhdClone(this._settings()), q = s.phone.secs[sid], fix = (L) => L.map((x) => (x === a ? b : x));
+    const s = lhdClone(this._settings()), q = s.phone.secs[sid], fix = (L) => { const o = []; L.forEach((x) => { if (x !== a) o.push(x); else { if (keep) o.push(a); if (o.indexOf(b) < 0) o.push(b); } }); return o; };
     let ch = false;
     ['hide_items', 'item_order'].forEach((k) => { if (Array.isArray(q[k]) && q[k].indexOf(a) >= 0) { q[k] = fix(q[k]); ch = true; } });
     if (Array.isArray(q.folds)) q.folds.forEach((g) => { if (g && Array.isArray(g.items) && g.items.indexOf(a) >= 0) { g.items = fix(g.items); ch = true; } });
     if (ch) this._commit('settings', s);
+  }
+  // v0.36: bölümde anahtarı çakışan öğeler (ikizler) telefonda birlikte gizleniyor, sıralanıyor, gruplanıyordu. Telefonda öğe ayarı yazılırken
+  // ikizlerin her birine kalıcı bir pk verilir (anahtar + '#' + pk; tablette yer değiştirse de kendi ayarı kalır). İkizi olmayan öğe değişmez.
+  // p (telefon ayarı kopyası) verilirse bölümün eski ortak anahtarı bütün ikizlerin yeni anahtarlarına açılır: telefonda görünen değişmez.
+  // save: sekmeler de kaydedilir (_phEdit içinde: geri al ikisini birlikte geri alır). Dönen: { E: bölümün öğeleri (yeni), map: { eski: [yeniler] } }
+  _phSplit(sid, p, save) {
+    const W = this._work(); let S = null;
+    W.forEach((T) => (T.sections || []).forEach((x) => { if (x.id === sid && !S) S = x; }));
+    const L = (S && S.entities) || [], ks = L.map(lhdItemKey), n = {}, map = {}, used = {};
+    ks.forEach((k) => { if (k) n[k] = (n[k] || 0) + 1; });
+    L.forEach((x) => { if (lhdIsObj(x) && typeof x.pk === 'string') used[x.pk] = 1; });
+    let c = 1; const nid = () => { while (used[String(c)]) c++; used[String(c)] = 1; return String(c); };
+    ks.forEach((k, i) => {
+      if (!k || n[k] < 2) return;
+      const first = !map[k], it = typeof L[i] === 'string' ? { entity: L[i] } : L[i];
+      if (first) map[k] = [];
+      if (!first || typeof it.pk !== 'string' || !it.pk) it.pk = nid();   // kopyalanmış pk'li öğede ilki kendi pk'sini (ve ayarlarını) tutar
+      L[i] = it; map[k].push(lhdItemKey(it));
+    });
+    if (!Object.keys(map).length) return { E: L, map: map };
+    const o = p && lhdIsObj(p.secs) && lhdIsObj(p.secs[sid]) ? p.secs[sid] : null;
+    if (o) {
+      const ex = (A) => { const out = []; A.forEach((x) => { if (map[x]) map[x].forEach((y) => { if (out.indexOf(y) < 0) out.push(y); }); else out.push(x); }); return out; };
+      ['hide_items', 'item_order'].forEach((q) => { if (Array.isArray(o[q])) o[q] = ex(o[q]); });
+      if (Array.isArray(o.folds)) o.folds.forEach((g) => { if (lhdIsObj(g) && Array.isArray(g.items)) g.items = ex(g.items); });
+    }
+    if (save) this._commit('tabs', W);
+    return { E: L, map: map };
   }
   _phOrd(tab) { const O = this._phOv().order; return lhdIsObj(O) && Array.isArray(O[tab.id]) && O[tab.id].length ? O[tab.id] : null; }
   // fn(p) settings.phone'un kopyasını değiştirir; boş kalan kayıtlar silinir, geri al çalışır
@@ -599,6 +673,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._toast(this._t('redone'), false);
   }
   _histApply(u) {
+    // seçili sekmenin kimliği geri alınan / yeniden yapılan değişiklikte değişiyorsa (yeni sekme ilk kez adlandırılınca "sekme" → "salon")
+    // aynı yerdeki sekmede kal; yoksa ilk sekmeye atlıyordu
+    const T0 = (STORE.data && STORE.data.tabs) || [], i0 = T0.map((x) => x.id).indexOf(this._tab);
+    if (i0 >= 0 && Array.isArray(u.tabs) && u.tabs.length === T0.length && u.tabs[i0] && !u.tabs.some((x) => x.id === this._tab)) this._tab = u.tabs[i0].id;
     // sadece değişen anahtar gönderilir (ikisi birden gönderilince ara yankı geri alınanı bir an geri getiriyordu)
     if (JSON.stringify(u.settings) !== JSON.stringify(this._settings())) this._commit('settings', u.settings);
     if (JSON.stringify(u.tabs) !== JSON.stringify((STORE.data && STORE.data.tabs) || [])) this._commit('tabs', u.tabs);
@@ -2381,7 +2459,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (f.kind === 'onoff') Object.assign(e, { off: n('off'), on: n('on'), entity: ent });
     if (f.kind === 'states') { e.entity = ent; e.other = n('other'); e.states = Object.keys(f.st || {}).filter((x) => String(f.st[x]).trim() !== '').slice(0, 24).map((x) => ({ s: x.slice(0, 40), w: Math.min(50000, lpEnNumOf(f.st[x])) })); }
     if (f.kind === 'fixed') e.w = n('w');
-    if (f.kind === 'year') e.year = n('year');
+    if (f.kind === 'year') e.year = Math.min(100000, lpEnNumOf(f.year));   // yıllık kWh: sınır 100000 (form denetimi _enBadNum ve Python şeması ile aynı)
     if (f.kind === 'cycle') Object.assign(e, { k100: n('k100'), week: Math.min(100, n('week')) });
     if (f.icon && /^[a-z]+:[a-z0-9-]+$/.test(f.icon)) e.icon = f.icon;
     return e;
@@ -2864,7 +2942,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return lhdKind(it) === 'scene' ? 'scene' : 'light';
   }
   _iconList() {
-    const q = String(this._iq || '').toLowerCase().trim(), cur = this._ip && this._ip.cur;
+    const q = lhdFold(this._iq).trim(), cur = this._ip && this._ip.cur;   // "İklim".toLowerCase() "i̇klim" (noktalı i) olup hiçbir şey bulmuyordu
     if (this._icSet === 'lec') return this._lecIconList(q, cur);
     return this._colIconList(q, cur);
     const cell = (n) => '<div class="icell' + ('mdi:' + n === cur ? ' on' : '') + '" data-icn="mdi:' + esc(n) + '" title="mdi:' + esc(n) + '"><ha-icon icon="mdi:' + esc(n) + '"></ha-icon><span>' + esc(n) + '</span></div>';
@@ -3010,12 +3088,16 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       });
       this._pv.addEventListener('lhd-phitems', (e) => {
         const d = e.detail || {}, tab0 = this._curTab(this._work()), S0 = tab0 && (tab0.sections || []).filter((x) => x.id === d.sec)[0]; if (!S0 || !Array.isArray(d.keys)) return;
-        const all = lhdOrderBy(S0.entities || [], this._phSec(d.sec).item_order, lhdItemKey).map(lhdItemKey);
-        const got = d.keys.filter((k) => all.indexOf(k) >= 0), rest = all.filter((k) => got.indexOf(k) < 0);
+        // ikizler (aynı anahtar): hangisi olduğu d.occ'tan (aynı anahtarlılar arasındaki sırası); önce ayrı anahtar alırlar (_phSplit, burada denemesi)
+        const k0 = (S0.entities || []).map(lhdItemKey), tmp = { secs: {} }; tmp.secs[d.sec] = lhdClone(this._phSec(d.sec));
+        const E = this._phSplit(d.sec, tmp).E;
+        const keys = d.keys.map((k, j) => { const tw = []; k0.forEach((x, i) => { if (x === k) tw.push(i); }); const i = tw[(Array.isArray(d.occ) && d.occ[j]) || 0]; return i === undefined ? k : lhdItemKey(E[i]); });
+        const all = lhdOrderBy(E, tmp.secs[d.sec].item_order, lhdItemKey).map(lhdItemKey);
+        const got = keys.filter((k) => all.indexOf(k) >= 0), rest = all.filter((k) => got.indexOf(k) < 0);
         const ids = got.concat(rest);
         if (ids.join('\n') === all.join('\n')) return;
-        const def = (S0.entities || []).map(lhdItemKey).join('\n');
-        this._phEdit((p) => { const o = p.secs[d.sec] = lhdIsObj(p.secs[d.sec]) ? p.secs[d.sec] : {}; if (ids.join('\n') === def) delete o.item_order; else o.item_order = ids; });
+        const def = E.map(lhdItemKey).join('\n');
+        this._phEdit((p) => { this._phSplit(d.sec, p, true); const o = p.secs[d.sec] = lhdIsObj(p.secs[d.sec]) ? p.secs[d.sec] : {}; if (ids.join('\n') === def) delete o.item_order; else o.item_order = ids; });
       });
       this._pv.addEventListener('lhd-phorder', (e) => {
         const d = e.detail || {}, T0 = (this._work() || []).filter((x) => x.id === d.tab)[0]; if (!T0 || !Array.isArray(d.order)) return;
@@ -3231,7 +3313,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         return editTab((T) => { T.sections = T.sections.filter((x) => x.id !== id); });
       }
       if (act === 'refill') {
-        const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === tab.area)[0];
+        const fresh = buildDefaultTabs(this._hass, this._lang, { areas: [tab.area], home: false, other: false }).filter((x) => x.area === tab.area)[0];
         if (!fresh) return;
         this._sec = null;
         // sekmenin kolon sayısı korunur: otomatik düzendeki 3. kolon, kolonu az olan sekmede son kolona düşer
@@ -3320,7 +3402,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         let id = base, k = 2; while (taken[id]) id = base + '-' + (k++);
         let nw;
         if (aid) {
-          const fresh = buildDefaultTabs(this._hass, this._lang).filter((x) => x.area === aid)[0];
+          const fresh = buildDefaultTabs(this._hass, this._lang, { areas: [aid], home: false, other: false }).filter((x) => x.area === aid)[0];
           const ar = this._hass.areas[aid];
           nw = fresh ? Object.assign({}, fresh, { id: id, sections: fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })) })
             : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LP_DEFAULT_COLS.slice(), sections: [] };
@@ -3365,16 +3447,16 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (phc && secId) { const v = +phc.getAttribute('data-phcols'); return this._phEdit((p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; if (v) o.cols = v; else delete o.cols; }); }
       const phi = g('[data-phitem]');
       if (phi && sec) {
-        const raw = (sec.entities || [])[+phi.getAttribute('data-phitem')], k = lhdItemKey(raw); if (!k) return;
-        return this._phEdit((p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; const L = Array.isArray(o.hide_items) ? o.hide_items.slice() : []; const j = L.indexOf(k); if (j >= 0) L.splice(j, 1); else L.push(k); o.hide_items = L; });
+        const ii = +phi.getAttribute('data-phitem'), raw = (sec.entities || [])[ii], k0 = lhdItemKey(raw); if (!k0) return;
+        return this._phEdit((p) => { const k = lhdItemKey(this._phSplit(secId, p, true).E[ii]) || k0; const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; const L = Array.isArray(o.hide_items) ? o.hide_items.slice() : []; const j = L.indexOf(k); if (j >= 0) L.splice(j, 1); else L.push(k); o.hide_items = L; });
       }
       const pga = act === 'phgadd' && secId, pgd = g('[data-phgdel]'), pgi = g('[data-phgit]');   // katlanır grup: ekle, sil, öğe seç
       if (pga || ((pgd || pgi) && sec)) {
         const fo = (p) => { const o = p.secs[secId] = lhdIsObj(p.secs[secId]) ? p.secs[secId] : {}; if (!Array.isArray(o.folds)) o.folds = []; return o.folds; };
         if (pga) return this._phEdit((p) => { fo(p).push({ items: [] }); });
         if (pgd) { const j = +pgd.getAttribute('data-phgdel'); return this._phEdit((p) => { fo(p).splice(j, 1); }); }
-        const pr = pgi.getAttribute('data-phgit').split(':'), j = +pr[0], raw = (sec.entities || [])[+pr[1]], k = lhdItemKey(raw); if (!k) return;
-        return this._phEdit((p) => { const G = fo(p)[j]; if (!G) return; const L = Array.isArray(G.items) ? G.items.slice() : [], x = L.indexOf(k); if (x >= 0) L.splice(x, 1); else L.push(k); G.items = L; });
+        const pr = pgi.getAttribute('data-phgit').split(':'), j = +pr[0], raw = (sec.entities || [])[+pr[1]], k0 = lhdItemKey(raw); if (!k0) return;
+        return this._phEdit((p) => { const k = lhdItemKey(this._phSplit(secId, p, true).E[+pr[1]]) || k0; const G = fo(p)[j]; if (!G) return; const L = Array.isArray(G.items) ? G.items.slice() : [], x = L.indexOf(k); if (x >= 0) L.splice(x, 1); else L.push(k); G.items = L; });
       }
       if (act === 'phressec' && secId) return this._phEdit((p) => { delete p.secs[secId]; });
       if (act === 'phresord' && tabId) return this._phEdit((p) => { delete p.order[tabId]; });
@@ -3600,7 +3682,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         let rk = null;   // öğenin anahtarı değişirse telefon ayarları da (fix: telefonda gizlenen düğme adı değişince yeniden görünüyordu)
         editSec((S) => {
           const k0 = lhdItemKey(S.entities[i]);
-          rk = () => this._phRekey(S.id, k0, lhdItemKey(S.entities[i]));
+          rk = () => this._phRekey(S.id, k0, lhdItemKey(S.entities[i]), S.entities.some((x, j) => j !== i && lhdItemKey(x) === k0));
           let it = S.entities[i]; if (it === undefined) return;
           if (it && typeof it === 'object' && !it.entity) { if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }   // düğme ya da boş karo
           if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
@@ -3766,7 +3848,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const it = typeof raw === 'string' ? { entity: raw } : lhdClone(raw || {});
     const f = { name: it.name || '', icon: it.icon || '', icon_on: it.icon_on || '', icon_off: it.icon_off || '', size: it.size || '', icon_size: it.icon_size || '', text_size: it.text_size || '',
       look: it.look || '', color: it.color || '', color_on: it.color_on || '', bg: it.bg || '', height: it.height ? String(it.height) : '', subtitle: it.subtitle || '',
-      swap: !!it.swap, refresh: it.refresh ? String(it.refresh) : '', cover: it.cover || '', cover_dir: it.cover_dir || '', tilt_entity: it.tilt_entity || '', cfm: !!it.confirm, cfmText: typeof it.confirm === 'string' ? it.confirm : '' };
+      swap: !!it.swap, natural: !!it.natural, refresh: it.refresh ? String(it.refresh) : '', cover: it.cover || '', cover_dir: it.cover_dir || '', tilt_entity: it.tilt_entity || '', cfm: !!it.confirm, cfmText: typeof it.confirm === 'string' ? it.confirm : '' };
     const tw = it.entity && STORE.data && STORE.data.twins && STORE.data.twins[it.entity];
     f.twin = (tw && tw.backup) || '';
     const s2 = it.secondary || '';
@@ -3774,8 +3856,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     f.secAttr = f.secK === 'attr' ? s2.slice(5) : ''; f.secTpl = f.secK === 'tpl' ? s2 : '';
     const sc = it.state_colors && typeof it.state_colors === 'object' ? it.state_colors : null;
     f.scOn = !!sc; f.scE = (sc && sc.entity) || '';
-    f.scRows = sc && sc.map ? Object.keys(sc.map).map((x) => [x, lhdIsObj(sc.map[x]) ? (sc.map[x].color || '') : sc.map[x]]) : [];
-    f.scX = {}; if (sc && sc.map) Object.keys(sc.map).forEach((x) => { if (lhdIsObj(sc.map[x])) f.scX[x] = sc.map[x]; });   // renk dışındaki ayarlar (v0.35)
+    lhdScLoad(f, sc);   // renk dışındaki ayarlar (hareket, çerçeve, ad, simge) satır sırasıyla
     while (f.scRows.length < 4) f.scRows.push(['', LHD_SC_DEF[f.scRows.length % LHD_SC_DEF.length]]);
     const z = it.zones && typeof it.zones === 'object' ? it.zones : null;
     f.zOn = !!z;
@@ -3927,8 +4008,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         body += L0 === 'halo' ? fld(t('colorsL') + hb('colors'), cf('color', t('cFixed'))) : fld(t('colorsL') + hb('colors'), cf('color', t('cIcon')) + (two ? cf('color_on', t('cOn')) : '') + (L0 === 'row' || L0 === 'button' ? '' : cf('bg', t('cBg'))));
         // duruma göre renk (metin değerler de)
         body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('scL') + hb('statecol') + '</b><span>' + t('scT') + '</span></div><button class="tg' + (f.scOn ? ' on' : '') + '" data-imsc></button></div>' +
-          (f.scOn ? fld(t('scE'), inp('scE', it.entity, true)) + '<div class="scrows">' + f.scRows.map((r, q) => '<div class="scr"><input class="inp" data-imsr="' + q + ':0" value="' + esc(r[0]) + '" placeholder="' + t('scState') + '">' +
-            '<input type="color" data-imsr="' + q + ':1" value="' + esc(LP_HALO_RGB[r[1]] || r[1] || '#28BE64') + '"></div>').join('') + '</div><button class="btn sm" data-imscadd>+ ' + t('scAdd') + '</button>' : '') + '</div>';
+          (f.scOn ? fld(t('scE'), inp('scE', it.entity, true)) + '<div class="scrows">' + f.scRows.map((r, q) => '<div class="scrw"><div class="scr' + (L0 === 'halo' ? ' scx' : '') + '"><input class="inp" data-imsr="' + q + ':0" value="' + esc(r[0]) + '" placeholder="' + t('scState') + '">' +
+            '<input type="color" data-imsr="' + q + ':1" value="' + esc(LP_HALO_RGB[r[1]] || r[1] || '#28BE64') + '">' + (L0 === 'halo' ? this._scxHtml(q) : '') + '</div>' +
+            (L0 === 'halo' && f['scmo' + q] ? '<div class="scxm"><div class="row2">' + fld(t('scName'), inp('scname' + q, f.name || (it.entity ? this._ename(it.entity) : ''))) + '</div>' +
+              icf('scicon' + q, t('scIcon'), f.icon || (st ? lpEntIcon(st) : 'mdi:shape-outline')) + '</div>' : '') + '</div>').join('') + '</div>' +
+            (L0 === 'halo' ? '<div class="hint">' + t('scHaloT') + '</div>' : '') + '<button class="btn sm" data-imscadd>+ ' + t('scAdd') + '</button>' : '') + '</div>';
         if (k === 'value' && !two && L0 !== 'halo') {
           body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('zonesL') + hb('zones') + '</b><span>' + t('zonesT') + '</span></div><button class="tg' + (f.zOn ? ' on' : '') + '" data-imzone></button></div>' +
             (f.zOn ? '<div class="zones">' + [0, 1, 2, 3, 4].map((q) => '<input type="color" data-imf="zc' + q + '" value="' + esc(f['zc' + q]) + '">' + (q < 4 ? '<input class="inp" type="number" step="any" data-imf="zt' + q + '" value="' + esc(f['zt' + q]) + '" title="' + esc(this._t('zLim', { n: q + 1 })) + '">' : '')).join('') + '</div>' : '') + '</div>';
@@ -3946,7 +4030,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (k === 'value' && (!L0 || L0 === 'tile')) body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>';
       }
       // hâle görünümünde de ad/değer yer değiştirme (v0.35)
-      if (adv && k === 'value' && L0 === 'halo') body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>';
+      if (adv && k === 'value' && L0 === 'halo') body += '<div class="srow"><div class="t"><b>' + t('swapL') + '</b></div><button class="tg' + (f.swap ? ' on' : '') + '" data-imtg="swap"></button></div>' +
+        '<div class="srow"><div class="t"><b>' + t('natL') + '</b><span>' + t('natT') + '</span></div><button class="tg' + (f.natural ? ' on' : '') + '" data-imtg="natural"></button></div>';
       if ((k === 'scene' || ((k === 'tile' || k === 'value') && it.entity)) && L0 !== 'halo') {
         body += '<div class="imvis"><div class="srow"><div class="t"><b>' + t('cfmL') + '</b><span>' + t('cfmT') + '</span></div><button class="tg' + (f.cfm ? ' on' : '') + '" data-imtg="cfm"></button></div>' +
           (f.cfm ? fld(t('cfmText'), inp('cfmText', '')) : '') + '</div>';
@@ -3968,6 +4053,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<datalist id="lhdents">' + ents.map((id) => '<option value="' + esc(id) + '">').join('') + '</datalist></div>';
   }
   // taslaktan eylemi kur (hatalıysa Error); undefined: alan silinir (varsayılan davranış)
+  _scxHtml(q) {
+    const f = this._im.f, t = (k) => esc(this._t(k)), fx = f['scfx' + q] || '', fr = !!f['scfr' + q], mo = !!f['scmo' + q], ic = String(f['scicon' + q] || '').trim();
+    const opts = [''].concat(LP_HALO_FX).concat(fx && LP_HALO_FX.indexOf(fx) < 0 ? [fx] : []);
+    return '<select class="inp scfx" data-imf="scfx' + q + '" title="' + t('scFxL') + '" aria-label="' + t('scFxL') + '">' + opts.map((o) => '<option value="' + esc(o) + '"' + (o === fx ? ' selected' : '') + '>' + (o && LP_HALO_FX.indexOf(o) < 0 ? esc(o) : t('hfx_' + o)) + '</option>').join('') + '</select>' +
+      '<button class="scb' + (fr ? ' on' : '') + '" data-imtg="scfr' + q + '" role="checkbox" aria-checked="' + fr + '" title="' + t('scFrT') + '">' + (fr ? lpIcon('mdi:checkbox-marked', 's16') : lpIcon('mdi:checkbox-blank-outline', 's16')) + '<span>' + t('scFr') + '</span></button>' +
+      '<button class="scb scm' + (mo ? ' on' : '') + (ic || String(f['scname' + q] || '').trim() ? ' has' : '') + '" data-imtg="scmo' + q + '" aria-expanded="' + mo + '" title="' + t('scMoreT') + '" aria-label="' + t('scMore') + '">' + lpIcon(/^[a-z]+:[a-z0-9-]+$/.test(ic) ? ic : 'mdi:dots-horizontal', 's16') + '</button>';
+  }
   _imAct(pre, scene) {
     const f = this._im.f, K = f[pre + 'K'] || (scene ? 'none' : 'def'), T = (k, v) => this._t(k, v);
     const y = (txt) => { try { return lhdYamlParse(txt); } catch (e) { throw new Error(e.line ? T('yamlErrL', { n: e.line }) : T('yamlErr', { e: e.message })); } };
@@ -4062,9 +4154,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         if (k === 'scene' || k === 'value' || (k === 'tile' && it.entity)) setS('look', f.look);
         if ((k === 'tile' || k === 'value') && it.entity) {
           setS('color', f.color); setS('color_on', f.color_on); setS('bg', f.bg);
-          if (f.look === 'halo') { delete it.color_on; delete it.bg; delete it.zones; setS('height', f.height); } else delete it.height;
-          const rows = f.scRows.filter((r) => String(r[0]).trim());
-          if (f.scOn && rows.length) { const m = {}; rows.forEach((r) => { const k0 = String(r[0]).trim(), X = f.scX && f.scX[k0]; m[k0] = X ? Object.assign({}, X, { color: r[1] }) : r[1]; }); it.state_colors = { map: m }; if (String(f.scE || '').trim()) it.state_colors.entity = String(f.scE).trim(); } else delete it.state_colors;
+          if (f.look === 'halo') { delete it.color_on; delete it.bg; delete it.zones; setS('height', f.height); if (f.natural) it.natural = true; else delete it.natural; } else { delete it.height; delete it.natural; }
+          const m = {}; let nr = 0;
+          f.scRows.forEach((r, q) => { const k0 = String(r[0]).trim(); if (!k0) return; nr++; m[k0] = lhdScVal(f, q, r[1]); });
+          if (f.scOn && nr) { it.state_colors = { map: m }; if (String(f.scE || '').trim()) it.state_colors.entity = String(f.scE).trim(); } else delete it.state_colors;
           if (k === 'value' && f.zOn) {
             const tt = [0, 1, 2, 3].map((q) => { const v = parseFloat(String(f['zt' + q]).replace(',', '.')); return isNaN(v) ? null : v; });
             it.zones = { t: tt, c: [0, 1, 2, 3, 4].map((q) => f['zc' + q]) };
@@ -4090,6 +4183,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const T = lhdClone((STORE.data && STORE.data.twins) || {}), cur = (T[it.entity] && T[it.entity].backup) || '';
       if ((f.twin || '') !== cur) { if (f.twin) T[it.entity] = { backup: f.twin }; else delete T[it.entity]; this._commit('twins', T); }
     }
+    if (lhdIsObj(M.raw) && typeof M.raw.pk === 'string' && M.raw.pk && lhdIsObj(it)) it.pk = M.raw.pk;   // ikizin telefon anahtarı (enerji kartı yeniden kuruluyor)
     if (it.entity && Object.keys(it).length === 1) it = it.entity;   // sade kalsın
     this._modal = null; this._im = null;
     this._edit((T) => {
@@ -4097,7 +4191,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       S.entities = S.entities || [];
       if (M.isNew) S.entities.push(it); else if (M.idx < S.entities.length) S.entities[M.idx] = it;
     });
-    if (!M.isNew) this._phRekey(M.sec, lhdItemKey(M.raw), lhdItemKey(it));   // telefonda gizli / gruptaki öğe adı, simgesi ya da kartı değişince de öyle kalsın
+    const S1 = M.isNew ? null : this._work().map((T) => (T.sections || []).filter((z) => z.id === M.sec)[0]).filter((z) => z)[0];
+    if (!M.isNew) this._phRekey(M.sec, lhdItemKey(M.raw), lhdItemKey(it), !!S1 && (S1.entities || []).some((x, j) => j !== M.idx && lhdItemKey(x) === lhdItemKey(M.raw)));   // telefonda gizli / gruptaki öğe adı, simgesi ya da kartı değişince de öyle kalsın
   }
 
   // ---- kart seçici (D1, D2) ve kart düzenleyici ----
