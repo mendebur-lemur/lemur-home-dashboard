@@ -19,6 +19,21 @@ const LHD_FEEDER_DOMAINS = ['switch', 'button', 'input_button', 'timer', 'script
 const lhdSafeFeederSvc = (s) => typeof s === 'string' && LHD_SVC_RE.test(s) && LHD_FEEDER_DOMAINS.indexOf(s.split('.')[0]) >= 0;
 const lhdSafeNotify = (s) => typeof s === 'string' && /^notify\.[a-z0-9_]+$/.test(s);
 const lhdIsObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+// Python'un json.dumps(v) uzunluğu (entegrasyonun MAX_CONFIG_BYTES sınırı bununla ölçülür): ", " ve ": " ayraçları, ASCII
+// dışı her karakter \uXXXX (6). Sayılar JS yazımıyla (5.0 / 5 farkı önemsiz); sınırın yanında karar yine sunucunundur.
+function lhdPyLen(v) {
+  if (v === null || v === undefined) return 4;
+  if (typeof v === 'boolean') return v ? 4 : 5;
+  if (typeof v === 'number') return isFinite(v) ? String(v).length : 8;
+  if (typeof v === 'string') {
+    let n = 2;
+    for (let i = 0; i < v.length; i++) { const c = v.charCodeAt(i); n += c > 126 ? 6 : c === 34 || c === 92 || c === 8 || c === 9 || c === 10 || c === 12 || c === 13 ? 2 : c < 32 ? 6 : 1; }
+    return n;
+  }
+  if (Array.isArray(v)) { let n = 2; v.forEach((x, i) => { n += lhdPyLen(x) + (i ? 2 : 0); }); return n; }
+  if (typeof v === 'object') { let n = 2, i = 0; Object.keys(v).forEach((k) => { if (v[k] === undefined) return; n += lhdPyLen(k) + 2 + lhdPyLen(v[k]) + (i++ ? 2 : 0); }); return n; }
+  return 4;
+}
 // eylem: pencere içeriği olarak yalnız kart (html alanı atılır), url eyleminde güvenli adres
 function lhdCleanAction(a) {
   if (!lhdIsObj(a)) return a;

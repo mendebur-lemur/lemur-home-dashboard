@@ -16,7 +16,9 @@ const ctx = {
   localStorage: { _d: {}, getItem(k) { return this._d[k] === undefined ? null : this._d[k]; }, setItem(k, v) { this._d[k] = String(v); }, removeItem(k) { delete this._d[k]; } }
 };
 vm.createContext(ctx);
-vm.runInContext(src + '\nthis.E = { lpErData, lpErCsv, lpExRepHtml, LP_EX }; this.setNow = (t) => { Date.now = () => t; };', ctx);
+vm.runInContext(src + '\nthis.E = { lpErData, lpErCsv, lpExRepHtml, LP_EX }; const LP_RD = Date; this.setNow = (t) => { Date = class extends LP_RD { constructor(...a) { if (a.length) super(...a); else super(t); } static now() { return t; } }; };', ctx);
+// sahte kayıt üreticisi de sayfanın saatini kullanır (testin sonucu çalıştırıldığı güne bağlı olmasın)
+let LP_NOW = Date.now(); { const s0 = ctx.setNow; ctx.setNow = (x) => { LP_NOW = x; s0(x); }; }
 const E = ctx.E;
 // sahte istatistik: her yerel günün kWh'i = günün ayın kaçıncı günü olduğu (1..31); ay periyodunda ayın günlerinin toplamı.
 // first: kaydın başladığı gün (öncesi yok)
@@ -25,12 +27,12 @@ function conn(first) {
     const a = Date.parse(m.start_time), b = m.end_time ? Date.parse(m.end_time) : Infinity, out = {};
     m.statistic_ids.forEach((id) => {
       const rows = []; const d = new Date(a); d.setHours(0, 0, 0, 0); if (m.period === 'month') d.setDate(1);
-      for (; d.getTime() < b && d.getTime() < Date.now(); m.period === 'month' ? d.setMonth(d.getMonth() + 1) : d.setDate(d.getDate() + 1)) {
+      for (; d.getTime() < b && d.getTime() < LP_NOW; m.period === 'month' ? d.setMonth(d.getMonth() + 1) : d.setDate(d.getDate() + 1)) {
         let v = 0, any = false;   // ay: kayıtlı günlerin toplamı (Home Assistant'ın ay satırı gibi, kayıt ortadan başladıysa kısmi)
-        if (m.period === 'month') { for (const x = new Date(d.getTime()); x.getMonth() === d.getMonth() && x.getTime() < Date.now(); x.setDate(x.getDate() + 1)) if (!first || x.getTime() >= first) { v += x.getDate(); any = true; } }
+        if (m.period === 'month') { for (const x = new Date(d.getTime()); x.getMonth() === d.getMonth() && x.getTime() < LP_NOW; x.setDate(x.getDate() + 1)) if (!first || x.getTime() >= first) { v += x.getDate(); any = true; } }
         else { any = !first || d.getTime() >= first; v = d.getDate(); }
         if (!any) continue;
-        rows.push({ start: d.getTime(), end: d.getTime() + 86400000, change: v });
+        rows.push({ start: d.getTime(), end: m.period === 'month' ? new Date(d.getFullYear(), d.getMonth() + 1, 1).getTime() : d.getTime() + 86400000, change: v });
       }
       if (rows.length) out[id] = rows;
     });

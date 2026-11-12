@@ -118,11 +118,15 @@ function lpEnPeriod() {
   let a = t; while (a + len * D <= Date.now()) a += len * D;   // fatura girilmeden geçen dönemler atlanır
   return { from: a, len: len };
 }
-const lpEnDayTot = (M, i) => M.cats.reduce((a, c) => a + ((M.days.cats[c.id] || [])[i] || 0), 0);
+// cihazların (kategoriler ve kategorisiz) o günkü toplamı
+const lpEnDevDay = (M, i) => M.cats.reduce((a, c) => a + ((M.days.cats[c.id] || [])[i] || 0), 0);
+// evin o günkü toplamı: ev sayacı varsa sayaçtan (lpEnHomeDays), yoksa cihazların toplamı
+function lpEnDayTot(M, i) { const H = lpEnHomeDays(M), x = H && H.idx[i]; return x ? x.k : lpEnDevDay(M, i); }
 // bu ay şimdiye kadar (sayaç tahmini: takip edilenler + ölçülmeyen pay)
 function lpEnMonthKwh(M) {
   if (!M || !M.days) return 0;
   const P = lpEnPeriod(), m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0); if (P) m0.setTime(P.from);
+  const Hd = lpEnHomeDays(M); if (Hd) return lpEnHomeSum(Hd, m0.getTime());   // ev sayacı: dönemin günleri (sayaçtan önceki günler cihazlardan)
   const hs = lpEnSince(m0.getTime()); if (hs !== null && LP_EN.yr.src === 'grid') return hs;   // şebeke sayacı varsa dönem onunla
   let s = 0; M.days.t.forEach((t, i) => { if (t >= m0.getTime()) s += lpEnDayTot(M, i); });
   return s / (1 - lpEnUntracked());   // faturadan bulunan ölçülmeyen payla sayaca yaklaştırılır
@@ -136,9 +140,44 @@ function lpEnUntracked() {
 function lpEnMeterUnt() {
   const Y = LP_EN.yr, M = LP_EN.m; if (!lpEnMeter() || !Y || Y.src !== 'grid' || !M || !M.days || M.demo) return 0;
   let a = 0, p = 0; const n = M.days.t.length;
-  for (let i = Math.max(0, n - 8); i < n - 1; i++) { const t = M.days.t[i]; let g = 0; Object.keys(Y.days).forEach((k) => { if (Math.abs(+k - t) < 43200000) g += Y.days[k]; }); if (!g) continue; a += g; p += lpEnDayTot(M, i); }
+  for (let i = Math.max(0, n - 8); i < n - 1; i++) { const t = M.days.t[i]; let g = 0; Object.keys(Y.days).forEach((k) => { if (Math.abs(+k - t) < 43200000) g += Y.days[k]; }); if (!g) continue; a += g; p += lpEnDevDay(M, i); }
   return a > 0.5 ? Math.max(0, Math.min(0.95, (a - p) / a)) : 0;
 }
+// ---- evin toplamı ev sayacından (v0.36.0b4) ----
+// Ev sayacı (kWh: panelde seçilen ya da Home Assistant Enerji ayarındaki şebeke) varsa evin her dönemdeki toplamı sayacın saydığıdır;
+// cihazlar ve kategoriler onun parçası, "ölçülmeyen" = sayaç − cihazlar (eksiye düşmez: cihazlar fazlaysa 0, toplam yine sayaç).
+// Önce halka ve "bu ay" sayaçtan, "bugün", hafta ve raporlar cihazlardan geliyordu: günler ayı tutmuyordu. Güneş ya da batarya
+// varsa sayaç evin tüketimini değil şebekeden alınanı sayar: orada eski hesap kalır. Gün gün:
+//  - sayacın kaydından önceki günler cihazların toplamı; sayaç cihazlardan sonra takıldıysa yarım kalan ilk günü de
+//  - sayacın o gün eksiye düştüğü (sıfırlanan "total" sensör) gün cihazların toplamı
+//  - sayacın kaydı olmayan gün (okunmadı) cihazların toplamı; sayaç dönünce kapalıyken saydığını ilk saatinde topluca yazar
+//    (Home Assistant öyle kaydeder): o günlerin cihaz toplamı bu fazlalıktan düşülür, iki kez sayılmaz
+function lpEnHomeIds(M) { if (lpEnSunOn() || lpEnBatOn()) return null; const q = lpEnYearIds(M); return q.src === 'grid' && q.ids.length ? q.ids : null; }
+// dev, met: { Home Assistant'ın gün başı (ms): kWh }; from: sorgunun başı. Dönen: [{ t, k (evin), d (cihazların), m (sayaçtan mı) }]
+function lpEnMix(dev, met, from) {
+  const all = {}; Object.keys(dev || {}).forEach((k) => { all[k] = 1; }); Object.keys(met || {}).forEach((k) => { all[k] = 1; });
+  const L = Object.keys(all).map(Number).sort((a, b) => a - b), mk = L.filter((t) => met[t] !== undefined), dk = L.filter((t) => dev[t] > 0);
+  const mF = mk.length ? mk[0] : Infinity, late = mF > from + 43200000 && dk.length > 0 && dk[0] < mF;
+  let debt = 0;
+  return L.map((t) => {
+    const d = dev[t] || 0, m = met[t];
+    if (t < mF || (late && t === mF) || (isFinite(m) && m < 0)) return { t: t, k: d, d: d, m: false };
+    if (!isFinite(m)) { debt += d; return { t: t, k: d, d: d, m: false }; }
+    const take = Math.min(debt, Math.max(0, m - d)); debt -= take;
+    return { t: t, k: m - take, d: d, m: true };
+  });
+}
+// panonun günlük verisinden (M.days: dall cihazlar, mall sayaç); M.days.t'nin her gününe karşılığı (idx)
+function lpEnHomeDays(M) {
+  const D = M && !M.demo ? M.days : null; if (!D || !D.mall || !lpEnHomeIds(M)) return null;
+  const C = LP_EN.hd; if (C && C.d === D) return C.v;
+  const L = lpEnMix(D.dall || {}, D.mall, D.from || 0);
+  const idx = D.t.map((t) => { let r = null; L.forEach((x) => { if (Math.abs(x.t - t) < 43200000) r = x; }); return r; });
+  const v = { L: L, idx: idx }; LP_EN.hd = { d: D, v: v };
+  return v;
+}
+const lpEnHomeSum = (H, t0) => H.L.reduce((a, x) => a + (x.t >= t0 - 43200000 ? x.k : 0), 0);
+const LP_EN_UNT_C = '#555a63';   // ölçülmeyen pay grafiklerde
 // yıllık sınır (son kaynak tedarik tarifesi, mesken, ikili anlaşması olmayan). Y yılında geçerli sınır: 2025 5.000, 2026 4.000,
 // 2027'den itibaren 3.000 kWh (EPDK 30.10.2026, karar 15005). Ölçü takvim yılının toplamı (sayaç okumalarıyla), "geçerli yıl ya da bir önceki yıl":
 //  - önceki yılın toplamı o yılın sınırını geçtiyse bütün yıl son kaynak (Y başından itibaren)
@@ -164,6 +203,39 @@ function lpEnDayFrom() { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate
 // istenir ve eldekinin üstüne eklenir. Güvenlik için tam indirme LP_EN_FULL_MS'de bir yinelenir.
 const LP_EN_FULL_MS = 6 * 3600000;
 const lpEnStT = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
+// ---- bozuk okuma koruması (v0.36.0b4) ----
+// Kategorilerin kWh'ı entegrasyonun sensöründen gelir; o sensör bir güncellemede 50 kWh'ten fazlasını saymaz (sensor.py MAX_STEP).
+// Kategorisiz ölçen cihaz, ev sayacı ve cihaz ayrıntısı ise prizin / sayacın kendi istatistiğinden toplanır: tek bir bozuk okuma
+// (99999 kWh) ayın tutarını ₺346.022 yapıyordu. Aynı sınır burada: saatlik dilimde 50 kWh'ten büyük değişim sayılmaz; gün / ay
+// diliminde 50 kWh'i geçen değişim o dilimin saatlerinden yeniden toplanır (0 ile 50 arasındakiler). Entegrasyonun kendi
+// sensörleri (sensor.lhd_*) zaten korumalı, onlara dokunulmaz.
+const LP_EN_MAX_STEP = 50;
+const lpEnRaw = (id) => typeof id === 'string' && id.indexOf('sensor.lhd_') !== 0;
+const LP_EN_PER = { day: 86400000, week: 604800000, month: 2678400000 };
+function lpEnStat(conn, msg) {
+  return conn.sendMessagePromise(msg).then((r) => {
+    if (!r || typeof r !== 'object' || (msg.types || []).indexOf('change') < 0 || msg.period === '5minute') return r;
+    const bad = [];
+    Object.keys(r).forEach((id) => {
+      if (!lpEnRaw(id) || !Array.isArray(r[id])) return;
+      r[id].forEach((x, i) => {
+        if (!x || !(x.change > LP_EN_MAX_STEP)) return;
+        if (msg.period === 'hour') { x.change = 0; return; }
+        const s = lpEnStT(x), nx = r[id][i + 1], e0 = x.end !== undefined && x.end !== null ? (typeof x.end === 'number' ? x.end : Date.parse(x.end)) : NaN;
+        const e = isFinite(e0) ? e0 : nx ? lpEnStT(nx) : s + (LP_EN_PER[msg.period] || 86400000);
+        if (isFinite(s) && e > s) bad.push({ id: id, x: x, s: s, e: e });
+      });
+    });
+    if (!bad.length) return r;
+    const ids = []; let a = Infinity, b = -Infinity;
+    bad.forEach((q) => { if (ids.indexOf(q.id) < 0) ids.push(q.id); a = Math.min(a, q.s); b = Math.max(b, q.e); });
+    return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(a).toISOString(), end_time: new Date(b).toISOString(), period: 'hour', statistic_ids: ids, types: ['change'], units: msg.units })
+      .then((hr) => {
+        bad.forEach((q) => { let c = 0; ((hr && hr[q.id]) || []).forEach((y) => { const t = lpEnStT(y); if (t >= q.s && t < q.e && y.change > 0 && y.change <= LP_EN_MAX_STEP) c += y.change; }); q.x.change = c; });
+        return r;
+      }, () => { bad.forEach((q) => { q.x.change = 0; }); return r; });   // saatlik sorulamadıysa bozuk dilim hiç sayılmaz
+  });
+}
 // kesme noktası: eldeki verideki dilim başlangıçlarından sondan `back` öncesi (Home Assistant'ın kendi dilim sınırı; gün
 // dilimleri HA'nın saat dilimine göre başlar, tarayıcınınkine göre hesaplanmaz). Yeterli dilim yoksa null: baştan indirilir
 function lpEnCutStart(data, ids, back) {
@@ -185,7 +257,7 @@ function lpEnMergeStats(old, add, ids, cut, drop) {
 function lpEnDayQ(conn, ids) {
   const from = lpEnDayFrom(), Q = LP_EN.dq;
   if (Q && Q.from === from && Date.now() - Q.at < 60000 && ids.every((x) => Q.ids.indexOf(x) >= 0)) return Q.p;
-  const ask = (start) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } });
+  const ask = (start) => lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), period: 'day', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } });
   const K = LP_EN.dk, okK = K && K.from === from && Date.now() - K.full < LP_EN_FULL_MS && ids.every((x) => K.ids.indexOf(x) >= 0);
   const cut = okK ? lpEnCutStart(K.data, ids, 2) : null;   // son 3 gün dilimi yeniden istenir (bugün, dün, önceki gün)
   const p = cut !== null
@@ -210,16 +282,21 @@ function lpEnYearFetch(conn, M) {
   if (!q.ids.length || (Y && Y.key === key && Date.now() - Y.at < 1800000)) return Promise.resolve();
   const y = new Date().getFullYear(), a = new Date(y, 0, 1), p0 = new Date(y - 1, 0, 1), sum = (L) => { let t = 0; (L || []).forEach((x) => { if (isFinite(x.change)) t += Math.max(0, x.change); }); return t; };
   const st = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
-  const ask = (from, to, period) => conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), end_time: to ? to.toISOString() : undefined, period: period, statistic_ids: q.ids, types: ['change'], units: { energy: 'kWh' } });
-  return Promise.all([lpEnDayQ(conn, q.ids), ask(p0, a, 'month')]).then((r) => {
+  // ev sayacı geçen yılın tamamını tutmuyorsa (sonradan takıldı) geçen yıl cihazların toplamı (yıllık sınırın "geçen yıl" kuralı için)
+  const cids = []; if (q.src === 'grid' && lpEnHomeIds(M)) (M ? M.cats : []).forEach((c) => (c.e ? [c.e] : (c.es || [])).forEach((x) => { if (x && cids.indexOf(x) < 0) cids.push(x); }));
+  const dp = cids.length ? lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: p0.toISOString(), end_time: a.toISOString(), period: 'month', statistic_ids: cids, types: ['change'], units: { energy: 'kWh' } }).catch(() => null) : Promise.resolve(null);
+  const ask = (from, to, period) => lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: from.toISOString(), end_time: to ? to.toISOString() : undefined, period: period, statistic_ids: q.ids, types: ['change'], units: { energy: 'kWh' } });
+  return Promise.all([lpEnDayQ(conn, q.ids), ask(p0, a, 'month'), dp]).then((r) => {
     const days = {}; let first = 0;
     q.ids.forEach((id) => ((r[0] && r[0][id]) || []).forEach((x) => { const t = st(x); if (!isFinite(x.change) || t < a.getTime() - 43200000) return; days[t] = (days[t] || 0) + Math.max(0, x.change); if (!first || t < first) first = t; }));
     let prev = 0, pfirst = 0; q.ids.forEach((id) => { const L = (r[1] && r[1][id]) || []; prev += sum(L); L.forEach((x) => { const t = st(x); if (!pfirst || t < pfirst) pfirst = t; }); });
     LP_EN.yr = { key: key, at: Date.now(), y: y, src: q.src, days: days, first: first, prev: prev, pfull: !!pfirst && pfirst <= p0.getTime() + 2 * 86400000 };
+    if (r[2]) { let dv = 0, df = 0; cids.forEach((id) => { const L = r[2][id] || []; dv += sum(L); L.forEach((x) => { const t = st(x); if (!df || t < df) df = t; }); }); LP_EN.yr.dprev = dv; LP_EN.yr.dpfull = !!df && df <= p0.getTime() + 2 * 86400000; }
   }).catch(() => {});
 }
 // bir tarihten bu yana Home Assistant'ın saydığı (şebeke sayacı ya da panel; panelse ölçülmeyen payla büyütülür)
 function lpEnSince(t0) {
+  const Hd = lpEnHomeDays(LP_EN.m); if (Hd) return lpEnHomeSum(Hd, t0);   // ev sayacı: günler (sayaçtan önceki günler cihazlardan)
   const Y = LP_EN.yr; if (!Y || Y.y !== new Date().getFullYear()) return null;
   let s = 0; Object.keys(Y.days).forEach((k) => { if (+k >= t0 - 43200000) s += Y.days[k]; });
   return Y.src === 'grid' ? s : s / (1 - lpEnUntracked());
@@ -235,6 +312,12 @@ function lpEnYtdInfo(M) {
   lpEnBills().forEach((x) => { const f = Date.parse(x.from + 'T00:00:00'), t = end(x); if (t <= y0 || !(f < t)) return; base += lpEnNumOf(x.kwh) * (f >= y0 ? 1 : (t - y0) / (t - f)); if (t > upto) upto = t; });
   // faturalar yılın başından mı başlıyor? değilse aradaki dönem Home Assistant'tan
   if (base) { const f0 = Math.min.apply(null, lpEnBills().map((x) => Date.parse(x.from + 'T00:00:00')).filter((f) => f + 40 * D > y0)); if (f0 <= y0 + 3 * D) return { k: base + tail(upto), src: 'bills' }; }
+  const Hd = lpEnHomeDays(M), HL = Hd ? Hd.L.filter((x) => x.t >= y0 - 43200000 && x.k > 0) : [];
+  if (HL.length) {   // ev sayacı: yılın günleri (sayaçtan önceki günler cihazlardan); kayıt yılın ortasında başladıysa yukarıdaki gibi tahmin
+    const s = HL.reduce((a, x) => a + x.k, 0), covered = Math.max(1, (now - HL[0].t) / D), elapsed = Math.max(1, (now - y0) / D), late = HL[0].t > y0 + 2 * D;
+    const short = late && covered < LP_EN_MIN_DAYS, est = late && !short;
+    return { k: est ? s / covered * elapsed : s, src: 'grid', est: est, short: short, days: Math.floor(covered), low: short };
+  }
   if (Y && Y.y === new Date().getFullYear() && Y.first) {
     let s = 0; Object.keys(Y.days).forEach((k) => { s += Y.days[k]; });
     const covered = Math.max(1, (now - Y.first) / D), elapsed = Math.max(1, (now - y0) / D), late = Y.first > y0 + 2 * D;
@@ -250,7 +333,7 @@ function lpEnYtdInfo(M) {
 function lpEnYtd(M) { return lpEnYtdInfo(M).k; }
 const lpEnYear = lpEnYtd;
 // geçen yılın toplamı: elle yazılan, yoksa Home Assistant'ın kaydı (yılın tamamını tutuyorsa)
-function lpEnPrev() { const c = lpEnCfg(), Y = LP_EN.yr; if (lpEnNumOf(c.prev_year)) return lpEnNumOf(c.prev_year); if (Y && Y.pfull && Y.prev) return Y.src === 'grid' ? Y.prev : Y.prev / (1 - lpEnUntracked()); return 0; }
+function lpEnPrev() { const c = lpEnCfg(), Y = LP_EN.yr; if (lpEnNumOf(c.prev_year)) return lpEnNumOf(c.prev_year); if (Y && Y.pfull && Y.prev) return Y.src === 'grid' ? Y.prev : Y.prev / (1 - lpEnUntracked()); if (Y && Y.src === 'grid' && Y.dpfull && Y.dprev && lpEnHomeIds(LP_EN.m)) return Y.dprev; return 0; }
 // yılın gidişi: şimdiki hızla yıl sonu, sınırın geçileceği gün, son kaynak fiyatının başlayacağı gün
 function lpEnYearPlan(M) {
   const I = lpEnYtdInfo(M), k = I.k, y = new Date().getFullYear(), prev = lpEnPrev(), prevOver = prev > 0 && prev >= lpEnLimitOf(y);
@@ -270,7 +353,7 @@ function lpEnPeriodKwh(h, from, to) {
   const M = LP_EN.m, conn = h && h.connection;
   if (!M || !M.cats.length || !conn) return Promise.resolve(0);
   const a = new Date(from + 'T00:00:00'), b = new Date(to + 'T00:00:00'); b.setDate(b.getDate() + 1);
-  return conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: a.toISOString(), end_time: b.toISOString(), period: 'day', statistic_ids: M.cats.reduce((a, c) => a.concat(c.e ? [c.e] : c.es || []), []).filter((x) => !!x), types: ['change'], units: { energy: 'kWh' } })
+  return lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: a.toISOString(), end_time: b.toISOString(), period: 'day', statistic_ids: M.cats.reduce((a, c) => a.concat(c.e ? [c.e] : c.es || []), []).filter((x) => !!x), types: ['change'], units: { energy: 'kWh' } })
     .then((r) => { let s = 0; Object.keys(r || {}).forEach((k) => (r[k] || []).forEach((p) => { if (isFinite(p.change)) s += Math.max(0, p.change); })); return Math.round(s * 10) / 10; }).catch(() => 0);
 }
 // ölçülmüş ışık tablosu (Öğren, ortak havuz, aktarma): entegrasyondaki lut.power ile aynı ara değer hesabı
@@ -506,6 +589,9 @@ function lpEnDays(conn, M) {
   const of = (c) => (c.e ? [c.e] : (c.es || [])), ids = [];
   M.cats.forEach((c) => of(c).forEach((x) => { if (x && ids.indexOf(x) < 0) ids.push(x); }));
   const sun = lpEnSunE(); if (sun && ids.indexOf(sun) < 0) ids.push(sun);
+  // ev sayacı aynı sorguda (yıl hesabı da aynı isteği kullanır): her gün sayaç ve cihazların toplamı ayrı ayrı (lpEnHomeDays)
+  const dids = ids.filter((x) => x !== sun), hid = (lpEnHomeIds(M) || []).filter((x) => dids.indexOf(x) < 0), from = lpEnDayFrom();
+  hid.forEach((x) => { if (ids.indexOf(x) < 0) ids.push(x); });
   if (!ids.length) return Promise.resolve();
   const d0 = new Date(); d0.setHours(0, 0, 0, 0);
   const days = []; for (let i = LP_EN_DAYS - 1; i >= 0; i--) { const d = new Date(d0.getTime()); d.setDate(d.getDate() - i); days.push(d.getTime()); }
@@ -523,6 +609,12 @@ function lpEnDays(conn, M) {
       });
       const per = {}; M.cats.forEach((c) => { per[c.id] = days.map((x, i) => of(c).reduce((s0, id) => s0 + ((cats[id] || [])[i] || 0), 0)); });
       M.days = { t: days, cats: per, sun: sun ? cats[sun] : null };
+      if (hid.length) {
+        const dall = {}, mall = {}, rows = (id, f) => ((r && r[id]) || []).forEach((p) => { if (isFinite(p.change)) f(typeof p.start === 'number' ? p.start : Date.parse(p.start), p.change); });
+        dids.forEach((id) => rows(id, (s, v) => { dall[s] = (dall[s] || 0) + Math.max(0, v); }));
+        hid.forEach((id) => rows(id, (s, v) => { mall[s] = (mall[s] || 0) + v; }));
+        M.days.dall = dall; M.days.mall = mall; M.days.from = from;
+      }
     }).catch(() => {});
 }
 // dönemin saatlik tüketimi (üç zamanlının payları) ve bataryanın saatlik şarj/deşarjı: Home Assistant'ın saatlik istatistiklerinden
@@ -536,7 +628,7 @@ function lpEnHourFetch(conn, M) {
   if (!need || (LP_EN.tou && LP_EN.tou.sig === sig && Date.now() - LP_EN.tou.at < 1800000)) return Promise.resolve();
   const P = lpEnPeriod(), from = P ? new Date(P.from) : (() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })();
   const st = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
-  const a = ids.length ? conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), period: 'hour', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } }) : Promise.resolve({});
+  const a = ids.length ? lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: from.toISOString(), period: 'hour', statistic_ids: ids, types: ['change'], units: { energy: 'kWh' } }) : Promise.resolve({});
   const b = bp ? conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: from.toISOString(), period: 'hour', statistic_ids: [bp], types: ['mean'], units: { power: 'W' } }) : Promise.resolve({});
   return Promise.all([a, b]).then((r) => {
     const k = { day: 0, peak: 0, night: 0 }, ch = { day: 0, peak: 0, night: 0 }, dis = { day: 0, peak: 0, night: 0 };
@@ -583,7 +675,8 @@ function lpEnEnsure(h) {
     const M = M0 || lpEnModel(h, prefs);
     if (M0) M.price = lpEnModel(h, prefs).price;
     if (!LP_EN.m) { M.partial = true; LP_EN.m = M; lpEnFire(); }   // kartlar ve anlık değerler hemen; grafikler gelince dolar
-    if (early) return Promise.all([early, lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => M);
+    // ev sayacı yalnız Home Assistant'ın Enerji ayarındaysa (şebeke) erken istenen günlük veride yoktu: ayar gelince bir daha
+    if (early) return Promise.all([early, lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => (lpEnHomeIds(M) && M.days && !M.days.mall ? lpEnDays(conn, M) : null)).then(() => M);
     return M.cats.length || lpEnSunE() || lpEnYearIds(M).ids.length ? Promise.all([lpEnHist(conn, h.states || {}, M), lpEnDays(conn, M), lpEnYearFetch(conn, M), lpEnHourFetch(conn, M)]).then(() => M) : M;
   }).then((M) => { M.partial = false; LP_EN.m = M; LP_EN.at = Date.now(); LP_EN.busy = false; lpEnCachePut(key, M); lpEnFire(); },
     () => { LP_EN.busy = false; LP_EN.at = Date.now(); if (!LP_EN.m) LP_EN.m = { cats: [], devs: [], price: 0 }; lpEnFire(); });
@@ -772,20 +865,23 @@ function lpEnCard(h, M, it, lang, phone) {
     if (!M.days) return '<div class="enmsg"><span>' + esc(lpEnT(lang, M.partial ? 'loading' : 'noHist')) + '</span></div>';
     const n = +it.days === 30 ? 30 : 7, cost = it.unit === 'cost' && price > 0, f = cost ? price : 1;
     const idx = []; for (let i = N - n; i < N; i++) idx.push(i);
-    const tot = idx.map((i) => M.cats.reduce((a, c) => a + (M.days.cats[c.id][i] || 0), 0) * f);
+    const Hd = lpEnHomeDays(M), dv = idx.map((i) => (Hd ? lpEnDevDay(M, i) * f : 0));   // ev sayacı: çubuk evin toplamı, üstünde gri "ölçülmeyen"
+    const tot = idx.map((i) => (Hd ? lpEnDayTot(M, i) : M.cats.reduce((a, c) => a + (M.days.cats[c.id][i] || 0), 0)) * f);
     const mx = Math.max.apply(null, tot.concat([0.001])) * 1.08;
     const W = phone ? 360 : 600, H = phone ? 170 : 190, pl = 34, pb = 20, cw = (W - pl - 4) / n, bw = cw * (n > 7 ? 0.7 : 0.56);
     let s = '';
     [0, 0.5, 1].forEach((q) => { const y = (H - pb - q * (H - pb - 8)).toFixed(1); s += '<line x1="' + pl + '" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="rgba(255,255,255,.07)"/><text x="' + (pl - 6) + '" y="' + (+y + 4) + '" text-anchor="end">' + esc(lpEnNum(mx * q, mx * q < 10 && q ? 1 : 0, lang)) + '</text>'; });
     idx.forEach((i, j) => {
       const x = pl + j * cw + (cw - bw) / 2; let y = H - pb;
-      M.cats.forEach((c) => { const v = (M.days.cats[c.id][i] || 0) * f, hh = v / mx * (H - pb - 8); if (hh <= 0) return; y -= hh; s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" fill="' + c.color + '"/>'; });
+      const sc = Hd && dv[j] > tot[j] && dv[j] > 0 ? tot[j] / dv[j] : 1;   // cihazlar sayaçtan fazlaysa çubuk yine sayaç kadar
+      M.cats.forEach((c) => { const v = (M.days.cats[c.id][i] || 0) * f * sc, hh = v / mx * (H - pb - 8); if (hh <= 0) return; y -= hh; s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" fill="' + c.color + '"/>'; });
+      if (Hd && tot[j] > dv[j]) { const hh = (tot[j] - dv[j]) / mx * (H - pb - 8); if (hh > 0) { y -= hh; s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" fill="' + LP_EN_UNT_C + '"/>'; } }
       const d = new Date(M.days.t[i]), today = i === N - 1;
       const lab = n === 7 ? (today ? lpEnT(lang, 'todayD') : lpEnT(lang, 'wd')[d.getDay()]) : (j % 5 === 4 || today ? d.getDate() + '.' + (d.getMonth() + 1) : '');
       if (lab) s += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (H - 5) + '" text-anchor="middle"' + (today ? ' class="now"' : '') + '>' + esc(lab) + '</text>';
     });
     const sum = tot.reduce((a, b) => a + b, 0);
-    return '<div class="enhd"><span>' + (cost ? esc(lpEnMoney(h, sum, lang)) : esc(lpEnNum(sum, sum < 10 ? 1 : 0, lang)) + ' kWh') + '</span></div><svg class="ench2" viewBox="0 0 ' + W + ' ' + H + '">' + s + '</svg>' + lpEnLegend(M);
+    return '<div class="enhd"><span>' + (cost ? esc(lpEnMoney(h, sum, lang)) : esc(lpEnNum(sum, sum < 10 ? 1 : 0, lang)) + ' kWh') + '</span></div><svg class="ench2" viewBox="0 0 ' + W + ' ' + H + '">' + s + '</svg>' + lpEnLegend(M, Hd && tot.some((v, j) => v - dv[j] > 0.0005) ? lang : null);
   }
   if (k === 'day') {
     if (!M.hist) return '<div class="enmsg"><span>' + esc(lpEnT(lang, M.partial ? 'loading' : 'noHist')) + '</span></div>';
@@ -897,7 +993,7 @@ function lpEnTipsHtml(h, M, lang) {
   const L = lpEnTips(h, M, lang); if (!L.length) return '';
   return '<div class="entips" title="' + esc(lpEnT(lang, 'tHide')) + '">' + L.map((x, i) => '<div class="entip' + (i ? '' : ' on') + '" data-entip="' + esc(x.k) + '"' + (x.ent ? ' data-tipent="' + esc(x.ent) + '"' : '') + '><ha-icon icon="' + esc(x.ic) + '"></ha-icon><span>' + esc(x.t) + '</span>' + (L.length > 1 ? '<i>' + (i + 1) + '/' + L.length + '</i>' : '') + '</div>').join('') + '</div>';
 }
-function lpEnLegend(M) { const L = M.cats.slice(0, 10); return '<div class="enlg">' + L.map((c) => '<span><i style="background:' + c.color + '"></i>' + esc(c.name) + '</span>').join('') + (M.cats.length > L.length ? '<span>+' + (M.cats.length - L.length) + '</span>' : '') + '</div>'; }
+function lpEnLegend(M, ul) { const L = M.cats.slice(0, 10); return '<div class="enlg">' + L.map((c) => '<span><i style="background:' + c.color + '"></i>' + esc(c.name) + '</span>').join('') + (M.cats.length > L.length ? '<span>+' + (M.cats.length - L.length) + '</span>' : '') + (ul ? '<span><i style="background:' + LP_EN_UNT_C + '"></i>' + esc(lpEnT(ul, 'untracked')) + '</span>' : '') + '</div>'; }   // ul: ölçülmeyen payın dili (ev sayacı)
 // kategoriye dokununca: o kategorinin cihazları (anlık güce göre)
 function lpEnPopHtml(h, M, catId, lang) {
   const S = (h && h.states) || {}, c = M.cats.filter((x) => x.id === catId)[0]; if (!c) return '';

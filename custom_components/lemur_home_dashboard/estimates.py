@@ -376,6 +376,16 @@ def meter_cfg(settings: dict) -> dict:
     return m if isinstance(m, dict) else {}
 
 
+def home_meter_energy(settings: dict) -> str | None:
+    """The kWh sensor that is the home's total (the dashboard's rule, v0.36.0b4): the home meter's, unless there is solar or
+    a battery (then the meter counts what came from the grid, not what the home used)."""
+    m, s = meter_cfg(settings), solar_cfg(settings)
+    sun = (bool(s.get("sun")) and s.get("on") is not False) if "sun" in s else bool(s.get("on") and s.get("prod"))
+    bat = (bool(s.get("bat")) and s.get("on") is not False) if "bat" in s else bool(s.get("on") and (s.get("bat_power") or s.get("soc")))
+    e = m.get("energy")
+    return e if isinstance(e, str) and e and not sun and not bat else None
+
+
 def build_prefs(prefs: dict, ests: dict, cats: list, settings: dict, owned: str | None = None, owned_grid: str | None = None) -> dict:
     """Energy settings with the dashboard's categories, devices and solar source; other entries kept.
     owned: the solar statistic the dashboard wrote last time (taken out if it changed)."""

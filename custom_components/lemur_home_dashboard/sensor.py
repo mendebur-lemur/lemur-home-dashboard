@@ -56,7 +56,8 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
             out["solar_energy"] = lambda d=data: SolarEnergySensor(d)
         # the home's and each room's totals (power now, kWh today)
         ests = data.estimates()
-        if ests or EST.meter_cfg(data.data.get("settings") or {}).get("power"):
+        mcfg = EST.meter_cfg(data.data.get("settings") or {})
+        if ests or mcfg.get("power") or mcfg.get("energy"):
             out["ev_power"] = lambda d=data: HomePowerSensor(d)
             out["ev_energy"] = lambda d=data: HomeEnergySensor(d)
         for aid in sorted({a for a in (area_of(hass, k, e) for k, e in ests.items()) if a}):
@@ -764,6 +765,11 @@ class HomeEnergySensor(_HomeMixin, _Daily, CategoryEnergySensor):
         self._day = None
         self._suffix = "energy"
         self._init(data, "ev_energy", "sensor.lhd_ev_energy")
+
+    def _follow(self) -> list[str]:
+        # ev sayacı seçiliyse evin bugünkü kWh'ı sayaçtan (panonun kartları da evin toplamını ondan alır); yoksa cihazların toplamı
+        m = EST.home_meter_energy(self._d.data.get("settings") or {})
+        return [m] if m else CategoryEnergySensor._follow(self)
 
     async def async_added_to_hass(self) -> None:
         await CategoryEnergySensor.async_added_to_hass(self)

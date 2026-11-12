@@ -891,6 +891,7 @@ div.ensr:hover { background: var(--s1); }
 .dlg.dock .sjump { background: var(--s1); }
 /* v0.28.8 telefonda yönetim paneli bütün olarak kayar: sekme düzenleyici ekranın yarısını tutup altta 240 piksellik bir alan bırakıyordu */
 .narrowv { overflow-y: auto; }
+.narrowv > .ov { position: fixed; }   /* kaydırılmış sayfada açılan pencere ekranın üstünde kalmasın */
 .narrowv .main { flex: none; overflow: visible; }
 /* v0.28.8 orta genişlikte (küçük tablet, dar pencere) üst şerit sığsın: Basit / Gelişmiş alt alta düşüyor, Ayarlar kesiliyordu */
 @media (max-width: 1100px) {

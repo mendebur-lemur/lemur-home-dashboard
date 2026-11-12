@@ -50,7 +50,7 @@ function lpExGet(h, key, ttl, fn) {
   }
   return C ? C.v : undefined;
 }
-const lpExSt = (conn, ids, start, period, types, units, end) => (ids.length ? conn.sendMessagePromise({ type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), end_time: end ? new Date(end).toISOString() : undefined, period: period, statistic_ids: ids, types: types, units: units }).catch(() => ({})) : Promise.resolve({}));
+const lpExSt = (conn, ids, start, period, types, units, end) => (ids.length ? lpEnStat(conn, { type: 'recorder/statistics_during_period', start_time: new Date(start).toISOString(), end_time: end ? new Date(end).toISOString() : undefined, period: period, statistic_ids: ids, types: types, units: units }).catch(() => ({})) : Promise.resolve({}));
 const lpExT0 = (x) => (typeof x.start === 'number' ? x.start : Date.parse(x.start));
 const lpExDay0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); };
 function lpExNight0() { const d = new Date(); d.setHours(2, 0, 0, 0); if (Date.now() < d.getTime() + 3 * LP_EX_H) d.setDate(d.getDate() - 1); return d.getTime(); }
@@ -298,15 +298,20 @@ const LP_EX_CARDS = {
     const of = (c) => (c.e ? [c.e] : (c.es || []));
     const D = M.demo ? { H0: new Date().getHours(), cats: M.cats.map((c, i) => ({ id: c.id, y: [1.2, 3.4, 1.1, 0.6, 0.4, 0.1][i] || 0.2, t: [1.1, 4.1, 1.3, 0.5, 0.4, 0.1][i] || 0.2 })) } : lpExGet(h, 'cmp', 600000, (conn) => {
       const d0 = lpExDay0(), ids = []; M.cats.forEach((c) => of(c).forEach((x) => { if (x && ids.indexOf(x) < 0) ids.push(x); }));
-      return lpExSt(conn, ids, d0 - LP_EX_D, 'hour', ['change'], { energy: 'kWh' }).then((r) => {
+      const hid = (lpEnHomeIds(M) || []).filter((x) => ids.indexOf(x) < 0);   // ev sayacı: dünün ve bugünün toplamı ondan
+      return lpExSt(conn, ids.concat(hid), d0 - LP_EX_D, 'hour', ['change'], { energy: 'kWh' }).then((r) => {
         const H0 = new Date().getHours();
-        return { H0: H0, cats: M.cats.map((c) => { let y = 0, t = 0; of(c).forEach((id) => (r[id] || []).forEach((x) => { if (!isFinite(x.change)) return; const ts = lpExT0(x); if (new Date(ts).getHours() >= H0) return; if (ts >= d0) t += Math.max(0, x.change); else y += Math.max(0, x.change); })); return { id: c.id, y: y, t: t }; }) };
+        let my = null, mt = null;
+        if (hid.length) { my = 0; mt = 0; hid.forEach((id) => (r[id] || []).forEach((x) => { if (!isFinite(x.change)) return; const ts = lpExT0(x); if (new Date(ts).getHours() >= H0) return; if (ts >= d0) mt += x.change; else my += x.change; })); }
+        return { H0: H0, my: my, mt: mt, cats: M.cats.map((c) => { let y = 0, t = 0; of(c).forEach((id) => (r[id] || []).forEach((x) => { if (!isFinite(x.change)) return; const ts = lpExT0(x); if (new Date(ts).getHours() >= H0) return; if (ts >= d0) t += Math.max(0, x.change); else y += Math.max(0, x.change); })); return { id: c.id, y: y, t: t }; }) };
       });
     });
     if (D === undefined) return lpExLoading(lang);
     if (!D) return '<div class="enmsg"><span>' + esc(lpEnT(lang, 'noHist')) + '</span></div>';
     if (!D.H0) return '<div class="enmsg"><span>' + esc(lpExT(lang, 'early')) + '</span></div>';
-    const Y = D.cats.reduce((a, x) => a + x.y, 0), T = D.cats.reduce((a, x) => a + x.t, 0), hh = ('0' + D.H0).slice(-2);
+    // ev sayacı o günü tutuyorsa (lpEnHomeDays: sayaçtan) toplam sayaçtan; satırlar yine kategoriler
+    const Hd = lpEnHomeDays(M), Nd = M.days ? M.days.t.length : 0, mOk = (i, v) => typeof v === 'number' && v >= 0 && !!Hd && Nd > 1 && !!Hd.idx[i] && Hd.idx[i].m;
+    const Y = mOk(Nd - 2, D.my) ? D.my : D.cats.reduce((a, x) => a + x.y, 0), T = mOk(Nd - 1, D.mt) ? D.mt : D.cats.reduce((a, x) => a + x.t, 0), hh = ('0' + D.H0).slice(-2);
     const dp = Y > 0.05 ? Math.round((T - Y) / Y * 100) : null, my = lpExMoney(h, M, Y, lang), mt = lpExMoney(h, M, T, lang);
     const box = (lab, k, sub, cls) => '<div class="exst"><span>' + esc(lab) + '</span><b>' + esc(lpExK(k, lang)) + ' kWh</b><span' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(sub) + '</span></div>';
     let s = '<div class="exstats">' + box(lpExT(lang, 'yd', { h: hh }), Y, my || '') + box(lpExT(lang, 'td', { h: hh }), T, (dp === null ? '' : (dp > 0 ? '▲ ' : dp < 0 ? '▼ ' : '') + lpEnPct(Math.abs(dp), lang)) + (mt ? ' · ' + mt : ''), dp === null ? '' : dp > 5 ? 'up' : dp < -5 ? 'dn' : '') + '</div>';

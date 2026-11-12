@@ -11,7 +11,7 @@ const rd = (f) => fs.readFileSync(path.join(__dirname, '../src/' + f), 'utf8');
 const card = rd('panel-card.js'), adm = rd('admin.js'), defs = rd('defaults.js');
 const fnSrc = (src, head) => { const a = src.indexOf(head); assert.ok(a >= 0, head); return src.slice(a, src.indexOf('\n}\n', a) + 2); };
 // sınıf yöntemi: "  _ad(...) {" ile başlayıp ilk "\n  }\n" ile biten parça, function olarak
-const method = (head) => { const a = adm.indexOf('  ' + head + '('); assert.ok(a >= 0, head); const b = adm.indexOf('\n  }\n', a); return 'function ' + adm.slice(a + 2 + head.length, b + 4); };
+const method = (head) => { let a = adm.indexOf('  ' + head + '('), pre = 'function '; if (a < 0) { a = adm.indexOf('  async ' + head + '('); pre = 'async function '; if (a >= 0) a += 6; } assert.ok(a >= 0, head); const b = adm.indexOf('\n  }\n', a); return pre + adm.slice(a + 2 + head.length, b + 4); };
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
 test('ızgaranın sütun sayısı kartın o anki boyutundan; boyut değişince _gStale yeniden çizim ister', () => {
@@ -46,16 +46,19 @@ test('Serbest ızgaraya dönüş kayıtlı yerleri korur; ızgaralı sekmede "Al
   assert.ok(/if \(T\.layout === 'grid'\) \{ lpGridFromCols\(T\); delete T\.gm_own; \}/.test(adm));
 });
 
-test('yedekten geri yükleme: geri al hayvanları, profilleri ve tahminleri de geri getirir; ileri al yeniden uygular', () => {
-  const ctx = { STORE: { data: {} }, lhdClone: clone, lhdIsObj: (x) => !!x && typeof x === 'object' && !Array.isArray(x), lhdCleanTabs: (x) => clone(x), lhdCleanPets: (x) => clone(x) };
+test('yedekten geri yükleme: geri al hayvanları, profilleri ve tahminleri de geri getirir; ileri al yeniden uygular', async () => {
+  // v0.36.0b4: _backupApply bekler (entegrasyon hepsini kabul edince yazar; STORE.restore), yedeğin sabitleri admin.js'in başında
+  const ctx = { STORE: { data: {}, subs: [] }, lhdClone: clone, lhdIsObj: (x) => !!x && typeof x === 'object' && !Array.isArray(x), lhdCleanTabs: (x) => clone(x), lhdCleanPets: (x) => clone(x), lhdPyLen: (x) => JSON.stringify(x).length };
+  ctx.STORE.restore = (V) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, clone(V)); return Promise.resolve(ctx.STORE.data); };
   vm.createContext(ctx);
-  ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply'].forEach((m) => vm.runInContext('this.' + m + ' = ' + method(m) + ';', ctx));
+  vm.runInContext(adm.slice(adm.indexOf('const LHD_BK_KEYS'), adm.indexOf('function lhdBkPrep(')), ctx);
+  ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply', '_bkWrite'].forEach((m) => vm.runInContext('this.' + m + ' = ' + method(m) + ';', ctx));
   const S0 = { tabs: [{ id: 'ev', sections: [] }], settings: { a: 1 }, pets: { kedi: { name: 'Pamuk' }, kopek: { name: 'Karabaş' } }, estimates: { 'switch.kettle': { w: 2000 } }, profiles: { p: 1 } };
   ctx.STORE.data = clone(S0);
   const h = { _undo: [], _redo: [], _tab: 'ev', _settings: () => ctx.STORE.data.settings || {}, _commit: (k, v) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, { [k]: v }); }, _render: () => {}, _toast: () => {}, _t: (k) => k };
-  ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply'].forEach((m) => { h[m] = ctx[m]; });
+  ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply', '_bkWrite'].forEach((m) => { h[m] = ctx[m]; });
   h._bk = { data: { tabs: [{ id: 'eski', sections: [] }], settings: {}, profiles: {}, pets: { kedi: { name: 'Pamuk' } }, estimates: { 'switch.kettle': { w: 100 } } } };
-  h._backupApply();
+  await h._backupApply();
   assert.deepStrictEqual(Object.keys(ctx.STORE.data.pets), ['kedi']);
   h._undoIt();
   for (const k of ['tabs', 'settings', 'pets', 'estimates', 'profiles']) assert.deepStrictEqual(clone(ctx.STORE.data[k]), S0[k], k);

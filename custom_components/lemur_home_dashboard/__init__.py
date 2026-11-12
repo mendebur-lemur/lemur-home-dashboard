@@ -368,7 +368,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        for handler in (ws_get, ws_set, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
+        for handler in (ws_get, ws_set, ws_restore, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
     # A page opened while Home Assistant is still starting has neither of the two above; the loader is also a
@@ -488,29 +488,11 @@ def ws_set(hass, connection, msg):
         # change. The page reloads and says so. A wall tablet's season switch does not count here (ws_season, ssn below).
         connection.send_error(msg["id"], "conflict", f"{key} was changed elsewhere")
         return
-    if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
-        connection.send_error(msg["id"], "invalid", f"{key}: wrong type or too large")
+    try:
+        value = _check(key, value)
+    except vol.Invalid as err:
+        connection.send_error(msg["id"], "invalid", f"{key}: {err}")
         return
-    if key == "pets":
-        try:
-            value = SF.PETS_SCHEMA(value)
-        except vol.Invalid as err:
-            connection.send_error(msg["id"], "invalid", f"pets: {err}")
-            return
-    elif key in ("estimates", "ecats"):
-        try:
-            value = (EST.ESTIMATES_SCHEMA if key == "estimates" else EST.ECATS_SCHEMA)(value)
-        except vol.Invalid as err:
-            connection.send_error(msg["id"], "invalid", f"{key}: {err}")
-            return
-    elif key == "tabs":
-        value = EST.migrate_ids(SF.clean_tabs(value))
-    elif key in ("twins", "walls"):
-        try:
-            value = (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)
-        except vol.Invalid as err:
-            connection.send_error(msg["id"], "invalid", f"{key}: {err}")
-            return
     if key == "settings" and ("ssn" in msg or "rev" in msg):
         # an admin page from 0.32-0.35 (rev, no ssn): the season of the settings' last save is the one its copy had
         ssn = msg["ssn"] if "ssn" in msg else data.sbase.get("v")
@@ -525,7 +507,7 @@ def ws_set(hass, connection, msg):
     # solar production or the sync switch changed: sensors and energy settings follow
     def _en(st: dict) -> tuple:
         e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
-        return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"))
+        return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"), json.dumps(e.get("meter"), sort_keys=True))
     energy_changed = key == "settings" and _en(data.data.get("settings") or {}) != _en(value)
     data.data[key] = value
     if key == "walls":
@@ -537,6 +519,83 @@ def ws_set(hass, connection, msg):
         async_dispatcher_send(hass, SIGNAL_EST)
         data.schedule_prefs()
     data.changed(*((key, "feed") if key == "pets" else (key,)))   # pets: the next feedings were worked out again
+    connection.send_result(msg["id"], _for_user(connection, data.view()))
+
+
+def _check(key: str, value: Any) -> Any:
+    """One key as it may be stored (ws_set, ws_restore): its type, at most MAX_CONFIG_BYTES, and its own rules.
+    Returns the cleaned value; raises vol.Invalid."""
+    if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
+        raise vol.Invalid("wrong type or too large")
+    if key == "pets":
+        return SF.PETS_SCHEMA(value)
+    if key in ("estimates", "ecats"):
+        return (EST.ESTIMATES_SCHEMA if key == "estimates" else EST.ECATS_SCHEMA)(value)
+    if key == "tabs":
+        return EST.migrate_ids(SF.clean_tabs(value))
+    if key in ("twins", "walls"):
+        return (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)
+    return value
+
+
+def _energy_key(st: Any) -> tuple:
+    e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
+    return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"))
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/restore",
+        vol.Required("data"): vol.All(dict, vol.Length(min=1)),   # key -> value, only the keys the backup file has
+        vol.Optional("revs"): {str: int},   # each key's counter the page had (as ws_set's rev)
+    }
+)
+@callback
+def ws_restore(hass, connection, msg):
+    """A backup file from the admin page (v0.36.0b4): every key is checked with ws_set's rules first and nothing is
+    written unless all pass, so a refused file cannot leave the layout half restored. Keys the file does not have
+    (an older backup without ecats / walls / twins) stay as they are. One save, one message to the screens."""
+    data = _data(hass)
+    if data is None:
+        connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
+        return
+    if not connection.user.is_admin:
+        connection.send_error(msg["id"], "unauthorized", "Only administrators can change the panel")
+        return
+    vals = msg["data"]
+    unknown = [k for k in vals if k not in SET_KEYS]
+    if unknown:
+        connection.send_error(msg["id"], "invalid", f"{unknown[0]}: unknown key")
+        return
+    revs = msg.get("revs")
+    if revs is not None:
+        for key in vals:
+            if revs.get(key, 0) != data.revs.get(key, 0):
+                connection.send_error(msg["id"], "conflict", f"{key} was changed elsewhere")
+                return
+    out: dict[str, Any] = {}
+    errs = []
+    for key in SET_KEYS:
+        if key not in vals:
+            continue
+        try:
+            out[key] = _check(key, vals[key])
+        except vol.Invalid as err:
+            errs.append(f"{key}: {err}")
+    if errs:
+        connection.send_error(msg["id"], "invalid", "; ".join(errs))
+        return
+    energy_changed = "settings" in out and _energy_key(data.data.get("settings") or {}) != _energy_key(out["settings"])
+    data.data.update(out)
+    if "walls" in out:
+        data.twins.listen()
+    if "pets" in out:
+        data.refresh_all()
+        async_dispatcher_send(hass, SIGNAL_PETS)
+    if "estimates" in out or "ecats" in out or energy_changed:
+        async_dispatcher_send(hass, SIGNAL_EST)
+        data.schedule_prefs()
+    data.changed(*(list(out) + (["feed"] if "pets" in out else [])))
     connection.send_result(msg["id"], _for_user(connection, data.view()))
 
 

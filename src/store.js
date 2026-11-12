@@ -118,6 +118,30 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
       throw e;
     });
   },
+  // yedekten geri yükleme (v0.36.0b4): dosyadaki bütün anahtarlar tek mesajda. Entegrasyon hepsini ws_set'in kurallarıyla
+  // denetler, biri bile geçmezse hiçbirini yazmaz; ekrandaki veri ancak kabul edilince değişir (sunucunun temizlediği hâliyle)
+  restore(values) {
+    const keys = Object.keys(values);
+    this.pending++; keys.forEach((k) => { this.pk[k] = (this.pk[k] || 0) + 1; });
+    const done = () => { this.pending = Math.max(0, this.pending - 1); keys.forEach((k) => { this.pk[k] = Math.max(0, (this.pk[k] || 0) - 1); }); };
+    const msg = { type: 'lemur_home_dashboard/restore', data: values };
+    if (this.revs) { msg.revs = {}; keys.forEach((k) => { msg.revs[k] = this.revs[k] || 0; }); }
+    return this.conn.sendMessagePromise(msg).then((r) => {
+      done();
+      const o = {};
+      keys.forEach((k) => { o[k] = r && r[k] !== undefined ? r[k] : values[k]; });
+      if (this.revs && r && lhdIsObj(r.revs)) keys.concat(['feed']).forEach((k) => { if (r.revs[k] !== undefined) this.revs[k] = r.revs[k]; });
+      if (o.settings !== undefined) this.ssn = this._ssnOf(o);
+      if (r && lhdIsObj(r.feed)) o.feed = r.feed;   // hayvanlar değiştiyse sıradaki beslemeler yeniden hesaplandı
+      this.data = Object.assign({}, this.data, o);
+      const d = this.data; this.subs.forEach((f) => f(d));
+      return r;
+    }, (e) => {
+      done();
+      if (e && e.code === 'conflict') this.refresh();
+      throw e;
+    });
+  },
   // sunucudaki güncel veriyi al (çakışmadan sonra): bütün ekranlar yeniden çizer
   refresh() {
     return lhdRetryMsg(this.conn, { type: 'lemur_home_dashboard/get' }).then((n) => {
