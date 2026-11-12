@@ -22,7 +22,7 @@ const LP_EL_T = {
     L_meter: ['Bölünmüş çubuk', 'Sayılar', 'İç içe halka', 'İki çizgi', 'Güç ve gerilim'], L_tips: ['Liste', 'Tek satır', 'Kartlar', 'Öne çıkan', 'Rozetler'], L_standby: ['Satır'],
     now: 'şu an', unt: 'Ölçülmeyen', byMeter: 'ev sayacına göre', byBill: 'son faturaya göre', home: 'Ev', grid: 'Şebeke', gridIn: 'Şebekeden', sun: 'Güneş', bat: 'Batarya',
     charge: 'şarj', dis: 'boşalma', idle: 'beklemede', inc: 'Gelen', out: 'Giden', avg: 'ortalama {v} / gün', tot: 'Toplam', thisW: 'Bu hafta', lastW: 'Geçen hafta',
-    peak: 'En yoğun', calm: 'en sakin', most: 'en çok', hiLo: 'en düşük {a} · en yüksek {b}', share: 'evin {p}\'i', lead: 'evin', soFar: 'şimdiye kadar', perEnd: 'dönem sonu',
+    peak: 'En yoğun', calm: 'en sakin', most: 'en çok', hiLo: 'en düşük {a} · en yüksek {b}', share: 'evdeki payı {p}', lead: 'evin', soFar: 'şimdiye kadar', perEnd: 'dönem sonu',
     perDay: '{d}. gün', cheap: 'düşük kademe', dear: 'yüksek kademe', unit: '₺/kWh şu an', yearL: 'yıllık sınır', tierUse: 'kademe', perUse: 'dönem', kwhUse: 'kWh tüketim',
     bill: 'Bu dönem', devs: 'Paneldeki cihazlar', meterL: 'Sayaç', diff: 'Fark', volt: 'gerilim', power: 'güç', noTips: 'Şu an ipucu yok', hide: 'Gizle', dayKwh: 'kWh · 24 saat',
     bandD: 'Gündüz', bandP: 'Puant', bandN: 'Gece', costDays: 'günlük, son 9 gün', est: '~', kwhToday: 'kWh bugün', today: 'bugün', month: 'bu ay', full: 'dolmasına {t}', left: 'bitmesine {t}', noMeter: 'Ev sayacı seçilmedi', noMeterT: 'Enerji sayfasında "Ev sayacı" bölümünden seç.', noPrice: 'Fiyat girilmedi', noPriceT: 'Enerji sayfasında "Fiyat ve tarife" bölümünden gir.' },

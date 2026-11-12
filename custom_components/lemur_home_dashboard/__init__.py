@@ -80,6 +80,9 @@ class PanelData:
         # key → how many times it changed since the start (in memory). Kept in hass.data so a reload of the integration
         # does not start them again from 0: open admin pages keep their counters (a restart reconnects and reloads them)
         self.revs: dict[str, int] = hass.data.setdefault(f"{DOMAIN}_revs", {})
+        # {"v": the season the settings had at their last change} (not a wall tablet's switch): stands in for the ssn
+        # an admin page from before 0.36 does not send (ws_set). Kept like revs, so a reload does not move it
+        self.sbase: dict[str, Any] = hass.data.setdefault(f"{DOMAIN}_sbase", {})
         self._est_cache: tuple | None = None   # estimates(): (stored table, its size, cleaned copy)
         self._learn_saved = 0.0                  # time.monotonic() of the last save asked for the learning runs
         self._learn_shape: tuple = ()
@@ -115,6 +118,7 @@ class PanelData:
         if isinstance(est, dict) and any(EST.is_virtual(v) for v in est.values()):
             self.data["estimates"] = {k: v for k, v in est.items() if not EST.is_virtual(v)}
             self.store.async_delay_save(lambda: self.data, 1.0)
+        self.sbase.setdefault("v", (self.data.get("settings") or {}).get("season"))
         self.learning = LRN.Learning(self.hass, self.data.get("learn_avg"), self._save_learn)
         self.learning.resume_saved()   # yeniden başlatmayla kesilen ışık ölçümü kaldığı yerden sürer
 
@@ -137,6 +141,8 @@ class PanelData:
         take parts); none: everything."""
         for k in keys or SET_KEYS:
             self.revs[k] = self.revs.get(k, 0) + 1
+        if not keys or "settings" in keys:
+            self.sbase["v"] = (self.data.get("settings") or {}).get("season")
         self.store.async_delay_save(lambda: self.data, 1.0)
         async_dispatcher_send(self.hass, SIGNAL_UPDATE, self.view(), tuple(keys))
 
@@ -505,9 +511,11 @@ def ws_set(hass, connection, msg):
         except vol.Invalid as err:
             connection.send_error(msg["id"], "invalid", f"{key}: {err}")
             return
-    if key == "settings" and "ssn" in msg:
+    if key == "settings" and ("ssn" in msg or "rev" in msg):
+        # an admin page from 0.32-0.35 (rev, no ssn): the season of the settings' last save is the one its copy had
+        ssn = msg["ssn"] if "ssn" in msg else data.sbase.get("v")
         cur = (data.data.get("settings") or {}).get("season")
-        if value.get("season") == msg["ssn"] and cur != msg["ssn"]:
+        if value.get("season") == ssn and cur != ssn:
             # sayfa mevsime dokunmadı, arada bir tablet yaz / kış yaptı: tabletin seçimi kalır (yöneticinin değişikliği de)
             value = dict(value)
             if cur is None:

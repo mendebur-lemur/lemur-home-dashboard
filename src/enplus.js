@@ -6,7 +6,7 @@ const LP_EX_TXT = {
     d_night: 'Dün gece en düşük saatlerde hangi cihaz ne çekti', d_heat: 'Son 7 günün saat saat tüketimi', d_cmp: 'Bugün bu saate kadar, dünün aynı saatine göre',
     d_odd: 'Ölçülen cihazlar kendi alışkanlığından saparsa', d_period: 'Dönem başından bugüne günlük kWh ve dönem sonu tahmini',
     s_night: 'Gece kim çekiyor', s_heat: 'Haftanın saatleri', s_cmp: 'Dün ile bugün', s_odd: 'Olağandışı', s_period: 'Fatura dönemi',
-    meas: 'Ölçülen', estL: 'Tahmini · ışık modeli', estY: 'Tahmini · yıllık tüketimden', est: 'Tahmini', share: 'Evin şu anki gücünün {p}\'i', shareC: '{c} içinde {p}',
+    meas: 'Ölçülen', estL: 'Tahmini · ışık modeli', estY: 'Tahmini · yıllık tüketimden', est: 'Tahmini', share: 'Evin şu anki gücündeki payı {p}', shareC: '{c} içinde {p}',
     h24: 'Son 24 saat', d7: 'Son 7 gün · kWh', per: 'Bu dönem', mon: 'Bu ay', nightMin: 'Gece en düşük (02-05)', onToday: 'Bugün açık', projEnd: 'Böyle giderse dönem sonu',
     noData: 'kayıt yok', days: 'kayıt {n} gündür', tipNight: 'Gece boyunca {w} altına inmedi. Bekleme ya da uyku ayarına bakmaya değer: ayda ~{k} kWh{c}.',
     on: 'Aç', off: 'Kapat', offSure: 'Kapatmak için tekrar dokun', lightOn: 'Işığı aç', lightOff: 'Işığı kapat', more: 'Ayrıntılar', back: 'Geri', nowAll: 'Şu an çekenler', devN: '{n} cihaz',

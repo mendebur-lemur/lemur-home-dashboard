@@ -7,10 +7,18 @@
 // gizli yan menüyü açan kaydırmanın başlayabileceği sol kenar şeridi (CSS piksel). Android'in hareketli gezinmesi en kenardaki
 // ~30 pikseli geri hareketine ayırır, oradan başlayan dokunuş sayfaya hiç gelmez; şerit bu yüzden geniş (v0.28.11: 48 → 72).
 const LP_EDGE = 72;
+// Sonuç önbellekte (v0.36.0): window.innerWidth / innerHeight okumak, sayfada bekleyen bir değişiklik varsa tarayıcıya o anda
+// yerleşim yaptırıyordu; pano her HA güncellemesinde bunu birkaç kez soruyordu (ucuz tablette güncelleme süresinin yarısı).
+// Pencere boyutu değişince ('resize', yakalama aşamasında: kartların kendi resize dinleyicilerinden önce) yeniden hesaplanır.
+let lpPhS = null;
 function lpPhoneScreen() {
-  const w = window.innerWidth || 1280, h = window.innerHeight || 800;
-  return w < 700 || (h < 500 && w < 1100) || (h > w && w < 1100);
+  if (lpPhS === null) {
+    const w = window.innerWidth || 1280, h = window.innerHeight || 800;
+    lpPhS = w < 700 || (h < 500 && w < 1100) || (h > w && w < 1100);
+  }
+  return lpPhS;
 }
+try { ['resize', 'orientationchange'].forEach((ev) => window.addEventListener(ev, () => { lpPhS = null; }, true)); } catch (e) {}
 // dokunmatik cihaz (telefon, tablet): kiosk ayarındaki "Sadece telefon ve tablette" seçeneği buna bakar
 function lpTouchDev() {
   try { if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return true; } catch (e) {}

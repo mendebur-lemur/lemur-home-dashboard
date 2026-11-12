@@ -4,13 +4,13 @@
 const LP_ER_TXT = {
   tr: { k_nav: 'Analiz ve raporlar', d_nav: 'İki karo: Analiz ve Raporlar pencereleri', s_nav: 'Analiz ve raporlar', ana: 'Analiz', rep: 'Raporlar', warnN: '{n} uyarı', allOk: 'her şey normal',
     anaT: 'Enerji analizi', show: 'Analiz penceresinde', month: 'Ay', year: 'Yıl', running: 'sürüyor', use: 'Tüketim', cost: 'Tutar', avg: 'Günlük ortalama', peak: 'en yoğun: {d} · {k} kWh',
-    tier: 'Kademe ({l} kWh)', tierOk: 'aşılmadı', tierOver: 'aşıldı', tierNo: 'tarife kademesiz', vsPrev: '{p} {m}\'e göre', vsLy: 'geçen yıl aynı ay {k} kWh', noPrev: 'önceki ay kaydı yok',
+    tier: 'Kademe ({l} kWh)', tierOk: 'aşılmadı', tierOver: 'aşıldı', tierNo: 'tarife kademesiz', vsPrev: '{p} {m} ayına göre', vsLy: 'geçen yıl aynı ay {k} kWh', noPrev: 'önceki ay kaydı yok',
     daily: 'Günlük kWh', cats: 'Kategoriler', topM: 'Dönemin en çok tüketenleri', wk: 'Hafta içi · hafta sonu', wkd: 'hafta içi', wke: 'hafta sonu', perDay: 'günlük ortalama',
     sbT: 'Bekleme ~{c} tuttu', sbTk: 'Bekleme ~{k} kWh', sbS: 'Gece tabanı ortalama {w}; dönemin {p} kadarı hiçbir şey kullanılmıyorken gitti.',
     topT: '{n} tek başına {p}', topS: '{k} kWh{c}', none: 'Bu dönem için kayıt yok', noneS: 'Home Assistant bu dönemde bu sensörlerin istatistiğini tutmamış.',
     ytd: 'Bu yıl şimdiye kadar', ytdAll: 'Yıl toplamı', yEnd: 'Yıl sonu tahmini', yLim: 'Yıllık sınır ({l} kWh)', left: 'kalan {k} kWh', under: 'sınırın altında', over: 'sınırı aşıyor',
     vsLyY: '{p} geçen yılın aynı dönemine göre', monthly: 'Aylık kWh', legend: 'gri: {a} · renkli: {b}', bestM: 'En yüksek ay {m}', bestS: '{k} kWh{c}', topY: 'Yılın en çok tüketenleri',
-    csv: 'CSV indir', measured: 'Panonun ölçtüğü ve tahmin ettiği cihazlar; tutar bugünkü tarifeyle', loading: 'Yükleniyor…' },
+    vsPrevS: '{p} {m} ayının aynı günlerine göre', csv: 'CSV indir', measured: 'Panonun ölçtüğü ve tahmin ettiği cihazlar; tutar bugünkü tarifeyle', loading: 'Yükleniyor…' },
   en: { k_nav: 'Analysis and reports', d_nav: 'Two tiles: the Analysis and Reports windows', s_nav: 'Analysis and reports', ana: 'Analysis', rep: 'Reports', warnN: '{n} alerts', allOk: 'all normal',
     anaT: 'Energy analysis', show: 'In the Analysis window', month: 'Month', year: 'Year', running: 'in progress', use: 'Usage', cost: 'Cost', avg: 'Daily average', peak: 'busiest: {d} · {k} kWh',
     tier: 'Tier ({l} kWh)', tierOk: 'not passed', tierOver: 'passed', tierNo: 'no tiered tariff', vsPrev: '{p} vs {m}', vsLy: 'same month last year {k} kWh', noPrev: 'no previous month',
@@ -19,7 +19,7 @@ const LP_ER_TXT = {
     topT: '{n} alone {p}', topS: '{k} kWh{c}', none: 'No history for this period', noneS: 'Home Assistant kept no statistics for these sensors in this period.',
     ytd: 'This year so far', ytdAll: 'Year total', yEnd: 'Year-end estimate', yLim: 'Yearly limit ({l} kWh)', left: '{k} kWh left', under: 'below the limit', over: 'passes the limit',
     vsLyY: '{p} vs the same period last year', monthly: 'Monthly kWh', legend: 'grey: {a} · colour: {b}', bestM: 'Highest month {m}', bestS: '{k} kWh{c}', topY: 'Top consumers of the year',
-    csv: 'Download CSV', measured: 'Devices the dashboard measures or estimates; cost at today\'s tariff', loading: 'Loading…' }
+    vsPrevS: '{p} vs the same days of {m}', csv: 'Download CSV', measured: 'Devices the dashboard measures or estimates; cost at today\'s tariff', loading: 'Loading…' }
 };
 const lpErT = (lang, k, v) => { let s = (LP_ER_TXT[lang] || LP_ER_TXT.en)[k] || LP_ER_TXT.en[k] || k; if (v) Object.keys(v).forEach((x) => { s = s.split('{' + x + '}').join(v[x]); }); return s; };
 if (LP_EN_TYPES.indexOf('nav') < 0) LP_EN_TYPES.splice(0, 0, 'nav');
@@ -65,13 +65,15 @@ function lpErData(h, M, P) {
   return lpExGet(h, 'rep:' + key, done ? 43200000 : 600000, (conn) => {
     const cids = lpErCatIds(M), dids = M.devs.filter((d) => d.e).map((d) => d.e), tids = lpExTotIds(M);
     const q = yr ? [lpExSt(conn, cids, new Date(y - 1, 0, 1).getTime(), 'month', ['change'], { energy: 'kWh' }, to), lpExSt(conn, dids, from, 'month', ['change'], { energy: 'kWh' }, to), lpExSt(conn, tids, from, 'day', ['min'], { power: 'W' }, to)]
-      : [lpExSt(conn, cids, from, 'day', ['change'], { energy: 'kWh' }, to), lpExSt(conn, dids, from, 'month', ['change'], { energy: 'kWh' }, to), lpExSt(conn, tids, from, 'day', ['min'], { power: 'W' }, to), lpExSt(conn, cids, new Date(y - 1, m, 1).getTime(), 'month', ['change'], { energy: 'kWh' }, from)];
+      : [lpExSt(conn, cids, from, 'day', ['change'], { energy: 'kWh' }, to), lpExSt(conn, dids, from, 'month', ['change'], { energy: 'kWh' }, to), lpExSt(conn, tids, from, 'day', ['min'], { power: 'W' }, to), lpExSt(conn, cids, new Date(y - 1, m, 1).getTime(), 'month', ['change'], { energy: 'kWh' }, from),
+        lpExSt(conn, cids, new Date(y, m - 1, 1).getTime(), 'day', ['change'], { energy: 'kWh' }, done ? from : Math.min(from, new Date(y, m - 1, 1).getTime() + Date.now() - from))];   // önceki ay: süren ayda aynı süre
     return Promise.all(q).then((r) => {
       const ch = (x) => (isFinite(x.change) ? Math.max(0, x.change) : 0);
       const D = { mode: yr ? 'y' : 'm', y: y, m: m, from: from, to: to, cats: {}, devs: [], rows: [], base: null };
       // satırlar: ayda günler, yılda aylar; her satırda kategori kWh'leri
-      const n = yr ? 12 : Math.round((to - from) / LP_EX_D), slot = (t) => (yr ? new Date(t).getMonth() + (new Date(t).getFullYear() - y) * 12 : Math.floor((t - from) / LP_EX_D + 0.02));
-      for (let i = 0; i < n; i++) D.rows.push({ t: yr ? new Date(y, i, 1).getTime() : from + i * LP_EX_D, c: {}, tot: 0, prev: 0 });
+      // gün 23 ya da 25 saat olabilir (yaz saati) ve Home Assistant'ın saat dilimi tarayıcınınkinden farklı olabilir: en yakın gün / ayın ortası
+      const n = yr ? 12 : Math.round((to - from) / LP_EX_D), slot = (t) => { const d = new Date(t + 12 * LP_EX_H); return yr ? d.getMonth() + (d.getFullYear() - y) * 12 : Math.round((t - from) / LP_EX_D); };
+      for (let i = 0; i < n; i++) D.rows.push({ t: yr ? new Date(y, i, 1).getTime() : new Date(y, m, i + 1).getTime(), c: {}, tot: 0, prev: 0 });
       M.cats.forEach((c) => {
         let sum = 0;
         lpErOf(c).forEach((id) => ((r[0] || {})[id] || []).forEach((x) => { const s = slot(lpExT0(x)), v = ch(x); if (yr && s < 0 && s >= -12) { D.rows[s + 12].prev += v; return; } if (s < 0 || s >= n) return; D.rows[s].c[c.id] = (D.rows[s].c[c.id] || 0) + v; D.rows[s].tot += v; sum += v; }));
@@ -87,7 +89,9 @@ function lpErData(h, M, P) {
       if (!yr) {
         const pm = new Date(y, m - 1, 1).getTime(), ly = new Date(y - 1, m, 1).getTime(); let p = 0, l = 0, pk = false, lk = false;
         cids.forEach((id) => ((r[3] || {})[id] || []).forEach((x) => { const t = lpExT0(x); if (Math.abs(t - pm) < 3 * LP_EX_D) { p += ch(x); pk = true; } else if (Math.abs(t - ly) < 3 * LP_EX_D) { l += ch(x); lk = true; } }));
-        D.prevTot = pk ? p : null; D.lyTot = lk ? l : null;
+        // önceki ayın kaydı ayın başından değilse karşılaştırma yok (kayıt ortadan başladı)
+        let p2 = 0, f2 = null; cids.forEach((id) => ((r[4] || {})[id] || []).forEach((x) => { p2 += ch(x); const t = lpExT0(x); if (f2 === null || t < f2) f2 = t; }));
+        D.prevTot = pk && f2 !== null && f2 < pm + 1.5 * LP_EX_D ? p2 : null; D.lyTot = lk ? l : null;
       }
       if (done && D.tot > 0) lpErStore(key, D);
       return D;
@@ -131,7 +135,7 @@ function lpErMonth(h, M, D, lang, ph) {
   const mc = lpEnMonthCost(D.tot, len, M), avg = D.tot / el, pk = past.slice().sort((a, b) => b.tot - a.tot)[0];
   const pm = new Date(D.y, D.m - 1, 1), pr = D.prevTot !== null && D.prevTot !== undefined ? lpErPct(D.tot, D.prevTot, lang) : null;
   const tierOn = lpEnMode() === 'tier', lim = tierOn ? lpEnDaily() * len : 0;
-  let k = '<div class="exstats n4 exkp">' + lpErKpi(lpErT(lang, 'use'), lpExK(D.tot, lang) + ' kWh', pr ? lpErT(lang, 'vsPrev', { p: pr.s, m: lpErMon(pm.getFullYear(), pm.getMonth(), lang, false) }) : lpErT(lang, 'noPrev'), pr ? pr.c : '') +
+  let k = '<div class="exstats n4 exkp">' + lpErKpi(lpErT(lang, 'use'), lpExK(D.tot, lang) + ' kWh', pr ? lpErT(lang, D.to > now ? 'vsPrevS' : 'vsPrev', { p: pr.s, m: lpErMon(pm.getFullYear(), pm.getMonth(), lang, false) }) : lpErT(lang, 'noPrev'), pr ? pr.c : '') +
     lpErKpi(lpErT(lang, 'cost'), u ? lpEnMoney(h, mc.tl, lang) : '–', D.lyTot ? lpErT(lang, 'vsLy', { k: lpExK(D.lyTot, lang) }) : '') +
     lpErKpi(lpErT(lang, 'avg'), lpExK(avg, lang) + ' kWh', pk ? lpErT(lang, 'peak', { d: lpExDM(pk.t), k: lpExK(pk.tot, lang) }) : '') +
     (tierOn ? lpErKpi(lpErT(lang, 'tier', { l: lpEnNum(Math.round(lim), 0, lang) }), lpEnPct(D.tot / lim * 100, lang), lpErT(lang, D.tot > lim ? 'tierOver' : 'tierOk'), D.tot > lim ? 'up' : 'dn') : lpErKpi(lpErT(lang, 'tier', { l: '–' }), '–', lpErT(lang, 'tierNo'))) + '</div>';
@@ -162,7 +166,9 @@ function lpErYear(h, M, D, lang, ph) {
   const now = new Date(), cur = D.y === now.getFullYear(), u = lpEnUnit(M), lim = D.y === now.getFullYear() ? lpEnYearLimit() : lpEnLimitOf(D.y);
   const mdays = (i) => new Date(D.y, i + 1, 0).getDate();
   let cost = 0; D.rows.forEach((r, i) => { if (r.tot) cost += lpEnMonthCost(r.tot, mdays(i), M).tl; });
-  const doneM = cur ? now.getMonth() : 12, prevSame = D.rows.slice(0, cur ? now.getMonth() + 1 : 12).reduce((a, r) => a + r.prev, 0);
+  // geçen yılın aynı dönemi: süren ay geçen kısmı kadar; karşılaştırılan aylardan birinin kaydı yoksa oran gösterilmez
+  const m0 = new Date(D.y, now.getMonth(), 1).getTime(), fr = cur ? Math.min(1, (now.getTime() - m0) / (new Date(D.y, now.getMonth() + 1, 1).getTime() - m0)) : 1;
+  const cmpM = D.rows.slice(0, cur ? now.getMonth() + 1 : 12), prevSame = cmpM.every((r) => r.prev > 0) ? cmpM.reduce((a, r, i) => a + r.prev * (cur && i === now.getMonth() ? fr : 1), 0) : 0;
   const yd0 = new Date(D.y, 0, 1).getTime(), elD = Math.max(1, D.nd || ((cur ? Date.now() : D.to) - yd0) / LP_EX_D), yDays = (D.to - yd0) / LP_EX_D, est = cur ? D.tot / elD * yDays : D.tot;   // kaydı olan günlere göre
   const pr = lpErPct(D.tot, prevSame, lang);
   let k = '<div class="exstats n4 exkp">' + lpErKpi(lpErT(lang, cur ? 'ytd' : 'ytdAll'), lpExK(D.tot, lang) + ' kWh', pr ? lpErT(lang, 'vsLyY', { p: pr.s }) : '', pr ? pr.c : '') +

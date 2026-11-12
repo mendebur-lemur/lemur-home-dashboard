@@ -179,6 +179,11 @@ function lpGFill(L, C, rows) {
   ord.forEach((o) => { while (o.y + o.h < rows && free(o, { x: o.x, y: o.y, w: o.w, h: o.h + 1 })) o.h++; });
   return L;
 }
+// ızgaranın sütun sayısı: kart dikeyse 6, değilse 12 (tab._gn önizlemede zorlar)
+function lpGridC(el, tab) {
+  const lh = parseFloat(getComputedStyle(el).getPropertyValue('--lp-h')) || window.innerHeight, ow = el.offsetWidth || window.innerWidth;
+  return tab._gn === 6 || (tab._gn !== 12 && ow < lh * 0.95) ? 6 : 12;
+}
 // bölümlerin yerleri: { id: {x, y, w, h} }
 function lpGridPos(T, C, ids) {
   const S = (T.sections || []).filter((s) => !ids || ids.indexOf(s.id) >= 0), out = {};
@@ -212,6 +217,7 @@ const LP_ON = ['on', 'open', 'opening', 'closing', 'playing', 'cleaning'];
 // Gerçek durum gelince (ya da 5 sn içinde gelmezse) karo gerçeğe göre yeniden çizilir; başka yerden değiştiyse gerçek olan kalır.
 const LP_OPT = window.__LEMUR_HD_OPT || (window.__LEMUR_HD_OPT = { mem: null, pend: {}, t: null });
 const LP_OPT_DOMAINS = ['light', 'switch', 'input_boolean', 'fan'];
+const LP_NOTOG = ['lock', 'alarm_control_panel', 'water_heater', 'lawn_mower'];   // homeassistant.toggle'ın atladığı alanlar (toggle / turn_on servisi yok)
 const LP_OPT_MS = 5000;
 function lpOptMem() {
   if (!LP_OPT.mem) {
@@ -383,7 +389,8 @@ function lpCatView(tabs, cur) {
   const cat = cats.indexOf(LP_PH.cat) >= 0 ? LP_PH.cat : cats[0];
   const rooms = cat === 'lights' ? tabs.filter((T) => (T.sections || []).some((s) => lpSecCat(s) === 'lights' && has(s))) : [];
   const roomIds = ['all'].concat(rooms.map((T) => T.id));
-  const room = roomIds.indexOf(LP_PH.room) >= 0 ? LP_PH.room : (rooms.some((T) => T.id === cur.id) ? cur.id : 'all');
+  // tek oda: "Tümü" aynı ışıkları gösterir, seçim yok (şerit çizilmez)
+  const room = rooms.length === 1 ? rooms[0].id : roomIds.indexOf(LP_PH.room) >= 0 ? LP_PH.room : (rooms.some((T) => T.id === cur.id) ? cur.id : 'all');
   const secs = [], seen = {};
   const one = cat === 'lights' && room !== 'all' ? rooms.filter((T) => T.id === room)[0] : null;
   (one ? [one] : tabs).forEach((T) => (T.sections || []).forEach((s) => {
@@ -652,7 +659,9 @@ class LemurHomeDashboardCard extends HTMLElement {
     // ekran açılınca (sayfa yeniden görünür) saat ve "… önce" yazıları beklemeden tazelenir (v0.35.2)
     if (!this._vis) { this._vis = () => { if (!document.hidden && this._hass) this._tick(); }; document.addEventListener('visibilitychange', this._vis); }
     // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
-    if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } else this._postSoon(); }; window.addEventListener('resize', this._rsz); }
+    if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone || this._gStale()) { this._phone = p; this._sig = null; this._render(); } else this._postSoon(); }; window.addEventListener('resize', this._rsz); }
+    // pencere değişmeden kartın genişliği değişirse (yan menü açılıp kapandı, önizleme çerçevesi): telefonda karo sütunu
+    if (!this._wRO && window.ResizeObserver) { this._wRO = new ResizeObserver(() => { const p = lpPhoneKey(this, this._config); if (p !== this._phone && this._hass) { this._phone = p; this._sig = null; this._render(); } }); this._wRO.observe(this); }
     this._phone = lpPhoneKey(this, this._config);
     if (this._hass) this._render();
   }
@@ -672,6 +681,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     clearInterval(this._tmr); this._tmr = null;
     clearInterval(this._camT); this._camT = null;
     if (this._rsz) { window.removeEventListener('resize', this._rsz); this._rsz = null; }
+    if (this._wRO) { this._wRO.disconnect(); this._wRO = null; }
     if (this._edMove) { window.removeEventListener('pointermove', this._edMove); window.removeEventListener('pointerup', this._edUp); window.removeEventListener('pointercancel', this._edUp); this._edMove = null; }
     if (this._edRO) { this._edRO.disconnect(); this._edRO = null; }
     lpTplOff(this._tplCb); clearTimeout(this._tplT); this._tplT = null;   // şablon geri çağrısı (geri takılınca _tx yeniden ekler)
@@ -738,6 +748,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const e = lpEnt(x); if (e && S[e.entity]) { present.push(e.entity); if (lhdKind(x) === 'scene') { const a = S[e.entity].attributes || {}; vis.push([a.friendly_name || '', a.icon || '']); } }   // düğmenin adı / simgesi HA'dan (iskelette yazılı)
       if (x && x.visible) vis.push(lpVisible(x.visible, S));   // koşullu öğe: koşul değişince iskelet yeniden kurulur
       if (x && x.state_colors) vis.push(JSON.stringify(lpMapStyle(x, S)));      // duruma göre görünüm (Halo kartı yeniden kurulur)
+      if (e && S[e.entity] && String(e.entity).indexOf('climate.') === 0) vis.push((S[e.entity].attributes.hvac_modes || []).indexOf('cool') >= 0 ? 'ac' : 'cl');   // klima mı petek mi (Yaz / Kış)
+      if (e && lpEnIsVal(e.entity) && !(x && Array.isArray(x.extra))) vis.push(lpEnHaloExtra(e.entity, S).join(','));   // enerji Halo kartının yan değerleri (kullanılabilir olanlar)
     }));
     const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
@@ -748,9 +760,10 @@ class LemurHomeDashboardCard extends HTMLElement {
   // --- iskelet ---
   _build(tab, tabs, lang, season) {
     tab = lhdNormTab(tab);
+    this._gTab = null;   // ızgara çizilirse yeniden atanır (_gStale)
     const h = this._hass, S = h.states;
     if (this.getAttribute('lang') !== lang) this.setAttribute('lang', lang);
-    const tiles = [], tileItems = [], rows = [], embeds = [], vals = [], cards = [], visW = [], ssItems = [], clrs = [], cams = [], ens = [];
+    const tiles = [], tileItems = [], rows = [], rowIt = [], embeds = [], vals = [], cards = [], visW = [], ssItems = [], clrs = [], cams = [], ens = [];
     // şablonlu (A6) sabit yazılar: yer tutucu span, _update'te doldurulur
     const txs = (s) => (lpIsTpl(s) ? '<span data-tx="' + esc(s) + '">…</span>' : esc(s));
     const lecRooms = {};   // bu sekmede LEC'ten oynayan efekti sorulacak odalar
@@ -879,6 +892,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       // iklim: bölümde hem klima hem petek varsa mevsime göre biri gösterilir (başlıkta Yaz/Kış düğmesi)
       const isAC = (x) => (x.kind ? x.kind === 'ac' : (S[x.entity].attributes.hvac_modes || []).indexOf('cool') >= 0);
       const cl = all.filter((x) => x._k === 'climate'), both = cl.some(isAC) && cl.some((x) => !isAC(x));
+      cl.forEach((x) => { if (visW.indexOf(x.entity) < 0) visW.push(x.entity); });   // hvac_modes gelince / değişince imza yeniden hesaplanır
       const items0 = both ? all.filter((x) => x._k !== 'climate' || (season === 'winter' ? !isAC(x) : isAC(x))) : all;
       // kategori sayfasının oda ara başlığı: altında (mevsime göre) cihaz kalmadıysa çizilmez
       const items = items0.filter((x, i, arr) => !x._catSub || (arr[i + 1] && !arr[i + 1]._catSub));
@@ -907,7 +921,7 @@ class LemurHomeDashboardCard extends HTMLElement {
             const nm = typeof ms.name === 'string' && ms.name ? ms.name : x.name, icn = typeof ms.icon === 'string' && ms.icon ? ms.icon : x.icon;
             if (nm) hc.name = nm;
             if (icn && !lpIsLecIcon(icn)) hc.icon = icn;
-            if (lpEnIsVal(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
+            if (lpEnIsVal(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; if (!Array.isArray(x.extra)) lpEnHaloExtra(x.entity, null).forEach((q) => { if (visW.indexOf(q) < 0) visW.push(q); }); }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
             const hcol = lpMapColor(x, S) || x.color;                       // sabit renk ya da duruma göre renk
             if (hcol) hc.color = LP_HALO_RGB[hcol] || hcol;
             const hfx = LP_HALO_FX.indexOf(ms.effect) >= 0 ? ms.effect : (LP_HALO_FX.indexOf(x.effect) >= 0 ? x.effect : '');
@@ -923,7 +937,7 @@ class LemurHomeDashboardCard extends HTMLElement {
           if (x._k === 'climate') return emb('lemur-hd-climate-card', Object.assign(c, { type: 'custom:lemur-hd-climate-card' }), x.entity, x._i);
           if (x._k === 'vacuum' && lpClimStyle() === 'rows') { clrs.push(x); return '<div class="clr vac" data-clr="' + (clrs.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'vacuum') return emb('lemur-hd-vacuum-card', Object.assign(c, { type: 'custom:lemur-hd-vacuum-card' }), x.entity, x._i);
-          rows.push(x.entity); return '<div class="row" data-row="' + esc(x.entity) + '"' + hidA(x) + mark(x._i) + '></div>';
+          rows.push(x.entity); rowIt.push(x); return '<div class="row" data-row="' + esc(x.entity) + '" data-ri="' + (rowIt.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>';
         }).join('');
       }).join('');
       // başlık biçimi: karo ya da düğmeyle başlayan bölüm büyük başlık, kartla başlayan küçük başlık
@@ -1006,7 +1020,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
         if (cvPage) { const rt = cv.rooms.filter((T) => T.id === cv.room)[0]; this._bbTab = cv.cat === 'lights' ? (rt || null) : tab; }   // Işıklar: seçili oda (Hepsi: sayfadaki ışıklar)
         pHead = phd(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '', cvPage && cv.cat === 'climate' && cols.some((c) => c.some((u) => u.some((b) => b.season)))) +
-          (cvPage && cv.rooms.length ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
+          (cvPage && cv.rooms.length > 1 ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
         pHead = phd(tab.name || '');
@@ -1030,17 +1044,17 @@ class LemurHomeDashboardCard extends HTMLElement {
       // telefon: kolonlar soldan sağa, sütunlar sırayla alt alta; boş sütun yer kaplamaz
       grid = '';
       const bx = [];
-      if (tab.layout === 'grid' && !tab._ph) gbx.slice().sort((a, b) => ((a.s.g || {}).y || 0) - ((b.s.g || {}).y || 0) || ((a.s.g || {}).x || 0) - ((b.s.g || {}).x || 0)).forEach((x) => bx.push(x.b));   // ızgarada okuma sırası
+      const gy = (x) => { const g = x.s.g || {}; return g.y === undefined ? 999 : +g.y || 0; };   // yeri olmayan bölüm tablette olduğu gibi en altta
+      if (tab.layout === 'grid' && !tab._ph) gbx.slice().sort((a, b) => gy(a) - gy(b) || ((a.s.g || {}).x || 0) - ((b.s.g || {}).x || 0)).forEach((x) => bx.push(x.b));   // ızgarada okuma sırası
       else cols.forEach((c) => c.forEach((boxes) => boxes.forEach((b) => bx.push(b))));
       body = '<div class="pcol">' + (bx.length ? bx.map((b) => boxHtml(b, false)).join('') : '<div class="box empty">' + esc(t(lang, 'empty')) + '</div>') + '</div>';
     } else if (tab.layout === 'grid' && gbx.length) {
       // serbest ızgara: geniş ekranda 12, dikeyde 6 sütun; ekrana sığdır ya da sabit satırla kaydır
-      const lh = parseFloat(getComputedStyle(this).getPropertyValue('--lp-h')) || window.innerHeight, ow = this.offsetWidth || window.innerWidth;
-      const C = tab._gn === 6 || (tab._gn !== 12 && ow < lh * 0.95) ? 6 : 12, P = lpGridPos(tab, C, gbx.map((x) => x.s.id));
+      const C = lpGridC(this, tab), P = lpGridPos(tab, C, gbx.map((x) => x.s.id));
       let rows = 0; gbx.forEach((x) => { const p = P[x.s.id]; if (p) rows = Math.max(rows, p.y + p.h); });
       const fit = tab.gfit !== false, R0 = fit ? Math.max(+tab.grows || 12, rows) : rows + (edit ? 2 : 0);
       if (fit && !edit) lpGFill(Object.keys(P).map((k) => P[k]), C, R0);   // panoda boş hücre kalmaz (düzenlemede gerçek yerler görünür)
-      this._gC = C; this._gR = R0;
+      this._gC = C; this._gR = R0; this._gTab = tab;
       grid = 'grid-template-columns:1fr;grid-template-areas:\'h\' \'c0\'';
       body = '<div class="gl' + (fit ? ' gfit' : ' gscr') + '" data-gl style="grid-area:c0;grid-template-columns:repeat(' + C + ',minmax(0,1fr));grid-template-rows:repeat(' + R0 + ',' + (fit ? 'minmax(0,1fr)' : (+tab.growh || 70) + 'px') + ')">' +
         gbx.map((x) => { const p = P[x.s.id]; return '<div class="gcell" data-gsec="' + esc(x.s.id) + '" style="grid-column:' + (p.x + 1) + ' / span ' + p.w + ';grid-row:' + (p.y + 1) + ' / span ' + p.h + '">' + boxHtml(x.b, false) + (edit ? '<i class="grz" title="' + esc(t(lang, 'drag_size')) + '"></i>' : '') + '</div>'; }).join('') + '</div>';
@@ -1100,7 +1114,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     this._badges = [];
     if (lpEnBadge()) this._tiles.forEach((el) => { const p = lpEnTileP(h, el.getAttribute('data-light')); if (p) { el._pw = p; this._badges.push(el); } });
     this._enNoP = lpEnBadge() ? this._tiles.filter((el) => !el._pw).map((el) => el.getAttribute('data-light')) : [];
-    this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => this._rows.push(el));
+    this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => { el._item = el.hasAttribute('data-ri') ? rowIt[+el.getAttribute('data-ri')] : null; this._rows.push(el); });
     this._clrs = []; R.querySelectorAll('[data-clr]').forEach((el) => { el._item = clrs[+el.getAttribute('data-clr')]; this._clrs.push(el); if (!edit) this._clrBind(el); });
     const clrW = []; clrs.forEach((x) => [x.entity, x.temperature_sensor, x.humidity_sensor].concat(x.entities || []).forEach((e) => { if (typeof e === 'string' && clrW.indexOf(e) < 0) clrW.push(e); }));
     // LEC: karoların odaları da sorulur; efekt düğmesi olan odaların ışıkları izlenir (değişince oynayan efekt yeniden sorulur)
@@ -1228,7 +1242,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (sx === null) return;
         const p = e.changedTouches[0], dx = p.clientX - sx, dy = p.clientY - sy; sx = null;
         if (Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
-        const ids = ['all'].concat(cvw.rooms.map((T) => T.id)), i = ids.indexOf(cvw.room) + (dx < 0 ? 1 : -1);
+        const ids = cvw.rooms.length > 1 ? ['all'].concat(cvw.rooms.map((T) => T.id)) : [], i = ids.indexOf(cvw.room) + (dx < 0 ? 1 : -1);
         if (i >= 0 && i < ids.length) goCat('lights', ids[i]);
       }, { passive: true });
     }
@@ -1641,6 +1655,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (a === 'more-info') { if (id) lpFire(this, 'hass-more-info', { entityId: id }); return; }
       if (a === 'toggle') {
         if (!id) return;
+        // aç/kapat servisi olmayan alan (kilit, alarm...): homeassistant.toggle bunları sessizce atlar; cihaz penceresi açılır (kod orada girilir)
+        if (LP_NOTOG.indexOf(id.split('.')[0]) >= 0) { lpFire(this, 'hass-more-info', { entityId: id }); return; }
         // v0.32: ulaşılamayan cihaza komut gitmez (kapalı ışık gibi görünüp dokununca boşa komut gidiyordu); yedeği olan lamba hariç
         if (h.states[id] && h.states[id].state === 'unavailable' && !lpTwinOf(id)) return;
         this._optTap(id);
@@ -1696,11 +1712,16 @@ class LemurHomeDashboardCard extends HTMLElement {
       sub = '<em>' + esc(lpClW(LP_VAC, lang, mode)) + '</em>' + (typeof a.battery_level === 'number' ? ' · ' + lpEnPct(a.battery_level, lang) : '');
       // kapalı satırda tek düğme (başlat ya da duraklat), dar telefonda ad sığsın. Açıkken sağdaki düğme gizlenir,
       // yerine iklimdeki hedef alanı gibi iki büyük düğme gelir: başlat/duraklat ve istasyona dön (v0.28.9)
-      if (!na && !el._open) right = ib(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', busy);   // kapalıyken tek düğme; istasyona dön açınca
+      // yalnız cihazın desteklediği düğmeler (VacuumEntityFeature: PAUSE 4, STOP 8, RETURN_HOME 16, FAN_SPEED 32, LOCATE 512, START 8192); öznitelik yoksa hepsi
+      const vf = a.supported_features === undefined || a.supported_features === null ? 0xFFFFFF : (+a.supported_features || 0);
+      const main = busy ? (vf & 4 ? 'vpause' : vf & 8 ? 'vstop' : null) : (vf & 8192 ? 'vstart' : null);
+      const mIc = main === 'vpause' ? 'mdi:pause' : main === 'vstop' ? 'mdi:stop' : 'mdi:play', mTx = main === 'vpause' ? 'cl_pause' : main === 'vstop' ? 'cl_stop' : 'cl_start';
+      if (!na && !el._open && main) right = ib(main, mIc, busy);   // kapalıyken tek düğme; istasyona dön açınca
       const big = (c, icon, label, on, off) => '<button class="cbig' + (on ? ' on' : '') + '" data-c="' + c + '"' + (off ? ' disabled' : '') + '><ha-icon icon="' + icon + '"></ha-icon><span>' + esc(label) + '</span></button>';
-      if (!na) stepH = '<div class="cstep cvac">' + big(busy ? 'vpause' : 'vstart', busy ? 'mdi:pause' : 'mdi:play', t(lang, busy ? 'cl_pause' : 'cl_start'), busy) + big('vdock', 'mdi:home-import-outline', t(lang, 'cl_dock'), mode === 'returning', mode === 'docked') + '</div>';
-      const fs = a.fan_speed_list || [];
-      more = chip('vstop', '', t(lang, 'cl_stop')) + chip('vloc', '', t(lang, 'cl_find')) + (fs.length ? chip('vfan', t(lang, 'cl_suction'), lpClW(LP_FANW, lang, a.fan_speed || '–')) : '');
+      const bigs = (main ? big(main, mIc, t(lang, mTx), busy) : '') + (vf & 16 ? big('vdock', 'mdi:home-import-outline', t(lang, 'cl_dock'), mode === 'returning', mode === 'docked') : '');
+      if (!na && bigs) stepH = '<div class="cstep cvac">' + bigs + '</div>';
+      const fs = vf & 32 ? a.fan_speed_list || [] : [];
+      more = (vf & 8 && main !== 'vstop' ? chip('vstop', '', t(lang, 'cl_stop')) : '') + (vf & 512 ? chip('vloc', '', t(lang, 'cl_find')) : '') + (fs.length ? chip('vfan', t(lang, 'cl_suction'), lpClW(LP_FANW, lang, a.fan_speed || '–')) : '');
       if (el._menu === 'vfan') { opts = fs; curO = a.fan_speed; }
     } else {
       const on = !na && mode !== 'off';
@@ -1716,7 +1737,9 @@ class LemurHomeDashboardCard extends HTMLElement {
         stepH = '<div class="cstep"><button class="cbt" data-c="dn">−</button><b class="ctg">' + f1(tgt) + '°</b><button class="cbt" data-c="up">+</button></div>';
       }
       const modes = (a.hvac_modes || []).filter((m) => m !== 'off'), fans = a.fan_modes || [], sw = a.swing_modes || [];
-      more = chip('pw', t(lang, 'cl_power'), on ? t(lang, 'on') : t(lang, 'off'), on) +
+      // güç yalnız cihaz o yöne geçebiliyorsa: kapatmak için TURN_OFF (128) ya da 'off' modu, açmak için TURN_ON (256) ya da bir mod
+      const cf = +a.supported_features || 0, canPw = on ? !!(cf & 128) || (a.hvac_modes || []).indexOf('off') >= 0 : !!(cf & 256) || modes.length > 0;
+      more = (canPw ? chip('pw', t(lang, 'cl_power'), on ? t(lang, 'on') : t(lang, 'off'), on) : '') +
         (modes.length > 1 ? chip('mode', t(lang, 'cl_mode'), on ? lpClW(LP_HVAC, lang, mode) : '–') : '') +
         (fans.length ? chip('fan', t(lang, 'cl_fan'), lpClW(LP_FANW, lang, a.fan_mode || '–')) : '') +
         (sw.length ? chip('swing', t(lang, 'cl_swing'), lpClW(LP_FANW, lang, a.swing_mode || '–')) : '');
@@ -1760,7 +1783,7 @@ class LemurHomeDashboardCard extends HTMLElement {
           const s2 = this._hass.states[x]; if (!s2) return;
           const a2 = s2.attributes || {}, f = +a2.supported_features || 0, ms = (a2.hvac_modes || []).filter((m) => m !== 'off');
           if (f & (off ? 256 : 128)) this._hass.callService('climate', off ? 'turn_on' : 'turn_off', { entity_id: x });
-          else if (!off) this._hass.callService('climate', 'set_hvac_mode', { entity_id: x, hvac_mode: 'off' });
+          else if (!off) { if ((a2.hvac_modes || []).indexOf('off') >= 0) this._hass.callService('climate', 'set_hvac_mode', { entity_id: x, hvac_mode: 'off' }); }
           else if (ms.length) this._hass.callService('climate', 'set_hvac_mode', { entity_id: x, hvac_mode: ms.indexOf('cool') >= 0 ? 'cool' : ms[0] });
         });
         return;
@@ -1875,6 +1898,8 @@ class LemurHomeDashboardCard extends HTMLElement {
   // göreli kaydırma (panodaki çubuklar gibi): yatay hareket 8 px'i geçince başlar, dikey hareket sayfayı kaydırır;
   // bırakınca tek komut: %0 ise kapat, değilse brightness_pct. Gönderilen değer 3 sn ekranda kalır.
   // çizimden sonra ölçüye bakan düzeltmeler (v0.32): yassı karo yan yana dizilir, kayan kutuda "aşağıda daha var" izi
+  // ızgara başka bir boyutta çizildi (tablet döndü, önizleme kutusu sonradan boyutlandı): sütun sayısı artık farklı mı
+  _gStale() { const T = this._gTab; return !!T && !!this._gC && this.isConnected && lpGridC(this, T) !== this._gC; }
   _postSoon() {
     if (this._postT) return;
     const run = () => { this._postT = 0; try { this._post(); } catch (e) {} };
@@ -2180,7 +2205,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       else if (st.state === 'playing') txt = a.media_title ? a.media_title + (a.media_artist ? ' · ' + a.media_artist : '') : t(lang, 'playing');
       else txt = TXT[lang][st.state] ? t(lang, st.state) : st.state;
       el.className = 'row' + (st.state === 'playing' || st.state === 'on' ? ' on' : '');
-      el.innerHTML = lpIcon(lpEntIcon(st)) + '<div class="rt"><div class="rn">' + esc(a.friendly_name || id) + '</div><div class="rs">' + esc(txt) + '</div></div>';
+      el.innerHTML = lpIcon(lpEntIcon(st)) + '<div class="rt"><div class="rn">' + esc(this._tx((el._item || {}).name) || a.friendly_name || id) + '</div><div class="rs">' + esc(txt) + '</div></div>';
     });
     (this._clrs || []).forEach((el) => this._paintClr(el));
     (this._vals || []).forEach((el) => {

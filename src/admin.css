@@ -331,8 +331,8 @@ label.btn { cursor: pointer; }
 .scxm { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--ln); }
 .scxm .fld { margin: 0; }
 @media (max-width: 600px) {
-  .scr .inp, .scb { height: 40px; }
-  .scr input[type=color] { height: 40px; }
+  .scr.scx .inp, .scb { height: 40px; }
+  .scr.scx input[type=color] { height: 40px; }
   .scr.scx > .inp:first-child { flex-basis: calc(100% - 48px); }
   .scr.scx .scfx { flex: 1 1 100px; }
   .scb.scm { width: 40px; }

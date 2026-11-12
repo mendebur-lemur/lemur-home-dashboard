@@ -46,7 +46,7 @@ const LP_EN_TXT = {
     noSol: 'Güneş ya da batarya açık değil', noSolT: 'Enerji sayfasında "Güneş ve batarya" bölümünden "Güneş enerjisi var" ya da "Batarya var"ı aç.', nGridOff: 'Şebeke yok', nGridOffT: 'kesinti',  noBat: 'Batarya sensörü seçilmedi',
     nSun: 'Güneş', nGrid: 'Şebeke', nGridO: 'Şebekeye', nGridI: 'Şebekeden', nHome: 'Ev', nBat: 'Batarya', prodT: 'kWh üretim bugün', selfU: 'kendi kullanımı', expN: 'şebekeye', impN: 'şebekeden',
     bCh: 'Şarj oluyor', bDis: 'Evi besliyor', bIdle: 'Beklemede', bFull: '~{t} sonra dolu', bLeft: '~{t} yeter', bKwh: '{k} / {c} kWh',
-    tLeft: '{n} {h} saattir açık · {w}', tSb: 'Gece bekleme tüketimi yüksek: ~{w}', tDay: 'Bugün {k} kWh, günlük hedef {d} kWh', tYear: 'Yıllık sınırın %{p}\'ine gelindi',
+    tLeft: '{n} {h} saattir açık · {w}', tSb: 'Gece bekleme tüketimi yüksek: ~{w}', tDay: 'Bugün {k} kWh, günlük hedef {d} kWh', tYear: 'Yıllık sınırda %{p} doldu',
     tSun: 'Güneş fazlası {w}: çamaşır için iyi an', tHide: 'Basılı tut: bunu gösterme', h: 'sa', m: 'dk' },
   en: { lvl0: 'Low usage', lvl1: 'Medium usage', lvl2: 'High usage', lvl3: 'Very high usage', today: 'kWh today', costToday: 'today', month: 'kWh/mo at this rate',
     none: 'No energy data', noneT: 'Add devices in the admin panel under Energy → Devices; the cards fill from there.', loading: 'Loading…',
@@ -653,7 +653,13 @@ function lpEnTotal(S, M) {
   return s;
 }
 // biçimleme
-function lpEnNum(v, d, lang) { return Number(v).toLocaleString(lang === 'tr' ? 'tr-TR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+// biçimleyici dil ve ondalık başına bir kez kurulur (toLocaleString her çağrıda yenisini kuruyordu; güç rozetleri her güncellemede çağırır)
+const LP_EN_NF = {};
+function lpEnNum(v, d, lang) {
+  const loc = lang === 'tr' ? 'tr-TR' : 'en-US', k = loc + d;
+  if (LP_EN_NF[k] === undefined) { try { LP_EN_NF[k] = new Intl.NumberFormat(loc, { minimumFractionDigits: d, maximumFractionDigits: d }); } catch (e) { LP_EN_NF[k] = null; } }
+  return LP_EN_NF[k] ? LP_EN_NF[k].format(Number(v)) : Number(v).toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+}
 function lpEnWp(w, lang) {   // [sayı, birim]
   if (w === null || w === undefined) return ['–', 'W'];
   if (Math.abs(w) >= 1000) return [lpEnNum(w / 1000, Math.abs(w) >= 10000 ? 0 : 1, lang), 'kW'];
@@ -979,8 +985,8 @@ const LP_EN_HX = {
   'sensor.lhdx_bugun_tl': ['sensor.lhd_ev_energy', 'sensor.lhdx_ay_tl', 'sensor.lhdx_donem_sonu'], 'sensor.lhdx_ay_tl': ['sensor.lhdx_ay_kwh', 'sensor.lhdx_donem_sonu', 'sensor.lhdx_yil'],
   'sensor.lhdx_ay_kwh': ['sensor.lhdx_ay_tl', 'sensor.lhdx_donem_sonu', 'sensor.lhdx_yil'], 'sensor.lhdx_donem_sonu': ['sensor.lhdx_ay_tl', 'sensor.lhdx_ay_kwh', 'sensor.lhdx_yil'],
   'sensor.lhdx_yil': ['sensor.lhdx_ay_kwh', 'sensor.lhdx_ay_tl', 'sensor.lhd_ev_energy'], 'sensor.lhdx_olcmeyen': ['sensor.lhd_ev_power', 'sensor.lhd_ev_energy'] };
-function lpEnHaloExtra(id, S) {
-  const ok = (x) => S[x] && S[x].state !== 'unavailable' && S[x].state !== 'unknown';
+function lpEnHaloExtra(id, S) {   // S verilmezse bütün adaylar (pano bunları izler)
+  const ok = (x) => !S || (S[x] && S[x].state !== 'unavailable' && S[x].state !== 'unknown');
   const m = /^sensor\.lhd_oda_(.+)_(power|energy)$/.exec(id);
   if (m) return ['sensor.lhd_oda_' + m[1] + '_' + (m[2] === 'power' ? 'energy' : 'power'), 'sensor.lhd_ev_power'].filter(ok);
   return (LP_EN_HX[id] || []).filter(ok);

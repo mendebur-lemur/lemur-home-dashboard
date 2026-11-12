@@ -85,6 +85,9 @@
 .scene ha-icon { display: block; width: 40px; --mdc-icon-size: 40px; }
 .scene span span { padding-left: 0; font-size: inherit; }
 .scene span { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* sahne adı sığmazsa iki satır (dar kanvas: 4:3, 5:4 tablet); sığan ad tek satırda, görünümü değişmez */
+.scene > span:not(.s2w) { white-space: normal; overflow-wrap: break-word; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.phone .scene > span:not(.s2w) { white-space: nowrap; display: block; -webkit-line-clamp: none; }
 
 /* gömülü kartlar (iklim, süpürge): zemin ve köşe tablettekiyle aynı */
 .emb { --ha-card-background: var(--lp-embed-bg); --card-background-color: var(--lp-embed-bg); --ha-card-border-radius: 20px;
@@ -92,7 +95,7 @@
   --primary-text-color: var(--lp-text); --secondary-text-color: var(--lp-text2); }
 
 /* kendi kartı henüz olmayan cihazlar için geçici satır (medya) */
-.row { display: flex; align-items: center; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }
+.row { display: flex; align-items: center; min-width: 0; padding: 16px; border-radius: 20px; background: var(--lp-embed-bg); cursor: pointer; --mdc-icon-size: 36px; }
 .row ha-state-icon { flex: 0 0 auto; color: var(--lp-text); margin-right: 14px; }
 .row.on ha-state-icon { color: var(--lp-on-icon); }
 .rt { min-width: 0; }
@@ -266,6 +269,7 @@
 .box.al-center > .title { margin-bottom: auto; }
 .box.al-center > :first-child:not(.title):not(.bgrip), .box.al-center > .bgrip + :not(.title) { margin-top: auto; }
 .box.al-center > :last-child { margin-bottom: auto; }
+.box.al-center > .title ~ :last-child { margin-bottom: auto; }   /* başlıklı kutuda telefonun 8 px alt boşluğunu (.phone .box.spread > …) eskisi gibi ezer */
 .box.al-spread > * + *:not(.title + *) { margin-top: auto; }
 /* A2 simge ve yazı boyutu (öğeye verilirse; yoksa bugünkü ölçü) */
 .tile .lic { width: var(--lp-icw, 40%); }
