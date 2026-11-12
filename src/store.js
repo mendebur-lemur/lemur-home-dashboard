@@ -91,7 +91,13 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
     const msg = { type: 'lemur_home_dashboard/set', key: key, value: value };
     // sayaç gönderilir ve yerelde bir artar: art arda iki kendi kaydımız birbirine takılmaz
     if (this.revs) { msg.rev = this.revs[key] || 0; this.revs[key] = msg.rev + 1; }
-    return this.conn.sendMessagePromise(msg).then((r) => { done(); return r; }, (e) => { done(); if (e && e.code === 'conflict') this.refresh(); throw e; });
+    return this.conn.sendMessagePromise(msg).then((r) => { done(); return r; }, (e) => {
+      done();
+      if (e && e.code === 'conflict') this.refresh();
+      // geri çevrilen kayıt sunucuda sayacı artırmadı: yereldeki artış geri alınır (arada başka kayıt gitmediyse)
+      else if (this.revs && msg.rev !== undefined && this.revs[key] === msg.rev + 1) this.revs[key] = msg.rev;
+      throw e;
+    });
   },
   // sunucudaki güncel veriyi al (çakışmadan sonra): bütün ekranlar yeniden çizer
   refresh() {

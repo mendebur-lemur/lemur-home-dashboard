@@ -410,6 +410,8 @@ const LHD_REPO_URL = /^https:\/\/github\.com\/mendebur-lemur\/lemur-home-dashboa
 const lhdSlug = (x) => String(x || '').replace(/İ/g, 'i').toLowerCase().replace(/[çćč]/g, 'c').replace(/ğ/g, 'g').replace(/[ıîí]/g, 'i').replace(/[öô]/g, 'o').replace(/ş/g, 's').replace(/[üû]/g, 'u')
   .replace(/[âáà]/g, 'a').replace(/[éè]/g, 'e').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
 const lhdMove = (arr, from, to) => { const x = arr.splice(from, 1)[0]; arr.splice(to, 0, x); };
+// arama için küçük harf: I / ı / İ hepsi i olur ("Işığı".toLowerCase() "işığı", "İyi" ise "i̇yi" veriyordu; yazılan "ışığı" / "iyi" bulunmuyordu)
+const lhdFold = (x) => String(x || '').replace(/[Iİı]/g, 'i').toLowerCase().replace(/\u0307/g, '');
 
 class LemurHomeDashboardAdmin extends HTMLElement {
   constructor() {
@@ -518,6 +520,15 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _phSec(id) { const S = this._phOv().secs; return lhdIsObj(S) && lhdIsObj(S[id]) ? S[id] : {}; }
   _phTabs() { const T = this._phOv().tabs; return lhdIsObj(T) ? T : {}; }
   _phStyle() { const T = this._phOv().style; return lhdIsObj(T) ? T : {}; }
+  // öğenin anahtarı değişti (ad, simge, kart): telefon ayarlarında eski anahtar yenisiyle değiştirilir; _snap çağırmaz (değişikliğin kendi geri al adımı)
+  _phRekey(sid, a, b) {
+    if (!sid || !a || !b || a === b || !Object.keys(this._phSec(sid)).length) return;
+    const s = lhdClone(this._settings()), q = s.phone.secs[sid], fix = (L) => L.map((x) => (x === a ? b : x));
+    let ch = false;
+    ['hide_items', 'item_order'].forEach((k) => { if (Array.isArray(q[k]) && q[k].indexOf(a) >= 0) { q[k] = fix(q[k]); ch = true; } });
+    if (Array.isArray(q.folds)) q.folds.forEach((g) => { if (g && Array.isArray(g.items) && g.items.indexOf(a) >= 0) { g.items = fix(g.items); ch = true; } });
+    if (ch) this._commit('settings', s);
+  }
   _phOrd(tab) { const O = this._phOv().order; return lhdIsObj(O) && Array.isArray(O[tab.id]) && O[tab.id].length ? O[tab.id] : null; }
   // fn(p) settings.phone'un kopyasını değiştirir; boş kalan kayıtlar silinir, geri al çalışır
   _phEdit(fn, soft) {
@@ -2826,9 +2837,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (k === 'stop') have['lecstop:' + d.room] = 1;
     });
     const areaOf = (id) => { const e = ents[id]; if (!e) return ''; if (e.area_id) return e.area_id; const d = e.device_id && devs[e.device_id]; return (d && d.area_id) || ''; };
-    const q = this._q.toLowerCase().trim();
+    const q = lhdFold(this._q).trim();
     const ids = Object.keys(S).filter((id) => doms.indexOf(id.split('.')[0]) >= 0 && !(ents[id] && (ents[id].hidden || ents[id].entity_category)) && (pf !== 'energy' || lpEnIsVal(id) || /^sensor\.lhd_kat_.*_power$/.test(id)) && (pf === 'energy' || !lpEnIsVirt(id)))
-      .filter((id) => !q || (this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).toLowerCase().indexOf(q) >= 0);
+      .filter((id) => !q || lhdFold(this._ename(id) + ' ' + id + ' ' + this._area(areaOf(id))).indexOf(q) >= 0);
     const lecHtml = pf === 'all' || pf === 'scenes' ? this._lecGroups(sec, have, q) : '';
     if (!ids.length) return lecHtml || '<div class="empty">' + esc(this._t('nothing')) + '</div>';
     const groups = {};
@@ -2958,7 +2969,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const fav = (LEC.favorites || []).map((x) => String(x).toLowerCase());
       const sorted = list.slice().sort((a, b) => ((fav.indexOf(String(a).toLowerCase()) < 0) - (fav.indexOf(String(b).toLowerCase()) < 0)) || String(a).localeCompare(String(b)));
       const row = (id, icon, title, sub) => {
-        if (q && (title + ' ' + sub).toLowerCase().indexOf(q) < 0) return '';
+        if (q && lhdFold(title + ' ' + sub).indexOf(q) < 0) return '';
         const on = this._picked.indexOf(id) >= 0, dis = !!have[id];
         return '<div class="pi' + (on ? ' on' : '') + (dis ? ' dis' : '') + '" data-pk="' + esc(id) + '"><span class="ck">' + (on || dis ? '<ha-icon class="s14" icon="mdi:check"></ha-icon>' : '') + '</span>' +
           '<div class="ico">' + lpIcon(icon) + '</div><div class="t"><b>' + esc(title) + '</b><span>' + esc(sub) + '</span></div>' +
@@ -3586,7 +3597,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (itf) {
         const p = itf.split('.'), i = +p[0], key = p[1], v = el.value.trim();
         if (key === 'color') { const ic = el.parentNode.querySelector('.ico ha-icon'); if (ic) ic.style.color = v; }
-        return editSec((S) => {
+        let rk = null;   // öğenin anahtarı değişirse telefon ayarları da (fix: telefonda gizlenen düğme adı değişince yeniden görünüyordu)
+        editSec((S) => {
+          const k0 = lhdItemKey(S.entities[i]);
+          rk = () => this._phRekey(S.id, k0, lhdItemKey(S.entities[i]));
           let it = S.entities[i]; if (it === undefined) return;
           if (it && typeof it === 'object' && !it.entity) { if (v) it[key] = v; else if (key !== 'name') delete it[key]; return; }   // düğme ya da boş karo
           if (typeof it === 'string') { it = { entity: it }; S.entities[i] = it; }
@@ -3594,6 +3608,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           else if (v && !(key === 'kind' && v === 'auto')) it[key] = v; else delete it[key];
           if (it.entity && Object.keys(it).length === 1) S.entities[i] = it.entity;   // sade kalsın
         }, soft);
+        if (rk) rk();
+        return;
       }
       if (el.hasAttribute && el.hasAttribute('data-bgpick')) return this._bgSet({ mode: 'color', color: el.value }, true);
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akpick')) { this._ak.bg = 'color'; this._ak.bgColor = el.value; return this._render(); }
@@ -3974,7 +3990,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (ti) p.title = ti;
       return { popup: p };
     }
-    if (K === 'yaml') { const v = y(f[pre + 'Y'] || ''); if (!v) return undefined; return v; }
+    if (K === 'yaml') {
+      const v = y(f[pre + 'Y'] || ''); if (!v) return undefined;
+      if (typeof v === 'string' ? ['more-info', 'toggle', 'none'].indexOf(v) < 0 : !lhdIsObj(v)) throw new Error(T('yamlErr', { e: 'action: …' }));   // panoda çalışmayan eylem kaydedilmez
+      return v;
+    }
     return undefined;
   }
   _imSave() {
@@ -4077,6 +4097,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       S.entities = S.entities || [];
       if (M.isNew) S.entities.push(it); else if (M.idx < S.entities.length) S.entities[M.idx] = it;
     });
+    if (!M.isNew) this._phRekey(M.sec, lhdItemKey(M.raw), lhdItemKey(it));   // telefonda gizli / gruptaki öğe adı, simgesi ya da kartı değişince de öyle kalsın
   }
 
   // ---- kart seçici (D1, D2) ve kart düzenleyici ----
@@ -4090,8 +4111,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return out;
   }
   _cpHtml() {
-    const t = (k, v) => esc(this._t(k, v)), q = (this._cpq || '').toLowerCase();
-    const L = this._cpList().filter((x) => !q || (x.name + ' ' + x.key + ' ' + (x.desc || '')).toLowerCase().indexOf(q) >= 0);
+    const t = (k, v) => esc(this._t(k, v)), q = lhdFold(this._cpq);
+    const L = this._cpList().filter((x) => !q || lhdFold(x.name + ' ' + x.key + ' ' + (x.desc || '')).indexOf(q) >= 0);
     const grp = (g, title) => { const a = L.filter((x) => x.g === g); return a.length ? '<div class="pg">' + title + '</div><div class="cpg">' + a.map((x) => '<button class="cpi" data-cpk="' + esc(x.key) + '">' + lpIcon(x.icon) + '<span><b>' + esc(x.name) + '</b>' + (x.desc ? '<i>' + esc(x.desc) + '</i>' : '') + '</span></button>').join('') + '</div>' : ''; };
     return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="mdi:card-plus-outline"></ha-icon></div><h2>' + t('cpT') + this._hb('card') + '</h2>' +
       '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +

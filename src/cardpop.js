@@ -21,7 +21,9 @@ function lpMountCard(ph, cfg, getHass, lang, onEl) {
     try { el.hass = getHass(); } catch (e) {}
     // HA'nın hata kartı, eksik özel kart sonradan tanımlanınca kendini yeniden kurdurur
     el.addEventListener('ll-rebuild', (ev) => { ev.stopPropagation(); lpMountCard(ph, cfg, getHass, lang, onEl); });
-    ph.innerHTML = ''; ph.appendChild(el);
+    // panonun şeffaf dokunma katmanı (tapov: öğenin tap/hold ayarı) yerinde kalır, kart onun altına takılır (v0.35.2: siliniyordu)
+    const keep = Array.prototype.filter.call(ph.children, (x) => x.classList && x.classList.contains('tapov'));
+    ph.innerHTML = ''; ph.appendChild(el); keep.forEach((x) => ph.appendChild(x));
     if (onEl) onEl(el);
     setTimeout(() => { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }, 60);   // grafik kartları boyutunu ölçsün
   };
@@ -96,7 +98,17 @@ class LemurCardPopup {
     const p = LemurCardPopup._openHtml(hass, text, '<div class="cfm"><div data-no>' + esc(lpCardT(lang, 'no')) + '</div><div class="ok" data-yes>' + esc(lpCardT(lang, 'yes')) + '</div></div>', lang);
     const R = p._host.shadowRoot;
     R.querySelector('[data-no]').addEventListener('click', () => p.close());
-    R.querySelector('[data-yes]').addEventListener('click', () => { p.close(); yes(); });
+    // pencere kapanırken geçmişte bir adım geri gidilir (eşzamansız): onaylanan iş geri gidiş bitince çalışır, yoksa gecikmeli
+    // gelen popstate onayla açılan kart penceresini hemen kapatıyor, sayfa geçişini geri alıyordu (v0.35.2)
+    R.querySelector('[data-yes]').addEventListener('click', () => {
+      const back = p._pushed && !p._closed;
+      p.close();
+      if (!back) { yes(); return; }
+      let done = false;
+      const go = () => { if (done) return; done = true; window.removeEventListener('popstate', go); yes(); };
+      window.addEventListener('popstate', go);
+      setTimeout(go, 400);   // popstate gelmezse (tarayıcı geri gidemediyse) yine de çalışır
+    });
     return p;
   }
   constructor(hass, p, lang) {

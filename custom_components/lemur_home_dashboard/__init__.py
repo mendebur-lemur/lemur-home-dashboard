@@ -77,7 +77,9 @@ class PanelData:
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
         self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (light runs and long averages go on after a restart)
         self._prefs_unsub = None
-        self.revs: dict[str, int] = {}          # key → how many times it changed since the start (in memory)
+        # key → how many times it changed since the start (in memory). Kept in hass.data so a reload of the integration
+        # does not start them again from 0: open admin pages keep their counters (a restart reconnects and reloads them)
+        self.revs: dict[str, int] = hass.data.setdefault(f"{DOMAIN}_revs", {})
         self._est_cache: tuple | None = None   # estimates(): (stored table, its size, cleaned copy)
         self._learn_saved = 0.0                  # time.monotonic() of the last save asked for the learning runs
         self._learn_shape: tuple = ()

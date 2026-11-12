@@ -260,10 +260,12 @@
 .box.fill > .grid, .box.fill > .bars { flex: 1 1 auto; }
 .box.fill > .emb, .box.fill > .row { flex: 0 0 auto; }
 /* B2 hizalama (içeriğe göre olan kutuda); başlık hep üstte kalır.
-   Orta: öğeler başlığın altındaki alanın ortasında. Eşit dağıt: ilk öğe üstte, son öğe altta, aralar eşit. */
-.box.al-center { justify-content: center; }
+   Orta: öğeler başlığın altındaki alanın ortasında. Eşit dağıt: ilk öğe üstte, son öğe altta, aralar eşit.
+   Orta otomatik kenar boşluğuyla (justify-content:center değil): içerik kutuya sığmazsa üstten başlar ve kaydırılır
+   (center'da taşan kısım yukarı çıkıyor, başlık ve ilk sıra kaydırılarak da görülemiyordu). */
 .box.al-center > .title { margin-bottom: auto; }
-.box.al-center > .title ~ :last-child { margin-bottom: auto; }
+.box.al-center > :first-child:not(.title):not(.bgrip), .box.al-center > .bgrip + :not(.title) { margin-top: auto; }
+.box.al-center > :last-child { margin-bottom: auto; }
 .box.al-spread > * + *:not(.title + *) { margin-top: auto; }
 /* A2 simge ve yazı boyutu (öğeye verilirse; yoksa bugünkü ölçü) */
 .tile .lic { width: var(--lp-icw, 40%); }

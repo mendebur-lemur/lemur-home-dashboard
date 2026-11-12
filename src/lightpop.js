@@ -325,24 +325,27 @@ class LemurLightPopup {
     Array.prototype.forEach.call(R.querySelectorAll('[data-sl]'), (sl) => {
       const id = sl.getAttribute('data-sl');
       if (!this._caps(id).dim) return;
-      let pct = 0, last = 0;
-      const send = () => { last = Date.now(); if (pct <= 0) this._call('turn_off', id, {}); else this._call('turn_on', id, { brightness_pct: pct }); };
-      lpDrag(sl, (p) => {
+      let pct = 0, last = 0, sent = null;
+      // tek dokunuş basışta gönderir; bırakışta aynı değer yeniden gönderilmez (v0.35.1: her dokunuşta iki çağrı gidiyordu)
+      const send = (fin) => { if (fin && sent === pct) return; last = Date.now(); sent = pct; if (pct <= 0) this._call('turn_off', id, {}); else this._call('turn_on', id, { brightness_pct: pct }); };
+      lpDrag(sl, (p, first) => {
+        if (first) sent = null;
         this._dragging = true; sl.classList.add('drag');
         const r = sl.getBoundingClientRect();
         pct = Math.max(0, Math.min(100, Math.round((p.clientX - r.left) / r.width * 100)));
         sl.querySelector('.fill').style.width = pct + '%';
         sl.querySelector('.tx span').textContent = pct ? pct + '%' : this._t('off');
         if (Date.now() - last > 300) send();
-      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); sl._settle = { v: pct, until: Date.now() + 3000 }; send(); });
+      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); sl._settle = { v: pct, until: Date.now() + 3000 }; send(true); });
     });
     // renk çemberi
     const wh = R.querySelector('.wh');
     if (wh) {
       this._paintWheel(wh.querySelector('canvas'));
-      let hs = null, last = 0;
-      const send = () => { if (!hs) return; last = Date.now(); this._call('turn_on', this._target(), { hs_color: hs }); };
-      lpDrag(wh, (p) => {
+      let hs = null, last = 0, sent = '';
+      const send = (fin) => { if (!hs || (fin && sent === hs.join(','))) return; last = Date.now(); sent = hs.join(','); this._call('turn_on', this._target(), { hs_color: hs }); };   // bırakışta aynı renk yeniden gönderilmez
+      lpDrag(wh, (p, first) => {
+        if (first) sent = '';
         this._dragging = true;
         const r = wh.getBoundingClientRect(), rad = r.width / 2;
         let x = p.clientX - r.left - rad, y = p.clientY - r.top - rad, d = Math.sqrt(x * x + y * y) / rad;
@@ -350,7 +353,7 @@ class LemurLightPopup {
         hs = [Math.round((Math.atan2(y, x) * 180 / Math.PI + 360) % 360), Math.round(d * 100)];
         const dot = wh.querySelector('.dot'); dot.style.left = (50 + x / rad * 50) + '%'; dot.style.top = (50 + y / rad * 50) + '%';
         if (Date.now() - last > 220) send();
-      }, () => { this._dragging = false; this._seen = null; if (hs) wh._settle = { hs: hs, until: Date.now() + 3000 }; setTimeout(send, 120); });
+      }, () => { this._dragging = false; this._seen = null; if (hs) wh._settle = { hs: hs, until: Date.now() + 3000 }; setTimeout(() => send(true), 120); });
     }
   }
   _paintWheel(cv) {

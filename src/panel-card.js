@@ -33,7 +33,7 @@ function lpSelNow(R, b) {
 }
 function lpNextFrame(f) { if (window.requestAnimationFrame) requestAnimationFrame(() => setTimeout(f, 0)); else setTimeout(f, 16); }
 function lpPress(el, tap, hold) {
-  let timer = null, held = false, moved = false, sx = 0, sy = 0, touched = false;
+  let timer = null, held = false, moved = false, sx = 0, sy = 0, touched = 0;   // son dokunuşun zamanı: ardından gelen taklit fare olayları yok sayılır
   const start = (x, y) => {
     held = false; moved = false; sx = x; sy = y; clearTimeout(timer);
     el.classList.add('down');
@@ -41,20 +41,21 @@ function lpPress(el, tap, hold) {
   };
   const cancel = () => { moved = true; clearTimeout(timer); el.classList.remove('down'); };
   const end = () => { clearTimeout(timer); el.classList.remove('down'); if (!held && !moved) tap(); };
-  el.addEventListener('touchstart', (e) => { touched = true; const p = e.touches[0]; start(p.clientX, p.clientY); }, { passive: true });
+  el.addEventListener('touchstart', (e) => { touched = Date.now(); const p = e.touches[0]; start(p.clientX, p.clientY); }, { passive: true });
   el.addEventListener('touchmove', (e) => { const p = e.touches[0]; if (Math.abs(p.clientX - sx) > 10 || Math.abs(p.clientY - sy) > 10) cancel(); }, { passive: true });
   el.addEventListener('touchend', (e) => { if (e.cancelable) e.preventDefault(); end(); });
   el.addEventListener('touchcancel', cancel);
-  el.addEventListener('mousedown', (e) => { if (touched || e.button !== 0) return; start(e.clientX, e.clientY); });
-  el.addEventListener('mouseup', () => { if (touched) return; end(); });
-  el.addEventListener('mouseleave', () => { if (!touched) cancel(); });
+  const tch = () => Date.now() - touched < 800;   // dokunmatik + fareli cihazda fare dokunuştan sonra da çalışsın (v0.35.2)
+  el.addEventListener('mousedown', (e) => { if (tch() || e.button !== 0) return; start(e.clientX, e.clientY); });
+  el.addEventListener('mouseup', () => { if (tch()) return; end(); });
+  el.addEventListener('mouseleave', () => { if (!tch()) cancel(); });
   el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 // Kaydırmalı çubuk: dokun aç/kapat, sağa-sola kaydır değer (parlaklık, perde konumu, fan hızı), basılı tut pencere.
 // Kaydırma parmağın başladığı yerden göreli (dokununca değer zıplamaz). Dikey hareket sayfayı kaydırır.
 // o: { tap, hold, can() → kaydırılabilir mi, start() → şu anki değer 0-100, move(v), end() }
 function lpSlide(el, o) {
-  let timer = null, held = false, mode = null, sx = 0, sy = 0, sv = 0, w = 1, touched = false;
+  let timer = null, held = false, mode = null, sx = 0, sy = 0, sv = 0, w = 1, touched = 0;
   const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)));
   const begin = (x, y) => {
     held = false; mode = null; sx = x; sy = y; clearTimeout(timer);
@@ -76,12 +77,12 @@ function lpSlide(el, o) {
     if (mode === 'drag') { el.classList.remove('drag'); o.end(); } else if (!held && !mode) o.tap();
     mode = null;
   };
-  el.addEventListener('touchstart', (e) => { touched = true; const p = e.touches[0]; begin(p.clientX, p.clientY); }, { passive: true });
+  el.addEventListener('touchstart', (e) => { touched = Date.now(); const p = e.touches[0]; begin(p.clientX, p.clientY); }, { passive: true });
   el.addEventListener('touchmove', (e) => { const p = e.touches[0]; move(p.clientX, p.clientY, e); }, { passive: false });
   el.addEventListener('touchend', (e) => { if (e.cancelable) e.preventDefault(); end(); });
   el.addEventListener('touchcancel', () => { clearTimeout(timer); el.classList.remove('down'); if (mode === 'drag') { el.classList.remove('drag'); o.end(); } mode = 'scroll'; });
   el.addEventListener('mousedown', (e) => {
-    if (touched || e.button !== 0) return;
+    if (Date.now() - touched < 800 || e.button !== 0) return;
     begin(e.clientX, e.clientY);
     const mm = (ev) => move(ev.clientX, ev.clientY, ev);
     const mu = () => { document.removeEventListener('mousemove', mm, true); document.removeEventListener('mouseup', mu, true); end(); };
@@ -607,10 +608,13 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._sig) return;
     (this._embeds || []).forEach((e) => { e.hass = h; });
     if (this._ens && this._ens.length) { const L = this._enIds || []; for (let i = 0; i < L.length; i++) if (h.states[L[i]] !== this._enLast[L[i]]) { this._enPaint(false); break; } }
+    if (this._enP && this._enP.act && h.states[this._enP.act] !== this._enP.actSt) this._enP.draw();
     const w = this._watched || [];
     for (let i = 0; i < w.length; i++) if (h.states[w[i]] !== this._last[w[i]]) { this._render(); return; }
     const m = this._missing || [];
     for (let i = 0; i < m.length; i++) if (h.states[m[i]]) { this._render(); return; }
+    // watt rozeti: sensörü henüz bulunmayan karo varsa yeni varlık gelince yeniden bakılır (lpEnTileP)
+    if ((this._enNoP || []).length && Object.keys(h.states).length !== LP_EN.tpN) { this._render(); return; }
   }
   connectedCallback() {
     if (LP_CARDS.indexOf(this) < 0) LP_CARDS.push(this);
@@ -633,6 +637,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub((full) => { if (full === false) { this._last = {}; if (this._sig) this._update(); } else { this._sig = null; this._render(); } });
     if (!this._enUnsub) this._enUnsub = lpEnSub(() => { if (this._ens && this._ens.length) this._enPaint(true); this._enDot(); });   // enerji verisi yüklendi
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
+    // ekran açılınca (sayfa yeniden görünür) saat ve "… önce" yazıları beklemeden tazelenir (v0.35.2)
+    if (!this._vis) { this._vis = () => { if (!document.hidden && this._hass) this._tick(); }; document.addEventListener('visibilitychange', this._vis); }
     // ekran döndürülünce ya da pencere daralınca telefon ↔ tablet görünümü
     if (!this._rsz) { this._rsz = () => { const p = lpPhoneKey(this, this._config); if (p !== this._phone) { this._phone = p; this._sig = null; this._render(); } else this._postSoon(); }; window.addEventListener('resize', this._rsz); }
     this._phone = lpPhoneKey(this, this._config);
@@ -646,10 +652,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (this._leciUnsub) { this._leciUnsub(); this._leciUnsub = null; }
     if (this._mdicUnsub) { this._mdicUnsub(); this._mdicUnsub = null; }
     if (this._enUnsub) { this._enUnsub(); this._enUnsub = null; }
-    this._enClose();
+    this._enClose(true);
     clearTimeout(this._enT); this._enT = null;
     clearInterval(this._tipT); this._tipT = null;
     clearInterval(this._clock); this._clock = null;
+    if (this._vis) { document.removeEventListener('visibilitychange', this._vis); this._vis = null; }
     clearInterval(this._tmr); this._tmr = null;
     clearInterval(this._camT); this._camT = null;
     if (this._rsz) { window.removeEventListener('resize', this._rsz); this._rsz = null; }
@@ -715,6 +722,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (x && x.state_colors) vis.push(JSON.stringify(lpMapStyle(x, S)));      // duruma göre görünüm (Halo kartı yeniden kurulur)
     }));
     const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge()]);
+    if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
   }
@@ -1031,6 +1039,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     }
     const R = this.shadowRoot;
     R.innerHTML = '<style>' + CSS + LP_FX_CSS + '</style><div class="wrap ic-' + lpIconMode() + (lpIconTintLight() ? ' ic-lightc' : '') + (edit ? ' edit' : '') + (phone ? ' phone' + (lpPhoneCfg().flat ? ' flat' : '') : '') + (pbOn ? ' pb' : '') + (lpBgLight(phone ? lpPhoneMerge(lpSettings()) : lpSettings(), phone && ((lpSettings().phone || {}).style || {}).bg ? null : tab) ? ' bglight' : '') + '" style="' + grid + ';--lp-ic-on:' + lpIconTint() + '">' + (pbOn ? pHead : nav) + body + pBar + '</div>';
+    // açık enerji penceresi yeniden çizimde silinmesin (v0.35.1: telefon döndürülünce kayboluyor, açık sayılmaya devam ediyordu)
+    if (this._enP && this._enP.el) { if (this._enP.el.classList.contains('ph') === phone) { R.appendChild(this._enP.el); setTimeout(() => { if (this._enP) lpPauseUnder(true); }, 0); } else this._enClose(); }
 
     // gömülü kartlar
     this._embeds = [];
@@ -1069,6 +1079,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // ışık / priz karosunda watt rozeti (Enerji sayfası → Görünüm): karonun güç sensörü izlenir
     this._badges = [];
     if (lpEnBadge()) this._tiles.forEach((el) => { const p = lpEnTileP(h, el.getAttribute('data-light')); if (p) { el._pw = p; this._badges.push(el); } });
+    this._enNoP = lpEnBadge() ? this._tiles.filter((el) => !el._pw).map((el) => el.getAttribute('data-light')) : [];
     this._rows = []; R.querySelectorAll('[data-row]').forEach((el) => this._rows.push(el));
     this._clrs = []; R.querySelectorAll('[data-clr]').forEach((el) => { el._item = clrs[+el.getAttribute('data-clr')]; this._clrs.push(el); if (!edit) this._clrBind(el); });
     const clrW = []; clrs.forEach((x) => [x.entity, x.temperature_sensor, x.humidity_sensor].concat(x.entities || []).forEach((e) => { if (typeof e === 'string' && clrW.indexOf(e) < 0) clrW.push(e); }));
@@ -1715,7 +1726,18 @@ class LemurHomeDashboardCard extends HTMLElement {
       }
       if (c === 'tog') { el._open = !el._open; el._menu = null; this._paintClr(el); return; }
       if (c === 'info') { lpFire(this, 'hass-more-info', { entityId: it.entity }); return; }
-      if (c === 'pw') { call('climate', st.state === 'off' ? 'turn_on' : 'turn_off'); return; }
+      if (c === 'pw') {
+        // TURN_ON (256) / TURN_OFF (128) desteklemeyen cihaza (ör. termostat vanası) HA bu komutları göndermez: modla açılıp kapanır (hâle kartı gibi)
+        const off = st.state === 'off';
+        ids().forEach((x) => {
+          const s2 = this._hass.states[x]; if (!s2) return;
+          const a2 = s2.attributes || {}, f = +a2.supported_features || 0, ms = (a2.hvac_modes || []).filter((m) => m !== 'off');
+          if (f & (off ? 256 : 128)) this._hass.callService('climate', off ? 'turn_on' : 'turn_off', { entity_id: x });
+          else if (!off) this._hass.callService('climate', 'set_hvac_mode', { entity_id: x, hvac_mode: 'off' });
+          else if (ms.length) this._hass.callService('climate', 'set_hvac_mode', { entity_id: x, hvac_mode: ms.indexOf('cool') >= 0 ? 'cool' : ms[0] });
+        });
+        return;
+      }
       if (c === 'vstart') { call('vacuum', 'start'); return; }
       if (c === 'vpause') { call('vacuum', 'pause'); return; }
       if (c === 'vdock') { call('vacuum', 'return_to_base'); return; }
@@ -2012,17 +2034,23 @@ class LemurHomeDashboardCard extends HTMLElement {
   _enPop(catId) { this._enOpen({ k: 'cat', id: catId }); }
   // enerji penceresi (v0.30): kategori, cihaz ya da "şu an çekenler"; veri gelince ve değerler değişince yeniden çizilir.
   // Tablette ortada, telefonda alttan açılır. Listeden cihaza geçince Geri ile önceki pencereye dönülür.
-  _enClose() {
+  // nav: true = geri tuşuyla ya da pano kapanırken (geçmişe dokunulmaz), 'keep' = içinden başka sayfası açılıyor (geçmiş adımı kalır)
+  _enClose(nav) {
     const P = this._enP; this._enP = null; if (!P) return;
     lpPauseUnder(false);
     if (P.unsub) P.unsub(); clearTimeout(P.armT); clearTimeout(P.idleT);
     if (P.el && P.el.parentNode) P.el.parentNode.removeChild(P.el);
+    if (nav !== 'keep' && this._enH) { window.removeEventListener('popstate', this._enH); this._enH = null; if (nav !== true) { try { history.back(); } catch (e) {} } }
   }
   _enOpen(V, keep) {
     const R = this.shadowRoot; if (!R) return;
     const M0 = lpEnGet(this._hass, this._lang); if (!M0) return;
     const stack = keep && this._enP ? this._enP.stack.concat([this._enP.P]) : [];
-    this._enClose();
+    this._enClose('keep');
+    // geri tuşu pencereyi kapatsın (ışık penceresindeki gibi; v0.35.1: açık kalıyor, geri tuşu panodan çıkıyordu)
+    if (!this._enH && !this._config.demo && !this._config.edit) {
+      try { history.pushState(Object.assign({}, history.state, { lhdPop: 1 }), ''); this._enH = () => { window.removeEventListener('popstate', this._enH); this._enH = null; this._enClose(true); }; window.addEventListener('popstate', this._enH); } catch (e) { this._enH = null; }
+    }
     const ph = lpIsPhone(this._config), pop = document.createElement('div');
     pop.className = 'enpop expop' + (ph ? ' ph' : '');
     R.appendChild(pop);
@@ -2038,6 +2066,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const html = lpExPopHtml(this._hass, M, S.P, this._lang, ph, S.arm, S.stack.length > 0);
       if (!html) { this._enClose(); return; }
       if (pop._h !== html) { const sc = pop.firstChild ? pop.firstChild.scrollTop : 0; pop._h = html; pop.innerHTML = html; if (pop.firstChild) pop.firstChild.scrollTop = sc; }
+      // aç/kapat düğmesinin varlığı: durumu değişince pencere yeniden çizilir (güç sensörü değişmese de düğme doğru yazsın)
+      const ab = pop.querySelector('[data-enact]'); S.act = ab ? ab.getAttribute('data-enact') : null; S.actSt = S.act ? this._hass.states[S.act] : null;
     };
     S.unsub = lpEnSub(S.draw);
     S.draw();
@@ -2079,6 +2109,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (dom !== 'light' && st.state === 'on' && !S.arm) { S.arm = true; S.draw(); clearTimeout(S.armT); S.armT = setTimeout(() => { S.arm = false; S.draw(); }, 4000); return; }
         S.arm = false; clearTimeout(S.armT);
         this._hass.callService(dom, 'toggle', { entity_id: id });
+        S.draw();
         return;
       }
       const more = c('[data-enmore]');

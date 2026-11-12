@@ -155,8 +155,9 @@ function buildDefaultTabs(hass, lang, opts) {
     // tarayıcı/tablet eklentilerinin her ekran için açtığı "ışık" ve "oynatıcı"lar (browser_mod) ev cihazı değil
     if (e && e.platform === 'browser_mod') return false;
     // şu an ulaşılamayan cihaz otomatik düzene girmez (bozuk ya da kaldırılmış cihazlar panoyu doldurmasın)
+    // sahnenin durumu son çalıştırıldığı an: hiç çalıştırılmamış sahne HA'da hep 'unknown' (bozuk değil)
     const st = S[id];
-    return !(st && (st.state === 'unavailable' || st.state === 'unknown'));
+    return !(st && (st.state === 'unavailable' || (st.state === 'unknown' && dom(id) !== 'scene')));
   };
   const lightLikeSwitch = (id) => {
     const a = attr(id);
@@ -206,7 +207,7 @@ function buildDefaultTabs(hass, lang, opts) {
   // sıra: ışık grupları önce, sonra normal ışıklar, en sonda durum ledi gibi görünenler (…_leds, …_switch_state)
   const lightRank = (id) => (Array.isArray(attr(id).entity_id) ? 0 : /_(leds|switch_state|status|status_led|indicator)$/.test(id) ? 2 : 1);
 
-  const byName = (a, b) => String(name(a)).localeCompare(String(name(b)), lang);
+  const byName = (a, b) => String(name(a)).localeCompare(String(name(b)), lang, { numeric: true });   // "Işık 2", "Işık 10"den önce
   const inArea = (list, aid) => list.filter((id) => areaOf(id) === aid).sort(byName);
   const lightsIn = (aid) => inArea(lightList, aid).sort((a, b) => (lightRank(a) - lightRank(b)) || byName(a, b));
 

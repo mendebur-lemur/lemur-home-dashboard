@@ -485,3 +485,16 @@ test('5 dakikalık veri: sonraki istek yalnız son yarım saat; pencereden çık
   assert.ok(r2.p[0].start >= t0 - 600000);
   E.LP_EN.h5 = null;
 });
+
+test('tile power sensor that appears later is found (no permanent "no sensor" cache)', () => {
+  E.LP_EN.tp = {};
+  const S = { 'light.yeni': { state: 'on', attributes: {} } };
+  const h = { states: S, entities: {} };
+  assert.strictEqual(E.lpEnTileP(h, 'light.yeni'), null);
+  // the owner adds the light in Energy: the record arrives, then the integration's sensor
+  ctx.STORE.data = { estimates: { yeni: { name: 'Yeni', kind: 'light', entity: 'light.yeni', max: 9 } } };
+  assert.strictEqual(E.lpEnTileP(h, 'light.yeni'), null);
+  h.states = Object.assign({}, S, { 'sensor.lhd_yeni_power': pw(9) });
+  assert.strictEqual(E.lpEnTileP(h, 'light.yeni'), 'sensor.lhd_yeni_power');
+  ctx.STORE.data = {}; E.LP_EN.tp = {};
+});

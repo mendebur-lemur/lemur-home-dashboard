@@ -903,10 +903,14 @@ function lpEnPopHtml(h, M, catId, lang) {
 }
 // ışık / priz karosunun güç sensörü (karoda watt rozeti için): aynı cihazın güç sensörü ya da sensor.<ad>_power
 function lpEnTileP(h, id, dep) {
-  if (Object.prototype.hasOwnProperty.call(LP_EN.tp, id)) return LP_EN.tp[id];
   const S = h.states || {}, E = h.entities || {}, obj = id.split('.')[1];
-  let p = null;
   const ES = (STORE.data && STORE.data.estimates) || {};
+  // cihaz eklenince (Enerji sayfası) ya da yeni sensör gelince bulunamayanlara yeniden bakılır: sensor.lhd_<id>_power
+  // cihaz kaydedildikten sonra gelir; "sensör yok" sonucu önceden sayfa yenilenene kadar kalıyordu (rozet hiç çıkmıyordu)
+  const n = Object.keys(S).length;
+  if (LP_EN.tpN !== n || LP_EN.tpE !== ES) { LP_EN.tp = {}; LP_EN.tpN = n; LP_EN.tpE = ES; }
+  if (Object.prototype.hasOwnProperty.call(LP_EN.tp, id)) return LP_EN.tp[id];
+  let p = null;
   Object.keys(ES).forEach((k) => { if (!p && ES[k] && ES[k].entity === id && lpEnIsPow(S['sensor.lhd_' + k + '_power'])) p = 'sensor.lhd_' + k + '_power'; });
   ['sensor.' + obj + '_power', 'sensor.' + obj + '_guc'].forEach((x) => { if (!p && lpEnIsPow(S[x])) p = x; });
   const dv = E[id] && E[id].device_id;
