@@ -2,6 +2,9 @@
 // En yeni sürüm en üstte; ilk kaydın sürümü paketin sürümüyle aynı olmalı, yoksa pencere çıkmaz. Satırlar kısa olsun,
 // ayrıntılar GitHub'daki sürüm notlarında. tr dışındaki diller en'e düşer.
 const LHD_CHANGES = [
+  { v: '0.35.1',
+    tr: ['Hâle kartına dokununca komut iki kez gidiyordu; aç/kapat yapan kartta (ör. otomatik mod) anahtar kapanıp hemen yeniden açıldığı için dokunuş işe yaramıyordu. Artık tek kez gider.', '1,5 ve 2 satırlık hâle kartlarında simge ortalanmıyor, diğer kartlardaki gibi sol üst köşede kalıyor.'],
+    en: ['Tapping a halo card sent its command twice; on a card that toggles (e.g. an auto mode) the switch turned off and straight back on, so the tap did nothing. It is now sent once.', '1.5 and 2-row halo cards no longer centre their icon; it stays in the top left corner like on the other cards.'] },
   { v: '0.35.0',
     tr: ['Hâle görünümündeki öğelere dokunma ve basılı tutma işlemi verilebilir (aç/kapat, servis, pencere); yazı gösteren sensörler ve anahtarlar da hâle kartı olarak gösterilir.', 'Duruma göre renk artık başka bir varlığın durumuna göre hâlenin hareketini (yanıp sönme, nabız), adını, simgesini ve çerçevesini de değiştirebilir; dikkat isteyen durumlarda kart çerçevesi ve zemini renklenip yanıp söner. Mushroom ve card-mod gerekmez.', 'Hâle kartında ad ve değer yer değiştirebilir; 1,5 ve 2 satırlık hâle kartlarında simge ve yazı ortalanır.'],
     en: ['Items in halo look can have tap and hold actions (toggle, service, popup); text sensors and switches can be shown as halo cards too.', 'Colour by state can now also change the halo motion (blink, pulse), name, icon and frame from another entity\'s state; for states that need attention the card frame and background light up and blink. No Mushroom or card-mod needed.', 'Halo cards can swap name and value; 1.5 and 2-row halo cards centre their icon and text.'] },

@@ -501,9 +501,9 @@ function lpHaloStyle(it) {
   let css = it.natural ? '' : ':host{height:100%}ha-card{height:100%;box-sizing:border-box}.compact .top{height:100%;min-height:80px}';
   if (T) css += '.name{font-size:' + T[0] + 'px;line-height:' + Math.round(T[0] * 1.4) + 'px}.sec{font-size:' + T[1] + 'px;line-height:' + Math.round(T[1] * 1.35) + 'px;max-height:none}';
   if (I) css += '.ic{width:' + I[0] + 'px;height:' + I[0] + 'px;--mdc-icon-size:' + I[1] + 'px}.ic svg{width:' + I[1] + 'px;height:' + I[1] + 'px}.txt{left:' + (I[0] + 12) + 'px}';
-  // yüksek (1,5 ya da 2 satır) hâle kartı: simge ve yazı dikeyde ortada (büyük uyarı kartı gibi)
+  // yüksek (1,5 ya da 2 satır) hâle kartı: kart uzar, simge diğer kartlardaki gibi sol üst köşede kalır (v0.35.1)
   const HH = LP_EMB_H[it.height];
-  if (HH && +it.height >= 1.5) { const isz = I ? I[0] : 64; css += '.compact .top{height:' + HH + 'px}.ic{left:18px;top:' + Math.round((HH - isz) / 2) + 'px}.txt{left:' + (isz + 34) + 'px}.halo{left:' + Math.round(18 + isz / 2) + 'px;top:' + Math.round(HH / 2) + 'px}'; }
+  if (HH && +it.height >= 1.5) css += '.compact .top{height:' + HH + 'px}';
   // ad ve değer yer değiştirir (swap): değer üstte, adın boyunda; ad altta küçük (ör. "6 sa 18 dk" / "Yem Saati")
   if (it.swap) css += '.txt{display:flex;flex-direction:column-reverse}.txt .sec{font-size:' + (T ? T[0] : 14) + 'px;line-height:' + Math.round((T ? T[0] : 14) * 1.4) + 'px;font-weight:500;color:var(--primary-text-color);-webkit-line-clamp:1;max-height:none}' +
     '.txt .name{font-size:' + (T ? T[1] : 12) + 'px;line-height:' + Math.round((T ? T[1] : 12) * 1.35) + 'px;font-weight:400;color:var(--secondary-text-color)}';
@@ -1043,13 +1043,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._embeds.push(el);
       if (spec.it) ph._item = spec.it;
       if (spec.it && spec.tag === 'lemur-hd-sensor-card' && el.shadowRoot) { const st = document.createElement('style'); st.textContent = lpHaloStyle(spec.it); el.shadowRoot.appendChild(st); }
-      // hâle görünümündeki öğenin dokun / basılı tut ayarı (v0.35): kartın kendi "ayrıntı penceresi" tıklaması yerine öğenin eylemi
-      const hit = spec.it;
-      if (!edit && hit && spec.tag === 'lemur-hd-sensor-card' && (hit.tap || hit.hold)) {
-        ph.classList.add('tapx');
-        ph.addEventListener('click', (e) => { e.stopPropagation(); }, true);
-        lpPress(ph, () => this._act(hit.tap, hit.entity, 'more-info'), () => this._act(hit.hold, hit.entity, 'more-info'));
-      }
+      // hâle öğesinin dokun / basılı tut ayarını aşağıdaki şeffaf katman (tapov) çalıştırır; burada ikinci bir dinleyici eklenmez (v0.35.1: çift çalışıyordu)
     });
     // gömülü HA kartları (HA'nın kart yardımcısıyla; yüklenemezse kısa uyarı)
     R.querySelectorAll('[data-hc]').forEach((ph) => {
