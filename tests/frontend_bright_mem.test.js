@@ -55,8 +55,8 @@ test('üç ışık 5 sn içinde tek tek kapanır (hangi sırayla olursa olsun): 
 test('biri bilerek kapatılıp ikisi uzun süre açık kalırsa bellek o ikisi olur; sonra onlar kapanınca yine ikisi', () => {
   const H = home({ 'light.a': 'on', 'light.b': 'on', 'light.c': 'on' }), c = H.card('salon', ABC);
   H.set('light.b', 'off');
-  H.wait(4000); assert.deepStrictEqual(H.mem(), { salon: ABC });                       // henüz yazılmadı
-  H.wait(2000); assert.deepStrictEqual(H.mem(), { salon: ['light.a', 'light.c'] });    // 5 sn sonra hâlâ ikisi açık
+  H.wait(19000); assert.deepStrictEqual(H.mem(), { salon: ABC });                      // henüz yazılmadı
+  H.wait(2000); assert.deepStrictEqual(H.mem(), { salon: ['light.a', 'light.c'] });    // 20 sn sonra hâlâ ikisi açık
   H.wait(3600000);
   H.set('light.a', 'off'); H.wait(300); H.set('light.c', 'off'); H.wait(60000);
   assert.deepStrictEqual(H.mem(), { salon: ['light.a', 'light.c'] });
@@ -146,4 +146,28 @@ test('tarayıcı kaydı kullanılamıyorsa (gizli sekme) bellek oturum boyunca �
   let e = null;
   assert.doesNotThrow(() => { e = E.card('salon', ['light.a', 'light.b']); E.set('light.a', 'off'); E.set('light.b', 'off'); E.wait(60000); });
   assert.deepStrictEqual(arr(e._bbTargets()), ['light.a', 'light.b']);
+});
+
+test('evde başka cihazların durumu birkaç saniyede bir değişirken de (her değişiklikte yeniden boyanır) küçülen liste 5 sn sonra yazılır (v0.36.0b6)', () => {
+  const H = home({ 'light.a': 'on', 'light.b': 'on', 'light.c': 'on', 'sensor.watt': '1' }), c = H.card('salon', ABC);
+  H.set('light.b', 'off');
+  for (let i = 0; i < 12; i++) { H.wait(2000); H.set('sensor.watt', String(i)); }      // 24 sn boyunca 2 sn'de bir ilgisiz değişiklik
+  assert.deepStrictEqual(H.mem(), { salon: ['light.a', 'light.c'] });
+  // tek tek kapanma, arada ilgisiz değişikliklerle: yine üçü de hatırlanır
+  const H2 = home({ 'light.a': 'on', 'light.b': 'on', 'light.c': 'on', 'sensor.watt': '1' }), c2 = H2.card('salon', ABC);
+  ABC.forEach((id, i) => { H2.set(id, 'off'); H2.wait(1000); H2.set('sensor.watt', 'x' + i); H2.wait(1000); });
+  H2.wait(60000);
+  assert.deepStrictEqual(H2.mem(), { salon: ABC });
+  assert.deepStrictEqual(arr(c2._bbTargets()), ABC);
+});
+
+test('durumu geç bildiren ışık: ötekiler kapandıktan 12 sn sonra kapanır, bellek yalnız o ışığa küçülmez (v0.36.0b6, evde görüldü)', () => {
+  const H = home({ 'light.a': 'on', 'light.b': 'on', 'light.c': 'on', 'sensor.watt': '1' }), c = H.card('salon', ABC);
+  H.set('light.a', 'off'); H.wait(300); H.set('light.b', 'off');
+  for (let i = 0; i < 6; i++) { H.wait(2000); H.set('sensor.watt', String(i)); }       // light.c 12 sn daha "açık" görünür
+  H.set('light.c', 'off');
+  H.wait(120000);
+  assert.deepStrictEqual(H.mem(), { salon: ABC });
+  assert.deepStrictEqual(arr(c._bbTargets()), ABC);
+  assert.strictEqual(H.timers.length, 0);
 });

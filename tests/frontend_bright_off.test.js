@@ -64,7 +64,7 @@ test('bellek tarayıcıda saklanır: yeni açılan sayfa (yeni kart) aynı ış�
 });
 
 test('bellek _bbPaint içinde tutulur (önizlemede değil), _bbLast kalmadı, ayar yönetim panelinde', () => {
-  assert.ok(/if \(L\.length && !\(this\._config && \(this\._config\.demo \|\| this\._config\.edit\)\)\) this\._bbMemSet\(L\);/.test(src));
+  assert.ok(/if \(!\(this\._config && \(this\._config\.demo \|\| this\._config\.edit\)\)\) \{ if \(L\.length\) this\._bbMemSet\(L\); else if \(this\._bbMemT\)/.test(src));
   assert.ok(src.indexOf('_bbLast') < 0);
   assert.ok(/allOff: b\.all_off === true/.test(src));
   const adm = fs.readFileSync(path.join(__dirname, '../src/admin.js'), 'utf8');

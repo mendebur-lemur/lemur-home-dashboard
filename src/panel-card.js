@@ -2045,14 +2045,19 @@ class LemurHomeDashboardCard extends HTMLElement {
   }
   _bbMemSet(L) {
     const k = this._bbKey(), a = this._bbMemGet()[k], old = Array.isArray(a) ? a : [];
-    clearTimeout(this._bbMemT);
-    if (old.length === L.length && old.every((x, i) => x === L[i])) return;
-    // liste küçülüyorsa (ışıklar tek tek kapanıyor, ulaşılamaz oluyor) hemen yazılmaz: 5 sn sonra hâlâ açık ışık varsa o zamanki liste
+    if (old.length === L.length && old.every((x, i) => x === L[i])) { clearTimeout(this._bbMemT); this._bbMemT = 0; return; }
+    // liste küçülüyorsa (ışıklar tek tek kapanıyor, ulaşılamaz oluyor) hemen yazılmaz: 20 sn sonra hâlâ açık ışık varsa o zamanki liste.
+    // 20 sn: durumu geç bildiren ışıklar (evde Govee kutusu ötekilerden 5 sn'den fazla sonra kapandı, bellek yalnız o kaldı). Hepsi kapanınca sayaç iptal edilir (_bbPaint)
     if (L.length < old.length && L.every((x) => old.indexOf(x) >= 0)) {
-      this._bbMemT = setTimeout(() => { if (this.isConnected === false || !this._hass || this._bbKey() !== k) return;   // kart ekrandan kalktı ya da sekme değişti: yazılmaz
-        const N = this._bbIds(); if (N.length) this._bbMemPut(k, N); }, 5000);
+      // aynı küçülmüş liste için sayaç yeniden başlatılmaz: evde her durum değişikliğinde (watt sensörleri, birkaç saniyede bir) buraya gelinir, sayaç hiç dolmuyordu (v0.36.0b6)
+      const g = k + '|' + L.join();
+      if (this._bbMemT && this._bbMemG === g) return;
+      clearTimeout(this._bbMemT); this._bbMemG = g;
+      this._bbMemT = setTimeout(() => { this._bbMemT = 0; if (this.isConnected === false || !this._hass || this._bbKey() !== k) return;   // kart ekrandan kalktı ya da sekme değişti: yazılmaz
+        const N = this._bbIds(); if (N.length) this._bbMemPut(k, N); }, 20000);
       return;
     }
+    clearTimeout(this._bbMemT); this._bbMemT = 0;
     this._bbMemPut(k, L);
   }
   _bbMemPut(k, L) {
@@ -2082,7 +2087,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const el = this.shadowRoot && this.shadowRoot.querySelector('[data-bbar]');
     if (!el || !this._hass) return;
     const L = this._bbIds(), v = this._bbVal(L), lang = this._lang || 'tr';
-    if (L.length && !(this._config && (this._config.demo || this._config.edit))) this._bbMemSet(L);   // en son açık olanlar: hepsi kapanınca kaydırma bunları yeniden açar
+    if (!(this._config && (this._config.demo || this._config.edit))) { if (L.length) this._bbMemSet(L); else if (this._bbMemT) { clearTimeout(this._bbMemT); this._bbMemT = 0; } }   // en son açık olanlar: hepsi kapanınca kaydırma bunları yeniden açar
     el.classList.toggle('bbon', L.length > 0);
     el.classList.toggle('bboff', !L.length && typeof this._bbDrag !== 'number');
     el.querySelector('.bbf').style.width = v + '%';
