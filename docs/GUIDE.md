@@ -78,7 +78,7 @@ The vacuum card starts, pauses and sends it to the dock. In Choose a style pick 
 **Options**
 
 - **Season** (Automatic · Summer · Winter): Air conditioners in summer, radiators in winter. Automatic: May to September is summer (Settings).
-- **Climate and vacuum cards** (Halo · Simple): Halo shows big ring cards; Simple shows one row per device that expands when tapped (Choose a style).
+- **Climate, vacuum and value cards** (Halo · Simple): Halo shows big ring cards; Simple shows one row per device that expands when tapped (Choose a style).
 - **Type** (Automatic · Air conditioner · Radiator): Whether a climate item is an air conditioner or a radiator (item ⚙).
 - **Temperature sensor**: The room temperature shown on the card; empty uses the device's own value.
 - **Humidity sensor**: The humidity shown on the card.
@@ -264,7 +264,7 @@ The preview uses an imaginary home; applying builds the dashboard with your own 
 - **Other tab**: A tab for unselected rooms and devices without an area.
 - **What to include** (Lights · Scenes · Climate · Vacuum · Media · Cameras · Energy): Which sections go into the tabs; with Energy an Energy tab is added at the end.
 - **Look** (Tiles · Slider bars · Bars on phones): How lights look.
-- **Climate and vacuum cards** (Halo · Simple): Climate and vacuum cards.
+- **Climate, vacuum and value cards** (Halo · Simple): Climate and vacuum cards.
 - **Holding a light** (Light window · HA dialog · Effect screen): The window a long press on a light tile opens.
 - **Phone** (Categories at the bottom · Rooms at the bottom · Rooms on top): Navigation on phones (shown when the preview is switched to Phone).
 - **Light window** (From the bottom · In the middle): The light window on phones.
@@ -456,7 +456,7 @@ You can also type an `mdi:...` name directly.
 
 - **My home** (My home · Example home): Preview your own dashboard or the example home.
 - **Tiles** (Tiles · Sliders): Lights on the tablet.
-- **Climate and vacuum cards** (Halo · Simple): Climate and vacuum cards on the tablet.
+- **Climate, vacuum and value cards** (Halo · Simple): Climate and vacuum cards on the tablet.
 - **Holding a light** (Light window · HA dialog · Effect screen): The window a long press on a light opens; try it in the preview.
 - **Navigation** (Categories at the bottom · Rooms at the bottom · Rooms on top): Navigation, lights and light window on phones.
 - **Background** (Effect · Dark · Black · Colour · Image): The dashboard background.

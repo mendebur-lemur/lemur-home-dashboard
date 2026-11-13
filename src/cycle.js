@@ -126,11 +126,11 @@ function lpCyHass(h, id, lang) {
 function lpCyItem(id) {
   return { entity: id, look: 'halo', state_colors: { map: { idle: { color: 'grey', effect: 'still' }, running: { color: 'blue', effect: 'breathe' }, done: { color: 'green', effect: 'breathe', frame: true } } } };
 }
-// karta dokununca: Bitti'yken Boşaltıldı (tek servis çağrısı), değilken cihazın enerji penceresi (yoksa cihaz penceresi)
-function lpCyTap(card, id) {
+// karta dokununca: Bitti'yken Boşaltıldı (tek servis çağrısı), değilken cihazın enerji penceresi (yoksa cihaz penceresi). hold (basılı tut): hep pencere
+function lpCyTap(card, id, hold) {
   const h = card._hass, st = h && h.states[id]; if (!st) return;
   const a = st.attributes || {};
-  if (st.state === 'done') { if (a.emptied_button && h.states[a.emptied_button]) h.callService('button', 'press', { entity_id: a.emptied_button }); return; }
+  if (st.state === 'done' && !hold) { if (a.emptied_button && h.states[a.emptied_button]) h.callService('button', 'press', { entity_id: a.emptied_button }); return; }
   const dev = () => { const M = typeof lpEnGet === 'function' ? lpEnGet(h, card._lang) : null; return M && M.devs ? M.devs.filter((x) => x.lid === a.device)[0] : null; };
   const open = (d) => { if (d && typeof card._enOpen === 'function') card._enOpen({ k: 'dev', id: d.id }); else lpFire(card, 'hass-more-info', { entityId: id }); };
   const d0 = dev(); if (d0 || typeof lpEnSub !== 'function' || (LP_EN.m && !LP_EN.busy)) { open(d0); return; }

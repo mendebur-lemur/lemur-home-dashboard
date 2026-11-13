@@ -20,7 +20,7 @@ function klass(method, extra) {
 
 test('kilit ve alarm karosuna dokununca cihaz penceresi açılır, homeassistant.toggle gitmez', () => {
   const fired = [], calls = [];
-  const X = klass(pick(panel, /\n  _act\(a, id, def\) \{[\s\S]*?\n  \}\n/), {
+  const X = klass(pick(panel, /\n  _act\(a, id, def, hold\) \{[\s\S]*?\n  \}\n/), {
     lpFire: (el, ev, d) => fired.push(ev + ':' + d.entityId), lpTwinOf: () => null, LP_OPT: { pend: {} }, LemurCardPopup: {}, lhdIsObj: () => true, lhdSafeUrl: () => false });
   const x = new X();
   x._hass = { states: { 'lock.kapi': { state: 'locked' }, 'alarm_control_panel.ev': { state: 'disarmed' }, 'switch.priz': { state: 'off' } },

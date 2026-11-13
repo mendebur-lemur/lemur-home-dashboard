@@ -1,4 +1,4 @@
-/*! Lemur Home Dashboard yükleyici v0.36.0b3 */
+/*! Lemur Home Dashboard yükleyici v0.36.0b4 */
 // Her sayfaya yüklenen küçük dosya (2026-11-04, GitHub #3).
 // Ana dosya ~700 KB. Yavaş tabletlerde ve HA Android uygulamasında, HA'nın pano stratejisini
 // bekleme süresi dolmadan inip çalışamıyor, pano "Timeout waiting for strategy element" veriyordu.
@@ -8,9 +8,9 @@
   var W = window;
   // Bu dosya sayfaya iki yoldan gelebilir (add_extra_js_url ve Lovelace kaynağı); ikincisi hiçbir şey yapmaz.
   if (W.__LEMUR_HD_LOADER) return;
-  W.__LEMUR_HD_LOADER = '0.36.0b3';
+  W.__LEMUR_HD_LOADER = '0.36.0b4';
   var NAME = 'll-strategy-dashboard-lemur-home-dashboard';
-  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.36.0b3';
+  var MAIN = '/lemur_home_dashboard/lemur-home-dashboard.js?v=0.36.0b4';
   // Ana dosya inemezse yeniden denenir: ilk 40 sn 3 sn'de bir (ilki 1,5 sn sonra), 2. dakikaya kadar 5 sn'de bir,
   // 5. dakikaya kadar 15 sn'de bir, sonra dakikada bir; 10 dakika sonra bırakılır.
   // Home Assistant açılırken eklenti kurulana kadar ana dosyanın adresi "bulunamadı" döner (evde ~14 sn, yavaş sistemde daha uzun).

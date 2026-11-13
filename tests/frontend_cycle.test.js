@@ -167,7 +167,7 @@ test('notify targets: notify entities and legacy services, without send_message'
 test('the bundle wires it: card text, halo hass, tap, editor, picker, energy window; no ?. or ??', () => {
   const P = fs.readFileSync(path.join(__dirname, '../src/panel-card.js'), 'utf8'), E = fs.readFileSync(path.join(__dirname, '../src/enplus.js'), 'utf8');
   assert.ok(/a\.lhd_cycle === true\) \{ const c = lpCyLabel/.test(P));
-  assert.ok(/e\._lpCy \? lpCyHass\(h, e\._lpCy/.test(P) && /cy \? lpCyTap\(this, id\)/.test(P));
+  assert.ok(/e\._lpCy \? lpCyHass\(h, e\._lpCy/.test(P) && /lpCyIs\(st\)\) \{ lpCyTap\(this, id, !!hold\)/.test(P));
   assert.ok(/lpCyEdHtml\(this, D\)/.test(A) && /lpCyIs\(st\)\) \{ S\.entities\.push\(lpCyItem\(id\)\)/.test(A));
   assert.ok(/lpCyDevHtml\(h, d, lang\)/.test(E));
   assert.ok(!/\?\.|\?\?/.test(SRC.replace(/\/\/.*$/gm, '').replace(/'[^'\n]*'/g, '')));   // yorumlar ve yazılar hariç

@@ -300,6 +300,8 @@
 .vrow .rv { flex: 0 0 auto; margin-left: 8px; font-size: var(--lp-fs, 15px); font-weight: 700; white-space: nowrap; }
 .vrow.on { box-shadow: inset 0 0 0 2px var(--tile-rgb, var(--lp-on-border)); background-color: rgba(255, 255, 255, 0.05); }
 .vrow.na { opacity: 0.5; }
+/* Stil seç'te "Sade": Halo görünümlü değer kartı sade iklim satırıyla aynı kutuda, tam genişlik (panel-card.js bodyOf, _full) */
+.vrows.vfull .vrow { height: auto; min-height: 66px; padding: 8px 12px 8px 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); }
 .phone .vrow { height: 40px; }
 /* düğme görünümündeki varlık: ad ve altında durum/değer */
 .scene.ebtn .sb { flex: 1 1 auto; min-width: 0; padding-left: 6px; }

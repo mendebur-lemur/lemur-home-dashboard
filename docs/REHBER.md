@@ -78,7 +78,7 @@ Süpürge kartı başlatır, duraklatır, istasyona gönderir. Stil seç'te **Ha
 **Seçenekler**
 
 - **Mevsim** (Otomatik · Yaz · Kış): İklim bölümünde yazın klimalar, kışın petekler. Otomatik: Mayıs-Eylül yaz (Ayarlar).
-- **İklim ve süpürge kartları** (Halo · Sade): Halo büyük halkalı kartlar; Sade her cihazı tek satırda gösterir, dokununca genişler (Stil seç).
+- **İklim, süpürge ve değer kartları** (Halo · Sade): Halo büyük halkalı kartlar; Sade her cihazı tek satırda gösterir, dokununca genişler (Stil seç).
 - **Tür** (Otomatik · Klima · Petek): İklim öğesinin türü (öğe ⚙).
 - **Sıcaklık sensörü**: Kartta gösterilecek oda sıcaklığı; boşsa cihazın kendi değeri.
 - **Nem sensörü**: Kartta gösterilecek nem.
@@ -264,7 +264,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Diğer sekmesi**: Seçilmeyen odaların ve alanı olmayan cihazların sekmesi.
 - **Neler dahil olsun** (Işıklar · Senaryolar · İklim · Süpürge · Medya · Kameralar · Enerji): Sekmelere hangi bölümler girsin; Enerji seçilirse sonda bir Enerji sekmesi açılır.
 - **Görünüm** (Karo · Kaydırmalı çubuk · Telefonda çubuk): Işıkların görünümü.
-- **İklim ve süpürge kartları** (Halo · Sade): İklim ve süpürge kartları.
+- **İklim, süpürge ve değer kartları** (Halo · Sade): İklim ve süpürge kartları.
 - **Işığa basılı tutunca** (Işık penceresi · HA penceresi · Efekt ekranı): Işık karosuna basılı tutunca açılan pencere.
 - **Telefon** (Altta kategoriler · Altta odalar · Üstte odalar): Telefonda gezinme (önizlemede Telefon'a geçince görünür).
 - **Işık penceresi** (Alttan açılsın · Ortada açılsın): Telefonda ışık penceresi.
@@ -456,7 +456,7 @@ Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; 
 
 - **Benim evim** (Benim evim · Örnek ev): Önizlemede kendi panon ya da örnek ev.
 - **Karo** (Karo · Kaydırmalı): Tablette ışıklar.
-- **İklim ve süpürge kartları** (Halo · Sade): Tablette iklim ve süpürge kartları.
+- **İklim, süpürge ve değer kartları** (Halo · Sade): Tablette iklim ve süpürge kartları.
 - **Işığa basılı tutunca** (Işık penceresi · HA penceresi · Efekt ekranı): Işığa basılı tutunca açılan pencere; seçince önizlemede denenir.
 - **Gezinme** (Altta kategoriler · Altta odalar · Üstte odalar): Telefonda gezinme, ışıklar ve ışık penceresi.
 - **Arka plan** (Efekt · Koyu · Siyah · Renk · Resim): Pano zemini.
