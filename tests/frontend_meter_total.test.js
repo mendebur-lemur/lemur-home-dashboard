@@ -138,3 +138,63 @@ test('report with a meter: total from the meter, "not measured" row and CSV colu
   assert.strictEqual(E.lpErCsv(h, M, P, 'tr').text.replace(/^﻿/, '').split('\r\n')[0], 'Tarih;A;B;Toplam kWh');
   assert.strictEqual(E.lpErData(h, M, P).tot, 12 * 6 + 3);
 });
+
+// ---- hata avı düzeltmeleri: boşluk borcu, HA Enerji ayarındaki güneş / batarya, önceki ay sayaçtan ----
+test('lpEnMix: the devices\' sum of a gap is taken only from the first metered day after it, never from later days', () => {
+  const t = []; for (let d = 1; d <= 12; d++) t.push(day(2026, 10, d));
+  const mk = (back) => { const dev = {}, met = {}; t.forEach((x, i) => { dev[x] = 5; if (i < 4 || i > 6) met[x] = 20; }); met[t[7]] = back; return Array.from(E.lpEnMix(dev, met, t[0]), (x) => x.k); };
+  // the meter wrote what it counted while away (60) on its first day back: nothing counted twice
+  assert.deepStrictEqual(mk(80).slice(4, 10), [5, 5, 5, 65, 20, 20]);
+  // no lump came (the meter did not count while away, or the reading was refused): only the first day back pays, day 9 is whole
+  assert.deepStrictEqual(mk(20).slice(4, 10), [5, 5, 5, 5, 20, 20]);
+  assert.deepStrictEqual(mk(8).slice(4, 10), [5, 5, 5, 5, 20, 20]);     // was 5 5 5 5 8 20: the rest of the debt ate day 9
+  // the meter was replaced while away (reset on its first day back): the debt is gone, day 9 is the meter's
+  assert.deepStrictEqual(mk(-480).slice(4, 10), [5, 5, 5, 5, 20, 20]);  // was 5 5 5 5 5 20
+});
+
+test('solar or battery only in Home Assistant\'s energy settings: the grid meter is not the home, days stay the devices', async () => {
+  const now = new Date(2026, 10, 13, 15, 0).getTime(); ctx.setNow(now);
+  const rows = { 'sensor.lhd_kat_a_energy': { day: [] }, 'sensor.lhd_kat_b_energy': { day: [] }, 'sensor.grid_kwh': { day: [] } };
+  for (let t = day(2026, 0, 1); t <= now; t += D) { rows['sensor.lhd_kat_a_energy'].day.push({ start: t, end: t + D, change: 8 }); rows['sensor.lhd_kat_b_energy'].day.push({ start: t, end: t + D, change: 4 }); rows['sensor.grid_kwh'].day.push({ start: t, end: t + D, change: 3 }); }
+  const grid = { type: 'grid', flow_from: [{ stat_energy_from: 'sensor.grid_kwh' }] };
+  const run = async (prefs) => {
+    SET.s = { energy: { price_mode: 'single', price: 2 } };
+    E.LP_EN.dk = null; E.LP_EN.dq = null; E.LP_EN.hd = null; E.LP_EN.yr = null; E.LP_EN.prefs = prefs;
+    const M = model(); E.LP_EN.m = M; await E.lpEnDays(statConn(rows), M);
+    return [E.lpEnDayTot(M, M.days.t.length - 2), E.lpEnMonthKwh(M), !!M.days.mall];
+  };
+  try {
+    assert.deepStrictEqual(await run({ energy_sources: [grid] }), [3, 39, true]);                                             // grid only: the meter is the home
+    assert.deepStrictEqual(await run({ energy_sources: [grid, { type: 'solar', stat_energy_from: 'sensor.pv' }] }), [12, 156, false]);
+    assert.deepStrictEqual(await run({ energy_sources: [grid, { type: 'battery', stat_energy_from: 'sensor.b_out', stat_energy_to: 'sensor.b_in' }] }), [12, 156, false]);
+    // the same with a meter picked in the dashboard: reports too
+    SET.s = { energy: { price_mode: 'single', price: 2, meter: { energy: 'sensor.grid_kwh' } } };
+    E.LP_EN.prefs = { energy_sources: [grid, { type: 'solar', stat_energy_from: 'sensor.pv' }] }; E.LP_EX.c = {}; E.LP_EX.busy = {}; ctx.localStorage._d = {};
+    const M = model(), h = { connection: statConn(rows) }, P = { k: 'rep', mode: 'm', y: 2026, m: 10 };
+    E.lpErData(h, M, P); await new Promise((r) => setTimeout(r, 30));
+    assert.strictEqual(E.lpErData(h, M, P).meter, undefined);
+    assert.strictEqual(E.lpErData(h, M, P).tot, 13 * 12);
+  } finally { E.LP_EN.prefs = null; }
+});
+
+test('report with a meter: the previous month is compared from the meter although the devices were added later', async () => {
+  const now = new Date(2026, 10, 13, 15, 0).getTime(); ctx.setNow(now);
+  SET.s = { energy: { price_mode: 'single', price: 2, meter: { energy: 'sensor.em_kwh' } } };
+  // meter: two years, 20 kWh a day; the dashboard's devices since 20 October (6 kWh a day)
+  const rows = { 'sensor.lhd_kat_a_energy': { day: [], month: [] }, 'sensor.lhd_kat_b_energy': { day: [], month: [] }, 'sensor.em_kwh': { day: [] } };
+  for (let d = new Date(2025, 0, 1); d.getTime() <= now; d.setDate(d.getDate() + 1)) {
+    const t = d.getTime(); rows['sensor.em_kwh'].day.push({ start: t, end: t + D, change: 20 });
+    if (t >= day(2026, 9, 20)) { rows['sensor.lhd_kat_a_energy'].day.push({ start: t, end: t + D, change: 4 }); rows['sensor.lhd_kat_b_energy'].day.push({ start: t, end: t + D, change: 2 }); }
+  }
+  const M = model(), h = { connection: statConn(rows) };
+  const rep = async (P) => { E.LP_EX.c = {}; E.LP_EX.busy = {}; ctx.localStorage._d = {}; E.lpErData(h, M, P); await new Promise((r) => setTimeout(r, 30)); return E.lpErData(h, M, P); };
+  const nov = await rep({ k: 'rep', mode: 'm', y: 2026, m: 10 });
+  assert.strictEqual(nov.tot, 13 * 20);
+  assert.strictEqual(nov.prevTot, 13 * 20);            // the same days of October, from the meter (was null: "no previous month")
+  const oct = await rep({ k: 'rep', mode: 'm', y: 2026, m: 9 });
+  assert.strictEqual(oct.prevTot, 30 * 20);            // September whole
+  assert.strictEqual(oct.lyTot, 31 * 20);
+  // the meter itself started in the middle of the previous month: still no comparison
+  rows['sensor.em_kwh'].day = rows['sensor.em_kwh'].day.filter((x) => x.start >= day(2026, 9, 10));
+  assert.strictEqual((await rep({ k: 'rep', mode: 'm', y: 2026, m: 10 })).prevTot, null);
+});

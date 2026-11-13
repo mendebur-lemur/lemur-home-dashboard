@@ -36,9 +36,9 @@ const LP_CY_TXT = {
     sugZero: 'Son {d} günde {n} bulunamadı. Hazır ayarlar kalıyor.', sugFound: 'Son {d} günde {c} {n} bulundu: ~{m}, ~{k} kWh', sugBase: 'Boştayken ~{b} W',
     sugTune: 'Önerilen ayar', sugApply: 'Uygula', sugKeep: 'Hazır ayarlar bu makineye uyuyor.', sugApplied: 'Uygulandı; kaydetmeyi unutma.', sugErr: 'Geçmiş okunamadı: {e}',
     t_end_min: 'Bitiş bekleme {v} dk', t_min_kwh: 'En az {v} kWh', t_start_w: 'Başlama {v} W',
-    card: 'Panoya durum kartı ekle', cardT: 'Halo kartı: Boş, Çalışıyor (süreyle), Bitti (çerçeveli). Bitti\'yken dokununca boşaltıldı sayılır.', cardTab: 'Sekme', cardSec: 'Bölüm', cardAdd: 'Ekle', cardAdded: 'Kart "{s}" bölümüne eklendi', cardSave: 'Kaydedince panoya ekleyebilirsin.', cardNoSec: 'Bu sekmede bölüm yok',
+    card: 'Panoya durum kartı ekle', cardT: 'Halo kartı: Boş, Çalışıyor (süreyle), Bitti (çerçeveli). Bitti\'yken dokununca boşaltıldı sayılır.', cardTab: 'Sekme', cardSec: 'Bölüm', cardAdd: 'Ekle', cardAdded: 'Kart "{s}" bölümüne eklendi', cardSave: 'Kaydedince panoya ekleyebilirsin.', cardNoSec: 'Bu sekmede bölüm yok', cardDup: 'Kart "{s}" bölümünde zaten var',
     nTitle: 'Bildirim', nOn: 'Bitince bildirim gönder', nOnT: 'Her çalışmada bir kez.', nTo: 'Kime', nNone: 'Home Assistant\'ta bildirim servisi bulunamadı (ör. telefondaki uygulama).', nMsg: 'Mesaj', nMsgT: 'Boş bırakırsan: {ex}. Yazılabilenler: {name}, {duration}, {kwh}, {cost}, {time}.',
-    nEnt: 'varlık', nSvc: 'servis', nPers: 'Home Assistant bildirimleri', nTest: 'Deneme gönder', nTestBusy: 'Gönderiliyor…', nTestOk: 'Gönderildi: {m}', nTestBad: '{t} gönderilemedi: {e}', nPick: 'Önce kime gideceğini seç.',
+    nEnt: 'varlık', nSvc: 'servis', nPers: 'Home Assistant bildirimleri', nTest: 'Deneme gönder', nTestBusy: 'Gönderiliyor…', nTestOk: 'Gönderildi: {m}', nTestBad: '{t} gönderilemedi: {e}', nPick: 'Önce kime gideceğini seç.', nGone: 'bulunamadı · çıkarmak için dokun',
     nRem: 'Boşaltılmazsa hatırlat', nRemOff: 'Hatırlatma yok', nRemH: '{h} saat sonra',
     adv: 'Eşikler', advT: 'Boş bırakılan alan türün hazır değerini kullanır. Hepsi prizin boştaki değerinin üstü.',
     f_start_w: 'Başlama (W üstü)', f_start_min: 'Başlama süresi (dk)', f_end_w: 'Bitiş (W altı)', f_end_min: 'Bitiş bekleme (dk)', f_tail_w: 'Kurutma (W üstü)', f_tail_min: 'Kurutma en çok (dk)', f_min_kwh: 'En az enerji (kWh)', f_max_h: 'En uzun (saat)',
@@ -61,9 +61,9 @@ const LP_CY_TXT = {
     sugZero: 'No {n} found in the last {d} days. The presets stay.', sugFound: '{c} {n} found in the last {d} days: ~{m}, ~{k} kWh', sugBase: 'Idle at ~{b} W',
     sugTune: 'Suggested', sugApply: 'Apply', sugKeep: 'The presets fit this machine.', sugApplied: 'Applied; remember to save.', sugErr: 'Could not read the history: {e}',
     t_end_min: 'End wait {v} min', t_min_kwh: 'At least {v} kWh', t_start_w: 'Start {v} W',
-    card: 'Add a status card to the dashboard', cardT: 'Halo card: Idle, Running (with the time), Finished (framed). Tapping it while finished marks it emptied.', cardTab: 'Tab', cardSec: 'Section', cardAdd: 'Add', cardAdded: 'Card added to "{s}"', cardSave: 'Save first, then add it to the dashboard.', cardNoSec: 'This tab has no sections',
+    card: 'Add a status card to the dashboard', cardT: 'Halo card: Idle, Running (with the time), Finished (framed). Tapping it while finished marks it emptied.', cardTab: 'Tab', cardSec: 'Section', cardAdd: 'Add', cardAdded: 'Card added to "{s}"', cardSave: 'Save first, then add it to the dashboard.', cardNoSec: 'This tab has no sections', cardDup: 'The card is already in "{s}"',
     nTitle: 'Notification', nOn: 'Notify when finished', nOnT: 'Once per cycle.', nTo: 'To', nNone: 'No notification service found in Home Assistant (e.g. the phone app).', nMsg: 'Message', nMsgT: 'Left empty: {ex}. You can use {name}, {duration}, {kwh}, {cost}, {time}.',
-    nEnt: 'entity', nSvc: 'service', nPers: 'Home Assistant notifications', nTest: 'Send a test', nTestBusy: 'Sending…', nTestOk: 'Sent: {m}', nTestBad: '{t} failed: {e}', nPick: 'Pick who gets it first.',
+    nEnt: 'entity', nSvc: 'service', nPers: 'Home Assistant notifications', nTest: 'Send a test', nTestBusy: 'Sending…', nTestOk: 'Sent: {m}', nTestBad: '{t} failed: {e}', nPick: 'Pick who gets it first.', nGone: 'not found · tap to remove',
     nRem: 'Remind if not emptied', nRemOff: 'No reminder', nRemH: 'after {h} h',
     adv: 'Thresholds', advT: 'An empty field uses the kind\'s preset. All are above the plug\'s idle reading.',
     f_start_w: 'Start (W above)', f_start_min: 'Start time (min)', f_end_w: 'End (W below)', f_end_min: 'End wait (min)', f_tail_w: 'Drying (W above)', f_tail_min: 'Drying at most (min)', f_min_kwh: 'Least energy (kWh)', f_max_h: 'Longest (hours)',
@@ -132,7 +132,7 @@ function lpCyTap(card, id, hold) {
   const a = st.attributes || {};
   if (st.state === 'done' && !hold) { if (a.emptied_button && h.states[a.emptied_button]) h.callService('button', 'press', { entity_id: a.emptied_button }); return; }
   const dev = () => { const M = typeof lpEnGet === 'function' ? lpEnGet(h, card._lang) : null; return M && M.devs ? M.devs.filter((x) => x.lid === a.device)[0] : null; };
-  const open = (d) => { if (d && typeof card._enOpen === 'function') card._enOpen({ k: 'dev', id: d.id }); else lpFire(card, 'hass-more-info', { entityId: id }); };
+  const open = (d) => { if (card.isConnected === false) return; if (d && typeof card._enOpen === 'function') card._enOpen({ k: 'dev', id: d.id }); else lpFire(card, 'hass-more-info', { entityId: id }); };
   const d0 = dev(); if (d0 || typeof lpEnSub !== 'function' || (LP_EN.m && !LP_EN.busy)) { open(d0); return; }
   // enerji verisi henüz yüklenmedi (panoda enerji kartı yok): gelince pencere açılır, 1,5 sn içinde gelmezse cihaz penceresi
   let fin = false; const un = lpEnSub(() => { const d = dev(); if (fin || !d) return; fin = true; un(); open(d); });
@@ -164,12 +164,13 @@ const lpCyF = (v) => { const s = String(v === undefined || v === null ? '' : v).
 function lpCyRec(cy) {
   if (!cy || (!cy.on && !cy.had)) return null;
   const P = LP_CY_PRE[cy.kind] || LP_CY_PRE.other, out = { on: !!cy.on, kind: LP_CY_PRE[cy.kind] ? cy.kind : 'other' };
-  LP_CY_NUM.forEach((x) => { const v = lpCyF(cy.v[x[0]]); if (v !== null && !isNaN(v) && v !== P[x[0]]) out[x[0]] = v; });
+  // sınır dışı sayı hiç yazılmaz (takip kapalıyken lpCyBad bakmaz; entegrasyon bütün cihaz kaydını geri çevirirdi)
+  LP_CY_NUM.forEach((x) => { const v = lpCyF(cy.v[x[0]]); if (v !== null && !isNaN(v) && v >= x[1] && v <= x[2] && v !== P[x[0]]) out[x[0]] = v; });
   if (typeof cy.tail === 'boolean' && cy.tail !== P.tail) out.tail = cy.tail;
   if (/^binary_sensor\.[a-z0-9_]+$/.test(cy.door || '')) out.door = cy.door;
-  const ch = lpCyF(cy.clear_h); if (ch > 0) out.clear_h = ch;
+  const ch = lpCyF(cy.clear_h); if (ch > 0 && ch <= 168) out.clear_h = ch;
   const n = cy.n || {}, rh = lpCyF(n.remind_h), tg = (n.targets || []).filter((x) => /^notify\.[a-z0-9_]+$/.test(x)).slice(0, 10), msg = String(n.msg || '').trim().slice(0, 200);
-  if (n.on || tg.length || msg || rh > 0) { out.notify = { on: !!n.on, targets: tg }; if (msg) out.notify.msg = msg; if (rh > 0) out.notify.remind_h = rh; }
+  if (n.on || tg.length || msg || rh > 0) { out.notify = { on: !!n.on, targets: tg }; if (msg) out.notify.msg = msg; if (rh > 0 && rh <= 48) out.notify.remind_h = rh; }
   return out;
 }
 // yanlış sayı: neyin yanlış olduğu yazılır (Python şemasıyla aynı sınırlar)
@@ -231,8 +232,9 @@ function lpCyEdHtml(A, D) {
   // gelişmiş: eşikler, kurutma, kapı, kendiliğinden kalkma
   if (A._adv()) {
     const P = LP_CY_PRE[cy.kind] || LP_CY_PRE.other;
-    const num = (k, st) => '<div class="fld"><label title="' + t('f_' + k) + '">' + t('f_' + k) + '</label><input class="inp" type="number" min="0" step="' + st + '" data-cyv="' + k + '" value="' + esc(cy.v[k] || '') + '" placeholder="' + esc(lpCyNum(P[k], k === 'min_kwh' ? 2 : k === 'tail_w' ? 1 : 0, L)) + '"></div>';
-    h += '<div class="ency-l">' + t('adv') + '</div><div class="hint">' + t('advT') + '</div><div class="engrid g2">' + LP_CY_NUM.filter((x) => tail || (x[0] !== 'tail_w' && x[0] !== 'tail_min')).map((x) => num(x[0], x[3])).join('') + '</div>';
+    // yazı alanı (type=number değil): tarayıcının dili İngilizceyken "0,3" yazınca virgül düşüp 3 oluyordu; virgülü lpCyF çevirir
+    const num = (k) => '<div class="fld"><label title="' + t('f_' + k) + '">' + t('f_' + k) + '</label><input class="inp" type="text" inputmode="decimal" spellcheck="false" autocomplete="off" data-cyv="' + k + '" value="' + esc(cy.v[k] || '') + '" placeholder="' + esc(lpCyNum(P[k], k === 'min_kwh' ? 2 : k === 'tail_w' ? 1 : 0, L)) + '"></div>';
+    h += '<div class="ency-l">' + t('adv') + '</div><div class="hint">' + t('advT') + '</div><div class="engrid g2">' + LP_CY_NUM.filter((x) => tail || (x[0] !== 'tail_w' && x[0] !== 'tail_min')).map((x) => num(x[0])).join('') + '</div>';
     h += '<div class="ency-row"><div class="t"><b>' + t('tailL') + '</b><span>' + t('tailT') + '</span></div><button class="tg' + (tail ? ' on' : '') + '" data-cya="tail" aria-label="' + t('tailL') + '"></button></div>';
     const doors = Object.keys(S).filter((x) => x.indexOf('binary_sensor.') === 0).sort((a, b) => { const r = (x) => (/^(door|opening|window)$/.test(String(S[x].attributes.device_class || '')) ? 0 : 1); return r(a) - r(b) || (a < b ? -1 : 1); });
     h += '<div class="engrid g2"><div class="fld"><label>' + t('door') + '</label><select class="inp" data-cyd="door"><option value="">' + t('doorNone') + '</option>' + doors.map((x) => '<option value="' + esc(x) + '"' + (cy.door === x ? ' selected' : '') + '>' + esc(A._ename(x)) + '</option>').join('') + '</select><div class="hint">' + t('doorT') + '</div></div>' +
@@ -243,7 +245,9 @@ function lpCyEdHtml(A, D) {
   h += '<div class="ency-row"><div class="t"><b>' + t('nOn') + '</b><span>' + t('nOnT') + '</span></div><button class="tg' + (n.on ? ' on' : '') + '" data-cya="non" aria-label="' + t('nOn') + '"></button></div>';
   if (n.on) {
     h += '<div class="ency-l">' + t('nTo') + '</div>' + (T.length ? '<div class="endchips">' + T.map((x) => '<button class="chip' + (n.targets.indexOf(x.id) >= 0 ? ' on' : '') + '" data-cyn="' + esc(x.id) + '" title="' + esc(x.id) + '">' + esc(x.name) + ' <i>' + t(x.ent ? 'nEnt' : 'nSvc') + '</i></button>').join('') + '</div>' : '<div class="hint enwarn">' + t('nNone') + '</div>');
-    n.targets.filter((x) => !T.some((y) => y.id === x)).forEach((x) => { h += '<div class="hint enwarn">' + esc(x) + '</div>'; });
+    // Home Assistant'ta artık olmayan hedef: seçili düğme olarak görünür, dokununca listeden çıkar
+    const gone = n.targets.filter((x) => !T.some((y) => y.id === x));
+    if (gone.length) h += '<div class="endchips">' + gone.map((x) => '<button class="chip on gone" data-cyn="' + esc(x) + '" title="' + t('nGone') + '">' + esc(x) + ' <i>' + t('nGone') + '</i></button>').join('') + '</div>';
     const nm = String(f.name || '').trim() || lpCyT(L, 'k_' + cy.kind);
     const ph = L === 'tr' ? '{name} bitti · {duration} · {kwh} kWh' : '{name} finished · {duration} · {kwh} kWh';   // cycle.py DEFAULT_MSG
     h += '<div class="engrid g1"><div class="fld"><label>' + t('nMsg') + '</label><input class="inp" spellcheck="false" maxlength="200" data-cyd="msg" value="' + esc(n.msg) + '" placeholder="' + esc(ph) + '"><div class="hint">' + t('nMsgT', { ex: L === 'tr' ? nm + ' bitti · 52 dk · 0,79 kWh' : nm + ' finished · 52 min · 0.79 kWh' }) + '</div></div></div>';
@@ -294,6 +298,8 @@ function lpCyClick(A, g) {
     const tabs = A._work(), tab = tabs.filter((x) => x.id === cy.tab)[0] || tabs[0], sec = tab && ((tab.sections || []).filter((x) => x.id === cy.sec)[0] || (tab.sections || [])[0]);
     if (!tab || !sec) return true;
     const tid = tab.id, sid = sec.id, ent = 'sensor.lhd_' + D.id + '_cycle';
+    // aynı bölüme ikinci kez eklenmez
+    if ((sec.entities || []).some((q) => (typeof q === 'string' ? q : q && q.entity) === ent)) { A._toast(lpCyT(L, 'cardDup', { s: sec.title || sec.id }), false); return true; }
     A._edit((T) => { const x = T.filter((y) => y.id === tid)[0], S = x && (x.sections || []).filter((z) => z.id === sid)[0]; if (S) { S.entities = S.entities || []; S.entities.push(lpCyItem(ent)); } }, lpCyT(L, 'cardAdded', { s: sec.title || sec.id }));
     return true;
   }

@@ -21,7 +21,7 @@ function card(extra) {
     lpCyTap: (c, id, hold) => log.cy.push(id + ':' + hold), lpEnValOpen: (c, id) => log.en.push(id)
   }, extra || {});
   vm.createContext(ctx);
-  vm.runInContext(pick(panel, /const LP_NOTOG = [^\n]*\n/) + pick(energy, /const lpEnIsVirt = [^\n]*\n/) + pick(energy, /const lpEnIsVal = [^\n]*\n/) +
+  vm.runInContext(pick(panel, /const LP_NOTOG = [^\n]*\n/) + pick(panel, /const lpEnKatCat = [^\n]*\n/) + pick(energy, /const lpEnIsVirt = [^\n]*\n/) + pick(energy, /const lpEnIsVal = [^\n]*\n/) +
     'class X {' + pick(panel, /\n  _own\(id, hold\) \{[\s\S]*?\n  \}\n/) + pick(panel, /\n  _act\(a, id, def, hold\) \{[\s\S]*?\n  \}\n/) + '}; this.X = X;', ctx);
   const x = new ctx.X();
   x._hass = { states: { 'sensor.lhd_bul_cycle': { state: 'done', attributes: { lhd_cycle: true } }, 'sensor.lhd_ev_power': { state: '400', attributes: {} }, 'sensor.sicaklik': { state: '21', attributes: {} } },
@@ -49,10 +49,10 @@ test('makine durumu ve enerji değeri: dokunuş ve basılı tutuş panonun pence
 
 function enval(model) {
   const log = { open: [], tab: 0, subs: [], timers: [] };
-  const ctx = { lpEnGet: () => model.m, lpEnGoTab: () => { log.tab++; }, lpEnSub: (fn) => { log.subs.push(fn); return () => { log.subs = log.subs.filter((f) => f !== fn); }; },
+  const ctx = { lpEnGet: () => model.m, lpEnGoTab: () => { log.tab++; return true; }, lpEnIsVirt: () => false, lpFire: () => {}, lpEnSub: (fn) => { log.subs.push(fn); return () => { log.subs = log.subs.filter((f) => f !== fn); }; },
     setTimeout: (fn) => { log.timers.push(fn); return 1; } };
   vm.createContext(ctx);
-  vm.runInContext(pick(panel, /function lpEnValView\(id\) \{[^\n]*\n/) + pick(panel, /function lpEnValOpen\(card, id\) \{[\s\S]*?\n\}\n/) + 'this.V = lpEnValView; this.O = lpEnValOpen;', ctx);
+  vm.runInContext(pick(panel, /const lpEnKatCat = [^\n]*\n/) + pick(panel, /function lpEnValView\(id\) \{[^\n]*\n/) + pick(panel, /function lpEnValOpen\(card, id\) \{[\s\S]*?\n\}\n/) + 'this.V = lpEnValView; this.O = lpEnValOpen;', ctx);
   const c = { _hass: {}, _lang: 'tr', _enOpen: (v) => log.open.push(JSON.stringify(v)) };
   return { ctx: ctx, c: c, log: log };
 }
@@ -66,7 +66,7 @@ test('enerji değeri: anlık güç cihaz listesini, tüketim ve tutar Analiz pen
   assert.strictEqual(E.log.tab, 0);
 });
 
-test('enerji verisi henüz yoksa gelince açılır; 1,5 sn içinde gelmezse Enerji sekmesine gidilir, iki kez açılmaz', () => {
+test('enerji verisi henüz yoksa gelince açılır; süre dolunca (8 sn) Enerji sekmesine gidilir, iki kez açılmaz', () => {
   const M = { m: null }, E = enval(M);
   E.ctx.O(E.c, 'sensor.lhd_ev_energy');
   assert.deepStrictEqual(E.log.open, []); assert.strictEqual(E.log.subs.length, 1);
@@ -102,7 +102,7 @@ test('Sade stilde Halo görünümlü değer tam genişlikte sade satır olur; ö
 });
 
 test('Halo kartının üstündeki katman: makine durumu ve enerji değerinde hep var; sade görünümlerde makinenin adı', () => {
-  assert.ok(/own = !!it && !it\.card && !!it\.entity && \(lpCyIs\(h\.states\[it\.entity\]\) \|\| lpEnIsVal\(it\.entity\)\)/.test(panel));
+  assert.ok(/own = !!it && !it\.card && !!it\.entity && \(lpCyIs\(h\.states\[it\.entity\]\) \|\| lpEnIsVal\(it\.entity\) \|\| !!lpEnKatCat\(it\.entity\)\)/.test(panel));
   assert.ok(/if \(!it \|\| \(!it\.tap && !it\.hold && !own\)\) return;/.test(panel));
   assert.ok(/lpPress\(ov, \(\) => this\._act\(it\.tap, id, 'more-info'\), \(\) => this\._act\(it\.hold, id, 'more-info', true\)\)/.test(panel));
   assert.strictEqual((panel.match(/\(a\.lhd_cycle === true && a\.device_name\) \|\| a\.friendly_name/g) || []).length, 2);

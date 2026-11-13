@@ -14,12 +14,16 @@ shared with other small loads or a machine with a high standby works without tun
            another load on the same plug delays the end by at most end_min, and cannot keep a cycle alive for ever.
   tail     (dishwasher) after the end the machine may still dry at 2-5 W: it stays "running" until the 5-minute mean is
            back at the baseline (+ tail_w), for at most tail_min. A machine that dries at the baseline just ends.
+           Another small load that came on meanwhile (a lamp on the same plug) keeps the plug above the baseline: the
+           tail also ends when the plug has stepped down by tail_w from the level it held while drying (3 minutes
+           below the 20th percentile of the drying's 1-minute means).
   short    a cycle that used less than min_kwh above the baseline was not a cycle: back to idle without "done".
   max_h    a cycle longer than this ends anyway and the baseline is learned again (a new load stays on the plug).
   spikes   an isolated reading of 400 W or more above the baseline, shorter than 90 s, with low readings on both sides is
            a false reading: it counts as the reading before it (energy, means).
-  gaps     unavailable / unknown: nothing is decided, the state is kept. When readings come back the windows start again
-           (the end needs end_min of new readings), the energy of the gap is not counted.
+  gaps     unavailable / unknown: nothing is decided, the state is kept. A gap of up to 2 minutes is bridged (the
+           windows go on, the energy of the gap is not counted). After a longer one the windows start again (the end
+           needs end_min of new readings); a cycle whose readings never come back still ends after max_h.
   baseline the 20th percentile of the last 4 hours of quiet idle minutes (minutes without a reading above
            baseline + start_w); seeded from the recorder's history when tracking is switched on.
 
@@ -57,7 +61,11 @@ SPIKE_W = 400.0        # a false reading is at least this far above the baseline
 SPIKE_S = 90.0         # ... and shorter than this, with low readings before and after
 BACK_LOW_S = 60.0      # the start is dated back over activity; a quiet stretch this long stops it
 BACK_MAX_S = 20 * 60.0
-KEEP_S = 25 * 60.0     # readings kept in memory (the longest window + the date-back)
+KEEP_S = 25 * 60.0     # readings kept in memory (the date-back); longer for a longer end_min (Detector._keep)
+GAP_S = 120.0          # a gap (unavailable) up to this long is bridged: the windows go on
+TAIL_DROP_MIN = 3      # the tail's step down (another small load on the plug): this many 1-minute means below ...
+TAIL_OLD_MIN = 5       # ... the level of at least this many minutes before them ...
+TAIL_OLD_S = 20 * 60.0   # ... of the last 20 minutes
 BASE_RING = 240        # quiet idle minutes kept for the baseline (4 hours)
 BASE_MIN = 15          # the baseline is learned once this many quiet minutes are known
 BASE_Q = 0.2
@@ -151,6 +159,8 @@ class Detector:
         self.known: float | None = None   # readings known without a gap since
         self.acc_t: float | None = None   # energy and minute buckets counted up to here
         self.bucket: list | None = None   # [minute, W·s, s, max W]
+        self.gap_t: float | None = None   # a gap began here and may still be bridged (GAP_S)
+        self.drop_t = 0.0                 # the tail's step down was last looked for
 
     # ---- helpers ----
     @property
@@ -266,15 +276,19 @@ class Detector:
     # ---- input ----
     def feed(self, t: float, w: float | None) -> list:
         if w is None or not math.isfinite(w):
-            if self.known is not None:
+            if self.known is not None and self.gap_t is None:
                 self._advance(t)   # the last reading before the gap is counted up to it
-                self._close_bucket()
-                self.known = None
-                self.acc_t = None
-                self.segs.clear()
+                self.gap_t = t     # a short gap is bridged: the windows are dropped only after GAP_S (tick, feed)
                 self.rt["gaps"] = self.rt.get("gaps", 0) + (1 if self.rt["state"] == "running" else 0)
             return []
         w = max(0.0, float(w))
+        if self.gap_t is not None:
+            if t - self.gap_t > GAP_S:
+                self._gap_reset()
+            else:   # bridged: the last reading holds over the gap in the windows, its energy is not counted
+                self.gap_t = None
+                if self.acc_t is not None:
+                    self.acc_t = max(self.acc_t, t)
         if self.known is None:
             self.known = t
             self.acc_t = t
@@ -292,12 +306,33 @@ class Detector:
         self._count(max(self.acc_t, last[0]), t, last[2])
         self.acc_t = max(self.acc_t, t)
         self.segs.append([t, w, w])
-        while len(self.segs) > 2 and self.segs[1][0] < t - KEEP_S:
+        keep = self._keep()
+        while len(self.segs) > 2 and self.segs[1][0] < t - keep:
             self.segs.popleft()
         return self._eval(t)
 
+    def _keep(self) -> float:
+        """Seconds of readings kept: the longest window (an end_min above 25 minutes needs all of its readings)."""
+        return max(KEEP_S, self.p["end_min"] * 60 + 300, self.p["start_min"] * 60 + BACK_MAX_S)
+
+    def _gap_reset(self) -> None:
+        """A gap longer than GAP_S: the windows start again with the next reading."""
+        self._close_bucket()
+        self.known = None
+        self.acc_t = None
+        self.segs.clear()
+        self.gap_t = None
+
     def tick(self, t: float) -> list:
+        if self.gap_t is not None:
+            if t - self.gap_t <= GAP_S:
+                return []   # nothing is decided in a gap
+            self._gap_reset()
         if self.known is None:
+            # no readings (the plug is gone): a cycle still ends after max_h, at its last known activity
+            r = self.rt
+            if r["state"] == "running" and t - _nz(r.get("start"), t) >= self.p["max_h"] * 3600:
+                return self._finish(t, _nz(r.get("hi_t"), t), "max")
             return []
         self._advance(t)
         return self._eval(t)
@@ -356,7 +391,8 @@ class Detector:
                 was_done = r["state"] == "done"
                 wh, wh_all, cost = self._integrate(st, self.acc_t if self.acc_t is not None else t)
                 r.update(state="running", phase="main", start=st, wh=wh, wh_all=wh_all, cost=cost, hi_t=t, tail_since=None,
-                         main_end=None, detected=None, finished=None, notified=None, reminded=None, gaps=0, spikes=0)
+                         main_end=None, detected=None, finished=None, notified=None, reminded=None, gaps=0, spikes=0,
+                         blind=None)
                 if was_done:
                     ev.append(("clear", {"reason": "next"}))
                 ev.append(("start", {"start": st}))
@@ -388,19 +424,29 @@ class Detector:
                 ev.append(("resume", {}))
                 return ev
             tw = b + p["tail_w"]
+            main_end = _nz(r.get("main_end"), st)
             if t - max(self.known, _nz(r.get("tail_since"), t) - TAIL_WIN_S) >= TAIL_WIN_S:
                 m, sec = self.mean(t - TAIL_WIN_S, t)
-                if m is not None and sec >= TAIL_WIN_S * 0.5 and m < tw:
-                    fin = max(_nz(r.get("main_end"), st), self._last_active(t, tw, TAIL_WIN_S, floor, 60.0))
-                    return self._finish(t, fin, "tail")
+                if m is not None and sec >= TAIL_WIN_S * 0.5:
+                    thr = tw if m < tw else self._tail_drop(t, floor)
+                    if thr is not None:
+                        la = self._last_active(t, thr, TAIL_WIN_S, floor, 60.0)
+                        if r.get("blind") and la <= max(floor, t - TAIL_WIN_S):
+                            la = main_end   # nothing seen active since the readings came back
+                        return self._finish(t, max(main_end, la), "tail" if m < tw else "tail_drop")
             if t - _nz(r.get("tail_since"), t) >= p["tail_min"] * 60:
-                return self._finish(t, t, "tail_max")
+                return self._finish(t, main_end, "tail_max")   # the level never came down: the drying cannot be told
             return ev
         win = p["end_min"] * 60
         if t - floor >= win:
             m, _ = self.mean(t - win, t)
             if m is not None and m < b + p["end_w"]:
                 fin = self._last_active(t, b + p["end_w"], win, floor)
+                if self.known > st and fin <= max(floor, t - win) and isinstance(r.get("hi_t"), (int, float)) and r["hi_t"] < self.known:
+                    # the readings were gone for a while (a restart) and nothing was active since they came back: the
+                    # machine stopped at some time in the gap. Its last known activity, not the time the readings returned
+                    fin = max(st, r["hi_t"])
+                    r["blind"] = True
                 if p.get("tail"):
                     r.update(phase="tail", tail_since=t, main_end=fin)
                     ev.append(("tail", {"main_end": fin}))
@@ -408,6 +454,34 @@ class Detector:
                     return ev
                 return self._finish(t, fin, "end")
         return ev
+
+    def _tail_drop(self, t: float, floor: float) -> float | None:
+        """The tail with another small load on the plug (never back at the baseline): the level the plug held while
+        the machine dried (the 20th percentile of its 1-minute means since the wash ended: a burst of another load
+        only raises some minutes) and each of the last TAIL_DROP_MIN minutes tail_w below it. Returns the threshold
+        between the two levels, None while there is no such step. Looked at every 20 seconds."""
+        if t - self.drop_t < 20:
+            return None
+        self.drop_t = t
+        x = t
+        now: list = []
+        for _ in range(TAIL_DROP_MIN):
+            m, sec = self.mean(x - 60, x)
+            if m is None or sec < 40 or x - 60 < floor:
+                return None
+            now.append(m)
+            x -= 60
+        lo = max(floor, _nz(self.rt.get("main_end"), floor), t - TAIL_OLD_S)
+        old: list = []
+        while x - 60 >= lo:
+            m, sec = self.mean(x - 60, x)
+            if m is not None and sec >= 40:
+                old.append(m)
+            x -= 60
+        if len(old) < TAIL_OLD_MIN:
+            return None
+        thr = (percentile(old, BASE_Q) or 0.0) - self.p["tail_w"]
+        return thr if max(now) < thr else None
 
     def _finish(self, t: float, fin: float, why: str) -> list:
         r, p = self.rt, self.p
@@ -422,8 +496,11 @@ class Detector:
             return [("short", info)]
         n = int(r.get("count") or 0) + 1
         avg = r.get("avg_min")
-        r.update(state="done", finished=fin, detected=t, last=info, count=n,
-                 avg_min=round(info["min"] if not isinstance(avg, (int, float)) else (avg * min(n - 1, 9) + info["min"]) / min(n, 10), 1))
+        if r.get("blind") and isinstance(avg, (int, float)):
+            new_avg = avg   # the end was not seen (readings gone): this length does not go into the average
+        else:
+            new_avg = round(info["min"] if not isinstance(avg, (int, float)) else (avg * min(n - 1, 9) + info["min"]) / min(n, 10), 1)
+        r.update(state="done", finished=fin, detected=t, last=info, count=n, avg_min=new_avg)
         return [("done", info)]
 
     def clear(self, reason: str) -> list:
@@ -439,7 +516,7 @@ class Detector:
         """Elapsed minutes and kWh so far (the last reading counted up to now)."""
         r = self.rt
         wh = r.get("wh", 0.0)
-        if r["state"] == "running" and self.segs and self.acc_t is not None and t > self.acc_t:
+        if r["state"] == "running" and self.segs and self.acc_t is not None and t > self.acc_t and self.gap_t is None:
             wh += max(0.0, self.segs[-1][2] - self.base) * (t - self.acc_t) / 3600
         st = r.get("start")
         return {"elapsed": round((t - st) / 60, 1) if r["state"] == "running" and st else None, "kwh": round(wh / 1000, 3)}

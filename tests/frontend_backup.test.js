@@ -189,3 +189,41 @@ test('sunucu: restore komutu kayıtlı, ws_set ile aynı denetim (_check)', () =
 test('telefonda pencere kaydırılmış sayfada da ekranda (.narrowv > .ov sabit)', () => {
   assert.ok(/\.narrowv > \.ov \{ position: fixed; \}/.test(css));
 });
+
+// gerçek STORE (src/store.js) + gerçek _bkWrite, ws_get / ws_set gibi davranan sahte sunucuyla (sayaçlar, conflict; değişiklik
+// mesajı komutun cevabından önce gider). Anahtar anahtar yolda biri çakışırsa STORE.set hemen güncel veriyi ister: o cevap geri
+// almadan önceki yarım hâldir. Geri almadan sonra bir kez daha okunmazsa ekranda yedeğin sekmeleri kalır, sunucuda eskileri.
+test('anahtar anahtar yol, arada başka ekran kaydetti (conflict): geri almadan sonra ekran sunucudaki hâlde', async () => {
+  const home = Object.assign({}, clone(FRESH), { tabs: [{ id: 'ev', name: 'Ev', sections: [] }], settings: { a: 1 }, estimates: { modem: { name: 'Modem', kind: 'fixed', w: 9 } }, feed: {} });
+  const SV = { data: clone(home), revs: {}, subs: [] };
+  const view = () => Object.assign(clone(SV.data), { revs: Object.assign({}, SV.revs) });
+  let other = true;
+  const conn = {
+    sendMessagePromise: (m) => new Promise((res, rej) => setTimeout(() => {
+      const ty = m.type.split('/')[1];
+      if (ty === 'get') return res(view());
+      if (ty === 'info') return res({ version: '0.36.0b4' });
+      if (ty !== 'set') return rej({ code: 'unknown_command', message: 'Unknown command.' });   // restore: eski entegrasyon
+      if (m.key === 'estimates' && other) { other = false; SV.data.estimates = { baska: { name: 'X', kind: 'fixed', w: 1 } }; SV.revs.estimates = (SV.revs.estimates || 0) + 1; }   // öteki ekranın kaydı (mesajı henüz yolda)
+      if ('rev' in m && m.rev !== (SV.revs[m.key] || 0)) return rej({ code: 'conflict', message: m.key + ' was changed elsewhere' });
+      SV.data[m.key] = clone(m.value); SV.revs[m.key] = (SV.revs[m.key] || 0) + 1;
+      SV.subs.forEach((cb) => cb({ __part: { [m.key]: clone(m.value) }, revs: Object.assign({}, SV.revs) }));
+      res(view());
+    }, 1)),
+    subscribeMessage: (cb) => { SV.subs.push(cb); return Promise.resolve(() => {}); }
+  };
+  const ctx = { window: {}, console, setTimeout, setInterval: () => 0, lhdClone: clone, PANEL_VERSION: '0.36.0b4', document: { body: { appendChild() {} }, createElement: () => ({ setAttribute() {}, appendChild() {}, addEventListener() {}, remove() {} }) } };
+  vm.createContext(ctx);
+  vm.runInContext(safe + '\n' + store.split('// Panonun ayarları')[0] + '\n' + between(adm, 'const LHD_BK_KEYS', 'const LHD_REPO') + '\nthis.STORE = STORE; this.prep = lhdBkPrep;', ctx);
+  vm.runInContext('this._bkWrite = ' + method('_bkWrite') + ';', ctx);
+  await ctx.STORE.load({ connection: conn });
+  const V = ctx.prep(Object.assign({}, clone(FRESH), { tabs: [{ id: 'yedek', name: 'Yedek', sections: [] }], settings: { b: 2 }, estimates: { tv: { name: 'TV', kind: 'fixed', w: 80 } } })).V;
+  const prev = {}; KEYS.forEach((k) => { prev[k] = clone(ctx.STORE.data[k]); });
+  let err = null; try { await ctx._bkWrite(V, KEYS, prev, false); } catch (e) { err = e; }
+  await new Promise((r) => setTimeout(r, 30));
+  assert.strictEqual(err && err.code, 'conflict');
+  assert.strictEqual(SV.data.tabs[0].id, 'ev', 'sunucuda geri alındı');
+  assert.deepStrictEqual(Object.keys(SV.data.estimates), ['baska'], 'öteki ekranın kaydı duruyor');
+  KEYS.forEach((k) => assert.deepStrictEqual(clone(ctx.STORE.data[k]), SV.data[k], k + ': ekran = sunucu'));
+  KEYS.forEach((k) => assert.strictEqual(ctx.STORE.revs[k] || 0, SV.revs[k] || 0, k + ' sayacı'));
+});

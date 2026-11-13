@@ -110,7 +110,9 @@ function lpErData(h, M, P) {
         D.ne = X.filter((x) => x.t >= from - 12 * LP_EX_H && x.t < to - 12 * LP_EX_H && x.k > 0).length;   // kaydı olan gün (yıl sonu tahmini): sayaç yeniyse gece tabanının gün sayısı değil
         if (!yr) {
           const pm = new Date(y, m - 1, 1).getTime(), pe = done ? from : Math.min(from, pm + Date.now() - from);
-          if (D.prevTot !== null) { const v = sumIn(pm, pe); if (v !== null) D.prevTot = v; }
+          // önceki ay sayaçtan: kategorilerin kaydı o ayı tutmasa da (cihazlar sonradan eklendi) sayacın kaydı ayın başından varsa karşılaştırılır
+          const v = sumIn(pm, pe), f0 = X.filter((x) => x.t >= pm - 12 * LP_EX_H && x.k > 0)[0];
+          D.prevTot = v !== null && f0 && f0.t < pm + 1.5 * LP_EX_D ? v : null;
           D.lyTot = sumIn(new Date(y - 1, m, 1).getTime(), new Date(y - 1, m + 1, 1).getTime());
         }
       }

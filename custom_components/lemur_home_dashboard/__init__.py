@@ -513,10 +513,7 @@ def ws_set(hass, connection, msg):
             else:
                 value["season"] = cur
     # solar production or the sync switch changed: sensors and energy settings follow
-    def _en(st: dict) -> tuple:
-        e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
-        return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"), json.dumps(e.get("meter"), sort_keys=True))
-    energy_changed = key == "settings" and _en(data.data.get("settings") or {}) != _en(value)
+    energy_changed = key == "settings" and _energy_key(data.data.get("settings") or {}) != _energy_key(value)
     data.data[key] = value
     if key == "walls":
         data.twins.listen()
@@ -547,8 +544,9 @@ def _check(key: str, value: Any) -> Any:
 
 
 def _energy_key(st: Any) -> tuple:
+    """What of the settings the sensors and the energy settings follow (ws_set, ws_restore): solar, the sync switch, the home meter."""
     e = st.get("energy") if isinstance(st, dict) and isinstance(st.get("energy"), dict) else {}
-    return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"))
+    return (json.dumps(e.get("solar"), sort_keys=True), e.get("sync"), json.dumps(e.get("meter"), sort_keys=True))
 
 
 @websocket_api.websocket_command(

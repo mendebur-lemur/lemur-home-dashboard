@@ -151,8 +151,14 @@ function lpEnMeterUnt() {
 //  - sayacın kaydından önceki günler cihazların toplamı; sayaç cihazlardan sonra takıldıysa yarım kalan ilk günü de
 //  - sayacın o gün eksiye düştüğü (sıfırlanan "total" sensör) gün cihazların toplamı
 //  - sayacın kaydı olmayan gün (okunmadı) cihazların toplamı; sayaç dönünce kapalıyken saydığını ilk saatinde topluca yazar
-//    (Home Assistant öyle kaydeder): o günlerin cihaz toplamı bu fazlalıktan düşülür, iki kez sayılmaz
-function lpEnHomeIds(M) { if (lpEnSunOn() || lpEnBatOn()) return null; const q = lpEnYearIds(M); return q.src === 'grid' && q.ids.length ? q.ids : null; }
+//    (Home Assistant öyle kaydeder): o günlerin cihaz toplamı bu fazlalıktan düşülür, iki kez sayılmaz. Yalnız döndüğü ilk günden
+//    düşülür: fazlalık gelmediyse (sayaç kapalıyken saymadı, değişti ya da okuma korumaya takıldı) sonraki günler eksilmez
+// Home Assistant'ın Enerji ayarında güneş ya da batarya kaynağı varsa (panoda açılmamış olsa da) şebeke sayacı evin tüketimi değildir
+function lpEnHomeIds(M) {
+  if (lpEnSunOn() || lpEnBatOn()) return null;
+  const P = LP_EN.prefs; if (((P && P.energy_sources) || []).some((x) => x && (x.type === 'solar' || x.type === 'battery'))) return null;
+  const q = lpEnYearIds(M); return q.src === 'grid' && q.ids.length ? q.ids : null;
+}
 // dev, met: { Home Assistant'ın gün başı (ms): kWh }; from: sorgunun başı. Dönen: [{ t, k (evin), d (cihazların), m (sayaçtan mı) }]
 function lpEnMix(dev, met, from) {
   const all = {}; Object.keys(dev || {}).forEach((k) => { all[k] = 1; }); Object.keys(met || {}).forEach((k) => { all[k] = 1; });
@@ -161,9 +167,11 @@ function lpEnMix(dev, met, from) {
   let debt = 0;
   return L.map((t) => {
     const d = dev[t] || 0, m = met[t];
-    if (t < mF || (late && t === mF) || (isFinite(m) && m < 0)) return { t: t, k: d, d: d, m: false };
+    if (t < mF || (late && t === mF)) return { t: t, k: d, d: d, m: false };
+    if (isFinite(m) && m < 0) { debt = 0; return { t: t, k: d, d: d, m: false }; }   // sıfırlanan / değişen sayaç: kapalıyken saydığı artık gelmez
     if (!isFinite(m)) { debt += d; return { t: t, k: d, d: d, m: false }; }
-    const take = Math.min(debt, Math.max(0, m - d)); debt -= take;
+    // borcu yalnız sayacın döndüğü ilk gün öder (topluca yazdığı o gündedir); ödenmeyen kısım sonraki günlerden düşülmez
+    const take = Math.min(debt, Math.max(0, m - d)); debt = 0;
     return { t: t, k: m - take, d: d, m: true };
   });
 }

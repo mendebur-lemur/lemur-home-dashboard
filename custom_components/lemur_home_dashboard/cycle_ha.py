@@ -7,6 +7,8 @@ Per tracked device (estimates[id].cycle.on, a measured device with its own power
                              finish, or the auto-clear after clear_h hours
 Both sit on a device of their own (the appliance, under this integration).
 The trackers' state (data["cycles"]) is saved: a restart in the middle of a cycle goes on with its start and energy.
+Saved at once on a decision (start, done, cleared ...), every SAVE_S while a cycle runs, when Home Assistant stops and
+on unload; never for the readings of an idle plug (the whole store was written every 30 seconds).
 A notification (notify entities: notify.send_message; legacy notify.<name> services) is sent once per cycle; a failing
 target is logged and never stops the tracking.
 """
@@ -19,6 +21,7 @@ from typing import Any
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
+from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
@@ -33,6 +36,7 @@ from .const import DOMAIN, SIGNAL_EST
 _LOGGER = logging.getLogger(__name__)
 SIGNAL_CYCLE = f"{DOMAIN}_cycle"
 TICK_S = 30
+SAVE_S = 300             # a running cycle's energy is saved this often (a restart loses at most this much)
 HISTORY_DAYS = 30        # "suggest from history" reads this far back (the recorder keeps 10 days by default)
 SEED_HOURS = 24          # the first baseline
 KIND_ICON = {"dishwasher": "mdi:dishwasher", "washer": "mdi:washing-machine", "dryer": "mdi:tumble-dryer", "washer_dryer": "mdi:washing-machine", "other": "mdi:stove"}
@@ -114,6 +118,18 @@ class Tracker:
             fin = self.det.rt.get("finished")
             if self.det.state == "done" and (old is None or old.state != "on") and (not isinstance(fin, (int, float)) or t >= fin):
                 self.handle(self.det.clear("door"))
+            elif old is None or old.state != "on":
+                self._early("door")
+
+    def _early(self, reason: str) -> bool:
+        """The door opened (or Emptied was pressed) while the machine still dries (the tail): it counts as emptied once
+        "done" arrives. Not if the machine goes on with the wash (resume)."""
+        r = self.det.rt
+        if r["state"] != "running" or r.get("phase") != "tail":
+            return False
+        r["emptied"] = reason
+        self.mgr.dirty(self.eid, True)
+        return True
 
     def tick(self, t: float) -> None:
         self.handle(self.det.tick(t))
@@ -137,19 +153,25 @@ class Tracker:
     def press(self) -> bool:
         ev = self.det.clear("button")
         self.handle(ev)
-        return bool(ev)
+        return bool(ev) or self._early("button")
 
     def handle(self, events: list) -> None:
         if not events:
             return
         for kind, info in events:
             _LOGGER.debug("Cycle %s: %s %s", self.eid, kind, info)
+            r = self.det.rt
+            if kind in ("start", "resume", "short"):
+                r.pop("emptied", None)
             if kind == "done":
                 n = self.cfg.get("notify") if isinstance(self.cfg.get("notify"), dict) else {}
-                r = self.det.rt
                 if n.get("on") and n.get("targets") and r.get("notified") != r.get("start"):
                     r["notified"] = r.get("start")   # once per cycle, before sending (a restart does not send it again)
                     self._notify()
+                early = r.pop("emptied", None)
+                if early:   # emptied while it dried: no "done" left to clear, no reminder
+                    _LOGGER.debug("Cycle %s: clear %s (while drying)", self.eid, early)
+                    self.det.clear(str(early))
         self.mgr.dirty(self.eid, True)
         async_dispatcher_send(self.hass, SIGNAL_CYCLE, self.eid)
 
@@ -166,7 +188,9 @@ class CycleManager:
         self.data = data
         self.trackers: dict[str, Tracker] = {}
         self._unsubs: list = []
-        self._save_soon = False
+        self._dirty = False      # readings changed the trackers' state since the last save
+        self._saved = time.monotonic()
+        self._stop_unsub = None
         self.sent: list = []   # (target, message, ok) of the last sends (tests, the test button)
 
     def runtime(self, eid: str) -> dict:
@@ -182,11 +206,28 @@ class CycleManager:
         self.sync()
         self._unsubs.append(async_dispatcher_connect(self.hass, SIGNAL_EST, self.sync))
         self._unsubs.append(async_track_time_interval(self.hass, self._tick, timedelta(seconds=TICK_S)))
+        self._stop_unsub = self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, self._on_stop)
+
+    @callback
+    def _on_stop(self, _event=None) -> None:
+        """Home Assistant stops: what the readings changed since the last save (energy so far, the baseline) is written
+        with the store's final write."""
+        self._stop_unsub = None
+        if self._dirty:
+            self._save()
+
+    def _save(self) -> None:
+        self._dirty = False
+        self._saved = time.monotonic()
+        self.data.store.async_delay_save(lambda: self.data.data, 1.0)
 
     def stop(self) -> None:
         for u in self._unsubs:
             u()
         self._unsubs = []
+        if self._stop_unsub is not None:
+            self._stop_unsub()
+            self._stop_unsub = None
         for tr in self.trackers.values():
             tr.stop()
 
@@ -242,16 +283,16 @@ class CycleManager:
                 tr.tick(t)
             except Exception as err:  # noqa: BLE001 - one broken tracker must not stop the others
                 _LOGGER.warning("Cycle %s: %s", tr.eid, err)
-        if self._save_soon:
-            self._save_soon = False
-            self.data.store.async_delay_save(lambda: self.data.data, 1.0)
+        if self._dirty and time.monotonic() - self._saved >= SAVE_S and any(x.det.state == "running" for x in self.trackers.values()):
+            self._save()
 
     def dirty(self, eid: str, now: bool) -> None:
-        """The tracker's state changed: saved within a second on a decision, otherwise with the next tick."""
+        """The tracker's state changed: saved within a second on a decision. A reading only marks it: saved every
+        SAVE_S while a cycle runs, when Home Assistant stops and on unload; an idle plug writes nothing."""
         if now:
-            self.data.store.async_delay_save(lambda: self.data.data, 1.0)
+            self._save()
         else:
-            self._save_soon = True
+            self._dirty = True
 
     def press(self, eid: str) -> bool:
         tr = self.trackers.get(eid)

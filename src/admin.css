@@ -821,6 +821,7 @@ div.ensr:hover { background: var(--s1); }
 .endchips .chip i { font-style: normal; color: var(--mu); margin-left: 2px; }
 .endchips .chip.on { background: var(--acs); border-color: var(--ac); color: var(--tx); }
 .endchips .chip.warn:not(.on) { border-color: rgba(242,169,59,.5); color: var(--ac); }
+.endchips .chip.gone.on { background: transparent; border: 1px dashed rgba(242,169,59,.6); }
 .endg { display: flex; flex-direction: column; gap: 6px; }
 .endgh { display: flex; align-items: baseline; gap: 10px; padding: 0 4px; }
 .endgh b { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); }

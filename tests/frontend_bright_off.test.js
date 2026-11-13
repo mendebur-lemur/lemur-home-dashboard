@@ -14,9 +14,9 @@ const method = (name) => { const a = src.indexOf('\n  ' + name + '('); assert.ok
 function card(states, tiles, area, opt) {
   opt = opt || {};
   const store = {};
-  const ctx = { localStorage: { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); } }, lpBrightCfg: () => ({ allOff: opt.allOff === true }) };
+  const ctx = { localStorage: { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); } }, lpBrightCfg: () => ({ allOff: opt.allOff === true }), setTimeout: () => 0, clearTimeout: () => {} };   // küçülen listenin gecikmeli yazımı: frontend_bright_mem.test.js
   vm.createContext(ctx);
-  const M = ['_bbIds', '_bbKey', '_bbMemGet', '_bbMemSet', '_bbTargets'];
+  const M = ['_bbIds', '_bbKey', '_bbMemGet', '_bbMemSet', '_bbMemPut', '_bbTargets'];
   vm.runInContext(fn('function lpBarCan(') + M.map((m) => 'this.' + m + ' = ' + method(m) + ';').join('\n'), ctx);
   const S = {}; Object.keys(states).forEach((id) => { S[id] = { entity_id: id, state: states[id][0], attributes: { supported_color_modes: states[id][1] } }; });
   const ents = {}; Object.keys(states).forEach((id) => { ents[id] = { area_id: states[id][2] || null }; });

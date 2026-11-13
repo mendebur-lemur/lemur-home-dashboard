@@ -127,3 +127,33 @@ async def test_ws_set_messages_unchanged(hass, hass_ws_client, setup_lhd):
     assert r["error"]["message"] == "tabs: wrong type or too large"
     r = await _call(ws, ids, type=f"{DOMAIN}/set", key="pets", value={"a": {"feeder": {"service": "homeassistant.stop"}}})
     assert r["error"]["message"].startswith("pets: ")
+
+
+async def test_restore_follows_the_home_meter(hass, hass_ws_client, setup_lhd):
+    """A file without energy devices (an old backup) whose settings pick, change or drop the home meter: the sensors follow
+    at once, as after ws_set (the energy key of both includes the meter)."""
+    ws, ids = await _ws(hass, hass_ws_client), _Ids()
+    kwh = {"unit_of_measurement": "kWh"}
+    hass.states.async_set("sensor.a_kwh", "1000.0", kwh)
+    hass.states.async_set("sensor.b_kwh", "500.0", kwh)
+
+    async def restore(settings):
+        r = await _call(ws, ids, type=f"{DOMAIN}/restore", data={"tabs": [], "settings": settings})
+        assert r["success"], r
+        for _ in range(3):
+            await hass.async_block_till_done()
+
+    async def feed(ent, val):
+        hass.states.async_set(ent, val, kwh)
+        await hass.async_block_till_done()
+        return float(hass.states.get("sensor.lhd_ev_energy").state)
+
+    assert hass.states.get("sensor.lhd_ev_energy") is None
+    await restore({"energy": {"meter": {"energy": "sensor.a_kwh"}}})
+    assert hass.states.get("sensor.lhd_ev_energy") is not None   # created without a restart
+    assert await feed("sensor.a_kwh", "1001.0") == 1.0
+    await restore({"energy": {"meter": {"energy": "sensor.b_kwh"}}})
+    assert await feed("sensor.b_kwh", "502.0") == 3.0            # the new meter is followed
+    assert await feed("sensor.a_kwh", "1005.0") == 3.0           # the old one no longer
+    from custom_components.lemur_home_dashboard import _energy_key
+    assert _energy_key({"energy": {"meter": {"energy": "sensor.a_kwh"}}}) != _energy_key({"energy": {}})

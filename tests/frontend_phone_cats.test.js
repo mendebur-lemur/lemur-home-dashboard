@@ -155,5 +155,5 @@ test('önizleme: seçili sekmenin olmayan öğeler soluk, kendi öğeleri değil
 });
 
 test('panel kodu: telefon ve önizleme kategori sayfasını aynı işlevle kurar', () => {
-  assert.match(PC, /this\._cat = ph && pc\.nav === 'cats' \? lpCatView\(tabs, tab\) : \(pve \? lpCatView\(tabs, tab, this\._pvState\(tab\)\) : null\);/);
+  assert.match(PC, /this\._cat = ph && pc\.nav === 'cats' \? lpCatView\(tabs, tab, null, S\) : \(pve \? lpCatView\(tabs, tab, this\._pvState\(tab\), S\) : null\);/);
 });

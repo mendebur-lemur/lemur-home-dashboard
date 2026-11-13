@@ -84,7 +84,7 @@ const ADM = {
     ek_light: 'Işık', ek_lightT: 'Bekleme ve en çok W, parlaklıkla', ek_onoff: 'Aç / kapa', ek_onoffT: 'Kapalıyken ve açıkken W', ek_fixed: 'Sabit', ek_fixedT: 'Hep aynı W', ek_year: 'Yıllık tüketim', ek_yearT: 'Etiketteki kWh/yıl', ek_cycle: 'Çevrim', ek_cycleT: 'kWh/100 çevrim, haftada kaç kez',
     enEIdle: 'Kapalıyken (bekleme) W', enEMax: '%100 parlaklıkta W', enEOff: 'Kapalıyken W', enEOn: 'Açıkken W', enEW: 'Güç (W)', enEYear: 'Etiketteki yıllık tüketim (kWh)', enEK100: 'Etiketteki tüketim (kWh/100 çevrim)', enEWeek: 'Haftada kaç çevrim', enEEnt: 'Durumunu okuyan cihaz', enECat: 'Kategori', enECatNone: 'Kendi kategorisi',
     enENow: 'Şu an', enEAvg: 'Ortalama', enEDay: 'günde {k} kWh, yılda {y} kWh', enEBri: '%{p} parlaklıkta', enEYearT: 'Kompresörlü cihazlar anlık 0 ile 120 W arasında gider gelir; ortalama yıllık toplamda doğru çıkar.', enEEnts: 'Home Assistant\'ta oluşur: {p} ve {e}', enESave: 'Kaydet', enEDel: 'Sil',
-    enESaved: 'Kaydedildi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enEDirty: 'Yazdıkların kaydedilmedi. Kapatmak için yeniden dokun ya da Kaydet\'e bas.', enENaN: 'Buraya sayı yaz', enENeg: 'Değer eksi olamaz', enEBig: 'Değer çok büyük (en çok {n})', enEOnOff: 'Açıkken çektiği güç kapalıyken çektiğinden küçük olamaz', enEMaxMin: 'En yüksek güç, en düşük ve bekleme gücünden küçük olamaz', enEDup: 'Bu adda bir cihaz zaten var', enBLong: 'Fatura dönemi en çok 100 gün olabilir; tarihleri kontrol et', enBUpd: 'Aynı dönemin faturası güncellendi', enTierOrder: 'Düşük kademe fiyatı yüksek kademeden pahalı görünüyor; kontrol et', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
+    enERefused: 'Kaydedilemedi: Home Assistant bu kaydı kabul etmedi. Değerleri kontrol edip yeniden dene.', enESaved: 'Kaydedildi', enEDeleted: 'Silindi', enEPrefErr: 'Kaydedildi ama Enerji ayarları değiştirilemedi: {e}', enENeed: 'Ad yaz', enEDirty: 'Yazdıkların kaydedilmedi. Kapatmak için yeniden dokun ya da Kaydet\'e bas.', enENaN: 'Buraya sayı yaz', enENeg: 'Değer eksi olamaz', enEBig: 'Değer çok büyük (en çok {n})', enEOnOff: 'Açıkken çektiği güç kapalıyken çektiğinden küçük olamaz', enEMaxMin: 'En yüksek güç, en düşük ve bekleme gücünden küçük olamaz', enEDup: 'Bu adda bir cihaz zaten var', enBLong: 'Fatura dönemi en çok 100 gün olabilir; tarihleri kontrol et', enBUpd: 'Aynı dönemin faturası güncellendi', enTierOrder: 'Düşük kademe fiyatı yüksek kademeden pahalı görünüyor; kontrol et', enENeedEnt: 'Durumunu okuyan cihazı seç', enEDelQ: 'Emin misin? Sil',
     enTilde: 'Tahmini değerleri ayır', enTildeT: 'Tahmini watt kartlarda "~" ile ve morla yazılır', enUntL: 'Ölçülmeyen karo', enUntLT: 'Son faturaya göre ölçülmeyen pay kategori karolarında', enBars: 'Kademe ve yıllık sınır çubukları', enBarsT: 'Halo\'nun altında, ayarlandıysa',
     en_dev: 'Cihazlar', en_cat: 'Kategoriler', en_solar: 'Güneş ve batarya', en_tips: 'İpuçları', en_imp: 'Aktar',
     enDevT: 'Panelin takip ettiği cihazlar. Güç ölçen cihazlar doğrudan eklenir; ölçmeyenler için sanal ölçüm kurulur ve Home Assistant\'ta güç ve enerji sensörü oluşur. Hepsi Enerji ayarlarına seçtiğin kategorinin içinde eklenir.',
@@ -228,7 +228,7 @@ const ADM = {
     ek_light: 'Light', ek_lightT: 'Standby and max W, by brightness', ek_onoff: 'On / off', ek_onoffT: 'W when off and when on', ek_fixed: 'Fixed', ek_fixedT: 'Always the same W', ek_year: 'Yearly usage', ek_yearT: 'The label\'s kWh/year', ek_cycle: 'Cycles', ek_cycleT: 'kWh/100 cycles, cycles per week',
     enEIdle: 'Off (standby) W', enEMax: 'At 100% brightness W', enEOff: 'Off W', enEOn: 'On W', enEW: 'Power (W)', enEYear: 'Yearly usage on the label (kWh)', enEK100: 'Usage on the label (kWh/100 cycles)', enEWeek: 'Cycles per week', enEEnt: 'Device that gives the state', enECat: 'Category', enECatNone: 'Its own category',
     enENow: 'Now', enEAvg: 'Average', enEDay: '{k} kWh a day, {y} kWh a year', enEBri: 'at {p}% brightness', enEYearT: 'Appliances with a compressor swing between 0 and 120 W; the average adds up right over a year.', enEEnts: 'Home Assistant gets: {p} and {e}', enESave: 'Save', enEDel: 'Delete',
-    enESaved: 'Saved', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enEDirty: 'What you typed is not saved. Tap again to close, or press Save.', enENaN: 'Enter a number here', enENeg: 'The value cannot be negative', enEBig: 'The value is too large (at most {n})', enEOnOff: 'Power when on cannot be lower than power when off', enEMaxMin: 'The highest power cannot be below the lowest or the standby power', enEDup: 'A device with this name already exists', enBLong: 'A billing period can be at most 100 days; check the dates', enBUpd: 'The bill for this period was updated', enTierOrder: 'The low tier price looks higher than the high tier; please check', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
+    enERefused: 'Not saved: Home Assistant refused this record. Check the values and try again.', enESaved: 'Saved', enEDeleted: 'Deleted', enEPrefErr: 'Saved, but the Energy settings could not be changed: {e}', enENeed: 'Enter a name', enEDirty: 'What you typed is not saved. Tap again to close, or press Save.', enENaN: 'Enter a number here', enENeg: 'The value cannot be negative', enEBig: 'The value is too large (at most {n})', enEOnOff: 'Power when on cannot be lower than power when off', enEMaxMin: 'The highest power cannot be below the lowest or the standby power', enEDup: 'A device with this name already exists', enBLong: 'A billing period can be at most 100 days; check the dates', enBUpd: 'The bill for this period was updated', enTierOrder: 'The low tier price looks higher than the high tier; please check', enENeedEnt: 'Pick the device that gives the state', enEDelQ: 'Sure? Delete',
     enTilde: 'Mark estimated values', enTildeT: 'Estimated watts show with "~" in purple on the cards', enUntL: 'Not measured tile', enUntLT: 'The share not measured, from the last bill, as a category tile', enBars: 'Tier and yearly limit bars', enBarsT: 'Under the Halo, when set up',
     en_dev: 'Devices', en_cat: 'Categories', en_solar: 'Solar and battery', en_tips: 'Tips', en_imp: 'Import',
     enDevT: 'The devices the dashboard tracks. Devices that measure power are added as they are; for the others a virtual measurement is set up and Home Assistant gets a power and an energy sensor. All are added to the Energy settings inside the category you pick.',
@@ -664,9 +664,11 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._modal = null; this._picked = []; this._q = ''; this._bk = null; this._im = null; this._ce = null; this._render();
   }
   // cihaz formu: yazılan bir şey varsa dışarı dokunma ya da Esc ilk seferde kapatmaz, uyarır (İptal ve × hemen kapatır)
+  // taslağın karşılaştırma özeti: geçmişten öneri, deneme bildirimi ve kart için seçilen sekme / bölüm kaydedilecek şey değil
+  _enSig(f) { return JSON.stringify(f, (k, v) => (k === 'sug' || k === 'test' || k === 'tab' || k === 'sec' ? undefined : v)); }
   _enEClose(sure) {
     const D = this._enE; if (!D) return;
-    const dirty = D.f0 !== undefined && JSON.stringify(D.f) !== D.f0;
+    const dirty = D.f0 !== undefined && this._enSig(D.f) !== this._enSig(JSON.parse(D.f0));
     if (!sure && dirty && !D.warned) { D.warned = true; this._enErr = this._t('enEDirty'); return this._render(); }
     this._enE = null; this._enErr = ''; this._render();
   }
@@ -853,8 +855,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     }
     return STORE.set(key, value).catch((e) => {
       // başka bir ekran (ikinci yönetim paneli, aktarma, tabletteki yaz / kış) bu veriyi arada değiştirdi: üstüne yazılmaz, güncel hâli gelir
-      if (e && e.code === 'conflict') { this._undo = []; this._redo = []; this._lastJson = ''; return this._toast(this._t('errConflict'), false); }
+      if (e && e.code === 'conflict') { this._undo = []; this._redo = []; this._lastJson = ''; this._toast(this._t('errConflict'), false); return false; }
       this._toast(this._t('err', { e: (e && e.message) || e }), false);
+      return false;   // geri çevrildi (bekleyen: cihaz formu açık kalır)
     });
   }
   _snap() {
@@ -1043,7 +1046,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return step(0).then(() => {
       STORE.data = Object.assign({}, STORE.data, lhdClone(V));
       const d = STORE.data; STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
-    }, (e) => back(done.length - 1).then(() => { throw e; }));
+    }, (e) => back(done.length - 1).then(() => (typeof STORE.refresh === 'function' ? STORE.refresh() : null)).then(() => { throw e; }));   // geri alınan hâl yeniden okunur (çakışmada arada okunan yarım hâl ekranda kalmasın)
   }
   async _backupApply() {
     const b = this._bk; if (!b || this._bkBusy) return;
@@ -1623,7 +1626,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const SCR = ['.app', '.akr2', '.enm', '.enddb', '.ov .db', '.dock .db', '.ins .sc', '.main', '.rooms', '.plist', '.ilist'], scrKeep = {};
     // cihaz formunda yazılmakta olan alan henüz taslağa geçmediyse (change gelmedi) yeniden çizimde silinmesin
     if (act && act.hasAttribute && act.hasAttribute('data-enf') && this._enE && act.tagName !== 'SELECT') this._enE.f[act.getAttribute('data-enf')] = act.value;
-    if (act && act.hasAttribute && (act.hasAttribute('data-cyv') || act.hasAttribute('data-cyd')) && this._enE && act.tagName !== 'SELECT') lpCyInput(this, act);
+    // eşik alanı doğrudan taslağa yazılır: lpCyInput hata yazısını siler, odak alandayken Kaydet'in yazdığı hata hiç görünmüyordu
+    if (act && act.hasAttribute && this._enE && this._enE.f.cy && act.tagName !== 'SELECT') { const cv = act.getAttribute('data-cyv'); if (cv) this._enE.f.cy.v[cv] = act.value; else if (act.hasAttribute('data-cyd')) lpCyInput(this, act); }
     SCR.forEach((q) => { const el = R.querySelector(q); if (el && (el.scrollTop || el.scrollLeft)) scrKeep[q] = [el.scrollTop, el.scrollLeft]; });
     // Ayarlar önizlemenin üstünü kapatmaz: sağdaki panelin yerinde açılır, önizleme değişiklikleri canlı gösterir
     let modal = this._modalHtml(tabs, tab, sec), dock = '';
@@ -2784,12 +2788,23 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     } else if (f.cat) e.cat = f.cat;
     const E = lhdClone(this._enEsts()), id = D.id || this._enSlug(e.name);
     E[id] = e;
+    const E0 = STORE.data && STORE.data.estimates;   // entegrasyon geri çevirirse ekrandaki veri buna döner
     this._enBusy = true; this._render();
+    let ok = true;
     try {
-      if (C !== this._enCats()) await this._commit('ecats', C);
-      await this._commit('estimates', E);
-      this._toast(this._t('enESaved'));
-    } catch (err) { this._toast(this._t('err', { e: (err && err.message) || err }), false); }
+      if (C !== this._enCats()) ok = (await this._commit('ecats', C)) !== false;
+      if (ok) ok = (await this._commit('estimates', E)) !== false;
+    } catch (err) { ok = false; this._toast(this._t('err', { e: (err && err.message) || err }), false); }
+    if (!ok) {
+      // kayıt geri çevrildi (_commit nedenini bildirdi): "Kaydedildi" denmez, form yazılanlarla açık kalır, ekrandaki veri sunucudakiyle aynı olur
+      if (STORE.data && STORE.data.estimates === E) {
+        STORE.data = Object.assign({}, STORE.data); if (E0 === undefined) delete STORE.data.estimates; else STORE.data.estimates = E0;
+        const d = STORE.data; this._lastJson = JSON.stringify(d); STORE.subs.forEach((fn) => { try { fn(d); } catch (e2) {} });
+      }
+      if (typeof STORE.refresh === 'function') { try { await STORE.refresh(); } catch (e2) {} }
+      this._enBusy = false; if (this._enE === D) this._enErr = this._t('enERefused'); return this._render();
+    }
+    this._toast(this._t('enESaved'));
     LP_EN.at = 0; LP_EN.tp = {}; lpEnEnsure(this._hass);
     this._enBusy = false; this._enDraft(id); this._render();
   }
@@ -3709,7 +3724,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         let nw;
         if (aid) {
           const fresh = buildDefaultTabs(this._hass, this._lang, { areas: [aid], home: false, other: false }).filter((x) => x.area === aid)[0];
-          const ar = this._hass.areas[aid];
+          const ar = this._areas()[aid] || { name: aid };   // az önce buradan oluşturulan alan HA'nın listesine henüz gelmemiş olabilir
           nw = fresh ? Object.assign({}, fresh, { id: id, sections: fresh.sections.map((s) => Object.assign({}, s, { id: lhdId('s') })) })
             : { id: id, name: ar.name, icon: ar.icon || 'mdi:door', area: aid, columns: LP_DEFAULT_COLS.slice(), sections: [] };
         } else {
@@ -4296,7 +4311,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const lks = k === 'scene' ? [['', 'lk_button'], ['tile', 'lk_tile'], ['row', 'lk_row']]
         : k === 'value' ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']].concat(LP_HALO_DOMAINS.indexOf(d) >= 0 ? [['halo', 'lk_halo']] : [])
           : (k === 'tile' && it.entity) ? [['', 'lk_tile'], ['button', 'lk_button'], ['row', 'lk_row']] : null;
-      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo' || lpEnIsVal(it.entity)) : lks;
+      const lks2 = lks && !adv ? lks.filter((x) => x[0] !== 'halo' || f.look === 'halo' || (lhdIsObj(M.raw) && M.raw.look === 'halo') || lpEnIsVal(it.entity) || lpCyIs(this._hass.states[it.entity])) : lks;
       if (lks2) body += fld(t('lookL') + hb('look'), sg('look', lks2.map((x) => [x[0], this._t(x[1]), '', lhdThLook('i' + x[1].slice(3), thMe)])));
       const L0 = f.look || '';
       const inGrid = (k === 'tile' || k === 'ph' || k === 'value') && !L0 || (k === 'scene' && L0 === 'tile');
