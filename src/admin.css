@@ -191,6 +191,9 @@ select.inp { padding-right: 6px; }
 .menu button.dan { color: var(--red); }
 .menu hr { border: none; border-top: 1px solid var(--ln); margin: 6px 4px; }
 .menu .mh { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); padding: 6px 10px 4px; }
+.menu .nroom { padding: 2px 6px 4px; } .menu .nroom .inp { width: 100%; box-sizing: border-box; height: 34px; }
+.arst { gap: 6px; } .arst .arl { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--tx); line-height: 1.4; }
+.arst .arl ha-icon { color: var(--mu); flex: 0 0 auto; margin-top: 1px; } .arst .acts { flex-wrap: wrap; } .arst .hint { line-height: 1.4; }
 
 /* pencere (cihaz seçici, ayarlar) */
 .ov { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -974,6 +977,17 @@ div.ensr:hover { background: var(--s1); }
 /* dar ekranda önizleme çubuğu iki satıra iner; Geri al düğmesi yerinde kalır */
 .pvh { flex-wrap: wrap; row-gap: 6px; }
 .pvh .seg { flex: 0 1 auto; flex-wrap: wrap; }
+/* Çalışıyor / Bitti takibi (cihaz düzenleyici, src/cycle.js) */
+.ency { border-top: 1px solid var(--ln); }
+.ency-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; } .ency-row .t { flex: 1; min-width: 0; } .ency-row .t b { display: block; font-weight: 600; font-size: 13.5px; } .ency-row .t span { display: block; font-size: 12.5px; color: var(--tx2); }
+.ency-l { font-size: 12.5px; font-weight: 600; color: var(--tx2); margin: 12px 0 6px; }
+.ency-k .chip { display: inline-flex; align-items: center; gap: 6px; } .ency-k .chip ha-icon { --mdc-icon-size: 16px; }
+.ency-sum { margin: 10px 0; padding: 9px 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--ln); font-size: 13px; color: var(--tx); } .ency-sum small { display: block; margin-top: 3px; color: var(--mu); font-size: 12px; }
+.ency-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.ency-sr { margin: 8px 0; } .ency-sr.ok { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--ln2); background: var(--s2); } .ency-sr.ok > b { display: block; font-size: 13.5px; } .ency-sr.ok > span { font-size: 12px; color: var(--mu); }
+.ency-cl { margin-top: 6px; } .ency-cl > div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; padding: 3px 0; font-size: 12.5px; color: var(--tx2); font-variant-numeric: tabular-nums; } .ency-cl b { font-weight: 500; color: var(--tx); }
+.ency-tune { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--ln); font-size: 12.5px; } .ency-tune span { flex: 1; min-width: 0; } .ency-tune i { font-style: normal; color: #3DDC84; }
+.hint.ency-sr.ok { color: #3DDC84; border: none; background: none; padding: 0; }
 /* dokunma hedefleri: ? ve tutamaç */
 .hlp { position: relative; }
 .hlp::after { content: ''; position: absolute; left: -11px; top: -11px; right: -11px; bottom: -11px; }

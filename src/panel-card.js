@@ -335,7 +335,8 @@ function lpNavCfg() {
 // phone: false = telefon düzeninde (telefon, dikey tablet) sayfa adı + saat satırı kaydırılmaz (varsayılan kaydırılır).
 function lpBrightCfg() {
   const s = lpSettings(), b = lhdIsObj(s.bright) ? s.bright : {};
-  return { on: b.on === true, box: b.look === 'box', icon: b.icon === true, always: b.value === 'always', phone: b.phone !== false };
+  // all_off: true = hiç ışık açık değilken ve en son açık olanlar bilinmiyorken kaydırma sekmedeki kısılabilir bütün ışıkları açar (varsayılan: hiçbir şey yapmaz)
+  return { on: b.on === true, box: b.look === 'box', icon: b.icon === true, always: b.value === 'always', phone: b.phone !== false, allOff: b.all_off === true };
 }
 
 // telefon seçenekleri (ayar phone), her biri ayrı açılır:
@@ -373,7 +374,8 @@ const lpNum = (st) => { const x = st ? parseFloat(st.state) : NaN; return isFini
 // kategori görünümünün durumu (hangi kategori, ışıklarda hangi oda): bütün sekme kartları paylaşır
 const LP_PH = window.__LEMUR_HD_PH || (window.__LEMUR_HD_PH = { cat: null, room: null });
 const LP_CATS = ['lights', 'climate', 'scenes', 'camera', 'energy', 'other'];
-const LP_CAT_IC = { lights: 'mdi:lightbulb-group', climate: 'mdi:thermostat', scenes: 'lhd:scene-switch', camera: 'mdi:cctv', energy: 'mdi:lightning-bolt', other: 'mdi:view-grid-outline' };
+const LP_CAT_IC = { lights: 'mdi:lightbulb-group', climate: 'mdi:thermostat', scenes: 'lhd:scene-switch', camera: 'mdi:cctv', energy: 'mdi:lightning-bolt', other: 'mdi:view-grid-outline',
+  vacuum: 'mdi:robot-vacuum', media: 'mdi:speaker', devices: 'mdi:devices' };
 // kamera: kamera bölümü ya da yalnız kameralardan oluşan bölüm (Kameralar kategorisi bütün sekmelerin kameralarını toplar)
 const lpCamOnly = (s) => (s.entities || []).length > 0 && s.entities.every((x) => { const e = lpEnt(x); return !!e && String(e.entity).indexOf('camera.') === 0; });
 // enerji: enerji bölümü ya da yalnız enerji kartlarından oluşan bölüm
@@ -381,33 +383,80 @@ const lpEnOnly = (s) => (s.entities || []).length > 0 && s.entities.every((x) =>
 const lpSecCat = (s) => (!s ? 'other' : s.type === 'lights' || s.type === 'climate' || s.type === 'scenes' ? s.type : s.type === 'camera' || lpCamOnly(s) ? 'camera' : s.type === 'energy' || lpEnOnly(s) ? 'energy' : 'other');
 // kategori görünümü: bütün sekmelerin o türdeki bölümleri tek sayfada (her biri sekmenin adıyla). Işıklarda oda oda gezilir
 // ("Tümü" bütün evin ışıkları, aynı cihaz iki sekmede varsa bir kez). Kayıtlı sekmeler değişmez, sayfa yalnız çizilirken kurulur.
-function lpCatView(tabs, cur) {
+// Aynı cihaz birden çok sekmedeyse (ör. Ev özeti ve Hol) bir kez, odasının sekmesinde gösterilir: alanı (area) olan sekme önce,
+// yoksa sıradaki ilk sekme (v0.36, #24: Hol'deki süpürge "Ev" başlığı altında çıkıyordu, Hol hiçbir yerde görünmüyordu).
+// st: { cat, room } (yoksa bütün kartların ortak durumu LP_PH; yönetim panelindeki önizleme kendi durumunu verir)
+function lpCatView(tabs, cur, st) {
   tabs = tabs.map(lhdNormTab);
+  st = st || LP_PH;
   const has = (s) => (s.entities || []).length > 0 || (s._folds || []).some((F) => (F.entities || []).length > 0);   // katlanır gruplardakiler de sayılır
   const cats = LP_CATS.filter((c) => tabs.some((T) => (T.sections || []).some((s) => lpSecCat(s) === c && has(s))));
   if (!cats.length) return null;
-  const cat = cats.indexOf(LP_PH.cat) >= 0 ? LP_PH.cat : cats[0];
+  const cat = cats.indexOf(st.cat) >= 0 ? st.cat : cats[0];
   const rooms = cat === 'lights' ? tabs.filter((T) => (T.sections || []).some((s) => lpSecCat(s) === 'lights' && has(s))) : [];
   const roomIds = ['all'].concat(rooms.map((T) => T.id));
   // tek oda: "Tümü" aynı ışıkları gösterir, seçim yok (şerit çizilmez)
-  const room = rooms.length === 1 ? rooms[0].id : roomIds.indexOf(LP_PH.room) >= 0 ? LP_PH.room : (rooms.some((T) => T.id === cur.id) ? cur.id : 'all');
-  const secs = [], seen = {};
+  const room = rooms.length === 1 ? rooms[0].id : roomIds.indexOf(st.room) >= 0 ? st.room : (rooms.some((T) => T.id === cur.id) ? cur.id : 'all');
+  const secs = [], seen = {}, own = {};
   const one = cat === 'lights' && room !== 'all' ? rooms.filter((T) => T.id === room)[0] : null;
+  const keyOf = (x) => { const e = lpEnt(x); return e && e.entity ? String(e.entity) : ''; };
+  const listsOf = (s) => [s.entities || []].concat((s._folds || []).map((F) => F.entities || []));
+  if (cat !== 'scenes' && !one) tabs.filter((T) => !!T.area).concat(tabs.filter((T) => !T.area)).forEach((T) => (T.sections || []).forEach((s) => {
+    if (lpSecCat(s) === cat) listsOf(s).forEach((L) => L.forEach((x) => { const k = keyOf(x); if (k && !own[k]) own[k] = T.id; }));
+  }));
+  // İklim sayfasının adı ve simgesi içindekine göre: yalnız iklim cihazları (ya da boş) "İklim", yalnız süpürge, yalnız medya,
+  // karışıksa (iklimin yanında süpürge ya da medya da varsa) "Cihazlar". Sayfanın kendisi ve yaz / kış geçişi aynı kalır.
+  const ck = {};
+  tabs.forEach((T) => (T.sections || []).forEach((s) => { if (lpSecCat(s) === 'climate') listsOf(s).forEach((L) => L.forEach((x) => { const k = lhdKind(x); if (k && k !== 'sub') ck[k] = 1; })); }));
+  const ckn = Object.keys(ck), clim = !ckn.length ? 'climate' : ckn.length === 1 && (ck.climate || ck.vacuum || ck.media) ? ckn[0] : 'devices';
   (one ? [one] : tabs).forEach((T) => (T.sections || []).forEach((s) => {
     if (lpSecCat(s) !== cat || !has(s)) return;
-    const dd = (L) => (cat !== 'scenes' && !one ? (L || []).filter((x) => { const e = lpEnt(x), k = e && e.entity; if (!k) return true; if (seen[k]) return false; seen[k] = 1; return true; }) : (L || []));
+    const dd = (L) => (cat !== 'scenes' && !one ? (L || []).filter((x) => { const k = keyOf(x); if (!k) return true; if (seen[k] || own[k] !== T.id) return false; seen[k] = 1; return true; }) : (L || []));
     const ents = dd(s.entities), fl = (s._folds || []).map((F) => Object.assign({}, F, { entities: dd(F.entities) })).filter((F) => F.entities.length);   // aynı cihaz gruplarda da bir kez
     if (!ents.length && !fl.length) return;
-    secs.push(Object.assign({}, s, { col: 0, sub: 0, entities: ents, _folds: fl.length ? fl : null, title: one || cat === 'energy' ? s.title : (T.name || s.title) }));
+    secs.push(Object.assign({}, s, { col: 0, sub: 0, entities: ents, _folds: fl.length ? fl : null, title: one || cat === 'energy' ? s.title : (T.name || s.title), _tid: T.id }));
   }));
   // iklim: bütün odalar tek kutuda, oda adları küçük ara başlık (Halo ya da sade satırlar)
   if (cat === 'climate' && secs.length) {
-    const all = [], fl = [];
-    secs.forEach((s) => { all.push({ subtitle: s.title || '', _catSub: true }); s.entities.forEach((x) => all.push(x)); (s._folds || []).forEach((F) => fl.push(F)); });
+    const all = [], fl = [], mg = [];
+    secs.forEach((s) => { all.push({ subtitle: s.title || '', _catSub: true }); mg.push([s._tid, s.id]); s.entities.forEach((x) => { all.push(x); mg.push([s._tid, s.id]); }); (s._folds || []).forEach((F) => fl.push(F)); });
+    const srcs = secs.map((s) => s.id);
     secs.length = 0;
-    secs.push({ id: 'lhd-cat-climate', type: 'climate', title: '', col: 0, sub: 0, entities: all, _folds: fl.length ? fl : null });
+    secs.push({ id: 'lhd-cat-climate', type: 'climate', title: '', col: 0, sub: 0, entities: all, _folds: fl.length ? fl : null, _mg: mg, _srcs: srcs });
   }
-  return { tab: { id: cur.id, name: cur.name, icon: cur.icon, area: one ? one.area || null : null, columns: [1], sections: secs }, cat: cat, cats: cats, rooms: rooms, room: room };
+  return { tab: { id: cur.id, name: cur.name, icon: cur.icon, area: one ? one.area || null : null, columns: [1], sections: secs }, cat: cat, cats: cats, rooms: rooms, room: room, clim: clim };
+}
+// kategorinin alttaki çubuktaki ve sayfa başlığındaki adı / simgesi (İklim sayfası içindekine göre adlanır)
+const lpCatName = (cv, c) => (c === 'climate' && cv && cv.clim ? cv.clim : c);
+// telefonda (altta kategoriler) sekmenin bir bölümü hangi sayfada: { cat, room }. Bölüm boşsa ya da yoksa sekmenin ilk dolu bölümü;
+// sekmede hiç dolu bölüm yoksa null. Yönetim panelinin telefon önizlemesi seçili bölümü bununla gösterir.
+function lpPvNote(w, cv, lang) {
+  const sp = (k, v) => '<span class="pvn">' + esc(t(lang, k, v)) + '</span>';
+  return '<div class="pvw">' + (w.hid ? sp('pv_hid', { tab: w.name }) : w.chips.length ? sp('pv_where', { tab: w.name }) +
+    w.chips.map((c) => '<span class="pvc' + (c.cat === cv.cat ? ' sel' : '') + '" data-cat="' + c.cat + '">' + esc(t(lang, 'c_' + lpCatName(cv, c.cat))) + ' · ' + c.n + '</span>').join('') : sp('pv_none', { tab: w.name })) +
+    (w.sel ? sp(w.sel === 'hid' ? 'pv_selhid' : 'pv_selempty') : (w.empty && !w.hid ? sp('pv_empty') : '')) + '</div>';
+}
+function lpPhoneWhere(T, secId) {
+  if (!T) return null;
+  const has = (s) => (s.entities || []).length > 0 || (s._folds || []).some((F) => (F.entities || []).length > 0);
+  const L = (lhdNormTab(T).sections || []).filter(has), s = L.filter((x) => x.id === secId)[0] || L[0];
+  if (!s) return null;
+  const c = lpSecCat(s);
+  return { cat: c, room: c === 'lights' ? T.id : null };
+}
+// önizlemedeki kategori sayfası: seçili sekmede olmayan öğeler (ve yalnız onlardan oluşan kutular) soluk çizilir, kopya kaydedilmez (_ph)
+function lpPvMark(cv, cur) {
+  const mine = {}, lists = (s) => [s.entities || []].concat((s._folds || []).map((F) => F.entities || []));
+  (lhdNormTab(cur).sections || []).forEach((s) => { if (lpSecCat(s) === cv.cat) lists(s).forEach((L) => L.forEach((x) => { const k = lhdItemKey(x); if (k && !mine[k]) mine[k] = s.id; })); });
+  const dim = (x) => Object.assign(typeof x === 'string' ? { entity: x } : {}, typeof x === 'string' ? {} : x, { _oth: true });
+  const oth = (x, tid) => tid !== cur.id && !(x && x._catSub) && !mine[lhdItemKey(x)];
+  const secs = (cv.tab.sections || []).map((s) => {
+    const mg = s._mg, tidOf = (i) => (mg ? (mg[i] || [])[0] : s._tid);
+    const E = (s.entities || []).map((x, i) => ((x && x._catSub ? tidOf(i) !== cur.id : oth(x, tidOf(i))) ? dim(x) : x));
+    const F = s._folds ? s._folds.map((G) => Object.assign({}, G, { entities: (G.entities || []).map((x) => (oth(x, s._tid) ? dim(x) : x)) })) : s._folds;
+    return Object.assign({}, s, { entities: E, _folds: F, _oth: !mg && s._tid !== cur.id && E.every((x) => !!x && !!x._oth) });
+  });
+  return Object.assign({}, cv.tab, { sections: secs, _ph: true, _cvs: { cur: cur.id, mine: mine } });   // mine: öğe anahtarı → seçili sekmedeki bölümü
 }
 
 // Telefona özel ayarlar (v0.22). Sekmeler ve cihazlar tablet ile ortak; telefonda çizilirken sekmenin bir kopyası kurulur:
@@ -573,6 +622,7 @@ function lpValText(h, st, lang) {
     if (left !== null && !isNaN(left)) return lpDur(left);
   }
   if (st.state === 'unavailable') return t(lang, 'unavailable');
+  if (a.lhd_cycle === true) { const c = lpCyLabel(h, st, lang); if (c) return c; }   // makine durumu: "Çalışıyor · 32 dk" (src/cycle.js)
   if (h && typeof h.formatEntityState === 'function') { try { const v = h.formatEntityState(st); if (v !== undefined && v !== null && v !== '') return String(v); } catch (e) {} }
   if (st.state === 'unknown') return '—';
   const s = TXT[lang] && TXT[lang][st.state] ? t(lang, st.state) : st.state;
@@ -625,9 +675,10 @@ class LemurHomeDashboardCard extends HTMLElement {
     LemurLightPopup.update(h);
     LemurCardPopup.update(h);
     if (!this._sig) return;
-    (this._embeds || []).forEach((e) => { e.hass = h; });
+    (this._embeds || []).forEach((e) => { e.hass = e._lpCy ? lpCyHass(h, e._lpCy, this._lang) : h; });
     if (this._ens && this._ens.length) { const L = this._enIds || []; for (let i = 0; i < L.length; i++) if (h.states[L[i]] !== this._enLast[L[i]]) { this._enPaint(false); break; } }
     if (this._enP && this._enP.act && h.states[this._enP.act] !== this._enP.actSt) this._enP.draw();
+    if (this._enP && this._enP.cy && h.states[this._enP.cy] !== this._enP.cySt) this._enP.draw();   // makine durumu değişti
     const w = this._watched || [];
     for (let i = 0; i < w.length; i++) if (h.states[w[i]] !== this._last[w[i]]) { this._render(); return; }
     const m = this._missing || [];
@@ -711,6 +762,26 @@ class LemurHomeDashboardCard extends HTMLElement {
     return (d.getHours() % 12 || 12) + ':' + mm + '<small style="font-size:0.45em;font-weight:600;margin-left:0.2em;opacity:0.75">' + esc(lpDayPeriod(d, pickLang(this._hass))) + '</small>';
   }
 
+  // telefon önizlemesi (kategoriler): yönetim panelinde sekme ya da bölüm değişince o bölümün telefondaki sayfası; önizlemedeki
+  // çubuğa / oda hapına dokunulunca o sayfa (bir sonraki seçime kadar)
+  _pvState(tab) {
+    const key = (this._config.tab || '') + '|' + (this._config.selected || '');
+    if (this._pvKey !== key) { this._pvKey = key; const w = lpPhoneWhere(tab, this._config.selected); if (w) this._pvc = w; }
+    return this._pvc || { cat: null, room: null };
+  }
+  // önizlemenin üstündeki not: seçili sekmenin öğeleri telefonda hangi sayfalarda, boş / gizli bölümler
+  _pvWhere(tabs, tab) {
+    const has = (s) => (s.entities || []).length > 0 || (s._folds || []).some((F) => (F.entities || []).length > 0);
+    const cnt = {}, raw = this._tabs().filter((x) => x.id === tab.id)[0], sel = this._config.selected || '';
+    (lhdNormTab(tab).sections || []).forEach((s) => {
+      const hi = s._phHide || [], n = (s.entities || []).filter((x) => hi.indexOf(lhdItemKey(x)) < 0).length + (s._folds || []).reduce((a, F) => a + (F.entities || []).length, 0);
+      if (n) cnt[lpSecCat(s)] = (cnt[lpSecCat(s)] || 0) + n;
+    });
+    const ps = (tab.sections || []).filter((s) => s.id === sel)[0], inRaw = !!raw && (lhdNormTab(raw).sections || []).some((s) => s.id === sel);
+    return { name: tab.name || '', hid: !tabs.some((x) => x.id === tab.id), chips: LP_CATS.filter((c) => cnt[c]).map((c) => ({ cat: c, n: cnt[c] })),
+      empty: (tab.sections || []).some((s) => !has(s)), sel: !sel ? '' : ps ? (has(ps) ? '' : 'empty') : (inRaw ? 'hid' : '') };
+  }
+
   _render() {
     if (!this._hass) return;
     // önizleme kartı kendi ayarlarıyla çizilir (bu kartın çizimi bitince panonun ayarlarına dönülür)
@@ -739,8 +810,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     // telefonda altta kategoriler: sayfa bütün sekmelerden kurulur (düzenleme önizlemesinde değil)
     // düzenleme önizlemesinde de telefon seçenekleri görünür; kategori sayfası yerine sekmenin kendisi düzenlenir
     const pc = lpPhoneCfg(), ph = lpIsPhone(this._config) && !this._config.edit;
-    this._cat = ph && pc.nav === 'cats' ? lpCatView(tabs, tab) : null;
-    const view = this._cat ? this._cat.tab : tab;
+    // yönetim panelinin telefon önizlemesi (v0.36, #24): telefondaki kategori sayfasının aynısı; hangi sayfa olduğu önizlemenin
+    // kendi durumunda (seçili bölümün telefondaki sayfası ya da önizlemede dokunulan kategori / oda), panoyu etkilemez
+    const pve = lpIsPhone(this._config) && !!this._config.edit && pc.nav === 'cats';
+    this._cat = ph && pc.nav === 'cats' ? lpCatView(tabs, tab) : (pve ? lpCatView(tabs, tab, this._pvState(tab)) : null);
+    let view = this._cat ? this._cat.tab : tab;
+    if (pve && this._cat) view = Object.assign(lpPvMark(this._cat, tab), { _pvw: this._pvWhere(tabs, tab) });
     // iskeleti değiştiren her şey: sekme ayarı, mevsim, dil, var olan cihazlar
     const present = [], vis = [];
     const allOf = (s) => (s.entities || []).concat.apply(s.entities || [], (s._folds || []).map((F) => F.entities || []));   // katlanır gruplardakiler de
@@ -751,7 +826,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (e && S[e.entity] && String(e.entity).indexOf('climate.') === 0) vis.push((S[e.entity].attributes.hvac_modes || []).indexOf('cool') >= 0 ? 'ac' : 'cl');   // klima mı petek mi (Yaz / Kış)
       if (e && lpEnIsVal(e.entity) && !(x && Array.isArray(x.extra))) vis.push(lpEnHaloExtra(e.entity, S).join(','));   // enerji Halo kartının yan değerleri (kullanılabilir olanlar)
     }));
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
@@ -776,7 +851,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // her öğe hangi bölümün kaçıncı öğesi: düzenleme modunda sürükle-bırak için
     const mark = (i) => ' data-sec="' + esc(curSec) + '" data-idx="' + i + '"';
     // düzenleme modunda koşulu şu an sağlanmayan öğe soluk görünür (normal panoda hiç çizilmez, yer kaplamaz)
-    const hidA = (it) => (it._hid ? ' data-hid="1"' : '');
+    const hidA = (it) => (it._hid ? ' data-hid="1"' : '') + (it._oth ? ' data-oth="1"' : '');   // önizlemede başka sekmenin öğesi (soluk)
     // değer karosu (sensör, zamanlayıcı...): simge, değer, ad. Çubuk görünümünde yatay çubuk
     const valTile = (it, bar, c) => {
       vals.push(it);
@@ -918,7 +993,8 @@ class LemurHomeDashboardCard extends HTMLElement {
           if (x._k === 'halo') {
             const hc = { type: 'custom:lemur-hd-sensor-card', entity: x.entity };
             const ms = lpMapStyle(x, S) || {};                              // duruma göre görünüm (renk, hareket, ad, simge, çerçeve)
-            const nm = typeof ms.name === 'string' && ms.name ? ms.name : x.name, icn = typeof ms.icon === 'string' && ms.icon ? ms.icon : x.icon;
+            const cyS = lpCyIs(S[x.entity]) ? S[x.entity] : null;   // makine durumu: adı makinenin adı, alt satırı "Çalışıyor · 32 dk" (src/cycle.js)
+            const nm = typeof ms.name === 'string' && ms.name ? ms.name : x.name || (cyS && cyS.attributes.device_name), icn = typeof ms.icon === 'string' && ms.icon ? ms.icon : x.icon;
             if (nm) hc.name = nm;
             if (icn && !lpIsLecIcon(icn)) hc.icon = icn;
             if (lpEnIsVal(x.entity)) { const ex = Array.isArray(x.extra) ? x.extra : lpEnHaloExtra(x.entity, S); if (ex.length) hc.extra = ex; if (!Array.isArray(x.extra)) lpEnHaloExtra(x.entity, null).forEach((q) => { if (visW.indexOf(q) < 0) visW.push(q); }); }   // enerji değeri: altında ilgili değerler, iklim kartı boyunda
@@ -927,16 +1003,17 @@ class LemurHomeDashboardCard extends HTMLElement {
             const hfx = LP_HALO_FX.indexOf(ms.effect) >= 0 ? ms.effect : (LP_HALO_FX.indexOf(x.effect) >= 0 ? x.effect : '');
             if (hfx) hc.effect = hfx;
             const xi = ms.frame ? Object.assign({}, x, { _frame: hc.color || '#FF3737', _frameFx: hfx }) : x;
+            if (cyS) xi._cy = 1;
             return emb('lemur-hd-sensor-card', hc, x.entity, x._i, xi);
           }
           if (x._k === 'energy') { ens.push(x); return '<div class="enc en-' + esc(x.energy) + (lpEnIsLook(x) ? ' enlook' : '') + '" data-en="' + (ens.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'card') { cards.push(x); return '<div class="emb hc' + (LP_EMB_H[x.height] ? ' hfix" style="min-height:' + LP_EMB_H[x.height] + 'px' : '') + '" data-hc="' + (cards.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
           if (x._k === 'sub') return '<div class="subt' + (x._catSub ? ' csub' : '') + '"' + hidA(x) + mark(x._i) + '>' + esc(x.subtitle) + '</div>';
-          const c = Object.assign({}, x); delete c._i; delete c._k; delete c._val; delete c._hid; delete c._act;
+          const c = Object.assign({}, x); delete c._i; delete c._k; delete c._val; delete c._hid; delete c._act; delete c._oth;
           if (x._k === 'climate' && lpClimStyle() === 'rows') { clrs.push(x); return '<div class="clr" data-clr="' + (clrs.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
-          if (x._k === 'climate') return emb('lemur-hd-climate-card', Object.assign(c, { type: 'custom:lemur-hd-climate-card' }), x.entity, x._i);
+          if (x._k === 'climate') return emb('lemur-hd-climate-card', Object.assign(c, { type: 'custom:lemur-hd-climate-card' }), x.entity, x._i, x._oth ? { _oth: true } : undefined);
           if (x._k === 'vacuum' && lpClimStyle() === 'rows') { clrs.push(x); return '<div class="clr vac" data-clr="' + (clrs.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>'; }
-          if (x._k === 'vacuum') return emb('lemur-hd-vacuum-card', Object.assign(c, { type: 'custom:lemur-hd-vacuum-card' }), x.entity, x._i);
+          if (x._k === 'vacuum') return emb('lemur-hd-vacuum-card', Object.assign(c, { type: 'custom:lemur-hd-vacuum-card' }), x.entity, x._i, x._oth ? { _oth: true } : undefined);
           rows.push(x.entity); rowIt.push(x); return '<div class="row" data-row="' + esc(x.entity) + '" data-ri="' + (rowIt.length - 1) + '"' + hidA(x) + mark(x._i) + '></div>';
         }).join('');
       }).join('');
@@ -967,7 +1044,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       });
       if (!b && edit) b = { kind: 'md', html: '<div class="eph" data-sec="' + esc(s.id) + '">' + esc(t(lang, 'edit_empty')) + '</div>' };
       if (!b) return;
-      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id], grow: parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1, gap: typeof s.gap === 'number' ? s.gap : null,
+      cols[ci][sj].push({ title: s.title || '', kind: b.kind, season: !!b.season, spread: b.spread, mix: b.mix, fit: !!b.fit, html: b.html, secs: [s.id].concat(edit && s._srcs ? s._srcs : []), oth: !!s._oth, grow: parseFloat(s.grow) > 0 ? parseFloat(s.grow) : 1, gap: typeof s.gap === 'number' ? s.gap : null,
         fill: !!s.fill, align: !s.fill && (s.align === 'center' || s.align === 'spread') ? s.align : '' });   // doldururken hizalama yok (aralık kaybolmasın)
       gbx.push({ s: s, b: cols[ci][sj][cols[ci][sj].length - 1] });
     });
@@ -1012,14 +1089,14 @@ class LemurHomeDashboardCard extends HTMLElement {
     // telefon: odalar ya da kategoriler altta (uygulama gibi); üstte yalnız sayfanın adı ve saat
     const pcf = lpPhoneCfg(), pbOn = phone && pcf.nav !== 'top';
     // önizlemede (düzenleme) kategori çubuğu görünür ama sayfa sekmenin kendisidir: üstte sekmenin adı
-    const cv = pbOn ? (this._cat || (edit && pcf.nav === 'cats' ? lpCatView(tabs, tab) : null)) : null, cvPage = cv && !edit;
+    const cv = pbOn ? (this._cat || (edit && pcf.nav === 'cats' ? lpCatView(tabs, tab) : null)) : null, cvPage = cv && (!edit || !!this._cat);   // önizleme de telefondaki sayfayı çizer (#24)
     let pHead = '', pBar = '';
     if (pbOn) {
       const fxI = lpLecNav(h) ? '<div class="pbi fxb" data-navfx>' + lpIcon('mdi:creation') + '<span>' + esc(t(lang, 'effects')) + '</span></div>' : '';
       if (cv) {
-        pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[c]) + '<span>' + esc(t(lang, 'c_' + c)) + '</span></div>').join('') + fxI;
+        pBar = cv.cats.map((c) => '<div class="pbi' + (c === cv.cat ? ' sel' : '') + '" data-cat="' + c + '">' + lpIcon(LP_CAT_IC[lpCatName(cv, c)]) + '<span>' + esc(t(lang, 'c_' + lpCatName(cv, c))) + '</span></div>').join('') + fxI;
         if (cvPage) { const rt = cv.rooms.filter((T) => T.id === cv.room)[0]; this._bbTab = cv.cat === 'lights' ? (rt || null) : tab; }   // Işıklar: seçili oda (Hepsi: sayfadaki ışıklar)
-        pHead = phd(cvPage ? t(lang, 'c_' + cv.cat) : tab.name || '', cvPage && cv.cat === 'climate' && cols.some((c) => c.some((u) => u.some((b) => b.season)))) +
+        pHead = phd(cvPage ? t(lang, 'c_' + lpCatName(cv, cv.cat)) : tab.name || '', cvPage && cv.cat === 'climate' && cols.some((c) => c.some((u) => u.some((b) => b.season)))) + (edit && tab._pvw ? lpPvNote(tab._pvw, cv, lang) : '') +
           (cvPage && cv.rooms.length > 1 ? '<div class="ppills">' + ['all'].concat(cv.rooms.map((T) => T.id)).map((id) => { const T = cv.rooms.filter((x) => x.id === id)[0]; return '<div class="pp' + (id === cv.room ? ' sel' : '') + '" data-room="' + esc(id) + '">' + esc(T ? T.name : t(lang, 'c_all')) + '</div>'; }).join('') + '</div>' : '');
       } else {
         pBar = tabs.map((x) => '<div class="pbi' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '">' + lpIcon(x.icon || 'mdi:home-outline') + '<span>' + esc(x.name) + '</span></div>').join('') + fxI;
@@ -1030,7 +1107,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const seasonIcon = lpIcon(season === 'winter' ? 'mdi:snowflake' : 'mdi:white-balance-sunny', 'season');
     // aynı sütunda birden çok kutu varsa yükseklikler "grow" oranında paylaşılır (düzenlemede aradaki çizgi sürüklenerek değişir)
     // fill: öğeler kutunun yüksekliğini doldurur; align: içeriğe göre olan kutuda öğeler ortada ya da eşit aralıkla
-    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (b.fit ? ' fit' : '') + (b.fill ? ' fill' : '') + (b.align ? ' al-' + b.align : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
+    const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (b.fit ? ' fit' : '') + (b.fill ? ' fill' : '') + (b.align ? ' al-' + b.align : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + (b.oth ? ' oth' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi || b.gap !== null ? ' style="' + (multi ? 'flex:' + b.grow + ' 1 0px;min-height:auto;' : '') + (b.gap !== null ? '--lp-gap:' + b.gap + 'px;--lp-gapg:' + b.gap + 'px' : '') + '"' : '') + '>' +
       (edit ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
@@ -1082,7 +1159,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       const spec = embeds[+ph.getAttribute('data-emb')];
       const el = document.createElement(spec.tag);
       try { el.setConfig(spec.cfg); } catch (e) { ph.textContent = String((e && e.message) || e); return; }
-      el.hass = h;
+      if (spec.it && spec.it._cy) el._lpCy = spec.cfg.entity;   // makine durumu: değeri yazıyla
+      el.hass = el._lpCy ? lpCyHass(h, el._lpCy, lang) : h;
       ph.appendChild(el);
       this._embeds.push(el);
       if (spec.it) ph._item = spec.it;
@@ -1197,10 +1275,11 @@ class LemurHomeDashboardCard extends HTMLElement {
     }, () => lpPetHistory(this._hass, this._lang, b.getAttribute('data-pet'))));
     // gömülü kart (kart öğesi ya da Halo görünümü): öğede tap/hold verildiyse kartın üstüne şeffaf katman, kartın kendi tıklaması yerine o çalışır
     R.querySelectorAll('[data-hc],[data-emb]').forEach((ph) => {
-      const it = ph._item; if (!it || (!it.tap && !it.hold)) return;
+      const it = ph._item, cy = !!it && !it.tap && !!it.entity && lpCyIs(h.states[it.entity]);   // makine durumu: Bitti'yken Boşaltıldı, değilse enerji penceresi
+      if (!it || (!it.tap && !it.hold && !cy)) return;
       const ov = document.createElement('div'); ov.className = 'tapov'; ph.appendChild(ov);
       const id = it.entity || (it.card && it.card.entity) || '';
-      lpPress(ov, () => this._act(it.tap, id, 'more-info'), () => this._act(it.hold, id, 'more-info'));
+      lpPress(ov, () => (cy ? lpCyTap(this, id) : this._act(it.tap, id, 'more-info')), () => this._act(it.hold, id, 'more-info'));
     });
     // değer karosu: dokun → öğenin tap'i (varsayılan cihaz penceresi), basılı tut → hold'u (varsayılan cihaz penceresi)
     this._vals.forEach((b) => { const id = b.getAttribute('data-val'), it = b._item || {}; lpPress(b, () => this._confirm(it, () => this._act(it.tap, id, 'more-info')), () => this._act(it.hold, id, 'more-info')); });
@@ -1263,6 +1342,9 @@ class LemurHomeDashboardCard extends HTMLElement {
     const r2 = (x) => Math.round(x * 100) / 100;
     const arr = (x) => Array.prototype.slice.call(x);
     R.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => lpFire(this, 'lhd-tab', { tab: b.getAttribute('data-nav') })));
+    const pvGo = (c, room) => { this._pvc = { cat: c, room: room }; this._sig = null; this._render(); };
+    R.querySelectorAll('[data-cat]').forEach((b) => b.addEventListener('click', () => pvGo(b.getAttribute('data-cat'), (this._pvc || {}).room || null)));
+    R.querySelectorAll('[data-room]').forEach((b) => b.addEventListener('click', () => pvGo((this._cat && this._cat.cat) || 'lights', b.getAttribute('data-room'))));
 
     let D = null;   // süren sürükleme
     // boyutlandırma tutamakları: kolonların arasında dikey, aynı kolonda üst üste duran kutuların arasında yatay
@@ -1326,6 +1408,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         e.preventDefault(); return;
       }
       if (!ch && !rh && !item && !box) return;
+      if (tab._cvs && (item ? item.hasAttribute('data-oth') : !!box && box.classList.contains('oth'))) return;   // başka sekmenin öğesi: yalnız dokunup seçilir
       D = { kind: ch ? 'col' : rh ? 'row' : item ? 'item' : 'box', el: ch || rh || item || box, sx: e.clientX, sy: e.clientY, on: false, z: zoom() };
       if (ch) {
         const k = +ch.getAttribute('data-k'), cols = arr(R.querySelectorAll('.col[data-col]'));
@@ -1465,7 +1548,9 @@ class LemurHomeDashboardCard extends HTMLElement {
         const sid = d.el.getAttribute('data-sec'), S0 = secById(tab, sid), bxe = d.el.closest('.box[data-secs]');
         // occ: aynı anahtarlı öğeler (ikizler) arasındaki sırası; yönetim paneli hangi ikizin sürüklendiğini bununla bulur
         const E0 = S0 ? S0.entities || [] : [], ix = bxe ? arr(bxe.querySelectorAll('[data-idx][data-sec="' + sid + '"]')).map((x) => +x.getAttribute('data-idx')) : [];
-        if (S0 && bxe) phItems = { sec: sid, keys: ix.map((i) => lhdItemKey(E0[i])), occ: ix.map((i) => { let n = 0; for (let j = 0; j < i; j++) if (lhdItemKey(E0[j]) === lhdItemKey(E0[i])) n++; return n; }) };
+        // İklim'in tek kutusu: sıra, seçili sekmenin kaynak bölümlerine ayrı ayrı yazılır
+        if (S0 && bxe && S0._mg) { const by = {}; ix.forEach((i) => { const m = S0._mg[i]; if (!m || m[0] !== tab._cvs.cur || (E0[i] && E0[i]._catSub)) return; (by[m[1]] = by[m[1]] || []).push(lhdItemKey(E0[i])); }); phItems = { multi: Object.keys(by).map((k) => ({ sec: k, keys: by[k] })) }; }
+        else if (S0 && bxe) phItems = { sec: sid, keys: ix.map((i) => lhdItemKey(E0[i])), occ: ix.map((i) => { let n = 0; for (let j = 0; j < i; j++) if (lhdItemKey(E0[j]) === lhdItemKey(E0[i])) n++; return n; }) };
       }
       // değişiklik olmazsa (ya da kaydedilmezse) öğe/kutu eski yerine döner; kaydedilirse pano zaten yeniden çizilir
       if (d.home && d.home.p) { try { d.home.p.insertBefore(d.el, d.home.n && d.home.n.parentNode === d.home.p ? d.home.n : null); } catch (e) {} }
@@ -1486,7 +1571,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (ha) ha.grow = d.na; if (hb) hb.grow = d.nb;
         return emit(nt);
       }
-      if (phItems) { lpFire(this, 'lhd-phitems', phItems); return; }
+      if (phItems) { (phItems.multi || [phItems]).forEach((p) => lpFire(this, 'lhd-phitems', p)); return; }
       if (tab._ph && d.kind === 'item') return;
       if (phOrd) { if (d.target && phOrd.join() !== (tab.sections || []).map((x) => x.id).join()) lpFire(this, 'lhd-phorder', { tab: tab.id, order: phOrd }); return; }
       if (d.kind === 'box' && d.target) {
@@ -1531,7 +1616,17 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (ad) { const p = ad.getAttribute('data-addsec').split(':'); return lpFire(this, 'lhd-addsec', { col: +p[0], sub: +p[1], x: e.clientX, y: e.clientY }); }
       const bx = e.target.closest ? e.target.closest('.box[data-secs]') : null; if (!bx) return;
       const hit = e.target.closest('[data-sec]');
-      lpFire(this, 'lhd-select', { section: hit ? hit.getAttribute('data-sec') : bx.getAttribute('data-secs').split(',')[0] });
+      let sid = hit ? hit.getAttribute('data-sec') : bx.getAttribute('data-secs').split(',')[0];
+      if (tab._cvs) {   // önizlemede kategori sayfası: bölüm hangi sekmenin (İklim'in tek kutusunda öğenin kaynağı)
+        const S0 = secById(tab, sid), mg = S0 && S0._mg;
+        let tid = S0 && S0._tid;
+        if (mg) { const r = hit && hit.hasAttribute('data-idx') ? mg[+hit.getAttribute('data-idx')] : (mg.filter((m) => m[0] === tab._cvs.cur)[0] || mg[0]); if (!r) return; tid = r[0]; sid = r[1]; }
+        // seçili sekmede de olan öğe başka sekmenin başlığı altında gösteriliyorsa (aynı cihaz iki sekmede): seçili sekmedeki bölümü seçilir
+        const it0 = S0 && hit && hit.hasAttribute('data-idx') ? (S0.entities || [])[+hit.getAttribute('data-idx')] : null, own = it0 && !it0._catSub ? tab._cvs.mine[lhdItemKey(it0)] : '';
+        if (own) { tid = tab._cvs.cur; sid = own; }
+        if (tid && tid !== tab._cvs.cur) lpFire(this, 'lhd-tab', { tab: tid });
+      }
+      lpFire(this, 'lhd-select', { section: sid });
     });
   }
 
@@ -1853,14 +1948,15 @@ class LemurHomeDashboardCard extends HTMLElement {
   // --- durum güncellemesi (iskelete dokunmadan) ---
   // Saatte parlaklık: etkilenen ışıklar sekmedeki ışık karoları ve sekmenin odası (alanı) varsa o alandaki bütün ışıklar;
   // yalnız o an açık ve kısılabilir olanlar.
-  _bbIds() {
+  // off: true ise kapalı (ama ulaşılabilir) kısılabilir ışıklar da; yalnız sekmedeki karolar (alanın görünmeyen ışıkları kendiliğinden açılmasın)
+  _bbIds(off) {
     const h = this._hass, S = h.states, out = [], tab = this._bbTab;
     const add = (id) => {
       if (!id || id.split('.')[0] !== 'light' || out.indexOf(id) >= 0) return;
-      const st = S[id]; if (st && st.state === 'on' && lpBarCan(st)) out.push(id);
+      const st = S[id]; if (st && (off ? (st.state === 'on' || st.state === 'off') : st.state === 'on') && lpBarCan(st)) out.push(id);
     };
     (this._tiles || []).forEach((b) => add(b.getAttribute('data-light')));
-    if (tab && tab.area) {
+    if (!off && tab && tab.area) {
       const ents = h.entities || {}, devs = h.devices || {};
       let C = this._bbA;   // alanın ışıkları: kayıt ya da alan değişince yeniden bulunur (v0.33; her güncellemede bütün kayıt geziliyordu)
       if (!C || C.e !== ents || C.d !== devs || C.a !== tab.area) {
@@ -1877,8 +1973,27 @@ class LemurHomeDashboardCard extends HTMLElement {
     }
     return out;
   }
-  // kaydırınca etkilenecekler: açık ışıklar; hiçbiri açık değilse bu alandan en son kapatılanlar (yeniden açılır)
-  _bbTargets() { const L = this._bbIds(); return L.length ? L : (this._bbLast || []); }
+  // kaydırınca etkilenecekler: açık ışıklar; hiçbiri açık değilse bu sekmede en son açık olanlar (nasıl kapatıldıkları fark etmez;
+  // bu tarayıcıda saklanır, sayfa yenilense de kalır). Onlar da bilinmiyorsa hiçbir şey yapılmaz: kaydırma kendiliğinden bütün evi
+  // yakmasın. Ayar bright.all_off açıksa o durumda sekmedeki kısılabilir bütün ışık karoları açılır (v0.36, GitHub #22)
+  _bbKey() { const T = this._bbTab; return (T && T.id) || ''; }
+  _bbMemGet() {
+    if (!this._bbMem) { let m = null; try { m = JSON.parse(localStorage.getItem('lhd-bb-mem') || 'null'); } catch (e) {} this._bbMem = (m && typeof m === 'object' && !Array.isArray(m)) ? m : {}; }
+    return this._bbMem;
+  }
+  _bbMemSet(L) {
+    const M = this._bbMemGet(), k = this._bbKey(), a = M[k];
+    if (Array.isArray(a) && a.length === L.length && a.every((x, i) => x === L[i])) return;
+    M[k] = L.slice();
+    try { localStorage.setItem('lhd-bb-mem', JSON.stringify(M)); } catch (e) {}
+  }
+  _bbTargets() {
+    const L = this._bbIds(); if (L.length) return L;
+    const S = this._hass.states, ok = (id) => { const st = S[id]; return typeof id === 'string' && id.split('.')[0] === 'light' && !!st && (st.state === 'on' || st.state === 'off'); };
+    const a = this._bbMemGet()[this._bbKey()], M = (Array.isArray(a) ? a : []).filter(ok);
+    if (M.length) return M;
+    return lpBrightCfg().allOff ? this._bbIds(true) : [];
+  }
   _bbVal(L) {
     if (typeof this._bbDrag === 'number') return this._bbDrag;
     if (this._bbHold && Date.now() < this._bbHold.until) return this._bbHold.v;
@@ -1890,6 +2005,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const el = this.shadowRoot && this.shadowRoot.querySelector('[data-bbar]');
     if (!el || !this._hass) return;
     const L = this._bbIds(), v = this._bbVal(L), lang = this._lang || 'tr';
+    if (L.length && !(this._config && (this._config.demo || this._config.edit))) this._bbMemSet(L);   // en son açık olanlar: hepsi kapanınca kaydırma bunları yeniden açar
     el.classList.toggle('bbon', L.length > 0);
     el.classList.toggle('bboff', !L.length && typeof this._bbDrag !== 'number');
     el.querySelector('.bbf').style.width = v + '%';
@@ -1957,7 +2073,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       const v = this._bbDrag, L = this._bbTargets(); this._bbDrag = null;
       if (send && typeof v === 'number' && L.length && !(this._config && this._config.demo)) {
         this._bbHold = { v: v, until: Date.now() + 3000 };
-        if (v === 0) { this._bbLast = L.slice(); this._hass.callService('light', 'turn_off', { entity_id: L }); }
+        if (v === 0) this._hass.callService('light', 'turn_off', { entity_id: L });
         else this._hass.callService('light', 'turn_on', { entity_id: L, brightness_pct: v });
         setTimeout(() => this._bbPaint(), 3100);
       }
@@ -2120,6 +2236,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (pop._h !== html) { const sc = pop.firstChild ? pop.firstChild.scrollTop : 0; pop._h = html; pop.innerHTML = html; if (pop.firstChild) pop.firstChild.scrollTop = sc; }
       // aç/kapat düğmesinin varlığı: durumu değişince pencere yeniden çizilir (güç sensörü değişmese de düğme doğru yazsın)
       const ab = pop.querySelector('[data-enact]'); S.act = ab ? ab.getAttribute('data-enact') : null; S.actSt = S.act ? this._hass.states[S.act] : null;
+      const cb = pop.querySelector('[data-ency]'); S.cy = cb ? cb.getAttribute('data-ency') : null; S.cySt = S.cy ? this._hass.states[S.cy] : null;
     };
     S.unsub = lpEnSub(S.draw);
     S.draw();

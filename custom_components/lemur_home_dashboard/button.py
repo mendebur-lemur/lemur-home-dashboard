@@ -5,11 +5,13 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.core import callback
 
 from ._petent import is_tr, setup_pet_entities
+from .cycle_ha import setup_buttons
 from .const import DOMAIN
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
     setup_pet_entities(hass, entry, async_add_entities, "button", PetFeedButton, "feed")
+    setup_buttons(hass, entry, async_add_entities)   # appliance cycles: "Boşaltıldı"
 
 
 class PetFeedButton(ButtonEntity):

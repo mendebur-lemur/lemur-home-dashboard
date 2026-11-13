@@ -122,7 +122,7 @@ for _it in picks["items"]:
     for _u in (_it.get("buy") or {}).values():
         if not str(_u).startswith("https://"):
             raise SystemExit("library/picks.json: '" + _it["id"] + "' linki https değil")
-parts = ["const LHD_GUIDE = " + json.dumps(guide, ensure_ascii=False) + ";", "const LHD_PICKS = " + json.dumps(picks, ensure_ascii=False) + ";"] + [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "energy.js", "enlooks.js", "enplus.js", "enrep.js", "yaml.js", "help.js", "thumbs.js", "picks.js", "admin.js")]
+parts = ["const LHD_GUIDE = " + json.dumps(guide, ensure_ascii=False) + ";", "const LHD_PICKS = " + json.dumps(picks, ensure_ascii=False) + ";"] + [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "safe.js", "changes.js", "store.js", "autodash.js", "mdic.js", "lec.js", "defaults.js", "demohome.js", "scale.js", "strategy.js", "tpl.js", "panel-card.js", "lightpop.js", "coverpop.js", "cardpop.js", "pet.js", "energy.js", "enlooks.js", "enplus.js", "enrep.js", "cycle.js", "yaml.js", "help.js", "thumbs.js", "picks.js", "admin.js")]
 errlog = (src / "errlog.js").read_text(encoding="utf-8")
 out = f"""/*! Lemur Home Dashboard v{version} | GPL-3.0 */
 (() => {{

@@ -138,14 +138,18 @@ def clean_tabs(tabs: Any) -> list:
 
 
 def public_data(data: dict) -> dict:
-    """What a non-admin user gets: pets without the feeder service and the notification target."""
-    pets = data.get("pets")
-    if not isinstance(pets, dict) or not pets:
-        return data
-    slim = {}
-    for pid, pet in pets.items():
-        if isinstance(pet, dict):
-            slim[pid] = {k: v for k, v in pet.items() if k not in ("feeder", "notify")}
+    """What a non-admin user gets: pets without the feeder service and the notification target, energy devices without
+    their cycle notification targets."""
     out = dict(data)
-    out["pets"] = slim
+    pets = data.get("pets")
+    if isinstance(pets, dict) and pets:
+        slim = {}
+        for pid, pet in pets.items():
+            if isinstance(pet, dict):
+                slim[pid] = {k: v for k, v in pet.items() if k not in ("feeder", "notify")}
+        out["pets"] = slim
+    ests = data.get("estimates")
+    if isinstance(ests, dict) and any(isinstance(e, dict) and isinstance(e.get("cycle"), dict) and "notify" in e["cycle"] for e in ests.values()):
+        out["estimates"] = {k: (dict(e, cycle={x: y for x, y in e["cycle"].items() if x != "notify"})
+                                if isinstance(e, dict) and isinstance(e.get("cycle"), dict) else e) for k, e in ests.items()}
     return out

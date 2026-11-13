@@ -136,7 +136,7 @@ function lpExDevHtml(h, M, d, lang, ph, arm, back) {
   if (X.on !== null) st.push(lpExStat(X.on < 1 ? '0 ' + lpEnT(lang, 'm') : lpEnDur(X.on, lang), lpExT(lang, 'onToday')));
   else if (X.night !== null) st.push(lpExStat('~' + lpEnWs(X.night, lang), lpExT(lang, 'nightMin')));
   if (X.per > 0) st.push(lpExStat('~' + (mj || lpExK(proj, lang) + ' kWh'), lpExT(lang, 'projEnd')));
-  body += '<div class="exstats' + (st.length === 4 ? ' n4' : '') + '">' + st.join('') + '</div>';
+  body += '<div class="exstats' + (st.length === 4 ? ' n4' : '') + '">' + st.join('') + '</div>' + (typeof lpCyDevHtml === 'function' ? lpCyDevHtml(h, d, lang) : '');   // makine: şu anki durum ve son çalışma (src/cycle.js)
   const hv = X.hrs.length >= 2 ? X.hrs.map((x) => x.v) : (M.hist && M.hist.devs && M.hist.devs[d.id]) || [];
   const lab = X.hrs.length >= 2 ? [[0, lpExHH(X.hrs[0].t)], [Math.round((X.hrs.length - 1) / 2), lpExHH(X.hrs[Math.round((X.hrs.length - 1) / 2)].t)], [X.hrs.length - 1, lpExHH(X.hrs[X.hrs.length - 1].t)]] : [];
   const wd = lpEnT(lang, 'wd'), d0 = lpExDay0(), dl = X.d7.map((x, i) => (i === 6 ? lpEnT(lang, 'todayD') : wd[new Date(d0 - (6 - i) * LP_EX_D).getDay()]));

@@ -25,6 +25,7 @@ from typing import Any
 
 import voluptuous as vol
 
+from . import cycle as CY
 from . import lut as LUT
 
 KINDS = ("meas", "light", "states", "onoff", "fixed", "year", "cycle")
@@ -67,6 +68,7 @@ ESTIMATE_SCHEMA = vol.Schema(
         vol.Optional("strip"): bool,   # light: an LED strip, its table follows its length
         vol.Optional("len"): vol.All(vol.Coerce(float), vol.Range(min=0.1, max=50)),   # strip length (m) the table is scaled to
         vol.Optional("cap"): vol.All(vol.Coerce(float), vol.Range(min=1, max=2000)),   # adapter power (W): the strip never draws more
+        vol.Optional("cycle"): CY.CYCLE_SCHEMA,   # meas: appliance cycle tracking (cycle.py)
     },
     extra=vol.REMOVE_EXTRA,
 )
@@ -89,7 +91,16 @@ def _drop_virtual(v: dict) -> dict:
     return {k: e for k, e in v.items() if not is_virtual(e)}
 
 
-ESTIMATES_SCHEMA = vol.All(vol.Schema({_ID: ESTIMATE_SCHEMA}), _drop_virtual, vol.Length(max=MAX_ESTIMATES), _no_reserved)
+def _cycle_meas(v: dict) -> dict:
+    """Cycle tracking needs the device's own power sensor: the block is dropped from other kinds (a device changed from
+    measured to estimated keeps saving)."""
+    for e in v.values():
+        if "cycle" in e and not (e.get("kind") == "meas" and e.get("sensor")):
+            del e["cycle"]
+    return v
+
+
+ESTIMATES_SCHEMA = vol.All(vol.Schema({_ID: ESTIMATE_SCHEMA}), _drop_virtual, _cycle_meas, vol.Length(max=MAX_ESTIMATES), _no_reserved)
 ECAT_SCHEMA = vol.Schema(
     {
         vol.Required("id"): vol.All(str, vol.Match(r"^[a-z0-9_]{1,40}$")),

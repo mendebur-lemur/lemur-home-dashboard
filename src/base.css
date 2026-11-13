@@ -446,6 +446,16 @@
 .cstep { display: flex; align-items: center; justify-content: center; margin-top: 12px; padding: 6px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); }
 .cstep .cbt { flex: 0 0 52px; width: 52px; height: 44px; border-radius: 12px; font-size: 24px !important; }
 .cstep .ctg { flex: 1 1 auto; font-size: 26px; }
+/* yönetim panelinin telefon önizlemesi (#24): seçili sekmenin öğeleri hangi sayfada; başka sekmelerin öğeleri soluk */
+.pvw { display: flex; flex-wrap: wrap; align-items: center; margin: -6px 2px 12px; font-size: 12.5px; line-height: 16px; color: var(--lp-text2); }
+.pvw > * { margin: 0 6px 4px 0; }
+.pvc { padding: 4px 10px; border-radius: 99px; border: 1px solid var(--lp-box-border); color: var(--lp-text); cursor: pointer; white-space: nowrap; }
+.pvc.sel { border-color: var(--lp-sel); background: rgba(91, 141, 239, 0.18); font-weight: 700; }
+.edit .box.oth, .edit [data-oth] { opacity: 0.45; }
+.edit .box.oth [data-oth] { opacity: 1; }
+/* önizlemede alt çubuk, sayfa kısa olsa da telefondaki gibi en altta */
+.wrap.phone.edit.pb { display: flex; flex-direction: column; min-height: var(--lp-h, 0px); }
+.wrap.phone.edit.pb > .pbar { margin-top: auto; }
 /* yönetim panelindeki önizlemede alt çubuk ekranın değil önizlemenin altında durur */
 .edit .pbar { position: -webkit-sticky; position: sticky; margin: 12px -4px -25px; }
 .edit.pb { padding-bottom: 25px; }

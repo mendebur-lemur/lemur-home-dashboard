@@ -24,6 +24,19 @@
           "late": "Late",
           "never": "Never fed"
         }
+      },
+      "cycle": {
+        "name": "Status",
+        "state": {
+          "idle": "Idle",
+          "running": "Running",
+          "done": "Finished"
+        }
+      }
+    },
+    "button": {
+      "emptied": {
+        "name": "Emptied"
       }
     }
   },

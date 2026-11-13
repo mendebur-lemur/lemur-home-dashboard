@@ -24,6 +24,8 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 from datetime import timedelta
 
+from . import cycle as CY
+from . import cycle_ha as CYH
 from . import energy_import as EI
 from . import estimates as EST
 from . import learn as LRN
@@ -57,11 +59,12 @@ _LOGGER = logging.getLogger(__name__)
 # twins / walls: backup control and wall switches (twins.py)
 # estimates / ecats: energy devices (measured and virtual) and categories (estimates.py, sensor.py)
 # energy_solar_src: the solar statistic the dashboard put into the energy settings; learn_avg: long averages running (learn.py)
-DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "energy_grid_src": "", "learn_avg": {}}
+# cycles: the appliance cycle trackers' state (cycle_ha.py; the settings themselves are in estimates[id].cycle)
+DEFAULT_DATA: dict[str, Any] = {"version": 1, "settings": {}, "tabs": [], "profiles": {}, "pets": {}, "feed": {}, "twins": {}, "walls": [], "estimates": {}, "ecats": [], "energy_solar_src": "", "energy_grid_src": "", "learn_avg": {}, "cycles": {}}
 PLATFORMS = ["sensor", "button"]
 # v0.32: what the screens get. learn_avg (the running measurements, with every step) stays on the server: the admin page
 # asks for it with learn_status. revs: a counter per key, so a save made on an older copy is turned down (ws_set).
-PRIVATE_KEYS = ("learn_avg",)
+PRIVATE_KEYS = ("learn_avg", "cycles")
 SET_KEYS = ("settings", "tabs", "profiles", "pets", "twins", "walls", "estimates", "ecats")
 LEARN_SAVE_S = 60.0   # a running light measurement is written to disk at most this often (it was every step)
 
@@ -76,6 +79,7 @@ class PanelData:
         self._feeder_at: dict[str, Any] = {}   # pet id → last time the feeder service ran (in memory)
         self.twins = TW.Twins(hass, lambda: self.data, self._fallback_used)
         self.learning = LRN.Learning(hass, None, self._save_learn)   # Enerji → Öğren (light runs and long averages go on after a restart)
+        self.cycles: CYH.CycleManager | None = None   # appliance cycles (bulaşık / çamaşır makinesi): set up with the entry
         self._prefs_unsub = None
         # key → how many times it changed since the start (in memory). Kept in hass.data so a reload of the integration
         # does not start them again from 0: open admin pages keep their counters (a restart reconnects and reloads them)
@@ -368,7 +372,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # builds, so browsers that get HA's legacy build load it too.
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}")
         add_extra_js_url(hass, f"{URL_BASE}/{LOADER_FILE}?v={VERSION}", es5=True)
-        for handler in (ws_get, ws_set, ws_restore, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup):
+        for handler in (ws_get, ws_set, ws_restore, ws_season, ws_subscribe, ws_info, ws_feed, ws_dashboard_claim, ws_energy_import, ws_learn_start, ws_learn_status, ws_learn_ctl, ws_pool_lookup, ws_cycle_suggest, ws_cycle_test):
             websocket_api.async_register_command(hass, handler)
         hass.data[f"{DOMAIN}_static"] = True
     # A page opened while Home Assistant is still starting has neither of the two above; the loader is also a
@@ -402,6 +406,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     }))
     data.twins.listen()
     entry.async_on_unload(async_track_time_interval(hass, data.async_tick, timedelta(minutes=1)))
+    data.cycles = CYH.CycleManager(hass, data)   # before the platforms: their entities read the trackers
+    data.cycles.start()
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     if PANEL_URL not in hass.data.get("frontend_panels", {}):
         turkish = (hass.config.language or "").lower().startswith("tr")
@@ -425,6 +431,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     d = _data(hass)
     if d is not None:
         d.twins.stop()
+        if d.cycles is not None:
+            d.cycles.stop()
         await d.learning.async_stop()
         if d._prefs_unsub:
             d._prefs_unsub()
@@ -816,3 +824,53 @@ async def ws_pool_lookup(hass, connection, msg):
         _LOGGER.debug("Pool lookup failed: %s", err)
         r = None
     connection.send_result(msg["id"], r)
+
+
+# ---- appliance cycles (cycle.py, cycle_ha.py) ----
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/cycle_suggest",
+        vol.Required("sensor"): vol.All(str, vol.Match(r"^sensor\.[a-z0-9_]+$")),
+        vol.Optional("cycle", default={}): dict,
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_cycle_suggest(hass, connection, msg):
+    """Device editor → "Geçmişten öner": the cycles the detector finds in the power sensor's recorded history and tuned
+    values (cycle.suggest). No history: days 0, the preset stays."""
+    try:
+        cfg = CY.CYCLE_SCHEMA(msg["cycle"])
+    except vol.Invalid as err:
+        connection.send_error(msg["id"], "invalid", str(err))
+        return
+    try:
+        res = await CYH.async_suggest(hass, msg["sensor"], cfg)
+    except Exception as err:  # noqa: BLE001 - the editor says nothing was found
+        _LOGGER.warning("Cycle suggestion for %s failed: %s", msg["sensor"], err)
+        connection.send_error(msg["id"], "failed", str(err))
+        return
+    connection.send_result(msg["id"], res)
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "lemur_home_dashboard/cycle_test",
+        vol.Required("targets"): vol.All([vol.All(str, vol.Match(r"^notify\.[a-z0-9_]+$"))], vol.Length(min=1, max=10)),
+        vol.Optional("msg", default=""): vol.All(str, vol.Length(max=200)),
+        vol.Optional("name", default=""): vol.All(str, vol.Length(max=60)),
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_cycle_test(hass, connection, msg):
+    """Device editor → "Deneme gönder": the finished message with example values, to each target; per target ok / error."""
+    data = _data(hass)
+    if data is None or data.cycles is None:
+        connection.send_error(msg["id"], "not_loaded", "Integration not loaded")
+        return
+    tr = (hass.config.language or "").lower().startswith("tr")
+    name = msg["name"] or ("Bulaşık makinesi" if tr else "Dishwasher")
+    text = CY.message(msg["msg"], name, {"min": 52, "kwh": 0.79, "cost": None}, tr, dt_util.now().strftime("%H:%M"))
+    res = await data.cycles.async_send(msg["targets"], text)
+    connection.send_result(msg["id"], {"message": text, "results": res})

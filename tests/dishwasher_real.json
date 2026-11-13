@@ -1,0 +1,7 @@
+{
+ "note": "Real dishwasher on a Sonoff power-metering plug that reports every ~2 s. The same plug also feeds a water purifier (pump bursts of ~38 W for 1-2 min, several times a day, any time) and a small Hue Play light (a few W). Idle reading flickers between 0 and ~2.5-2.8 W. Values below are 1-minute average watts. The plug also sent a lone false reading of exactly 1714 W seven times in five days (a single sample, 0 Wh).",
+ "cycle1_1min_avg_w": [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,7,9,228,1488,1734,1714,1717,1744,1744,1741,1742,1746,1467,1729,1257,13,10,47,12,17,1588,1464,1719,1446,1423,1718,1479,1487,1718,1712,1714,1712,1717,1715,1721,1718,837,5,2,2,3,3,2,3,3,3,3,3,3,3,3,3,3,13,8,0,0,0,0,0,0],
+ "cycle2_1min_avg_w": [0,0,0,0,1,7,8,216,1440,495,0,0,0,0,0,141,1624,1631,1660,1677,1683,1697,1693,1689,1412,1688,1569,22,8,51,14,9,1232,1487,1567,1383,1396,1636,1399,1461,1672,1676,1675,1673,1666,1668,1667,1672,1655,385,2,2,2,3,3,3,3,3,2,2,2,2,3,2,3,5,5,0,0,0,0,0],
+ "cycle_energy_kwh": 0.79,
+ "other_loads_on_same_plug": {"purifier_burst_w": [35, 45], "burst_minutes": [1, 2], "one_long_period": "2.75 h averaging 7 W with peaks of 43 W"}
+}

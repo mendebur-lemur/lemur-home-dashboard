@@ -24,6 +24,19 @@
           "late": "Gecikti",
           "never": "Hiç beslenmedi"
         }
+      },
+      "cycle": {
+        "name": "Durum",
+        "state": {
+          "idle": "Boş",
+          "running": "Çalışıyor",
+          "done": "Bitti"
+        }
+      }
+    },
+    "button": {
+      "emptied": {
+        "name": "Boşaltıldı"
       }
     }
   },

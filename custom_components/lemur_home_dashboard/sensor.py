@@ -15,6 +15,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 from homeassistant.util import dt as dt_util
 
+from . import cycle as CY
 from . import estimates as EST
 from . import pets as P
 from ._petent import is_tr, setup_pet_entities
@@ -45,6 +46,9 @@ def _setup_energy(hass, entry, async_add_entities) -> None:
             if EST.has_net(eid, est, data.estimates()):   # shared plug: what is left after the devices on it
                 keys.append(("net_power", lambda d=data, i=eid: NetPowerSensor(d, i)))
                 keys.append(("net_energy", lambda d=data, i=eid: NetEnergySensor(d, i)))
+            if CY.tracked(est):   # appliance cycles: idle / running / done (cycle_ha.py)
+                from .cycle_ha import CycleStatusSensor
+                keys.append(("cycle", lambda d=data, i=eid: CycleStatusSensor(d, i)))
             for suffix, make in keys:
                 out[f"est_{eid}_{suffix}"] = make
         for c in data.ecats():
