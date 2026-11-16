@@ -15,8 +15,9 @@ const method = (source, name) => {
 vm.runInContext(read('i18n.js') + '\n' + read('safe.js') + '\n' + card + '\nthis.html = lpTabSensors; this.Card = LemurHomeDashboardCard; this.clean = lhdCleanTabs; this.editor = ' + method(admin, '_tabSensorsHtml') + ';', ctx);
 const state = (id, value, dc, extra) => ({ entity_id: id, state: value, attributes: Object.assign({ friendly_name: id, device_class: dc }, extra) });
 function sensorRow(id, presence) {
-  const el = { text: { textContent: '' }, active: false, getAttribute: () => id, hasAttribute: () => !!presence,
-    querySelector(selector) { assert.equal(selector, '.ntval'); return this.text; }, classList: {} };
+  const el = { text: { textContent: '' }, active: false, parentNode: {}, getAttribute: () => id, hasAttribute: () => !!presence,
+    querySelector(selector) { assert.equal(selector, '.ntval'); return presence ? null : this.text; },
+    setAttribute(key, value) { assert.equal(key, 'aria-label'); this.label = value; }, classList: {} };
   el.classList.toggle = (key, value) => { el.active = value; };
   return el;
 }
@@ -26,7 +27,9 @@ test('optional metadata: old tabs unchanged, configured IDs escaped and retained
   assert.equal(ctx.html({ temperature_sensor: {} }), '');
   const tab = { id: 'room', temperature_sensor: 'sensor.temp', humidity_sensor: 'sensor.humidity', presence_sensor: 'binary_sensor.motion', sections: [] };
   assert.match(ctx.html(tab), /data-nav-sensor="sensor.temp"/);
-  assert.match(ctx.html(tab), /data-presence/);
+  assert.match(ctx.html(tab), /data-presence role="img"/);
+  assert.match(ctx.html(tab), /lhd:presence-mmwave/);
+  assert.equal((ctx.html(tab).match(/class="ntval"/g) || []).length, 2);
   assert.match(ctx.html(tab), /class="ntval"/);
   assert.equal(ctx.clean([tab])[0].presence_sensor, tab.presence_sensor);
   assert.match(ctx.html({ temperature_sensor: 'sensor.x" onmouseover="x' }), /&quot;/);
@@ -70,14 +73,15 @@ test('live paint uses HA formatting and localized presence, handles unknown/miss
   paint();
   assert.equal(a.text.textContent, '23.4 °F');
   assert.equal(b.text.textContent, '0 %');
-  assert.equal(c.text.textContent, 'Var'); assert.equal(c.active, true);
+  assert.equal(c.label, 'binary_sensor.motion: Var'); assert.equal(c.active, true);
+  assert.equal(c.parentNode.title, c.label);
   h._hass.formatEntityState = () => '23,4 °C'; paint();
   assert.equal(a.text.textContent, '23,4 °C');
   h._lang = 'en'; h._hass.states['binary_sensor.motion'] = state('binary_sensor.motion', 'off', 'motion'); paint();
-  assert.equal(c.text.textContent, 'Absent'); assert.equal(c.active, false);
+  assert.equal(c.label, 'binary_sensor.motion: Absent'); assert.equal(c.active, false);
   for (const value of ['unknown', 'unavailable']) {
     h._hass.states['binary_sensor.motion'] = state('binary_sensor.motion', value, 'motion'); paint();
-    assert.equal(c.text.textContent, value === 'unknown' ? '—' : 'Unavailable');
+    assert.equal(c.label, 'binary_sensor.motion: ' + (value === 'unknown' ? '—' : 'Unavailable'));
     assert.equal(c.active, false);
   }
   delete h._hass.states['sensor.temp']; paint(); assert.equal(a.text.textContent, 'Unavailable');

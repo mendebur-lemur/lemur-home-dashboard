@@ -715,8 +715,8 @@
     },
     {
      "k": "pSensor",
-     "tr": "Oda düğmesinde Var / Yok olarak gösterilecek varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.",
-     "en": "Presence or motion sensor shown as Present / Absent on the room button. Sensors in this area are listed first; sensors from other areas can also be selected."
+     "tr": "Varlık algılandığında oda düğmesinin zemininde hafif renk ve dalga deseni gösteren varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.",
+     "en": "Presence or motion sensor that adds a subtle tint and wave pattern to the room button’s background when presence is detected. Sensors in this area are listed first; sensors from other areas can also be selected."
     },
     {
      "k": "tabBg",

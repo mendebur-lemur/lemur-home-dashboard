@@ -239,7 +239,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Alan**: Sekmenin odası: efekt ekranı ve saatte parlaklık bu odayı kullanır.
 - **Sıcaklık sensörü**: Oda düğmesinde gösterilecek sıcaklık sensörü. Gösterme seçeneği değeri gizler.
 - **Nem sensörü**: Oda düğmesinde gösterilecek nem sensörü. Sensörün kendi birimi kullanılır.
-- **Varlık sensörü**: Oda düğmesinde Var / Yok olarak gösterilecek varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.
+- **Varlık sensörü**: Varlık algılandığında oda düğmesinin zemininde hafif renk ve dalga deseni gösteren varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.
 - **Odanın arka planı** (Genel): (Gelişmiş) Bu sekmeye özel arka plan: renk ya da efekt. **Genel** Stil seç'teki zemini kullanır. Telefona özel zemin seçildiyse telefonda o geçerli.
 - **Alandan yeniden doldur**: Seçili alanın cihazlarıyla sekmeyi baştan kurar.
 - **Düzen** (Sütunlar · Serbest ızgara): (Gelişmiş) Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; ötekiler yer açar. Sütunlar'a dönünce eski düzen yerinde. Bölüm listesinde kolon yerine kutunun boyu yazar.

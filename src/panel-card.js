@@ -8,9 +8,9 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const lpTxt = (el, s) => { if (el && el.textContent !== s) el.textContent = s; };
 const LP_TAB_SENSORS = ['temperature_sensor', 'humidity_sensor', 'presence_sensor'];
 function lpTabSensors(tab) {
-  const icons = ['mdi:thermometer', 'mdi:water-percent', 'mdi:account'];
-  const rows = LP_TAB_SENSORS.map((k, i) => typeof tab[k] === 'string' && tab[k] ? '<div class="nts" data-nav-sensor="' + esc(tab[k]) + '"' + (i === 2 ? ' data-presence' : '') + '>' + lpIcon(icons[i]) + '<span class="ntval">—</span></div>' : '').join('');
-  return rows ? '<div class="ntstats">' + rows + '</div>' : '';
+  const values = LP_TAB_SENSORS.slice(0, 2).map((k) => typeof tab[k] === 'string' && tab[k] ? '<div class="nts" data-nav-sensor="' + esc(tab[k]) + '"><span class="ntval">—</span></div>' : '').join('');
+  const presence = typeof tab.presence_sensor === 'string' && tab.presence_sensor ? '<div class="ntpresence" data-nav-sensor="' + esc(tab.presence_sensor) + '" data-presence role="img" aria-label="—">' + lpIcon('lhd:presence-mmwave') + '</div>' : '';
+  return (values ? '<div class="ntstats">' + values + '</div>' : '') + presence;
 }
 const LP_HOLD_MS = 400;
 
@@ -2385,6 +2385,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         presence ? (st.state === 'on' ? t(lang, 'present') : st.state === 'off' ? t(lang, 'absent') : '—') : lpValText(h, st, lang);
       lpTxt(el.querySelector('.ntval'), text);
       el.title = ((st && st.attributes.friendly_name) || id) + ': ' + text;
+      if (presence) { el.setAttribute('aria-label', el.title); el.parentNode.title = el.title; }
       el.classList.toggle('active', presence && !!st && st.state === 'on');
     });
   }

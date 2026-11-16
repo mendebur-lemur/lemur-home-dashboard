@@ -26,11 +26,17 @@
 .ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }
 /* renkli simgelerde yalnızca seçili oda renkli, diğerleri soluk */
 .nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ntstats { flex: 0 0 auto; max-width: 100%; box-sizing: border-box; padding: 3px 6px 0; font-size: 12px; line-height: 15px; color: var(--lp-text2); font-variant-numeric: tabular-nums; }
-.nts { display: flex; align-items: center; min-width: 0; }
-.nts > ha-icon, .nts > .lic { flex: 0 0 13px; width: 13px; height: 13px; --mdc-icon-size: 13px; margin-right: 3px; }
+.navb { position: relative; isolation: isolate; }
+.navb > .ni, .navb > .nn, .navb > .ntstats { position: relative; z-index: 1; }
+.ntstats { flex: 0 0 auto; display: flex; flex-wrap: wrap; justify-content: center; max-width: 100%; box-sizing: border-box; padding: 5px 4px 0; font-size: 13px; line-height: 18px; color: var(--lp-text2); font-variant-numeric: tabular-nums; }
+.nts { display: flex; align-items: center; min-width: 0; max-width: 100%; margin: 0 3px; }
+.nts:first-child { color: var(--lp-text); font-weight: 600; }
 .nts > .ntval { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nts.active { color: var(--lp-on-icon); }
+.ntpresence { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 0; pointer-events: none; opacity: 0; color: var(--lp-on-icon); background: radial-gradient(ellipse at 100% 0, rgba(255, 193, 7, 0.10), rgba(255, 193, 7, 0.025) 55%, transparent 85%); }
+.ntpresence.active { opacity: 1; }
+.ntpresence > .lic { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; opacity: 0.12; filter: grayscale(1); }
+.ntpresence::before, .ntpresence::after { content: ''; position: absolute; top: -38px; right: -42px; width: 140px; height: 140px; border: 1px solid currentColor; border-radius: 50%; opacity: 0.07; }
+.ntpresence::after { top: -64px; right: -68px; width: 192px; height: 192px; opacity: 0.045; }
 .clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* bölüm kutuları */

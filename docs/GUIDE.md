@@ -239,7 +239,7 @@ Drag tabs to reorder them. A tab tied to an area uses that room for the effect s
 - **Area**: The tab's room: the effect screen and brightness on the clock use it.
 - **Temperature sensor**: Temperature sensor shown on the room button. Do not show hides the value.
 - **Humidity sensor**: Humidity sensor shown on the room button, using the sensor’s own unit.
-- **Presence sensor**: Presence or motion sensor shown as Present / Absent on the room button. Sensors in this area are listed first; sensors from other areas can also be selected.
+- **Presence sensor**: Presence or motion sensor that adds a subtle tint and wave pattern to the room button’s background when presence is detected. Sensors in this area are listed first; sensors from other areas can also be selected.
 - **Room background** (General): (Advanced) A background for this tab only: a colour or an effect. **General** uses the background from Choose a style. A phone-only background wins on phones.
 - **Refill from area**: Rebuilds the tab from the devices of the chosen area.
 - **Layout** (Columns · Free grid): (Advanced) In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; the others make room. Back in Columns the old layout is still there. The section list shows the box size instead of the column.
