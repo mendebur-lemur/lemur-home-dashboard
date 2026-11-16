@@ -6,6 +6,7 @@
 
 const ADM = {
   tr: {
+    headerInfo: 'Saat alanı', headerClock: 'Saat', headerDate: 'Tarih', headerWeather: 'Hava durumu', headerWeatherEntity: 'Hava durumu kaynağı', headerWeatherT: 'Güncel koşul ve sıcaklık seçtiğin Home Assistant hava durumu varlığından alınır.', headerWeatherPick: 'Kaynak seç', headerWeatherEmpty: 'Home Assistant’ta hava durumu varlığı bulunamadı.',
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
     undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', redoK: 'İleri al (Ctrl+Y)', redone: 'İleri alındı', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}', errConflict: 'Bu ayar başka bir ekrandan değiştirildi; güncel hâli yüklendi. Değişikliğini yeniden yap.',
     layout: 'Düzen', layCols: 'Sütunlar', layGrid: 'Serbest ızgara', layGridT: 'Kutuyu ⠿ ile taşı, sağ alt köşesinden büyüt; ötekiler yer açar. Dikey ekranda düzen kendiliğinden 6 sütuna iner; orada değiştirirsen o ekranın kendi düzeni olur.', gFit: 'Ekrana sığdır', gScr: 'Kaydırılabilir', gmAuto: 'Dikey düzeni otomatiğe döndür', gPos: '{w}×{h}', gFill: 'Boşlukları doldur', gFillT: 'Kutular sağa ve aşağı uzayıp boş hücreleri kapatır', gRowsT: 'Ekranın kaç satıra bölüneceği: çok kutu varsa artır', gmAutoT: 'Dikey ekrandaki elle yapılan düzen silinir, geniş düzenden yeniden türetilir', tabName: 'Sekme adı', icon: 'Simge', area: 'Alan', noArea: 'Alan yok', cols: 'Kolonlar', colAdd: 'Kolon ekle', colDel: 'Son kolonu kaldır', tabBg: 'Odanın arka planı', tabBgOwn: 'bu odaya özel', tabBgSame: 'Genel', tabBgT: 'Genel: Stil seç\'teki arka plan. Bir renk ya da efekt seçersen yalnız bu sekmede o görünür. Telefona özel zemin seçtiysen telefonda o geçerli.', scr_custom: 'Özel', scrCustT: 'Cihazının çözünürlüğü (genişlik × yükseklik). Tablette oran önemli, çözünürlüğü olduğu gibi yazabilirsin (ör. 2560 × 1600). Telefonda tarayıcının gördüğü genişliği yaz (ör. 412 × 915).', colTab: 'Tablet düzeni', colEq: 'Eşit', colHint: 'Genişliği önizlemede kolonların arasındaki çizgiyi sürükleyerek ayarla.', delTab: 'Sekmeyi sil', sure: 'Emin misin?',
@@ -150,6 +151,7 @@ const ADM = {
     lrPillAvg: 'Öğreniyor · {t} · ~{w}', lrBoxA: 'Bu cihaz şu an etiket değeri ya da tahmin. Güç ölçen bir prize takıp birkaç gün bekle; gerçek ortalaması kaydedilir.', lrBoxAvgRun: 'Öğreniyor: {t}, şu ana kadar ortalama ~{w}.', lrBoxOwnA: 'Ölçülen ortalama kullanılıyor ({w}).', lrSaveGo: 'Kaydet ve öğren', lrNameFirst: 'Önce ad yaz'
   },
   en: {
+    headerInfo: 'Clock area', headerClock: 'Clock', headerDate: 'Date', headerWeather: 'Weather', headerWeatherEntity: 'Weather source', headerWeatherT: 'Current conditions and temperature come from the selected Home Assistant weather entity.', headerWeatherPick: 'Choose a source', headerWeatherEmpty: 'No weather entities found in Home Assistant.',
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
     undo: 'Undo', undoK: 'Undo (Ctrl+Z)', redoK: 'Redo (Ctrl+Y)', redone: 'Redone', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}', errConflict: 'This was changed from another screen; the current version was loaded. Please make your change again.',
     layout: 'Layout', layCols: 'Columns', layGrid: 'Free grid', layGridT: 'Move a box by its ⠿ handle, resize it from its lower right corner; the others make room. In portrait the layout drops to 6 columns by itself; change it there and that screen gets its own layout.', gFit: 'Fit the screen', gScr: 'Scrollable', gmAuto: 'Reset portrait layout', gPos: '{w}×{h}', gFill: 'Fill gaps', gFillT: 'Boxes grow right and down to close empty cells', gRowsT: 'How many rows the screen is split into: raise it for many boxes', gmAutoT: 'Drops the hand-made portrait layout and derives it from the wide one again', tabName: 'Tab name', icon: 'Icon', area: 'Area', noArea: 'No area', cols: 'Columns', colAdd: 'Add column', colDel: 'Remove last column', tabBg: 'Room background', tabBgOwn: 'this room only', tabBgSame: 'General', tabBgT: 'General: the background from Choose a style. Pick a colour or effect and only this tab shows it. If you set a phone-only background, phones use that.', scr_custom: 'Custom', scrCustT: 'Your device resolution (width × height). On tablets only the ratio matters, so the resolution as is works (e.g. 2560 × 1600). On phones type the width the browser sees (e.g. 412 × 915).', colTab: 'Tablet layout', colEq: 'Equal', colHint: 'Set widths by dragging the line between columns in the preview.', delTab: 'Delete tab', sure: 'Sure?',
@@ -1331,6 +1333,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   // üst şerit ayarları (ayar nav): oda düğmelerinin boyu ve kolona hizalama (src/panel-card.js lpNavCfg)
   // Saatte parlaklık: aç/kapa; açıkken görünüm, simge ve gösterge
+  _headerRows() {
+    const t = (k) => esc(this._t(k)), c = lpHeaderCfg(), S = this._hass.states;
+    const toggle = (key, label, on) => '<div class="srow"><div class="t"><b id="header-' + key + '">' + t(label) + '</b></div><button type="button" class="tg' + (on ? ' on' : '') + '" role="switch" aria-checked="' + on + '" aria-labelledby="header-' + key + '" data-tg="header.' + key + '"></button></div>';
+    const ids = Object.keys(S).filter((id) => id.indexOf('weather.') === 0).sort((a, b) => this._ename(a).localeCompare(this._ename(b)));
+    if (c.entity && ids.indexOf(c.entity) < 0) ids.unshift(c.entity);
+    return '<div class="sh">' + t('headerInfo') + '</div>' + toggle('clock', 'headerClock', c.clock) + toggle('date', 'headerDate', c.date) + toggle('weather', 'headerWeather', c.weather) +
+      (c.weather ? '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 100%"><label for="header-weather-entity"><b>' + t('headerWeatherEntity') + '</b></label><span>' + t('headerWeatherT') + '</span></div>' +
+        '<select class="inp" id="header-weather-entity" name="weather_entity" data-sf="header.weather_entity"><option value="">' + t('headerWeatherPick') + '</option>' +
+        ids.map((id) => '<option value="' + esc(id) + '"' + (c.entity === id ? ' selected' : '') + '>' + esc(this._ename(id)) + ' (' + esc(id) + ')</option>').join('') + '</select>' +
+        (!ids.length ? '<div class="hint">' + t('headerWeatherEmpty') + '</div>' : '') + '</div>' : '');
+  }
   _bbRows(seg, tg) {
     const t = (k, v) => esc(this._t(k, v));
     const b = lhdIsObj(this._settings().bright) ? this._settings().bright : {}, on = b.on === true;
@@ -3125,7 +3138,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           (lpIconMode() === 'tint' ? '<div class="bgsw" style="width:100%">' + LHD_TINT_COLORS.map((c) => '<button class="bgc' + (lpIconTint().toLowerCase() === c.toLowerCase() ? ' on' : '') + '" data-tintc="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') + '<label class="bgc pick" title="' + t('icTintC') + '"><input type="color" data-tintpick value="' + esc(lpIconTint()) + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') + '</div>' +
         (lpIconMode() === 'tint' ? '<div class="srow"><div class="t"><b>' + t('icTintL') + '</b><span>' + t('icTintLT') + '</span></div>' + tg('icon_tint_light', lpIconTintLight()) + '</div>' : '') +
         ((this._adv() || (lhdIsObj(s.nav) && (s.nav.cols || s.nav.w || s.nav.h))) ? this._navRows(seg, tg, lec && s.lec_nav !== false) : '') +
-        this._bbRows(seg, tg) +
+        this._headerRows() + this._bbRows(seg, tg) +
         '<div class="srow"><div class="t"><b>' + t('theme') + '</b><span>' + t('themeT') + '</span></div><input class="inp w" data-sf="theme_name" value="' + esc(s.theme_name || '') + '" placeholder="ios-dark-mode-blue-red"></div>' +
         '<div class="sh" data-sh="s_screen">' + t('s_screen') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + kseg('kiosk.hide_header', k.hide_header) + '</div>' +
@@ -3940,7 +3953,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const tgl = g('[data-tg]');
       if (tgl) {
         const path = tgl.getAttribute('data-tg'); const cur = tgl.classList.contains('on');
-        if (path === 'lec_nav' || path === 'icon_tint_light' || path === 'phone.sheet') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
+        if (path === 'lec_nav' || path === 'icon_tint_light' || path === 'phone.sheet' || path === 'header.clock') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
         return this._setting(path, cur ? null : true);
       }
     });

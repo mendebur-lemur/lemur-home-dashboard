@@ -485,6 +485,21 @@
 .phone .phd.bbar .clock { left: auto; top: auto; transform: none; margin-left: auto; }
 .phone .phd.bbar .bbv { margin-left: 0; font-size: 18px; line-height: 32px; }
 .phone .phd.bbar .bbv:empty { display: none; }
+.clock[hidden] { display: none !important; }
+.clock.hinfo { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.clock.hinfo .hdate { max-width: 100%; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--lp-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clock.hinfo .hweather { display: flex; align-items: center; justify-content: center; max-width: 100%; margin-top: 4px; font-size: 15px; line-height: 22px; font-weight: 500; color: var(--lp-text2); }
+.hweather > .lic { flex: 0 0 22px; width: 22px; height: 22px; margin-right: 6px; }
+.hweather > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bbar > .clock.hinfo { position: relative; left: auto; top: auto; transform: none; flex: 1 1 0%; margin: 0 10px; }
+.phone .nav > .clock.hinfo { display: none; }
+.phone .phd.hasinfo { flex-wrap: wrap; }
+.phone .phd.hasinfo .bbv { margin-left: auto; }
+.phone .phd .clock.hinfo { display: flex; flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 4px 0 0; text-align: left; }
+.phone .phd .clock.hinfo .htime { line-height: 26px; }
+.phone .phd .clock.hinfo .hdate { font-size: 11px; line-height: 16px; }
+.phone .phd .clock.hinfo .hweather { margin-top: 2px; font-size: 12px; line-height: 18px; }
+.phone .hweather > .lic { flex-basis: 18px; width: 18px; height: 18px; margin-right: 4px; }
 /* kameralar (2026-11-05): 16:9 anlık görüntü karosu, adı sol altta; çevrimdışıysa sade yüz */
 .cams { display: grid; grid-gap: 8px; flex: 0 0 auto; align-self: stretch; width: 100%; box-sizing: border-box; }
 .cam { position: relative; padding-top: 56.25%; border-radius: 18px; overflow: hidden; background: var(--lp-embed-bg); cursor: pointer; -webkit-tap-highlight-color: transparent; }
