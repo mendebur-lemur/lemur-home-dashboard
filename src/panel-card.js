@@ -6,6 +6,12 @@
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 // yazı yalnız değiştiyse yazılır: aynı yazıyı yeniden yazmak da yerleşimi baştan hesaplatır (parlaklık güncellemesi başına bir yerleşim, v0.33)
 const lpTxt = (el, s) => { if (el && el.textContent !== s) el.textContent = s; };
+const LP_TAB_SENSORS = ['temperature_sensor', 'humidity_sensor', 'presence_sensor'];
+function lpTabSensors(tab) {
+  const icons = ['mdi:thermometer', 'mdi:water-percent', 'mdi:account'];
+  const rows = LP_TAB_SENSORS.map((k, i) => typeof tab[k] === 'string' && tab[k] ? '<div class="nts" data-nav-sensor="' + esc(tab[k]) + '"' + (i === 2 ? ' data-presence' : '') + '>' + lpIcon(icons[i]) + '<span class="ntval">—</span></div>' : '').join('');
+  return rows ? '<div class="ntstats">' + rows + '</div>' : '';
+}
 const LP_HOLD_MS = 400;
 
 // Dokun / basılı tut. Parmak kayarsa (kaydırma) hiçbir şey yapmaz.
@@ -875,7 +881,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (e && lpCyIs(S[e.entity])) vis.push('cy');   // makine durumu: sayfa açılırken ulaşılamıyorsa (HA yeni başladı) gelince kart yeniden kurulur (katman, yazı, ad)
       if (e && lpEnIsVal(e.entity) && !(x && Array.isArray(x.extra))) vis.push(lpEnHaloExtra(e.entity, S).join(','));   // enerji Halo kartının yan değerleri (kullanılabilir olanlar)
     }));
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.temperature_sensor, x.humidity_sensor, x.presence_sensor, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
@@ -1104,7 +1110,7 @@ class LemurHomeDashboardCard extends HTMLElement {
 
     // Lemur Light Effect Card kuruluysa üst şeridin sonunda "Efektler": efekt ekranını bu sekmenin odasıyla açar (ayarlardan kapatılabilir)
     const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni">' + lpIcon('mdi:creation') + '</div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
-    const navBtns = tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div></div>').join('');
+    const navBtns = tabs.map((x) => '<div class="navb' + (x.id === tab.id ? ' sel' : '') + '" data-nav="' + esc(x.id) + '"><div class="ni">' + lpIcon(x.icon || 'mdi:home-outline') + '</div><div class="nn">' + esc(x.name) + '</div>' + lpTabSensors(x) + '</div>').join('');
     const clock0 = '<div class="clock">' + this._time() + '</div>';
     const bbc = lpBrightCfg();
     this._bbTab = tab;
@@ -1252,6 +1258,8 @@ class LemurHomeDashboardCard extends HTMLElement {
     const lecLights = [];
     this._lecRooms.forEach((r) => LEC.lightsOf(r).forEach((id) => { if (tiles.indexOf(id) < 0 && lecLights.indexOf(id) < 0) lecLights.push(id); }));
     this._watched = tiles.concat(rows, clrW, lecLights, cams.map((x) => x.entity), vals.concat(ents, ssItems).map((x) => x.entity).filter((x) => x && tiles.indexOf(x) < 0), visW);
+    this._navSensors = Array.prototype.slice.call(R.querySelectorAll('[data-nav-sensor]'));
+    this._navSensors.forEach((el) => { const id = el.getAttribute('data-nav-sensor'); if (this._watched.indexOf(id) < 0) this._watched.push(id); });
     this._badges.forEach((el) => [].concat(el._pw).forEach((x) => { if (this._watched.indexOf(x) < 0) this._watched.push(x); }));
     if (!edit && LEC.installed(h)) this._lecRooms.forEach((r) => LEC.query(h, r));
     this._last = {};
@@ -2367,8 +2375,22 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (more && more.getAttribute('data-enmore') && !this._config.demo) { lpFire(this, 'hass-more-info', { entityId: more.getAttribute('data-enmore') }); }
     });
   }
+  _navSensorsPaint() {
+    const h = this._hass, lang = this._lang;
+    (this._navSensors || []).forEach((el) => {
+      const id = el.getAttribute('data-nav-sensor'), st = h.states[id];
+      if (st && this._last[id] === st) return;
+      const presence = el.hasAttribute('data-presence');
+      const text = !st || st.state === 'unavailable' ? t(lang, 'unavailable') : st.state === 'unknown' ? '—' :
+        presence ? (st.state === 'on' ? t(lang, 'present') : st.state === 'off' ? t(lang, 'absent') : '—') : lpValText(h, st, lang);
+      lpTxt(el.querySelector('.ntval'), text);
+      el.title = ((st && st.attributes.friendly_name) || id) + ': ' + text;
+      el.classList.toggle('active', presence && !!st && st.state === 'on');
+    });
+  }
   _update() {
     const h = this._hass, S = h.states, lang = this._lang;
+    this._navSensorsPaint();
     const RF = this.shadowRoot;   // katlanır grubun başlığında kaç öğe, kaçı açık
     if (RF) RF.querySelectorAll('[data-fcnt]').forEach((el) => { const n = +el.getAttribute('data-fn') || 0, on = el.getAttribute('data-fcnt').split(',').filter((id) => id && S[id] && LP_ON.indexOf(S[id].state) >= 0).length; const tx = t(lang, on ? 'fold_on' : 'fold_n', { n: n, on: on }); if (el.textContent !== tx) el.textContent = tx; el.classList.toggle('on', on > 0); });
     // LEC odalarındaki bir ışık değiştiyse o odada oynayan efekti yeniden sor

@@ -704,6 +704,21 @@
      "en": "The tab's room: the effect screen and brightness on the clock use it."
     },
     {
+     "k": "tSensor",
+     "tr": "Oda düğmesinde gösterilecek sıcaklık sensörü. Gösterme seçeneği değeri gizler.",
+     "en": "Temperature sensor shown on the room button. Do not show hides the value."
+    },
+    {
+     "k": "hSensor",
+     "tr": "Oda düğmesinde gösterilecek nem sensörü. Sensörün kendi birimi kullanılır.",
+     "en": "Humidity sensor shown on the room button, using the sensor’s own unit."
+    },
+    {
+     "k": "pSensor",
+     "tr": "Oda düğmesinde Var / Yok olarak gösterilecek varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.",
+     "en": "Presence or motion sensor shown as Present / Absent on the room button. Sensors in this area are listed first; sensors from other areas can also be selected."
+    },
+    {
      "k": "tabBg",
      "v": [
       "tabBgSame"
