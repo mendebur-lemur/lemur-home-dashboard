@@ -1,3 +1,6 @@
+# Satır sonu: metin dosyaları her bilgisayarda LF ile açılır (Windows'ta git'in CRLF'e çevirmesi testleri ve derlenen paketi bozuyordu).
+* text=auto eol=lf
+
 # GitHub'ın sürüm arşivine (Marketplace ve HACS bunu indirir) yalnız kurulumda gerekenler girer:
 # entegrasyon klasörü, README, lisans ve hacs.json. Ekran görüntüleri README'de raw.githubusercontent'tan görünür.
 docs/ export-ignore
