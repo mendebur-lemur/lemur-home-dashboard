@@ -237,6 +237,9 @@ Drag tabs to reorder them. A tab tied to an area uses that room for the effect s
 - **Tab name**: The name on the room button.
 - **Icon**: The room button's icon.
 - **Area**: The tab's room: the effect screen and brightness on the clock use it.
+- **Temperature sensor**: Temperature sensor shown as a small badge in the top right corner of the room button (e.g. 24.8°). Do not show hides the value.
+- **Humidity sensor**: Humidity sensor shown next to the temperature on the room button (e.g. 48%). On phones only the temperature is shown to save space.
+- **Presence sensor**: Presence or motion sensor that shows a soft, slowly breathing glow behind the room button’s icon when presence is detected. Sensors in this area are listed first; sensors from other areas can also be selected.
 - **Room background** (General): (Advanced) A background for this tab only: a colour or an effect. **General** uses the background from Choose a style. A phone-only background wins on phones.
 - **Refill from area**: Rebuilds the tab from the devices of the chosen area.
 - **Layout** (Columns · Free grid): (Advanced) In the free grid a box moves by its ⠿ handle and resizes from its lower right corner; the others make room. Back in Columns the old layout is still there. The section list shows the box size instead of the column.
@@ -497,6 +500,8 @@ Everything you change says "phone only". A section's name, column and devices ar
 
 **Dashboard:** language, season, Recommended products. **Appearance:** a card that opens Choose a style, icon style, room buttons (advanced), brightness on the clock, HA theme. **Screen:** top bar and sidebar (see Full screen on a tablet), canvas (advanced).
 
+**Clock area:** turn the clock, date and weather on or off separately. Choose a Home Assistant source for weather. The date follows the device’s local time and the dashboard language. Brightness swiping still works with the clock hidden.
+
 **Brightness on the clock:** swipe the clock area left or right and every light that is on in that tab's room changes brightness together; all the way left turns them off, and swiping while all are off turns the last ones back on. On phones and upright tablets swipe the row with the page name and the clock.
 
 Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue.
@@ -511,6 +516,10 @@ Version and updates at the top: install a new version from here. **Backup** down
 - **Light colour on lights**: In Single colour, a light that is on keeps its own colour.
 - **Align room buttons to a column**: (Advanced) Room buttons end at the chosen column's right edge and share the space evenly.
 - **Room button size**: (Advanced) Width and height of room buttons (default 235 × 155).
+- **Clock**: Shows or hides the clock in the clock area. On by default.
+- **Date**: Shows the day and date in the clock area, independently of the clock.
+- **Weather**: Shows current conditions and temperature from the chosen weather source, independently of the clock and date.
+- **Weather source**: A Home Assistant weather entity. No forecast requests or additional service calls are made.
 - **Brightness on the clock**: Swiping the clock area changes the brightness of every light that is on in the room.
 - **Look** (Hidden · Box): (Advanced) Hidden: only the clock shows, it appears while swiping. Box: a box like the room buttons.
 - **On phones and upright tablets too**: On phones and upright tablets the clock row is swiped; turn it off and that row cannot be swiped.

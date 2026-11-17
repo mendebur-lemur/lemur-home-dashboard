@@ -26,6 +26,18 @@
 .ni ha-icon { display: block; width: 100%; --mdc-icon-size: 100%; }
 /* renkli simgelerde yalnızca seçili oda renkli, diğerleri soluk */
 .nn { font-size: 16.8px; line-height: 20px; max-width: 100%; padding: 0 6px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.navb { position: relative; isolation: isolate; }
+.navb > .ni, .navb > .nn { position: relative; z-index: 1; }
+.navb > .ntstats { position: absolute; top: 8px; right: 10px; z-index: 1; display: flex; align-items: baseline; font-size: 13px; line-height: 16px; font-weight: 700; font-variant-numeric: tabular-nums; pointer-events: none; }
+.nts { color: var(--lp-text); }
+.nts + .nts { margin-left: 7px; color: var(--lp-text2); font-weight: 600; }
+.ntpresence { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .6s;
+  background: radial-gradient(circle at 50% 40%, rgba(240, 169, 59, 0.26), rgba(240, 169, 59, 0.08) 38%, rgba(240, 169, 59, 0) 64%); }
+.ntpresence.active { opacity: 1; animation: lhdprs 4.5s ease-in-out infinite alternate; }
+@keyframes lhdprs { from { opacity: 0.55; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ntpresence.active { animation: none; } }
+.phone .ntstats { top: 4px; right: 6px; font-size: 10px; line-height: 12px; }
+.phone .nts + .nts { display: none; }
 .clock { flex: 1 0 150px; margin-left: 8px; text-align: center; font-size: 32px; line-height: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* bölüm kutuları */
@@ -485,6 +497,22 @@
 .phone .phd.bbar .clock { left: auto; top: auto; transform: none; margin-left: auto; }
 .phone .phd.bbar .bbv { margin-left: 0; font-size: 18px; line-height: 32px; }
 .phone .phd.bbar .bbv:empty { display: none; }
+.clock[hidden] { display: none !important; }
+.clock.hinfo { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.clock.hinfo .hdate { max-width: 100%; margin-top: 2px; font-size: 16.8px; line-height: 22px; font-weight: 500; color: var(--lp-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clock.hinfo .hweather { display: flex; align-items: center; justify-content: center; max-width: 100%; margin-top: 4px; font-size: 15px; line-height: 24px; font-weight: 500; color: var(--lp-text2); }
+.hweather > .lic { flex: 0 0 26px; width: 26px; height: 26px; margin-right: 6px; }
+.hweather > .htemp { margin-right: 7px; font-size: 18px; font-weight: 700; color: var(--lp-text); font-variant-numeric: tabular-nums; }
+.hweather > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bbar > .clock.hinfo { position: relative; left: auto; top: auto; transform: none; flex: 1 1 0%; margin: 0 10px; }
+.phone .nav > .clock.hinfo { display: none; }
+.phone .phd.hasinfo { flex-wrap: wrap; }
+.phone .phd.hasinfo .bbv { margin-left: auto; }
+.phone .phd .clock.hinfo { display: flex; flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 4px 0 0; text-align: left; }
+.phone .phd .clock.hinfo .htime { line-height: 26px; }
+.phone .phd .clock.hinfo .hdate { font-size: 11px; line-height: 16px; }
+.phone .phd .clock.hinfo .hweather { margin-top: 2px; font-size: 12px; line-height: 18px; }
+.phone .hweather > .lic { flex-basis: 18px; width: 18px; height: 18px; margin-right: 4px; }
 /* kameralar (2026-11-05): 16:9 anlık görüntü karosu, adı sol altta; çevrimdışıysa sade yüz */
 .cams { display: grid; grid-gap: 8px; flex: 0 0 auto; align-self: stretch; width: 100%; box-sizing: border-box; }
 .cam { position: relative; padding-top: 56.25%; border-radius: 18px; overflow: hidden; background: var(--lp-embed-bg); cursor: pointer; -webkit-tap-highlight-color: transparent; }

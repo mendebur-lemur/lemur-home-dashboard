@@ -107,6 +107,8 @@ ha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px
 .fld > label, .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--mu); }
 .inp { flex-shrink: 0; height: 36px; border-radius: var(--r3); border: 1px solid var(--ln2); background: var(--s2); padding: 0 11px; color: var(--tx); outline: none; min-width: 0; width: 100%; }
 .inp:focus { border-color: var(--acl); background: var(--s3); }
+.tabsensors .inp:focus-visible { outline: 2px solid var(--acl); outline-offset: 2px; }
+#header-weather-entity:focus-visible { outline: 2px solid var(--acl); outline-offset: 2px; }
 select.inp { padding-right: 6px; }
 .iconin { display: flex; align-items: center; gap: 8px; }
 .iconin .pv { width: 36px; height: 36px; border-radius: var(--r3); background: var(--s3); display: grid; place-items: center; flex: none; }
@@ -165,6 +167,7 @@ select.inp { padding-right: 6px; }
 .ed { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 16px; background: var(--s2); border: 1px solid var(--ln); }
 .row2 { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
 .row2 > .fld { flex: 1 1 140px; }
+.tabsensors > .fld { flex-basis: 180px; }
 .items { display: flex; flex-direction: column; gap: 6px; }
 .it { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 11px; background: var(--s3); }
 .it .ico { width: 30px; height: 30px; border-radius: 9px; background: var(--s4); display: grid; place-items: center; flex: none; }

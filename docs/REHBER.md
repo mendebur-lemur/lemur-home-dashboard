@@ -237,6 +237,9 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Sekme adı**: Oda düğmesindeki ad.
 - **Simge**: Oda düğmesinin simgesi.
 - **Alan**: Sekmenin odası: efekt ekranı ve saatte parlaklık bu odayı kullanır.
+- **Sıcaklık sensörü**: Oda düğmesinin sağ üst köşesinde küçük rozet olarak gösterilecek sıcaklık sensörü (ör. 24,8°). Gösterme seçeneği değeri gizler.
+- **Nem sensörü**: Oda düğmesinde sıcaklığın yanında gösterilecek nem sensörü (ör. %48). Telefonda yer açmak için yalnızca sıcaklık gösterilir.
+- **Varlık sensörü**: Varlık algılandığında oda düğmesinin simgesinin arkasında yavaşça nefes alan hafif bir hâle gösteren varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.
 - **Odanın arka planı** (Genel): (Gelişmiş) Bu sekmeye özel arka plan: renk ya da efekt. **Genel** Stil seç'teki zemini kullanır. Telefona özel zemin seçildiyse telefonda o geçerli.
 - **Alandan yeniden doldur**: Seçili alanın cihazlarıyla sekmeyi baştan kurar.
 - **Düzen** (Sütunlar · Serbest ızgara): (Gelişmiş) Serbest ızgarada kutu ⠿ ile taşınır, sağ alt köşesinden büyütülür; ötekiler yer açar. Sütunlar'a dönünce eski düzen yerinde. Bölüm listesinde kolon yerine kutunun boyu yazar.
@@ -497,6 +500,8 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. En üstteki dü�
 
 **Pano:** dil, mevsim, Önerilen ürünler. **Görünüm:** Stil seç'e giden kart, simge stili, oda düğmeleri (gelişmiş), saatte parlaklık, HA teması. **Ekran:** üst bar ve yan menü (bkz. Tablette tam ekran), kanvas (gelişmiş).
 
+**Saat alanı:** saat, tarih ve hava durumu ayrı ayrı açılıp kapatılır. Hava durumu için bir Home Assistant kaynağı seç. Tarih, cihazın yerel saatine ve panonun diline göre gösterilir. Saat kapalı olsa da saatte parlaklık kaydırması çalışır.
+
 **Saatte parlaklık:** saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık bütün ışıkların parlaklığı birlikte değişir; en sola çekince kapanırlar, hepsi kapalıyken kaydırınca en son kapatılanlar açılır. Telefonda ve dikey tablette sayfa adı ile saatin olduğu satır kaydırılır.
 
 En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar.
@@ -511,6 +516,10 @@ En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her ş
 - **Işıkta ışığın rengi**: Tek renkte açık ışığın simgesi lambanın kendi renginde.
 - **Oda düğmelerini kolona hizala**: (Gelişmiş) Oda düğmeleri seçilen kolonun sağ kenarında biter, aradaki alanı eşit paylaşır.
 - **Oda düğmelerinin boyutu**: (Gelişmiş) Oda düğmelerinin genişliği ve yüksekliği (varsayılan 235 × 155).
+- **Saat**: Saat alanındaki saat gösterimini açar veya kapatır. Varsayılan açık.
+- **Tarih**: Saat alanında gün ve tarihi gösterir. Saatten bağımsız açılıp kapatılabilir.
+- **Hava durumu**: Seçili hava durumu kaynağının güncel koşulunu ve sıcaklığını gösterir. Saat ve tarihten bağımsızdır.
+- **Hava durumu kaynağı**: Home Assistant hava durumu varlığı. Tahmin isteği veya ek servis çağrısı yapılmaz.
 - **Saatte parlaklık**: Saatin olduğu alanı kaydırınca odadaki açık ışıkların parlaklığı birlikte değişir.
 - **Görünüm** (Gizli · Kutu): (Gelişmiş) Gizli: yalnız saat görünür, kaydırınca belirir. Kutu: oda düğmeleri gibi bir kutu.
 - **Telefonda ve dikey tablette de**: Telefonda ve dikey tablette saatin olduğu satır kaydırılır; kapatınca bu satır kaydırılamaz.

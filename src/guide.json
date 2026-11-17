@@ -704,6 +704,21 @@
      "en": "The tab's room: the effect screen and brightness on the clock use it."
     },
     {
+     "k": "tSensor",
+     "tr": "Oda düğmesinin sağ üst köşesinde küçük rozet olarak gösterilecek sıcaklık sensörü (ör. 24,8°). Gösterme seçeneği değeri gizler.",
+     "en": "Temperature sensor shown as a small badge in the top right corner of the room button (e.g. 24.8°). Do not show hides the value."
+    },
+    {
+     "k": "hSensor",
+     "tr": "Oda düğmesinde sıcaklığın yanında gösterilecek nem sensörü (ör. %48). Telefonda yer açmak için yalnızca sıcaklık gösterilir.",
+     "en": "Humidity sensor shown next to the temperature on the room button (e.g. 48%). On phones only the temperature is shown to save space."
+    },
+    {
+     "k": "pSensor",
+     "tr": "Varlık algılandığında oda düğmesinin simgesinin arkasında yavaşça nefes alan hafif bir hâle gösteren varlık veya hareket sensörü. Seçimlerde bu alandaki sensörler önce listelenir; başka bir alandan da seçebilirsin.",
+     "en": "Presence or motion sensor that shows a soft, slowly breathing glow behind the room button’s icon when presence is detected. Sensors in this area are listed first; sensors from other areas can also be selected."
+    },
+    {
      "k": "tabBg",
      "v": [
       "tabBgSame"
@@ -1701,6 +1716,7 @@
     "Ayarlar",
     "Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. En üstteki düğmelerle bölümlere atlanır: Sürüm, Pano, Görünüm, Ekran, Efektler, Anahtarlar (gelişmiş), Enerji, Yardım, Yedek.",
     "**Pano:** dil, mevsim, Önerilen ürünler. **Görünüm:** Stil seç'e giden kart, simge stili, oda düğmeleri (gelişmiş), saatte parlaklık, HA teması. **Ekran:** üst bar ve yan menü (bkz. Tablette tam ekran), kanvas (gelişmiş).",
+    "**Saat alanı:** saat, tarih ve hava durumu ayrı ayrı açılıp kapatılır. Hava durumu için bir Home Assistant kaynağı seç. Tarih, cihazın yerel saatine ve panonun diline göre gösterilir. Saat kapalı olsa da saatte parlaklık kaydırması çalışır.",
     "**Saatte parlaklık:** saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık bütün ışıkların parlaklığı birlikte değişir; en sola çekince kapanırlar, hepsi kapalıyken kaydırınca en son kapatılanlar açılır. Telefonda ve dikey tablette sayfa adı ile saatin olduğu satır kaydırılır.",
     "En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar."
    ],
@@ -1708,6 +1724,7 @@
     "Settings",
     "**Settings** at the top right apply to every tablet in the home. The buttons on top jump to a part: Version, Dashboard, Appearance, Screen, Effects, Switches (advanced), Energy, Help, Backup.",
     "**Dashboard:** language, season, Recommended products. **Appearance:** a card that opens Choose a style, icon style, room buttons (advanced), brightness on the clock, HA theme. **Screen:** top bar and sidebar (see Full screen on a tablet), canvas (advanced).",
+    "**Clock area:** turn the clock, date and weather on or off separately. Choose a Home Assistant source for weather. The date follows the device’s local time and the dashboard language. Brightness swiping still works with the clock hidden.",
     "**Brightness on the clock:** swipe the clock area left or right and every light that is on in that tab's room changes brightness together; all the way left turns them off, and swiping while all are off turns the last ones back on. On phones and upright tablets swipe the row with the page name and the clock.",
     "Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue."
    ],
@@ -1771,6 +1788,26 @@
      "k": "navSz",
      "tr": "(Gelişmiş) Oda düğmelerinin genişliği ve yüksekliği (varsayılan 235 × 155).",
      "en": "(Advanced) Width and height of room buttons (default 235 × 155)."
+    },
+    {
+     "k": "headerClock",
+     "tr": "Saat alanındaki saat gösterimini açar veya kapatır. Varsayılan açık.",
+     "en": "Shows or hides the clock in the clock area. On by default."
+    },
+    {
+     "k": "headerDate",
+     "tr": "Saat alanında gün ve tarihi gösterir. Saatten bağımsız açılıp kapatılabilir.",
+     "en": "Shows the day and date in the clock area, independently of the clock."
+    },
+    {
+     "k": "headerWeather",
+     "tr": "Seçili hava durumu kaynağının güncel koşulunu ve sıcaklığını gösterir. Saat ve tarihten bağımsızdır.",
+     "en": "Shows current conditions and temperature from the chosen weather source, independently of the clock and date."
+    },
+    {
+     "k": "headerWeatherEntity",
+     "tr": "Home Assistant hava durumu varlığı. Tahmin isteği veya ek servis çağrısı yapılmaz.",
+     "en": "A Home Assistant weather entity. No forecast requests or additional service calls are made."
     },
     {
      "k": "bb",
