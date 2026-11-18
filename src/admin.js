@@ -1598,7 +1598,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
       '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv">' + lpIcon(tab.icon || 'mdi:door') + '</div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label title="' + t('arHelp') + '">' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
-      this._tabSensorsHtml(tab) +
+      // oda düğmesindeki sıcaklık / nem / varlık sensörleri: gelişmiş ayar; biri seçiliyse basit modda da görünür (ayar gizli kalmasın)
+      ((this._adv() || LP_TAB_SENSORS.some((k) => typeof tab[k] === 'string' && tab[k])) ? this._tabSensorsHtml(tab) : '') +
       ((this._adv() || (tab.bg && tab.bg.mode)) ? (() => {   // odaya özel arka plan (v0.29.2)
         const B = tab.bg || {}, k = B.mode === 'fx' ? 'fx:' + B.fx : B.mode === 'color' ? 'color:' + String(B.color || '').toLowerCase() : B.mode || '';
         const b1 = (v, css, title) => '<button class="phsw' + (k === v ? ' on' : '') + '" data-tabbg="' + esc(v) + '" style="background:' + esc(css) + '" title="' + esc(title) + '"></button>';
