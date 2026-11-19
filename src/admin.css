@@ -255,6 +255,17 @@ select.inp { padding-right: 6px; }
 .bgc { width: 34px; height: 34px; border-radius: 10px; border: 2px solid var(--ln2); margin: 0 8px 8px 0; cursor: pointer; padding: 0; box-sizing: border-box; position: relative; }
 .bgc.on { border-color: var(--acl); box-shadow: 0 0 0 2px rgba(240, 169, 59, 0.35); }
 .bgc.pick { display: inline-flex; align-items: center; justify-content: center; background: var(--s3); color: var(--tx2); overflow: hidden; }
+.lpkel { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.lpk { display: inline-flex; align-items: center; height: 38px; padding: 0 6px 0 10px; border-radius: 11px; color: #3A2A17; font: 600 13px ui-monospace, monospace; }
+.lpk input { width: 52px; padding: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; text-align: right; -moz-appearance: textfield; }
+.lpk input::-webkit-outer-spin-button, .lpk input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.lpk i { font-style: normal; margin: 0 4px 0 1px; }
+.lpk button { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 8px; background: rgba(0, 0, 0, 0.12); color: inherit; cursor: pointer; }
+.lpcol { flex: 1 1 100%; margin-top: 0; }
+.lpcol .bgc, .lpedit .bgc { margin-bottom: 0; }
+.lpcol { gap: 0; row-gap: 8px; }
+.lpedit { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; }
+.lpedit .bgc { margin-right: 0; }
 .bgc.pick input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 .bgfx { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); grid-gap: 8px; margin-top: 4px; }
 .fxs { display: flex; flex-direction: column; align-items: stretch; padding: 6px; border-radius: 12px; border: 1px solid var(--ln2); background: var(--s2); color: var(--tx2); cursor: pointer; font-size: 11.5px; }

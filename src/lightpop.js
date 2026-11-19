@@ -288,11 +288,12 @@ class LemurLightPopup {
   }
   _target() { const segs = this._segments(); return this._tab === 'segment' && segs[this._seg] ? segs[this._seg] : this._id; }
   _colorHtml(id) {
-    const c = this._caps(id);
+    const c = this._caps(id), g = lpLightPopCfg();
+    const kel = g.kelvin ? g.kelvin.map((k) => [k, lpKelvinCss(k)]) : LP_POP_KELVIN, sw = g.colors || LP_POP_SWATCH;   // yönetim panelinden özelleştirilebilir
     let h = '';
-    if (c.ct) h += '<div class="kel">' + LP_POP_KELVIN.map((k) => '<div data-k="' + k[0] + '" style="background:' + k[1] + '">' + k[0] + 'K</div>').join('') + '</div>';
+    if (c.ct) h += '<div class="kel"' + (kel.length < 6 ? ' style="grid-template-columns:repeat(' + kel.length + ',1fr)"' : '') + '>' + kel.map((k) => '<div data-k="' + k[0] + '" style="background:' + k[1] + '">' + k[0] + 'K</div>').join('') + '</div>';
     if (c.color) h += '<div class="col"' + (c.ct ? '' : ' style="margin-top:0"') + '><div class="wh"><canvas width="326" height="326"></canvas><div class="dot"></div></div>' +
-      '<div class="sw">' + LP_POP_SWATCH.map((x) => '<div data-rgb="' + x + '" style="background:' + x + '"></div>').join('') + '</div></div>';
+      '<div class="sw">' + sw.map((x) => '<div data-rgb="' + x + '" style="background:' + x + '"></div>').join('') + '</div></div>';
     return h;
   }
   _paneHtml() {

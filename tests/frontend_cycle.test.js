@@ -121,7 +121,8 @@ test('the card text: elapsed time, drying, the finish time in 24 hours', () => {
   assert.strictEqual(X.lpCyLabel({}, st('running', { elapsed: 72, phase: 'tail' }), 'tr'), 'Kurutuyor · 1 sa 12 dk');
   assert.strictEqual(X.lpCyLabel({}, st('running', { elapsed: 5 }), 'en'), 'Running · 5 min');
   const d = new Date(); d.setHours(14, 5, 0, 0);
-  if (d.getTime() > Date.now()) d.setTime(Date.now() - 60000);
+  // 14:05'ten önce çalışırsa: içinde bulunulan dakika (gece yarısından hemen sonra "bir dakika önce" düne düşüp testi düşürüyordu)
+  if (d.getTime() > Date.now()) { d.setTime(Date.now()); d.setSeconds(0, 0); }
   const hm = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
   assert.strictEqual(X.lpCyLabel({}, st('done', { finished: d.toISOString() }), 'tr'), 'Bitti · ' + hm);
   assert.ok(/AM|PM/.test(X.lpCyLabel({ locale: { time_format: '12' } }, st('done', { finished: d.toISOString() }), 'en')));

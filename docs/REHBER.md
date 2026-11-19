@@ -502,6 +502,8 @@ Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. En üstteki dü�
 
 **Saat alanı:** saat, tarih ve hava durumu ayrı ayrı açılıp kapatılır. Hava durumu için bir Home Assistant kaynağı seç. Tarih, cihazın yerel saatine ve panonun diline göre gösterilir. Saat kapalı olsa da saatte parlaklık kaydırması çalışır.
 
+**Işık penceresi (gelişmiş):** bir ışığa basılı tutunca açılan penceredeki hazır beyaz tonları ve hazır renkler buradan değiştirilir. Beyaz tonunda Kelvin değerini yaz (1500 - 9000, en çok 6 düğme). Hazır renkte bir renge dokun; seçiciden ya da kodunu (#RRGGBB) yazarak değiştir, artı ile yenisini ekle (en çok 12). Varsayılana dön eski listeyi geri getirir.
+
 **Saatte parlaklık:** saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık bütün ışıkların parlaklığı birlikte değişir; en sola çekince kapanırlar, hepsi kapalıyken kaydırınca en son kapatılanlar açılır. Telefonda ve dikey tablette sayfa adı ile saatin olduğu satır kaydırılır.
 
 En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar.

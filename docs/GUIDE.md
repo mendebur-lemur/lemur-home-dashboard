@@ -502,6 +502,8 @@ Everything you change says "phone only". A section's name, column and devices ar
 
 **Clock area:** turn the clock, date and weather on or off separately. Choose a Home Assistant source for weather. The date follows the device’s local time and the dashboard language. Brightness swiping still works with the clock hidden.
 
+**Light window (advanced):** change the preset white tones and preset colors in the window that opens when you hold a light. For a white tone type the Kelvin value (1500 - 9000, up to 6 buttons). For a preset color tap it, then use the picker or type its code (#RRGGBB); add one with the plus (up to 12). Back to default restores the original list.
+
 **Brightness on the clock:** swipe the clock area left or right and every light that is on in that tab's room changes brightness together; all the way left turns them off, and swiping while all are off turns the last ones back on. On phones and upright tablets swipe the row with the page name and the clock.
 
 Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue.

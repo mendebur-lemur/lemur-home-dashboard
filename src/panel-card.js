@@ -380,6 +380,21 @@ function lpHeaderCfg() {
   return { clock: h.clock !== false, date: h.date === true, weather: h.weather === true,
     entity: typeof h.weather_entity === 'string' && /^weather\.[a-z0-9_]+$/.test(h.weather_entity) ? h.weather_entity : '' };
 }
+// ışık penceresindeki hazır beyaz tonları ve hazır renkler (Ayarlar → Işık penceresi); boşsa penceredeki varsayılanlar kullanılır
+function lpLightPopCfg() {
+  const s = lpSettings(), p = lhdIsObj(s.lightpop) ? s.lightpop : {};
+  const k = Array.isArray(p.kelvin) ? p.kelvin.map((v) => Math.round(+v)).filter((v) => v >= 1500 && v <= 9000).slice(0, 6) : [];
+  const c = Array.isArray(p.colors) ? p.colors.filter((v) => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v)).slice(0, 12) : [];
+  return { kelvin: k.length ? k : null, colors: c.length ? c : null };
+}
+// kelvin değerinin düğme rengi: bilinen noktalar arasında doğrusal geçiş (varsayılan düğmelerin renkleri aynen çıkar)
+const LP_KELVIN_PTS = [[1500, [255, 122, 0]], [2200, [255, 146, 39]], [2700, [255, 167, 87]], [3200, [255, 184, 123]], [3500, [255, 193, 141]], [4000, [255, 206, 166]], [5000, [255, 228, 206]], [6500, [255, 254, 250]], [9000, [214, 228, 255]]];
+function lpKelvinCss(k) {
+  const P = LP_KELVIN_PTS; k = Math.max(P[0][0], Math.min(P[P.length - 1][0], +k || 0));
+  let i = 1; while (i < P.length - 1 && k > P[i][0]) i++;
+  const a = P[i - 1], b = P[i], f = (k - a[0]) / (b[0] - a[0]);
+  return 'rgb(' + [0, 1, 2].map((q) => Math.round(a[1][q] + (b[1][q] - a[1][q]) * f)).join(',') + ')';
+}
 const LP_WEATHER_IC = { 'clear-night': 'night', cloudy: 'cloudy', exceptional: 'cloudy-alert', fog: 'fog', hail: 'hail', lightning: 'lightning',
   'lightning-rainy': 'lightning-rainy', partlycloudy: 'partly-cloudy', pouring: 'pouring', rainy: 'rainy', snowy: 'snowy', 'snowy-rainy': 'snowy-rainy', sunny: 'sunny', windy: 'windy', 'windy-variant': 'windy-variant' };
 

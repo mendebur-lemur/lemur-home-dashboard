@@ -6,6 +6,7 @@
 
 const ADM = {
   tr: {
+    lpSec: 'Işık penceresi', lpKel: 'Beyaz tonları', lpKelT: 'Pencerede çıkan hazır beyaz düğmeleri. Kelvin değerini yaz (1500 - 9000), en çok 6 düğme.', lpCol: 'Hazır renkler', lpColT: 'Pencerede çıkan renk örnekleri, en çok 12. Bir renge dokun; seçiciden ya da kodunu yazarak değiştir.', lpAdd: 'Ekle', lpDel: 'Sil', lpDef: 'Varsayılana dön', lpOwn: 'özel', lpCode: 'Renk kodu',
     headerInfo: 'Saat alanı', headerClock: 'Saat', headerDate: 'Tarih', headerWeather: 'Hava durumu', headerWeatherEntity: 'Hava durumu kaynağı', headerWeatherT: 'Güncel koşul ve sıcaklık seçtiğin Home Assistant hava durumu varlığından alınır.', headerWeatherPick: 'Kaynak seç', headerWeatherEmpty: 'Home Assistant’ta hava durumu varlığı bulunamadı.',
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
     undo: 'Geri al', undoK: 'Geri al (Ctrl+Z)', redoK: 'İleri al (Ctrl+Y)', redone: 'İleri alındı', settings: 'Ayarlar', more: 'Diğer işlemler', saved: 'Kaydedildi', undone: 'Geri alındı', err: 'Kaydedilemedi: {e}', errConflict: 'Bu ayar başka bir ekrandan değiştirildi; güncel hâli yüklendi. Değişikliğini yeniden yap.',
@@ -151,6 +152,7 @@ const ADM = {
     lrPillAvg: 'Öğreniyor · {t} · ~{w}', lrBoxA: 'Bu cihaz şu an etiket değeri ya da tahmin. Güç ölçen bir prize takıp birkaç gün bekle; gerçek ortalaması kaydedilir.', lrBoxAvgRun: 'Öğreniyor: {t}, şu ana kadar ortalama ~{w}.', lrBoxOwnA: 'Ölçülen ortalama kullanılıyor ({w}).', lrSaveGo: 'Kaydet ve öğren', lrNameFirst: 'Önce ad yaz'
   },
   en: {
+    lpSec: 'Light window', lpKel: 'White tones', lpKelT: 'The preset white buttons in the window. Type the Kelvin value (1500 - 9000), up to 6 buttons.', lpCol: 'Preset colors', lpColT: 'The color swatches in the window, up to 12. Tap a color; change it with the picker or by typing its code.', lpAdd: 'Add', lpDel: 'Delete', lpDef: 'Back to default', lpOwn: 'custom', lpCode: 'Color code',
     headerInfo: 'Clock area', headerClock: 'Clock', headerDate: 'Date', headerWeather: 'Weather', headerWeatherEntity: 'Weather source', headerWeatherT: 'Current conditions and temperature come from the selected Home Assistant weather entity.', headerWeatherPick: 'Choose a source', headerWeatherEmpty: 'No weather entities found in Home Assistant.',
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
     undo: 'Undo', undoK: 'Undo (Ctrl+Z)', redoK: 'Redo (Ctrl+Y)', redone: 'Redone', settings: 'Settings', more: 'More', saved: 'Saved', undone: 'Undone', err: 'Could not save: {e}', errConflict: 'This was changed from another screen; the current version was loaded. Please make your change again.',
@@ -1352,6 +1354,32 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   // üst şerit ayarları (ayar nav): oda düğmelerinin boyu ve kolona hizalama (src/panel-card.js lpNavCfg)
   // Saatte parlaklık: aç/kapa; açıkken görünüm, simge ve gösterge
+  // ışık penceresi (ayar lightpop): hazır beyaz tonları ve hazır renkler; gelişmiş ayar, özelleştirilmişse basit modda da görünür
+  _lpList(key) {
+    const c = lpLightPopCfg();
+    return key === 'kelvin' ? (c.kelvin || LP_POP_KELVIN.map((k) => k[0])) : (c.colors || LP_POP_SWATCH).map((x) => x.toUpperCase());
+  }
+  _lpSave(key, list) {
+    const def = key === 'kelvin' ? LP_POP_KELVIN.map((k) => k[0]) : LP_POP_SWATCH.map((x) => x.toUpperCase());
+    this._setting('lightpop.' + key, list && list.length && list.join() !== def.join() ? list : null);
+  }
+  _lightPopRows() {
+    const t = (k) => esc(this._t(k)), c = lpLightPopCfg();
+    if (!this._adv() && !c.kelvin && !c.colors) return '';
+    const K = this._lpList('kelvin'), C = this._lpList('colors'), sel = Math.min(this._lpSel === undefined ? -1 : this._lpSel, C.length - 1);
+    const own = (on) => on ? ' <i class="phb">' + t('lpOwn') + '</i>' : '', reset = (key, on) => on ? '<button class="btn sm" data-lpreset="' + key + '">' + t('lpDef') + '</button>' : '';
+    return '<div class="sh">' + t('lpSec') + '</div>' +
+      '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 60%"><b>' + t('lpKel') + own(!!c.kelvin) + '</b><span>' + t('lpKelT') + '</span></div>' + reset('kelvin', !!c.kelvin) +
+        '<div class="lpkel">' + K.map((k, i) => '<span class="lpk" style="background:' + lpKelvinCss(k) + '"><input type="number" min="1500" max="9000" step="100" data-lpk="' + i + '" value="' + k + '"><i>K</i>' +
+          (K.length > 1 ? '<button data-lpkdel="' + i + '" title="' + t('lpDel') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button>' : '') + '</span>').join('') +
+          (K.length < 6 ? '<button class="btn sm dash" data-lpkadd><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('lpAdd') + '</button>' : '') + '</div></div>' +
+      '<div class="srow" style="flex-wrap:wrap"><div class="t" style="flex:1 1 60%"><b>' + t('lpCol') + own(!!c.colors) + '</b><span>' + t('lpColT') + '</span></div>' + reset('colors', !!c.colors) +
+        '<div class="bgsw lpcol">' + C.map((x, i) => '<button class="bgc' + (i === sel ? ' on' : '') + '" data-lpc="' + i + '" style="background:' + x + '" title="' + x + '"></button>').join('') +
+          (C.length < 12 ? '<button class="bgc pick" data-lpcadd title="' + t('lpAdd') + '"><ha-icon class="s16" icon="mdi:plus"></ha-icon></button>' : '') + '</div>' +
+        (sel >= 0 ? '<div class="lpedit"><label class="bgc pick" style="background:' + C[sel] + '"><input type="color" data-lpcpick="' + sel + '" value="' + C[sel] + '"></label>' +
+          '<input class="inp" type="text" maxlength="7" spellcheck="false" autocomplete="off" data-lpchex="' + sel + '" value="' + C[sel] + '" aria-label="' + t('lpCode') + '" style="width:110px;font-family:ui-monospace,monospace;text-transform:uppercase">' +
+          (C.length > 1 ? '<button class="btn sm dan" data-lpcdel="' + sel + '"><ha-icon class="s16" icon="mdi:trash-can-outline"></ha-icon>' + t('lpDel') + '</button>' : '') + '</div>' : '') + '</div>';
+  }
   _headerRows() {
     const t = (k) => esc(this._t(k)), c = lpHeaderCfg(), S = this._hass.states;
     const toggle = (key, label, on) => '<div class="srow"><div class="t"><b id="header-' + key + '">' + t(label) + '</b></div><button type="button" class="tg' + (on ? ' on' : '') + '" role="switch" aria-checked="' + on + '" aria-labelledby="header-' + key + '" data-tg="header.' + key + '"></button></div>';
@@ -3159,7 +3187,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           (lpIconMode() === 'tint' ? '<div class="bgsw" style="width:100%">' + LHD_TINT_COLORS.map((c) => '<button class="bgc' + (lpIconTint().toLowerCase() === c.toLowerCase() ? ' on' : '') + '" data-tintc="' + c + '" style="background:' + c + '" title="' + c + '"></button>').join('') + '<label class="bgc pick" title="' + t('icTintC') + '"><input type="color" data-tintpick value="' + esc(lpIconTint()) + '"><ha-icon class="s16" icon="mdi:eyedropper-variant"></ha-icon></label></div>' : '') + '</div>' +
         (lpIconMode() === 'tint' ? '<div class="srow"><div class="t"><b>' + t('icTintL') + '</b><span>' + t('icTintLT') + '</span></div>' + tg('icon_tint_light', lpIconTintLight()) + '</div>' : '') +
         ((this._adv() || (lhdIsObj(s.nav) && (s.nav.cols || s.nav.w || s.nav.h))) ? this._navRows(seg, tg, lec && s.lec_nav !== false) : '') +
-        this._headerRows() + this._bbRows(seg, tg) +
+        this._headerRows() + this._bbRows(seg, tg) + this._lightPopRows() +
         '<div class="srow"><div class="t"><b>' + t('theme') + '</b><span>' + t('themeT') + '</span></div><input class="inp w" data-sf="theme_name" value="' + esc(s.theme_name || '') + '" placeholder="ios-dark-mode-blue-red"></div>' +
         '<div class="sh" data-sh="s_screen">' + t('s_screen') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + kseg('kiosk.hide_header', k.hide_header) + '</div>' +
@@ -3944,6 +3972,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (g('[data-updrs]')) return this._updSet({ st: 'ask' });
       if (g('[data-updno]')) return this._updSet({ st: 'installed' });
       if (g('[data-updyes]')) return this._updRestart();
+      // Işık penceresi: hazır beyaz tonları ve hazır renkler
+      const lpq = g('[data-lpreset], [data-lpkadd], [data-lpkdel], [data-lpc], [data-lpcadd], [data-lpcdel]');
+      if (lpq) {
+        const K = this._lpList('kelvin').slice(), C = this._lpList('colors').slice();
+        if (lpq.hasAttribute('data-lpreset')) { this._lpSel = -1; return this._setting('lightpop.' + lpq.getAttribute('data-lpreset'), null); }
+        if (lpq.hasAttribute('data-lpkadd')) { K.push(Math.min(9000, K[K.length - 1] + 500)); return this._lpSave('kelvin', K); }
+        if (lpq.hasAttribute('data-lpkdel')) { K.splice(+lpq.getAttribute('data-lpkdel'), 1); return this._lpSave('kelvin', K); }
+        if (lpq.hasAttribute('data-lpc')) { const i = +lpq.getAttribute('data-lpc'); this._lpSel = this._lpSel === i ? -1 : i; return this._render(); }
+        if (lpq.hasAttribute('data-lpcadd')) { C.push('#FFFFFF'); this._lpSel = C.length - 1; return this._lpSave('colors', C); }
+        if (lpq.hasAttribute('data-lpcdel')) { C.splice(+lpq.getAttribute('data-lpcdel'), 1); this._lpSel = -1; return this._lpSave('colors', C); }
+      }
       const tcl = g('[data-tintc]');
       if (tcl) return this._setting('icon_tint', tcl.getAttribute('data-tintc'));
       const bgc = g('[data-bgcolor]');
@@ -4057,6 +4096,16 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (el.hasAttribute && el.hasAttribute('data-bgpick')) return this._bgSet({ mode: 'color', color: el.value }, true);
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akpick')) { this._ak.bg = 'color'; this._ak.bgColor = el.value; return this._render(); }
       if (this._ak && el.hasAttribute && el.hasAttribute('data-akurl')) { this._ak.bg = 'img'; this._ak.bgUrl = el.value.trim(); return this._render(); }
+      if (el.hasAttribute && el.hasAttribute('data-lpk')) {
+        const K = this._lpList('kelvin').slice(), v = Math.round(parseFloat(String(el.value).replace(',', '.')));
+        if (!(v >= 1500 && v <= 9000)) return this._render();   // geçersiz değer: eskisi geri gelir
+        K[+el.getAttribute('data-lpk')] = v; return this._lpSave('kelvin', K);
+      }
+      if (el.hasAttribute && (el.hasAttribute('data-lpcpick') || el.hasAttribute('data-lpchex'))) {
+        const C = this._lpList('colors').slice(), m = /^#?([0-9a-f]{6})$/i.exec(String(el.value).trim());
+        if (!m) return this._render();
+        C[+el.getAttribute(el.hasAttribute('data-lpcpick') ? 'data-lpcpick' : 'data-lpchex')] = '#' + m[1].toUpperCase(); return this._lpSave('colors', C);
+      }
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');
       if (sf === 'energy.meter.power' && el.value && !(lpEnMeter() && lpEnMeter().energy)) return this._enSetMany({ meter: this._enMeterAuto(el.value) });

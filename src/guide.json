@@ -1717,6 +1717,7 @@
     "Sağ üstteki **Ayarlar** evdeki bütün tabletlere uygulanır. En üstteki düğmelerle bölümlere atlanır: Sürüm, Pano, Görünüm, Ekran, Efektler, Anahtarlar (gelişmiş), Enerji, Yardım, Yedek.",
     "**Pano:** dil, mevsim, Önerilen ürünler. **Görünüm:** Stil seç'e giden kart, simge stili, oda düğmeleri (gelişmiş), saatte parlaklık, HA teması. **Ekran:** üst bar ve yan menü (bkz. Tablette tam ekran), kanvas (gelişmiş).",
     "**Saat alanı:** saat, tarih ve hava durumu ayrı ayrı açılıp kapatılır. Hava durumu için bir Home Assistant kaynağı seç. Tarih, cihazın yerel saatine ve panonun diline göre gösterilir. Saat kapalı olsa da saatte parlaklık kaydırması çalışır.",
+    "**Işık penceresi (gelişmiş):** bir ışığa basılı tutunca açılan penceredeki hazır beyaz tonları ve hazır renkler buradan değiştirilir. Beyaz tonunda Kelvin değerini yaz (1500 - 9000, en çok 6 düğme). Hazır renkte bir renge dokun; seçiciden ya da kodunu (#RRGGBB) yazarak değiştir, artı ile yenisini ekle (en çok 12). Varsayılana dön eski listeyi geri getirir.",
     "**Saatte parlaklık:** saatin olduğu alanı sağa sola kaydırınca o sekmenin odasında açık bütün ışıkların parlaklığı birlikte değişir; en sola çekince kapanırlar, hepsi kapalıyken kaydırınca en son kapatılanlar açılır. Telefonda ve dikey tablette sayfa adı ile saatin olduğu satır kaydırılır.",
     "En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her şeyi tek dosyada indirir; **Sorun bildir** GitHub'da kayıt açar."
    ],
@@ -1725,6 +1726,7 @@
     "**Settings** at the top right apply to every tablet in the home. The buttons on top jump to a part: Version, Dashboard, Appearance, Screen, Effects, Switches (advanced), Energy, Help, Backup.",
     "**Dashboard:** language, season, Recommended products. **Appearance:** a card that opens Choose a style, icon style, room buttons (advanced), brightness on the clock, HA theme. **Screen:** top bar and sidebar (see Full screen on a tablet), canvas (advanced).",
     "**Clock area:** turn the clock, date and weather on or off separately. Choose a Home Assistant source for weather. The date follows the device’s local time and the dashboard language. Brightness swiping still works with the clock hidden.",
+    "**Light window (advanced):** change the preset white tones and preset colors in the window that opens when you hold a light. For a white tone type the Kelvin value (1500 - 9000, up to 6 buttons). For a preset color tap it, then use the picker or type its code (#RRGGBB); add one with the plus (up to 12). Back to default restores the original list.",
     "**Brightness on the clock:** swipe the clock area left or right and every light that is on in that tab's room changes brightness together; all the way left turns them off, and swiping while all are off turns the last ones back on. On phones and upright tablets swipe the row with the page name and the clock.",
     "Version and updates at the top: install a new version from here. **Backup** downloads everything in one file; **Report a problem** opens a GitHub issue."
    ],
