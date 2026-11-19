@@ -814,13 +814,16 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const S = this._hass.states, E = this._hass.entities || {}, D = this._hass.devices || {};
     const t = (k) => esc(this._t(k));
     const areaOf = (id) => { const e = E[id] || {}, d = D[e.device_id] || {}; return e.area_id || d.area_id; };
+    // varlık: hareket/doluluk/varlık sensörleri her grubun başında; sınıfsız ikili sensörler (kayıt, besleme...) de seçilebilir
+    // ama sonda, yoksa gerçek sensör onların arasında kayboluyor. "moving": bazı hareket sensörleri bu sınıfla gelir
+    const pres = (id) => ['occupancy', 'presence', 'motion', 'moving'].indexOf((S[id].attributes || {}).device_class) >= 0;
     return '<div class="row2 tabsensors" style="flex:1 1 100%">' + LP_TAB_SENSORS.map((key, i) => {
       const label = ['tSensor', 'hSensor', 'pSensor'][i], cur = tab[key], fid = 'tab-' + key;
       const ids = Object.keys(S).filter((id) => {
         const dc = (S[id].attributes || {}).device_class;
-        return i === 2 ? id.indexOf('binary_sensor.') === 0 && (!dc || ['occupancy', 'presence', 'motion'].indexOf(dc) >= 0) :
+        return i === 2 ? id.indexOf('binary_sensor.') === 0 && (!dc || pres(id)) :
           id.indexOf('sensor.') === 0 && dc === (i === 0 ? 'temperature' : 'humidity');
-      }).sort((a, b) => this._ename(a).localeCompare(this._ename(b)));
+      }).sort((a, b) => (i === 2 ? (pres(a) ? 0 : 1) - (pres(b) ? 0 : 1) : 0) || this._ename(a).localeCompare(this._ename(b)));
       if (typeof cur === 'string' && cur && ids.indexOf(cur) < 0) ids.unshift(cur);
       const option = (id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + ' (' + esc(id) + ')</option>';
       const near = ids.filter((id) => tab.area && areaOf(id) === tab.area), other = ids.filter((id) => near.indexOf(id) < 0);

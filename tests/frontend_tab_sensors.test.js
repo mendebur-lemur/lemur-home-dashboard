@@ -47,6 +47,9 @@ test('selectors filter types, put entity/device area matches first and keep miss
     'binary_sensor.presence': state('binary_sensor.presence', 'on', 'presence'),
     'binary_sensor.diy': state('binary_sensor.diy', 'on'),
     'binary_sensor.door': state('binary_sensor.door', 'on', 'door'),
+    'binary_sensor.terrace_motion_sensor_occupancy': state('binary_sensor.terrace_motion_sensor_occupancy', 'on', 'motion', { friendly_name: 'terrace motion sensor Varlık' }),
+    'binary_sensor.kitchen_motion_sensor_occupancy': state('binary_sensor.kitchen_motion_sensor_occupancy', 'off', 'moving', { friendly_name: 'kitchen motion sensor Varlık' }),
+    'binary_sensor.a_feeder': state('binary_sensor.a_feeder', 'off'),
     'sensor.power': state('sensor.power', '2', 'power')
   };
   const h = { _hass: { states: S, entities: { 'sensor.local': { device_id: 'd' }, 'binary_sensor.presence': { area_id: 'room' } }, devices: { d: { area_id: 'room' } } },
@@ -60,6 +63,12 @@ test('selectors filter types, put entity/device area matches first and keep miss
   assert.match(fields[2], /binary_sensor.presence/);
   assert.match(fields[2], /binary_sensor.diy/);
   assert.doesNotMatch(fields[2], /binary_sensor.door/);
+  // gerçek hareket sensörü, adı alfabede sonra gelse de sınıfsız ikili sensörlerin önünde
+  const terrace = fields[2].indexOf('binary_sensor.terrace_motion_sensor_occupancy');
+  assert.ok(terrace >= 0 && terrace < fields[2].indexOf('binary_sensor.a_feeder') && terrace < fields[2].indexOf('binary_sensor.diy'));
+  // device_class "moving" ile gelen hareket sensörü de listede ve önde
+  const kitchen = fields[2].indexOf('binary_sensor.kitchen_motion_sensor_occupancy');
+  assert.ok(kitchen >= 0 && kitchen < fields[2].indexOf('binary_sensor.a_feeder'));
   assert.match(fields[0], /label for="tab-temperature_sensor"/);
   assert.match(fields[0], /id="tab-temperature_sensor"/);
 });
