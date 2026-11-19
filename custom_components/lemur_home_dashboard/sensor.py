@@ -11,7 +11,7 @@ from homeassistant.core import callback
 from homeassistant.helpers import area_registry as ar
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
-from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dispatcher_send
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 from homeassistant.util import dt as dt_util
 
@@ -24,6 +24,15 @@ from .const import DOMAIN, SIGNAL_EST, SIGNAL_TICK
 ENERGY_WRITE_S = 30.0   # kWh sensors: the value is kept exact, written to the state machine at most this often
 ENERGY_IDLE_S = 300   # a kWh sensor whose shown value did not move is still written this often
 REG_SYNC_S = 2.0        # registry events (devices, areas): one sync this long after the last one
+SIGNAL_HA_PREFS = f"{DOMAIN}_ha_energy_prefs"   # Home Assistant's Energy settings changed (the home total looks at its sources)
+
+
+def _ha_sun(hass) -> bool:
+    """Home Assistant's Energy settings have a solar or battery source (then a grid meter counts what came from the grid,
+    not what the home used; the dashboard's lpEnHomeIds checks the same). False when the energy manager is not loaded."""
+    mgr = hass.data.get("energy_manager") if hass is not None else None
+    prefs = getattr(mgr, "data", None)
+    return isinstance(prefs, dict) and any(isinstance(x, dict) and x.get("type") in ("solar", "battery") for x in prefs.get("energy_sources") or [])
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -773,11 +782,28 @@ class HomeEnergySensor(_HomeMixin, _Daily, CategoryEnergySensor):
     def _follow(self) -> list[str]:
         # ev sayacı seçiliyse evin bugünkü kWh'ı sayaçtan (panonun kartları da evin toplamını ondan alır); yoksa cihazların toplamı
         m = EST.home_meter_energy(self._d.data.get("settings") or {})
+        if m and _ha_sun(self._d.hass):   # güneş / batarya yalnız Home Assistant'ın Enerji ayarında: sayaç evi değil şebekeyi sayar
+            m = None
         return [m] if m else CategoryEnergySensor._follow(self)
 
     async def async_added_to_hass(self) -> None:
+        hass = self.hass
+        try:   # Home Assistant'ın Enerji ayarı: yüklü olsun, değişince sayaç kararı yeniden verilsin (dinleyici çalışma başına bir kez)
+            from homeassistant.components.energy.data import async_get_manager
+            mgr = await async_get_manager(hass)
+            if not hass.data.get(SIGNAL_HA_PREFS):
+                hass.data[SIGNAL_HA_PREFS] = True
+
+                async def _prefs_changed() -> None:
+                    async_dispatcher_send(hass, SIGNAL_HA_PREFS)
+
+                mgr.async_listen_updates(_prefs_changed)
+        except Exception:  # noqa: BLE001 - no energy integration: the dashboard's own settings decide
+            pass
         await CategoryEnergySensor.async_added_to_hass(self)
         await self._daily_start()
+        # Home Assistant'ta güneş / batarya eklenip çıkarılınca sayaç ya da cihazlar (seyrek: yalnız Enerji ayarı kaydedilince)
+        self.async_on_remove(async_dispatcher_connect(hass, SIGNAL_HA_PREFS, self.async_est_changed))
 
 
 class PetFeedingSensor(SensorEntity):

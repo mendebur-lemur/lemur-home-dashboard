@@ -1360,7 +1360,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (!b._bar) { lpPress(b, tap, hold2); return; }
       lpSlide(b, {
         tap: tap, hold: hold2,
-        can: () => lpBarCan(this._hass.states[id]),
+        can: () => { const st = this._hass.states[id]; return lpBarCan(st) && st.state !== 'unavailable'; },   // ulaşılamayan cihaza komut gitmez (dokunuştaki gibi)
         start: () => { const st = this._hass.states[id]; return b._settle && Date.now() < b._settle.until ? b._settle.v : (st ? lpBarVal(st) : 0); },
         move: (v) => { b._drag = true; b._dv = v; this._paintBar(b, this._hass.states[id], v); },
         end: () => {

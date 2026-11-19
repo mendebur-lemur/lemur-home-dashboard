@@ -508,6 +508,7 @@
 .phone .nav > .clock.hinfo { display: none; }
 .phone .phd.hasinfo { flex-wrap: wrap; }
 .phone .phd.hasinfo .bbv { margin-left: auto; }
+.phone .phd.bbar.hasinfo > b { flex: 1 1 0px; }   /* uzun ad parlaklık değerini alt satıra itmesin (boş bant); saat satırı yine alta iner (100% + gap) */
 .phone .phd .clock.hinfo { display: flex; flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 4px 0 0; text-align: left; }
 .phone .phd .clock.hinfo .htime { line-height: 26px; }
 .phone .phd .clock.hinfo .hdate { font-size: 11px; line-height: 16px; }

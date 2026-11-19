@@ -200,7 +200,11 @@ class LemurCoverPopup extends LemurLightPopup {
         this._dragging = false; win.classList.remove('drag');
         if (v === null) return;
         this._hold = { v: v, until: Date.now() + 4000 };   // cihazın yeni konumu gelene kadar çizim geri zıplamasın
-        this._h.callService('cover', 'set_cover_position', { entity_id: this._id, position: v });
+        // süre dolunca ya da komut reddedilince çizim gerçek konuma döner (yoksa perde hiç kıpırdamasa da bırakılan konumda kalıyordu)
+        const back = () => { if (this._closed) return; this._seen = null; this._sync(); };
+        setTimeout(back, 4100);
+        const pr = this._h.callService('cover', 'set_cover_position', { entity_id: this._id, position: v });
+        if (pr && pr.catch) pr.catch(() => { this._hold = null; back(); });
       });
     }
   }

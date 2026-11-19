@@ -31,8 +31,8 @@ _LUT_FILES = ("color_temp.csv", "hs.csv", "brightness.csv", "effect.csv")
 
 
 def _ci(parent: Path, name: str) -> Path | None:
-    """A child directory by name, ignoring case."""
-    if not name or not parent.is_dir():
+    """A child directory by name, ignoring case. Only a plain folder name: no path parts, nothing that leaves parent."""
+    if not name or name in (".", "..") or "/" in name or "\\" in name or "\0" in name or not parent.is_dir():
         return None
     p = parent / name
     if p.is_dir():

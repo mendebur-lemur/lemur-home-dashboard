@@ -1293,8 +1293,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return Object.values(S).find((s) => hacs(s) && LHD_REPO_URL.test(String(s.attributes.release_url || ''))) || (hacs(S['update.lemur_home_dashboard_update']) ? S['update.lemur_home_dashboard_update'] : null);
   }
   async _updCheck() {
-    const c = this._hass.connection, vnum = (v) => String(v || '').replace(/^v/i, '').split('.').map((n) => parseInt(n, 10) || 0);
-    const newer = (a, b) => { const x = vnum(a), y = vnum(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; };
+    // 0.36.0b8 → [0, 36, 0, 8]; kararlı sürümün dördüncüsü sonsuz: 0.36.0b8 < 0.36.0b9 < 0.36.0 (eskiden "0b8" 0 okunuyordu, beta = kararlı)
+    const c = this._hass.connection, vnum = (v) => { const m = /^v?(\d+)\.(\d+)\.(\d+)(?:b(\d+))?/i.exec(String(v || '').trim()) || []; return [m[1], m[2], m[3]].map((n) => parseInt(n, 10) || 0).concat(m[4] !== undefined ? parseInt(m[4], 10) : Infinity); };
+    const newer = (a, b) => { const x = vnum(a), y = vnum(b); for (let i = 0; i < 4; i++) if (x[i] !== y[i]) return x[i] > y[i]; return false; };
     this._updSet({ st: 'checking', err: null });
     try {
       let cur = PANEL_VERSION; try { cur = (await c.sendMessagePromise({ type: 'lemur_home_dashboard/info' })).version || cur; } catch (e) {}
@@ -1359,9 +1360,21 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const c = lpLightPopCfg();
     return key === 'kelvin' ? (c.kelvin || LP_POP_KELVIN.map((k) => k[0])) : (c.colors || LP_POP_SWATCH).map((x) => x.toUpperCase());
   }
-  _lpSave(key, list) {
+  _lpSave(key, list, soft) {
     const def = key === 'kelvin' ? LP_POP_KELVIN.map((k) => k[0]) : LP_POP_SWATCH.map((x) => x.toUpperCase());
-    this._setting('lightpop.' + key, list && list.length && list.join() !== def.join() ? list : null);
+    this._setting('lightpop.' + key, list && list.length && list.join() !== def.join() ? list : null, soft);
+    if (soft) this._lpOwnPaint();
+  }
+  // yazı alanından soft kayıt: satır başlığındaki "özel" işareti ve Varsayılana dön düğmesi yerinde güncellenir
+  _lpOwnPaint() {
+    const R = this.shadowRoot, c = lpLightPopCfg(), t = (k) => esc(this._t(k));
+    [['kelvin', '.lpkel', 'lpKel'], ['colors', '.lpcol', 'lpCol']].forEach((x) => {
+      const box = R && R.querySelector(x[1]), row = box && box.parentNode, b = row && row.querySelector('.t b'); if (!b) return;
+      const on = !!c[x[0]], r = row.querySelector('[data-lpreset]');
+      b.innerHTML = t(x[2]) + (on ? ' <i class="phb">' + t('lpOwn') + '</i>' : '');
+      if (on && !r) row.querySelector('.t').insertAdjacentHTML('afterend', '<button class="btn sm" data-lpreset="' + x[0] + '">' + t('lpDef') + '</button>');
+      else if (!on && r) r.remove();
+    });
   }
   _lightPopRows() {
     const t = (k) => esc(this._t(k)), c = lpLightPopCfg();
@@ -4013,7 +4026,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const tgl = g('[data-tg]');
       if (tgl) {
         const path = tgl.getAttribute('data-tg'); const cur = tgl.classList.contains('on');
-        if (path === 'lec_nav' || path === 'icon_tint_light' || path === 'phone.sheet' || path === 'header.clock') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
+        if (path === 'lec_nav' || path === 'icon_tint_light' || path === 'phone.sheet' || path === 'header.clock' || path === 'bright.phone') return this._setting(path, cur ? false : null);   // varsayılan açık: kapatınca false saklanır
         return this._setting(path, cur ? null : true);
       }
     });
@@ -4099,12 +4112,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (el.hasAttribute && el.hasAttribute('data-lpk')) {
         const K = this._lpList('kelvin').slice(), v = Math.round(parseFloat(String(el.value).replace(',', '.')));
         if (!(v >= 1500 && v <= 9000)) return this._render();   // geçersiz değer: eskisi geri gelir
-        K[+el.getAttribute('data-lpk')] = v; return this._lpSave('kelvin', K);
+        K[+el.getAttribute('data-lpk')] = v; el.value = v; if (el.parentNode) el.parentNode.style.background = lpKelvinCss(v);
+        return this._lpSave('kelvin', K, true);   // soft: hemen ardından basılan düğme yutulmasın, Tab'la geçilen alan odakta kalsın
       }
       if (el.hasAttribute && (el.hasAttribute('data-lpcpick') || el.hasAttribute('data-lpchex'))) {
         const C = this._lpList('colors').slice(), m = /^#?([0-9a-f]{6})$/i.exec(String(el.value).trim());
         if (!m) return this._render();
-        C[+el.getAttribute(el.hasAttribute('data-lpcpick') ? 'data-lpcpick' : 'data-lpchex')] = '#' + m[1].toUpperCase(); return this._lpSave('colors', C);
+        const ci = +el.getAttribute(el.hasAttribute('data-lpcpick') ? 'data-lpcpick' : 'data-lpchex'), hx = '#' + m[1].toUpperCase(); C[ci] = hx;
+        if (el.hasAttribute('data-lpcpick')) return this._lpSave('colors', C);
+        // renk kodu alanı: soft kayıt, örnek ve seçici yerinde güncellenir (Sil'e ya da başka renge basış yutulmasın)
+        const R2 = this.shadowRoot, sw = R2.querySelector('[data-lpc="' + ci + '"]'), pk = R2.querySelector('[data-lpcpick="' + ci + '"]');
+        el.value = hx; if (sw) { sw.style.background = hx; sw.title = hx; } if (pk) { pk.value = hx.toLowerCase(); pk.parentNode.style.background = hx; }
+        return this._lpSave('colors', C, true);
       }
       if (el.hasAttribute && el.hasAttribute('data-tintpick')) return this._setting('icon_tint', el.value);
       const sf = el.getAttribute && el.getAttribute('data-sf');

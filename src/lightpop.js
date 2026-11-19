@@ -330,7 +330,7 @@ class LemurLightPopup {
     }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-seg]'), (el) => el.addEventListener('click', () => { this._seg = +el.getAttribute('data-seg'); this._render(); }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => el.addEventListener('click', () => {
-      this._kHold = { k: +el.getAttribute('data-k'), until: Date.now() + 3000 }; this._seen = null; this._sync();   // seçim hemen görünür (v0.33)
+      this._kHold = { k: +el.getAttribute('data-k'), until: Date.now() + 3000 }; this._seen = null; this._sync(); this._resync(3100);   // seçim hemen görünür (v0.33)
       this._call('turn_on', this._target(), { color_temp_kelvin: +el.getAttribute('data-k') });
     }));
     Array.prototype.forEach.call(R.querySelectorAll('[data-rgb]'), (el) => el.addEventListener('click', () => {
@@ -354,7 +354,7 @@ class LemurLightPopup {
         sl.querySelector('.fill').style.width = pct + '%';
         sl.querySelector('.tx span').textContent = pct ? pct + '%' : this._t('off');
         if (Date.now() - last > 300) send();
-      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); sl._settle = { v: pct, until: Date.now() + 3000 }; send(true); });
+      }, () => { this._dragging = false; this._seen = null; sl.classList.remove('drag'); sl._settle = { v: pct, until: Date.now() + 3000 }; this._resync(3100); send(true); });
     });
     // renk çemberi
     const wh = R.querySelector('.wh');
@@ -371,7 +371,7 @@ class LemurLightPopup {
         hs = [Math.round((Math.atan2(y, x) * 180 / Math.PI + 360) % 360), Math.round(d * 100)];
         const dot = wh.querySelector('.dot'); dot.style.left = (50 + x / rad * 50) + '%'; dot.style.top = (50 + y / rad * 50) + '%';
         if (Date.now() - last > 220) send();
-      }, () => { this._dragging = false; this._seen = null; if (hs) wh._settle = { hs: hs, until: Date.now() + 3000 }; setTimeout(() => send(true), 120); });
+      }, () => { this._dragging = false; this._seen = null; if (hs) { wh._settle = { hs: hs, until: Date.now() + 3000 }; this._resync(3100); } setTimeout(() => send(true), 120); });
     }
   }
   _paintWheel(cv) {
@@ -395,9 +395,17 @@ class LemurLightPopup {
   _call(svc, id, data) {
     if (!this._live(id)) return;
     const d = id.split('.')[0];
-    if (d !== 'light') { this._h.callService('homeassistant', svc === 'turn_off' ? 'turn_off' : 'turn_on', { entity_id: id }); return; }
-    this._h.callService('light', svc, Object.assign({ entity_id: id }, data));
+    const pr = d !== 'light' ? this._h.callService('homeassistant', svc === 'turn_off' ? 'turn_off' : 'turn_on', { entity_id: id }) : this._h.callService('light', svc, Object.assign({ entity_id: id }, data));
+    // komut reddedildiyse (cihaz cevap vermedi, HA hata döndü) bırakılan değer tutulmaz: kaydırıcı, beyaz tonu ve renk noktası hemen gerçeğe döner
+    if (pr && pr.catch) pr.catch(() => {
+      if (this._closed) return;
+      this._kHold = null;
+      Array.prototype.forEach.call(this._pan.querySelectorAll('[data-sl], .wh'), (el) => { el._settle = null; });
+      if (!this._dragging) { this._seen = null; this._sync(); }
+    });
   }
+  // tutulan değerin süresi dolunca yeniden çizilir: ışık o arada hiç durum bildirmediyse (ya da başka bir değer bildirdiyse) gerçeğe döner
+  _resync(ms) { setTimeout(() => { if (!this._closed && !this._dragging) { this._seen = null; this._sync(); } }, ms); }
   _toggle(id) {
     // beklenen durum hemen gösterilir, Home Assistant'ın cevabı gelince (ya da 5 sn sonra) gerçeğine döner (v0.33; düğme cevap gelene kadar hiç kıpırdamıyordu)
     // cevap beklenirken yeniden dokunulursa beklenen durumun tersi istenir (gerçek durum henüz eski); komut açık aç / kapat (v0.36)
@@ -468,10 +476,13 @@ class LemurLightPopup {
       dot.style.left = (50 + Math.cos(a) * r * 50) + '%'; dot.style.top = (50 + Math.sin(a) * r * 50) + '%';
     }
     const kReal = !!tgt && tgt.state === 'on' && ta.color_mode === 'color_temp' ? (ta.color_temp_kelvin || 0) : 0;
+    // ışığın değerine en yakın düğme (120 K içinde); özel tonlar birbirine yakınsa (ör. 2700 / 2750 / 2800) yalnız biri seçili görünür
+    const kEls = R.querySelectorAll('[data-k]');
+    let kNear = 0; Array.prototype.forEach.call(kEls, (el) => { const k = +el.getAttribute('data-k'); if (kReal > 0 && Math.abs(kReal - k) < 120 && (!kNear || Math.abs(kReal - k) < Math.abs(kReal - kNear))) kNear = k; });
     let kH = this._kHold;   // dokunulan beyaz tonu, ışık onu bildirene kadar seçili kalır
-    if (kH && (Date.now() > kH.until || Math.abs(kReal - kH.k) < 120)) kH = this._kHold = null;
-    Array.prototype.forEach.call(R.querySelectorAll('[data-k]'), (el) => {
-      el.classList.toggle('on', kH ? +el.getAttribute('data-k') === kH.k : kReal > 0 && Math.abs(kReal - +el.getAttribute('data-k')) < 120);
+    if (kH && (Date.now() > kH.until || kNear === kH.k)) kH = this._kHold = null;
+    Array.prototype.forEach.call(kEls, (el) => {
+      el.classList.toggle('on', +el.getAttribute('data-k') === (kH ? kH.k : kNear));
     });
     const ef = st && st.state === 'on' ? String(st.attributes.effect || '') : '';
     Array.prototype.forEach.call(R.querySelectorAll('[data-fx]'), (el) => el.classList.toggle('on', !!ef && el.getAttribute('data-fx') === ef));
