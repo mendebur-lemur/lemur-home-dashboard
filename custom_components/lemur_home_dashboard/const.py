@@ -1,7 +1,7 @@
 """Constants for Lemur Home Dashboard."""
 
 DOMAIN = "lemur_home_dashboard"
-VERSION = "0.36.0b7"
+VERSION = "0.36.0b8"
 STORAGE_KEY = DOMAIN
 STORAGE_VERSION = 1
 SIGNAL_UPDATE = f"{DOMAIN}_update"
