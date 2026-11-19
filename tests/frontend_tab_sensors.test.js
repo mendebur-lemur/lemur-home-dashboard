@@ -46,6 +46,8 @@ test('selectors filter types, put entity/device area matches first and keep miss
     'binary_sensor.motion': state('binary_sensor.motion', 'off', 'motion'),
     'binary_sensor.presence': state('binary_sensor.presence', 'on', 'presence'),
     'binary_sensor.diy': state('binary_sensor.diy', 'on'),
+    'binary_sensor.aaa_plain': state('binary_sensor.aaa_plain', 'off'),
+    'binary_sensor.zzz_moving': state('binary_sensor.zzz_moving', 'off', 'moving'),
     'binary_sensor.door': state('binary_sensor.door', 'on', 'door'),
     'sensor.power': state('sensor.power', '2', 'power')
   };
@@ -60,6 +62,10 @@ test('selectors filter types, put entity/device area matches first and keep miss
   assert.match(fields[2], /binary_sensor.presence/);
   assert.match(fields[2], /binary_sensor.diy/);
   assert.doesNotMatch(fields[2], /binary_sensor.door/);
+  // "moving" sınıflı hareket sensörü de seçilebilir; sınıflı sensörler sınıfsızlardan önce gelir (ad sırası ne olursa olsun)
+  assert.match(fields[2], /binary_sensor.zzz_moving/);
+  assert.ok(fields[2].indexOf('value="binary_sensor.zzz_moving"') < fields[2].indexOf('value="binary_sensor.aaa_plain"'));
+  assert.ok(fields[2].indexOf('value="binary_sensor.motion"') < fields[2].indexOf('value="binary_sensor.diy"'));
   assert.match(fields[0], /label for="tab-temperature_sensor"/);
   assert.match(fields[0], /id="tab-temperature_sensor"/);
 });

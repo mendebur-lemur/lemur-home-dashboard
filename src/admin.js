@@ -811,6 +811,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return lhdRoomTab(tab) ? 'none' : '';
   }
   _tabSensorsHtml(tab) {
+    // varlık sensörü sayılan sınıflar; bazı hareket sensörleri (ör. Aqara) Home Assistant'a "moving" sınıfıyla gelir
+    const LHD_PRESENCE_DC = ['occupancy', 'presence', 'motion', 'moving'];
     const S = this._hass.states, E = this._hass.entities || {}, D = this._hass.devices || {};
     const t = (k) => esc(this._t(k));
     const areaOf = (id) => { const e = E[id] || {}, d = D[e.device_id] || {}; return e.area_id || d.area_id; };
@@ -818,9 +820,13 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const label = ['tSensor', 'hSensor', 'pSensor'][i], cur = tab[key], fid = 'tab-' + key;
       const ids = Object.keys(S).filter((id) => {
         const dc = (S[id].attributes || {}).device_class;
-        return i === 2 ? id.indexOf('binary_sensor.') === 0 && (!dc || ['occupancy', 'presence', 'motion'].indexOf(dc) >= 0) :
+        return i === 2 ? id.indexOf('binary_sensor.') === 0 && (!dc || LHD_PRESENCE_DC.indexOf(dc) >= 0) :
           id.indexOf('sensor.') === 0 && dc === (i === 0 ? 'temperature' : 'humidity');
-      }).sort((a, b) => this._ename(a).localeCompare(this._ename(b)));
+      }).sort((a, b) => {
+        // varlık listesinde gerçek varlık / hareket sensörleri önce, sınıfsız ikili sensörler sonda (yoksa aralarında kayboluyorlar)
+        const ca = (S[a].attributes || {}).device_class ? 0 : 1, cb = (S[b].attributes || {}).device_class ? 0 : 1;
+        return ca - cb || this._ename(a).localeCompare(this._ename(b));
+      });
       if (typeof cur === 'string' && cur && ids.indexOf(cur) < 0) ids.unshift(cur);
       const option = (id) => '<option value="' + esc(id) + '"' + (cur === id ? ' selected' : '') + '>' + esc(this._ename(id)) + ' (' + esc(id) + ')</option>';
       const near = ids.filter((id) => tab.area && areaOf(id) === tab.area), other = ids.filter((id) => near.indexOf(id) < 0);
