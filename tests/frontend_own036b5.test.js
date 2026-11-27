@@ -82,11 +82,13 @@ test('önizlemede (demo, düzenleme) sekme değişmez, HA penceresi açılmaz', 
 });
 
 test('lpEnGoTab: enerji sekmesi varsa gider ve true, yoksa false döner', () => {
-  const pushed = [], ctx = { STORE: { data: { tabs: [{ id: 'a', sections: [{ type: 'lights' }] }] } }, location: { pathname: '/pano/a' }, history: { pushState: (s, t, u) => pushed.push(u) }, window: { dispatchEvent: () => {} }, Event: function () {} };
+  const pushed = [], STORE = { data: { tabs: [{ id: 'a', sections: [{ type: 'lights' }] }] } };
+  const ctx = { location: { pathname: '/pano/a' }, history: { pushState: (s, t, u) => pushed.push(u) }, window: { dispatchEvent: () => {}, __LEMUR_HOME_DASHBOARD_STORE: STORE }, Event: function () {} };
+  const rd = (f) => fs.readFileSync(path.join(__dirname, '../src', f), 'utf8');
   vm.createContext(ctx);
-  vm.runInContext(pick(panel, /function lpEnGoTab\(\) \{[\s\S]*?\n\}\n/) + 'this.G = lpEnGoTab;', ctx);
+  vm.runInContext(rd('safe.js') + '\n' + rd('store.js') + '\n' + pick(panel, /function lpEnGoTab\(\) \{[\s\S]*?\n\}\n/) + 'this.G = lpEnGoTab;', ctx);
   assert.strictEqual(ctx.G(), false); assert.deepStrictEqual(pushed, []);
-  ctx.STORE.data.tabs.push({ id: 'en', sections: [{ type: 'energy' }] });
+  STORE.data.tabs.push({ id: 'en', sections: [{ type: 'energy' }] });
   assert.strictEqual(ctx.G(), true); assert.deepStrictEqual(pushed, ['/pano/en']);
 });
 

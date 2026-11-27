@@ -132,13 +132,16 @@ function lpBarSet(h, id, v) {
 const LP_BAR_COLOR = '#F0A93B';
 // panoda sanal enerji değeri kullanılan bir öğe var mı (sekmeler değişince yeniden bakılır)
 function lpEnVirtUsed() {
-  const T = STORE.data && STORE.data.tabs; if (!T) return false;
-  if (LP_EN.vu && LP_EN.vu.t === T) return LP_EN.vu.v;
-  const v = JSON.stringify(T).indexOf('sensor.lhdx_') >= 0; LP_EN.vu = { t: T, v: v }; return v;
+  const d = STORE.data; if (!d) return false;
+  if (LP_EN.vu && LP_EN.vu.t === d.tabs && LP_EN.vu.p === d.profiles) return LP_EN.vu.v;
+  const v = JSON.stringify(lpAllTabs(d)).indexOf('sensor.lhdx_') >= 0;
+  LP_EN.vu = { t: d.tabs, p: d.profiles, v: v }; return v;
 }
-// enerji kartı olan ilk sekmeye git
+// enerji kartı olan ilk sekmeye git; başka bir profilin sekmesi bu panoda açılamaz
 function lpEnGoTab() {
-  const T = (STORE.data && STORE.data.tabs) || [], tab = T.filter((x) => (x.sections || []).some((s) => s.type === 'energy'))[0]; if (!tab) return false;
+  const d = STORE.data, T = new Set(lpProfTabs(d, LP_PROF.id) || []);
+  const tab = lpAllTabs(d).find((x) => T.has(x) && (x.sections || []).some((s) => s.type === 'energy'));
+  if (!tab) return false;
   const seg = location.pathname.split('/').filter((x) => x), base = '/' + (seg[0] || 'lemur-home-dashboard');
   history.pushState(null, '', base + '/' + tab.id);
   const ev = new Event('location-changed', { bubbles: true, composed: true }); ev.detail = { replace: false }; window.dispatchEvent(ev);
@@ -728,7 +731,7 @@ function lpDayPeriod(d, lang) {
 }
 
 class LemurHomeDashboardCard extends HTMLElement {
-  setConfig(config) { this._config = config || {}; this._sig = null; if (this._hass) this._render(); }
+  setConfig(config) { this._config = config || {}; LP_PROF.id = this._config.profile || null; this._sig = null; if (this._hass) this._render(); }
   // ışık penceresi; önizlemede (demo) ekran yerine önizleme kutusunda, seçilen telefon/alttan ayarıyla açılır
   _popOpen(h, id, item, room) {
     const c = this._config;
@@ -773,13 +776,16 @@ class LemurHomeDashboardCard extends HTMLElement {
     if ((this._enNoP || []).length && Object.keys(h.states).length !== LP_EN.tpN) { this._render(); return; }
   }
   connectedCallback() {
+    LP_PROF.id = (this._config && this._config.profile) || null;
     if (LP_CARDS.indexOf(this) < 0) LP_CARDS.push(this);
     // yeni sürüm uyarısı (src/store.js): yalnız gerçek pano sayar, yönetim panelindeki önizleme kartı saymaz
     if (!this._nw && !(this._config && this._config.demo)) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }
     if (!this._unsub) this._unsub = STORE.onChange((d) => {
       this._def = null;
-      const st = (d && d.settings) || {};
-      if (!this._config.edit && !this._config.demo) LemurScale.set(st.canvas || null, st.kiosk || null, lpBgBase(lpPhoneScreen() ? lpPhoneMerge(st) : st));   // ölçek ve kiosk ayarı canlı değişsin
+      if (this._config && !this._config.edit && !this._config.demo) {
+        const profile = this._config.profile, st = lpProfSettings(d, profile);
+        LemurScale.set(st.canvas || null, st.kiosk || null, lpBgBase(lpPhoneScreen() ? lpPhoneMerge(st) : st), profile);   // ölçek ve kiosk ayarı canlı değişsin
+      }
       this._render();
     });
     if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
@@ -827,8 +833,8 @@ class LemurHomeDashboardCard extends HTMLElement {
 
   _tabs() {
     if (this._config && this._config.demo) return this._config.demo_tabs || [];
-    const d = STORE.data;
-    if (d && d.tabs && d.tabs.length) return d.tabs;
+    const tabs = lpProfTabs(STORE.data, this._config && this._config.profile);
+    if (tabs && tabs.length) return tabs;
     if (!this._def) this._def = buildDefaultTabs(this._hass, pickLang(this._hass));
     return this._def;
   }
@@ -934,7 +940,8 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (e && lpCyIs(S[e.entity])) vis.push('cy');   // makine durumu: sayfa açılırken ulaşılamıyorsa (HA yeni başladı) gelince kart yeniden kurulur (katman, yazı, ad)
       if (e && lpEnIsVal(e.entity) && !(x && Array.isArray(x.extra))) vis.push(lpEnHaloExtra(e.entity, S).join(','));   // enerji Halo kartının yan değerleri (kullanılabilir olanlar)
     }));
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.temperature_sensor, x.humidity_sensor, x.presence_sensor, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpHeaderCfg(), lpEnBadge(), ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
+    const canvas = lpSettings().canvas || {};
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.temperature_sensor, x.humidity_sensor, x.presence_sensor, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpHeaderCfg(), lpEnBadge(), canvas.width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
@@ -997,7 +1004,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // Bölümde sadece karo varsa ızgara kutuyu doldurur (tablet panosundaki gibi); başka öğelerle birlikteyse karolar kare kalır.
     const tileGrid = (s, items, only) => {
       // Karo sayısı ayardaki kadar, ama sütun daraldıysa karolar 70 px'ten küçülmesin diye azalır (kanvas en az W piksel geniş)
-      const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
+      const cw = canvas.width || 1280;
       const sumW = widths.reduce((a, b) => a + b, 0), ci = Math.max(0, Math.min(widths.length - 1, s.col || 0));
       const inner = (cw - 8 - 20 * widths.length) * widths[ci] / sumW / splits[ci] - 12 - 40;
       // kaydırmalı çubuklar: bölüm ayarı look = 'bar' (her yerde) ya da 'phone' (telefonda otomatik)
@@ -1337,7 +1344,8 @@ class LemurHomeDashboardCard extends HTMLElement {
         if (this._config.demo) { this._config = Object.assign({}, this._config, { tab: id }); this._sig = null; this._render(); return; }
         const base = location.pathname.split('/').slice(0, 2).join('/');
         // pano açıkken eklenen sekmenin HA'da henüz görünümü yok: sayfa baştan yüklenir, pano yeniden üretilir
-        if (window.__LHD_VIEWS && window.__LHD_VIEWS.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
+        const views = window.__LHD_VIEWS_BY ? window.__LHD_VIEWS_BY[this._config.profile || ''] : window.__LHD_VIEWS;
+        if (views && views.indexOf(id) < 0) { location.assign(base + '/' + id); return; }
         history.pushState(null, '', base + '/' + id);
         lpFire(window, 'location-changed', { replace: false });
       });
@@ -1578,7 +1586,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         // kolon, içindeki sütun sayısı kadar daralabilir: her sütun en dar kanvasta (W, genelde 1280) en az 150 px.
         // Sınır oran olarak hesaplanır; önizleme ya da ekran daha geniş olsa da dar tablette sütun ezilmez.
         const spl = lpSplits(tab, widths.length), n = widths.length;
-        const cw = ((STORE.data && STORE.data.settings && STORE.data.settings.canvas) || {}).width || 1280;
+        const cw = (lpSettings().canvas || {}).width || 1280;
         const k = (wrap.offsetWidth - 8 - 20 * n) / (cw - 8 - 20 * n);
         const ma = spl[D.a] * 150 * Math.max(1, k), mb = spl[D.b] * 150 * Math.max(1, k);
         const tot = D.pa + D.pb, na = Math.max(ma, Math.min(tot - mb, D.pa + dx));

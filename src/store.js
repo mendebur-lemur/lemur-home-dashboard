@@ -165,7 +165,82 @@ const STORE = window.__LEMUR_HOME_DASHBOARD_STORE || (window.__LEMUR_HOME_DASHBO
 });
 // Panonun ayarları. Otomatik kur önizlemesi (hayali ev) çizilirken kısa süre kendi seçimleriyle değiştirilir (LP_OVR.s)
 const LP_OVR = { s: null };
-function lpSettings() { return LP_OVR.s || (STORE.data && STORE.data.settings) || {}; }
+const LP_PROF = { id: null };
+const LP_PROF_KEYS = ['canvas', 'kiosk', 'bg', 'background', 'theme_name', 'icon_style', 'icon_tint', 'icon_tint_light',
+  'climate_style', 'nav', 'header', 'bright', 'hold', 'lec_nav', 'lec_hold', 'lightpop', 'phone'];
+const lpProfHas = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+function lpProfile(data, id) {
+  const p = data && data.profiles;
+  return typeof id === 'string' && /^[a-z0-9_-]{1,40}$/.test(id) && lhdIsObj(p) && lpProfHas(p, id) && lhdIsObj(p[id]) ? p[id] : null;
+}
+const lpProfSubkeys = (k, v) => Object.keys(v).filter((x) => x !== '__proto__' && !(k === 'header' && x === 'weather_entity'));
+function lpProfMerge(base, over) {
+  if (!lhdIsObj(over)) return base;
+  let out = base;
+  LP_PROF_KEYS.forEach((k) => {
+    if (!lpProfHas(over, k)) return;
+    let v = over[k];
+    if (k !== 'phone' && lhdIsObj(v)) {
+      const keys = lpProfSubkeys(k, v);
+      if (!keys.length) return;
+      const o = lhdIsObj(base[k]) ? Object.assign({}, base[k]) : {};
+      keys.forEach((x) => { o[x] = v[x]; });
+      v = o;
+    }
+    if (out === base) out = Object.assign({}, base);
+    out[k] = v;
+  });
+  return out;
+}
+let lpProfMemo = null;
+function lpProfSettings(data, id) {
+  const s = data && data.settings, p = data && data.profiles;
+  if (lpProfMemo && lpProfMemo.s === s && lpProfMemo.p === p && lpProfMemo.id === id) return lpProfMemo.v;
+  const v = lpProfMerge(s || {}, (lpProfile(data, id) || {}).settings);
+  lpProfMemo = { s: s, p: p, id: id, v: v };
+  return v;
+}
+function lpProfTabs(data, id) {
+  const p = lpProfile(data, id);
+  return p && Array.isArray(p.tabs) ? p.tabs : (data && data.tabs) || null;
+}
+function lpProfOwnTabs(data, id) { const p = lpProfile(data, id); return !!p && Array.isArray(p.tabs); }
+
+// Ayarlar JSON olarak saklanır; nesnede anahtar sırası değişse de değer aynıdır.
+function lpProfEqual(a, b) {
+  if (a === b) return true;
+  if (!a || !b || typeof a !== 'object' || typeof b !== 'object' || Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every((k) => lpProfHas(b, k) && lpProfEqual(a[k], b[k]));
+}
+function lpProfSplit(base, merged, over) {
+  const b = Object.assign({}, merged), o = {};
+  LP_PROF_KEYS.concat(['season']).forEach((k) => {
+    if (lpProfHas(base, k)) b[k] = base[k]; else delete b[k];
+    if (k === 'season' || !lpProfHas(merged, k)) return;
+    const v = merged[k], a = base[k];
+    if (k !== 'phone' && lhdIsObj(v)) {
+      const prev = lhdIsObj(a) ? a : {}, diff = {};
+      lpProfSubkeys(k, v).forEach((x) => { if (!lpProfEqual(v[x], prev[x])) diff[x] = v[x]; });
+      if (Object.keys(diff).length) o[k] = diff;
+      if (k === 'header' && v.weather_entity !== prev.weather_entity) {
+        b.header = Object.assign({}, prev);
+        if (lpProfHas(v, 'weather_entity')) b.header.weather_entity = v.weather_entity;
+        else delete b.header.weather_entity;
+      }
+    } else if (!lpProfEqual(v, a)) o[k] = v;
+  });
+  return { base: lpProfEqual(b, base) ? base : b, over: lpProfEqual(o, over) ? over : o };
+}
+function lpAllTabs(data) {
+  const tabs = data && Array.isArray(data.tabs) ? data.tabs.slice() : [];
+  const profiles = data && data.profiles;
+  if (lhdIsObj(profiles)) Object.keys(profiles).forEach((id) => {
+    if (lpProfOwnTabs(data, id)) tabs.push.apply(tabs, profiles[id].tabs);
+  });
+  return tabs;
+}
+function lpSettings() { return LP_OVR.s || (STORE.data ? lpProfSettings(STORE.data, LP_PROF.id) : {}); }
 // Telefona özel görünüm (v0.22): settings.phone.style içindeki anahtarlar telefonda genel ayarların yerine geçer
 const LP_PH_STYLE = ['icon_style', 'icon_tint', 'icon_tint_light', 'climate_style', 'bg', 'background'];
 function lpPhoneMerge(s) {

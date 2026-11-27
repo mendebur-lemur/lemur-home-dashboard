@@ -55,12 +55,27 @@ const LemurScale = (() => {
     if (c) { if (tcOrig === null) tcOrig = m.getAttribute('content') || ''; if (m.getAttribute('content') !== c) m.setAttribute('content', c); }
     else if (tcOrig !== null) { m.setAttribute('content', tcOrig); tcOrig = null; }
   }
-  function apply(canvas, kiosk) {
+  const kioskKey = (pid) => 'lhd-kiosk' + (pid ? ':' + pid : '');
+  // Ayarlar gelene kadar tarayıcıda saklanan kiosk ayarı kullanılır.
+  function savedKiosk(pid) {
+    try { const v = JSON.parse(localStorage.getItem(kioskKey(pid)) || 'null'); return lhdIsObj(v) ? v : null; } catch (e) { return null; }
+  }
+  function apply() {
     const m = mainRoot(); if (!m) return;
     const r = root(m);
     const sr = r && r.shadowRoot;
     const raw = r && r.lovelace && r.lovelace.rawConfig;
-    const active = !!sr && (!!sr.querySelector('lemur-home-dashboard-card') || !!(raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard'));
+    const strategy = raw && raw.strategy && raw.strategy.type === 'custom:lemur-home-dashboard' ? raw.strategy : null;
+    const active = !!sr && (!!sr.querySelector('lemur-home-dashboard-card') || !!strategy);
+    const requested = strategy && strategy.profile;
+    const d = STORE.data;
+    const pid = (d ? lpProfile(d, requested) : typeof requested === 'string') ? requested || null : null;
+    const st = active && d ? lpProfSettings(d, pid) : null;
+    const same = fallback && fallback.pid === pid;
+    const canvas = st ? st.canvas : same && fallback.canvas;
+    const kiosk = st ? st.kiosk : same ? fallback.kiosk : active && savedKiosk(pid);
+    if (!active || activePid !== pid) peek = false;
+    activePid = pid;
     // kiosk: yan menü home-assistant-main içinde, üst bar hui-root içinde. Yeni HA (2025.x+) menü genişliğini
     // --ha-sidebar-width ile verir; sadece menüyü gizlemek solda boş şerit bırakıyordu, genişlik de sıfırlanır.
     const k = kiosk || {}, sideOff = active && lpKioskOn(k.hide_sidebar);
@@ -71,7 +86,7 @@ const LemurScale = (() => {
     // zemin yine ekranın en üstüne kadar uzanır (#11)
     const headOff = active && lpKioskOn(k.hide_header);
     style(sr, KID, headOff ? '.header,.toolbar,app-header,ha-app-layout>[slot=header]{display:none !important}#view,hui-view-container{padding-top:var(--safe-area-inset-top, env(safe-area-inset-top, 0px)) !important;min-height:100vh !important;box-sizing:border-box !important}' : '');
-    themeColor(headOff ? bgc : null);
+    themeColor(headOff ? (st ? lpBgBase(lpPhoneScreen() ? lpPhoneMerge(st) : st) : same && fallback.bgc) : null);
     if (!active) { style(sr, ID, ''); return; }
     // telefon: ölçekleme yok, pano kendi telefon düzenini çizer (panel-card lpIsPhone ile aynı eşik)
     if (lpPhoneScreen()) { style(sr, ID, 'hui-view{min-height:0 !important;}'); return; }
@@ -91,10 +106,8 @@ const LemurScale = (() => {
     const lh = Math.floor(y / z);
     style(sr, ID, 'hui-view{zoom:' + z + ';width:' + gen + 'px !important;max-width:' + gen + 'px !important;margin:0 auto;flex:0 0 auto !important;min-height:0 !important;height:auto !important;--lp-h:' + lh + 'px;}');
   }
-  let canvas = null, kiosk = null, bgc = null, hidden = false, peek = false, onDash = false;
-  // son kiosk ayarı tarayıcıda saklı: sayfa yenilenince menü ayar gelene kadar görünüp kaybolmasın
-  try { const sv = JSON.parse(localStorage.getItem('lhd-kiosk') || 'null'); if (sv && typeof sv === 'object') kiosk = sv; } catch (e) {}
-  const run = () => apply(canvas, kiosk);
+  let fallback = null, activePid = null, hidden = false, peek = false, onDash = false;
+  const run = () => apply();
   // gizli yan menü bilgisayarda: fare ekranın sol kenarına gidince açılır, menüden çıkınca yine gizlenir
   window.addEventListener('mousemove', (e) => {
     if (!hidden && !peek) return;
@@ -135,5 +148,14 @@ const LemurScale = (() => {
   setInterval(run, 1000);
   // açılışta sık bak: pano yüklenir yüklenmez gizlensin (ilk 5 saniye)
   let fast = 0; const fi = setInterval(() => { run(); if (++fast >= 50) clearInterval(fi); }, 100);
-  return { set(c, k, b) { canvas = c; kiosk = k || null; if (b) bgc = b; try { localStorage.setItem('lhd-kiosk', JSON.stringify(kiosk)); } catch (e) {} run(); }, run: run };
+  return {
+    set(c, k, b, pid) {
+      pid = pid && (!STORE.data || lpProfile(STORE.data, pid)) ? pid : null;
+      const bgc = b || (fallback && fallback.pid === pid && fallback.bgc);
+      fallback = { pid: pid, canvas: c, kiosk: k || null, bgc: bgc };
+      try { localStorage.setItem(kioskKey(pid), JSON.stringify(fallback.kiosk)); } catch (e) {}
+      run();
+    },
+    run: run
+  };
 })();
