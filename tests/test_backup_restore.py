@@ -47,7 +47,7 @@ def _norm(x):
 
 
 async def test_round_trip_fresh_install(hass, hass_ws_client, setup_lhd):
-    """Backup of a full home, restored on a fresh install: the same store, key for key."""
+    """Backup of a full home, restored on a fresh install: the same store, key for key (the legacy profiles entry is dropped)."""
     ws, ids = await _ws(hass, hass_ws_client), _Ids()
     before = await _get(ws, ids)
     assert before["tabs"] == [] and before["walls"] == []
@@ -55,7 +55,8 @@ async def test_round_trip_fresh_install(hass, hass_ws_client, setup_lhd):
     assert r["success"], r
     after = await _get(ws, ids)
     for k in KEYS:
-        assert _norm(after[k]) == _norm(FULL[k]), k
+        expected = {} if k == "profiles" else FULL[k]
+        assert _norm(after[k]) == _norm(expected), k
     # the backup the page would make now (STORE.data's keys) restores to the same again
     r = await _call(ws, ids, type=f"{DOMAIN}/restore", data={k: after[k] for k in KEYS})
     assert r["success"], r

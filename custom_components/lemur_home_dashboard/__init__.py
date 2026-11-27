@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 from typing import Any
 
@@ -107,7 +108,15 @@ class PanelData:
         if isinstance(stored, dict):
             for key, default in DEFAULT_DATA.items():
                 val = stored.get(key)
-                if isinstance(val, type(default)):
+                if key == "profiles" and key in stored:
+                    try:
+                        self.data[key] = _check(key, val)
+                    except vol.Invalid as err:
+                        self.data[key] = {}
+                        _LOGGER.warning("Stored %s is damaged (%s) and was reset", key, err)
+                    if self.data[key] != val:
+                        self.store.async_delay_save(lambda: self.data, 1.0)
+                elif isinstance(val, type(default)):
                     self.data[key] = val
                 elif val is not None:
                     _LOGGER.warning("Stored %s is damaged (%s) and was reset", key, type(val).__name__)
@@ -527,6 +536,30 @@ def ws_set(hass, connection, msg):
     connection.send_result(msg["id"], _for_user(connection, data.view()))
 
 
+def _clean_profiles(value: dict) -> dict:
+    out = {}
+    for pid, profile in value.items():
+        if len(out) == 10:
+            break
+        if not isinstance(pid, str) or not re.fullmatch(r"[a-z0-9_-]{1,40}", pid) or not isinstance(profile, dict):
+            continue
+        # v0.6 öncesinden kalan eski biçim ({"tab": ..., "note": ...}): pano profili değil, hayalet profil olmasın
+        if not any(k in profile for k in ("name", "tabs", "settings")):
+            continue
+        name = profile.get("name")
+        clean = {"name": name if isinstance(name, str) and len(name) <= 60 else pid}
+        tabs = profile.get("tabs")
+        if isinstance(tabs, list):
+            clean["tabs"] = EST.migrate_ids(SF.clean_tabs(tabs))
+        settings = SF.clean_profile_settings(profile.get("settings"))
+        if settings:
+            clean["settings"] = settings
+        out[pid] = clean
+    if out != value:
+        _LOGGER.warning("Dashboard profiles contained invalid or outdated data and were cleaned")
+    return out
+
+
 def _check(key: str, value: Any) -> Any:
     """One key as it may be stored (ws_set, ws_restore): its type, at most MAX_CONFIG_BYTES, and its own rules.
     Returns the cleaned value; raises vol.Invalid."""
@@ -538,6 +571,8 @@ def _check(key: str, value: Any) -> Any:
         return (EST.ESTIMATES_SCHEMA if key == "estimates" else EST.ECATS_SCHEMA)(value)
     if key == "tabs":
         return EST.migrate_ids(SF.clean_tabs(value))
+    if key == "profiles":
+        return _clean_profiles(value)
     if key in ("twins", "walls"):
         return (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)
     return value

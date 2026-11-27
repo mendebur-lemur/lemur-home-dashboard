@@ -19,6 +19,10 @@ FEEDER_DOMAINS = (
 PET_KINDS = ("cat", "dog", "fish", "bird", "rabbit", "turtle", "other")
 MAX_PETS = 50
 FEED_MIN_SECONDS = 60
+PROFILE_SETTING_KEYS: tuple[str, ...] = (
+    "canvas", "kiosk", "bg", "background", "theme_name", "icon_style", "icon_tint", "icon_tint_light",
+    "climate_style", "nav", "header", "bright", "hold", "lec_nav", "lec_hold", "lightpop", "phone",
+)
 
 _SVC_RE = re.compile(r"^[a-z0-9_]+\.[a-z0-9_]+$")
 _ENT_RE = re.compile(r"^[a-z0-9_]+\.[a-z0-9_]+$")
@@ -134,6 +138,20 @@ def clean_tabs(tabs: Any) -> list:
             secs.append(S)
         T["sections"] = secs[:80]
         out.append(T)
+    return out
+
+
+def clean_profile_settings(s: Any) -> dict:
+    if not isinstance(s, dict):
+        return {}
+    out = {key: s[key] for key in PROFILE_SETTING_KEYS if key in s}
+    header = out.get("header")
+    if isinstance(header, dict) and "weather_entity" in header:
+        header = {key: value for key, value in header.items() if key != "weather_entity"}
+        if header:
+            out["header"] = header
+        else:
+            del out["header"]
     return out
 
 

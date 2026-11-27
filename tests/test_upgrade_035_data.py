@@ -1,5 +1,6 @@
-"""Data saved by 0.35.1 (with odd but valid old shapes) loads in this version unchanged, and saving each key back
-unchanged from the admin page (ws_set, as the page does after an edit elsewhere) neither refuses nor rewrites it.
+"""Data saved by 0.35.1 (with odd but valid old shapes) loads in this version unchanged (except the legacy profiles
+entry, which is dropped), and saving each key back unchanged from the admin page (ws_set, as the page does after an edit
+elsewhere) neither refuses nor rewrites it.
 Runs on both trees; with LHD_DUMP=<file> it writes what it saw, so 0.35.1 and 0.36 can be compared."""
 import copy
 import json
@@ -86,9 +87,10 @@ async def test_035_data_loads_and_resaves_unchanged(hass, hass_storage, hass_ws_
            "loaded": loaded}
     if os.environ.get("LHD_DUMP"):
         Path(os.environ["LHD_DUMP"]).write_text(json.dumps(out, indent=1, sort_keys=True, ensure_ascii=False), encoding="utf-8")
-    # the stored values of every known key load as they were
+    # v0.6 öncesinin eski profil kaydı pano profili değildir: atılır.
+    assert loaded["profiles"] == {}
     for k in blob:
-        if k in loaded and k not in ("estimates",):
+        if k in loaded and k not in ("estimates", "profiles"):
             assert loaded[k] == blob[k], k
     assert loaded["estimates"] == blob["estimates"]
     for k, v in res.items():
