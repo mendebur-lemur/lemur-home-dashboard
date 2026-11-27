@@ -731,7 +731,7 @@ function lpDayPeriod(d, lang) {
 }
 
 class LemurHomeDashboardCard extends HTMLElement {
-  setConfig(config) { this._config = config || {}; LP_PROF.id = this._config.profile || null; this._sig = null; if (this._hass) this._render(); }
+  setConfig(config) { this._config = config || {}; if (!this._config.admin_preview) LP_PROF.id = this._config.profile || null; this._sig = null; if (this._hass) this._render(); }
   // ışık penceresi; önizlemede (demo) ekran yerine önizleme kutusunda, seçilen telefon/alttan ayarıyla açılır
   _popOpen(h, id, item, room) {
     const c = this._config;
@@ -776,7 +776,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     if ((this._enNoP || []).length && Object.keys(h.states).length !== LP_EN.tpN) { this._render(); return; }
   }
   connectedCallback() {
-    LP_PROF.id = (this._config && this._config.profile) || null;
+    if (!this._config || !this._config.admin_preview) LP_PROF.id = (this._config && this._config.profile) || null;
     if (LP_CARDS.indexOf(this) < 0) LP_CARDS.push(this);
     // yeni sürüm uyarısı (src/store.js): yalnız gerçek pano sayar, yönetim panelindeki önizleme kartı saymaz
     if (!this._nw && !(this._config && this._config.demo)) { this._nw = 1; lhdNewerUse(true, this._hass ? pickLang(this._hass) : null); }
@@ -791,12 +791,12 @@ class LemurHomeDashboardCard extends HTMLElement {
     if (!this._lecUnsub) this._lecUnsub = LEC.onChange((kind) => {
       if (kind === 'rooms') { this._sig = null; this._render(); return; }
       if (kind === 'effects' || kind === 'info') return;   // oda listesi değişti: izlenen ışıklar değişir
-      this._last = {}; if (this._sig) this._update();                       // oynayan efekt değişti: karolar ve düğmeler
+      this._last = {}; if (this._sig) this._previewProfile(() => this._update());                       // oynayan efekt değişti: karolar ve düğmeler
     });
     if (!this._leciUnsub) this._leciUnsub = lpLecIconsSub(() => this._render());   // LEC simgeleri yüklendi
     // renkli simge seti yüklendi: ilk çizim tarayıcıdaki simge önbelleğiyle eksiksiz yapıldıysa (full === false) baştan çizilmez,
     // yalnız durumlar yerinde tazelenir (v0.33)
-    if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub((full) => { if (full === false) { this._last = {}; if (this._sig) this._update(); } else { this._sig = null; this._render(); } });
+    if (!this._mdicUnsub) this._mdicUnsub = lpMdicSub((full) => { if (full === false) { this._last = {}; if (this._sig) this._previewProfile(() => this._update()); } else { this._sig = null; this._render(); } });
     if (!this._enUnsub) this._enUnsub = lpEnSub(() => { if (this._ens && this._ens.length) this._enPaint(true); this._enDot(); });   // enerji verisi yüklendi
     if (!this._clock) this._clock = setInterval(() => this._tick(), 15000);
     // ekran açılınca (sayfa yeniden görünür) saat ve "… önce" yazıları beklemeden tazelenir (v0.35.2)
@@ -895,13 +895,21 @@ class LemurHomeDashboardCard extends HTMLElement {
       empty: (tab.sections || []).some((s) => !has(s)), sel: !sel ? '' : ps ? (has(ps) ? '' : 'empty') : (inRaw ? 'hid' : '') };
   }
 
+  // önizleme kendi profiliyle çizilir; açık panonun ayarları çizim bitince geri gelir
+  _previewProfile(fn) {
+    if (!this._config || !this._config.admin_preview) return fn();
+    const id = LP_PROF.id;
+    LP_PROF.id = this._config.profile || null;
+    try { return fn(); } finally { LP_PROF.id = id; }
+  }
   _render() {
     if (!this._hass) return;
-    // önizleme kartı kendi ayarlarıyla çizilir (bu kartın çizimi bitince panonun ayarlarına dönülür)
-    if (this._config && this._config.demo) { LP_OVR.s = this._config.demo_settings || {}; try { this._render0(); } finally { LP_OVR.s = null; } return; }
-    // telefonda telefona özel görünüm (simge stili, iklim kartları, zemin) genel ayarların yerine geçer
-    if (lpIsPhone(this._config)) { const b = lpSettings(), m = lpPhoneMerge(b); if (m !== b) { LP_OVR.s = m; try { this._render0(); } finally { LP_OVR.s = null; } return; } }
-    this._render0();
+    this._previewProfile(() => {
+      const prev = LP_OVR.s;
+      if (this._config && this._config.demo) LP_OVR.s = this._config.demo_settings || {};
+      else if (lpIsPhone(this._config)) { const b = lpSettings(), m = lpPhoneMerge(b); if (m !== b) LP_OVR.s = m; }
+      try { this._render0(); } finally { LP_OVR.s = prev; }
+    });
   }
   _render0() {
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
@@ -941,7 +949,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       if (e && lpEnIsVal(e.entity) && !(x && Array.isArray(x.extra))) vis.push(lpEnHaloExtra(e.entity, S).join(','));   // enerji Halo kartının yan değerleri (kullanılabilir olanlar)
     }));
     const canvas = lpSettings().canvas || {};
-    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.temperature_sensor, x.humidity_sensor, x.presence_sensor, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpHeaderCfg(), lpEnBadge(), canvas.width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
+    const sig = JSON.stringify([view, pc, this._cat ? [this._cat.cat, this._cat.room, this._cat.clim] : 0, season, lang, present, vis, tabs.map((x) => [x.id, x.name, x.icon, x.temperature_sensor, x.humidity_sensor, x.presence_sensor, x.bg ? x.bg.mode + (x.bg.color || '') : 0]), JSON.stringify(lpSettings().bg || 0), lpHas('lemur-hd-climate-card'), LEC.installed(h), lpLecNav(h), lpIsPhone(this._config) && this._config.edit ? lpPhoneKey(this, this._config) : lpIsPhone(this._config), !!this._config.edit, !!this._config.read_only, this._config.selected || '', !!LP_LECI.map, lpIconMode(), lpIconTint(), lpIconTintLight(), LP_MDIC.gen || 0, lpNavCfg(), lpClimStyle(), lpBrightCfg(), lpHeaderCfg(), lpEnBadge(), canvas.width || 0]);   // kanvas genişliği: karo sütun sayısı (tileGrid)
     if (lpEnBadge() && (this._enNoP || []).some((x) => lpEnTileP(h, x))) this._sig = null;   // rozetsiz bir karonun güç sensörü geldi
     if (sig !== this._sig) { this._sig = sig; this._build(view, tabs, lang, season); }
     this._update();
@@ -960,7 +968,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // ayarda olup şu an HA'da olmayan cihazlar: gelince (ör. HA yeniden başladıktan sonra) pano yeniden kurulur
     this._missing = [];
     (tab.sections || []).forEach((s) => (s.entities || []).concat.apply(s.entities || [], (s._folds || []).map((F) => F.entities || [])).forEach((x) => { const e = lpEnt(x); if (e && !S[e.entity]) this._missing.push(e.entity); }));
-    const edit = !!this._config.edit, selected = this._config.selected || '';
+    const edit = !!this._config.edit, editable = edit && !this._config.read_only, selected = this._config.selected || '';
     const phone = lpIsPhone(this._config);
     let curSec = '';
     // her öğe hangi bölümün kaçıncı öğesi: düzenleme modunda sürükle-bırak için
@@ -1166,7 +1174,7 @@ class LemurHomeDashboardCard extends HTMLElement {
       gbx.push({ s: s, b: cols[ci][sj][cols[ci][sj].length - 1] });
     });
     const used = [];
-    cols.forEach((c, i) => { if (edit || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
+    cols.forEach((c, i) => { if (editable || c.some((x) => x.length)) used.push(i); });   // düzenlemede boş kolon da görünür
 
     // Lemur Light Effect Card kuruluysa üst şeridin sonunda "Efektler": efekt ekranını bu sekmenin odasıyla açar (ayarlardan kapatılabilir)
     const navFx = lpLecNav(h) ? '<div class="navb fxb" data-navfx><div class="ni">' + lpIcon('mdi:creation') + '</div><div class="nn">' + esc(t(lang, 'effects')) + '</div></div>' : '';
@@ -1228,7 +1236,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     // fill: öğeler kutunun yüksekliğini doldurur; align: içeriğe göre olan kutuda öğeler ortada ya da eşit aralıkla
     const boxHtml = (b, multi) => '<div class="box' + (b.spread ? ' spread' : '') + (b.mix ? ' mix' : '') + (b.fit ? ' fit' : '') + (b.fill ? ' fill' : '') + (b.align ? ' al-' + b.align : '') + (edit && b.secs.indexOf(selected) >= 0 ? ' selbox' : '') + (b.oth ? ' oth' : '') + '" data-secs="' + esc(b.secs.join(',')) + '"' +
       (multi || b.gap !== null ? ' style="' + (multi ? 'flex:' + b.grow + ' 1 0px;min-height:auto;' : '') + (b.gap !== null ? '--lp-gap:' + b.gap + 'px;--lp-gapg:' + b.gap + 'px' : '') + '"' : '') + '>' +
-      (edit ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
+      (editable ? '<div class="bgrip" title="' + esc(t(lang, 'drag_box')) + '"><ha-icon icon="mdi:drag"></ha-icon></div>' : '') +
       (b.title ? '<div class="title ' + b.kind + (b.season ? ' season" data-season="1">' + seasonIcon : '">') + '<span>' + esc(b.title) + '</span></div>' : '') +
       b.html + '</div>';   // spread: başlık da dahil hepsi kutuya eşit aralıkla dağılır (tablet panosundaki justify-content: space-between)
     const subHtml = (i, j, boxes) => '<div class="sub" data-col="' + i + '" data-sub="' + j + '">' +
@@ -1253,13 +1261,13 @@ class LemurHomeDashboardCard extends HTMLElement {
       this._gC = C; this._gR = R0; this._gTab = tab;
       grid = 'grid-template-columns:1fr;grid-template-areas:\'h\' \'c0\'';
       body = '<div class="gl' + (fit ? ' gfit' : ' gscr') + '" data-gl style="grid-area:c0;grid-template-columns:repeat(' + C + ',minmax(0,1fr));grid-template-rows:repeat(' + R0 + ',' + (fit ? 'minmax(0,1fr)' : (+tab.growh || 70) + 'px') + ')">' +
-        gbx.map((x) => { const p = P[x.s.id]; return '<div class="gcell" data-gsec="' + esc(x.s.id) + '" style="grid-column:' + (p.x + 1) + ' / span ' + p.w + ';grid-row:' + (p.y + 1) + ' / span ' + p.h + '">' + boxHtml(x.b, false) + (edit ? '<i class="grz" title="' + esc(t(lang, 'drag_size')) + '"></i>' : '') + '</div>'; }).join('') + '</div>';
+        gbx.map((x) => { const p = P[x.s.id]; return '<div class="gcell" data-gsec="' + esc(x.s.id) + '" style="grid-column:' + (p.x + 1) + ' / span ' + p.w + ';grid-row:' + (p.y + 1) + ' / span ' + p.h + '">' + boxHtml(x.b, false) + (editable ? '<i class="grz" title="' + esc(t(lang, 'drag_size')) + '"></i>' : '') + '</div>'; }).join('') + '</div>';
     } else if (used.length) {
       // kolon genişlikleri oran (fr): kolon sayısı ne olursa olsun ekrana sığar, aralıklar taşırmaz
       grid = 'grid-template-columns:' + used.map((i) => 'minmax(0,' + widths[i] + 'fr)').join(' ') + ';grid-template-areas:\'' + used.map(() => 'h').join(' ') + '\' \'' + used.map((i) => 'c' + i).join(' ') + '\'';
       body = used.map((i) => {
         // normal panoda boş sütun yer kaplamaz; düzenlemede görünür
-        const subs = cols[i].map((boxes, j) => ({ j: j, boxes: boxes })).filter((x) => edit || x.boxes.length);
+        const subs = cols[i].map((boxes, j) => ({ j: j, boxes: boxes })).filter((x) => editable || x.boxes.length);
         return '<div class="col" data-col="' + i + '" style="grid-area:c' + i + '"><div class="subs" style="grid-template-columns:repeat(' + subs.length + ',minmax(0,1fr))">' +
           subs.map((x) => subHtml(i, x.j, x.boxes)).join('') + '</div></div>';
       }).join('');
@@ -1469,6 +1477,7 @@ class LemurHomeDashboardCard extends HTMLElement {
     const pvGo = (c, room) => { this._pvc = { cat: c, room: room }; this._sig = null; this._render(); };
     R.querySelectorAll('[data-cat]').forEach((b) => b.addEventListener('click', () => pvGo(b.getAttribute('data-cat'), (this._pvc || {}).room || null)));
     R.querySelectorAll('[data-room]').forEach((b) => b.addEventListener('click', () => pvGo((this._cat && this._cat.cat) || 'lights', b.getAttribute('data-room'))));
+    if (this._config.read_only) return;
 
     let D = null;   // süren sürükleme
     // boyutlandırma tutamakları: kolonların arasında dikey, aynı kolonda üst üste duran kutuların arasında yatay
@@ -1890,7 +1899,7 @@ class LemurHomeDashboardCard extends HTMLElement {
         // yedek kontrolü olan lamba: entegrasyon önce hızlı yoldan dener, cevap gelmezse yedekten gönderir (twins.py)
         const pr = lpTwinOf(id) ? h.callService('lemur_home_dashboard', 'control', { entity_id: id, action: 'toggle' }) : h.callService('homeassistant', 'toggle', { entity_id: id });
         // komut reddedildiyse karo hemen gerçek duruma döner (v0.33; önce 5 sn açık görünüp sessizce geri dönüyordu)
-        if (pr && pr.catch) pr.catch(() => { if (LP_OPT.pend[id]) { delete LP_OPT.pend[id]; this._last = {}; if (this._sig) this._update(); } });
+        if (pr && pr.catch) pr.catch(() => { if (LP_OPT.pend[id]) { delete LP_OPT.pend[id]; this._last = {}; if (this._sig) this._previewProfile(() => this._update()); } });
         return;
       }
       return;

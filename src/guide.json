@@ -675,6 +675,26 @@
    ]
   },
   {
+   "id": "profiles",
+   "group": "edit",
+   "tr": [
+    "Pano profilleri",
+    "Üst bardaki **Pano profili** seçicisinden bir profil aç. Profilin görünümünü ve ölçeğini değiştirirken önizleme de seçili profili gösterir.",
+    "**Ana düzeni kopyala** bağımsız sekmeler ve telefon düzeni oluşturur. **Ana düzeni kullan** seçilirse sekme ve bölümler ana panoyla birlikte değişir. Bunları ayrı düzenlemek için **Düzeni ayır**'a dokun.",
+    "Ayarlar'da **Profile özel ayarlar** bölümünden bir farkı silip ana değere dönebilirsin. **Profili yönet** menüsünden bu profile bağlı bir Home Assistant panosu oluşturabilirsin."
+   ],
+   "en": [
+    "Dashboard profiles",
+    "Choose a profile from **Dashboard profile** in the top bar. The preview shows the selected profile as you change its appearance and scale.",
+    "**Copy main layout** creates independent tabs and a phone layout. **Use main layout** keeps the tabs and sections in sync with the main dashboard. Choose **Make layout separate** to edit them independently.",
+    "Under **Profile overrides** in Settings, you can remove an override to use the main value. Open **Manage profile** to create a Home Assistant dashboard linked to the profile."
+   ],
+   "opts": [
+    { "k": "profNew", "v": ["profCopy", "profLink"], "tr": "Yeni profilin düzenini seç.", "en": "Choose the layout for the new profile." },
+    { "k": "profDash", "tr": "Profili Home Assistant kenar çubuğundan aç.", "en": "Open the profile from the Home Assistant sidebar." }
+   ]
+  },
+  {
    "group": "edit",
    "tr": [
     "Sekmeler",

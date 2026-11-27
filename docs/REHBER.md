@@ -224,7 +224,20 @@ Sol menüdeki **Lemur Home Dashboard** (yalnız yöneticiler görür). Üstte se
 - **Yıldız ver**: Panoyu beğendiysen projenin GitHub sayfasını açar; hatırlatma ya da sayım yok.
 - **Önerilen ürünler**: Önerilen ürünler penceresini açar (Daha fazlası → Önerilen ürünler).
 
-### 12. Sekmeler
+### 12. Pano profilleri
+
+Üst bardaki **Pano profili** seçicisinden bir profil aç. Profilin görünümünü ve ölçeğini değiştirirken önizleme de seçili profili gösterir.
+
+**Ana düzeni kopyala** bağımsız sekmeler ve telefon düzeni oluşturur. **Ana düzeni kullan** seçilirse sekme ve bölümler ana panoyla birlikte değişir. Bunları ayrı düzenlemek için **Düzeni ayır**'a dokun.
+
+Ayarlar'da **Profile özel ayarlar** bölümünden bir farkı silip ana değere dönebilirsin. **Profili yönet** menüsünden bu profile bağlı bir Home Assistant panosu oluşturabilirsin.
+
+**Seçenekler**
+
+- **Yeni profil…** (Ana düzeni kopyala · Ana düzeni kullan): Yeni profilin düzenini seç.
+- **Bu profil için pano oluştur**: Profili Home Assistant kenar çubuğundan aç.
+
+### 13. Sekmeler
 
 ![Sekmeler](guide/tr/tabs.webp)
 
@@ -252,7 +265,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Sekme** (Boş sekme · Alandan sekme · Kameralar sekmesi · Enerji sekmesi): Yeni sekme.
 - **Sekmeyi sil**: Sekmeyi siler (önce sorar, geri alınabilir).
 
-### 13. Otomatik kur
+### 14. Otomatik kur
 
 ![Otomatik kur](guide/tr/autosetup.webp)
 
@@ -275,7 +288,7 @@ Sekmeler sürüklenerek sıralanır. Bir alana bağlı sekme, efekt ekranında v
 - **Işık efektleri** (Efektler açık · Efektler gizli): Efektler düğmesi (Light Effect Card kuruluysa).
 - **Uygula**: Mevcut sekmelerin yerine geçer; ayarlar kalır, geri al ile dönülür.
 
-### 14. Cihaz eklemek
+### 15. Cihaz eklemek
 
 ![Cihaz eklemek](guide/tr/add.webp)
 
@@ -295,7 +308,7 @@ Birden fazla cihaz tek seferde eklenir. Betik, sahne ve otomasyonlar renkli dü�
 - **Alt başlık**: (Gelişmiş) Bölümün içinde küçük bir ara başlık.
 - **Boş karo** (Boş karo · Boş düğme): (Gelişmiş) Yer tutan boş karo ya da düğme (sonra ⚙ ile eylem verilir).
 
-### 15. Öğe ayarları
+### 16. Öğe ayarları
 
 ![Öğe ayarları](guide/tr/item.webp)
 
@@ -315,7 +328,7 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 - **Basılı tutunca**: Basılı tutunca ne olsun; seçenekler aynı.
 - **Dokununca onay iste**: Önce "çalıştırılsın mı?" diye sorar; soru yazılabilir.
 
-### 16. Enerji sayfası
+### 17. Enerji sayfası
 
 ![Enerji sayfası](guide/tr/energy-settings.webp)
 
@@ -361,7 +374,7 @@ Perdelerde tasarım, kameralarda yenileme sıklığı gibi türe özel ayarlar d
 - **Tahmini değerleri ayır**: Görünüm ve veri: tahmini watt "~" ile ve morla.
 - **Ölçülmeyen karo**: Görünüm ve veri: ölçülmeyen pay kategori karolarında.
 
-### 17. Öğren
+### 18. Öğren
 
 ![Öğren](guide/tr/learn.webp)
 
@@ -390,7 +403,7 @@ TV, klima gibi durumu olan cihazlarda her durumun ortalaması sen cihazı kullan
 - **Şerit LED**: Şeritte uzunluk ve adaptör gücü; tablo uzunluğa göre uyarlanır, adaptör gücünü geçmez.
 - **Kaydet ve öğren**: Yeni cihaz eklerken öğrenmeyi hemen başlatır.
 
-### 18. Kartlar ve değerler
+### 19. Kartlar ve değerler
 
 ![Kartlar ve değerler](guide/tr/cards.webp)
 
@@ -410,7 +423,7 @@ Değer karoları simge, değer ve ad gösterir; çalışan zamanlayıcı geri sa
 - **Değere göre renk**: 4 sınır, 5 renk: değere göre çerçeve, değer ve simge rengi.
 - **Duruma göre renk**: Bir varlığın durumunu renge eşler; metin değerlerde de çalışır.
 
-### 19. Bölümler ve kolonlar
+### 20. Bölümler ve kolonlar
 
 ![Bölümler ve kolonlar](guide/tr/sections.webp)
 
@@ -429,7 +442,7 @@ Bölüm ayarında başlık, kolon, görünüm (karo, kaydırmalı), satırdaki k
 - **Aralık** (Otomatik · 0 · 6 · 12 · 18 · 24): Öğeler arası boşluk (piksel).
 - **Bölümü sil**: Bölümü siler (önce sorar, geri alınabilir).
 
-### 20. Simge seçici
+### 21. Simge seçici
 
 ![Simge seçici](guide/tr/icons.webp)
 
@@ -445,7 +458,7 @@ Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; 
 - **Tüm simgeler**: Bütün set; arama Türkçe kelimeleri de tanır.
 - **Efekt simgeleri**: Light Effect Card kuruluysa onun efekt simgeleri.
 
-### 21. Stil seç
+### 22. Stil seç
 
 ![Stil seç](guide/tr/style.webp)
 
@@ -467,7 +480,7 @@ Simge alanlarının yanındaki düğme. Panonun renkli simge setinden seçilir; 
 - **Resim**: HA'nın www klasöründeki bir resim (/local/zemin.jpg) ya da bir internet adresi.
 - **Işık efektleri**: Efektler düğmesini açar ya da gizler; kurulu değilse kartı anlatır.
 
-### 22. Telefona özel düzen
+### 23. Telefona özel düzen
 
 ![Telefona özel düzen](guide/tr/phone-layout.webp)
 
@@ -492,7 +505,7 @@ Değişen her yerde "telefona özel" yazar. Bölümün adı, kolonu ve içindeki
 
 ## Daha fazlası
 
-### 23. Ayarlar
+### 24. Ayarlar
 
 ![Ayarlar](guide/tr/settings.webp)
 
@@ -534,7 +547,7 @@ En üstte sürüm ve güncelleme: yeni sürüm buradan kurulur. **Yedek** her ş
 - **Sorun bildir**: Sürüm ve cihaz bilgisiyle GitHub'da kayıt açar; oda, cihaz ya da kişi adı eklenmez.
 - **Yedeği indir** (Yedeği indir · Yedekten geri yükle): Sekmeler, bölümler, ayarlar ve hayvanlar tek dosyada; geri yüklemeden önce sorar.
 
-### 24. Tablette tam ekran
+### 25. Tablette tam ekran
 
 ![Tablette tam ekran](guide/tr/kiosk.webp)
 
@@ -551,7 +564,7 @@ Gizli yan menü bilgisayarda fare ekranın sol kenarına gidince açılır. Tele
 - **Üst barı gizle** (Gizleme · Telefon ve tablette · Her yerde): HA'nın başlık çubuğu.
 - **Yan menüyü gizle** (Gizleme · Telefon ve tablette · Her yerde): HA'nın sol menüsü; gizliyken kenardan kaydırınca açılır.
 
-### 25. Gelişmiş ayarlar
+### 26. Gelişmiş ayarlar
 
 ![Gelişmiş ayarlar](guide/tr/advanced.webp)
 
@@ -571,7 +584,7 @@ Gizli yan menü bilgisayarda fare ekranın sol kenarına gidince açılır. Tele
 - **Yedek kontrol**: İki kez görünen lambanın ikinci kopyası; cevap gelmezse komut oradan gider, karoda turuncu nokta çıkar.
 - **Duvar anahtarları** (Parlaklık % · Kelvin): Yalnız sinyal veren röle bir lambaya bağlanır; açarken parlaklık ve kelvin verilebilir (Ayarlar, gelişmiş).
 
-### 26. Önerilen ürünler
+### 27. Önerilen ürünler
 
 ![Önerilen ürünler](guide/tr/picks.webp)
 
@@ -591,7 +604,7 @@ Liste GitHub'dan güncellenir; yeni ürün için panel güncellemesi gerekmez. �
 - **Telefonuma gönder**: Bilgisayarda Hepsiburada linkini telefona bildirim olarak gönderir; birden çok telefonun varsa ilk seferde sorar.
 - **Önerilen ürünler** (Göster · Gizle): Ayarlar → Pano: üst şeritteki düğmeyi gösterir ya da gizler.
 
-### 27. İpuçları
+### 28. İpuçları
 
 ![İpuçları](guide/tr/tips.webp)
 

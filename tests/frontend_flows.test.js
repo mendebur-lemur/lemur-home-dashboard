@@ -52,10 +52,12 @@ test('yedekten geri yükleme: geri al hayvanları, profilleri ve tahminleri de g
   ctx.STORE.restore = (V) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, clone(V)); return Promise.resolve(ctx.STORE.data); };
   vm.createContext(ctx);
   vm.runInContext(adm.slice(adm.indexOf('const LHD_BK_KEYS'), adm.indexOf('function lhdBkPrep(')), ctx);
+  const store = fs.readFileSync(path.join(__dirname, '../src/store.js'), 'utf8');
+  vm.runInContext(store.slice(store.indexOf('const LP_OVR ='), store.indexOf('// Telefona özel görünüm')), ctx);
   ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply', '_bkWrite'].forEach((m) => vm.runInContext('this.' + m + ' = ' + method(m) + ';', ctx));
   const S0 = { tabs: [{ id: 'ev', sections: [] }], settings: { a: 1 }, pets: { kedi: { name: 'Pamuk' }, kopek: { name: 'Karabaş' } }, estimates: { 'switch.kettle': { w: 2000 } }, profiles: { p: 1 } };
   ctx.STORE.data = clone(S0);
-  const h = { _undo: [], _redo: [], _tab: 'ev', _settings: () => ctx.STORE.data.settings || {}, _commit: (k, v) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, { [k]: v }); }, _render: () => {}, _toast: () => {}, _t: (k) => k };
+  const h = { _undo: [], _redo: [], _tab: 'ev', _settings: () => ctx.STORE.data.settings || {}, _commitBase: (k, v) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, { [k]: v }); }, _render: () => {}, _toast: () => {}, _t: (k) => k };
   ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply', '_bkWrite'].forEach((m) => { h[m] = ctx[m]; });
   h._bk = { data: { tabs: [{ id: 'eski', sections: [] }], settings: {}, profiles: {}, pets: { kedi: { name: 'Pamuk' } }, estimates: { 'switch.kettle': { w: 100 } } } };
   await h._backupApply();

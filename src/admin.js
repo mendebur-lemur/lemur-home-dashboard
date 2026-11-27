@@ -6,6 +6,13 @@
 
 const ADM = {
   tr: {
+    profLabel: 'Pano profili', profMain: 'Ana pano', profNew: 'Yeni profil…', profManage: 'Profili yönet', profName: 'Profil adı', profLayout: 'Profil düzeni',
+    profCopy: 'Ana düzeni kopyala', profLink: 'Ana düzeni kullan', profCreate: 'Profil oluştur', profRename: 'Yeniden adlandır', profDelete: 'Profili sil',
+    profDeleteQ: '“{n}” profili silinsin mi? Bu profile bağlı panolar ana panonun düzenine ve ayarlarına döner.', profLimit: 'En çok 10 profil oluşturabilirsin.', profNameEmpty: 'Bir profil adı yaz.',
+    profLinked: 'Ana panonun düzenini kullanıyor', profDetach: 'Düzeni ayır', profDetachFirst: 'Düzeni değiştirmek için önce bu profilde Düzeni ayır’a dokun.',
+    profDash: 'Bu profil için pano oluştur', profDashBusy: 'Pano oluşturuluyor…', profDashDone: 'Pano oluşturuldu. Kenar çubuğundan açabilirsin.',
+    profYamlTitle: 'Pano oluşturulamadı', profYamlHelp: 'Home Assistant’ta panonun ham yapılandırma düzenleyicisine bu YAML’ı yapıştır.', profYamlCopy: 'YAML’ı kopyala', profYamlCopied: 'YAML kopyalandı', profYamlLabel: 'Profil panosu YAML yapılandırması',
+    profOverrides: 'Profile özel ayarlar', profReset: 'Ana değere dön', profResetFor: '{n}: ana değere dön', profPhone: 'Telefon ayarları',
     lpSec: 'Işık penceresi', lpKel: 'Beyaz tonları', lpKelT: 'Pencerede çıkan hazır beyaz düğmeleri. Kelvin değerini yaz (1500 - 9000), en çok 6 düğme.', lpCol: 'Hazır renkler', lpColT: 'Pencerede çıkan renk örnekleri, en çok 12. Bir renge dokun; seçiciden ya da kodunu yazarak değiştir.', lpAdd: 'Ekle', lpDel: 'Sil', lpDef: 'Varsayılana dön', lpOwn: 'özel', lpCode: 'Renk kodu',
     headerInfo: 'Saat alanı', headerClock: 'Saat', headerDate: 'Tarih', headerWeather: 'Hava durumu', headerWeatherEntity: 'Hava durumu kaynağı', headerWeatherT: 'Güncel koşul ve sıcaklık seçtiğin Home Assistant hava durumu varlığından alınır.', headerWeatherPick: 'Kaynak seç', headerWeatherEmpty: 'Home Assistant’ta hava durumu varlığı bulunamadı.',
     title: 'Lemur Home Dashboard', auto: 'Otomatik düzen', autoT: 'Pano şu an evin alanlarından kendiliğinden kuruluyor. İlk değişiklikte bu düzen kaydedilir, sonra her şey buradan düzenlenir.',
@@ -152,6 +159,13 @@ const ADM = {
     lrPillAvg: 'Öğreniyor · {t} · ~{w}', lrBoxA: 'Bu cihaz şu an etiket değeri ya da tahmin. Güç ölçen bir prize takıp birkaç gün bekle; gerçek ortalaması kaydedilir.', lrBoxAvgRun: 'Öğreniyor: {t}, şu ana kadar ortalama ~{w}.', lrBoxOwnA: 'Ölçülen ortalama kullanılıyor ({w}).', lrSaveGo: 'Kaydet ve öğren', lrNameFirst: 'Önce ad yaz'
   },
   en: {
+    profLabel: 'Dashboard profile', profMain: 'Main dashboard', profNew: 'New profile…', profManage: 'Manage profile', profName: 'Profile name', profLayout: 'Profile layout',
+    profCopy: 'Copy main layout', profLink: 'Use main layout', profCreate: 'Create profile', profRename: 'Rename', profDelete: 'Delete profile',
+    profDeleteQ: 'Delete “{n}”? Dashboards using this profile will fall back to the main layout and settings.', profLimit: 'You can create up to 10 profiles.', profNameEmpty: 'Enter a profile name.',
+    profLinked: 'Uses the main dashboard’s layout', profDetach: 'Make layout separate', profDetachFirst: 'To change the layout, choose Make layout separate for this profile first.',
+    profDash: 'Create a dashboard for this profile', profDashBusy: 'Creating dashboard…', profDashDone: 'Dashboard created. Open it from the sidebar.',
+    profYamlTitle: 'Could not create the dashboard', profYamlHelp: 'Paste this YAML into the dashboard’s raw configuration editor in Home Assistant.', profYamlCopy: 'Copy YAML', profYamlCopied: 'YAML copied', profYamlLabel: 'Profile dashboard YAML configuration',
+    profOverrides: 'Profile overrides', profReset: 'Reset to main', profResetFor: '{n}: reset to main', profPhone: 'Phone settings',
     lpSec: 'Light window', lpKel: 'White tones', lpKelT: 'The preset white buttons in the window. Type the Kelvin value (1500 - 9000), up to 6 buttons.', lpCol: 'Preset colors', lpColT: 'The color swatches in the window, up to 12. Tap a color; change it with the picker or by typing its code.', lpAdd: 'Add', lpDel: 'Delete', lpDef: 'Back to default', lpOwn: 'custom', lpCode: 'Color code',
     headerInfo: 'Clock area', headerClock: 'Clock', headerDate: 'Date', headerWeather: 'Weather', headerWeatherEntity: 'Weather source', headerWeatherT: 'Current conditions and temperature come from the selected Home Assistant weather entity.', headerWeatherPick: 'Choose a source', headerWeatherEmpty: 'No weather entities found in Home Assistant.',
     title: 'Lemur Home Dashboard', auto: 'Automatic layout', autoT: 'The dashboard is currently built from your areas. Your first change saves this layout, then everything is edited here.',
@@ -532,6 +546,13 @@ function lhdBkPrep(D) {
     let v = D[k];
     if (k === 'tabs') v = lhdCleanTabs(v);
     else if (k === 'settings') { if (!lhdIsObj(v)) v = {}; }
+    else if (k === 'profiles' && lhdIsObj(v)) {
+      v = Object.assign(Object.create(null), v);
+      Object.keys(v).forEach((id) => {
+        const p = v[id];
+        if (lhdIsObj(p) && Array.isArray(p.tabs)) v[id] = Object.assign({}, p, { tabs: lhdCleanTabs(p.tabs) });
+      });
+    }
     else if (k === 'pets' && lhdIsObj(v)) v = lhdCleanPets(v);
     if (Array.isArray(lhdBkNone(k)) ? !Array.isArray(v) : !lhdIsObj(v)) { bad.push(k + ':type'); return; }
     const n = lhdPyLen(v);
@@ -558,6 +579,7 @@ function lhdBkEnts(D) {
   };
   if (!lhdIsObj(D)) return [];
   walk(D.tabs);
+  if (lhdIsObj(D.profiles)) Object.keys(D.profiles).forEach((id) => { if (lhdIsObj(D.profiles[id])) walk(D.profiles[id].tabs); });
   if (lhdIsObj(D.twins)) Object.keys(D.twins).forEach((k) => { add(k); if (lhdIsObj(D.twins[k])) add(D.twins[k].backup); });
   if (Array.isArray(D.walls)) D.walls.forEach((w) => { if (lhdIsObj(w)) { add(w.switch); add(w.light); } });
   if (lhdIsObj(D.estimates)) Object.keys(D.estimates).forEach((k) => { const e = D.estimates[k]; if (lhdIsObj(e)) ['entity', 'sensor', 'energy'].forEach((q) => add(e[q])); });
@@ -568,6 +590,8 @@ const LHD_REPO = 'https://github.com/mendebur-lemur/lemur-home-dashboard';
 const LHD_REPO_URL = /^https:\/\/github\.com\/mendebur-lemur\/lemur-home-dashboard(\/[^\s"'<>]*)?$/;
 const lhdSlug = (x) => String(x || '').replace(/İ/g, 'i').toLowerCase().replace(/[çćč]/g, 'c').replace(/ğ/g, 'g').replace(/[ıîí]/g, 'i').replace(/[öô]/g, 'o').replace(/ş/g, 's').replace(/[üû]/g, 'u')
   .replace(/[âáà]/g, 'a').replace(/[éè]/g, 'e').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+const LHD_PROF_MAX = 10;
+const lhdProfName = (name) => Array.from(String(name || '').trim()).slice(0, 60).join('');
 const lhdMove = (arr, from, to) => { const x = arr.splice(from, 1)[0]; arr.splice(to, 0, x); };
 // arama için küçük harf: I / ı / İ hepsi i olur ("Işığı".toLowerCase() "işığı", "İyi" ise "i̇yi" veriyordu; yazılan "ışığı" / "iyi" bulunmuyordu)
 const lhdFold = (x) => String(x || '').replace(/[Iİı]/g, 'i').toLowerCase().replace(/\u0307/g, '');
@@ -608,10 +632,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     super();
     this._tab = null; this._sec = null; this._undo = []; this._modal = null; this._menu = null; this._q = ''; this._picked = [];
     this._ask = null;
+    this._prof = null;
+    try { this._prof = localStorage.getItem('lhd-admin-prof') || null; } catch (e) {}
   }
   set hass(h) {
     const first = !this._hass;
-    if (h && STORE.data && STORE.data.tabs) { lpEnEnsure(h); h = lpEnVirt(h); }   // enerji değerleri Cihaz ekle'de seçilebilsin
+    if (h && lpProfTabs(STORE.data, this._prof)) { lpEnEnsure(h); h = lpEnVirt(h); }   // enerji değerleri Cihaz ekle'de seçilebilsin
     this._hass = h;
     // HA'nın alan listesi değişti (alan eklendi, silindi, adı değişti): sekmenin Alan seçimi ve uyarısı güncellensin (GitHub #23)
     const A = (h && h.areas) || {};
@@ -716,7 +742,160 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (v) Object.keys(v).forEach((x) => { s = s.split('{' + x + '}').join(v[x]); });
     return s;
   }
-  _settings() { return (STORE.data && STORE.data.settings) || {}; }
+  _profSet(id) {
+    this._prof = lpProfile(STORE.data, id) ? id : null;
+    this._tab = null; this._sec = null;
+    try { if (this._prof) localStorage.setItem('lhd-admin-prof', this._prof); else localStorage.removeItem('lhd-admin-prof'); } catch (e) {}
+  }
+  _profOwn() { return lpProfOwnTabs(STORE.data, this._prof); }
+  _profLinked() { return !!this._prof && !this._profOwn(); }
+  _profContext(fn) {
+    const id = LP_PROF.id;
+    LP_PROF.id = this._prof || null;
+    try { return fn(); } finally { LP_PROF.id = id; }
+  }
+  _profNew(name, mode) {
+    const profiles = STORE.data.profiles || {};
+    if (Object.keys(profiles).length >= LHD_PROF_MAX) { this._toast(this._t('profLimit'), false); return null; }
+    name = lhdProfName(name);
+    if (!name) { this._toast(this._t('profNameEmpty'), false); return null; }
+    const slug = lhdSlug(name) || 'profile';
+    let id = slug, n = 2;
+    while (lpProfHas(profiles, id)) id = slug + '-' + (n++);
+    const p = { name: name, settings: {} };
+    if (mode === 'copy') {
+      p.tabs = this._work(null);
+      const phone = (STORE.data.settings || {}).phone;
+      if (lpProfHas(STORE.data.settings || {}, 'phone')) p.settings.phone = lhdClone(phone);
+    }
+    this._snap();
+    this._commit('profiles', Object.assign(Object.create(null), profiles, { [id]: p }));
+    return id;
+  }
+  _profRename(id, name) {
+    const p = lpProfile(STORE.data, id);
+    name = lhdProfName(name);
+    if (!name) { this._toast(this._t('profNameEmpty'), false); return false; }
+    if (!p || p.name === name) return !!p;
+    this._snap();
+    return this._commit('profiles', Object.assign(Object.create(null), STORE.data.profiles, { [id]: Object.assign({}, p, { name: name }) }));
+  }
+  async _profDel(id) {
+    if (!lpProfile(STORE.data, id)) return false;
+    const next = Object.assign(Object.create(null), STORE.data.profiles);
+    delete next[id];
+    this._snap();
+    const ok = await this._commit('profiles', next);
+    if (ok !== false && this._prof === id) this._profSet(null);
+    return ok !== false;
+  }
+  async _profDetach() {
+    const id = this._prof, p = lpProfile(STORE.data, id);
+    if (!p || this._profOwn()) return;
+    const settings = Object.assign({}, p.settings), s = this._settings();
+    if (lpProfHas(s, 'phone')) settings.phone = lhdClone(s.phone);
+    this._snap();
+    const ok = await this._commit('profiles', Object.assign(Object.create(null), STORE.data.profiles, { [id]: Object.assign({}, p, { tabs: this._work(null), settings: settings }) }));
+    this._render();
+    if (ok !== false) this._toast(this._t('saved'));
+  }
+  async _profReset(path) {
+    const id = this._prof, p = lpProfile(STORE.data, id), parts = path.split('.');
+    const k = parts[0], sub = parts[1], over = p && p.settings;
+    if (!lhdIsObj(over) || LP_PROF_KEYS.indexOf(k) < 0 || !lpProfHas(over, k) || parts.length > 2) return;
+    const settings = Object.assign({}, over);
+    if (sub) {
+      if (k === 'phone' || !lhdIsObj(over[k]) || lpProfSubkeys(k, over[k]).indexOf(sub) < 0) return;
+      settings[k] = Object.assign({}, over[k]); delete settings[k][sub];
+      if (!Object.keys(settings[k]).length) delete settings[k];
+    } else {
+      delete settings[k];
+      if (k === 'bg') delete settings.background;
+    }
+    const next = Object.assign({}, p);
+    if (Object.keys(settings).length) next.settings = settings; else delete next.settings;
+    this._snap();
+    const ok = await this._commit('profiles', Object.assign(Object.create(null), STORE.data.profiles, { [id]: next }));
+    this._render();
+    if (ok !== false) this._toast(this._t('saved'));
+  }
+  async _profDash(id) {
+    const p = lpProfile(STORE.data, id), h = this._hass;
+    if (!p || !h || this._profDashBusy) return;
+    const config = { strategy: { type: LHD_STRAT, profile: id } };
+    this._profDashBusy = true; this._render();
+    try {
+      const list = (await h.connection.sendMessagePromise({ type: 'lovelace/dashboards/list' })) || [];
+      await lhdCreateDash(h, list, 'lemur-' + (lhdSlug(id) || 'profile'), p.name, config);
+      if (this._modal === 'profManage') this._modal = null;
+    } catch (e) {
+      this._profYaml = 'strategy:\n  type: ' + LHD_STRAT + '\n  profile: ' + JSON.stringify(id) + '\n';
+      this._modal = 'profYaml';
+    } finally {
+      this._profDashBusy = false; this._render();
+    }
+    if (this._modal !== 'profYaml') this._toast(this._t('profDashDone'), false);
+  }
+  _profPicker() {
+    const profiles = STORE.data.profiles || {}, ids = Object.keys(profiles), t = (k) => esc(this._t(k));
+    const opt = (id, name) => '<option value="' + esc(id) + '"' + ((this._prof || '') === id ? ' selected' : '') + '>' + esc(name) + '</option>';
+    return '<div class="profbar"><select class="inp" data-prof aria-label="' + t('profLabel') + '">' +
+      opt('', this._t('profMain')) + ids.map((id) => opt(id, profiles[id].name)).join('') +
+      '<option value="+" ' + (ids.length >= LHD_PROF_MAX ? 'disabled title="' + t('profLimit') + '"' : '') + '>' + t('profNew') + '</option></select>' +
+      (this._prof ? '<button class="btn ic" data-a="profManage" title="' + t('profManage') + '" aria-label="' + t('profManage') + '"><ha-icon class="s16" icon="mdi:dots-horizontal"></ha-icon></button>' : '') + '</div>';
+  }
+  _profDialog(md) {
+    const p = lpProfile(STORE.data, this._prof), t = (k, v) => esc(this._t(k, v));
+    const titles = { profNew: 'profCreate', profManage: 'profManage', profRename: 'profRename', profDelete: 'profDelete', profYaml: 'profYamlTitle' };
+    if (!p && md !== 'profNew' && md !== 'profYaml') return '';
+    const form = md === 'profNew' || md === 'profRename';
+    const busy = this._profDashBusy ? ' disabled' : '';
+    let body = '', foot = '';
+    if (form) {
+      body = '<div class="fld"><label for="prof-name">' + t('profName') + '</label><input class="inp" name="name" id="prof-name" required maxlength="60" value="' + (md === 'profRename' ? esc(p.name) : '') + '"></div>';
+      if (md === 'profNew') body += '<div class="fld"><label for="prof-layout">' + t('profLayout') + '</label><select id="prof-layout" class="inp" name="layout"><option value="copy">' + t('profCopy') + '</option><option value="link">' + t('profLink') + '</option></select></div>';
+      foot = '<button type="submit" class="btn pri">' + t(md === 'profNew' ? 'profCreate' : 'imSave') + '</button>';
+    } else if (md === 'profManage') {
+      body = '<div class="profacts"><b>' + esc(p.name) + '</b><button class="btn pri" data-a="profDash"' + busy + '>' + t(busy ? 'profDashBusy' : 'profDash') + '</button>' +
+        '<div class="acts"><button class="btn" data-a="profRename"' + busy + '>' + t('profRename') + '</button><button class="btn dan" data-a="profDelete"' + busy + '>' + t('profDelete') + '</button></div></div>';
+    } else if (md === 'profDelete') {
+      body = '<p>' + t('profDeleteQ', { n: p.name }) + '</p>';
+      foot = '<button class="btn dan" data-a="profDeleteGo">' + t('profDelete') + '</button>';
+    } else if (md === 'profYaml') {
+      body = '<p>' + t('profYamlHelp') + '</p><textarea class="inp ta" rows="4" data-profyaml readonly aria-label="' + t('profYamlLabel') + '">' + esc(this._profYaml) + '</textarea>';
+      foot = '<button class="btn pri" data-a="profYamlCopy">' + t('profYamlCopy') + '</button>';
+    }
+    const tag = form ? 'form' : 'div';
+    const close = '<button type="button" class="btn" data-a="close">' + t(form || md === 'profDelete' ? 'cancel' : 'close') + '</button>';
+    return '<div class="ov" data-ovl><' + tag + ' class="dlg sm" role="dialog" aria-modal="true" aria-labelledby="prof-title"' + (form ? ' data-profform' : '') + '>' +
+      '<div class="dh"><div class="di"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h2 id="prof-title">' + t(titles[md]) + '</h2>' +
+      '<button type="button" class="btn ic" data-a="close" aria-label="' + t('close') + '"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
+      '<div class="db">' + body + '</div><div class="df">' + close + foot + '</div></' + tag + '></div>';
+  }
+  _profOverridesHtml() {
+    const p = lpProfile(STORE.data, this._prof), over = p && p.settings, t = (k, v) => esc(this._t(k, v));
+    if (!lhdIsObj(over)) return '';
+    const labels = {
+      canvas: 'canvas', 'canvas.width': 'navW', 'canvas.ref_height': 'navH',
+      kiosk: 's_screen', 'kiosk.hide_header': 'kHeader', 'kiosk.hide_sidebar': 'kSide',
+      bg: 'bg', background: 'bg', theme_name: 'theme', icon_style: 'icStyle', icon_tint: 'icTintC', icon_tint_light: 'icTintL',
+      climate_style: 'clSt', nav: 'navSz', 'nav.w': 'navW', 'nav.h': 'navH', 'nav.cols': 'navAl', 'nav.fx_in': 'navFx',
+      header: 'headerInfo', 'header.clock': 'headerClock', 'header.date': 'headerDate', 'header.weather': 'headerWeather',
+      bright: 'bb', 'bright.on': 'bb', 'bright.look': 'bbLook', 'bright.phone': 'bbPh', 'bright.icon': 'bbIcon', 'bright.all_off': 'bbAll', 'bright.value': 'bbVal',
+      hold: 'hold', lec_nav: 'akLec', lec_hold: 'hLec', lightpop: 'lpSec', 'lightpop.kelvin': 'lpKel', 'lightpop.colors': 'lpCol', phone: 'profPhone'
+    };
+    const row = (k, sub) => {
+      const path = sub ? k + '.' + sub : k;
+      const group = this._t(labels[k]), name = sub ? group + ' · ' + (labels[path] ? this._t(labels[path]) : sub) : group;
+      return '<div class="srow"><div class="t"><b>' + esc(name) + '</b></div><button class="btn sm" data-profreset="' + esc(path) + '" aria-label="' + t('profResetFor', { n: name }) + '">' + t('profReset') + '</button></div>';
+    };
+    const rows = LP_PROF_KEYS.filter((k) => lpProfHas(over, k) && !(k === 'background' && lpProfHas(over, 'bg'))).map((k) => {
+      if (k === 'bg' || k === 'phone' || !lhdIsObj(over[k])) return row(k);
+      return lpProfSubkeys(k, over[k]).map((sub) => row(k, sub)).join('');
+    }).join('');
+    return rows ? '<div class="sh" data-sh="profOverrides">' + t('profOverrides') + '</div>' + rows : '';
+  }
+  _settings() { return this._prof ? lpProfSettings(STORE.data, this._prof) : (STORE.data && STORE.data.settings) || {}; }
   // telefona özel düzenleme: önizleme Telefon'dayken (ya da 'Bu ekran' bir telefonken) sağdaki düzenleyici telefona yazar
   // telefon düzeninde çizilen önizleme ekranları: Telefon, Büyük dikey (dikey tablet panoda da telefon düzenine geçer) ve dar/dikey Bu ekran
   _scrPh(k) { if (k === 'custom') { const c = lhdCustomScr(); return lhdScrIsPh(c[0], c[1]); } return k === 'phone' || k === 'tabp' || (k === 'here' && lpPhoneScreen()); }
@@ -784,15 +963,16 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     Object.keys(p.order).forEach((k) => { if (!Array.isArray(p.order[k]) || !p.order[k].length) delete p.order[k]; });
     if (!Object.keys(p.secs).length) delete p.secs;
     if (!Object.keys(p.order).length) delete p.order;
-    if (Object.keys(p).length) s.phone = p; else delete s.phone;   // telefona özel bir şey kalmadıysa boş kayıt da kalmasın
+    // Profilin boş telefon ayarı ana panonun telefon düzenini ezebilir.
+    if (Object.keys(p).length || (this._prof && (STORE.data.settings || {}).phone)) s.phone = p; else delete s.phone;
     this._commit('settings', s);
     if (soft) this._undoBtn(); else this._render();   // yazı kutusundan çıkınca yeniden çizme: hemen tıklanan düğme kaybolmasın
     this._toast(this._t('saved'));
   }
   _cw() { return (this._settings().canvas || {}).width || 1280; }
-  _isAuto() { const d = STORE.data; return !(d && d.tabs && d.tabs.length); }
-  _work() {
-    const d = STORE.data; if (d && d.tabs && d.tabs.length) return lhdClone(d.tabs).map(lhdNormTab);
+  _isAuto() { const T = lpProfTabs(STORE.data, this._prof); return !(T && T.length); }
+  _work(profile = this._prof) {
+    const T = lpProfTabs(STORE.data, profile); if (T && T.length) return lhdClone(T).map(lhdNormTab);
     // otomatik düzen: aynı hass ve dil için bir kez kurulur (çizim başına birkaç kez çağrılıyordu); dışarı kopyası gider
     const M = this._defM;
     if (!M || M.h !== this._hass || M.l !== this._lang) this._defM = { h: this._hass, l: this._lang, v: buildDefaultTabs(this._hass, this._lang) };
@@ -872,9 +1052,31 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
   // ---- kayıt: önce ekranda, sonra entegrasyona; her değişiklik geri alınabilir ----
   _commit(key, value) {
+    if (!this._prof || (key !== 'tabs' && key !== 'settings')) return this._commitBase(key, value);
+    const d = STORE.data, id = this._prof, p = lpProfile(d, id);
+    if (!p) return Promise.resolve(false);
+    const write = (next) => this._commitBase('profiles', Object.assign(Object.create(null), d.profiles, { [id]: next }));
+    if (key === 'tabs') return this._profOwn() ? write(Object.assign({}, p, { tabs: value })) : Promise.resolve(false);
+    const base = d.settings || {}, over = p.settings || {}, cur = this._settings();
+    const split = lpProfSplit(base, value, over);
+    // Kopyalanan telefon düzeni gibi dokunulmayan farklar, ana değerle aynı olsa bile saklanır.
+    LP_PROF_KEYS.forEach((k) => {
+      if (lpProfHas(over, k) && lpProfEqual(cur[k], value[k])) split.over[k] = over[k];
+    });
+    const writes = [];
+    if (split.base !== base) writes.push(this._commitBase('settings', split.base));
+    if (!lpProfEqual(split.over, over)) {
+      const next = Object.assign({}, p);
+      if (Object.keys(split.over).length) next.settings = split.over; else delete next.settings;
+      writes.push(write(next));
+    }
+    return Promise.all(writes).then((results) => results.every((r) => r !== false));
+  }
+  _commitBase(key, value) {
+    const prev = STORE.data || {};
     // bu adım mevsimi kendisi değiştirdi (Ayarlar > Mevsim, içe aktarma): geri alınca mevsim de geri gelir; yoksa geri al mevsime dokunmaz
-    if (key === 'settings' && !this._hx && this._undo.length && lhdIsObj(value) && value.season !== this._settings().season) this._undo[this._undo.length - 1].sx = true;
-    STORE.data = Object.assign({}, STORE.data); STORE.data[key] = value;
+    if (key === 'settings' && !this._hx && this._undo.length && lhdIsObj(value) && value.season !== (prev.settings || {}).season) this._undo[this._undo.length - 1].sx = true;
+    STORE.data = Object.assign({}, prev, { [key]: value });
     const d = STORE.data;
     this._lastJson = JSON.stringify(d);   // kendi değişikliğimiz: abonelikten gelince yeniden çizme
     STORE.subs.forEach((f) => { try { f(d); } catch (e) {} });
@@ -885,21 +1087,29 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return STORE.set(key, value).catch((e) => {
       // başka bir ekran (ikinci yönetim paneli, aktarma, tabletteki yaz / kış) bu veriyi arada değiştirdi: üstüne yazılmaz, güncel hâli gelir
       if (e && e.code === 'conflict') { this._undo = []; this._redo = []; this._lastJson = ''; this._toast(this._t('errConflict'), false); return false; }
+      if (key === 'profiles' && STORE.data.profiles === value) {
+        STORE.data = Object.assign({}, STORE.data, { profiles: prev.profiles });
+        this._lastJson = '';
+        STORE.subs.forEach((f) => { try { f(STORE.data); } catch (err) {} });
+        this._render();
+      }
       this._toast(this._t('err', { e: (e && e.message) || e }), false);
       return false;   // geri çevrildi (bekleyen: cihaz formu açık kalır)
     });
   }
   _snap() {
-    this._undo.push({ tabs: lhdClone((STORE.data && STORE.data.tabs) || []), settings: lhdClone(this._settings()) });
+    this._undo.push(this._histCur());
     if (this._undo.length > 40) this._undo.shift();
     this._redo = [];   // yeni bir değişiklik: ileri alınacak bir şey kalmaz
   }
   // telefon önizlemesinde katlanır gruplar: kapalıyken öğeler yerinde (sıralamak ve gizlemek için), açıkken telefondaki gibi
   _pvFoldsOn() { try { return localStorage.getItem('lhd-pv-folds') === '1'; } catch (e) { return false; } }
   _hasFolds() { const S0 = this._phOv().secs; return lhdIsObj(S0) && Object.keys(S0).some((k) => lhdIsObj(S0[k]) && Array.isArray(S0[k].folds) && S0[k].folds.length > 0); }
-  // geri al / ileri al kaydı: sekmeler ve ayarlar; yedekten geri yükleme hayvanları, profilleri ve tahminleri de değiştirir (u.more)
+  // geri al / ileri al kaydı: ana pano ve profiller; yedekten geri yükleme başka ev verilerini de değiştirebilir (u.more)
   _histCur(u) {
-    const o = { tabs: lhdClone((STORE.data && STORE.data.tabs) || []), settings: lhdClone(this._settings()), sx: u && u.sx };
+    const d = STORE.data || {};
+    const o = { tabs: lhdClone(d.tabs || []), settings: lhdClone(d.settings || {}), sx: u && u.sx };
+    if (!u || u.profiles) o.profiles = lhdClone(d.profiles || {});
     if (u && u.more) { o.more = {}; Object.keys(u.more).forEach((k) => { o.more[k] = lhdClone((STORE.data && STORE.data[k]) || lhdBkNone(k)); }); }
     return o;
   }
@@ -919,22 +1129,27 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _histApply(u) {
     // seçili sekmenin kimliği geri alınan / yeniden yapılan değişiklikte değişiyorsa (yeni sekme ilk kez adlandırılınca "sekme" → "salon")
     // aynı yerdeki sekmede kal; yoksa ilk sekmeye atlıyordu
-    const T0 = (STORE.data && STORE.data.tabs) || [], i0 = T0.map((x) => x.id).indexOf(this._tab);
-    if (i0 >= 0 && Array.isArray(u.tabs) && u.tabs.length === T0.length && u.tabs[i0] && !u.tabs.some((x) => x.id === this._tab)) this._tab = u.tabs[i0].id;
+    const d = STORE.data || {}, profiles = u.profiles || (u.more && u.more.profiles);
+    const T0 = lpProfTabs(d, this._prof) || [], i0 = T0.map((x) => x.id).indexOf(this._tab);
+    const T1 = lpProfTabs({ tabs: u.tabs, profiles: profiles || d.profiles }, this._prof) || [];
+    if (i0 >= 0 && T1.length === T0.length && !T1.some((x) => x.id === this._tab)) this._tab = T1[i0].id;
     // mevsim (yaz / kış) tabletten her an değişebilir: geri alınan adım mevsimi kendisi değiştirmediyse şimdiki mevsim kalır
     let us = u.settings;
-    if (!u.sx && us && typeof us === 'object') { const cs = this._settings().season; us = Object.assign({}, us); if (cs === undefined) delete us.season; else us.season = cs; }
+    const base = d.settings || {};
+    if (!u.sx && us && typeof us === 'object') { const cs = base.season; us = Object.assign({}, us); if (cs === undefined) delete us.season; else us.season = cs; }
     // sadece değişen anahtar gönderilir (ikisi birden gönderilince ara yankı geri alınanı bir an geri getiriyordu)
     this._hx = true;
     try {
-      if (JSON.stringify(us) !== JSON.stringify(this._settings())) this._commit('settings', us);
-      if (JSON.stringify(u.tabs) !== JSON.stringify((STORE.data && STORE.data.tabs) || [])) this._commit('tabs', u.tabs);
-      if (u.more) Object.keys(u.more).forEach((k) => { if (JSON.stringify(u.more[k]) !== JSON.stringify((STORE.data && STORE.data[k]) || lhdBkNone(k))) this._commit(k, u.more[k]); });
+      if (!lpProfEqual(us, base)) this._commitBase('settings', us);
+      if (!lpProfEqual(u.tabs, d.tabs || [])) this._commitBase('tabs', u.tabs);
+      if (u.profiles && !lpProfEqual(u.profiles, d.profiles || {})) this._commitBase('profiles', u.profiles);
+      if (u.more) Object.keys(u.more).forEach((k) => { if (!lpProfEqual(u.more[k], d[k] || lhdBkNone(k))) this._commitBase(k, u.more[k]); });
     } finally { this._hx = false; }
     this._render();
   }
   // soft: yazı alanından gelen değişiklik; panel yeniden çizilmez (odak ve hemen ardından gelen tıklama kaybolmasın), önizleme kendisi güncellenir
   _edit(fn, msg, soft) {
+    if (this._profLinked()) return this._toast(this._t('profDetachFirst'), false);
     this._snap();
     const tabs = this._work();
     fn(tabs);
@@ -948,9 +1163,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const s = lhdClone(this._settings());
     if (b) s.bg = b; else delete s.bg;
     const css = lpBgCss(b);
-    if (css) s.background = css; else delete s.background;
+    if (css) s.background = css; else if (this._prof) s.background = null; else delete s.background;
     this._commit('settings', s);
-    if (!soft) this._render(); else { this._undoBtn(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = lpBgOf(s); }
+    if (!soft) this._render(); else { this._undoBtn(); this._profPaintOverrides(); const box = this.shadowRoot && this.shadowRoot.querySelector('.pvbox'); if (box) box.style.background = lpBgOf(s); }
     this._toast(this._t('saved'));
   }
 
@@ -1093,7 +1308,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       this._bkErr = this._bkErrText(err); this._render(); return;
     }
     // tek geri al adımı: dosyanın değiştirdiği bütün anahtarlar (sekmeler, ayarlar ve "more")
-    const u = { tabs: prev.tabs, settings: prev.settings !== undefined ? prev.settings : lhdClone(this._settings()), more: {} };
+    const u = { tabs: prev.tabs, settings: prev.settings !== undefined ? prev.settings : cur('settings'), more: {} };
     if (prev.settings !== undefined && (V.settings || {}).season !== (prev.settings || {}).season) u.sx = true;
     keys.forEach((k) => { if (k !== 'tabs' && k !== 'settings') u.more[k] = prev[k]; });
     this._undo.push(u); if (this._undo.length > 40) this._undo.shift();
@@ -1106,7 +1321,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     let seen = null; try { seen = localStorage.getItem('lemur-hd-news'); } catch (e) { return; }
     if (seen === PANEL_VERSION) return;
     const mark = () => { try { localStorage.setItem('lemur-hd-news', PANEL_VERSION); } catch (e) {} };
-    const d = STORE.data || {}, used = (d.tabs && d.tabs.length) || (d.settings && Object.keys(d.settings).length);
+    const d = STORE.data || {}, used = lpAllTabs(d).length || Object.keys(d.profiles || {}).length || (d.settings && Object.keys(d.settings).length);
     if (!seen && !used) return mark();                       // ilk kurulumda gösterilecek bir şey yok
     if (!LHD_CHANGES.length || LHD_CHANGES[0].v !== PANEL_VERSION) return mark();
     if (this._modal) return;                                   // başka bir pencere açık: bir dahaki sefere
@@ -1460,7 +1675,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     this._ak = { mode: stil ? 'stil' : 'kur', src: stil ? 'mine' : 'demo', order: order, areas: areas, home: true, other: true,
       types: { lights: true, scenes: true, climate: true, vacuum: true, media: true, camera: false, energy: Object.keys(this._hass.states || {}).some((id) => id.indexOf('sensor.') === 0 && lpEnIsPow(this._hass.states[id])) }, look: nb > nt ? 'bar' : 'tiles', clim: stil && lpClimStyle() === 'rows' ? 'rows' : 'halo',
       bg: bg, bgColor: (m === 'color' && st.bg.color) || LHD_BG_COLORS[1], bgUrl: (m === 'img' && st.bg.url) || url, nav: pc.nav, plights: pc.lights, sheet: pc.sheet, lec: st.lec_nav !== false, hold: lpHoldMode(), pv: 'tablet' };
-    this._ak.look0 = this._ak.look; this._ak.bg0 = this._ak.bg; this._ak.clim0 = this._ak.clim;
+    const K = this._ak;
+    K.look0 = K.look; K.bg0 = K.bg; K.clim0 = K.clim;
+    K.bgColor0 = K.bgColor; K.bgUrl0 = K.bgUrl; K.phone0 = [pc.nav, pc.lights, pc.sheet]; K.hold0 = K.hold; K.lec0 = K.lec;
     // önizlemenin hayali evi (dokunulunca durumu değişir; pencere açık kaldıkça aynı ev)
     const home = lhdDemoHome(this._lang);
     this._akDemo = lhdDemoHass(this._hass, home, () => { if (this._akCard) this._akCard.hass = this._akHassFor(); });
@@ -1529,7 +1746,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (LP_POP.cur) LP_POP.cur.close(true);
     const scr = document.createElement('div'); scr.className = 'akscr'; scr.style.overflowY = ph ? 'auto' : 'hidden';
     // kart önce yerine takılır, sonra ayarlanır: dışarıdayken çizilirse genişliği 0 okunur, telefonda 8 minicik karo çıkıyordu
-    const cfg = { type: 'custom:lemur-home-dashboard-card', demo: true, demo_tabs: tabs, demo_settings: this._akSettings(), demo_mount: box, tab: this._akTab, phone: ph };
+    const cfg = { type: 'custom:lemur-home-dashboard-card', admin_preview: true, profile: this._prof || undefined, demo: true, demo_tabs: tabs, demo_settings: this._akSettings(), demo_mount: box, tab: this._akTab, phone: ph };
     if (!card._config) card.setConfig(cfg);
     box.innerHTML = ''; box.appendChild(scr); scr.appendChild(card);
     card.setConfig(cfg);
@@ -1544,19 +1761,29 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _autoApply() {
     if (!this._ak) return;
     const K = this._ak, stil = K.mode === 'stil';
+    if (!stil && this._profLinked()) return this._toast(this._t('profDetachFirst'), false);
     let tabs = null;
     if (!stil) { tabs = buildDefaultTabs(this._hass, this._lang, this._autoOpts()); if (!tabs.length) return; }
     this._snap();
     if (tabs) this._commit('tabs', tabs);
-    else if (K.look !== K.look0) this._commit('tabs', this._akLook(this._work()));
+    else if (!this._profLinked() && K.look !== K.look0) this._commit('tabs', this._akLook(this._work()));
     const s = lhdClone(this._settings());
-    if (K.clim === 'rows') s.climate_style = 'rows'; else delete s.climate_style;
+    if (!this._prof || !stil || K.clim !== K.clim0) {
+      if (K.clim === 'rows') s.climate_style = 'rows';
+      else if (this._prof && (STORE.data.settings || {}).climate_style === 'rows') s.climate_style = null;
+      else delete s.climate_style;
+    }
     const sel = K.bg && this._akBgSel(K.bg);
-    if (sel) { s.bg = sel; const css = lpBgCss(sel); if (css) s.background = css; else delete s.background; }
-    s.phone = Object.assign({}, lhdIsObj(s.phone) ? s.phone : {}, { nav: K.nav, lights: K.plights, sheet: K.sheet });
+    if (sel && (!this._prof || K.bg !== K.bg0 || K.bgColor !== K.bgColor0 || K.bgUrl !== K.bgUrl0)) {
+      s.bg = sel; const css = lpBgCss(sel);
+      if (css) s.background = css; else if (this._prof) s.background = null; else delete s.background;
+    }
+    if (!this._prof || !lpProfEqual(K.phone0, [K.nav, K.plights, K.sheet])) {
+      s.phone = Object.assign({}, lhdIsObj(s.phone) ? s.phone : {}, { nav: K.nav, lights: K.plights, sheet: K.sheet });
+    }
     this._akPhStyle(s);
-    if (this._akLecOk()) s.lec_nav = K.lec;
-    if (K.hold) s.hold = K.hold === 'lec' && !this._akLecOk() ? 'popup' : K.hold;
+    if (this._akLecOk() && (!this._prof || K.lec !== K.lec0)) s.lec_nav = K.lec;
+    if (K.hold && (!this._prof || K.hold !== K.hold0)) s.hold = K.hold === 'lec' && !this._akLecOk() ? 'popup' : K.hold;
     this._commit('settings', s);
     this._modal = null; this._sec = null; if (tabs) this._tab = tabs[0].id; this._ak = null; this._akCard = null; this._akDemo = null;
     this._toast(this._t(stil ? 'akOkS' : 'akOk'));
@@ -1564,14 +1791,22 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   _setting(path, value, soft) {
     this._snap();
-    const s = lhdClone(this._settings());
     const p = path.split('.');
+    const shared = p[0] === 'energy' || p[0] === 'season';
+    const s = lhdClone(shared ? (STORE.data.settings || {}) : this._settings());
     let o = s;
     for (let i = 0; i < p.length - 1; i++) { if (!o[p[i]] || typeof o[p[i]] !== 'object') o[p[i]] = {}; o = o[p[i]]; }
-    if (value === undefined || value === null || value === '') delete o[p[p.length - 1]]; else o[p[p.length - 1]] = value;
-    this._commit('settings', s);
-    if (!soft) this._render(); else this._undoBtn();   // ayarlar penceresi açıkken de güncel görünsün
+    const key = p[p.length - 1], empty = value === undefined || value === null || value === '';
+    const base = (this._prof && STORE.data.settings) || {}, b = p.length === 1 ? base : base[p[0]];
+    const mask = this._prof && p[0] !== 'phone' && path !== 'header.weather_entity' && LP_PROF_KEYS.indexOf(p[0]) >= 0 && b && b[key] !== undefined && b[key] !== null;
+    if (empty && !mask) delete o[key]; else o[key] = empty ? null : value;
+    if (shared) this._commitBase('settings', s); else this._commit('settings', s);
+    if (!soft) this._render(); else { this._undoBtn(); this._profPaintOverrides(); }
     this._toast(this._t('saved'));
+  }
+  _profPaintOverrides() {
+    const el = this.shadowRoot && this.shadowRoot.querySelector('[data-prof-overrides]');
+    if (el) el.innerHTML = this._profOverridesHtml();
   }
   // yazı alanından gelen kayıtta panel yeniden çizilmez; geri al düğmesi yine de açılsın (ilk değişiklikte kapalı kalıyordu)
   _undoBtn() { const R = this.shadowRoot, u = R && R.querySelector('[data-a="undo"]'), r = R && R.querySelector('[data-a="redo"]'); if (u) u.disabled = !this._undo.length; if (r) r.disabled = !(this._redo && this._redo.length); }
@@ -1598,6 +1833,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
 
   // ---- çizim ----
   _render() {
+    this._profContext(() => this._renderProfile());
+  }
+  _renderProfile() {
     if (!this._hass) return;
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
     // büyük harfe çevrilen başlıklar panelin diliyle çevrilsin (İngilizce panoda "SECTİONS" olmasın)
@@ -1607,13 +1845,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (!this._newsChk && STORE.data) { this._newsChk = true; this._newsAuto(); }
     const R = this.shadowRoot;
     if (!STORE.data) { R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app"><div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + esc(this._t('title')) + '</h1></div><div class="warn">' + esc(this._t('notLoaded')) + '</div></div>'; return; }
-    const tabs = this._work(), tab = this._curTab(tabs), sec = this._curSec(tab);
+    if (this._prof && !lpProfile(STORE.data, this._prof)) {
+      this._profSet(null);
+      if (['profManage', 'profRename', 'profDelete'].indexOf(this._modal) >= 0) this._modal = null;
+    }
+    const linked = this._profLinked(), tabs = this._work(), tab = this._curTab(tabs), sec = linked ? null : this._curSec(tab);
     const t = (k, v) => esc(this._t(k, v));
     const narrow = (this.clientWidth || window.innerWidth) < 980;
     this._narrowNow = narrow;
 
     const top = '<div class="top"><div class="lg"><ha-icon icon="mdi:tablet-dashboard"></ha-icon></div><h1>' + t('title') + '</h1>' +
-      (this._isAuto() ? '<span class="badge" title="' + t('autoT') + '">' + t('auto') + '</span>' : '') + '<div class="grow"></div>' +
+      (!linked && this._isAuto() ? '<span class="badge" title="' + t('autoT') + '">' + t('auto') + '</span>' : '') + this._profPicker() + '<div class="grow"></div>' +
       // "Yıldız ver": yalnız GitHub bağlantısı (sayım, hatırlatma yok); dar ekranda yalnız simge
       '<a class="btn stb" href="' + LHD_REPO + '" target="_blank" rel="noopener" title="' + t('starT') + '" aria-label="' + t('starT') + '"><ha-icon class="s16" icon="mdi:star"></ha-icon><span class="l">' + t('starB') + '</span></a>' +
       // Önerilen ürünler (src/picks.js): yıldızın yanında; Ayarlar → Pano'dan gizlenir
@@ -1629,19 +1871,19 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const PTN = lhdIsObj(PTB.names) ? PTB.names : {}, PTI = lhdIsObj(PTB.icons) ? PTB.icons : {}, PTH = lhdIsObj(PTB.hide) ? PTB.hide : {};
     // telefonda oda düğmeleri telefondaki sırasıyla, telefona özel ad ve simgeyle; gizliler soluk
     const tabsShown = phE ? lhdOrderBy(tabs, PTB.order) : tabs;
-    const rooms = '<div class="rooms' + (phE ? ' phl' : '') + '" data-dl="tabs" data-dir="x">' + tabsShown.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + (phE && PTH[x.id] ? ' phoff' : '') + '" data-di data-tab="' + esc(x.id) + '" data-handle>' + lpIcon((phE && PTI[x.id]) || x.icon || 'mdi:door') + esc((phE && PTN[x.id]) || x.name) + '</div>').join('') +
-      (phE ? '' : '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div>') + '</div>';
+    const rooms = '<div class="rooms' + (phE ? ' phl' : '') + '"' + (linked ? '' : ' data-dl="tabs" data-dir="x"') + '>' + tabsShown.map((x) => '<div class="rb' + (x.id === this._tab ? ' on' : '') + (phE && PTH[x.id] ? ' phoff' : '') + '" data-tab="' + esc(x.id) + '"' + (linked ? '' : ' data-di data-handle') + '>' + lpIcon((phE && PTI[x.id]) || x.icon || 'mdi:door') + esc((phE && PTN[x.id]) || x.name) + '</div>').join('') +
+      (phE || linked ? '' : '<div class="rb add" data-a="addtab"><ha-icon class="s18" icon="mdi:plus"></ha-icon>' + t('addTab') + '</div>') + '</div>';
     const AR = this._areas();
     const areaOpts = '<option value="">' + t('noArea') + '</option>' + (tab && tab.area && !AR[tab.area] ? '<option value="' + esc(tab.area) + '" selected>' + t('arGoneOpt', { a: tab.area }) + '</option>' : '') + Object.keys(AR).map((a) => '<option value="' + esc(a) + '"' + (tab && tab.area === a ? ' selected' : '') + '>' + esc(this._area(a)) + '</option>').join('');
     const W = tab ? lpWeights(tab) : LP_DEFAULT_COLS, wsum = W.reduce((a, b) => a + b, 0), SP = lpSplits(tab, W.length);
-    const rpanelPh = tab ? '<div class="rpanel phr' + (tabsShown[0] && tabsShown[0].id === tab.id ? ' first' : '') + '">' +
+    const rpanelPh = !linked && tab ? '<div class="rpanel phr' + (tabsShown[0] && tabsShown[0].id === tab.id ? ' first' : '') + '">' +
       (!this._adv() && !PTN[tab.id] && !PTI[tab.id] ? '' :
       '<div class="fld" style="flex:1 1 180px"><label>' + t('phTabName') + (PTN[tab.id] ? ' <i class="phb">' + t('phOwn') + '</i>' : '') + '</label><input class="inp" data-phtn="' + esc(tab.id) + '" value="' + esc(PTN[tab.id] || '') + '" placeholder="' + esc(tab.name || '') + '"></div>' +
       '<div class="fld" style="flex:1 1 200px"><label>' + t('phTabIcon') + (PTI[tab.id] ? ' <i class="phb">' + t('phOwn') + '</i>' : '') + '</label><div class="iconin"><div class="pv">' + lpIcon(PTI[tab.id] || tab.icon || 'mdi:door') + '</div><input class="inp" data-phti="' + esc(tab.id) + '" value="' + esc(PTI[tab.id] || '') + '" placeholder="' + esc(tab.icon || 'mdi:door') + '"><button class="btn sm ic" data-ip="phtab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>') +
       '<div class="fld"><label>' + t('phTabShow') + '</label><div class="seg"><button data-phtabh="0"' + (PTH[tab.id] ? '' : ' class="on"') + '>' + t('phShown') + '</button><button data-phtabh="1"' + (PTH[tab.id] ? ' class="on"' : '') + '>' + t('phHidden') + '</button></div></div>' +
       ((PTN[tab.id] || PTI[tab.id] || PTH[tab.id]) ? '<button class="btn sm" data-a="phrestab">' + t('phReset') + '</button>' : '') +
       '<div class="hint" style="flex:1 1 100%">' + (PTH[tab.id] ? t('phTabHidden') + ' ' : '') + t('phTabNote') + '</div></div>' : '';
-    const rpanel = phE ? rpanelPh : tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
+    const rpanel = linked ? '' : phE ? rpanelPh : tab ? '<div class="rpanel' + (tabs[0] && tabs[0].id === tab.id ? ' first' : '') + '">' +
       '<div class="fld" style="flex:1 1 180px"><label>' + t('tabName') + '</label><input class="inp" data-f="tab.name" value="' + esc(tab.name || '') + '"></div>' +
       '<div class="fld" style="flex:1 1 200px"><label>' + t('icon') + '</label><div class="iconin"><div class="pv">' + lpIcon(tab.icon || 'mdi:door') + '</div><input class="inp" data-f="tab.icon" value="' + esc(tab.icon || '') + '" placeholder="mdi:sofa-outline"><button class="btn sm ic" data-ip="tab" title="' + t('iconPick') + '"><ha-icon class="s16" icon="mdi:shape-outline"></ha-icon></button></div></div>' +
       '<div class="fld" style="flex:1 1 160px"><label title="' + t('arHelp') + '">' + t('area') + '</label><select class="inp" data-f="tab.area">' + areaOpts + '</select></div>' +
@@ -1670,7 +1912,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // özet: içindeki öğe türleri ("Işıklar 7 · İklim 2"); boşsa "0 öğe"
     const summary = (s) => { const k = lhdKinds(s), ks = Object.keys(k); return ks.length ? ks.map((x) => this._t(LHD_KIND_KEY[x]) + ' ' + k[x]).join(' · ') : this._t('n_items', { n: 0 }); };
     const secsShown = tab ? (phE ? lhdPhoneOrder(tab, this._phOrd(tab)) : (tab.sections || [])) : [];
-    const secList = tab && (tab.sections || []).length ? '<div class="sl' + (phE ? ' phl' : '') + '" data-dl="secs">' + secsShown.map((s) => {
+    const secList = linked ? '' : tab && (tab.sections || []).length ? '<div class="sl' + (phE ? ' phl' : '') + '" data-dl="secs">' + secsShown.map((s) => {
       const po = phE ? this._phSec(s.id) : {}, own = phE && Object.keys(po).length > 0;
       return '<div class="si' + (s.id === this._sec ? ' on' : '') + (po.hide ? ' phoff' : '') + '" data-di data-sec="' + esc(s.id) + '">' +
         '<span class="hd" data-handle><ha-icon class="s16" icon="mdi:drag-vertical"></ha-icon></span><div class="ti"><ha-icon icon="' + esc((LHD_TYPES[s.type] || {}).icon || 'mdi:shape') + '"></ha-icon></div>' +
@@ -1684,9 +1926,9 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       (phCnt ? '<span class="phc">' + t('phCount', { n: phCnt }) + '</span>' : '') + '</div>' + (phE ? '<div class="phban"><ha-icon class="s16" icon="mdi:cellphone"></ha-icon><span>' + t('phBanner') + '</span></div>' : '');
 
     const ins = '<div class="ins"><div class="sc">' +
-      edMode + (phE ? this._phLookHtml() : '') + '<h3>' + t('sections') + '<span class="grow"></span>' + (phE ? '' : '<button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button>') + '</h3>' + secList +
+      edMode + (phE ? this._phLookHtml() : '') + (linked ? '' : '<h3>' + t('sections') + '<span class="grow"></span>' + (phE ? '' : '<button class="btn sm" data-a="addsec"><ha-icon class="s16" icon="mdi:plus"></ha-icon>' + t('addSec') + '</button>') + '</h3>' + secList +
       (sec ? (phE ? this._secEditorPh(tab, sec) : this._secEditor(tab, sec, ncols)) : '') +
-      (this._isAuto() ? '<div class="hint">' + t('autoT') + ' <button class="btn sm" data-a="autokur"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('akT') + '</button></div>' : '') + '<div class="hint">' + t('editNote') + '</div></div></div>';
+      (this._isAuto() ? '<div class="hint">' + t('autoT') + ' <button class="btn sm" data-a="autokur"><ha-icon class="s16" icon="mdi:auto-fix"></ha-icon>' + t('akT') + '</button></div>' : '') + '<div class="hint">' + t('editNote') + '</div>') + '</div></div>';
 
     const scr = this._screenKey();
     const pv = '<div class="pvw"><div class="pvh"><ha-icon class="s16" icon="mdi:eye-outline"></ha-icon><b>' + t('preview') + '</b><span class="pvhint">· ' + t('pvHint') + '</span>' +
@@ -1697,7 +1939,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       '<button class="btn ic pvundo" data-a="redo" title="' + t('redoK') + '"' + (this._redo && this._redo.length ? '' : ' disabled') + '><ha-icon class="s16" icon="mdi:redo"></ha-icon></button></div><div class="pvbox"><div class="pvc"></div></div></div>';
 
     // yeniden çizimde odaktaki alan ve imleç korunur
-    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf', 'data-enst', 'data-encf', 'data-enq', 'data-cyv', 'data-cyd'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
+    const act = R.activeElement, keyOf = (el) => { if (!el || !el.getAttribute) return null; const n = ['data-f', 'data-if', 'data-sf', 'data-q', 'data-bgurl', 'data-imf', 'data-enf', 'data-enst', 'data-encf', 'data-enq', 'data-cyv', 'data-cyd', 'data-prof'].filter((k) => el.hasAttribute(k))[0]; return n ? '[' + n + (el.getAttribute(n) ? '="' + el.getAttribute(n) + '"' : '') + ']' : null; };
     const focusKey = keyOf(act), selS = act && act.selectionStart, selE = act && act.selectionEnd;
     // LEC kuruluysa bir kez: efektlerin nerede olduğunu anlatan bilgi kutusu ("Tamam" deyince kaybolur)
     const st0 = this._settings();
@@ -1715,7 +1957,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const OV = '<div class="ov" data-ovl><div class="dlg sm sset">';
     if (this._modal === 'settings' && modal.indexOf(OV) === 0) { dock = '<div class="dlg sm sset dock">' + modal.slice(OV.length, modal.length - 6); modal = ''; }
     R.innerHTML = '<style>' + ADMIN_CSS + '</style><div class="app' + (narrow ? ' narrowv' : '') + (dock ? ' docked' : '') + (this._narrow ? ' hanarrow' : '') + '">' + top + lecInfo +
-      '<div class="rblock">' + rooms + rpanel + '</div><div class="main">' + pv + (dock || ins) + '</div>' +
+      '<div class="rblock">' + rooms + (linked ? '<div class="phban proflink"><span>' + t('profLinked') + '</span><button class="btn sm" data-a="profDetach">' + t('profDetach') + '</button></div>' : '') + rpanel + '</div><div class="main">' + pv + (dock || ins) + '</div>' +
       this._menuHtml() + modal + this._helpHtml() +
       '<div class="toast"><span></span><button data-a="undo">' + t('undo') + '</button></div></div>';
 
@@ -1731,7 +1973,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (this._modal === 'auto') this._akMount();
     this._ceMount();
     this._bind(tabs, tab, sec);
-    if (focusKey) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
+    if (focusKey && !(focusKey === '[data-prof]' && this._profDialogMode)) { const el = R.querySelector(focusKey); if (el && el.focus) { el.focus(); try { if (selS !== null && selS !== undefined) el.setSelectionRange(selS, selE); } catch (x) {} } }
   }
 
   // telefon görünümü: Stil seç'in telefon adımı (gezinme, ışıklar, ışık penceresi) ve telefona özel zemin, simge stili, iklim kartları
@@ -1753,7 +1995,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<span class="phsq"><button class="btn sm phyes" data-a="phresall"><ha-icon class="s16" icon="mdi:delete-outline"></ha-icon>' + t('phSameYes') + '</button><button class="btn sm" data-a="phresno">' + t('phSameNo') + '</button></span></span></div>'
       : '<div class="phsame' + (any ? '' : ' none') + '"><ha-icon icon="mdi:tablet-cellphone"></ha-icon><span><b>' + t(any ? 'phSame' : 'phSameNone') + '</b>' + (any ? '<i>' + t('phSameT') + '</i>' : '') + '</span>' +
         (any ? '<button class="btn sm phgo" data-a="phresall">' + t('phSameGo') + '</button>' : '') + '</div>';
-    return same + '<details class="phlook"' + (this._phLookOpen ? ' open' : '') + '><summary data-phlk><span class="phli"><ha-icon icon="mdi:cellphone-cog"></ha-icon></span><span class="phlt"><b>' + t('phLookT') + '</b><i>' + t('phLookS') + '</i></span></summary>' +
+    return (this._profLinked() ? '' : same) + '<details class="phlook"' + (this._phLookOpen ? ' open' : '') + '><summary data-phlk><span class="phli"><ha-icon icon="mdi:cellphone-cog"></ha-icon></span><span class="phlt"><b>' + t('phLookT') + '</b><i>' + t('phLookS') + '</i></span></summary>' +
       '<div class="fld"><label>' + t('phNav') + '</label>' + seg('data-phset="nav"', pc.nav, [['cats', this._t('phCats')], ['rooms', this._t('phRooms')], ['top', this._t('phTop')]]) + '</div>' +
       '<div class="fld"><label>' + t('phLights') + '</label>' + seg('data-phset="lights"', pc.lights, [['auto', this._t('phLAuto')], ['tiles', this._t('phLTiles')], ['rows', this._t('phLRows')]]) + '</div>' +
       '<div class="fld"><label>' + t('phFlat') + '</label>' + seg('data-phset="flat"', pc.flat ? '1' : '0', [['0', this._t('phFlat0')], ['1', this._t('phFlat1')]]) + '<div class="hint">' + t('phFlatT') + '</div></div>' +
@@ -2036,7 +2278,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     return h;
   }
   _enSetMany(o) {   // birden çok enerji ayarını tek kayıtta
-    this._snap(); const s = lhdClone(this._settings()); s.energy = Object.assign({}, s.energy || {}, o); this._commit('settings', s); this._render(); this._toast(this._t('saved'));
+    this._snap(); const s = lhdClone(STORE.data.settings || {}); s.energy = Object.assign({}, s.energy || {}, o); this._commitBase('settings', s); this._render(); this._toast(this._t('saved'));
   }
   _enBill() {
     const t = (k, v) => esc(this._t(k, v)), en = lpEnCfg(), raw = Array.isArray(en.bills) ? en.bills : [];
@@ -3056,6 +3298,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   }
   // akış (ve batarya) kartını enerji sekmesine ekle: enerji kartı olan ilk sekmenin ilk kolonuna
   _enSolCard() {
+    if (this._profLinked()) return this._toast(this._t('profDetachFirst'), false);
     const tabs = this._work(), T = tabs.filter((x) => (x.sections || []).some((s) => s.type === 'energy' || lpEnOnly(s)))[0];
     if (!T) { this._toast(this._t('enSolNoTab'), false); return; }
     const has = (k) => (T.sections || []).some((s) => (s.entities || []).some((x) => x && x.energy === k));
@@ -3159,6 +3402,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _modalHtml(tabs, tab, sec) {
     const md = this._modal; if (!md) return '';
     const t = (k, v) => esc(this._t(k, v));
+    if (md.indexOf('prof') === 0) return this._profDialog(md);
     if (md === 'pick' && sec) {
       return '<div class="ov" data-ovl><div class="dlg"><div class="dh"><div class="di"><ha-icon icon="' + (LHD_TYPES[sec.type] || LHD_TYPES.free).icon + '"></ha-icon></div><h2>' + t('pickT') + ' → ' + esc(sec.title || this._t('t_' + (LHD_TYPES[sec.type] ? sec.type : 'free'))) + '</h2>' +
         '<button class="btn ic" data-a="close"><ha-icon class="s16" icon="mdi:close"></ha-icon></button></div>' +
@@ -3211,7 +3455,8 @@ class LemurHomeDashboardAdmin extends HTMLElement {
         '<div class="sh" data-sh="s_screen">' + t('s_screen') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kHeader') + '</b><span>' + t('kHeaderT') + '</span></div>' + kseg('kiosk.hide_header', k.hide_header) + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('kSide') + '</b><span>' + t('kSideT') + '</span></div>' + kseg('kiosk.hide_sidebar', k.hide_sidebar) + '</div>' +
-        (!this._adv() ? '' : '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><div class="acts"><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" title="' + t('navW') + '" style="width:80px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" title="' + t('navH') + '" style="width:80px"></div></div>') +
+        (!this._adv() && !this._prof ? '' : '<div class="srow"><div class="t"><b>' + t('canvas') + '</b><span>' + t('canvasT') + '</span></div><div class="acts"><input class="inp" type="number" min="800" max="3000" data-sf="canvas.width" value="' + esc(cv.width || 1280) + '" title="' + t('navW') + '" style="width:80px"><input class="inp" type="number" min="500" max="2500" data-sf="canvas.ref_height" value="' + esc(cv.ref_height || 1075) + '" title="' + t('navH') + '" style="width:80px"></div></div>') +
+        (this._prof ? '<div data-prof-overrides>' + this._profOverridesHtml() + '</div>' : '') +
         '<div class="sh" data-sh="s_info">' + t('s_info') + '</div>' +
         '<div class="srow"><div class="t"><b>' + t('lec') + '</b><span>' + (lec ? t('lecOn', { v: LEC.version || '?' }) : t('lecOff')) + '</span></div></div>' +
         (this._adv() ? this._wallsHtml() : '') +
@@ -3253,7 +3498,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
           step(t('akTabs'), '', '<div class="akgrid">' + opt('home', K.home, 'lhd:room-whole-home', t('akHome'), t('akHomeT')) + opt('other', K.other, 'mdi:dots-horizontal-circle-outline', t('akOther'), t('akOtherT')) + '</div>') +
           step(t('akWhat'), '', '<div class="akgrid">' + [['lights', 'akL', 'mdi:lightbulb-group'], ['scenes', 'akS', 'lhd:scene-switch'], ['climate', 'akC', 'mdi:thermostat'], ['vacuum', 'akV', 'mdi:robot-vacuum'], ['media', 'akM', 'mdi:speaker'], ['camera', 'akK', 'mdi:cctv'], ['energy', 'akE', 'mdi:lightning-bolt']].map((x) => opt('type:' + x[0], K.types[x[0]], x[2], t(x[1]))).join('') + '</div>')) +
         step(t('akTablet'), t('akTabletT'),
-          sub(t('akLights')) + '<div class="akgrid">' + opt('look:tiles', K.look === 'tiles', 'mdi:view-grid-outline', t('akTiles'), t('akTilesT')) + opt('look:bar', K.look === 'bar', 'mdi:view-sequential-outline', t('akBars'), t('akBarsT')) + '</div>' +
+          (this._profLinked() ? '<p class="hint">' + t('profDetachFirst') + '</p>' : sub(t('akLights')) + '<div class="akgrid">' + opt('look:tiles', K.look === 'tiles', 'mdi:view-grid-outline', t('akTiles'), t('akTilesT')) + opt('look:bar', K.look === 'bar', 'mdi:view-sequential-outline', t('akBars'), t('akBarsT')) + '</div>') +
           sub(t('clSt')) + '<div class="akgrid">' + opt('clim:halo', K.clim === 'halo', 'mdi:circle-slice-8', t('clHalo'), t('akHaloT')) + opt('clim:rows', K.clim === 'rows', 'mdi:format-list-bulleted', t('clRows'), t('akRowsT')) + '</div>' +
           // ışığa basılı tutunca açılan pencere (v0.28.8: Ayarlar'dan buraya, ışık görünümünün yanına)
           sub(t('hold')) + '<div class="akgrid">' + opt('hold:popup', K.hold !== 'ha' && K.hold !== 'lec', 'mdi:lightbulb-on-outline', t('hPop'), t('akHoldPopT')) + opt('hold:ha', K.hold === 'ha', 'mdi:home-assistant', t('hHa'), t('akHoldHaT')) + (lecOk ? opt('hold:lec', K.hold === 'lec', 'mdi:creation', t('hLec'), t('akHoldLecT')) : '') + '</div>') +
@@ -3489,7 +3734,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       });
       this._pv.addEventListener('lhd-change', (e) => { const nt = e.detail.tab; this._edit((T) => { const i = T.map((x) => x.id).indexOf(nt.id); if (i >= 0) { lhdFitSplits(nt, this._cw()); T[i] = nt; } }); });
     }
-    const cfg = { type: 'custom:lemur-home-dashboard-card', tab: tab.id, edit: true, selected: sec ? sec.id : '', phone: this._scrPh(this._screenKey()) };
+    const cfg = { type: 'custom:lemur-home-dashboard-card', admin_preview: true, profile: this._prof || undefined, tab: tab.id, edit: true, read_only: this._profLinked(), selected: sec ? sec.id : '', phone: this._scrPh(this._screenKey()) };
     if (cfg.phone && this._pvFoldsOn()) cfg.folds = true;   // telefon önizlemesinde katlanır gruplar telefondaki gibi
     this._pvPh = cfg.phone;   // önizleme hangi düzende çizildi (özel ekranda telefon/tablet değişince yeniden çizmek için)
     if (!this._pvCfg || JSON.stringify(this._pvCfg) !== JSON.stringify(cfg)) { this._pvCfg = cfg; this._pv.setConfig(cfg); }
@@ -3528,6 +3773,30 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   // ---- olaylar ----
   _bind(tabs, tab, sec) {
     const R = this.shadowRoot, app = R.querySelector('.app');
+    const profileDialog = R.querySelector('[aria-labelledby="prof-title"]');
+    const profileMode = profileDialog ? this._modal : null;
+    if (profileMode !== this._profDialogMode) {
+      const target = profileDialog ? (profileDialog.querySelector('#prof-name') || profileDialog.querySelector('[data-a="close"]')) : R.querySelector('[data-prof]');
+      if (target && (profileDialog || this._profDialogMode)) target.focus();
+      this._profDialogMode = profileMode;
+    }
+    if (profileDialog) profileDialog.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const controls = profileDialog.querySelectorAll('button:not(:disabled), input, select, textarea');
+      const first = controls[0], last = controls[controls.length - 1];
+      if ((e.shiftKey && R.activeElement === first) || (!e.shiftKey && R.activeElement === last)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+    });
+    const profileForm = R.querySelector('[data-profform]');
+    if (profileForm) profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = profileForm.querySelector('#prof-name').value;
+      if (this._modal === 'profNew') {
+        const id = this._profNew(name, profileForm.querySelector('#prof-layout').value);
+        if (!id) return;
+        this._profSet(id);
+      } else if (this._modal !== 'profRename' || await this._profRename(this._prof, name) === false) return;
+      this._modal = null; this._render();
+    });
     if (this._modal === 'picks') this._pkPlace();
     R.querySelectorAll('ha-state-icon[data-eid]').forEach((e) => { e.hass = this._hass; e.stateObj = this._hass.states[e.getAttribute('data-eid')]; });
     // sekme ve bölüm sırayla değil kimlikle bulunur (otomatik düzen ya da başka cihazdan değişiklik sırayı kaydırabilir)
@@ -3565,6 +3834,24 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       const at = (el) => { const r = el.getBoundingClientRect(), rr = app.getBoundingClientRect(); return { x: Math.min(r.left - rr.left, rr.width - 260), y: r.bottom - rr.top + 6 }; };
       if (act === 'undo') return this._undoIt();
       if (act === 'redo') return this._redoIt();
+      if (act === 'profDetach') return this._profDetach();
+      if (act === 'profManage' || act === 'profRename' || act === 'profDelete') { this._modal = act; return this._render(); }
+      if (act === 'profDash') return this._profDash(this._prof);
+      if (act === 'profDeleteGo') {
+        this._profDel(this._prof).then((ok) => { if (ok || !lpProfile(STORE.data, this._prof)) this._modal = null; this._render(); });
+        return;
+      }
+      if (act === 'profYamlCopy') {
+        const yaml = R.querySelector('[data-profyaml]');
+        yaml.focus(); yaml.select();
+        const copied = () => this._toast(this._t('profYamlCopied'), false);
+        const fallback = () => { try { if (document.execCommand('copy')) copied(); } catch (err) {} };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(yaml.value).then(copied, fallback);
+        else fallback();
+        return;
+      }
+      const reset = g('[data-profreset]');
+      if (reset) return this._profReset(reset.getAttribute('data-profreset'));
       if (act === 'pvfolds') { try { localStorage.setItem('lhd-pv-folds', this._pvFoldsOn() ? '0' : '1'); } catch (x) {} return this._render(); }
       // Enerji sayfası
       if (act === 'energy') return this._enOpen();
@@ -3630,6 +3917,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (dsc && dsc.scrollHeight > dsc.clientHeight + 2 || (dsc && dsc.classList.contains('open'))) { dsc.classList.toggle('open'); return; }
       const sj = g('[data-sjump]');
       if (sj) { const d = sj.closest('.dlg'), x = d && d.querySelector('[data-sh="' + sj.getAttribute('data-sjump') + '"]'), db = d && d.querySelector('.db'); if (x && db && db.scrollHeight > db.clientHeight + 4) db.scrollTo({ top: Math.max(0, x.offsetTop - db.offsetTop - 52), behavior: 'smooth' }); else if (x && x.scrollIntoView) x.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+      if (this._enE && this._profLinked() && g('[data-cya="card"]')) return this._toast(this._t('profDetachFirst'), false);
       if (this._enE && lpCyClick(this, g)) return;   // Çalışıyor / Bitti ayarları (src/cycle.js)
       const ene = g('[data-enest]');
       if (ene) { this._enDraft(ene.getAttribute('data-enest')); this._enErr = ''; this._render(); return this._enTop(); }
@@ -3664,8 +3952,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
       if (act === 'repcopy') return this._repCopy();
       if (act === 'bkdown') return this._backupDown();
       if (act === 'bkyes') return this._backupApply();
+      if ((act === 'reset' || act === 'autokur' || act === 'resetgo') && this._profLinked()) {
+        this._menu = null; if (this._modal === 'reset') this._modal = null; this._render();
+        return this._toast(this._t('profDetachFirst'), false);
+      }
       if (act === 'reset') { this._menu = null; this._modal = 'reset'; return this._render(); }
-      if (act === 'autokur' || act === 'stilsec') { this._menu = null; this._autoInit(act === 'stilsec' ? 'stil' : 'kur'); this._modal = 'auto'; return this._render(); }
+      if (act === 'autokur' || act === 'stilsec') { this._menu = null; this._profContext(() => this._autoInit(act === 'stilsec' ? 'stil' : 'kur')); this._modal = 'auto'; return this._render(); }
       if (act === 'autogo') return this._autoApply();
       const ak = g('[data-ak]');
       if (ak && this._ak) {
@@ -4042,6 +4334,12 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     // çizilmez (odak ve hemen arkasından basılan düğme kaybolmasın); görünen ilgili yazılar yerinde güncellenir, önizleme kendisi güncellenir.
     app.addEventListener('change', (e) => {
       const el = e.target;
+      if (el.hasAttribute('data-prof')) {
+        this._menu = null; this._ask = null;
+        if (el.value === '+') this._modal = 'profNew';
+        else { this._profSet(el.value); this._modal = null; }
+        return this._render();
+      }
       if (this._enE && lpCyInput(this, el)) return;   // Çalışıyor / Bitti ayarları (src/cycle.js)
       if (el.hasAttribute && el.hasAttribute('data-pkproto')) { if (this._pk) { this._pk.proto = el.value; this._render(); } return; }
       if (el.hasAttribute && el.hasAttribute('data-imf')) { if (this._im) { this._im.f[el.getAttribute('data-imf')] = el.value; if (el.tagName === 'SELECT' || (el.type === 'color' && /^(color|color_on|bg)$/.test(el.getAttribute('data-imf')))) this._render(); } return; }

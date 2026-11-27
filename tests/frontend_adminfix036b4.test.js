@@ -67,12 +67,12 @@ test('geri çevrilen cihaz kaydı "Kaydedildi" demez: form açık kalır, hata y
     ctx.STORE.set = (k, v) => (refuse ? Promise.reject({ code: 'invalid', message: 'value must be at least 0.5' }) : Promise.resolve({}));
     ctx.STORE.refresh = () => { ctx.STORE.refreshed++; return Promise.resolve(ctx.STORE.data); };
     vm.createContext(ctx);
-    vm.runInContext('this._enSave = ' + method('_enSave') + '; this._commit = ' + method('_commit') + ';', ctx);
+    vm.runInContext('this._enSave = ' + method('_enSave') + '; this._commit = ' + method('_commit') + '; this._commitBase = ' + method('_commitBase') + ';', ctx);
     const rec = { name: 'Bulaşık (yeni ad)', kind: 'meas', sensor: 'sensor.bul_power', cycle: { on: false, kind: 'dishwasher' } };
     const H = { toasts: [], drafts: 0, _undo: [], _redo: [], _modal: 'energy', _enErr: '', _hass: {}, _enE: { id: 'bul', f: { name: rec.name, cat: '' } },
       _t: (k, v) => k + (v && v.e ? ':' + v.e : ''), _toast(x) { H.toasts.push(x); }, _render() {}, _settings: () => ({}),
       _enRec: () => clone(rec), _enEsts: () => (ctx.STORE.data.estimates || {}), _enCats: () => [], _enBadNum: () => '', _enSlug: () => 'x', _enDraft() { H.drafts++; },
-      _enSave: ctx._enSave, _commit: ctx._commit };
+      _enSave: ctx._enSave, _commit: ctx._commit, _commitBase: ctx._commitBase };
     return { H: H, ctx: ctx, E0: E0, rec: rec };
   };
   const bad = mk(true), D = bad.H._enE;
