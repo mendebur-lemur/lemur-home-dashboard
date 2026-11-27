@@ -170,9 +170,12 @@ const LP_PROF_KEYS = ['canvas', 'kiosk', 'bg', 'background', 'theme_name', 'icon
   'climate_style', 'nav', 'header', 'bright', 'hold', 'lec_nav', 'lec_hold', 'lightpop', 'phone'];
 const lpProfHas = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 function lpProfile(data, id) {
-  const p = data && data.profiles;
-  return typeof id === 'string' && /^[a-z0-9_-]{1,40}$/.test(id) && lhdIsObj(p) && lpProfHas(p, id) && lhdIsObj(p[id]) ? p[id] : null;
+  const profiles = data && data.profiles;
+  if (typeof id !== 'string' || !/^[a-z0-9_-]{1,40}$/.test(id) || !lhdIsObj(profiles) || !lpProfHas(profiles, id)) return null;
+  const p = profiles[id];
+  return lhdIsObj(p) && typeof p.name === 'string' ? p : null;
 }
+function lpProfIds(data) { return Object.keys((data && data.profiles) || {}).filter((id) => lpProfile(data, id)); }
 const lpProfSubkeys = (k, v) => Object.keys(v).filter((x) => x !== '__proto__' && !(k === 'header' && x === 'weather_entity'));
 function lpProfMerge(base, over) {
   if (!lhdIsObj(over)) return base;
@@ -192,11 +195,27 @@ function lpProfMerge(base, over) {
   });
   return out;
 }
+// Bağlı profilin telefon düzeni ana sekmelerle birlikte değişir.
+const LP_PROF_PHONE_LAYOUT = ['tabs', 'secs', 'order'];
+function lpProfPhoneStyle(phone) {
+  if (!lhdIsObj(phone) || !LP_PROF_PHONE_LAYOUT.some((k) => lpProfHas(phone, k))) return phone;
+  const style = Object.assign({}, phone);
+  LP_PROF_PHONE_LAYOUT.forEach((k) => { delete style[k]; });
+  return style;
+}
 let lpProfMemo = null;
 function lpProfSettings(data, id) {
   const s = data && data.settings, p = data && data.profiles;
   if (lpProfMemo && lpProfMemo.s === s && lpProfMemo.p === p && lpProfMemo.id === id) return lpProfMemo.v;
-  const v = lpProfMerge(s || {}, (lpProfile(data, id) || {}).settings);
+  const profile = lpProfile(data, id), over = profile && profile.settings;
+  const v = lpProfMerge(s || {}, over);
+  if (lhdIsObj(over) && lpProfHas(over, 'phone') && !Array.isArray(profile.tabs)) {
+    const base = (s || {}).phone, phone = lpProfPhoneStyle(v.phone);
+    if (lhdIsObj(base) && LP_PROF_PHONE_LAYOUT.some((k) => lpProfHas(base, k))) {
+      v.phone = Object.assign({}, lhdIsObj(phone) ? phone : null);
+      LP_PROF_PHONE_LAYOUT.forEach((k) => { if (lpProfHas(base, k)) v.phone[k] = base[k]; });
+    } else v.phone = phone;
+  }
   lpProfMemo = { s: s, p: p, id: id, v: v };
   return v;
 }
@@ -213,7 +232,7 @@ function lpProfEqual(a, b) {
   const keys = Object.keys(a);
   return keys.length === Object.keys(b).length && keys.every((k) => lpProfHas(b, k) && lpProfEqual(a[k], b[k]));
 }
-function lpProfSplit(base, merged, over) {
+function lpProfSplit(base, merged, over, linked) {
   const b = Object.assign({}, merged), o = {};
   LP_PROF_KEYS.concat(['season']).forEach((k) => {
     if (lpProfHas(base, k)) b[k] = base[k]; else delete b[k];
@@ -228,6 +247,10 @@ function lpProfSplit(base, merged, over) {
         if (lpProfHas(v, 'weather_entity')) b.header.weather_entity = v.weather_entity;
         else delete b.header.weather_entity;
       }
+    } else if (k === 'phone' && linked) {
+      const phone = lpProfPhoneStyle(v);
+      const prev = lpProfPhoneStyle(a);
+      if (!lpProfEqual(phone, prev === undefined ? {} : prev)) o.phone = phone;
     } else if (!lpProfEqual(v, a)) o[k] = v;
   });
   return { base: lpProfEqual(b, base) ? base : b, over: lpProfEqual(o, over) ? over : o };

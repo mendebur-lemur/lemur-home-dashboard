@@ -8,6 +8,7 @@ const read = (name) => fs.readFileSync(path.join(__dirname, '../src/', name), 'u
 let now = new Date(2026, 10, 16, 23, 59).getTime();
 class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return now; } }
 const ctx = { window: {}, HTMLElement: class {}, Date: ClockDate, settings: {}, lpIcon: (name) => '<svg data-icon="' + name + '"></svg>',
+  LP_PROF: { id: null }, LP_OVR: { s: null }, lpPhoneScreen: () => false,
   LemurLightPopup: { update() {} }, LemurCardPopup: { update() {} } };
 vm.createContext(ctx);
 vm.runInContext(read('i18n.js') + '\n' + read('safe.js') + '\nfunction lpSettings() { return settings; }\nconst lhdClone = x => JSON.parse(JSON.stringify(x));\n' + read('panel-card.js') + '\nthis.Card = LemurHomeDashboardCard; this.cfg = lpHeaderCfg;', ctx);

@@ -538,13 +538,15 @@ def ws_set(hass, connection, msg):
 
 def _clean_profiles(value: dict) -> dict:
     out = {}
+    count = 0
+    changed = False
     for pid, profile in value.items():
-        if len(out) == 10:
-            break
-        if not isinstance(pid, str) or not re.fullmatch(r"[a-z0-9_-]{1,40}", pid) or not isinstance(profile, dict):
+        # Eski biçim pano profili değildir; olduğu gibi saklanır ve sınıra sayılmaz.
+        if isinstance(profile, dict) and not any(k in profile for k in ("name", "tabs", "settings")):
+            out[pid] = profile
             continue
-        # v0.6 öncesinden kalan eski biçim ({"tab": ..., "note": ...}): pano profili değil, hayalet profil olmasın
-        if not any(k in profile for k in ("name", "tabs", "settings")):
+        if count == 10 or not isinstance(pid, str) or not re.fullmatch(r"[a-z0-9_-]{1,40}", pid) or not isinstance(profile, dict):
+            changed = True
             continue
         name = profile.get("name")
         clean = {"name": name if isinstance(name, str) and len(name) <= 60 else pid}
@@ -552,10 +554,15 @@ def _clean_profiles(value: dict) -> dict:
         if isinstance(tabs, list):
             clean["tabs"] = EST.migrate_ids(SF.clean_tabs(tabs))
         settings = SF.clean_profile_settings(profile.get("settings"))
+        if "tabs" not in clean and isinstance(settings.get("phone"), dict):
+            settings["phone"] = {k: v for k, v in settings["phone"].items() if k not in ("tabs", "secs", "order")}
         if settings:
             clean["settings"] = settings
         out[pid] = clean
-    if out != value:
+        count += 1
+        if clean != {k: v for k, v in profile.items() if k != "settings" or v != {}}:
+            changed = True
+    if changed:
         _LOGGER.warning("Dashboard profiles contained invalid or outdated data and were cleaned")
     return out
 

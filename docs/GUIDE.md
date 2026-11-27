@@ -232,6 +232,8 @@ Choose a profile from **Dashboard profile** in the top bar. The preview shows th
 
 Under **Profile overrides** in Settings, you can remove an override to use the main value. Open **Manage profile** to create a Home Assistant dashboard linked to the profile.
 
+Choose the profile with `profile:` in the dashboard's strategy configuration, and if you reuse a deleted profile's ID by creating a profile with the same name, dashboards bound to that ID show the new profile.
+
 **Options**
 
 - **New profile…** (Copy main layout · Use main layout): Choose the layout for the new profile.

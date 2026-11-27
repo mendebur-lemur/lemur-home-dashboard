@@ -232,6 +232,8 @@ Sol menüdeki **Lemur Home Dashboard** (yalnız yöneticiler görür). Üstte se
 
 Ayarlar'da **Profile özel ayarlar** bölümünden bir farkı silip ana değere dönebilirsin. **Profili yönet** menüsünden bu profile bağlı bir Home Assistant panosu oluşturabilirsin.
 
+Profil, panonun strateji yapılandırmasındaki `profile:` alanından seçilir ve aynı adla oluşturulan yeni bir profil silinen profilin kimliğini yeniden kullanırsa eski kimliğe bağlı panolar yeni profili gösterir.
+
 **Seçenekler**
 
 - **Yeni profil…** (Ana düzeni kopyala · Ana düzeni kullan): Yeni profilin düzenini seç.

@@ -93,7 +93,7 @@ function profileHost(profile) {
   const a = adm.indexOf('const lhdSlug = ');
   vm.runInContext(adm.slice(a, adm.indexOf('const lhdMove', a)), c);
   h._work = (id) => clone(id === null ? mainTabs : desktopTabs);
-  ['_profSet', '_profNew', '_profRename', '_profDel', '_profDetach', '_profReset', '_profDash', '_setting', '_profPicker', '_profDialog', '_profOverridesHtml'].forEach((m) => {
+  ['_profSet', '_profNew', '_profRename', '_profDel', '_profDetach', '_profReset', '_profDash', '_setting', '_bgSet', '_profPicker', '_profDialog', '_profOverridesHtml'].forEach((m) => {
     if (new RegExp('^  (async )?' + m + '\\(', 'm').test(adm)) vm.runInContext('h.' + m + ' = ' + method(m), c);
   });
   return { h, S, c };
@@ -111,17 +111,75 @@ test('profil kopyası ana sekmeleri ve telefon düzenini alır; bağlı profil s
   await h._commit('settings', draft);
   assert.deepEqual(clone(S.data.profiles.masaustu.settings.phone), base.phone);
   assert.equal(h._profNew('Masaüstü', 'link'), 'masaustu-2');
-  assert.equal(Object.hasOwn(S.data.profiles['masaustu-2'], 'tabs'), false);
+  assert.deepEqual(clone(S.data.profiles['masaustu-2']), { name: 'Masaüstü' });
 });
 
 test('bağlı düzen sekme yazmaz; ayırınca sekmeleri ve etkin telefon düzenini kopyalar', async () => {
   const { h, S } = profileHost(null);
+  const toasts = [];
+  h._toast = (...args) => toasts.push(args);
   const id = h._profNew('Tablet', 'link');
   h._profSet(id);
   assert.equal(await h._commit('tabs', desktopTabs), false);
+  assert.deepEqual(toasts, [['profDetachFirst', false]]);
   assert.equal(Object.hasOwn(S.data.profiles[id], 'tabs'), false);
   await h._profDetach();
   assert.deepEqual(clone(S.data.profiles[id]), { name: 'Tablet', tabs: mainTabs, settings: { phone: base.phone } });
+});
+
+test('telefon düzeni bağlı profilde ana panodan gelir ve yalnız görünüm farkı saklanır', async () => {
+  const { h, S } = profileHost(null);
+  const id = h._profNew('Tablet', 'link');
+  h._profSet(id);
+  h._setting('phone.nav', 'rooms');
+  assert.deepEqual(S.writes.at(-1)[1][id].settings.phone, { nav: 'rooms' });
+
+  const layout = { tabs: { order: ['second', 'home'] }, order: { home: ['s2', 's'] }, secs: { s2: { hide: true } } };
+  S.data.settings = Object.assign({}, S.data.settings, { phone: layout });
+  assert.deepEqual(clone(h._settings().phone), { ...layout, nav: 'rooms' });
+
+  S.data.profiles = { ...S.data.profiles, [id]: { name: 'Tablet', settings: { phone: { ...base.phone, nav: 'rooms' } } } };
+  assert.deepEqual(clone(h._settings().phone), { ...layout, nav: 'rooms' });
+  h._setting('canvas.width', 1920);
+  assert.deepEqual(S.writes.at(-1)[1][id].settings.phone, { nav: 'rooms' });
+  await h._profDetach();
+  assert.deepEqual(S.writes.at(-1)[1][id].settings.phone, { ...layout, nav: 'rooms' });
+});
+
+test('telefonsuz ana düzenden ayrılırken boş profil ayarı gönderilmez', async () => {
+  const { h, S } = profileHost(null);
+  delete S.data.settings.phone;
+  const id = h._profNew('Tablet', 'link');
+  h._profSet(id);
+  await h._profDetach();
+  assert.deepEqual(S.writes.at(-1)[1][id], { name: 'Tablet', tabs: mainTabs });
+});
+
+test('eski profil kayıtları seçicide ve sınırda yoktur; kimlikleri yeniden kullanılmaz', () => {
+  const { h, S, c } = profileHost(null);
+  const legacy = { tab: 'home', note: 'eski' };
+  S.data.profiles = { tablet: legacy, ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['legacy-' + i, {}])) };
+  assert.equal(c.lpProfile(S.data, 'tablet'), null);
+  assert.doesNotMatch(h._profPicker(), /value="(?:tablet|legacy-\d+)"/);
+  assert.doesNotMatch(h._profPicker(), /value="\+" disabled/);
+  assert.equal(h._profNew('Tablet', 'link'), 'tablet-2');
+  assert.deepEqual(S.writes.at(-1)[1].tablet, legacy);
+  for (let i = 0; i < 9; i++) assert.ok(h._profNew('Pano ' + i, 'link'));
+  assert.match(h._profPicker(), /value="\+" disabled/);
+  assert.equal(h._profNew('Fazla', 'link'), null);
+});
+
+test('profil zemini temizlenince ana panonun zemini görünmez', async () => {
+  const { h, S, c } = profileHost();
+  c.lpBgCss = () => '';
+  S.data.settings.bg = { mode: 'color', color: '#123456' };
+  S.data.settings.background = '#123456';
+  h._bgSet(null);
+  assert.deepEqual(S.writes.at(-1)[1].masaustu.settings, { bg: null, background: null });
+  assert.equal(h._settings().bg, null);
+  assert.equal(S.data.settings.bg.color, '#123456');
+  await h._profReset('bg');
+  assert.equal(h._settings().bg.color, '#123456');
 });
 
 test('profil adı değiştirilebilir, seçili profil silinince ana pano seçilir', async () => {

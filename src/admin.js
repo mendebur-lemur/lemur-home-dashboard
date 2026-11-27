@@ -755,18 +755,18 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     try { return fn(); } finally { LP_PROF.id = id; }
   }
   _profNew(name, mode) {
-    const profiles = STORE.data.profiles || {};
-    if (Object.keys(profiles).length >= LHD_PROF_MAX) { this._toast(this._t('profLimit'), false); return null; }
+    const d = STORE.data, profiles = d.profiles || {};
+    if (lpProfIds(d).length >= LHD_PROF_MAX) { this._toast(this._t('profLimit'), false); return null; }
     name = lhdProfName(name);
     if (!name) { this._toast(this._t('profNameEmpty'), false); return null; }
     const slug = lhdSlug(name) || 'profile';
     let id = slug, n = 2;
     while (lpProfHas(profiles, id)) id = slug + '-' + (n++);
-    const p = { name: name, settings: {} };
+    const p = { name: name };
     if (mode === 'copy') {
       p.tabs = this._work(null);
-      const phone = (STORE.data.settings || {}).phone;
-      if (lpProfHas(STORE.data.settings || {}, 'phone')) p.settings.phone = lhdClone(phone);
+      const settings = d.settings || {};
+      if (lpProfHas(settings, 'phone')) p.settings = { phone: lhdClone(settings.phone) };
     }
     this._snap();
     this._commit('profiles', Object.assign(Object.create(null), profiles, { [id]: p }));
@@ -794,8 +794,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (!p || this._profOwn()) return;
     const settings = Object.assign({}, p.settings), s = this._settings();
     if (lpProfHas(s, 'phone')) settings.phone = lhdClone(s.phone);
+    const next = Object.assign({}, p, { tabs: this._work(null) });
+    if (Object.keys(settings).length) next.settings = settings; else delete next.settings;
     this._snap();
-    const ok = await this._commit('profiles', Object.assign(Object.create(null), STORE.data.profiles, { [id]: Object.assign({}, p, { tabs: this._work(null), settings: settings }) }));
+    const ok = await this._commit('profiles', Object.assign(Object.create(null), STORE.data.profiles, { [id]: next }));
     this._render();
     if (ok !== false) this._toast(this._t('saved'));
   }
@@ -837,7 +839,7 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     if (this._modal !== 'profYaml') this._toast(this._t('profDashDone'), false);
   }
   _profPicker() {
-    const profiles = STORE.data.profiles || {}, ids = Object.keys(profiles), t = (k) => esc(this._t(k));
+    const d = STORE.data, profiles = d.profiles || {}, ids = lpProfIds(d), t = (k) => esc(this._t(k));
     const opt = (id, name) => '<option value="' + esc(id) + '"' + ((this._prof || '') === id ? ' selected' : '') + '>' + esc(name) + '</option>';
     return '<div class="profbar"><select class="inp" data-prof aria-label="' + t('profLabel') + '">' +
       opt('', this._t('profMain')) + ids.map((id) => opt(id, profiles[id].name)).join('') +
@@ -1056,12 +1058,17 @@ class LemurHomeDashboardAdmin extends HTMLElement {
     const d = STORE.data, id = this._prof, p = lpProfile(d, id);
     if (!p) return Promise.resolve(false);
     const write = (next) => this._commitBase('profiles', Object.assign(Object.create(null), d.profiles, { [id]: next }));
-    if (key === 'tabs') return this._profOwn() ? write(Object.assign({}, p, { tabs: value })) : Promise.resolve(false);
+    const linked = !this._profOwn();
+    if (key === 'tabs') {
+      if (!linked) return write(Object.assign({}, p, { tabs: value }));
+      // Çağıran ekranı yeniledikten sonra uyarıyı göster.
+      return Promise.resolve().then(() => { this._toast(this._t('profDetachFirst'), false); return false; });
+    }
     const base = d.settings || {}, over = p.settings || {}, cur = this._settings();
-    const split = lpProfSplit(base, value, over);
+    const split = lpProfSplit(base, value, over, linked);
     // Kopyalanan telefon düzeni gibi dokunulmayan farklar, ana değerle aynı olsa bile saklanır.
     LP_PROF_KEYS.forEach((k) => {
-      if (lpProfHas(over, k) && lpProfEqual(cur[k], value[k])) split.over[k] = over[k];
+      if (lpProfHas(over, k) && lpProfEqual(cur[k], value[k])) split.over[k] = linked && k === 'phone' ? lpProfPhoneStyle(over[k]) : over[k];
     });
     const writes = [];
     if (split.base !== base) writes.push(this._commitBase('settings', split.base));
@@ -1161,7 +1168,10 @@ class LemurHomeDashboardAdmin extends HTMLElement {
   _bgSet(b, soft) {
     this._snap();
     const s = lhdClone(this._settings());
-    if (b) s.bg = b; else delete s.bg;
+    const baseBg = (STORE.data.settings || {}).bg;
+    if (b) s.bg = b;
+    else if (this._prof && baseBg !== undefined && baseBg !== null) s.bg = null;
+    else delete s.bg;
     const css = lpBgCss(b);
     if (css) s.background = css; else if (this._prof) s.background = null; else delete s.background;
     this._commit('settings', s);

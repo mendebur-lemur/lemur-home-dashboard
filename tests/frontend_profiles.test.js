@@ -41,7 +41,7 @@ test('telefon ayarı bütün olarak değişir ve telefon görünümü en son uyg
 
 test('birleşik ayar önbelleği ayar, profil haritası ve profil kimliğine bağlıdır', () => {
   const c = profileContext();
-  const profiles = { masaustu: { settings: { canvas: { width: 2560 } } }, tablet: { settings: { canvas: { width: 1280 } } } };
+  const profiles = { masaustu: { name: 'Masaüstü', settings: { canvas: { width: 2560 } } }, tablet: { name: 'Tablet', settings: { canvas: { width: 1280 } } } };
   const data = { settings: { canvas: { ref_height: 1075 } }, profiles };
   const first = c.lpProfSettings(data, 'masaustu');
   assert.equal(c.lpProfSettings(Object.assign({}, data), 'masaustu'), first);
@@ -54,7 +54,7 @@ test('birleşik ayar önbelleği ayar, profil haritası ve profil kimliğine ba�
 
 test('bağlı ve bilinmeyen profiller ana sekmeleri kullanır, boş profil dizisi ayrı düzendir', () => {
   const c = profileContext();
-  const data = { tabs: [{ id: 'ana' }], profiles: { linked: {}, empty: { tabs: [] }, own: { tabs: [{ id: 'other' }] } } };
+  const data = { tabs: [{ id: 'ana' }], profiles: { linked: { name: 'Bağlı' }, empty: { name: 'Boş', tabs: [] }, own: { name: 'Ayrı', tabs: [{ id: 'other' }] } } };
   for (const id of ['missing', 'linked', '__proto__']) {
     assert.equal(c.lpProfTabs(data, id), data.tabs);
     assert.equal(c.lpProfOwnTabs(data, id), false);
@@ -88,7 +88,7 @@ test('birleşik düzenleme yalnız farkları saklar ve ev geneli ayarları ayır
 });
 
 test('lpSettings etkin profili okur ve önizleme ayarına öncelik verir', () => {
-  const data = { settings: { hold: 'ha' }, profiles: { masaustu: { settings: { hold: 'lec' } } } };
+  const data = { settings: { hold: 'ha' }, profiles: { masaustu: { name: 'Masaüstü', settings: { hold: 'lec' } } } };
   const c = profileContext(data);
   assert.equal(c.lpSettings(), data.settings);
   vm.runInContext("LP_PROF.id = 'masaustu';", c);
@@ -104,8 +104,8 @@ const renderData = {
   tabs: [mainTab],
   settings: { canvas: { width: 1280, ref_height: 1075 }, kiosk: { hide_header: false, hide_sidebar: false }, bg: { mode: 'dark' }, theme_name: 'ana' },
   profiles: {
-    masaustu: { tabs: [profileTab], settings: { canvas: { width: 2560 }, kiosk: { hide_header: true, hide_sidebar: true }, bg: { mode: 'color', color: '#123456' }, theme_name: 'masaustu' } },
-    linked: { settings: { canvas: { width: 1920 } } }
+    masaustu: { name: 'Masaüstü', tabs: [profileTab], settings: { canvas: { width: 2560 }, kiosk: { hide_header: true, hide_sidebar: true }, bg: { mode: 'color', color: '#123456' }, theme_name: 'masaustu' } },
+    linked: { name: 'Bağlı', settings: { canvas: { width: 1920 } } }
   }
 };
 
@@ -235,7 +235,7 @@ test('sanal enerji taraması yalnız profil sekmesindeki sensörü bulur ve prof
   vm.runInContext(card.slice(card.indexOf('function lpEnVirtUsed('), card.indexOf('// enerji değerine (')), c);
   assert.equal(c.lpEnVirtUsed(), false);
   c.window.__LEMUR_HOME_DASHBOARD_STORE.data = {
-    tabs, profiles: { masaustu: { tabs: [{ sections: [{ entities: ['sensor.lhdx_olcmeyen'] }] }] } }
+    tabs, profiles: { masaustu: { name: 'Masaüstü', tabs: [{ sections: [{ entities: ['sensor.lhdx_olcmeyen'] }] }] } }
   };
   assert.equal(c.lpEnVirtUsed(), true);
   c.window.__LEMUR_HOME_DASHBOARD_STORE.data = data;
@@ -245,7 +245,7 @@ test('sanal enerji taraması yalnız profil sekmesindeki sensörü bulur ve prof
 test('enerji kısayolu açık panonun enerji sekmesine gider', () => {
   const data = {
     tabs: [{ id: 'ana-enerji', sections: [{ type: 'energy' }] }],
-    profiles: { masaustu: { tabs: [{ id: 'profil-enerji', sections: [{ type: 'energy' }] }] }, empty: { tabs: [] } }
+    profiles: { masaustu: { name: 'Masaüstü', tabs: [{ id: 'profil-enerji', sections: [{ type: 'energy' }] }] }, empty: { name: 'Boş', tabs: [] } }
   };
   const paths = [];
   const c = profileContext(data, {
@@ -260,7 +260,8 @@ test('enerji kısayolu açık panonun enerji sekmesine gider', () => {
   assert.equal(c.lpEnGoTab(), true);
   vm.runInContext("LP_PROF.id = 'empty';", c);
   assert.equal(c.lpEnGoTab(), false);
-  assert.deepEqual(paths, ['/pano/ana-enerji', '/pano/profil-enerji']);
+  assert.equal(c.lpEnGoTab('masaustu'), true);
+  assert.deepEqual(paths, ['/pano/ana-enerji', '/pano/profil-enerji', '/pano/profil-enerji']);
 });
 
 test('kart profili yapılandırmada ve yeniden bağlandığında etkinleştirir', () => {
@@ -277,4 +278,37 @@ test('kart profili yapılandırmada ve yeniden bağlandığında etkinleştirir'
   Object.assign(profile, { _nw: 1, _unsub: 1, _lecUnsub: 1, _leciUnsub: 1, _mdicUnsub: 1, _enUnsub: 1, _clock: 1, _vis: 1, _rsz: 1, _wRO: 1 });
   profile.connectedCallback();
   assert.equal(c.lpSettings().canvas.width, 2560);
+});
+
+for (const preview of [false, true]) {
+  test(`saat ve ışık penceresi kartın kendi profilini kullanır (önizleme: ${preview})`, () => {
+    const data = {
+      settings: {},
+      profiles: {
+        a: { name: 'A', settings: { header: { clock: true }, lightpop: { colors: ['#123456'] } } },
+        b: { name: 'B', settings: { header: { clock: false } } }
+      }
+    };
+    const c = profileContext(data, { HTMLElement: class {}, lpIsPhone: () => false });
+    c.LemurLightPopup = { open: () => c.lpSettings().lightpop };
+    const start = card.indexOf('class LemurHomeDashboardCard');
+    vm.runInContext(card.slice(card.indexOf('function lpHeaderCfg('), card.indexOf('function lpLightPopCfg(')) + '\n' +
+      card.slice(start, card.indexOf('  _render0()', start)) + '}\nthis.Card = LemurHomeDashboardCard;', c);
+    const a = new c.Card(), b = new c.Card(), clock = {};
+    a.setConfig({ profile: 'a', admin_preview: preview });
+    b.setConfig({ profile: 'b' });
+    Object.assign(a, { _hass: {}, _lang: 'en', _time: () => '12:34', shadowRoot: { querySelector: () => clock } });
+    a._headerPaint();
+    assert.equal(clock.innerHTML, '12:34');
+    assert.equal(c.lpSettings().header.clock, false);
+    assert.deepEqual(plain(a._popOpen({}, 'light.office')), { colors: ['#123456'] });
+    assert.equal(c.lpSettings().header.clock, false);
+  });
+}
+
+test('profil rehberi iki dilde strateji seçimini ve kimliği yeniden kullanmayı açıklar', () => {
+  const guide = JSON.parse(rd('guide.json'));
+  const section = guide.steps.find((step) => step.en[0] === 'Dashboard profiles');
+  assert.match(section.tr.join(' '), /`profile:`.*aynı adla.*kimliğini.*yeniden.*yeni profili gösterir/);
+  assert.match(section.en.join(' '), /`profile:`.*reuse.*ID.*same name.*show the new profile/);
 });
