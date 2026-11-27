@@ -67,11 +67,12 @@ function host(opts) {
   if (!opts.noRestore) S.restore = (V) => { S.restores++; const bad = opts.reject && Object.keys(V).filter((k) => opts.reject.indexOf(k) >= 0); if (bad && bad.length) return Promise.reject({ code: opts.code || 'invalid', message: bad.map((k) => k + ': wrong type or too large').join('; ') }); S.data = Object.assign({}, S.data, clone(V)); return Promise.resolve(S.data); };
   S.set = (k, v) => { S.sets.push(k); if (opts.reject && opts.reject.indexOf(k) >= 0 && !(opts.rejectOnce && S.sets.filter((x) => x === k).length > 1)) return Promise.reject({ code: 'invalid', message: k + ': refused' }); S.data = Object.assign({}, S.data, { [k]: v }); return Promise.resolve(S.data); };
   const ctx = ctxWith({ STORE: S, esc: (x) => String(x), PANEL_VERSION: '0.36.0b4' });
+  vm.runInContext(store.slice(store.indexOf('const LP_OVR ='), store.indexOf('// Telefona özel görünüm')), ctx);
   const M = ['_snap', '_histCur', '_undoIt', '_redoIt', '_histApply', '_backupApply', '_bkWrite', '_bkErrText', '_bkParts'];
   M.forEach((m) => vm.runInContext('this.' + m + ' = ' + method(m) + ';', ctx));
   const T = { tr: { bkFail: 'Yedek geri yüklenmedi, hiçbir şey değişmedi. Sorunlu bölüm: {p}', bkBig: 'çok büyük', bkBadT: 'bozuk' } };
   KEYS.forEach((k) => { T.tr['bkP_' + k] = k.toUpperCase(); });
-  const h = { _undo: [], _redo: [], _tab: 'ev', toasts: [], renders: 0, _settings: () => S.data.settings || {}, _commit: (k, v) => { S.data = Object.assign({}, S.data, { [k]: v }); },
+  const h = { _undo: [], _redo: [], _tab: 'ev', toasts: [], renders: 0, _settings: () => S.data.settings || {}, _commitBase: (k, v) => { S.data = Object.assign({}, S.data, { [k]: v }); },
     _render: () => { h.renders++; }, _toast: (m) => { h.toasts.push(m); }, _t: (k, v) => String(T.tr[k] || k).replace(/\{(\w+)\}/g, (m, q) => (v && v[q] !== undefined ? v[q] : m)) };
   M.forEach((m) => { h[m] = ctx[m]; });
   h.S = S; h.ctx = ctx;

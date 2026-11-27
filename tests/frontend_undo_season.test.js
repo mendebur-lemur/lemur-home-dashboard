@@ -41,7 +41,7 @@ const meth = (n) => { const a = adm.indexOf('\n  ' + n + '('), b = adm.indexOf('
 function setup() {
   const ctx = { window: {}, setInterval: () => 0, setTimeout: setTimeout, document: {}, location: {}, PANEL_VERSION: '0', t: () => '', console: console };
   vm.createContext(ctx);
-  vm.runInContext(rd('safe.js') + '\n' + rd('store.js') + '\nconst lhdClone = (x) => JSON.parse(JSON.stringify(x));\nthis.STORE = STORE;\nthis.A = {' + ['_commit', '_snap', '_histCur', '_undoIt', '_redoIt', '_histApply'].map(meth).join(',\n') + '};', ctx);
+  vm.runInContext(rd('safe.js') + '\n' + rd('store.js') + '\nconst lhdClone = (x) => JSON.parse(JSON.stringify(x));\nthis.STORE = STORE;\nthis.A = {' + ['_commit', '_commitBase', '_snap', '_histCur', '_undoIt', '_redoIt', '_histApply'].map(meth).join(',\n') + '};', ctx);
   const A = Object.assign(Object.create(ctx.A), { _undo: [], _redo: [], _tab: 'home', _modal: null, _t: (k) => k, _toast() {}, _render() {}, _settings: () => (ctx.STORE.data && ctx.STORE.data.settings) || {} });
   return { ST: ctx.STORE, A: A };
 }

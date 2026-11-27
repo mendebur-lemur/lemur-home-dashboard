@@ -60,10 +60,10 @@ test('lpEnNum: toLocaleString ile aynı çıktı, biçimleyici dil ve ondalık b
 });
 
 function work() {
-  const src = rd('admin.js'), a = src.indexOf('  _work() {'), b = src.indexOf('\n  }\n', a) + 4;
+  const src = rd('admin.js'), a = src.indexOf('  _work('), b = src.indexOf('\n  }\n', a) + 4;
   assert.ok(a > 0 && b > a, '_work bulunamadı');
   let calls = 0;
-  const ctx = { STORE: { data: { tabs: [] } }, buildDefaultTabs: (h, l) => { calls++; return [{ id: 'home', name: l + h.n, sections: [] }]; }, lhdClone: (x) => JSON.parse(JSON.stringify(x)), lhdNormTab: (x) => x };
+  const ctx = { STORE: { data: { tabs: [] } }, lpProfTabs: (d) => d.tabs, buildDefaultTabs: (h, l) => { calls++; return [{ id: 'home', name: l + h.n, sections: [] }]; }, lhdClone: (x) => JSON.parse(JSON.stringify(x)), lhdNormTab: (x) => x };
   vm.createContext(ctx);
   vm.runInContext('this.o = {' + src.slice(a, b) + '};', ctx);
   return { ctx, o: ctx.o, calls: () => calls };

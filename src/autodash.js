@@ -30,14 +30,25 @@ async function lhdAutoDashRun(ha, h) {
   }
   const claim = await send({ type: 'lemur_home_dashboard/dashboard_claim' });
   if (!claim || !claim.ok) return;
-  const used = {}; list.forEach((d) => { used[d.url_path] = 1; });
-  Object.keys(h.panels || {}).forEach((k) => { used[k] = 1; });
-  let url = 'lemur-home', n = 2;
-  while (used[url]) url = 'lemur-home-' + (n++);
-  await send({ type: 'lovelace/dashboards/create', url_path: url, title: claim.title || 'Lemur Home Dashboard', icon: 'mdi:tablet-dashboard', show_in_sidebar: true, require_admin: false });
-  await send({ type: 'lovelace/config/save', url_path: url, config: { strategy: { type: LHD_STRAT } } });
+  await lhdCreateDash(h, list, 'lemur-home', claim.title || 'Lemur Home Dashboard', { strategy: { type: LHD_STRAT } });
   const tr = String(h.language || '').toLowerCase().indexOf('tr') === 0;
   ha.dispatchEvent(new CustomEvent('hass-notification', { bubbles: true, composed: true,
     detail: { message: tr ? '"' + (claim.title || '') + '" panosu oluşturuldu; kenar çubuğunda.' : 'The "' + (claim.title || '') + '" dashboard was created; it is in the sidebar.' } }));
+}
+async function lhdCreateDash(h, list, path, title, config) {
+  const send = (m) => h.connection.sendMessagePromise(m);
+  const used = new Set(list.map((d) => d.url_path).concat(Object.keys(h.panels || {})));
+  let url = path, n = 2;
+  while (used.has(url)) url = path + '-' + (n++);
+  const created = await send({ type: 'lovelace/dashboards/create', url_path: url, title: title, icon: 'mdi:tablet-dashboard', show_in_sidebar: true, require_admin: false });
+  try {
+    await send({ type: 'lovelace/config/save', url_path: url, config: config });
+  } catch (e) {
+    // Kurulum yarıda kalırsa yalnız bu çağrının oluşturduğu boş panoyu kaldır.
+    if (created && created.id) {
+      try { await send({ type: 'lovelace/dashboards/delete', dashboard_id: created.id }); } catch (err) {}
+    }
+    throw e;
+  }
 }
 lhdAutoDash();

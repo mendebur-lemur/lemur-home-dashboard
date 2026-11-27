@@ -9,7 +9,7 @@ const src = fs.readFileSync(path.join(__dirname, '../src/scale.js'), 'utf8');
 function load(w, h, coarse) {
   const store = {};
   const win = { innerWidth: w, innerHeight: h, matchMedia: (q) => ({ matches: q.indexOf('coarse') >= 0 && coarse }), addEventListener: () => {} };
-  const ctx = { window: win, document: { querySelector: () => null }, setInterval: () => 0, setTimeout: () => 0, localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; } }, JSON: JSON };
+  const ctx = { window: win, STORE: { data: null }, document: { querySelector: () => null }, setInterval: () => 0, setTimeout: () => 0, localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; } }, JSON: JSON };
   vm.createContext(ctx);
   vm.runInContext(src + '\nthis.K = { lpKioskOn, LemurScale };', ctx);
   return { K: ctx.K, store: store };
@@ -41,7 +41,7 @@ function fakeHA(w, h, withCard) {
   const ha = { shadowRoot: { querySelector: (q) => (q === 'home-assistant-main' ? { shadowRoot: mainSR } : null) } };
   const doc = { querySelector: (q) => (q === 'home-assistant' ? ha : (q === 'meta[name=theme-color]' ? meta : null)), createElement: () => ({ id: '', textContent: '' }) };
   const win = { innerWidth: w, innerHeight: h, matchMedia: () => ({ matches: true }), addEventListener: () => {} };
-  const ctx = { window: win, document: doc, navigator: { userAgent: 'iPhone' }, getComputedStyle: () => ({ paddingTop: '47px' }), setInterval: () => 0, setTimeout: () => 0, localStorage: { getItem: () => null, setItem: () => {} }, JSON: JSON };
+  const ctx = { window: win, STORE: { data: null }, document: doc, navigator: { userAgent: 'iPhone' }, getComputedStyle: () => ({ paddingTop: '47px' }), setInterval: () => 0, setTimeout: () => 0, localStorage: { getItem: () => null, setItem: () => {} }, JSON: JSON };
   vm.createContext(ctx);
   vm.runInContext(src + '\nthis.K = { LemurScale };', ctx);
   return { K: ctx.K, meta, rootSR };

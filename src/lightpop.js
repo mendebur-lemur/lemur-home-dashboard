@@ -184,6 +184,7 @@ class LemurLightPopup {
     this._h = hass; this._id = id; this._item = item; this._room = room;
     this._lang = pickLang(hass);
     this._tab = 'color'; this._seg = 0;
+    this._withProfile = opts.withProfile;
     this._mount = opts.mount || null; this._inPh = !!opts.phone;
     this._sheet = this._mount ? !!opts.sheet : lpPhoneScreen() && lpPhoneCfg().sheet;
     this._host = document.createElement('div');
@@ -263,6 +264,10 @@ class LemurLightPopup {
   }
 
   _render() {
+    if (this._withProfile) return this._withProfile(() => this._render0());
+    return this._render0();
+  }
+  _render0() {
     const S = this._h.states, st = S[this._id], it = this._item;
     const name = it.name || (st && st.attributes.friendly_name) || this._id;
     const icon = lpIcon(lpEntIcon(st, it.icon));

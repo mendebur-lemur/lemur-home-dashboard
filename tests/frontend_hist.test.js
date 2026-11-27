@@ -9,11 +9,14 @@ const vm = require('vm');
 const adm = fs.readFileSync(path.join(__dirname, '../src/admin.js'), 'utf8');
 const a = adm.indexOf('  _histApply(u) {'), b = adm.indexOf('\n  }\n', a);
 const ctx = { STORE: { data: {} } }; vm.createContext(ctx);
+const safe = fs.readFileSync(path.join(__dirname, '../src/safe.js'), 'utf8');
+const store = fs.readFileSync(path.join(__dirname, '../src/store.js'), 'utf8');
+vm.runInContext(safe.split('\n// Canlı abonelik')[0] + '\n' + store.slice(store.indexOf('const LP_OVR ='), store.indexOf('// Telefona özel görünüm')), ctx);
 vm.runInContext('this.f = function ' + adm.slice(a + 2, b + 4).replace(/^_histApply/, '') + ';', ctx);
 
 function host(tabs, cur) {
   ctx.STORE.data = { tabs: tabs, settings: {} };
-  return { _tab: cur, _settings: () => ctx.STORE.data.settings, _commit: (k, v) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, { [k]: v }); }, _render: () => {} };
+  return { _tab: cur, _settings: () => ctx.STORE.data.settings, _commitBase: (k, v) => { ctx.STORE.data = Object.assign({}, ctx.STORE.data, { [k]: v }); }, _render: () => {} };
 }
 const T = (ids) => ids.map((id) => ({ id: id, sections: [] }));
 

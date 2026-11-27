@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 from typing import Any
 
@@ -107,7 +108,17 @@ class PanelData:
         if isinstance(stored, dict):
             for key, default in DEFAULT_DATA.items():
                 val = stored.get(key)
-                if isinstance(val, type(default)):
+                if key == "profiles" and key in stored:
+                    # kayıtlı profiller yalnız temizlenir: boyut sınırı burada uygulanmaz (temizlenince biraz büyüyen
+                    # bir kayıt bütün profilleri silmesin); sözlük olmayan değer bozuktur
+                    if isinstance(val, dict):
+                        self.data[key] = _clean_profiles(val)
+                    else:
+                        self.data[key] = {}
+                        _LOGGER.warning("Stored %s is damaged (%s) and was reset", key, type(val).__name__)
+                    if self.data[key] != val:
+                        self.store.async_delay_save(lambda: self.data, 1.0)
+                elif isinstance(val, type(default)):
                     self.data[key] = val
                 elif val is not None:
                     _LOGGER.warning("Stored %s is damaged (%s) and was reset", key, type(val).__name__)
@@ -527,10 +538,62 @@ def ws_set(hass, connection, msg):
     connection.send_result(msg["id"], _for_user(connection, data.view()))
 
 
+def _clean_profiles(value: dict) -> dict:
+    out = {}
+    count = 0
+    changed = False
+    for pid, profile in value.items():
+        # Eski biçim pano profili değildir; olduğu gibi saklanır ve sınıra sayılmaz.
+        if isinstance(profile, dict) and not any(k in profile for k in ("name", "tabs", "settings")):
+            out[pid] = profile
+            continue
+        if count == 10 or not isinstance(pid, str) or not re.fullmatch(r"[a-z0-9_-]{1,40}", pid) or not isinstance(profile, dict):
+            changed = True
+            continue
+        name = profile.get("name")
+        clean = {"name": name if isinstance(name, str) and len(name) <= 60 else pid}
+        tabs = profile.get("tabs")
+        if isinstance(tabs, list):
+            clean["tabs"] = EST.migrate_ids(SF.clean_tabs(tabs))
+        settings = SF.clean_profile_settings(profile.get("settings"))
+        if "tabs" not in clean and isinstance(settings.get("phone"), dict):
+            settings["phone"] = {k: v for k, v in settings["phone"].items() if k not in ("tabs", "secs", "order")}
+        if settings:
+            clean["settings"] = settings
+        out[pid] = clean
+        count += 1
+        if clean != {k: v for k, v in profile.items() if k != "settings" or v != {}}:
+            changed = True
+    if changed:
+        _LOGGER.warning("Dashboard profiles contained invalid or outdated data and were cleaned")
+    return out
+
+
+# HA deposu ve websocket'i (orjson) 255 kattan derin veriyi yazamaz: kabul edilen böyle bir değer bütün ekranların get'ini
+# ve diske kaydı bozuyordu. Gerçek düzenler 15 katı geçmez.
+MAX_DEPTH = 100
+
+
+def _too_deep(value: Any, limit: int = MAX_DEPTH) -> bool:
+    """value'da limit kattan derin sözlük / liste var mı (özyinelemesiz; çok derin veri RecursionError vermesin)."""
+    stack = [(value, 1)]
+    while stack:
+        v, depth = stack.pop()
+        if isinstance(v, (dict, list)):
+            if depth > limit:
+                return True
+            stack.extend((x, depth + 1) for x in (v.values() if isinstance(v, dict) else v))
+    return False
+
+
 def _check(key: str, value: Any) -> Any:
     """One key as it may be stored (ws_set, ws_restore): its type, at most MAX_CONFIG_BYTES, and its own rules.
     Returns the cleaned value; raises vol.Invalid."""
-    if not isinstance(value, type(DEFAULT_DATA[key])) or len(json.dumps(value)) > MAX_CONFIG_BYTES:
+    if not isinstance(value, type(DEFAULT_DATA[key])):
+        raise vol.Invalid("wrong type or too large")
+    if _too_deep(value):
+        raise vol.Invalid("too deeply nested")
+    if len(json.dumps(value)) > MAX_CONFIG_BYTES:
         raise vol.Invalid("wrong type or too large")
     if key == "pets":
         return SF.PETS_SCHEMA(value)
@@ -538,6 +601,8 @@ def _check(key: str, value: Any) -> Any:
         return (EST.ESTIMATES_SCHEMA if key == "estimates" else EST.ECATS_SCHEMA)(value)
     if key == "tabs":
         return EST.migrate_ids(SF.clean_tabs(value))
+    if key == "profiles":
+        return _clean_profiles(value)
     if key in ("twins", "walls"):
         return (TW.TWINS_SCHEMA if key == "twins" else TW.WALLS_SCHEMA)(value)
     return value

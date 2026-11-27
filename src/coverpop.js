@@ -146,7 +146,7 @@ class LemurCoverPopup extends LemurLightPopup {
   _tFt() { const t = this._tid(), st = this._h.states[t || this._id]; return (st && st.attributes && st.attributes.supported_features) || 0; }
   _tHasTilt() { return !!(this._tFt() & (LP_COV_F.topen | LP_COV_F.tclose | LP_COV_F.tpos)); }
   _tiltOk() { return (this._style === 'blind' || this._style === 'vert') && (!!this._tid() || this._tHasTilt()); }
-  _render() {
+  _render0() {
     const st = this._st(), it = this._item, F = this._ft();
     this._style = lpCovStyle(st, it); this._dir = lpCovDir(this._style, it);
     const name = it.name || (st && st.attributes.friendly_name) || this._id;

@@ -82,11 +82,13 @@ test('önizlemede (demo, düzenleme) sekme değişmez, HA penceresi açılmaz', 
 });
 
 test('lpEnGoTab: enerji sekmesi varsa gider ve true, yoksa false döner', () => {
-  const pushed = [], ctx = { STORE: { data: { tabs: [{ id: 'a', sections: [{ type: 'lights' }] }] } }, location: { pathname: '/pano/a' }, history: { pushState: (s, t, u) => pushed.push(u) }, window: { dispatchEvent: () => {} }, Event: function () {} };
+  const pushed = [], STORE = { data: { tabs: [{ id: 'a', sections: [{ type: 'lights' }] }] } };
+  const ctx = { location: { pathname: '/pano/a' }, history: { pushState: (s, t, u) => pushed.push(u) }, window: { dispatchEvent: () => {}, __LEMUR_HOME_DASHBOARD_STORE: STORE }, Event: function () {} };
+  const rd = (f) => fs.readFileSync(path.join(__dirname, '../src', f), 'utf8');
   vm.createContext(ctx);
-  vm.runInContext(pick(panel, /function lpEnGoTab\(\) \{[\s\S]*?\n\}\n/) + 'this.G = lpEnGoTab;', ctx);
+  vm.runInContext(rd('safe.js') + '\n' + rd('store.js') + '\n' + pick(panel, /function lpEnGoTab\([^\n]*\) \{[\s\S]*?\n\}\n/) + 'this.G = lpEnGoTab;', ctx);
   assert.strictEqual(ctx.G(), false); assert.deepStrictEqual(pushed, []);
-  ctx.STORE.data.tabs.push({ id: 'en', sections: [{ type: 'energy' }] });
+  STORE.data.tabs.push({ id: 'en', sections: [{ type: 'energy' }] });
   assert.strictEqual(ctx.G(), true); assert.deepStrictEqual(pushed, ['/pano/en']);
 });
 
@@ -116,7 +118,7 @@ test('sayfadan çıkmış kartta (sekme değişti) geç gelen veri pencere açma
   let got = 0; const c2 = { lpEnGet: () => { got++; return null; } };
   vm.createContext(c2);
   vm.runInContext('class X {' + pick(panel, /\n  _enOpen\(V, keep\) \{[\s\S]*?\n  \}\n/) + '}; this.X = X;', c2);
-  const x = new c2.X(); x.shadowRoot = {}; x.isConnected = false; x._enOpen({ k: 'cat', id: '__all' });
+  const x = new c2.X(); x._previewProfile = (fn) => fn(); x.shadowRoot = {}; x.isConnected = false; x._enOpen({ k: 'cat', id: '__all' });
   assert.strictEqual(got, 0);
   x.isConnected = true; x._enOpen({ k: 'cat', id: '__all' }); assert.strictEqual(got, 1);
 });

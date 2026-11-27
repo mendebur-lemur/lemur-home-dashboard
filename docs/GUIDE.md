@@ -224,7 +224,22 @@ Your first change saves the automatic layout; from then on everything is edited 
 - **Star**: If you like the dashboard, opens the project's GitHub page; no reminders or counting.
 - **Recommended**: Opens the recommended products window (More → Recommended products).
 
-### 12. Tabs
+### 12. Dashboard profiles
+
+Create the first profile with **New profile…** in the **⋯** menu, then choose a profile from the profile picker in the top bar. The preview shows the selected profile as you change its appearance and scale.
+
+**Copy main layout** creates independent tabs and a phone layout. **Use main layout** keeps the tabs and sections in sync with the main dashboard. Choose **Make layout separate** to edit them independently.
+
+Under **Profile overrides** in Settings, you can remove an override to use the main value. Open **Manage profile** to create a Home Assistant dashboard linked to the profile.
+
+Choose the profile with `profile:` in the dashboard's strategy configuration, and if you reuse a deleted profile's ID by creating a profile with the same name, dashboards bound to that ID show the new profile.
+
+**Options**
+
+- **New profile…** (Copy main layout · Use main layout): Choose the layout for the new profile.
+- **Create a dashboard for this profile**: Open the profile from the Home Assistant sidebar.
+
+### 13. Tabs
 
 ![Tabs](guide/en/tabs.webp)
 
@@ -252,7 +267,7 @@ Drag tabs to reorder them. A tab tied to an area uses that room for the effect s
 - **Tab** (Empty tab · Tab from area · Cameras tab · Energy tab): A new tab.
 - **Delete tab**: Deletes the tab (asks first, can be undone).
 
-### 13. Auto setup
+### 14. Auto setup
 
 ![Auto setup](guide/en/autosetup.webp)
 
@@ -275,7 +290,7 @@ The preview uses an imaginary home; applying builds the dashboard with your own 
 - **Light effects** (Effects on · Effects hidden): The Effects button (when Light Effect Card is installed).
 - **Apply**: Replaces the current tabs; settings stay and undo brings them back.
 
-### 14. Adding devices
+### 15. Adding devices
 
 ![Adding devices](guide/en/add.webp)
 
@@ -295,7 +310,7 @@ The **Card** button lists Halo cards, Home Assistant cards and installed custom 
 - **Subtitle**: (Advanced) A small heading inside the section.
 - **Empty tile** (Empty tile · Empty button): (Advanced) A placeholder tile or button (give it an action in ⚙).
 
-### 15. Item settings
+### 16. Item settings
 
 ![Item settings](guide/en/item.webp)
 
@@ -315,7 +330,7 @@ Type-specific settings live here too, such as the cover design or how often a ca
 - **On hold**: What a long press does; same choices.
 - **Ask before running**: Asks "run it?" first; the question can be written.
 
-### 16. Energy page
+### 17. Energy page
 
 ![Energy page](guide/en/energy-settings.webp)
 
@@ -361,7 +376,7 @@ Type-specific settings live here too, such as the cover design or how often a ca
 - **Mark estimated values**: Look and data: estimated watts with "~" in purple.
 - **Not measured tile**: Look and data: the share not measured as a category tile.
 
-### 17. Learn
+### 18. Learn
 
 ![Learn](guide/en/learn.webp)
 
@@ -390,7 +405,7 @@ Devices with states, like a TV or AC, collect an average per state while you use
 - **LED strip**: For a strip, length and adapter power; the table is scaled to the length, never above the adapter power.
 - **Save and learn**: Starts learning right away when adding a new device.
 
-### 18. Cards and values
+### 19. Cards and values
 
 ![Cards and values](guide/en/cards.webp)
 
@@ -410,7 +425,7 @@ Value tiles show an icon, value and name; a running timer counts down. Cards com
 - **Colour by value**: 4 limits, 5 colours: frame, value and icon colour by value.
 - **Colour by state**: Maps an entity's state to a colour; works with text values too.
 
-### 19. Sections and columns
+### 20. Sections and columns
 
 ![Sections and columns](guide/en/sections.webp)
 
@@ -429,7 +444,7 @@ The section settings hold its title, column, look (tiles, sliders), tiles per ro
 - **Spacing** (Auto · 0 · 6 · 12 · 18 · 24): Space between items (pixels).
 - **Delete section**: Deletes the section (asks first, can be undone).
 
-### 20. Icon picker
+### 21. Icon picker
 
 ![Icon picker](guide/en/icons.webp)
 
@@ -445,7 +460,7 @@ You can also type an `mdi:...` name directly.
 - **All icons**: The whole set; search understands Turkish words too.
 - **Effect icons**: Light Effect Card's effect icons when it is installed.
 
-### 21. Choose a style
+### 22. Choose a style
 
 ![Choose a style](guide/en/style.webp)
 
@@ -467,7 +482,7 @@ You can also type an `mdi:...` name directly.
 - **Image**: A picture in HA's www folder (/local/background.jpg) or a web address.
 - **Light effects**: Shows or hides the Effects button; explains the card if it is not installed.
 
-### 22. Phone-only layout
+### 23. Phone-only layout
 
 ![Phone-only layout](guide/en/phone-layout.webp)
 
@@ -492,7 +507,7 @@ Everything you change says "phone only". A section's name, column and devices ar
 
 ## More
 
-### 23. Settings
+### 24. Settings
 
 ![Settings](guide/en/settings.webp)
 
@@ -534,7 +549,7 @@ Version and updates at the top: install a new version from here. **Backup** down
 - **Report a problem**: Opens a GitHub issue with version and device details; no room, device or person names are added.
 - **Download backup** (Download backup · Restore a backup): Tabs, sections, settings and pets in one file; restoring asks first.
 
-### 24. Full screen on a tablet
+### 25. Full screen on a tablet
 
 ![Full screen on a tablet](guide/en/kiosk.webp)
 
@@ -551,7 +566,7 @@ With the top bar hidden, on iPhone the dashboard starts below the clock and batt
 - **Hide the top bar** (Don't hide · Phone and tablet · Everywhere): HA's top bar.
 - **Hide the sidebar** (Don't hide · Phone and tablet · Everywhere): HA's sidebar; when hidden, swipe from the edge to open it.
 
-### 25. Advanced settings
+### 26. Advanced settings
 
 ![Advanced settings](guide/en/advanced.webp)
 
@@ -571,7 +586,7 @@ With the top bar hidden, on iPhone the dashboard starts below the clock and batt
 - **Backup control**: The second copy of a lamp that shows up twice; if it does not answer the command goes there and an orange dot appears.
 - **Wall switches** (Brightness % · Kelvin): A signal-only relay is bound to a lamp; brightness and kelvin can be set for turning on (Settings, advanced).
 
-### 26. Recommended products
+### 27. Recommended products
 
 ![Recommended products](guide/en/picks.webp)
 
@@ -591,7 +606,7 @@ The list updates from GitHub; new products need no dashboard update. If you do n
 - **Send to my phone**: On a computer, sends the Hepsiburada link to your phone as a notification; with several phones it asks the first time.
 - **Recommended products** (Show · Hide): Settings → Dashboard: shows or hides the button in the top bar.
 
-### 27. Tips
+### 28. Tips
 
 ![Tips](guide/en/tips.webp)
 

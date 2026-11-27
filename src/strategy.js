@@ -75,13 +75,18 @@ class LemurHomeDashboardStrategy extends HTMLElement {
     if (!data) {
       return { views: [{ title: 'Lemur Home Dashboard', type: 'panel', cards: [{ type: 'markdown', content: t(lang, 'not_loaded') }] }] };
     }
-    const tabs = (data.tabs && data.tabs.length) ? data.tabs : buildDefaultTabs(hass, lang);
-    const settings = data.settings || {};
+    const requested = config && config.profile;
+    const profile = lpProfile(data, requested) ? requested : null;
+    if (!profile && requested !== undefined && requested !== null && requested !== '') console.warn('Lemur Home Dashboard: unknown profile', requested);
+    const saved = lpProfTabs(data, profile);
+    const tabs = saved && saved.length ? saved : buildDefaultTabs(hass, lang);
+    const settings = lpProfSettings(data, profile);
     const bgSet = lpPhoneScreen() ? lpPhoneMerge(settings) : settings;
-    LemurScale.set(settings.canvas || null, settings.kiosk || null, lpBgBase(bgSet));
+    LemurScale.set(settings.canvas || null, settings.kiosk || null, lpBgBase(bgSet), profile);
     // Zemin: ayarda HA'nın görünüm arka planı biçiminde (resim, opaklık...) ya da CSS metni olarak verilebilir; HA kendisi çizer.
-    const bg = lpBgOf(lpPhoneScreen() ? lpPhoneMerge(settings) : settings);   // telefonda telefona özel zemin
-    window.__LHD_VIEWS = tabs.map((x) => x.id);   // kartın gezinmesi bilsin: hangi sekmelerin HA'da görünümü var
+    const bg = lpBgOf(bgSet);   // telefonda telefona özel zemin
+    const viewsBy = window.__LHD_VIEWS_BY || (window.__LHD_VIEWS_BY = Object.create(null));
+    window.__LHD_VIEWS = viewsBy[profile || ''] = tabs.map((x) => x.id);   // hangi sekmelerin bu panoda HA görünümü var
     return {
       views: tabs.map((tab) => {
         const v = {
@@ -92,6 +97,7 @@ class LemurHomeDashboardStrategy extends HTMLElement {
           background: (lpPhoneScreen() && settings.phone && settings.phone.style && settings.phone.style.bg) ? bg : (lpTabBg(tab) || bg),   // telefona özel zemin önce, sonra odanın kendi zemini
           cards: [{ type: 'custom:lemur-home-dashboard-card', tab: tab.id }]
         };
+        if (profile) v.cards[0].profile = profile;
         if (settings.theme_name) v.theme = settings.theme_name;
         return v;
       })

@@ -19,6 +19,12 @@ ha-icon { --mdc-icon-size: 100%; display: inline-flex; width: 20px; height: 20px
 
 /* üst bar */
 .top { display: flex; align-items: center; gap: 10px; min-height: 60px; flex: none; }
+.profbar { display: flex; align-items: center; gap: 6px; min-width: 126px; max-width: 220px; }
+.profbar .inp { flex: 1 1 auto; width: auto; }
+.profbar .btn { flex: none; }
+.profacts { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.phban.proflink { flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 8px 0 0; }
+.narrowv .top { flex-wrap: wrap; row-gap: 8px; }
 .lg { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(140deg, #F4B24A, #E2702C); display: grid; place-items: center; color: var(--actx); flex: none; }
 .lg ha-icon { width: 18px; height: 18px; }
 .top h1 { font-size: 16px; font-weight: 600; margin: 0 6px 0 2px; letter-spacing: -.01em; white-space: nowrap; }
@@ -916,6 +922,15 @@ div.ensr:hover { background: var(--s1); }
   .modeseg button { white-space: nowrap; }
   .top .badge { display: none; }
   .stb .l, .shb .l { display: none; } .stb, .shb { width: 34px; padding: 0; justify-content: center; }
+}
+/* v0.37 üst şeritte profil seçici (yalnız en az bir profil varken çizilir; şerit o zaman .hasprof alır): 1100-1400 px arasında
+   Basit / Gelişmiş alt alta düşüp şeridi taşırıyordu. Seçici varken anahtar daralmaz (seçici daralır), yıldız ve önerilen ürünler
+   bu genişliğe kadar yalnız simge, "Otomatik düzen" rozeti gizli. Profili olmayan kurulumda üst şerit 0.36 ile aynı kalır. */
+.top.hasprof .modeseg { flex: none; flex-wrap: nowrap; }
+.top.hasprof .modeseg button { white-space: nowrap; }
+@media (max-width: 1400px) {
+  .top.hasprof .badge { display: none; }
+  .top.hasprof .stb .l, .top.hasprof .shb .l { display: none; } .top.hasprof .stb, .top.hasprof .shb { width: 34px; padding: 0; justify-content: center; }
 }
 @media (min-width: 601px) and (max-width: 860px) { .top h1 { display: none; } }
 /* v0.28.8 ayarlarda açıklamalar iki satır; dokununca açılır */
